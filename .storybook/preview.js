@@ -1,56 +1,29 @@
 import React from 'react';
 import { INITIAL_VIEWPORTS } from 'storybook/viewport';
 
-// Import theme SCSS files as lazy-loaded modules (via lazyStyleTag in main.js)
-// These provide .use() and .unuse() methods to toggle styles on/off
-import themeUNDRR from '../stories/assets/scss/style.scss';
-import themePreventionWeb from '../stories/assets/scss/style-preventionweb.scss';
-import themeIRP from '../stories/assets/scss/style-irp.scss';
-import themeMCR from '../stories/assets/scss/style-mcr.scss';
-import themeDelta from '../stories/assets/scss/style-delta.scss';
-import themeLegacy from '../stories/assets/scss/style-legacy.scss';
-import themePWLegacy from '../stories/assets/scss/style-preventionweb-legacy.scss';
-import themeIRPLegacy from '../stories/assets/scss/style-irp-legacy.scss';
-import themeMCRLegacy from '../stories/assets/scss/style-mcr-legacy.scss';
+import { transformSource } from './docsSource';
 
-// RTL languages
-const rtlLanguages = ['arabic'];
+import { addons } from 'storybook/preview-api';
+import { GLOBALS_UPDATED } from 'storybook/internal/core-events';
+import { applyTheme, themeNames } from './themeStyles';
 
-// Language code mapping
-const langArr = {
-  english: 'en',
-  arabic: 'ar',
-  japanese: 'ja',
-};
+import { applyLanguage } from './language';
 
-// Decorator to set language and text direction based on locale global
 const getLangCode = (Story, context) => {
-  const activeLang = context.globals.locale || 'english';
+  React.useLayoutEffect(() => {
+    // Embedded docs canvases can finish rendering an older globals snapshot
+    // after the docs globals listener has applied a newer toolbar selection.
+    // They own only their canvas; the listener owns the docs document/runtime.
+    applyLanguage(context.globals, context.canvasElement, {
+      previewDocument: context.viewMode !== 'docs',
+    });
+  });
 
   React.useEffect(() => {
-    const langCode = langArr[activeLang] || 'en';
-    const direction = rtlLanguages.includes(activeLang) ? 'rtl' : 'ltr';
-
-    // Set lang on html element
-    const htmlElem = document.documentElement;
-    htmlElem.setAttribute('lang', langCode);
-
-    // Set dir on both html and #storybook-root (where RTL addon sets it)
-    htmlElem.setAttribute('dir', direction);
-    const storybookRoot = document.getElementById('storybook-root');
-    if (storybookRoot) {
-      storybookRoot.setAttribute('dir', direction);
-    }
-
-    window.UNDRR = window.UNDRR || {};
-    window.UNDRR.langCode = activeLang;
-    window.UNDRR.dir = direction;
-
-    // Dispatch load event for components that listen for it
-    setTimeout(() => {
-      window.dispatchEvent(new Event('load'));
-    }, 10);
-  }, [activeLang]);
+    // Preserve the existing initialization signal for vanilla components.
+    const timer = setTimeout(() => window.dispatchEvent(new Event('load')), 10);
+    return () => clearTimeout(timer);
+  }, [context.globals.locale, context.globals.addonRtl]);
 
   return <Story {...context} />;
 };
@@ -59,8 +32,8 @@ const sbFrameReset = (Story, context) => {
   const iframeBody = document.querySelector('body');
   const sidebarItem = parent.document.querySelectorAll('.sidebar-item');
 
-  sidebarItem.forEach(function (item) {
-    item.addEventListener('click', function () {
+  sidebarItem.forEach(function resetSidebarItem(item) {
+    item.addEventListener('click', function resetIframeBody() {
       const classNames = ['sdgmodal-open', 'color-blue'];
       if (
         classNames.some(className => iframeBody.classList.contains(className))
@@ -73,67 +46,64 @@ const sbFrameReset = (Story, context) => {
   return <Story {...context} />;
 };
 
-// Legacy RTL addon support - allows manual RTL toggle to override locale
-const setDirection = (Story, context) => {
-  React.useEffect(() => {
-    const input = parent.document.querySelector('[aria-controls="rtl-status"]');
-    if (input?.checked) {
-      document.documentElement.setAttribute('dir', 'rtl');
-      window.UNDRR = window.UNDRR || {};
-      window.UNDRR.dir = 'rtl';
-    }
-  }, []);
-
-  return <Story {...context} />;
+// Docs-only pages do not run story decorators/loaders. Listen to the public
+// globals channel as well so toolbar changes update theme, language and direction.
+const channel = addons.getChannel();
+const updatePreviewGlobals = ({ globals }) => {
+  applyLanguage(globals);
+  applyTheme(globals.theme).catch(error =>
+    console.error('Theme loading failed', error)
+  );
 };
-
-const themeStyles = {
-  'Global UNDRR Theme': themeUNDRR,
-  'PreventionWeb Theme': themePreventionWeb,
-  'IRP Theme': themeIRP,
-  'MCR2030 Theme': themeMCR,
-  'DELTA Resilience Theme': themeDelta,
-  'Global UNDRR Theme (legacy 10px)': themeLegacy,
-  'PreventionWeb Theme (legacy 10px)': themePWLegacy,
-  'IRP Theme (legacy 10px)': themeIRPLegacy,
-  'MCR2030 Theme (legacy 10px)': themeMCRLegacy,
-};
-
-// Track currently active theme
-let activeThemeStyle = null;
-
-const themeDecorator = (Story, context) => {
-  const selectedTheme = context.globals.theme;
-
-  React.useEffect(() => {
-    // Unload previous theme
-    if (activeThemeStyle) {
-      activeThemeStyle.unuse();
-    }
-
-    // Load selected theme
-    const newThemeStyle = themeStyles[selectedTheme];
-    if (newThemeStyle) {
-      newThemeStyle.use();
-      activeThemeStyle = newThemeStyle;
-    }
-  }, [selectedTheme]);
-
-  // Load default theme on initial render
-  React.useEffect(() => {
-    const defaultTheme = themeStyles['Global UNDRR Theme'];
-    if (defaultTheme && !activeThemeStyle) {
-      defaultTheme.use();
-      activeThemeStyle = defaultTheme;
-    }
-  }, []);
-
-  return <Story {...context} />;
-};
+channel.on(GLOBALS_UPDATED, updatePreviewGlobals);
+const initialThemeReady = applyTheme();
+if (import.meta.hot) {
+  import.meta.hot.dispose(() =>
+    channel.off(GLOBALS_UPDATED, updatePreviewGlobals)
+  );
+}
 
 /** @type { import('storybook').Preview } */
 const preview = {
+  beforeAll: async () => {
+    await initialThemeReady;
+  },
+  loaders: [
+    async ({ globals, canvasElement, viewMode }) => {
+      applyLanguage(globals, canvasElement, {
+        previewDocument: viewMode !== 'docs',
+      });
+      await applyTheme(globals.theme);
+      return {};
+    },
+  ],
   parameters: {
+    // `@storybook/addon-a11y` is registered in main.js with no configuration,
+    // so it ran axe's default rule set. That set includes `best-practice`
+    // rules, which are advisory conventions rather than WCAG success
+    // criteria, and it runs over everything in the story — including markup
+    // from third-party embeds such as YouTube iframes, which this library
+    // neither writes nor can fix. The panel's output therefore read as a
+    // count of accessibility failures in Mangrove while being nothing of the
+    // sort. Scoping to the WCAG tags makes it mean what people already assume
+    // it means. See unisdr/undrr-mangrove#1273.
+    //
+    // `test: 'todo'` preserves the existing advisory policy: the
+    // addon reports in the panel and beside the test runner's output but does
+    // not fail a build. Turning it to `'error'` is a decision for #1273,
+    // after the existing findings have been triaged — not a side effect of
+    // switching the test runner on.
+    a11y: {
+      test: 'todo',
+      // `runOnly` is an axe *run* option, so it belongs under `options` —
+      // putting it in `config` is accepted silently and changes nothing.
+      options: {
+        runOnly: {
+          type: 'tag',
+          values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'],
+        },
+      },
+    },
     actions: {
       argTypes: {
         onClick: { action: 'clicked' },
@@ -151,20 +121,13 @@ const preview = {
       disable: true,
     },
     html: {
-      prettier: {
-        tabWidth: 2,
-        useTabs: false,
-        removeComments: true,
-        htmlWhitespaceSensitivity: 'css',
-        printWidth: 80,
-        semi: true,
-        singleQuote: true,
-        trailingComma: 'es5',
-      },
+      removeComments: true,
     },
     docs: {
       source: {
         format: 'dedent',
+        // Story files with docs.source.html: true show rendered HTML.
+        transform: transformSource,
       },
     },
     viewport: {
@@ -175,6 +138,14 @@ const preview = {
         method: 'alphabetical',
         order: [
           'Introduction',
+          'Brand',
+          [
+            'About this guide',
+            'Brand identity',
+            'Brand guidelines',
+            'Common patterns',
+            'Component gallery',
+          ],
           'Getting started',
           [
             'About Mangrove',
@@ -187,6 +158,7 @@ const preview = {
               'Theming guide',
               'CDN reference',
               'Hydration guide',
+              'Drupal Gutenberg',
             ],
             'Best practices',
             'Accessibility',
@@ -212,6 +184,8 @@ const preview = {
           ],
           'Design decisions',
           'Components',
+          'Patterns',
+          ['Content', ['Overview', '*'], '*'],
           'Utilities',
         ],
         includeName: true,
@@ -219,7 +193,23 @@ const preview = {
     },
   },
 
+  initialGlobals: {
+    addonRtl: 'ltr',
+  },
+
   globalTypes: {
+    addonRtl: {
+      name: 'Direction',
+      description: 'Text direction',
+      toolbar: {
+        icon: 'transfer',
+        items: [
+          { value: 'ltr', title: 'Locale direction' },
+          { value: 'rtl', title: 'Force right-to-left' },
+        ],
+        dynamicTitle: true,
+      },
+    },
     locale: {
       name: 'Locale',
       description: 'locale',
@@ -229,7 +219,11 @@ const preview = {
         items: [
           { value: 'english', title: 'English' },
           { value: 'arabic', title: 'Arabic' },
+          { value: 'french', title: 'French' },
           { value: 'japanese', title: 'Japanese' },
+          { value: 'russian', title: 'Russian' },
+          { value: 'spanish', title: 'Spanish' },
+          { value: 'chinese', title: 'Simplified Chinese' },
         ],
       },
     },
@@ -239,7 +233,7 @@ const preview = {
       defaultValue: 'Global UNDRR Theme',
       toolbar: {
         icon: 'paintbrush',
-        items: Object.keys(themeStyles).map((name) => ({
+        items: themeNames.map(name => ({
           value: name,
           title: name,
         })),
@@ -249,7 +243,7 @@ const preview = {
     },
   },
 
-  decorators: [getLangCode, sbFrameReset, setDirection, themeDecorator],
+  decorators: [getLangCode, sbFrameReset],
 
   tags: ['autodocs'],
 };

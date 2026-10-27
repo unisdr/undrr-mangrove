@@ -1,5 +1,8 @@
+import { checkPhotoCardEdges } from './cardGeometryChecks';
+import { expect } from 'storybook/test';
+import ScrollContainer from '../../ScrollContainer/ScrollContainer';
+import { scrollCardExamples } from '../../ScrollContainer/ScrollContainerExamples';
 import { VerticalCard } from './VerticalCard';
-
 const getCaptionForLocale = locale => {
   switch (locale) {
     case 'english':
@@ -77,30 +80,25 @@ This paper explores health risks from climate change in a global context, settin
       return dummy;
   }
 };
-
 export default {
   title: 'Components/Cards/Vertical Card',
   component: VerticalCard,
-
   args: {
     variant: 'primary',
   },
-
   argTypes: {
     variant: {
       options: ['primary', 'secondary', 'tertiary', 'quaternary'],
-
       control: {
         type: 'inline-radio',
       },
     },
   },
 };
-
 export const DefaultVerticalCard = {
+  play: checkPhotoCardEdges,
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
-
     return (
       <div
         style={{
@@ -111,14 +109,11 @@ export const DefaultVerticalCard = {
       </div>
     );
   },
-
   name: 'Vertical Card',
 };
-
 export const PlainTitleVerticalCard = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
-
     return (
       <div
         style={{
@@ -133,18 +128,19 @@ export const PlainTitleVerticalCard = {
       </div>
     );
   },
-
   name: 'Plain title (opt-out)',
 };
-
 export const NoImageVerticalCard = {
+  play: checkPhotoCardEdges,
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
-    const noImageData = caption.contentdata.map(item => {
-      const { image: _image, ...rest } = item;
-      return rest;
-    });
-
+    const noImageData = caption.contentdata.map(item => ({
+      ...item,
+      image: {
+        src: null,
+        alt: null,
+      },
+    }));
     return (
       <div
         style={{
@@ -155,6 +151,273 @@ export const NoImageVerticalCard = {
       </div>
     );
   },
-
   name: 'Vertical Card Without Image',
+};
+
+// Cards should normally be links. These stories cover the cases where they
+// aren't, so the unlinked treatment is exercised alongside the linked one.
+
+export const NoLinkVerticalCard = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    const unlinked = caption.contentdata.map(item => ({
+      ...item,
+      link: null,
+      button: null,
+    }));
+    return (
+      <div
+        style={{
+          maxWidth: '300px',
+        }}
+      >
+        <VerticalCard items={unlinked} {...args}></VerticalCard>
+      </div>
+    );
+  },
+  name: 'Without a link',
+};
+export const ButtonOnlyVerticalCard = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    const buttonOnly = caption.contentdata.map(item => ({
+      ...item,
+      link: null,
+      buttonLink: 'javascript:void(0)',
+    }));
+    return (
+      <div
+        style={{
+          maxWidth: '300px',
+        }}
+      >
+        <VerticalCard items={buttonOnly} {...args}></VerticalCard>
+      </div>
+    );
+  },
+  name: 'Button only, no card link',
+};
+export const MixedLinkVerticalCards = {
+  render: (args, { globals: { locale } }) => {
+    const [item] = getCaptionForLocale(locale).contentdata;
+    const mixed = [
+      {
+        ...item,
+      },
+      {
+        ...item,
+        link: null,
+        buttonLink: 'javascript:void(0)',
+      },
+      {
+        ...item,
+        link: null,
+        button: null,
+      },
+    ];
+    return (
+      <div
+        style={{
+          display: 'grid',
+          gap: '1rem',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+        }}
+      >
+        <VerticalCard items={mixed} {...args}></VerticalCard>
+      </div>
+    );
+  },
+  name: 'Mixed group (linked, button only, unlinked)',
+};
+
+// Reference for content already published through Drupal Gutenberg, which
+// emits `<a href="">` and a sibling button rather than a plain-text title.
+// Rendered as raw markup on purpose: it is what the CSS has to repair.
+export const LegacyEmptyHrefMarkup = {
+  render: () => (
+    <div
+      style={{
+        maxWidth: '300px',
+      }}
+      dangerouslySetInnerHTML={{
+        __html: `<article class="wp-block-undrr-undrr-card mg-card mg-card__vc">
+  <div class="mg-card__visual">
+    <img src="https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg" alt="illustration" class="mg-card__image" loading="lazy">
+  </div>
+  <div class="mg-card__content">
+    <header class="mg-card__title"><a href="">Jobs and Careers</a></header>
+    <div class="mg-card__summary">Stay current on the latest vacancies and current job trends in disaster risk reduction.</div>
+    <a href="javascript:void(0)" class="mg-button mg-button-primary mg-button-arrow" role="button" type="Primary">BUTTON</a>
+  </div>
+</article>`,
+      }}
+    />
+  ),
+  name: 'Legacy Gutenberg markup (empty href)',
+};
+
+// Mixed content deliberately exercises wrapping, missing media and missing CTAs.
+const groupedCards = scrollCardExamples.map((card, index) => ({
+  title: card.title,
+  summary: card.summary,
+  image: {
+    src: index === 3 ? undefined : card.image,
+    alt: card.alt,
+  },
+  button: index === 4 ? undefined : card.action,
+  link: `#card-example-${index + 1}`,
+}));
+
+// Browser geometry assertions catch regressions that DOM-only tests cannot.
+const checkCardRows = async ({ canvasElement }) => {
+  await canvasElement.ownerDocument.fonts.ready;
+  const rows = new Map();
+  canvasElement.querySelectorAll('.mg-card__vc').forEach(card => {
+    const bounds = card.getBoundingClientRect();
+    const key = Math.round(bounds.top);
+    const row = rows.get(key) || [];
+    row.push(card);
+    rows.set(key, row);
+  });
+  expect([...rows.values()].flat()).toHaveLength(groupedCards.length);
+  rows.forEach(cards => {
+    const bottoms = cards.map(card => card.getBoundingClientRect().bottom);
+    expect(Math.max(...bottoms) - Math.min(...bottoms)).toBeLessThan(1);
+    const actions = cards
+      .map(card => card.querySelector('.mg-button'))
+      .filter(Boolean);
+    if (actions.length > 1) {
+      const actionBottoms = actions.map(
+        action => action.getBoundingClientRect().bottom
+      );
+      expect(
+        Math.max(...actionBottoms) - Math.min(...actionBottoms)
+      ).toBeLessThan(1);
+    }
+  });
+};
+export const InSeparateColumns = {
+  name: 'In separate columns (uneven content)',
+  play: async ({ canvasElement }) => {
+    await canvasElement.ownerDocument.fonts.ready;
+    const columns = Array.from(
+      canvasElement.querySelectorAll('.mg-story-column')
+    );
+    expect(columns).toHaveLength(3);
+    columns.forEach(column => {
+      const card = column.querySelector('.mg-card__vc');
+      const columnBottom = column.getBoundingClientRect().bottom;
+      const cardBottom = card.getBoundingClientRect().bottom;
+      // The card fills its own column's full height, not just its own
+      // content's height — even though the columns are separate boxes with
+      // no shared flex/grid row of their own to stretch against.
+      expect(Math.abs(columnBottom - cardBottom)).toBeLessThan(1);
+    });
+  },
+  render: args => (
+    <div
+      style={{
+        display: 'grid',
+        // auto-fit rather than a fixed repeat(3, …): three columns above
+        // ~800px, fewer below, so the demo does not push a 375px page
+        // sideways. Each column is still its own box, which is what the
+        // equal-height behaviour below is demonstrating.
+        gridTemplateColumns: 'repeat(auto-fit, minmax(min(240px, 100%), 1fr))',
+        gap: '1rem',
+        maxWidth: '900px',
+      }}
+    >
+      {/* Each card sits in its own plain <div> column rather than as a
+          direct flex/grid sibling of the others — a common pattern for
+          CMS-templated three-up layouts. CSS Grid's own align-items:
+          stretch still equalises the three column <div>s to the same
+          height (the middle one has extra content), but nothing makes the
+          card inside each column fill that column's height without this
+          component's own block-size: 100%. */}
+      <div className="mg-story-column">
+        <VerticalCard {...args} items={[groupedCards[0]]} />
+      </div>
+      <div className="mg-story-column">
+        <VerticalCard {...args} items={[groupedCards[1]]} />
+        <p>
+          Extra content below the card makes this column taller than its
+          neighbours.
+        </p>
+      </div>
+      <div className="mg-story-column">
+        <VerticalCard {...args} items={[groupedCards[2]]} />
+      </div>
+    </div>
+  ),
+};
+export const GridOfCards = {
+  play: checkCardRows,
+  render: args => (
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))',
+        gap: '1rem',
+        maxWidth: '1000px',
+      }}
+    >
+      <VerticalCard {...args} items={groupedCards} />
+    </div>
+  ),
+};
+export const FlexRowOfCards = {
+  play: checkCardRows,
+  render: args => (
+    <div
+      style={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        alignItems: 'stretch',
+        gap: '1rem',
+        maxWidth: '1000px',
+      }}
+    >
+      {groupedCards.map(card => (
+        <div
+          key={card.link}
+          style={{
+            display: 'flex',
+            flex: '1 1 260px',
+            minWidth: 0,
+          }}
+        >
+          <VerticalCard {...args} items={[card]} />
+        </div>
+      ))}
+    </div>
+  ),
+};
+export const ScrollingCards = {
+  play: checkCardRows,
+  render: args => (
+    <ScrollContainer stretchItems itemWidth="280px" showArrows>
+      {groupedCards.map(card => (
+        <VerticalCard {...args} key={card.link} items={[card]} />
+      ))}
+    </ScrollContainer>
+  ),
+};
+export const NoLabels = {
+  name: 'Without labels',
+  render: (args, { globals: { locale } }) => {
+    const data = getCaptionForLocale(locale).contentdata.map(item => ({
+      ...item,
+      labels: [null, null],
+    }));
+    return (
+      <div
+        style={{
+          maxWidth: '300px',
+        }}
+      >
+        <VerticalCard {...args} items={data} />
+      </div>
+    );
+  },
+  play: checkPhotoCardEdges,
 };

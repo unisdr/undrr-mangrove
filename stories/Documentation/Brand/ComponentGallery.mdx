@@ -1,0 +1,137 @@
+{/* Maintenance note: the LinkTo `kind` values below are story IDs that change
+when a component's Storybook title changes (e.g. renaming, re-categorising).
+`scripts/__tests__/docs-links.test.js` resolves every `kind` against the story
+titles declared in `stories/`, so a rename that orphans one of these fails
+`yarn test`. */}
+
+import { Meta } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
+
+<Meta
+  title="Brand/Component gallery"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: {
+      canvas: { hidden: true },
+    },
+  }}
+/>
+
+# Component gallery
+
+A curated catalog of Mangrove components organized by purpose. For theme-specific previews, switch themes in the toolbar.
+
+---
+
+## Page structure
+
+| Component        | Purpose                                                     | View                                                                        |
+| ---------------- | ----------------------------------------------------------- | --------------------------------------------------------------------------- |
+| Page header      | Sticky top navigation with branding, language selector      | <LinkTo kind="components-pageheader" story="docs">View</LinkTo>             |
+| Mega menu        | Multi-column dropdown navigation                            | <LinkTo kind="components-navigation-megamenu" story="docs">View</LinkTo>               |
+| Breadcrumbs      | Hierarchical navigation trail                               | <LinkTo kind="components-navigation-breadcrumbs" story="docs">View</LinkTo> |
+| On-this-page nav | Sticky table of contents                                    | <LinkTo kind="components-navigation-on-this-page-nav" story="docs">View</LinkTo>       |
+| Footer           | Site-wide footer with navigation and social links           | <LinkTo kind="components-footer" story="docs">View</LinkTo>                 |
+
+---
+
+## Hero and headers
+
+| Component  | Purpose                                                          | View                                                                 |
+| ---------- | ---------------------------------------------------------------- | -------------------------------------------------------------------- |
+| Hero       | Full-width banner with title, summary and call-to-action         | <LinkTo kind="components-hero-hero" story="docs">View</LinkTo>       |
+| Child hero | Compact hero for sub-pages                                        | <LinkTo kind="components-hero-hero-child" story="docs">View</LinkTo> |
+
+---
+
+## Content cards
+
+| Component       | Purpose                                 | View                                                                       |
+| --------------- | --------------------------------------- | -------------------------------------------------------------------------- |
+| Vertical card   | Image-above-text card                   | <LinkTo kind="components-cards-vertical-card" story="docs">View</LinkTo>   |
+| Horizontal card | Side-by-side image and text             | <LinkTo kind="components-cards-horizontal-card" story="docs">View</LinkTo> |
+| Book card       | Publication cover with metadata         | <LinkTo kind="components-cards-book-card" story="docs">View</LinkTo>       |
+| Icon card       | Card with prominent icon                | <LinkTo kind="components-cards-icon-card" story="docs">View</LinkTo>       |
+| Stats card      | Numeric highlights with label           | <LinkTo kind="components-cards-stats-card" story="docs">View</LinkTo>      |
+| Quote highlight | Featured quote with attribution          | <LinkTo kind="components-quotehighlight" story="docs">View</LinkTo>        |
+| Highlight box   | Emphasized content container             | <LinkTo kind="components-highlightbox" story="docs">View</LinkTo>          |
+
+---
+
+## Interactive elements
+
+| Component     | Purpose                          | View                                                                      |
+| ------------- | -------------------------------- | ------------------------------------------------------------------------- |
+| Buttons       | Primary and secondary actions    | <LinkTo kind="components-buttons-buttons" story="docs">View</LinkTo>      |
+| Chips         | Filter chips and tag selectors   | <LinkTo kind="components-buttons-chips" story="docs">View</LinkTo>        |
+| Share buttons | Social media share links         | <LinkTo kind="components-buttons-sharebuttons" story="docs">View</LinkTo> |
+| Forms         | Text inputs, checkboxes, radios  | <LinkTo kind="components-forms-checkbox" story="docs">View</LinkTo>       |
+| Tabs          | Horizontal tab bar               | <LinkTo kind="components-tabs" story="docs">View</LinkTo>                 |
+| Pager         | Pagination for result lists      | <LinkTo kind="components-navigation-pager" story="docs">View</LinkTo>                |
+
+---
+
+## Data visualization
+
+| Component         | Purpose                         | View                                                                   |
+| ----------------- | ------------------------------- | ---------------------------------------------------------------------- |
+| Legend            | Keys for maps and charts        | <LinkTo kind="components-dataviz-legend" story="docs">View</LinkTo>    |
+| Gallery           | Image grid with lightbox        | <LinkTo kind="components-gallery" story="docs">View</LinkTo>           |
+| Table of contents | Auto-generated content index    | <LinkTo kind="components-navigation-table-of-contents" story="docs">View</LinkTo> |
+
+Mangrove does not ship chart or map components. Its D3 charts and Leaflet map wrapper were removed in 1.8.0; bring your own charting and mapping libraries and style their output with Mangrove tokens.
+
+---
+
+## Typography
+
+| Component              | Purpose                      | View                                                                                           |
+| ---------------------- | ---------------------------- | ---------------------------------------------------------------------------------------------- |
+| Base typography        | Headings, paragraphs, text   | <LinkTo kind="components-typography" story="docs">View</LinkTo>                                |
+| Links                  | Link styles                  | <LinkTo kind="components-typography-links" story="docs">View</LinkTo>                          |
+| Typography integration | Complete typography example  | <LinkTo kind="components-typography-typography-integration-example" story="docs">View</LinkTo> |
+
+---
+
+## Layout helpers
+
+| Component           | Purpose                    | View                                                                     |
+| ------------------- | -------------------------- | ------------------------------------------------------------------------ |
+| Grid                | Responsive CSS Grid        | <LinkTo kind="design-decisions-grid-layout" story="docs">View</LinkTo>   |
+| Scroll container    | Horizontal scrolling       | <LinkTo kind="components-scrollcontainer" story="docs">View</LinkTo>     |
+| Font size utilities | Typography overrides       | <LinkTo kind="components-font-size-utilities" story="docs">View</LinkTo> |
+
+---
+
+## Loading and progress
+
+| Component    | Purpose                                                     | View                                                               |
+| ------------ | ----------------------------------------------------------- | ------------------------------------------------------------------ |
+| Loader       | Spinner for short waits, inline in text, buttons and fields | <LinkTo kind="components-loader" story="docs">View</LinkTo>        |
+| Progress bar | Measurable task progress, or a region updating in place     | <LinkTo kind="components-progress-bar" story="docs">View</LinkTo>  |
+
+---
+
+## Platform features
+
+| Component          | Purpose                    | View                                                                     |
+| ------------------ | -------------------------- | ------------------------------------------------------------------------ |
+| Cookie consent     | GDPR cookie banner         | <LinkTo kind="components-notice-cookieconsentbanner" story="docs">View</LinkTo> |
+| Snackbar           | Notifications and alerts   | <LinkTo kind="components-notice-snackbar" story="docs">View</LinkTo>            |
+| Syndication search | Cross-site content search  | <LinkTo kind="components-syndicated-search" story="docs">View</LinkTo>   |
+| Error pages        | 404, 500 pages             | <LinkTo kind="components-error-pages" story="docs">View</LinkTo>         |
+| Page template      | Complete page layout       | <LinkTo kind="example-page-template-example" story="docs">View</LinkTo>  |
+
+---
+
+## Icons
+
+90+ icons for UI and humanitarian content, including hazard icons.
+
+See: <LinkTo kind="components-icons" story="docs">Full icon set</LinkTo>
+
+---
+
+## Need a new component?
+
+[Open a GitHub issue](https://github.com/PreventionWeb/undrr-mangrove/issues) to request a component or variant.

@@ -1,9 +1,7 @@
-/* eslint-disable react/no-danger */
 import React from 'react';
 import PropTypes from 'prop-types';
 import DOMPurify from 'dompurify';
 import { CtaButton } from '../../Buttons/CtaButton/CtaButton';
-
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
@@ -13,23 +11,28 @@ const cls = (...classes) =>
  * A card variant with icon/image, title, summary, and optional CTA.
  * RTL layout is automatic via CSS [dir="rtl"] - use the Storybook locale toolbar.
  *
+ * @see schemas/card.schema.js — canonical field names and documented deviations.
+ *
  * @param {Object} props
- * @param {Array} props.items - Array of card data objects (see data object properties below)
+ * @param {Array} props.items - Array of card item objects (see item properties below)
  * @param {boolean} props.centered - Center-align content (default: false, left-aligned)
+ * @param {'vertical'|'horizontal'} props.orientation - Icon above the content, or beside it (default: vertical)
  * @param {string} props.variant - Visual variant: 'default' or 'negative' (for dark backgrounds)
  *
- * Data object properties:
+ * Item properties:
  * @property {string} icon - Icon class name (e.g., "mg-icon mg-icon-globe") - see Atom/Icons
- * @property {Object} image - { src, alt } Image object (alternative to icon)
- * @property {number} iconSize - Width/height of icon in pixels (default: 72)
+ * @property {string} image.src - Image URL (alternative to icon, matches VerticalCard)
+ * @property {string} image.alt - Alt text for image (matches VerticalCard)
+ * @property {number} iconSize - Intrinsic image dimensions when imageScale is omitted (default: 72); does not size CSS glyphs
  * @property {string} imageScale - Scale for icons/images: 'small', 'medium', 'large', or 'full'
- * @property {string[]} labels - Badge or category label text array
+ * @property {string[]} labels - Badge or category labels; the first entry is displayed
  * @property {string} visualLabel - Text label rendered above the icon/image in the visual area
  * @property {string} title - Card heading text (required for accessibility)
  * @property {boolean} srOnlyTitle - Visually hide title but keep for screen readers (for logo cards)
- * @property {string} summary - Card body text, HTML supported
+ * @property {string} summary - Card body text, HTML supported (matches VerticalCard)
  * @property {string} link - URL for card link
  * @property {string} linkText - Text for text link CTA
+ * @property {Function} onClick - Optional activation handler for client-side routing
  * @property {string} iconColor - Background color for the icon badge (CSS color, e.g., "#f4b8a8")
  * @property {string} iconFgColor - Foreground (glyph) color for the icon (CSS color). Overrides the default neutral gray.
  * @property {string} borderColor - Border color for the card (CSS color, e.g., "#e8963a")
@@ -37,7 +40,7 @@ const cls = (...classes) =>
  * @property {string} buttonType - Button style: 'Primary' or 'Secondary'
  */
 /** Renders the icon/image visual for a card item. */
-function renderVisual(item) {
+function Visual({ item }) {
   if (item.image?.src) {
     return (
       <img
@@ -65,8 +68,12 @@ function renderVisual(item) {
         aria-hidden="true"
         {...((item.iconColor || item.iconFgColor) && {
           style: {
-            ...(item.iconColor && { '--mg-icon-bg': item.iconColor }),
-            ...(item.iconFgColor && { '--mg-icon-fg': item.iconFgColor }),
+            ...(item.iconColor && {
+              '--mg-icon-bg': item.iconColor,
+            }),
+            ...(item.iconFgColor && {
+              '--mg-icon-fg': item.iconFgColor,
+            }),
           },
         })}
       >
@@ -76,8 +83,12 @@ function renderVisual(item) {
   }
   return null;
 }
-
-export function IconCard({ items, centered = false, variant = 'default' }) {
+export function IconCard({
+  items,
+  centered = false,
+  variant = 'default',
+  orientation = 'vertical',
+}) {
   return (
     <>
       {items.map((item, index) => (
@@ -87,25 +98,34 @@ export function IconCard({ items, centered = false, variant = 'default' }) {
             'mg-card',
             'mg-card__icon',
             centered && 'mg-card__icon--centered',
+            orientation === 'horizontal' && 'mg-card__icon--horizontal',
             variant && variant !== 'default' && `mg-card__icon--${variant}`,
             item.borderColor && 'mg-card__icon--bordered'
           )}
           {...(item.borderColor && {
-            style: { '--mg-card-border': item.borderColor },
+            style: {
+              '--mg-card-border': item.borderColor,
+            },
           })}
         >
           {/* Icon or Image - wrapped in link when srOnlyTitle is true */}
           {(item.icon || item.image?.src || item.iconColor) && (
             <div className="mg-card__visual">
               {item.visualLabel && (
-                <span className="mg-card__visual-label">{item.visualLabel}</span>
+                <span className="mg-card__visual-label">
+                  {item.visualLabel}
+                </span>
               )}
-              {item.srOnlyTitle && item.link ? (
-                <a href={item.link} className="mg-card__visual-link">
-                  {renderVisual(item)}
+              {item.srOnlyTitle && (item.link || item.onClick) ? (
+                <a
+                  href={item.link || '#'}
+                  onClick={item.onClick}
+                  className="mg-card__visual-link"
+                >
+                  <Visual item={item} />
                 </a>
               ) : (
-                renderVisual(item)
+                <Visual item={item} />
               )}
             </div>
           )}
@@ -127,8 +147,12 @@ export function IconCard({ items, centered = false, variant = 'default' }) {
                   item.srOnlyTitle && 'mg-u-sr-only'
                 )}
               >
-                {item.link && !item.button && !item.srOnlyTitle ? (
-                  <a href={item.link}>{item.title?.trim()}</a>
+                {(item.link || item.onClick) &&
+                !item.button &&
+                !item.srOnlyTitle ? (
+                  <a href={item.link || '#'} onClick={item.onClick}>
+                    {item.title?.trim()}
+                  </a>
                 ) : (
                   item.title?.trim()
                 )}
@@ -139,6 +163,7 @@ export function IconCard({ items, centered = false, variant = 'default' }) {
             {item.summary && (
               <p
                 className="mg-card__summary"
+                // eslint-disable-next-line react/no-danger -- sanitized HTML contract; DOMPurify sanitizes caller input
                 dangerouslySetInnerHTML={{
                   __html: DOMPurify.sanitize(item.summary),
                 }}
@@ -149,16 +174,20 @@ export function IconCard({ items, centered = false, variant = 'default' }) {
             {item.button && (
               <div className="mg-card__cta">
                 <CtaButton
-                  type={item.buttonType || 'Primary'}
+                  Type={item.buttonType || 'Primary'}
+                  Variant="CTA"
                   label={item.button}
-                  href={item.link}
+                  href={item.link || '#'}
+                  onClick={item.onClick}
                 />
               </div>
             )}
 
             {item.linkText && !item.button && (
               <p className="mg-card__link">
-                <a href={item.link}>{item.linkText}</a>
+                <a href={item.link || '#'} onClick={item.onClick}>
+                  {item.linkText}
+                </a>
               </p>
             )}
           </div>
@@ -167,21 +196,19 @@ export function IconCard({ items, centered = false, variant = 'default' }) {
     </>
   );
 }
-
 IconCard.propTypes = {
-  /** Array of card data objects */
+  /** Array of card item objects */
   items: PropTypes.arrayOf(
     PropTypes.shape({
       /** Unique identifier for the card */
       id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       /** Icon class name (e.g., "mg-icon mg-icon-globe") - see Atom/Icons */
       icon: PropTypes.string,
-      /** Image object with src and alt */
       image: PropTypes.shape({
         src: PropTypes.string,
         alt: PropTypes.string,
       }),
-      /** Width/height of icon in pixels (ignored when imageScale is set) */
+      /** Intrinsic image dimensions when imageScale is omitted; does not size CSS glyphs */
       iconSize: PropTypes.number,
       /** Image width scale: small (72px), medium (50%), large (75%), full (100%) */
       imageScale: PropTypes.oneOf(['small', 'medium', 'large', 'full']),
@@ -191,7 +218,7 @@ IconCard.propTypes = {
       iconFgColor: PropTypes.string,
       /** Border color for the card (CSS color, e.g., "#e8963a") */
       borderColor: PropTypes.string,
-      /** Badge or category label text array */
+      /** Badge or category label text */
       labels: PropTypes.arrayOf(PropTypes.string),
       /** Text label rendered above the icon/image in the visual area */
       visualLabel: PropTypes.string,
@@ -199,12 +226,14 @@ IconCard.propTypes = {
       title: PropTypes.string.isRequired,
       /** Visually hide title but keep for screen readers (for logo cards) */
       srOnlyTitle: PropTypes.bool,
-      /** Card body text, HTML supported */
+      /** Card body text, HTML supported (matches VerticalCard) */
       summary: PropTypes.string,
       /** URL for card link */
       link: PropTypes.string,
       /** Text for text link CTA */
       linkText: PropTypes.string,
+      /** Optional activation handler for client-side routing. */
+      onClick: PropTypes.func,
       /** Button label text */
       button: PropTypes.string,
       /** Button style: 'Primary' or 'Secondary' */
@@ -215,4 +244,10 @@ IconCard.propTypes = {
   centered: PropTypes.bool,
   /** Visual variant: default or negative (for dark backgrounds) */
   variant: PropTypes.oneOf(['default', 'negative']),
+  /**
+   * `vertical` stacks the icon above the content. `horizontal` sets it beside
+   * the content, the arrangement undrr.org uses for "what would you like to do"
+   * route rows. Horizontal owns the visual's size, so `imageScale` is ignored.
+   */
+  orientation: PropTypes.oneOf(['vertical', 'horizontal']),
 };

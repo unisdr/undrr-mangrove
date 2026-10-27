@@ -61,10 +61,7 @@ describe('HorizontalCard contract', () => {
 
   it('renders all items when items array has multiple entries', () => {
     const fixture = {
-      items: [
-        { title: 'First card' },
-        { title: 'Second card' },
-      ],
+      items: [{ title: 'First card' }, { title: 'Second card' }],
     };
     expect(validate(fixture)).toBe(true);
     render(<HorizontalCard {...fixture} />);

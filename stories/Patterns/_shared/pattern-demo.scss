@@ -1,0 +1,60 @@
+/**
+ * Pattern Demo Shared Styles
+ *
+ * Shared layout and scaffolding styles for Storybook page pattern demonstrations.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Patterns/LandingPages/LandingPages.mdx
+ */
+// Demo-only story scaffolding (`mg-demo-*`), imported directly by pattern stories.
+@use "../../assets/scss/config" as *;
+
+.mg-demo-lede,
+.mg-demo-intro {
+  max-inline-size: 49rem;
+}
+
+.mg-demo-shell {
+  @media (width < 48rem) {
+    padding-inline: var(--mg-spacing-200);
+  }
+}
+
+// Vertical padding for full-width demo bands.
+.mg-demo-band {
+  padding-block: var(--mg-spacing-300);
+}
+
+.mg-demo-band--feature {
+  padding-block: var(--mg-spacing-400);
+}
+
+// ArticleStory's demo header image.
+.mg-demo-article-image {
+  inline-size: 100%;
+  block-size: auto;
+}
+
+// Capped at the same width as the reading grid below it.
+.mg-demo-article-media--compact {
+  max-inline-size: var(--mg-reading-with-contents-width);
+}
+
+.mg-demo-article-image + .mg-image-caption {
+  margin-block-start: var(--mg-spacing-100);
+}
+
+// Keep intro width aligned with the reading layout width token.
+.mg-demo-article-header .mg-demo-intro {
+  max-inline-size: var(--mg-reading-with-contents-width);
+}
+
+// Align split-hero grid width with the reading layout width token.
+.mg-demo-article-header .mg-hero__split-grid {
+  max-inline-size: var(--mg-reading-with-contents-width);
+}
+
+// CollectionPage: space between the page's sections.
+.mg-demo-collection-section {
+  margin-block-end: var(--mg-spacing-400);
+}

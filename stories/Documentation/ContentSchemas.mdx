@@ -14,7 +14,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 Design systems define how things look. Content management defines what gets stored.
 But neither defines the structural layer between them — what data a component
-*carries*, what fields it requires, and what constraints apply.
+_carries_, what fields it requires, and what constraints apply.
 
 That structural layer is **content architecture**: explicit, named contracts that
 survive visual redesigns and work across every property that consumes Mangrove
@@ -23,7 +23,7 @@ and lock those contracts in.**
 
 ## Status
 
-**Phase 2: schemas are enforced contracts.** All implementing components use
+**Unmerged Phase 2 proposal.** On this draft branch, the selected implementing components use
 canonical schema field names. Contract tests (`*.contract.test.jsx`) validate
 that schema-valid fixtures render correctly — if a schema-valid fixture breaks a
 component, the contract test catches it. The `x-mangrove.deviations` map is empty
@@ -33,13 +33,29 @@ See [issue #881](https://github.com/unisdr/undrr-mangrove/issues/881) for the
 full vision, [issue #883](https://github.com/unisdr/undrr-mangrove/issues/883)
 for Phase 1, and [issue #884](https://github.com/unisdr/undrr-mangrove/issues/884)
 for Phase 2. For migration guidance, see [docs/MIGRATION-SCHEMA-V2.md](https://github.com/unisdr/undrr-mangrove/blob/main/docs/MIGRATION-SCHEMA-V2.md).
-For the full v2.0 changelog, see the [v2.0 release notes](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-release-notes-v2-0--docs) in Storybook.
+This proposal has no assigned release version and has not shipped in Mangrove 2.3.0. Read the [schema phase 2 proposal](?path=/docs/design-decisions-schema-phase-2-proposal--docs) for the candidate changes; the actual released v2.0 guide is separate.
+
+These seven groups describe component interfaces, not the editorial archetypes or canonical CMS domain models. Existing ContentCard and ContentTeaser family/profile projections remain separate; see [the provisional contract alignment](?path=/docs/patterns-content-overview--docs#provisional-contract-alignment) before adoption.
+
+---
+
+## Conceptual foundation: strategic Domain-Driven Design
+
+Content schemas apply strategic patterns from [Domain-Driven Design](https://en.wikipedia.org/wiki/Domain-driven_design) (DDD) to Mangrove's content layer. If you are familiar with Evans' vocabulary, this is where each schema sits:
+
+- **Published Language** — the schemas themselves. A formally specified, versioned vocabulary that every system communicating through Mangrove components can conform to, rather than each consumer inventing its own terms.
+- **Ubiquitous Language** — the canonical field names each schema defines (e.g. `image.src`, `items[].summary`, `sharingBody`). The `x-mangrove.deviations` metadata on each schema records known gaps between the domain language and current component code; closing those gaps is the Phase 2 alignment pass.
+- **Anti-Corruption Layer** — the hydration wrappers in consuming systems. For example, the Drupal theme's `undrr_common/js/mangrove-components/MegaMenu-wrapper.js` translates CMS-native terms (taxonomy IDs, `view.name`, `field_url_alt`) into Mangrove's domain terms, keeping CMS shape out of component internals.
+- **Bounded context granularity** — the seven archetypes define the modelling boundary. New archetypes are a deliberate design decision, not accretion from one-off components.
+
+Mangrove uses strategic DDD only. Tactical DDD patterns (aggregates, repositories, domain events, identity-bearing entities as code) do not apply to a design-system component library and are explicitly out of scope. If a future contributor asks "where is the aggregate root?" — there isn't one, by design.
 
 ---
 
 ## Why lock in content architecture through schemas?
 
 Without explicit contracts:
+
 - Field names drift across implementations (`imgback` vs `image.src`)
 - CMS output silently mismatches component expectations
 - External consumers must reverse-engineer prop types from source code
@@ -52,15 +68,15 @@ Components can change how they look; the schema records what they carry.
 
 ## Schema inventory
 
-| Schema | Description | Implementing components |
-|--------|-------------|------------------------|
-| `card` | Content card with image, labels, title, summary, CTA | VerticalCard, HorizontalCard, BookCard, HorizontalBookCard, IconCard |
-| `statistic` | Key metrics display with icon, value, labels | StatsCard, StatsCardItem |
-| `quote` | Highlighted quote with attribution and image | QuoteHighlight |
-| `navigation` | Multi-level navigation with section banners | MegaMenu |
-| `share-action` | Social sharing buttons with localized labels | ShareButtons |
-| `gallery` | Media gallery (images, videos, embeds) | Gallery |
-| `text-cta` | Call-to-action banner with heading, text, buttons | TextCta |
+| Schema         | Description                                          | Implementing components                                              |
+| -------------- | ---------------------------------------------------- | -------------------------------------------------------------------- |
+| `card`         | Content card with image, labels, title, summary, CTA | VerticalCard, HorizontalCard, BookCard, HorizontalBookCard, IconCard |
+| `statistic`    | Key metrics display with icon, value, labels         | StatsCard, StatsCardItem                                             |
+| `quote`        | Highlighted quote with attribution and image         | QuoteHighlight                                                       |
+| `navigation`   | Multi-level navigation with section banners          | MegaMenu                                                             |
+| `share-action` | Social sharing buttons with localized labels         | ShareButtons                                                         |
+| `gallery`      | Media gallery (images, videos, embeds)               | Gallery                                                              |
+| `text-cta`     | Call-to-action banner with heading, text, buttons    | TextCta                                                              |
 
 ---
 
@@ -108,27 +124,57 @@ This is what a compiled schema file looks like. The full source is in
       "items": {
         "type": "object",
         "properties": {
-          "title":   { "type": "string", "description": "Card heading text" },
-          "summary": { "type": "string", "format": "html", "description": "Card body text (sanitized HTML supported)" },
-          "link":    { "type": "string", "format": "uri",  "description": "Primary URL for the card" },
+          "title": { "type": "string", "description": "Card heading text" },
+          "summary": {
+            "type": "string",
+            "format": "html",
+            "description": "Card body text (sanitized HTML supported)"
+          },
+          "link": {
+            "type": "string",
+            "format": "uri",
+            "description": "Primary URL for the card"
+          },
           "image": {
             "type": "object",
             "properties": {
-              "src": { "type": "string", "format": "uri", "description": "Image URL" },
-              "alt": { "type": "string", "description": "Alt text for the image. Use empty string for decorative images." }
+              "src": {
+                "type": "string",
+                "format": "uri",
+                "description": "Image URL"
+              },
+              "alt": {
+                "type": "string",
+                "description": "Alt text for the image. Use empty string for decorative images."
+              }
             },
             "required": ["src", "alt"]
           },
-          "labels":  { "type": "array", "items": { "type": "string" }, "maxItems": 2 },
-          "button":  { "type": "string", "description": "Button label text" },
-          "buttonType": { "type": "string", "enum": ["Primary", "Secondary"], "default": "Primary" }
+          "labels": {
+            "type": "array",
+            "items": { "type": "string" },
+            "maxItems": 2
+          },
+          "button": { "type": "string", "description": "Button label text" },
+          "buttonType": {
+            "type": "string",
+            "enum": ["Primary", "Secondary"],
+            "default": "Primary"
+          }
         },
         "required": ["title"]
       }
     },
     "variant": {
       "type": "string",
-      "enum": ["primary", "secondary", "tertiary", "quaternary", "default", "negative"],
+      "enum": [
+        "primary",
+        "secondary",
+        "tertiary",
+        "quaternary",
+        "default",
+        "negative"
+      ],
       "default": "primary"
     }
   },
@@ -136,7 +182,13 @@ This is what a compiled schema file looks like. The full source is in
   "x-mangrove": {
     "version": "2.0.0",
     "phase": 2,
-    "implementors": ["VerticalCard", "HorizontalCard", "BookCard", "HorizontalBookCard", "IconCard"],
+    "implementors": [
+      "VerticalCard",
+      "HorizontalCard",
+      "BookCard",
+      "HorizontalBookCard",
+      "IconCard"
+    ],
     "deviations": {}
   }
 }
@@ -207,7 +259,7 @@ schemas/
   ajv-setup.js            Shared AJV factory (createAjv) — use in tests and tooling
   *.schema.js             Schema source files (JS modules)
   build.js                Build script (JS → JSON)
-  dist/                   Compiled JSON schemas (gitignored, built by yarn build:schemas)
+  dist/                   Generated JSON schemas (seven versioned files on this proposal branch)
   __tests__/
     schemas.test.js       Validation tests for all schemas
 ```
@@ -228,4 +280,11 @@ automatically) and published to npm.
 
 ---
 
-<a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/ContentSchemas.mdx" target="_blank" rel="noopener noreferrer" aria-label="View source on GitHub (opens in new tab)">View source on GitHub</a>
+<a
+  href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/ContentSchemas.mdx"
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label="View source on GitHub (opens in new tab)"
+>
+  View source on GitHub
+</a>

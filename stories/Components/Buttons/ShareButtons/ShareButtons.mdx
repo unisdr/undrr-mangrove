@@ -33,60 +33,51 @@ export const getCaptionForLocale = locale => {
 
 <Meta of={ShareButtonsStories} />
 
-> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
 
 # ShareButtons
 
-A Widget with share buttons for social media
+> **Draft contract:** examples on this branch use the unmerged [schema phase-two proposal](?path=/docs/design-decisions-schema-phase-2-proposal--docs). Published 2.3.0 bundles retain their released prop names.
 
-### Overview
+A widget with share buttons for social media that open new tabs or copy the link to clipboard.
 
-This widget contains share buttons for social media that are clickable and each one of them opens a new tab with the link to the social media page.
-Also, there is an option to just copy the link to the clipboard, and generate a QR code for easy sharing.
+## Overview
 
-### Formatting
+Clickable share buttons for LinkedIn, Facebook, Twitter, Email, and QR code. Includes a copy-to-clipboard option and optional QR code modal with UTM parameters.
 
-#### default
+## Configuration
 
-default format is a list of share buttons for social media.
-default text body is: "Check out this link: " + automatically appending the link at the end
-default subject is: "Sharing Link"
+- **Default body**: "Check out this link: " + URL
+- **Default subject**: "Sharing Link"
+- Custom message body and subject can be configured
 
-#### Custom
+### Shortlink preference
 
-1. Format of the body of the message before the link
-2. Subject of the Message(only for Email)
-
-### Shortlink is favored
-
-The component will favor using a shortlink if a `<link rel="shortlink" href="{url here}" />` is present in the document. If no shortlink is available, it will default to using the full page URL.
+The component uses shortlinks when a `<link rel="shortlink" href="{url here}" />` is present. Defaults to the full page URL if unavailable.
 
 ## Behaviors
 
-The default Behaviors are:
+- Clicking a social button opens a new tab with the sharing link
+- Clicking the copy button copies the link to clipboard
+- Clicking the QR code button opens a native dialog with a labelled title and description. Focus stays in the dialog, Escape or either close button dismisses it, and focus returns to the QR code button. Clicking the backdrop also closes it. The dialog contains:
+  - QR code image
+  - URL with UTM tracking parameters
+  - Guidance text and copy, download, and close options
 
-1. Clicking on the button opens a new tab with the link to the social media page.
-   - LinkedIn
-   - Facebook
-   - Twitter
-   - Email
-   - QR Code (opens a modal with the QR code image)
-2. Clicking on the copy button copies the link to the clipboard.
-3. Clicking on the QR code button opens a modal displaying:
-   - The QR code image
-   - The URL with UTM tracking parameters
-   - Guidance text explaining how to use the QR code
-   - Options to copy the image or close the modal
+<Canvas
+  of={ShareButtonsStories.DefaultShareButtons}
+  meta={ShareButtonsStories}
+/>
 
-<Canvas of={ShareButtonsStories.DefaultShareButtons} meta={ShareButtonsStories} />
+## Usage
 
-### Usage
+Drop in and configure custom message if needed.
 
-Drop in and configure. custom message if needed
+On pages that also offer a citation, see the [Page actions pattern](?path=/docs/patterns-page-actions--docs) for placing ShareButtons beside [Cite this](?path=/docs/components-cite-this--docs).
 
-### Interactions
+## Interactions
 
-- The hover state is applied for each button when the mouse hovers over it.
+- Hover state applies to each button
 
 ## Server-rendered usage
 
@@ -95,12 +86,13 @@ ShareButtons supports hydration from server-rendered HTML using `createHydrator`
 The server renders a container with localized labels as data attributes:
 
 ```html
-<section data-mg-share-buttons
+<section
+  data-mg-share-buttons
   data-main-label="Share this"
   data-on-copy-label="Link copied"
   data-sharing-subject="Sharing Link"
-  data-sharing-body="Check out this link: ">
-</section>
+  data-sharing-body="Check out this link: "
+></section>
 ```
 
 The client script mounts the React component in three lines:
@@ -108,18 +100,49 @@ The client script mounts the React component in three lines:
 ```js
 import createHydrator from './hydrate.js';
 import ShareButtons, { fromElement } from './ShareButtons.js';
-createHydrator({ selector: '[data-mg-share-buttons]', component: ShareButtons, fromElement });
+createHydrator({
+  selector: '[data-mg-share-buttons]',
+  component: ShareButtons,
+  fromElement,
+});
 ```
 
-`fromElement` extracts labels and sharing config from data attributes, with sensible English defaults for any missing attributes.
+`fromElement` extracts language, label overrides and sharing config from data attributes. Missing UI labels use the selected catalogue; without a language, the existing English hydration defaults remain.
 
-See the [Hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
+See the [Hydration guide](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
+
+## Runtime UI translations
+
+Use `lang` for built-in copy and `labels` for individual overrides. The
+[shared translation guide](?path=/docs/contributing-ui-translations--docs)
+explains language matching, fallback, direction and hydration precedence.
+
+`components/ShareButtons.js` exports `getShareButtonsLabels(lang, labels)`
+for consumers needing the same strings outside React.
+
+Hydration without a language retains its prior `Share this` / `Link copied`
+fallback labels. Supplying a language uses that runtime catalogue. The QR dialog
+receives the share row's language and direction.
 
 ## Changelog
 
-- **2.0.0** — 2026-03-29: **Breaking.** Prop renames to align with canonical share-action schema ([#884](https://github.com/unisdr/undrr-mangrove/issues/884)): `SharingSubject` → `sharingSubject`; `SharingTextBody` → `sharingBody`. `fromElement` bridge is updated — Drupal data attributes unchanged. See [migration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/MIGRATION-SCHEMA-V2.md).
-- **1.4** — 2026-03-03: Added hydration support with `fromElement` prop extraction and `createHydrator` integration
-- **1.3** — 2026-02-09: Migrated icon classes from `fa-*` to `mg-icon-*` namespace
-- **1.2** — 2025-08-06: Added QR code sharing with responsive modal, UTM tracking, copy-to-clipboard, and keyboard navigation
-- **1.1** — 2024-10-15: Added shortlink support, Web Share API, updated Twitter to X icon, revised icon order and appearance
-- **1.0** — 2023-10-02: Released component
+- **Unreleased, draft schema proposal:** Adopt the schema-aligned input documented in [the migration proposal](?path=/docs/design-decisions-schema-phase-2-proposal--docs), preserving current rendering, accessibility and language handling.
+
+- **1.11**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance.
+
+- **1.10**, 2026-09-25: Replaced the custom QR overlay with a native dialog. It now has an accessible name and description, browser-managed modal focus and Escape handling, and focus restoration to the QR trigger. Moved dialog styling to themeable tokens and reused the shared close icon button while retaining translated labels, QR copy and download actions, and backdrop dismissal.
+
+- **1.9**, 2026-09-09 ([#1105](https://github.com/unisdr/undrr-mangrove/issues/1105)): Quiet, unfilled sharing icons and a neutral URL-copy surface replace competing primary-button fills; hover uses a subtle neutral tint. Theme text colours and button radii remain in control; the share row wraps at narrow widths, long URLs and translated feedback wrap at readable text size, and keyboard focus and reduced-motion behaviour are consistent.
+
+- **1.8.1**, 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to share-button text whose own language is not Arabic.
+- **1.8**, 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Removed redundant per-language Storybook exports; the default story already switches all six translated label sets and Arabic direction through the global locale toolbar.
+
+- **1.7**, 2026-06-19 ([mangrove#1056](https://github.com/unisdr/undrr-mangrove/pull/1056)): Locale wiring extended from 2 keys/3 locales to 15 keys/6 locales. `_labels.js` provides `LABELS_ES/FR/JA/ZH/AR/RU`; locale toolbar now switches all translated strings in stories. Backwards compatible: `DEFAULT_SHARE_LABELS` covers all keys. Co-located `_labels.js` provides `LABELS_ES/FR/JA/ZH/AR/RU`; locale toolbar now switches translated strings in all stories.
+
+- **1.6**, 2026-05-11: Declared PropTypes for `ShareButtons`, `QRCodeModal`, and `CopyButton`, so the AI manifest documents the prop contracts. No runtime change.
+- **1.5**, 2026-04-09: Fixed invalid `alt` attribute on icon `<span>`: replaced with `aria-hidden="true"` (WCAG 4.1.2)
+- **1.4**, 2026-03-03: Added hydration support with `fromElement` prop extraction and `createHydrator` integration
+- **1.3**, 2026-02-09: Migrated icon classes from `fa-*` to `mg-icon-*` namespace
+- **1.2**, 2025-08-06: Added QR code sharing with responsive modal, UTM tracking, copy-to-clipboard, and keyboard navigation
+- **1.1**, 2024-10-15: Added shortlink support, Web Share API, updated Twitter to X icon, revised icon order and appearance
+- **1.0**, 2023-10-02: Released component

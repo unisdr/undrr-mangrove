@@ -1,17 +1,23 @@
+import { languageFromElement, labelsFromElement } from '../../../src/i18n';
 /**
  * Extract SyndicationSearchWidget config from a DOM container.
  *
  * SyndicationSearchWidget is a complex-tier component: most config values
  * have sensible defaults, so only attributes explicitly set on the container
- * are included. Consumer wrappers (Layer 3) can merge additional config
- * (customFacets, customFilters, etc.) that is too complex for data attributes.
+ * are included.
  */
 export default function syndicationSearchWidgetFromElement(container) {
   const { dataset } = container;
   const config = {};
 
   // Simple string/number props
+  // `data-search-endpoint` is the consumer-facing half of the widget's trust
+  // boundary: ResultItem renders the response HTML unescaped so Elasticsearch
+  // highlight markup survives, so whatever this attribute points at is trusted
+  // to return safe HTML. See the note at the top of components/ResultItem.jsx.
   if (dataset.searchEndpoint) config.searchEndpoint = dataset.searchEndpoint;
+  if (dataset.taxonomyEndpoint)
+    config.taxonomyEndpoint = dataset.taxonomyEndpoint;
   if (dataset.resultsPerPage)
     config.resultsPerPage = parseInt(dataset.resultsPerPage, 10);
   if (dataset.debounceDelay)
@@ -24,6 +30,10 @@ export default function syndicationSearchWidgetFromElement(container) {
   if (dataset.gridColumns)
     config.gridColumns = parseInt(dataset.gridColumns, 10);
   if (dataset.queryAppend) config.queryAppend = dataset.queryAppend;
+  if (dataset.facetsTarget) config.facetsTarget = dataset.facetsTarget;
+  if (dataset.searchTarget) config.searchTarget = dataset.searchTarget;
+  if (dataset.analyticsRegionPrefix)
+    config.analyticsRegionPrefix = dataset.analyticsRegionPrefix;
 
   // Boolean props (only set if explicitly present)
   if (dataset.showSearchBox !== undefined)
@@ -32,6 +42,13 @@ export default function syndicationSearchWidgetFromElement(container) {
     config.showResultsCount = dataset.showResultsCount !== 'false';
   if (dataset.showFacets !== undefined)
     config.showFacets = dataset.showFacets !== 'false';
+  // New union prop for facets layout: 'false' | 'sidebar' | 'horizontal'.
+  // Drupal data attributes always arrive as strings, so the literal string
+  // 'false' is mapped to the boolean false; other values pass through and
+  // are validated by the resolver in utils/constants.js.
+  if (dataset.facets !== undefined) {
+    config.facets = dataset.facets === 'false' ? false : dataset.facets;
+  }
   if (dataset.showActiveFilters !== undefined)
     config.showActiveFilters = dataset.showActiveFilters !== 'false';
   if (dataset.showPager !== undefined)
@@ -40,8 +57,19 @@ export default function syndicationSearchWidgetFromElement(container) {
     config.showSearchMetrics = dataset.showSearchMetrics === 'true';
   if (dataset.showSearchTimer !== undefined)
     config.showSearchTimer = dataset.showSearchTimer === 'true';
-  if (dataset.enableHashSync !== undefined)
-    config.enableHashSync = dataset.enableHashSync !== 'false';
+  // enableHashSync supports a tri-state: boolean true/false, or the string
+  // 'auto' (default), which lets the Drupal wrapper auto-disable hash sync
+  // when more than one widget is mounted on the same page. Collapsing to a
+  // bool would lose that signal, so preserve 'auto' as the literal string.
+  // The useHashSync hook recognises both boolean true and the string 'true',
+  // so non-'auto' values can safely collapse to booleans.
+  if (dataset.enableHashSync !== undefined) {
+    if (dataset.enableHashSync === 'auto') {
+      config.enableHashSync = 'auto';
+    } else {
+      config.enableHashSync = dataset.enableHashSync !== 'false';
+    }
+  }
   if (dataset.requireImage !== undefined)
     config.requireImage = dataset.requireImage === 'true';
 
@@ -74,6 +102,38 @@ export default function syndicationSearchWidgetFromElement(container) {
       /* ignore malformed JSON */
     }
   }
+  if (dataset.customFilters) {
+    try {
+      config.customFilters = JSON.parse(dataset.customFilters);
+    } catch {
+      /* ignore malformed JSON */
+    }
+  }
+  if (dataset.customFacets) {
+    try {
+      config.customFacets = JSON.parse(dataset.customFacets);
+    } catch {
+      /* ignore malformed JSON */
+    }
+  }
+  if (dataset.visibleTeaserFields) {
+    try {
+      config.visibleTeaserFields = JSON.parse(dataset.visibleTeaserFields);
+    } catch {
+      /* ignore malformed JSON */
+    }
+  }
 
-  return { config };
+  // Server-rendered results to keep on screen until the first client results
+  // commit. Captured now, before React's first commit empties the container.
+  const ssrResults = container.querySelector('[data-mg-search-ssr]');
+  if (ssrResults) config.ssrResults = ssrResults;
+
+  const labels = labelsFromElement(container);
+
+  return {
+    config,
+    ...(labels ? { labels } : {}),
+    ...languageFromElement(container),
+  };
 }

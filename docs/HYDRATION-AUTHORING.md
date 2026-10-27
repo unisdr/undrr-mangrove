@@ -1,12 +1,14 @@
 # Adding hydration support
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION-AUTHORING.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-hydration--docs).
+> Edits to this file show up on both [GitHub](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION-AUTHORING.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-hydration--docs).
 
-How to add layered hydration support to a Mangrove component so it can be rendered into server-generated HTML containers. For how consumers use hydrated components, see the [Hydration guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-hydration-guide--docs).
+How to add layered hydration support so a Mangrove component can render into
+server-generated HTML containers. For consumer usage, see the
+[Hydration guide](https://mangrove.undrr.org/?path=/docs/getting-started-integration-hydration-guide--docs).
 
 ## Quick reference
 
-To add hydration support to a component, you create **3 files** in Mangrove and update **1 config**:
+Add hydration support by creating **3 files** and updating **1 config**:
 
 ```
 ComponentName/
@@ -22,11 +24,70 @@ ComponentName/
 ComponentName: './stories/Components/ComponentName/ComponentName.hydrate.js',
 ```
 
+### Rendering your own marker
+
+A component may render the same `data-mg-*` marker its hydration selector
+matches — `SyndicationSearchWidget` renders `data-mg-search-widget` on its root
+so its pager can find the widget to scroll to. That is allowed: `createHydrator`
+skips a match that sits inside a hydrated container the same selector matches,
+so a re-scan cannot mount a second copy into your own output
+([#1227](https://github.com/unisdr/undrr-mangrove/issues/1227)).
+
+The skip is scoped to your own selector, not to every hydrated container.
+`ScrollContainer` and `Drawer` read the consumer's markup in their
+`fromElement` and re-emit it through `dangerouslySetInnerHTML`, so another
+component's hydration host nested inside one must still hydrate — a scrolling
+row of hydrated cards is `ScrollContainer`'s canonical use, and on Drupal that
+nested markup is author-entered.
+
+Two things follow for an author:
+
+- If your component re-emits consumer markup, do not also render your own
+  hydration marker into it. The runtime cannot tell the two apart, and a
+  container of your own kind nested inside one of yours will not hydrate.
+- If your component clears its container and renders only markup it wrote, a
+  self-identifying root marker is a reasonable convention and the runtime
+  tolerates it.
+
+`createHydrator` is not the only auto-init mechanism with this shape. The
+vanilla runtimes in `stories/assets/js/` scan for their own `data-mg-*`
+markers, and six React components render those markers into their own output:
+`ShowMore.jsx` (`data-mg-show-more`), `Tab.jsx` (`data-mg-js-tabs`),
+`TableOfContents.jsx` (`data-mg-table-of-contents`), `OnThisPageNav.jsx`
+(`data-mg-on-this-page-nav`), `PreviewAccess.jsx` (`data-mg-preview-access`) and
+`HubHeader.jsx` (`data-mg-js-hub-header`, with `data-mg-hub-header-skip-auto-init`
+so its own effect initialises and releases it).
+Those are safe because each runtime records which elements it has already
+initialised and returns early on a second pass. Five of them write a per-element
+`…Initialized` dataset flag (`mgShowMoreInitialized`,
+`mgTableOfContentsInitialized`, `mgOnThisPageNavInitialized`,
+`mgPreviewAccessInitialized`, `mgJsHubHeaderInitialized`); `tabs.js` instead keys two module-scope
+`WeakMap`s on the container and checks them in `isInitialised()`. A new vanilla
+runtime needs one or the other. Prefer the dataset flag: it survives a second
+copy of the runtime on the page, which a module-scope `WeakMap` does not.
+
+`drawer.js` is the current worked example. It marks each enhanced container
+with `data-mg-js-drawer-initialized` and skips anything already carrying it, so
+`mgDrawer(scope)` can be called again after inserting markup without binding a
+second set of listeners. It keeps its handles in a `WeakMap` under a
+`Symbol.for('@undrr/mangrove/drawer@1')` registry as well, so a second copy of
+the module can still destroy an instance the first one created — the dataset
+flag is what makes the two copies agree, and the shared registry is what lets
+either of them clean up.
+
+A runtime with a marker of its own also needs to keep clear of the hydration
+selector for the same component. `Drawer` has both paths: the React hydrator
+matches `[data-mg-drawer]` and the vanilla module matches `[data-mg-js-drawer]`.
+Two markers, so a container is driven by one path or the other and never both.
+Reusing one marker for both would leave no way to tell which lifecycle a
+container asked for.
+
 ---
 
 ## Step-by-step walkthrough
 
-This walks through adding hydration to a hypothetical `AlertBanner` component that accepts `message`, `variant`, and `dismissible` props.
+Example below uses a hypothetical `AlertBanner` with `message`, `variant`, and
+`dismissible` props.
 
 ### 1. Write fromElement
 
@@ -47,8 +108,21 @@ export default function alertBannerFromElement(container) {
 
 - **Export a named default function.** The name should be `{componentName}FromElement` for grep-ability.
 - **Use `container.dataset`** for data attributes. The browser auto-converts `data-my-prop` to `dataset.myProp`.
-- **Provide defaults for every optional prop.** The function must return a valid props object even when every attribute is missing.
-- **Keep it pure.** No side effects, no DOM mutation, no API calls. This function is called _before_ the container is cleared.
+- **Return valid props when attributes are absent.** Let the component supply defaults where appropriate. In particular, omit missing label overrides so the selected language catalogue can supply them.
+- **Keep extraction read-only.** Do not make API calls or introduce DOM mutations. This function runs _before_ the container is cleared. ServiceNotice has an established compatibility exception: it consumes and removes legacy `mg-notice--compact` / `mg-notice--overlay` host classes so the hydration container is not styled as a second notice. Prefer its `data-is-compact` / `data-is-overlay` attributes in new markup; do not copy that cleanup into unrelated adapters.
+
+For components with a built-in label catalogue, spread
+`languageFromElement(container)` from `src/i18n.js` into the returned props. It
+selects `data-lang` before the nearest HTML `lang`, including the container
+itself, and preserves empty boundaries. Read from the container's own tree,
+never from global `document.documentElement`. The helper also forwards a valid
+`dir` attribute from the container itself, allowing that explicit direction to
+override the catalogue's inferred direction; it does not copy ancestor `dir`
+or read `data-dir`. Existing label attributes remain
+explicit overrides; do not fill them with English text when absent. Test local,
+ancestor, nested and unsupported languages alongside existing label attributes.
+See [UI translations](UI-TRANSLATIONS.md) for direction, React rendering and the
+boundary between hydration and separate vanilla JavaScript modules.
 
 ### 2. Create the barrel file
 
@@ -59,7 +133,8 @@ export { default } from './AlertBanner.jsx';
 export { default as fromElement } from './AlertBanner.fromElement.js';
 ```
 
-This lets the built bundle (`dist/components/AlertBanner.js`) export both the component and `fromElement` from a single import.
+This makes the built bundle (`dist/components/AlertBanner.js`) export both the
+component and `fromElement` from one import path.
 
 **If the component uses a named export instead of default:**
 
@@ -80,7 +155,7 @@ Change the component's entry point from the `.jsx` to the `.hydrate.js` barrel:
  },
 ```
 
-Existing named exports are preserved — the barrel re-exports everything the component did.
+Existing named exports are preserved through the barrel.
 
 ### 4. Write tests
 
@@ -172,7 +247,7 @@ dismissible: dataset.dismissible === 'true',
 resultsPerPage: dataset.resultsPerPage ? parseInt(dataset.resultsPerPage, 10) : 50,
 ```
 
-### JSON arrays
+### JSON arrays (with fallback)
 
 ```js
 try {
@@ -182,7 +257,7 @@ try {
 }
 ```
 
-### Optional props (undefined when absent)
+### Optional props (`undefined` when absent)
 
 ```js
 // Only include if explicitly set — lets the component use its own default
@@ -202,10 +277,10 @@ if (contentWrapper) {
 
 ---
 
-## Related documentation
+## Related docs
 
 - [Component guide](COMPONENT-GUIDE.md) — step-by-step tutorial for building a component
 - [Review checklist](REVIEW-CHECKLIST.md) — pre-submission component checklist
-- [Hydration guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-hydration-guide--docs) — consumer-facing guide for using hydrated components
+- [Hydration guide](https://mangrove.undrr.org/?path=/docs/getting-started-integration-hydration-guide--docs) — consumer-facing guide for using hydrated components
 - [Architecture](ARCHITECTURE.md) — build system and distribution channels
-- [Component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) — code standards reference
+- [Component standards](https://mangrove.undrr.org/?path=/docs/contributing-component-standards--docs) — code standards reference

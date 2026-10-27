@@ -1,9 +1,12 @@
 import React from 'react';
+import { expect, userEvent, within } from 'storybook/test';
 
 export default {
   title: 'Components/Tag',
   parameters: {
     docs: {
+      // CSS only: "Show code" shows the rendered HTML.
+      source: { html: true },
       description: {
         component:
           'A compact tag used to categorise content (content type, country, theme, etc.). ' +
@@ -79,7 +82,7 @@ export const Accent = {
   render: () => (
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
       <span className="mg-tag mg-tag--accent">Featured</span>
-      <span className="mg-tag mg-tag--accent">Urgent</span>
+      <span className="mg-tag mg-tag--accent">Spotlight</span>
       <a href="#" className="mg-tag mg-tag--accent">
         Highlighted
       </a>
@@ -87,7 +90,86 @@ export const Accent = {
   ),
 };
 
+export const Subtle = {
+  render: () => (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+      <span className="mg-tag mg-tag--subtle">Reference</span>
+      <span className="mg-tag mg-tag--subtle">Internal draft</span>
+      <span className="mg-tag mg-tag--subtle">Archived 2024</span>
+    </div>
+  ),
+};
+
+export const Badges = {
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '8px',
+          alignItems: 'center',
+        }}
+      >
+        <strong style={{ minWidth: '110px' }}>Standard</strong>
+        <span className="mg-badge">Verified</span>
+        <span className="mg-badge">Official</span>
+        <span className="mg-badge">v2.0</span>
+      </div>
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '8px',
+          alignItems: 'center',
+        }}
+      >
+        <strong style={{ minWidth: '110px' }}>Format badges</strong>
+        <span className="mg-badge mg-badge--code">PDF</span>
+        <span className="mg-badge mg-badge--code">JSON</span>
+        <span className="mg-badge mg-badge--code">CSV</span>
+        <span className="mg-badge mg-badge--code">SVG</span>
+      </div>
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '8px',
+          alignItems: 'center',
+        }}
+      >
+        <strong style={{ minWidth: '110px' }}>Code tags</strong>
+        <span className="mg-tag mg-tag--code">API v2</span>
+        <span className="mg-tag mg-tag--code">schema.org</span>
+      </div>
+    </div>
+  ),
+  name: 'Badges and format tags',
+};
+
 export const AllVariants = {
+  play: async ({ canvasElement }) => {
+    const tags = [...canvasElement.querySelectorAll('.mg-tag')];
+    for (let index = 0; index < tags.length; index += 2) {
+      const label = tags[index];
+      const link = tags[index + 1];
+      expect(label.getBoundingClientRect().height).toBe(
+        link.getBoundingClientRect().height
+      );
+      for (const property of [
+        'display',
+        'padding',
+        'minWidth',
+        'minHeight',
+        'lineHeight',
+        'borderWidth',
+      ]) {
+        expect(getComputedStyle(label)[property]).toBe(
+          getComputedStyle(link)[property]
+        );
+      }
+    }
+  },
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
       <div
@@ -167,7 +249,7 @@ export const TagContainer = {
       </div>
       <div>
         <p style={{ margin: '0 0 8px', fontWeight: 'bold' }}>
-          Drupal migration — existing markup structure:
+          Drupal migration (existing markup structure):
         </p>
         <div className="mg-tag-container">
           <a href="/taxonomy/term/123">Earthquake</a>
@@ -199,4 +281,52 @@ export const InContext = {
     </div>
   ),
   name: 'In context',
+};
+
+export const ReflowAndLanguages = {
+  name: 'Reflow and languages',
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const link = canvas.getByRole('link', {
+      name: 'Disaster risk reduction and climate adaptation',
+    });
+    const group = link.parentElement;
+    // A real browser catches CSS cascade and sizing failures that jsdom cannot.
+    expect(getComputedStyle(link).backgroundColor).toBe('rgba(0, 0, 0, 0)');
+    expect(group.scrollWidth).toBeLessThanOrEqual(group.clientWidth);
+    for (const destination of canvas.getAllByRole('link')) {
+      expect(destination.getBoundingClientRect().height).toBeGreaterThanOrEqual(
+        24
+      );
+      expect(destination.getBoundingClientRect().width).toBeGreaterThanOrEqual(
+        24
+      );
+    }
+    const label = canvas.getByText('Research');
+    const background = getComputedStyle(label).backgroundColor;
+    await userEvent.hover(label);
+    expect(getComputedStyle(label).backgroundColor).toBe(background);
+    await userEvent.unhover(label);
+    await userEvent.tab();
+    await expect(link).toHaveFocus();
+    expect(getComputedStyle(link).outlineStyle).not.toBe('none');
+  },
+  render: () => (
+    <div style={{ maxWidth: '280px', display: 'grid', gap: '24px' }}>
+      <div className="mg-tag-container">
+        <span className="mg-tag mg-tag--secondary">Research</span>
+        <a href="#topic" className="mg-tag mg-tag--outline">
+          Disaster risk reduction and climate adaptation
+        </a>
+        <a href="#identifier">Averylongunbrokentaxonomyidentifierforreflow</a>
+      </div>
+      <div className="mg-tag-container" lang="ar" dir="rtl">
+        <span>الحد من مخاطر الكوارث</span>
+        <a href="#warning">الإنذار المبكر</a>
+        <a href="#climate" className="mg-tag mg-tag--outline">
+          التكيف مع تغير المناخ
+        </a>
+      </div>
+    </div>
+  ),
 };

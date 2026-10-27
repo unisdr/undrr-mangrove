@@ -3,7 +3,7 @@ import * as TagStories from './Tag.stories';
 
 <Meta of={TagStories} />
 
-> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
 
 # Tag
 
@@ -22,8 +22,14 @@ A compact label used to categorise content by type, country, theme, or other tax
 
 <!-- Variants -->
 <span class="mg-tag mg-tag--secondary">Metadata</span>
-<span class="mg-tag mg-tag--outline">Subtle</span>
+<span class="mg-tag mg-tag--outline">Outline</span>
 <span class="mg-tag mg-tag--accent">Featured</span>
+
+<!-- Non-interactive subtle badges & format tags -->
+<span class="mg-tag mg-tag--subtle">Reference</span>
+<span class="mg-badge">Verified</span>
+<span class="mg-badge mg-badge--code">JSON</span>
+<span class="mg-badge mg-badge--code">PDF</span>
 
 <!-- Container (auto-styles children) -->
 <div class="mg-tag-container">
@@ -34,29 +40,32 @@ A compact label used to categorise content by type, country, theme, or other tax
 
 ### Theming
 
-The background color can be overridden per site theme using CSS custom properties:
+Tag keeps the shared `ui` font role and theme-owned colours. Its default radius is now 4px; sub-brand radius overrides remain in control. Tags are taxonomy metadata: use Chips for actions or removable filters and StatusLabel for workflow states.
+
+In v2, customise runtime CSS properties on the relevant theme or wrapper. Colour tokens contain RGB channels; the legacy `--tag-color-background*` hooks accept complete CSS colours and remain supported.
 
 ```css
-:root {
+.my-theme {
+  --mg-radius-tag: 0.25rem;
+  --mg-color-tag: 31 105 179;
+  --mg-color-tag--hover: 20 74 122;
+}
+
+/* Existing site overrides still work. Check text contrast for custom colours. */
+.my-theme {
   --tag-color-background: #1f69b3;
   --tag-color-background-hover: #144a7a;
   --tag-color-background-secondary: #666;
   --tag-color-background-secondary-hover: #4d4d4d;
-  --tag-color-background-accent: #eb752a;
-  --tag-color-background-accent-hover: #ed833f;
+  --tag-color-background-accent: #333;
+  --tag-color-background-accent-hover: #262626;
   --tag-color-background-outline-hover: #e6edf4;
 }
 ```
 
-Or via SCSS variables before importing the stylesheet:
+> **Note:** `--tag-color-background-accent` still sets the accent chip's fill, but the accent label is now `--mg-color-text` (dark). A dark fill such as the `#333` above will not meet AA against it. Pick a light fill, or set `--mg-tag-foreground` alongside it.
 
-```scss
-$mg-color-tag: #1f69b3;
-$mg-color-tag--hover: #144a7a;
-$mg-color-tag-secondary: #666;
-$mg-color-tag-accent: #eb752a;
-$mg-radius-tag: 4px;
-```
+The old `$mg-color-tag*` and `$mg-radius-tag` Sass override examples are superseded by the runtime properties above. No HTML migration or JavaScript is required. Tags occupy slightly more space; all tags share a compact 28px minimum height so adding a link does not change geometry and long labels wrap rather than clip. Use `.mg-tag-container` for wrapping groups with consistent spacing.
 
 ## Examples
 
@@ -66,7 +75,7 @@ $mg-radius-tag: 4px;
 
 ### As link
 
-Tags rendered as `<a>` elements gain a hover background transition.
+Anchors with `href` have an underlined hover state, a visible keyboard focus ring and a minimum 24px-wide target. Static tags and anchors without `href` have no hover feedback. Transitions run only when reduced motion is not requested.
 
 <Canvas of={TagStories.AsLink} />
 
@@ -84,9 +93,23 @@ Border-only tags for a lightweight appearance.
 
 ### Accent
 
-Orange tags for featured or highlighted content.
+Theme-coloured tags for featured content; the base theme uses a dark neutral. These do not convey urgency or workflow status.
+
+**Contrast:** the orange accent carries no text, so `--accent` wears it as its edge rather than its fill. The chip is `orange-50` (`orange-100` on hover) with a `--mg-color-text` label at 15.7:1, and the Sendai orange is the border, thickened on the leading edge. An orange rule is 2.95 on white and 2.66 on `orange-50`, under the 3:1 of SC 1.4.11, so the border is emphasis and never the chip's only boundary — the fill and the label carry that. The border colour is held steady on hover: the fill steps from `orange-50` to `orange-100` and the label underlines instead. See [the colour contrast methodology](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text) for the measurements.
 
 <Canvas of={TagStories.Accent} />
+
+### Subtle
+
+Neutral subtle variant (`.mg-tag--subtle`) for secondary, non-interactive taxonomy notes and metadata.
+
+<Canvas of={TagStories.Subtle} />
+
+### Badges and format tags
+
+Compact non-interactive pills (`.mg-badge`) for verified states and monospace format tags (`.mg-badge--code`, `.mg-tag--code`) for file extensions and technical identifiers.
+
+<Canvas of={TagStories.Badges} />
 
 ### All variants
 
@@ -104,26 +127,43 @@ The `.mg-tag-container` class auto-styles direct child elements (`span`, `div`, 
 
 ## CSS class reference
 
-| Class | Description |
-|-------|-------------|
-| `.mg-tag` | Base tag element (`<span>` or `<a>`) |
-| `.mg-tag--secondary` | Neutral gray variant for de-emphasised tags |
-| `.mg-tag--outline` | Border-only variant with transparent background |
-| `.mg-tag--accent` | Orange variant for featured/highlighted content |
-| `.mg-tag-container` | Wrapper that auto-styles direct children as tags |
+| Class                | Description                                      |
+| -------------------- | ------------------------------------------------ |
+| `.mg-tag`            | Base tag element (`<span>` or `<a>`)             |
+| `.mg-tag--secondary` | Neutral gray variant for de-emphasised tags      |
+| `.mg-tag--outline`   | Border-only variant with transparent background  |
+| `.mg-tag--accent`    | Theme-owned accent variant for featured content  |
+| `.mg-tag--subtle`    | Neutral subtle variant for non-interactive data  |
+| `.mg-badge`          | Compact non-interactive metadata badge pill      |
+| `.mg-badge--code`    | Monospace uppercase format badge (PDF, JSON)     |
+| `.mg-tag-container`  | Wrapper that auto-styles direct children as tags |
 
 ## Design tokens
 
-| Token | Default | Description |
-|-------|---------|-------------|
-| `$mg-color-tag` | `$mg-color-interactive` (blue-900) | Default background |
-| `$mg-color-tag--hover` | `$mg-color-interactive-active` (blue-700) | Default hover background |
-| `$mg-color-tag-secondary` | `$mg-color-neutral-500` (#666) | Secondary background |
-| `$mg-color-tag-secondary--hover` | `$mg-color-neutral-600` (#4d4d4d) | Secondary hover background |
-| `$mg-color-tag-accent` | `$mg-color-orange-900` (#eb752a) | Accent background |
-| `$mg-color-tag-accent--hover` | `$mg-color-orange-800` (#ed833f) | Accent hover background |
-| `$mg-radius-tag` | `0` | Border radius |
+| Token                                                         | Purpose                                                                     |
+| ------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| `--mg-color-tag`, `--mg-color-tag--hover`                     | Default fill / linked hover fill (RGB channels)                             |
+| `--mg-color-tag-secondary`, `--mg-color-tag-secondary--hover` | Metadata fill / linked hover fill                                           |
+| `--mg-color-tag-accent`                                       | Featured border, held steady across states (not the fill)                   |
+| `--mg-color-tag-accent--hover`                                | Not read by anything; setting it has no effect, and it is due to be retired |
+| `--mg-radius-tag`                                             | Theme-owned radius (base: 4px)                                              |
+| `--mg-font-family-ui`                                         | Compact label typography, with central script routing                       |
+| `--mg-color-focus-ring`                                       | Linked keyboard focus ring                                                  |
+
+### Reflow and languages
+
+Container children and individually classed tags share the same styling. Explicit modifiers still apply inside the container. Long taxonomy terms wrap, including unbroken identifiers; spacing follows the writing direction.
+
+<Canvas of={TagStories.ReflowAndLanguages} />
 
 ## Changelog
 
-- **1.0** — 2026-02-26: Initial release; replaces legacy `.st-tag--spl` class with Mangrove-native BEM pattern, hover state, `--secondary`/`--outline`/`--accent` variants, and `.mg-tag-container` for auto-styling children
+- **1.4.0**, 2026-09-18 ([#1249](https://github.com/unisdr/undrr-mangrove/pull/1249)): Fixes [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196). `.mg-tag--accent` no longer sets a white label on the orange accent (2.95 resting, 2.65 on hover). The chip is `orange-50`, hover `orange-100`, with a `--mg-color-text` label at 15.7:1, and the Sendai orange moves to the border with a 4px leading edge. `--mg-color-tag-accent` keeps its value and now paints that border, held steady across states; `--mg-color-tag-accent--hover` is `orange-800`, lighter than the resting `orange-900`, so swapping it in on hover would have dropped the rule to 2.15 on the darker fill. The hover is the fill step and the label's underline. This is a visible change wherever `--accent` is used, in all five themes. A theme overriding `--tag-color-background-accent` with a dark fill should set `--mg-tag-foreground` too.
+- **1.3.1**, 2026-09-18 ([#1198](https://github.com/unisdr/undrr-mangrove/pull/1198)): Documented that `--accent` paints a white label on the orange accent, which no text colour clears at any size, and that the variant is decorative emphasis. No colour changed; removal is tracked in [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196).
+- **1.3.0**, 2026-09-16 ([#1157](https://github.com/unisdr/undrr-mangrove/pull/1157)): Added `.mg-tag--subtle` and `.mg-badge` for non-interactive secondary metadata, along with monospace uppercase format badge variants (`.mg-badge--code`, `.mg-tag--code`) for technical extensions (PDF, JSON, SVG).
+- **1.2.0**, 2026-09-09 ([#1105](https://github.com/unisdr/undrr-mangrove/issues/1105)): Refreshed v2 spacing/geometry and aligned auto-styled tags with UI font/modifier rules. Added stronger focus/forced-colour handling for links, disabled hover treatment on static tags, and improved RTL/long-label wrapping behavior.
+
+- **1.1.2**, 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic tag typography now follows the `ui` font role (`Noto Sans Arabic`), and the component-level `:lang(ar)` override was removed. Latin rendering is unchanged.
+- **1.1.1**, 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a tag whose own language is not Arabic.
+- **1.1**, 2026-04-13: `.mg-tag` now uses `$mg-font-family-headings` (Roboto Condensed) and a matching `:lang(ar)` override to `$mg-font-family-arabic-headings`. Brings tags into alignment with the wider compact-UI-label font treatment.
+- **1.0**, 2026-02-26: Initial release; replaces legacy `.st-tag--spl` class with Mangrove-native BEM pattern, hover state, `--secondary`/`--outline`/`--accent` variants, and `.mg-tag-container` for auto-styling children

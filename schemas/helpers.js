@@ -48,7 +48,9 @@ export function imageObject(opts = {}) {
     description: opts.description || 'Image with source URL and alt text',
     properties: {
       src: urlField('Image URL'),
-      alt: textField('Alt text for the image. Use empty string ("") for decorative images that convey no information.'),
+      alt: textField(
+        'Alt text for the image. Use empty string ("") for decorative images that convey no information.'
+      ),
     },
     required: ['src', 'alt'],
   };
@@ -61,14 +63,16 @@ export function imageObject(opts = {}) {
  */
 export function linkAction(opts = {}) {
   const properties = {
-    label: textField('Display text for the link or button. Must be descriptive in isolation — avoid generic text like "Read more" or "Click here" without context.'),
+    label: textField(
+      'Display text for the link or button. Must be descriptive in isolation — avoid generic text like "Read more" or "Click here" without context.'
+    ),
     url: urlField('Target URL'),
   };
 
   if (opts.withType) {
     properties.type = enumField(
       ['Primary', 'Secondary'],
-      'Visual style of the button',
+      'Visual style of the button'
     );
   }
 

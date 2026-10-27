@@ -1,16 +1,27 @@
+import { getLanguageProps } from '../../../src/i18n';
+import { getScrollContainerLabels } from './_labels';
+export { getScrollContainerLabels } from './_labels';
+export { DEFAULT_SCROLL_LABELS } from './_labels';
 import React, { useRef, useEffect, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 // Separate arrow buttons component
 const ArrowButtons = React.memo(
-  ({ onScroll, leftButtonRef, rightButtonRef }) => {
+  ({
+    onScroll,
+    leftButtonRef,
+    rightButtonRef,
+    navigationLabel,
+    scrollLeftLabel = 'Scroll left',
+    scrollRightLabel = 'Scroll right',
+  }) => {
     return (
-      <nav className="mg-scroll__nav">
+      <nav className="mg-scroll__nav" aria-label={navigationLabel}>
         <button
           ref={leftButtonRef}
           className="mg-scroll__nav-button"
           onClick={() => onScroll('left')}
-          aria-label="Scroll left"
+          aria-label={scrollLeftLabel}
         >
           ←
         </button>
@@ -18,7 +29,7 @@ const ArrowButtons = React.memo(
           ref={rightButtonRef}
           className="mg-scroll__nav-button"
           onClick={() => onScroll('right')}
-          aria-label="Scroll right"
+          aria-label={scrollRightLabel}
         >
           →
         </button>
@@ -31,20 +42,35 @@ ArrowButtons.propTypes = {
   onScroll: PropTypes.func.isRequired,
   leftButtonRef: PropTypes.object.isRequired,
   rightButtonRef: PropTypes.object.isRequired,
+  navigationLabel: PropTypes.string.isRequired,
+  scrollLeftLabel: PropTypes.string,
+  scrollRightLabel: PropTypes.string,
 };
 
 // Scroll container component
 const ScrollContainer = ({
   children,
-  height,
-  minWidth,
-  itemWidth,
-  padding,
-  className,
-  showArrows,
-  stepSize,
+  height = 'auto',
+  minWidth = 'auto',
+  itemWidth = 'auto',
+  padding = '0',
+  className = '',
+  showArrows = false,
+  stretchItems = false,
+  stepSize = null,
+  ariaLabel,
+  lang,
+  dir,
+  labels,
   ...props
 }) => {
+  const {
+    ariaLabel: defaultAriaLabel,
+    navigationLabel,
+    scrollLeftLabel,
+    scrollRightLabel,
+  } = getScrollContainerLabels(lang, labels);
+  const resolvedAriaLabel = ariaLabel ?? defaultAriaLabel;
   const containerRef = useRef(null);
   const contentRef = useRef(null);
   const leftButtonRef = useRef(null);
@@ -76,11 +102,13 @@ const ScrollContainer = ({
       const newScrollLeft =
         containerRef.current.scrollLeft +
         (direction === 'right' ? scrollAmount : -scrollAmount);
+      const prefersReducedMotion =
+        window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ??
+        false;
 
-      // Use smooth scrolling for better user experience
       containerRef.current.scrollTo({
         left: newScrollLeft,
-        behavior: 'smooth',
+        behavior: prefersReducedMotion ? 'auto' : 'smooth',
       });
     },
     [stepSize]
@@ -203,6 +231,11 @@ const ScrollContainer = ({
     updateArrowVisibility();
 
     const container = containerRef.current;
+    const content = contentRef.current;
+    const resizeObserver =
+      typeof ResizeObserver === 'undefined'
+        ? null
+        : new ResizeObserver(updateArrowVisibility);
     if (container) {
       container.addEventListener('scroll', updateArrowVisibility, {
         passive: true,
@@ -219,6 +252,8 @@ const ScrollContainer = ({
       }
 
       container.addEventListener('click', handleClick, { capture: true });
+      resizeObserver?.observe(container);
+      if (content) resizeObserver?.observe(content);
     }
 
     return () => {
@@ -238,6 +273,7 @@ const ScrollContainer = ({
         // Remove click handler
         container.removeEventListener('click', handleClick, { capture: true });
       }
+      resizeObserver?.disconnect();
     };
   }, [
     checkMobileStatus,
@@ -250,6 +286,7 @@ const ScrollContainer = ({
 
   return (
     <section
+      {...getLanguageProps(lang, dir)}
       className={`mg-scroll${isMobileRef.current ? ' mg-scroll--mobile' : ''}`}
     >
       {showArrows && !isMobileRef.current && (
@@ -257,24 +294,33 @@ const ScrollContainer = ({
           onScroll={scroll}
           leftButtonRef={leftButtonRef}
           rightButtonRef={rightButtonRef}
+          navigationLabel={navigationLabel.replace(
+            '{label}',
+            () => resolvedAriaLabel
+          )}
+          scrollLeftLabel={scrollLeftLabel}
+          scrollRightLabel={scrollRightLabel}
         />
       )}
       <div
         ref={containerRef}
         className={containerClasses}
         style={containerStyle}
+        tabIndex={0}
         {...props}
       >
         <div
           ref={contentRef}
-          className={`mg-scroll__content${isMobileRef.current ? '' : ' mg-grid'}`}
+          className={`mg-scroll__content${
+            stretchItems ? ' mg-scroll__content--stretch' : ''
+          }${isMobileRef.current ? '' : ' mg-grid'}`}
         >
           {/* In some environments (like Gutenberg), children is an array of HTML strings */}
           {Array.isArray(children) && !React.isValidElement(children[0])
             ? children.map((child, index) => (
-                  <div key={index} className="mg-scroll__item-wrapper">
-                    <div dangerouslySetInnerHTML={{ __html: String(child) }} />
-                  </div>
+                <div key={index} className="mg-scroll__item-wrapper">
+                  <div dangerouslySetInnerHTML={{ __html: String(child) }} />
+                </div>
               ))
             : React.Children.map(children, child => (
                 <div className="mg-scroll__item-wrapper">{child}</div>
@@ -288,21 +334,28 @@ const ScrollContainer = ({
 ScrollContainer.propTypes = {
   children: PropTypes.node.isRequired,
   height: PropTypes.string,
+  /** Minimum width of the scroll container, e.g. `'320px'`. A value wider than the parent makes the container overflow it; to widen the scrollable track instead, use `itemWidth`. */
   minWidth: PropTypes.string,
   itemWidth: PropTypes.string,
   padding: PropTypes.string,
   className: PropTypes.string,
   showArrows: PropTypes.bool,
+  /** Stretch item wrappers and their direct children to a shared row height. */
+  stretchItems: PropTypes.bool,
   stepSize: PropTypes.number,
-};
-ScrollContainer.defaultProps = {
-  height: 'auto',
-  minWidth: 'auto',
-  itemWidth: 'auto',
-  padding: '0',
-  className: '',
-  showArrows: false,
-  stepSize: null,
+  /** Accessible name for this scroll container's arrow navigation. Use a unique value when more than one container appears on a page. */
+  ariaLabel: PropTypes.string,
+  /** HTML language tag. Built-in labels support en, ar, es, fr, ja, ru and zh. */
+  lang: PropTypes.string,
+  /** Explicit text direction; otherwise known catalogue languages select their direction. */
+  dir: PropTypes.oneOf(['ltr', 'rtl', 'auto']),
+  /** Label overrides; navigationLabel accepts a {label} token for ariaLabel. */
+  labels: PropTypes.shape({
+    ariaLabel: PropTypes.string,
+    navigationLabel: PropTypes.string,
+    scrollLeftLabel: PropTypes.string,
+    scrollRightLabel: PropTypes.string,
+  }),
 };
 
 export default React.memo(ScrollContainer);

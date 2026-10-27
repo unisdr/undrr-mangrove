@@ -1,0 +1,37 @@
+// Import-only bridges inspect the caller's scope; this module owns the
+// shared diagnostics so entry-point bridges cannot drift from variables.
+@use "sass:map";
+
+$legacy-roles: (
+  "mg-color-interactive": null,
+  "mg-color-interactive-active": null,
+  "mg-color-button-background": null,
+  "mg-color-button-background--hover": null,
+  "mg-border-color-button": null,
+  "mg-color-tag": null,
+  "mg-color-form-check": null,
+  "mg-color-form-focus": null,
+  "mg-color-hero": null,
+  "mg-color-hero--secondary": null,
+  "mg-spacing-150": null,
+  "mg-spacing-300": null,
+  "mg-font-family": "text",
+  "mg-font-family-headings": "ui",
+  "mg-font-family-condensed": "ui",
+  "mg-font-family-icons": "",
+  "mg-font-family-arabic-headings": "heading",
+  "mg-font-family-arabic-body": "text",
+);
+$legacy-names: map.keys($legacy-roles);
+
+@mixin warn-override($name) {
+  $role: map.get($legacy-roles, $name);
+
+  @if not $role {
+    @warn "Mangrove 2.0: `$#{$name}` no longer has any effect — color and spacing tokens are CSS custom properties now. Move the override into a `.mg-theme-* { --#{$name}: ...; }` block (or `:root`). See docs/RELEASE-2.0.md.";
+  } @else if $role == "" {
+    @warn "Mangrove 2.0: `$#{$name}` no longer exists and has no replacement — it had no stylesheet consumer, and icons.scss names the FontAwesome family directly. See docs/RELEASE-2.0.md.";
+  } @else {
+    @warn "Mangrove 2.0: `$#{$name}` no longer has any effect — font families are role custom properties now. Move the override into a `.mg-theme-* { --mg-font-family-#{$role}: ...; }` block (or `:root`). See docs/RELEASE-2.0.md.";
+  }
+}

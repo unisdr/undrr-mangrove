@@ -1,4 +1,3 @@
-/* eslint-disable react/no-danger */
 import React from 'react';
 import PropTypes from 'prop-types';
 import DOMPurify from 'dompurify';
@@ -11,6 +10,8 @@ import DOMPurify from 'dompurify';
  *
  * When a `link` prop is provided, the entire stat item becomes clickable
  * while still allowing inline links in the description to work independently.
+ *
+ * @see schemas/statistic.schema.js — canonical field names and documented deviations.
  */
 export function StatsCardItem({
   icon,
@@ -29,7 +30,9 @@ export function StatsCardItem({
     baseClass,
     link && `${baseClass}--linked`,
     className,
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   // Render value as link or data element
   const valueContent = link ? (
@@ -49,20 +52,15 @@ export function StatsCardItem({
           <span className={icon}></span>
         </span>
       )}
-      {label && (
-        <span className={`${baseClass}__label`}>
-          {label}
-        </span>
-      )}
+      {label && <span className={`${baseClass}__label`}>{label}</span>}
       {valueContent}
       {bottomLabel && (
-        <strong className={`${baseClass}__bottom-label`}>
-          {bottomLabel}
-        </strong>
+        <strong className={`${baseClass}__bottom-label`}>{bottomLabel}</strong>
       )}
       {summary && (
         <p
           className={`${baseClass}__summary`}
+          // eslint-disable-next-line react/no-danger -- sanitized HTML contract; DOMPurify sanitizes caller input
           dangerouslySetInnerHTML={{
             __html: DOMPurify.sanitize(summary),
           }}

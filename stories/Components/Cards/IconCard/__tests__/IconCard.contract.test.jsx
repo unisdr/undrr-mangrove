@@ -85,7 +85,9 @@ describe('IconCard contract', () => {
   });
 
   it('renders fixture with label', () => {
-    render(<IconCard items={[{ title: 'Labelled card', labels: ['Category'] }]} />);
+    render(
+      <IconCard items={[{ title: 'Labelled card', labels: ['Category'] }]} />
+    );
     expect(screen.getByText('Category')).toBeInTheDocument();
   });
 });

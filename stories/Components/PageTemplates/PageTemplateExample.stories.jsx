@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 /**
  * UNDRR Required Scripts
@@ -7,7 +7,7 @@ import React, { useEffect } from 'react';
  *
  * <!-- UNDRR Analytics - GA4 bootstrap and enhancements -->
  * <script
- *   src="https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js"
+ *   src="https://assets.undrr.org/analytics/v1.0.0/google_analytics_enhancements.js"
  *   defer
  * ></script>
  *
@@ -33,8 +33,20 @@ import CookieConsentBanner from '../CookieConsentBanner/CookieConsentBanner';
 import { mgTableOfContents } from '../TableOfContents/js/TableOfContentsVanillaJs';
 import { SectionHeader } from '../../Molecules/SectionHeader/SectionHeader';
 import { IconCard } from '../Cards/IconCard/IconCard';
-import { SyndicationSearchWidget } from '../SyndicationSearchWidget/SyndicationSearchWidget';
 import { TextCta } from '../TextCta/TextCta';
+import ScrollContainer from '../ScrollContainer/ScrollContainer';
+import { TableTag } from '../../Atom/Table/Table';
+import { TextInput } from '../Forms/TextInput/TextInput';
+import { Select } from '../Forms/Select/Select';
+import { Checkbox } from '../Forms/Checkbox/Checkbox';
+import { Radio } from '../Forms/Radio/Radio';
+import { Textarea } from '../Forms/Textarea/Textarea';
+import { FormErrorSummary } from '../Forms/FormErrorSummary/FormErrorSummary';
+import { FormAction } from '../Forms/FormAction/FormAction';
+import { FormGroup } from '../Forms/FormGroup/FormGroup';
+import { Pager } from '../Pager/Pager';
+import { SyndicationSearchWidget } from '../SyndicationSearchWidget/SyndicationSearchWidget';
+import { defaultConfig as searchShowcaseConfig } from '../SyndicationSearchWidget/_storyHelpers';
 import deltaLogo from '../../assets/images/delta-logo-placeholder.svg';
 
 const sampleHeroData = [
@@ -48,6 +60,11 @@ const sampleHeroData = [
     link: '/#',
     imgback:
       'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+    media: {
+      type: 'image',
+      src: 'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+      alt: 'Dry grassland landscape',
+    },
   },
 ];
 
@@ -55,7 +72,7 @@ const sampleTabData = [
   {
     text: 'Tab title 1',
     text_id: 'tab-1',
-    data: 'As the UN Office for Disaster Risk Reduction, UNDRR convenes partners and coordinates activities to create safer, more resilient communities.',
+    data: 'As the United Nations Office for Disaster Risk Reduction, UNDRR convenes partners and coordinates activities to create safer, more resilient communities.',
   },
   {
     text: 'Tab title 2',
@@ -74,7 +91,7 @@ const sampleTabDataStacked = [
   {
     text: 'Stacked title 1',
     text_id: 'tab-1-stacked',
-    data: 'As the UN Office for Disaster Risk Reduction, UNDRR convenes partners and coordinates activities to create safer, more resilient communities.',
+    data: 'As the United Nations Office for Disaster Risk Reduction, UNDRR convenes partners and coordinates activities to create safer, more resilient communities.',
   },
   {
     text: 'Tab title 2',
@@ -89,21 +106,169 @@ const sampleTabDataStacked = [
   },
 ];
 
-const sampleCardContent = [
+const insightCards = [
   {
-    contenttile: 'Content tag',
-    title: 'Title in large size',
-    summaryText: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
-  by vulnerable populations and communities.This paper explores health risks from climate change in a global context, setting out key risks actions`,
-    label1: 'Label 1',
-    label2: 'Label 2',
-    button: 'Primary action',
-    link: 'javascript:void(0)',
-    imgalt: 'A person looks on',
-    imgback:
-      'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+    contenttile: 'Research brief',
+    title: 'Financing resilience before disasters strike',
+    summary:
+      'Explore practical approaches for moving investment from response towards prevention and anticipatory action.',
+    button: 'Read the brief',
+    link: '#',
+    image: {
+      src: 'https://images.unsplash.com/photo-1518005020951-eccb494ad742?w=900&q=80',
+      alt: 'A coastal city viewed from above',
+    },
+    labels: ['28 August 2026'],
+  },
+  {
+    contenttile: 'Data insight',
+    title: 'Tracking disaster losses across regions',
+    summary:
+      'Comparable data helps governments identify risk patterns and direct resources.',
+    button: 'Explore the data',
+    link: '#',
+    image: {
+      src: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=900&q=80',
+      alt: 'Aerial landscape showing a river and settlements',
+    },
+    labels: ['24 August 2026'],
+  },
+  {
+    contenttile: 'Guidance',
+    title: 'Building inclusive early warning systems',
+    summary:
+      'A people-centred approach makes warnings understandable, actionable and accessible to everyone at risk.',
+    button: 'View the guidance',
+    link: '#',
+    image: {
+      src: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=900&q=80',
+      alt: 'Community members meeting outdoors',
+    },
+    labels: ['18 August 2026'],
+  },
+  {
+    contenttile: 'Case study',
+    title: 'Local leadership for heat resilience',
+    summary:
+      'Cities are combining climate information, public health planning and community networks to reduce extreme heat impacts.',
+    button: 'Read the case study',
+    link: '#',
+    image: {
+      src: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=900&q=80',
+      alt: 'Dense city buildings seen in warm light',
+    },
+    labels: ['12 August 2026'],
+  },
+  {
+    contenttile: 'Policy update',
+    title: 'Strengthening resilience through national planning',
+    summary:
+      'New policy approaches connect risk reduction targets with climate adaptation, public investment and local delivery.',
+    button: 'Read the update',
+    link: '#',
+    image: {
+      src: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=900&q=80',
+      alt: 'People collaborating around a meeting table',
+    },
+    labels: ['6 August 2026'],
   },
 ];
+
+const topicOptions = [
+  { value: 'risk-knowledge', label: 'Risk knowledge' },
+  { value: 'early-warning', label: 'Early warning systems' },
+  { value: 'resilient-investment', label: 'Resilient investment' },
+];
+
+const searchFixture = {
+  hits: {
+    hits: [
+      {
+        _id: 'showcase-result-1',
+        _source: {
+          title: 'Financing resilience before disasters strike',
+          url: '#search-result-1',
+          type: 'publication',
+          field_domain_access: ['www_undrr_org'],
+        },
+        highlight: {
+          body: [
+            'Practical approaches for moving investment towards prevention and anticipatory action.',
+          ],
+        },
+      },
+      {
+        _id: 'showcase-result-2',
+        _source: {
+          title: 'Tracking disaster losses across regions',
+          url: '#search-result-2',
+          type: 'data',
+          field_domain_access: ['www_undrr_org'],
+        },
+        highlight: {
+          body: [
+            'Comparable data helps governments direct resources towards communities most exposed.',
+          ],
+        },
+      },
+      {
+        _id: 'showcase-result-3',
+        _source: {
+          title: 'Building inclusive early warning systems',
+          url: '#search-result-3',
+          type: 'guidance',
+          field_domain_access: ['www_undrr_org'],
+        },
+        highlight: {
+          body: [
+            'People-centred guidance for warnings that are understandable and actionable.',
+          ],
+        },
+      },
+    ],
+    total: { value: 24, relation: 'eq' },
+  },
+  aggregations: {},
+  took: 18,
+};
+
+const MockedSearchShowcase = () => {
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    const originalFetch = window.fetch;
+    window.fetch = url =>
+      Promise.resolve({
+        ok: true,
+        json: () =>
+          Promise.resolve(
+            String(url).includes('preventionweb.net/api')
+              ? { results: [] }
+              : searchFixture
+          ),
+      });
+    setReady(true);
+
+    return () => {
+      window.fetch = originalFetch;
+    };
+  }, []);
+
+  if (!ready) {
+    return <p>Preparing search fixture…</p>;
+  }
+
+  return (
+    <SyndicationSearchWidget
+      config={{
+        ...searchShowcaseConfig,
+        defaultQuery: 'resilience',
+        resultsPerPage: 3,
+        debounceDelay: 0,
+      }}
+    />
+  );
+};
 
 const sampleMegaMenuSections = [
   {
@@ -140,6 +305,7 @@ const sampleMegaMenuSections = [
 
 // Define the Page Template Example component
 const PageTemplateExample = () => {
+  const [showcasePage, setShowcasePage] = useState(3);
   useEffect(() => {
     // Initialize table of contents
     const contentElement = document.querySelector('.page-template-example');
@@ -151,7 +317,7 @@ const PageTemplateExample = () => {
     // Load UNDRR Analytics script
     const analyticsScript = document.createElement('script');
     analyticsScript.src =
-      'https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js';
+      'https://assets.undrr.org/analytics/v1.0.0/google_analytics_enhancements.js';
     analyticsScript.defer = true;
     document.body.appendChild(analyticsScript);
 
@@ -179,15 +345,20 @@ const PageTemplateExample = () => {
       <CookieConsentBanner />
       <MegaMenu delay={600} sections={sampleMegaMenuSections} />
       <div className="page-template-example | mg-container mg-container--spacer">
-        <Hero data={sampleHeroData} variant="primary" />
+        <Hero
+          data={sampleHeroData}
+          variant="primary"
+          layout="split"
+          split="1/2"
+        />
         <div className="mg-container-full-width mg-container--padded mg-u-background-color--neutral-25">
           <section className="mg-grid mg-grid__col-3">
-            <VerticalCard data={sampleCardContent} />
-            <VerticalCard data={sampleCardContent} />
-            <VerticalCard data={sampleCardContent} />
+            {insightCards.slice(0, 3).map(card => (
+              <VerticalCard key={card.title} items={[card]} />
+            ))}
           </section>
         </div>
-        <section className="content-section">
+        <section className="content-section mg-content">
           <section className="mg-grid mg-grid__col-3">
             <div className="mg-grid__col--span-2">
               <h2>Understanding the importance of data</h2>
@@ -234,8 +405,172 @@ const PageTemplateExample = () => {
         </section>
         <Tab tabdata={sampleTabData} />
         <Tab tabdata={sampleTabDataStacked} variant={'stacked'} />
-        <h2>Sample header</h2>
-        <p>Sample paragraph</p>
+        <section className="mg-container--spacer">
+          <SectionHeader
+            headerText="Frequently asked questions"
+            descriptionText="Native disclosure elements share the same calm plus and minus treatment as stacked tabs."
+          />
+          <details className="mg-details" open>
+            <summary>How does Mangrove support accessible services?</summary>
+            <div className="mg-details__content">
+              <p>
+                Components include semantic markup, keyboard interaction,
+                visible focus states and documented accessibility contracts.
+              </p>
+            </div>
+          </details>
+          <details className="mg-details">
+            <summary>Can components be used without React?</summary>
+            <div className="mg-details__content">
+              <p>
+                Core styles and documented HTML patterns can be used directly,
+                with hydration added only where richer behaviour is needed.
+              </p>
+            </div>
+          </details>
+          <details className="mg-details">
+            <summary>How are themes and languages supported?</summary>
+            <div className="mg-details__content">
+              <p>
+                Shared tokens provide theme adaptation, while logical CSS
+                properties and Arabic font routing support RTL interfaces.
+              </p>
+            </div>
+          </details>
+        </section>
+        <section className="mg-container--spacer">
+          <SectionHeader
+            headerText="Latest insights"
+            descriptionText="Research, data and guidance from across the UNDRR network"
+          />
+          <ScrollContainer showArrows itemWidth="300px" stepSize={324}>
+            {insightCards.map(card => (
+              <VerticalCard key={card.title} items={[card]} />
+            ))}
+          </ScrollContainer>
+        </section>
+        <section className="mg-container--spacer">
+          <SectionHeader headerText="Explore disaster risk knowledge" />
+          <form
+            role="search"
+            aria-label="Search disaster risk knowledge"
+            onSubmit={event => event.preventDefault()}
+          >
+            <FormAction
+              label="Search disaster risk knowledge"
+              hideLabel
+              control={
+                <input
+                  className="mg-form-input"
+                  id="showcase-search"
+                  name="query"
+                  type="search"
+                  placeholder="Search reports, data and guidance"
+                  defaultValue="resilience"
+                />
+              }
+              action={
+                <button className="mg-button mg-button-primary" type="submit">
+                  Search
+                </button>
+              }
+            />
+          </form>
+          <p className="mg-form-help">
+            The full syndicated search stories demonstrate live results, facets,
+            filters, sorting and pagination against the UNDRR search endpoint.
+          </p>
+        </section>
+        <section className="mg-container--spacer">
+          <SectionHeader headerText="Progress at a glance" />
+          <p>
+            A responsive, striped table demonstrates how structured evidence
+            sits alongside editorial content in a real page composition.
+          </p>
+          <TableTag
+            text="Reporting cycle"
+            tdtext="2025–2026"
+            details="National reporting and validation in progress"
+            variant="striped"
+            responsive="scroll"
+          />
+          <Pager
+            page={showcasePage}
+            totalPages={20}
+            onPageChange={setShowcasePage}
+            layout="bar"
+            range={{
+              start: (showcasePage - 1) * 10 + 1,
+              end: showcasePage * 10,
+            }}
+            rangeLabel="Showing {start}–{end} of 200 records"
+            showJumpTo
+          />
+        </section>
+        <section className="mg-container--spacer mg-grid mg-grid__col-2">
+          <div>
+            <SectionHeader headerText="Stay informed" />
+            <p>
+              Subscribe for selected updates on risk knowledge, policy and
+              practice. Required fields are clearly identified.
+            </p>
+          </div>
+          <form onSubmit={event => event.preventDefault()}>
+            <FormAction
+              label="Email address"
+              helpText="This address is only used for your selected updates."
+              stackOnMobile
+              control={
+                <input
+                  className="mg-form-input"
+                  id="showcase-email"
+                  name="email"
+                  type="email"
+                  placeholder="name@example.org"
+                  required
+                />
+              }
+              action={
+                <button className="mg-button mg-button-primary" type="submit">
+                  Subscribe
+                </button>
+              }
+            />
+            <Select
+              id="showcase-topic"
+              name="topic"
+              label="Topic"
+              options={topicOptions}
+              placeholder="Choose a topic"
+              required
+            />
+            <Checkbox
+              id="showcase-consent"
+              name="consent"
+              label="I agree to receive email updates"
+              value="yes"
+            />
+            <Textarea
+              id="showcase-interests"
+              name="interests"
+              label="What would you like to hear about?"
+              placeholder="Tell us about your areas of interest"
+              helpText="Optional. Use up to 300 characters."
+              rows={3}
+            />
+          </form>
+        </section>
+        <TextCta
+          headline="Put risk knowledge into action"
+          text="Use Mangrove components to create accessible, evidence-led services across the UNDRR digital ecosystem."
+          buttons={[
+            {
+              label: 'Read the implementation guide',
+              url: '#',
+              type: 'Primary',
+            },
+          ]}
+        />
         <Footer />
       </div>
     </>
@@ -251,6 +586,105 @@ export default {
 // Define the story
 export const Default = {
   render: () => <PageTemplateExample />,
+  parameters: {
+    layout: 'fullscreen',
+  },
+};
+
+const ComponentLaboratoryExample = () => {
+  const [page, setPage] = useState(4);
+  const errors = [
+    { id: 'lab-email', message: 'Enter a valid email address' },
+    { id: 'lab-purpose', message: 'Describe how you plan to use the data' },
+  ];
+
+  return (
+    <main className="mg-container mg-container--spacer">
+      <SectionHeader
+        headerText="Component laboratory"
+        descriptionText="A dense integration canvas for search, data display, disclosures, form states and navigation."
+      />
+      <section
+        className="mg-container--spacer"
+        aria-labelledby="lab-search-title"
+      >
+        <h2 id="lab-search-title">Syndicated search</h2>
+        <MockedSearchShowcase />
+      </section>
+      <section className="mg-container--spacer mg-grid mg-grid__col-2">
+        <div>
+          <h2>Disclosure and structured data</h2>
+          <details className="mg-details" open>
+            <summary>About these reporting figures</summary>
+            <div className="mg-details__content">
+              <p>
+                Figures combine validated national reporting with regional
+                quality assurance and publication status.
+              </p>
+            </div>
+          </details>
+          <TableTag
+            text="Reporting status"
+            tdtext="Validated"
+            details="Published with supporting methodology"
+            variant="striped"
+            responsive="scroll"
+          />
+        </div>
+        <form onSubmit={event => event.preventDefault()} noValidate>
+          <h2>Validation states</h2>
+          <FormErrorSummary errors={errors} />
+          <TextInput
+            id="lab-email"
+            name="email"
+            type="email"
+            label="Email address"
+            defaultValue="not-an-email"
+            error
+            errorText="Enter a valid email address"
+            required
+          />
+          <Textarea
+            id="lab-purpose"
+            name="purpose"
+            label="How will you use the data?"
+            error
+            errorText="Describe how you plan to use the data"
+            required
+          />
+          <FormGroup legend="Preferred format">
+            <Radio name="format" value="csv" label="CSV" defaultChecked />
+            <Radio name="format" value="json" label="JSON" />
+          </FormGroup>
+          <div className="mg-buttons">
+            <button className="mg-button mg-button-primary" type="submit">
+              Submit request
+            </button>
+            <button
+              className="mg-button mg-button-primary mg-button-outline"
+              type="reset"
+            >
+              Reset form
+            </button>
+          </div>
+        </form>
+      </section>
+      <Pager
+        page={page}
+        totalPages={24}
+        onPageChange={setPage}
+        layout="bar"
+        range={{ start: (page - 1) * 10 + 1, end: page * 10 }}
+        rangeLabel="Showing {start}–{end} of 240 components"
+        showJumpTo
+      />
+    </main>
+  );
+};
+
+export const ComponentLaboratory = {
+  render: () => <ComponentLaboratoryExample />,
+  name: 'Component laboratory',
   parameters: {
     layout: 'fullscreen',
   },
@@ -338,34 +772,37 @@ const deltaHeroData = [
 
 const howItWorksCards = [
   {
-    imgback:
-      'https://dts-testing.undrr.org/assets/images/how-it-works-collect.png',
-    imgalt: 'Collect — record and link hazardous events with disaster data',
     imageScale: 'large',
     title: 'Collect',
     visualLabel: 'Data',
-    summaryText:
+    summary:
       'Record and link hazardous events with disaster losses and damages data. Systematically track disaster effects across sectors, social groups and geographic areas.',
+    image: {
+      src: 'https://dts-testing.undrr.org/assets/images/how-it-works-collect.png',
+      alt: 'Collect — record and link hazardous events with disaster data',
+    },
   },
   {
-    imgback:
-      'https://dts-testing.undrr.org/assets/images/how-it-works-analyze.png',
-    imgalt: 'Analyze — reveal patterns, trends and hotspots',
     imageScale: 'large',
     title: 'Analyze',
     visualLabel: 'Analysis',
-    summaryText:
+    summary:
       'Analyze links between hazardous events and losses and damages to reveal patterns, trends, and hotspots. Compare across hazards, sectors, events, and locations.',
+    image: {
+      src: 'https://dts-testing.undrr.org/assets/images/how-it-works-analyze.png',
+      alt: 'Analyze — reveal patterns, trends and hotspots',
+    },
   },
   {
-    imgback:
-      'https://dts-testing.undrr.org/assets/images/how-it-works-insights-for-action.png',
-    imgalt: 'Insights for action — turn raw data into insight',
     imageScale: 'large',
     title: 'Insights for action',
     visualLabel: 'Insights for action',
-    summaryText:
+    summary:
       'Turn raw data into insight. Produce analytical outputs to support decision-making for prevention, risk reduction, preparedness, recovery, financing and adaptation.',
+    image: {
+      src: 'https://dts-testing.undrr.org/assets/images/how-it-works-insights-for-action.png',
+      alt: 'Insights for action — turn raw data into insight',
+    },
   },
 ];
 
@@ -375,7 +812,7 @@ const featureCards = [
     borderColor: '#e8963a',
     imageScale: 'small',
     title: 'Analytics',
-    summaryText:
+    summary:
       'From data to decisions - analysis that drives multiple DRR applications including recovery planning, financing, early warning and risk-informed planning.',
   },
   {
@@ -383,7 +820,7 @@ const featureCards = [
     borderColor: '#007a8a',
     imageScale: 'small',
     title: 'Monitoring',
-    summaryText:
+    summary:
       'Continuous monitoring and tracking of hazardous events and disaster events and their effects across human, socio-economic and ecosystem dimensions.',
   },
   {
@@ -391,7 +828,7 @@ const featureCards = [
     borderColor: '#00a89a',
     imageScale: 'small',
     title: 'Data management & integration',
-    summaryText:
+    summary:
       'Preserve, connect and enrich disaster impact data using exposure, vulnerability and baseline information.',
   },
   {
@@ -399,7 +836,7 @@ const featureCards = [
     borderColor: '#4d9fd8',
     imageScale: 'small',
     title: 'Losses and damages overview',
-    summaryText:
+    summary:
       'Analyze losses and damages through interactive dashboards per disaster event, hazard type, sector and geography.',
   },
   {
@@ -407,7 +844,7 @@ const featureCards = [
     borderColor: '#b52a32',
     imageScale: 'small',
     title: 'Connected disaster data',
-    summaryText:
+    summary:
       'Support data sharing and application across sectors and multiple levels of government.',
   },
   {
@@ -415,7 +852,7 @@ const featureCards = [
     borderColor: '#d4a020',
     imageScale: 'small',
     title: 'Baseline & contextual data integration',
-    summaryText:
+    summary:
       'Integrate exposure, vulnerability, statistical and geospatial data enabling post-disaster change and impact analysis.',
   },
 ];
@@ -469,7 +906,7 @@ const DeltaLandingPage = () => (
         <div className="mg-container">
           <div className="mg-grid mg-grid__col-3">
             {howItWorksCards.map((card, i) => (
-              <IconCard key={i} data={[card]} />
+              <IconCard key={i} items={[card]} />
             ))}
           </div>
         </div>
@@ -488,7 +925,7 @@ const DeltaLandingPage = () => (
         <section className="mg-container--padded">
           <div className="mg-grid mg-grid__col-3">
             {featureCards.map((card, i) => (
-              <IconCard key={i} data={[card]} />
+              <IconCard key={i} items={[card]} />
             ))}
           </div>
         </section>

@@ -1,0 +1,29 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import { ContentFamilyGuide } from '../_shared/ContentFamilyGuide';
+import { publicationPatterns } from './patterns';
+import * as CardStories from '../../ContentCard/ContentCard.stories';
+import * as TeaserStories from '../../ContentTeaser/ContentTeaser.stories';
+
+<Meta title="Patterns/Content/Publication" />
+
+# Publication patterns
+
+> See the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) before modifying this archetype.
+
+<ContentFamilyGuide
+  family={publicationPatterns}
+  cardExamples={
+    <>
+      <h3>Vertical</h3>
+      <Canvas of={CardStories.Publication} />
+      <h3>Book</h3>
+      <Canvas of={CardStories.PublicationBook} />
+    </>
+  }
+>
+  <Canvas of={TeaserStories.Publication} />
+</ContentFamilyGuide>
+
+## Changelog
+
+- **0.1.0**, 2026-10-17 ([#1383](https://github.com/unisdr/undrr-mangrove/pull/1383)): Define the source-independent archetype, its editorial profiles and presentation coverage. Keep Drupal bindings in Mangrove's integration layer and group each presentation with its previews. Add experimental vertical/book card layouts from audited selections, with explicit proposals where no Drupal card display exists.

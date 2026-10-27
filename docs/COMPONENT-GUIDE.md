@@ -1,8 +1,15 @@
 # Component guide
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/COMPONENT-GUIDE.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-step-by-step--docs).
+> Edits to this file show up on both [GitHub](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/COMPONENT-GUIDE.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-step-by-step--docs).
 
-A step-by-step tutorial for building a new component in Mangrove from scratch. For code standards (React patterns, BEM, PropTypes, JSDoc), see the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) in Storybook.
+A step-by-step tutorial for building a new component in Mangrove from scratch. For code standards (React patterns, BEM, PropTypes, JSDoc), see the [component standards](https://mangrove.undrr.org/?path=/docs/contributing-component-standards--docs) in Storybook.
+
+For component motion, follow [Motion and animation](MOTION.md): purpose, timing tokens, reduced motion, progress indicators, forced colours and RTL.
+
+For built-in interface copy, follow [UI translations](UI-TRANSLATIONS.md):
+runtime `lang` selection, component-owned catalogues, explicit label overrides,
+HTML language boundaries and hydration. Keep consumer content separate from
+translated control labels, and exercise the runtime contract in locale stories.
 
 ## Decision tree: what files do I need?
 
@@ -14,13 +21,18 @@ Does the component need React?
 │
 └─ Yes
     │
-    ├─ npm only (consumed via `import { X } from '@undrr/undrr-mangrove'`)
-    │   → All of the above + add export to src/index.js
+    ├─ npm only (consumed via
+    │   `import { X } from '@undrr/undrr-mangrove/components/X.js'`)
+    │   → All of the above + a webpack entry + add export to src/index.js
     │
     └─ Drupal integration (rendered into server HTML via data attributes)
         → All of the above + fromElement.js + hydrate.js + webpack entry
           + fromElement tests + AI manifest SAMPLE_PROPS (optional)
 ```
+
+A webpack entry is what publishes a component. The build writes `dist/components/`; the npm tarball publishes those bundles
+as `components/`, without `src/`. An export added to `src/index.js` alone
+reaches no npm consumer — see unisdr/undrr-mangrove#1252.
 
 ## Reference component: Pager
 
@@ -48,16 +60,29 @@ Create `stories/Components/{Category}/{ComponentName}/{ComponentName}.jsx` as a 
 
 > **Accessibility first**: Before writing JSX, review the [accessibility requirements](ACCESSIBILITY.md) for semantic HTML, keyboard interaction patterns, and ARIA attributes. It's much easier to build in accessibility from the start than to add it later.
 
-See `Pager.jsx` for a complete example and the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) for React and PropTypes standards.
+See `Pager.jsx` for a complete example and the [component standards](https://mangrove.undrr.org/?path=/docs/contributing-component-standards--docs) for React and PropTypes standards.
 
 ## Step 2: Create the SCSS file
 
-Create `stories/Components/{Category}/{ComponentName}/component-name.scss` using SCSS variables from `_variables.scss` and BEM naming. For z-index: use `$mg-z-index-*` tokens for global stacking (fixed, sticky, portaled elements) and derive backdrops with `$token - 1` arithmetic; use raw values with comments for local stacking inside a component's own stacking context — see [Design decisions/Z-index layers](https://unisdr.github.io/undrr-mangrove/?path=/docs/design-decisions-z-index-layers--docs). See the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) for styling guidelines.
+Create `stories/Components/{Category}/{ComponentName}/component-name.scss` using SCSS variables from `_variables.scss` and BEM naming. For z-index: use `$mg-z-index-*` tokens for global stacking (fixed, sticky, portaled elements) and derive backdrops with `$token - 1` arithmetic; use raw values with comments for local stacking inside a component's own stacking context — see [Design decisions/Z-index layers](https://mangrove.undrr.org/?path=/docs/design-decisions-z-index-layers--docs). See the [component standards](https://mangrove.undrr.org/?path=/docs/contributing-component-standards--docs) for styling guidelines.
+
+Every component stylesheet must begin with a docblock comment containing a concise 1–2 sentence description of what the component does and a link to its full `.mdx` documentation file on GitHub:
+
+```scss
+/**
+ * Component Name (ComponentName)
+ *
+ * Brief 1-2 sentence description of the component purpose, layout, and behaviors.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/{Category}/{ComponentName}/{ComponentName}.mdx
+ */
+```
 
 **Then add the import to `stories/assets/scss/_components.scss`:**
 
 ```scss
-@import "../../Components/{Category}/{ComponentName}/component-name";
+@use "../../Components/{Category}/{ComponentName}/component-name";
 ```
 
 This is required — without it, your styles won't be included in any theme's compiled CSS.
@@ -66,7 +91,7 @@ This is required — without it, your styles won't be included in any theme's co
 
 Create `stories/Components/{Category}/{ComponentName}/{ComponentName}.stories.jsx` using CSF3 object syntax (not `Template.bind({})`). Set `component` in the default export for autodocs.
 
-Use `{ args: {} }` for simple stories, `{ render: (args) => ... }` when you need custom JSX wrapping. See the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) for story format details.
+Use `{ args: {} }` for simple stories, `{ render: (args) => ... }` when you need custom JSX wrapping. See the [component standards](https://mangrove.undrr.org/?path=/docs/contributing-component-standards--docs) for story format details.
 
 ### Storybook ID derivation
 
@@ -82,14 +107,88 @@ Create `stories/Components/{Category}/{ComponentName}/__tests__/{ComponentName}.
 
 ## Step 5: Write MDX documentation
 
-Create `stories/Components/{Category}/{ComponentName}/{ComponentName}.mdx` with overview, usage examples, props table, CSS class reference, and changelog. See `Pager.mdx` for the full structure and the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) for documentation requirements.
+Create `stories/Components/{Category}/{ComponentName}/{ComponentName}.mdx` with overview, usage examples, props table, CSS class reference, and changelog. See `Pager.mdx` for the full structure and the [component standards](https://mangrove.undrr.org/?path=/docs/contributing-component-standards--docs) for documentation requirements.
 
-**Add a review checklist reference** right after the `<Meta>` block. Adjust the relative path based on file depth (`../../../` for depth-3 components like `Pager/`, `../../../../` for depth-4 like `Cards/Card/`):
+Import Storybook doc blocks from `@storybook/addon-docs/blocks` (not `@storybook/blocks`, which was removed in Storybook 9):
+
+```mdx
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+```
+
+### Write for two audiences
+
+Component MDX docs serve two audiences:
+- **Consumers** need quick integration details (what it does, working example, props).
+- **Maintainers** need context (`why`, edge cases, limitations, history).
+
+Put consumer content first and maintainer depth near the end. Use this order:
+1. What it does (one sentence)
+2. Live examples (`<Canvas>`)
+3. How to use it (usage snippet + props table)
+4. Behaviors and constraints
+5. Accessibility
+6. Implementation notes / known limitations (maintainer depth)
+7. Server-rendered / CDN usage (if applicable)
+8. Changelog
+
+Keep CDN/server-rendered guidance near the end unless it is the primary
+integration path, in which case move it up and note why.
+
+Avoid implementation internals in usage/props sections; move those to maintainer
+notes or code comments.
+
+For contributor-only content within a section, use a labelled blockquote:
+
+```mdx
+> **Implementation note (for contributors):** Why this works the way it does.
+```
+
+For larger contributor-only content, use a dedicated section or multiple labeled
+callouts. See [Writing guidelines — Callout labels](WRITING.md).
+
+See [Writing guidelines — Write for two audiences](WRITING.md) for the full principle.
+
+
+### Linking within Storybook docs
+
+All MDX docs and embedded JSX stories render inside Storybook's **preview iframe** at `iframe.html`. Plain `<a href>` clicks navigate the iframe directly — stripping the Storybook UI shell, and root-relative `href`s also break on any copy of Storybook served from a subpath rather than a domain root.
+
+**Use `<LinkTo>` for prose story links** — it sends a channel message to the Storybook manager and works on any deployment path:
+
+```mdx
+import LinkTo from '@storybook/addon-links/react';
+
+See the <LinkTo kind="components-navigation-pager" story="docs">Pager</LinkTo> component.
+```
+
+**Use `linkTo` + `addons.getChannel()` for interactive navigation** (e.g., a card that navigates AND switches a global like the theme). Do NOT use Storybook hooks (`useGlobals`, `useArgs`) in regular React components — they only work inside story/decorator functions. Use `addons.getChannel().emit()` instead:
+
+```jsx
+import { linkTo } from '@storybook/addon-links';
+import { addons } from 'storybook/preview-api';
+
+function NavCard({ theme }) {
+  function handleClick(e) {
+    e.preventDefault();
+    addons.getChannel().emit('updateGlobals', { globals: { theme } });
+    linkTo('Brand/Brand identity', 'Docs')();
+  }
+  return <button onClick={handleClick}>Go</button>;
+}
+```
+
+**Never hand-write `<a href="/?path=...">` or `<a href="?path=...">` in JSX.** A raw anchor navigates the iframe directly, because nothing intercepts the click.
+
+**Markdown links to `?path=/docs/…` are fine, and are the right form in prose.** A markdown link in MDX — and in a `docs/*.md` file rendered through the `<Markdown>` block — compiles to Storybook's own `AnchorMdx`, which cancels the click and emits `NAVIGATE_URL` so the manager routes the page. `<LinkTo>` is still preferable when you know the story id, because it fails loudly on an unknown kind; use a markdown `?path=` link when you need a link inside a table cell, a heading, or plain Markdown that has no JSX.
+
+Write it as `?path=/docs/…--docs` (query only), never `/docs/…--docs` — a leading slash is not a Storybook route and 404s on a built site. In a `docs/*.md` file that also renders on GitHub, keep the relative `FILE.md` link: `stories/Documentation/docsPageLinks.js` rewrites those to `?path=` links when the page is imported into Storybook. `scripts/__tests__/docs-links.test.js` enforces all of this.
+
+**Add a review checklist reference** right after the `<Meta>` block. Copy the line as-is — the published Storybook URL is absolute because a relative path to a repo file 404s once the docs are built:
 
 ```mdx
 <Meta of={ComponentNameStories} />
 
-> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
 
 # Component name
 ```
@@ -100,9 +199,9 @@ If the component will render into server-generated HTML containers, create `from
 
 ## Step 7: Register for build
 
-### webpack entry (Drupal-integrated components)
+### webpack entry (every published component)
 
-In `webpack.config.js`, add to the second config block's `entry` object:
+This is the step that puts a component in the npm package and on the CDN, whether or not it is hydrated into Drupal. In `webpack.config.js`, add to the second config block's `entry` object:
 
 ```js
 entry: {
@@ -113,7 +212,7 @@ entry: {
 
 Point to `.hydrate.js` if the component has hydration files, otherwise `.jsx`.
 
-### npm export
+### Repository entry point
 
 In `src/index.js`, add the export:
 
@@ -121,11 +220,14 @@ In `src/index.js`, add the export:
 export { default as MyComponent } from '../stories/Components/{Category}/MyComponent/MyComponent';
 ```
 
+This keeps the repository's own entry point complete — it is what `main` and `exports` in the root `package.json` resolve to, for a workspace or a repository-URL install. It does not publish anything on its own: the tarball ships no `src/`, so an npm consumer reaches the component through the webpack entry above, at `@undrr/undrr-mangrove/components/MyComponent.js`. See unisdr/undrr-mangrove#1252.
+
 See the [distribution channels table](ARCHITECTURE.md#component-distribution-channels) for how registration affects where a component is available.
 
 ## Step 8: AI manifest (optional)
 
-The AI manifest provides machine-readable component metadata for coding agents. How much you need to do depends on your component:
+The AI manifest provides machine-readable component metadata for coding agents.
+Required work depends on component type:
 
 **Vanilla HTML component (auto-rendered):**
 If your component renders cleanly in Node.js (no `window`/`document` APIs):
@@ -261,4 +363,4 @@ The build step is required first because contract tests import from `schemas/dis
 - [Testing guide](TESTING.md) — unit, visual, and accessibility testing
 - [Writing guidelines](WRITING-SHORT.md) — UX writing standards
 - [Migration guide: schema-aligned props (v2)](MIGRATION-SCHEMA-V2.md) — breaking prop changes and upgrade path
-- [Component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) — code standards reference (Storybook)
+- [Component standards](https://mangrove.undrr.org/?path=/docs/contributing-component-standards--docs) — code standards reference (Storybook)

@@ -4,8 +4,18 @@
  */
 
 import React from 'react';
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
-import { SyndicationSearchWidget, SearchWidget } from '../SyndicationSearchWidget';
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  act,
+} from '@testing-library/react';
+import {
+  SyndicationSearchWidget,
+  SearchWidget,
+} from '../SyndicationSearchWidget';
+import { clearTaxonomyCache } from '../hooks/useTaxonomies';
 
 // Suppress console.error for expected async warnings
 const originalError = console.error;
@@ -62,11 +72,14 @@ function mockFetch(searchResponse = null) {
 describe('SyndicationSearchWidget', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    window.history.replaceState(null, '', '/');
+    clearTaxonomyCache();
     global.fetch = mockFetch();
   });
 
   afterEach(() => {
     jest.useRealTimers();
+    window.history.replaceState(null, '', '/');
   });
 
   describe('rendering', () => {
@@ -91,18 +104,39 @@ describe('SyndicationSearchWidget', () => {
       expect(screen.queryByRole('search')).not.toBeInTheDocument();
     });
 
-    it('shows empty state message before searching', () => {
+    // The widget searches on mount, so the first render is a loading state,
+    // not "enter a search term".
+    it('shows the loading skeleton, not the empty-query message, before the first results', () => {
       render(<SyndicationSearchWidget config={{}} />);
 
-      expect(screen.getByText(/enter a search term/i)).toBeInTheDocument();
+      expect(
+        document.querySelector(
+          '.mg-search__results-loading .mg-search__skeleton'
+        )
+      ).toBeInTheDocument();
+      expect(screen.queryByText(/enter a search term/i)).toBeNull();
+    });
+
+    it('asks for input only for a query too short to search', async () => {
+      render(
+        <SyndicationSearchWidget
+          config={{
+            defaultQuery: 'ab',
+            defaultFilters: [],
+            enableHashSync: false,
+          }}
+        />
+      );
+
+      await waitFor(() =>
+        expect(screen.getByText(/enter a search term/i)).toBeInTheDocument()
+      );
     });
 
     it('renders facets sidebar when showFacets is true', () => {
       render(<SyndicationSearchWidget config={{ showFacets: true }} />);
 
-      expect(
-        document.querySelector('.mg-search__sidebar')
-      ).toBeInTheDocument();
+      expect(document.querySelector('.mg-search__sidebar')).toBeInTheDocument();
     });
 
     it('does not render facets sidebar when showFacets is false', () => {
@@ -112,6 +146,212 @@ describe('SyndicationSearchWidget', () => {
         document.querySelector('.mg-search__sidebar')
       ).not.toBeInTheDocument();
     });
+
+    // facets layout: new union prop
+    it('renders sidebar when facets is "sidebar"', () => {
+      render(<SyndicationSearchWidget config={{ facets: 'sidebar' }} />);
+      expect(document.querySelector('.mg-search__sidebar')).toBeInTheDocument();
+      expect(
+        document.querySelector('.mg-search__facets-strip')
+      ).not.toBeInTheDocument();
+    });
+
+    it('renders horizontal strip when facets is "horizontal"', () => {
+      render(<SyndicationSearchWidget config={{ facets: 'horizontal' }} />);
+      expect(
+        document.querySelector('.mg-search__facets-strip')
+      ).toBeInTheDocument();
+      expect(
+        document.querySelector('.mg-search__sidebar')
+      ).not.toBeInTheDocument();
+    });
+
+    it('hides facets entirely when facets is false', () => {
+      render(<SyndicationSearchWidget config={{ facets: false }} />);
+      expect(
+        document.querySelector('.mg-search__sidebar')
+      ).not.toBeInTheDocument();
+      expect(
+        document.querySelector('.mg-search__facets-strip')
+      ).not.toBeInTheDocument();
+    });
+
+    it('treats facets prop as taking precedence over legacy showFacets', () => {
+      render(
+        <SyndicationSearchWidget
+          config={{ facets: 'horizontal', showFacets: false }}
+        />
+      );
+      // facets wins: horizontal strip renders even though showFacets is false
+      expect(
+        document.querySelector('.mg-search__facets-strip')
+      ).toBeInTheDocument();
+    });
+
+    // facetsTarget, AC2: portal facets to an external DOM region
+    it('renders facets into facetsTarget element via portal', () => {
+      const target = document.createElement('div');
+      target.id = 'external-facets';
+      document.body.appendChild(target);
+
+      try {
+        render(
+          <SyndicationSearchWidget
+            config={{ facets: 'sidebar', facetsTarget: '#external-facets' }}
+          />
+        );
+
+        // Portal renders facets inside the external target, not the sidebar
+        expect(
+          target.querySelector('.mg-search__facets-external')
+        ).toBeInTheDocument();
+        expect(
+          document.querySelector('.mg-search__sidebar')
+        ).not.toBeInTheDocument();
+      } finally {
+        target.remove();
+      }
+    });
+
+    it('falls back to in-widget layout and warns when facetsTarget selector is not found', () => {
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+      try {
+        render(
+          <SyndicationSearchWidget
+            config={{ facets: 'sidebar', facetsTarget: '#does-not-exist' }}
+          />
+        );
+
+        // No portal element anywhere
+        expect(
+          document.querySelector('.mg-search__facets-external')
+        ).not.toBeInTheDocument();
+        // In-widget sidebar still rendered
+        expect(
+          document.querySelector('.mg-search__sidebar')
+        ).toBeInTheDocument();
+        // Warning logged once
+        expect(warnSpy).toHaveBeenCalledWith(
+          expect.stringContaining('facetsTarget selector "#does-not-exist"')
+        );
+      } finally {
+        warnSpy.mockRestore();
+      }
+    });
+
+    it('does not render the in-widget horizontal strip when facets are portaled', () => {
+      const target = document.createElement('div');
+      target.id = 'external-facets-h';
+      document.body.appendChild(target);
+
+      try {
+        render(
+          <SyndicationSearchWidget
+            config={{
+              facets: 'horizontal',
+              facetsTarget: '#external-facets-h',
+            }}
+          />
+        );
+
+        expect(
+          target.querySelector('.mg-search__facets-external')
+        ).toBeInTheDocument();
+        expect(
+          document.querySelector('.mg-search__facets-strip')
+        ).not.toBeInTheDocument();
+      } finally {
+        target.remove();
+      }
+    });
+
+    // searchTarget: search input portal (replaces the deleted standalone bar)
+    it('renders the search input into searchTarget element via portal', () => {
+      const target = document.createElement('div');
+      target.id = 'external-search';
+      document.body.appendChild(target);
+
+      try {
+        render(
+          <SyndicationSearchWidget
+            config={{ searchTarget: '#external-search' }}
+          />
+        );
+
+        // Search form ends up in the external target
+        expect(target.querySelector('form[role="search"]')).toBeInTheDocument();
+        expect(
+          target.querySelector('input[type="search"]')
+        ).toBeInTheDocument();
+        // ...and not as a direct child of the widget container
+        const widget = document.querySelector('[data-mg-search-widget]');
+        expect(
+          widget.querySelector('form[role="search"]')
+        ).not.toBeInTheDocument();
+      } finally {
+        target.remove();
+      }
+    });
+
+    it('falls back to in-widget input and warns when searchTarget selector is not found', () => {
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+      try {
+        render(
+          <SyndicationSearchWidget
+            config={{ searchTarget: '#missing-search' }}
+          />
+        );
+
+        expect(screen.getByRole('search')).toBeInTheDocument();
+        expect(warnSpy).toHaveBeenCalledWith(
+          expect.stringContaining('searchTarget selector "#missing-search"')
+        );
+      } finally {
+        warnSpy.mockRestore();
+      }
+    });
+
+    it('keeps results in the widget container while the search input is portaled', () => {
+      const target = document.createElement('div');
+      target.id = 'external-search-2';
+      document.body.appendChild(target);
+
+      try {
+        render(
+          <SyndicationSearchWidget
+            config={{ searchTarget: '#external-search-2' }}
+          />
+        );
+
+        const widget = document.querySelector('[data-mg-search-widget]');
+        // Input portaled out
+        expect(target.querySelector('form[role="search"]')).toBeInTheDocument();
+        // Results stay in the widget container
+        expect(widget.querySelector('.mg-search__main')).toBeInTheDocument();
+      } finally {
+        target.remove();
+      }
+    });
+  });
+
+  describe('search box placement', () => {
+    it('sits in the results column with the facets sidebar', () => {
+      render(<SyndicationSearchWidget config={{ facets: 'sidebar' }} />);
+      const form = screen.getByRole('search');
+      expect(form.closest('.mg-search__column')).not.toBeNull();
+      expect(form.closest('.mg-search__sidebar')).toBeNull();
+    });
+
+    it.each(['horizontal', false])(
+      'sits above the content with facets %p',
+      facets => {
+        render(<SyndicationSearchWidget config={{ facets }} />);
+        const form = screen.getByRole('search');
+        expect(form.parentElement).toHaveAttribute('data-mg-search-widget');
+      }
+    );
   });
 
   describe('search input', () => {
@@ -134,6 +374,49 @@ describe('SyndicationSearchWidget', () => {
       fireEvent.click(clearButton);
 
       expect(input).toHaveValue('');
+    });
+
+    // Regression: on a /search#query=news load, useHashSync dispatches
+    // setQuery('news'), but the deferredQuery effect was firing on first
+    // render with deferredQuery='' and stomping the hash-loaded value before
+    // INITIALIZE could preserve it. The effect now skips its first render.
+    it('does not stomp the URL hash query on initial mount', async () => {
+      window.history.pushState({}, '', '/search#query=news');
+
+      render(<SyndicationSearchWidget config={{ enableHashSync: true }} />);
+
+      const input = screen.getByRole('searchbox');
+      await waitFor(() => {
+        expect(input).toHaveValue('news');
+      });
+
+      window.history.pushState({}, '', '/');
+    });
+
+    // A block editor preview re-renders the widget with the edited setting.
+    it('applies a changed defaultQuery unless the reader typed a query', async () => {
+      const { rerender } = render(
+        <SyndicationSearchWidget
+          config={{ defaultQuery: 'flood', enableHashSync: false }}
+        />
+      );
+      const input = screen.getByRole('searchbox');
+      await waitFor(() => expect(input).toHaveValue('flood'));
+
+      rerender(
+        <SyndicationSearchWidget
+          config={{ defaultQuery: 'drought', enableHashSync: false }}
+        />
+      );
+      await waitFor(() => expect(input).toHaveValue('drought'));
+
+      fireEvent.change(input, { target: { value: 'cyclone' } });
+      rerender(
+        <SyndicationSearchWidget
+          config={{ defaultQuery: 'heatwave', enableHashSync: false }}
+        />
+      );
+      await waitFor(() => expect(input).toHaveValue('cyclone'));
     });
   });
 
@@ -159,6 +442,81 @@ describe('SyndicationSearchWidget', () => {
 
       // Search should have been called (at least for initial empty search + this one)
       expect(global.fetch).toHaveBeenCalled();
+    });
+
+    const searchBodies = () =>
+      global.fetch.mock.calls
+        .filter(([url]) => !String(url).includes('preventionweb.net/api'))
+        .map(([, init]) => JSON.parse(init.body));
+
+    it('asks for highlights from the next search after a hit without a teaser, without a second request', async () => {
+      global.fetch = mockFetch({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            hits: {
+              hits: [
+                {
+                  _id: '1',
+                  _source: {
+                    title: 'No teaser',
+                    type: 'news',
+                    field_domain_access: ['www_undrr_org'],
+                  },
+                },
+              ],
+              total: { value: 1 },
+            },
+            took: 1,
+          }),
+      });
+
+      render(<SyndicationSearchWidget config={{ debounceDelay: 0 }} />);
+
+      await waitFor(() => expect(searchBodies()).toHaveLength(1));
+      expect(searchBodies()[0].highlight).toBeUndefined();
+      await act(async () => {
+        await new Promise(resolve => setTimeout(resolve, 20));
+      });
+      expect(searchBodies()).toHaveLength(1);
+
+      fireEvent.change(screen.getByRole('searchbox'), {
+        target: { value: 'flood' },
+      });
+      await waitFor(() => expect(searchBodies()).toHaveLength(2));
+      expect(searchBodies()[1].highlight).toBeDefined();
+    });
+
+    it('never asks for highlights while every hit has a teaser', async () => {
+      global.fetch = mockFetch({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            hits: {
+              hits: [
+                {
+                  _id: '1',
+                  _source: {
+                    teaser: '<div>Teaser</div>',
+                    type: 'news',
+                    field_domain_access: ['www_undrr_org'],
+                  },
+                },
+              ],
+              total: { value: 1 },
+            },
+            took: 1,
+          }),
+      });
+
+      render(<SyndicationSearchWidget config={{ debounceDelay: 0 }} />);
+
+      await waitFor(() => expect(searchBodies().length).toBeGreaterThan(0));
+      await act(async () => {
+        await new Promise(resolve => setTimeout(resolve, 20));
+      });
+      expect(searchBodies()).toHaveLength(1);
+      expect(searchBodies()[0].highlight).toBeUndefined();
     });
   });
 
@@ -234,11 +592,169 @@ describe('SyndicationSearchWidget', () => {
   });
 
   describe('loading indicator', () => {
-    it('has main element for results area', () => {
+    it('has a results area that is not a second main landmark', () => {
       render(<SyndicationSearchWidget config={{}} />);
 
-      const main = document.querySelector('.mg-search__main');
-      expect(main).toBeInTheDocument();
+      const results = document.querySelector('.mg-search__main');
+      expect(results).toBeInTheDocument();
+      expect(results.tagName).toBe('DIV');
+      expect(screen.queryByRole('main')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('results notification and empty widgets without a search box', () => {
+    it('calls onResults and dispatches mg-search-widget:results', async () => {
+      global.fetch = mockFetch({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            hits: { hits: [], total: { value: 0 } },
+            aggregations: {},
+          }),
+      });
+      window.history.replaceState(null, '', '/');
+      const onResults = jest.fn();
+      const events = jest.fn();
+      document.addEventListener('mg-search-widget:results', events);
+      render(
+        <SyndicationSearchWidget
+          config={{
+            onResults,
+            showSearchBox: false,
+            debounceDelay: 0,
+            enableHashSync: false,
+          }}
+        />
+      );
+      await waitFor(() => expect(onResults).toHaveBeenCalled());
+      expect(onResults.mock.calls[0][0]).toEqual(
+        expect.objectContaining({ total: 0 })
+      );
+      expect(events).toHaveBeenCalled();
+      expect(events.mock.calls[0][0].detail.total).toBe(0);
+      document.removeEventListener('mg-search-widget:results', events);
+      // With no search box there is nothing to type into: say no results.
+      expect(screen.queryByText(/enter a search term/i)).toBeNull();
+      expect(screen.getByText('No results found')).toBeInTheDocument();
+    });
+
+    it('shows no "No results found" before the first results arrive', () => {
+      // Before the debounced fetch, results is null and nothing is loading.
+      global.fetch = jest.fn(() => new Promise(() => {}));
+      window.history.replaceState(null, '', '/');
+      const { container } = render(
+        <SyndicationSearchWidget
+          config={{
+            showSearchBox: false,
+            debounceDelay: 500,
+            enableHashSync: false,
+          }}
+        />
+      );
+      expect(screen.queryByText('No results found')).toBeNull();
+      expect(screen.queryByText(/enter a search term/i)).toBeNull();
+      expect(
+        container.querySelector('.mg-search__results-loading')
+      ).not.toBeNull();
+    });
+
+    it('still announces totals when facets are on, even with count and pager off', async () => {
+      global.fetch = mockFetch({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            hits: {
+              hits: [{ _id: '1', _source: { title: 'A', url: '/a' } }],
+              total: { value: 3 },
+            },
+            aggregations: {},
+          }),
+      });
+      window.history.replaceState(null, '', '/');
+      const { container } = render(
+        <SyndicationSearchWidget
+          config={{
+            showSearchBox: false,
+            showResultsCount: false,
+            showPager: false,
+            debounceDelay: 0,
+            enableHashSync: false,
+          }}
+        />
+      );
+      await waitFor(() =>
+        expect(
+          container.querySelector('.mg-search__results > [role="status"]')
+            ?.textContent
+        ).toMatch(/3/)
+      );
+    });
+
+    it('does not announce totals when nothing in the widget is interactive', async () => {
+      global.fetch = mockFetch({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            hits: {
+              hits: [{ _id: '1', _source: { title: 'A', url: '/a' } }],
+              total: { value: 3 },
+            },
+            aggregations: {},
+          }),
+      });
+      const { container } = render(
+        <SyndicationSearchWidget
+          config={{
+            showSearchBox: false,
+            showResultsCount: false,
+            showPager: false,
+            showFacets: false,
+            debounceDelay: 0,
+          }}
+        />
+      );
+      await waitFor(() =>
+        expect(container.querySelector('.mg-search__results')).not.toBeNull()
+      );
+      const live = container.querySelector(
+        '.mg-search__results > [role="status"]'
+      );
+      expect(live.textContent).toBe('');
+    });
+  });
+
+  describe('analytics regions', () => {
+    const regions = container =>
+      [...container.querySelectorAll('[data-vf-google-analytics-region]')].map(
+        el => el.getAttribute('data-vf-google-analytics-region')
+      );
+
+    it('defaults to the undrr-search regions', () => {
+      const { container } = render(<SyndicationSearchWidget config={{}} />);
+      expect(regions(container)).toEqual(
+        expect.arrayContaining([
+          'undrr-search-form',
+          'undrr-search-results',
+          'undrr-search-facets',
+        ])
+      );
+    });
+
+    it('uses analyticsRegionPrefix for every region', () => {
+      const { container } = render(
+        <SyndicationSearchWidget
+          config={{ analyticsRegionPrefix: 'collection-content' }}
+        />
+      );
+      const names = regions(container);
+      expect(names).toEqual(
+        expect.arrayContaining([
+          'collection-content-form',
+          'collection-content-results',
+          'collection-content-facets',
+        ])
+      );
+      expect(names.some(name => name.startsWith('undrr-search'))).toBe(false);
     });
   });
 
@@ -299,6 +815,7 @@ describe('SyndicationSearchWidget', () => {
 
 describe('Widget with results', () => {
   beforeEach(() => {
+    clearTaxonomyCache();
     jest.useFakeTimers();
   });
 

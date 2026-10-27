@@ -1,7 +1,13 @@
+import { getLanguageProps } from '../../../../src/i18n';
+import { getShareButtonsLabels } from './_labels';
 import React from 'react';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useId, useRef } from 'react';
+import PropTypes from 'prop-types';
 import QRCode from 'qrcode';
 import LinkUrls from './links.json';
+
+export { getShareButtonsLabels } from './_labels';
+export { DEFAULT_SHARE_LABELS } from './_labels';
 
 const defaults = {
   defaultSharingTextBody: 'Check out this link: ',
@@ -12,6 +18,8 @@ const defaults = {
  * QR Code Modal Component
  */
 const QRCodeModal = ({
+  lang,
+  dir,
   isOpen,
   onClose,
   qrCodeDataUrl,
@@ -19,52 +27,52 @@ const QRCodeModal = ({
   onDownload,
   sharedLink,
   copiedLabel = 'Image copied',
+  titleLabel = 'QR code',
+  descriptionLabel = 'This QR code contains the link below. You can copy the image or add it to your printed or display materials.',
+  closeModalLabel = 'Close modal',
+  copyImageLabel = 'Copy image',
+  downloadImageLabel = 'Download image',
+  closeMessageLabel = 'Close message',
 }) => {
   const modalRef = useRef(null);
+  const titleId = useId();
+  const descriptionId = useId();
   const [qrCodeCopied, setQrCodeCopied] = useState(false);
 
-  useEffect(() => {
-    const handleEscape = e => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
-    };
-
-    const handleClickOutside = e => {
-      if (modalRef.current && !modalRef.current.contains(e.target)) {
-        onClose();
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener('keydown', handleEscape);
-      document.addEventListener('mousedown', handleClickOutside);
-      document.body.style.overflow = 'hidden';
-    }
-
-    return () => {
-      document.removeEventListener('keydown', handleEscape);
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen, onClose]);
-
-  // Reset copy state when modal opens
-  useEffect(() => {
+  // Reset the "copied" confirmation when the modal reopens. Tracking the
+  // previous isOpen in a ref lets us detect the false→true transition during
+  // render — no extra useEffect round-trip needed.
+  const prevIsOpenRef = useRef(isOpen);
+  if (isOpen !== prevIsOpenRef.current) {
+    prevIsOpenRef.current = isOpen;
     if (isOpen) {
       setQrCodeCopied(false);
     }
+  }
+
+  useEffect(() => {
+    if (!isOpen) return undefined;
+
+    const dialog = modalRef.current;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    dialog.showModal();
+    return () => {
+      if (dialog.open) dialog.close();
+      document.body.style.overflow = previousOverflow;
+    };
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!qrCodeCopied) return undefined;
+    const timeout = setTimeout(() => setQrCodeCopied(false), 2000);
+    return () => clearTimeout(timeout);
+  }, [qrCodeCopied]);
 
   const handleCopy = async () => {
     try {
       await onCopy();
       setQrCodeCopied(true);
-
-      // Auto-dismiss feedback after 2 seconds
-      setTimeout(() => {
-        setQrCodeCopied(false);
-      }, 2000);
     } catch (error) {
       // Error handling is done in the parent component
       console.error('Copy failed:', error);
@@ -73,151 +81,107 @@ const QRCodeModal = ({
 
   if (!isOpen) return null;
 
+  const closeDialog = () => modalRef.current?.close();
+
+  const handleBackdropClick = event => {
+    if (event.target !== modalRef.current) return;
+    const rect = modalRef.current.getBoundingClientRect();
+    if (
+      event.clientX < rect.left ||
+      event.clientX > rect.right ||
+      event.clientY < rect.top ||
+      event.clientY > rect.bottom
+    ) {
+      closeDialog();
+    }
+  };
+
   return (
-    <div
+    <dialog
+      {...getLanguageProps(lang, dir)}
+      ref={modalRef}
       data-vf-google-analytics-region="share-qr-code"
-      className="mg-modal-overlay"
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        zIndex: 1000,
-      }}
+      className="mg-share__dialog"
+      aria-labelledby={titleId}
+      aria-describedby={descriptionId}
+      onClose={onClose}
+      onClick={handleBackdropClick}
     >
-      <div
-        ref={modalRef}
-        className="mg-modal"
-        style={{
-          backgroundColor: 'white',
-          borderRadius: '8px',
-          padding: '24px',
-          maxWidth: '500px',
-          width: '90%',
-          maxHeight: '90vh',
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'hidden',
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            marginBottom: '16px',
-            flexShrink: 0,
-          }}
+      <div className="mg-share__dialog-header">
+        <h2 id={titleId} className="mg-share__dialog-title">
+          {titleLabel}
+        </h2>
+        <button
+          type="button"
+          onClick={closeDialog}
+          className="mg-icon-button mg-share__dialog-close"
+          aria-label={closeModalLabel}
         >
-          <h3>QR code</h3>
-          <button
-            onClick={onClose}
-            style={{
-              background: 'none',
-              border: 'none',
-              fontSize: '24px',
-              cursor: 'pointer',
-              padding: '4px',
-              borderRadius: '4px',
-              color: '#666',
-            }}
-            aria-label="Close modal"
-          >
-            ×
-          </button>
-        </div>
-        <p>
-          This QR code contains the link below. You can copy the image or add it to your printed or display materials.
-        </p>
-        <div
-          style={{
-            flex: 1,
-            overflowY: 'auto',
-            paddingRight: '8px',
-          }}
-        >
-          {qrCodeDataUrl && (
-            <div style={{ marginBottom: '16px' }}>
-              <img
-                src={qrCodeDataUrl}
-                alt="QR Code"
-                style={{
-                  maxWidth: '100%',
-                  maxHeight: '220px',
-                  height: 'auto',
-                }}
-              />
-              <div style={{ textAlign: 'left' }}>
-                <code className="mg-code--block">
-                  {(() => {
-                    const url = new URL(sharedLink);
-                    url.searchParams.set('utm_source', 'qr');
-                    url.searchParams.set('utm_medium', 'web');
-                    url.searchParams.set('utm_campaign', 'share_box');
-                    return url.toString();
-                  })()}
-                </code>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Accessibility announcement for copy feedback */}
-        <div
-          aria-live="polite"
-          aria-atomic="true"
-          style={{
-            position: 'absolute',
-            left: '-10000px',
-            width: '1px',
-            height: '1px',
-            overflow: 'hidden',
-          }}
-        >
-          {qrCodeCopied ? `${copiedLabel}` : ''}
-        </div>
-
-        <div
-          style={{
-            marginTop: '16px',
-            flexShrink: 0,
-            display: 'flex',
-            gap: '8px',
-            flexWrap: 'wrap',
-            justifyContent: 'space-between',
-            alignItems: 'flex-end',
-          }}
-        >
-          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-            <button
-              onClick={handleCopy}
-              className="mg-button mg-button-primary"
-              disabled={qrCodeCopied}
-            >
-              {qrCodeCopied ? copiedLabel : 'Copy image'}
-            </button>
-            <button
-              onClick={onDownload}
-              className="mg-button mg-button-secondary"
-            >
-              Download image
-            </button>
-          </div>
-          <button
-            onClick={onClose}
-            className="mg-button mg-button-secondary"
-            style={{ marginLeft: 'auto' }}
-          >
-            Close message
-          </button>
-        </div>
+          <span className="mg-icon mg-icon-close" aria-hidden="true" />
+        </button>
       </div>
-    </div>
+      <p id={descriptionId} className="mg-share__dialog-description">
+        {descriptionLabel}
+      </p>
+      <div className="mg-share__dialog-content">
+        {qrCodeDataUrl && (
+          <div>
+            <img
+              src={qrCodeDataUrl}
+              alt=""
+              className="mg-share__dialog-image"
+            />
+            <div className="mg-share__dialog-url">
+              <code className="mg-code--block">
+                {(() => {
+                  const url = new URL(sharedLink);
+                  url.searchParams.set('utm_source', 'qr');
+                  url.searchParams.set('utm_medium', 'web');
+                  url.searchParams.set('utm_campaign', 'share_box');
+                  return url.toString();
+                })()}
+              </code>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Accessibility announcement for copy feedback */}
+      <div
+        aria-live="polite"
+        aria-atomic="true"
+        className="mg-share__visually-hidden"
+      >
+        {qrCodeCopied ? `${copiedLabel}` : ''}
+      </div>
+
+      <div className="mg-share__dialog-actions">
+        <div className="mg-share__dialog-actions-primary">
+          <button
+            type="button"
+            onClick={handleCopy}
+            className="mg-button mg-button-primary"
+            disabled={qrCodeCopied}
+          >
+            {qrCodeCopied ? copiedLabel : copyImageLabel}
+          </button>
+          <button
+            type="button"
+            onClick={onDownload}
+            className="mg-button mg-button-secondary"
+          >
+            {downloadImageLabel}
+          </button>
+        </div>
+        <button
+          type="button"
+          onClick={closeDialog}
+          className="mg-button mg-button-secondary"
+        >
+          {closeMessageLabel}
+        </button>
+      </div>
+    </dialog>
   );
 };
 
@@ -228,16 +192,22 @@ const QRCodeModal = ({
  *                           onCopy: "Copied"
  *  @param {string} sharingSubject - subject of the Email that will be prefilled to the user
  *  @param {string} sharingBody - body of the Email that will be prefilled and appended with LINK to the site
+ *
+ *  @see schemas/share-action.schema.js — canonical field names and documented deviations.
  */
 const ShareButtons = ({
+  lang,
+  dir,
   labels,
   sharingSubject,
   sharingBody,
   // CustomUrl,
   ...props
 }) => {
+  const l = getShareButtonsLabels(lang, labels);
   const [qrModalOpen, setQrModalOpen] = useState(false);
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState(null);
+  const qrButtonRef = useRef(null);
 
   const getLinkToShare = () => {
     const shortlinkElement = document.querySelector('link[rel="shortlink"]');
@@ -247,7 +217,7 @@ const ShareButtons = ({
   const sharedLink = getLinkToShare();
 
   const getShareableLinkForPlatform = Platform => {
-    let baseLink = LinkUrls[Platform];
+    const baseLink = LinkUrls[Platform];
     const subject = encodeURIComponent(
       sharingSubject ?? defaults.defaultSharingTextSubject
     );
@@ -299,8 +269,8 @@ const ShareButtons = ({
         margin: 2,
         color: {
           dark: '#000000',
-          light: '#FFFFFF'
-        }
+          light: '#FFFFFF',
+        },
       });
 
       setQrCodeDataUrl(dataUrl);
@@ -329,7 +299,7 @@ const ShareButtons = ({
     }
   };
 
-    const downloadQRCode = async () => {
+  const downloadQRCode = async () => {
     try {
       if (qrCodeDataUrl) {
         // Convert data URL back to blob
@@ -385,27 +355,26 @@ const ShareButtons = ({
 
   const closeQRModal = () => {
     setQrModalOpen(false);
-    if (qrCodeDataUrl) {
-      URL.revokeObjectURL(qrCodeDataUrl);
-      setQrCodeDataUrl(null);
-    }
+    setQrCodeDataUrl(null);
+    qrButtonRef.current?.focus();
   };
 
   return (
     <>
       <section
+        {...getLanguageProps(lang, dir)}
         data-vf-google-analytics-region="share-this"
         className="mg-share"
         {...props}
       >
-        <header className="mg-share__header">{labels.mainLabel}</header>
+        <header className="mg-share__header">{l.mainLabel}</header>
         <div className="mg-share__buttons">
           {navigator.share && (
             <button
               data-vf-analytics-label="Social share: Web Share API"
               onClick={() => handleClick('WebShare')}
-              aria-label="Share using your device"
-              title="Share using your device"
+              aria-label={l.shareUsingDevice}
+              title={l.shareUsingDevice}
               className="mg-share__button"
             >
               <span className="mg-icon mg-icon-share" aria-hidden="true"></span>
@@ -414,45 +383,58 @@ const ShareButtons = ({
           <button
             data-vf-analytics-label="Social share: LinkedIn"
             onClick={() => handleClick('LinkedIn')}
-            aria-label="Share on LinkedIn"
+            aria-label={l.shareOnLinkedIn}
             className="mg-share__button"
-            title="Share on LinkedIn"
+            title={l.shareOnLinkedIn}
           >
-            <span className="mg-icon mg-icon-linkedin" aria-hidden="true"></span>
+            <span
+              className="mg-icon mg-icon-linkedin"
+              aria-hidden="true"
+            ></span>
           </button>
           <button
             data-vf-analytics-label="Social share: Facebook"
             onClick={() => handleClick('Facebook')}
-            aria-label="Share on Facebook"
-            title="Share on Facebook"
+            aria-label={l.shareOnFacebook}
+            title={l.shareOnFacebook}
             className="mg-share__button"
           >
-            <span className="mg-icon mg-icon-facebook" aria-hidden="true"></span>
+            <span
+              className="mg-icon mg-icon-facebook"
+              aria-hidden="true"
+            ></span>
           </button>
           <button
             data-vf-analytics-label="Social share: X"
             onClick={() => handleClick('Twitter')}
-            aria-label="Share on X"
+            aria-label={l.shareOnX}
             className="mg-share__button"
-            title="Share on X"
+            title={l.shareOnX}
           >
-            <span className="mg-icon mg-icon-x-social" aria-hidden="true"></span>
+            <span
+              className="mg-icon mg-icon-x-social"
+              aria-hidden="true"
+            ></span>
           </button>
           <button
             data-vf-analytics-label="Social share: Mail"
             onClick={() => handleClick('Mail')}
-            aria-label="Share via Email"
+            aria-label={l.shareViaEmail}
             className="mg-share__button"
-            title="Share via Email"
+            title={l.shareViaEmail}
           >
-            <span className="mg-icon mg-icon-envelope" aria-hidden="true"></span>
+            <span
+              className="mg-icon mg-icon-envelope"
+              aria-hidden="true"
+            ></span>
           </button>
           <button
+            ref={qrButtonRef}
             data-vf-analytics-label="Social share: QR Code"
             onClick={() => handleClick('QRCode')}
-            aria-label="Generate QR Code"
+            aria-label={l.generateQRCode}
             className="mg-share__button"
-            title="Generate QR Code"
+            title={l.generateQRCode}
           >
             <span className="mg-icon mg-icon-qrcode" aria-hidden="true"></span>
           </button>
@@ -460,19 +442,28 @@ const ShareButtons = ({
 
         <CopyButton
           className="mg-share__copy-button"
-          copiedLabel={labels.onCopy}
+          copiedLabel={l.onCopy}
+          copyToClipboardLabel={l.copyToClipboard}
           sharedLink={sharedLink}
         />
       </section>
 
       <QRCodeModal
+        lang={lang}
+        dir={dir}
         isOpen={qrModalOpen}
         onClose={closeQRModal}
         qrCodeDataUrl={qrCodeDataUrl}
         onCopy={copyQRCodeToClipboard}
         onDownload={downloadQRCode}
         sharedLink={sharedLink}
-        copiedLabel={labels.onCopy}
+        copiedLabel={l.onCopy}
+        titleLabel={l.qrCodeTitle}
+        descriptionLabel={l.qrCodeDescription}
+        closeModalLabel={l.closeModal}
+        copyImageLabel={l.copyImage}
+        downloadImageLabel={l.downloadImage}
+        closeMessageLabel={l.closeMessage}
       />
     </>
   );
@@ -483,33 +474,33 @@ const ShareButtons = ({
  *  @param {string} copiedLabel - the label that will be shown when the link is coppied(should be in the right language)
  *  @param {string} sharedLink - the link that will be copied
  */
-export function CopyButton({ copiedLabel, sharedLink, className }) {
+export function CopyButton({
+  copiedLabel,
+  sharedLink,
+  className,
+  copyToClipboardLabel = 'Copy to Clipboard',
+}) {
   const [coppied, setCoppied] = useState(false);
-  const [visibleLink, setVisibleLink] = useState(sharedLink);
+
+  // visibleLink is fully derived from sharedLink: strip the leading http(s)://
+  // for display. Computed during render so we don't need useState/useEffect.
+  let visibleLink = sharedLink;
+  if (sharedLink.startsWith('https://')) {
+    visibleLink = sharedLink.replace('https://', '');
+  } else if (sharedLink.startsWith('http://')) {
+    visibleLink = sharedLink.replace('http://', '');
+  }
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(sharedLink);
     setCoppied(true);
   };
 
-  //on sharedLink change, update visibleLink to not show http/s
-  useEffect(() => {
-    let newVisibleLink = sharedLink;
-    //replace https only if it is in the beginning of the URL
-    if (sharedLink.startsWith('https://')) {
-      //replace replaces only first occurence
-      newVisibleLink = sharedLink.replace('https://', '');
-    } else if (sharedLink.startsWith('http://')) {
-      newVisibleLink = sharedLink.replace('http://', '');
-    }
-    setVisibleLink(newVisibleLink);
-  }, [sharedLink]);
-
   return (
     <button
       data-vf-analytics-label="Quick link copy"
-      aria-label="Copy to Clipboard"
-      title="Copy to Clipboard"
+      aria-label={copyToClipboardLabel}
+      title={copyToClipboardLabel}
       className={className}
       onClick={() => handleCopyLink()}
     >
@@ -520,10 +511,67 @@ export function CopyButton({ copiedLabel, sharedLink, className }) {
         {coppied ? copiedLabel : visibleLink}
       </div>
       <div className="mg-share__stack-icon">
-        <span className="mg-icon mg-icon-clone" alt="Copy icon"></span>
+        <span className="mg-icon mg-icon-clone" aria-hidden="true"></span>
       </div>
     </button>
   );
 }
+
+QRCodeModal.propTypes = {
+  /** Controls modal visibility. */
+  isOpen: PropTypes.bool.isRequired,
+  /** Called when the user closes the modal (Escape, click-outside, or close button). */
+  onClose: PropTypes.func.isRequired,
+  /** Data URL for the generated QR code image. */
+  qrCodeDataUrl: PropTypes.string,
+  /** Called when the user copies the QR image to the clipboard. Should return a Promise. */
+  onCopy: PropTypes.func.isRequired,
+  /** Called when the user downloads the QR image. */
+  onDownload: PropTypes.func.isRequired,
+  /** URL the QR code encodes (also shown in the modal caption). */
+  sharedLink: PropTypes.string.isRequired,
+  /** Localised confirmation text shown after a successful copy. */
+  copiedLabel: PropTypes.string,
+};
+
+ShareButtons.propTypes = {
+  /** UI language tag; selects the built-in catalogue, with English fallback. */
+  lang: PropTypes.string,
+  /** Explicit text direction; otherwise known catalogue languages select their direction. */
+  dir: PropTypes.oneOf(['ltr', 'rtl', 'auto']),
+  /** Explicit UI label overrides; omitted keys use the selected catalogue, then English. */
+  labels: PropTypes.shape({
+    mainLabel: PropTypes.string,
+    onCopy: PropTypes.string,
+    qrCodeTitle: PropTypes.string,
+    qrCodeDescription: PropTypes.string,
+    closeModal: PropTypes.string,
+    copyImage: PropTypes.string,
+    downloadImage: PropTypes.string,
+    closeMessage: PropTypes.string,
+    shareUsingDevice: PropTypes.string,
+    shareOnLinkedIn: PropTypes.string,
+    shareOnFacebook: PropTypes.string,
+    shareOnX: PropTypes.string,
+    shareViaEmail: PropTypes.string,
+    generateQRCode: PropTypes.string,
+    copyToClipboard: PropTypes.string,
+  }),
+  /** Subject line used for email share and the QR caption. */
+  sharingSubject: PropTypes.string,
+  /** Body text prefixed to the shared URL in email and clipboard payloads. */
+  sharingBody: PropTypes.string,
+};
+
+CopyButton.propTypes = {
+  /** Localised confirmation text shown after a successful copy. */
+  copiedLabel: PropTypes.string.isRequired,
+  /** URL to copy; also rendered (with `http(s)://` stripped) as the button label. */
+  sharedLink: PropTypes.string.isRequired,
+  /** Optional CSS class applied to the root button element. */
+  className: PropTypes.string,
+  /** Accessible label for the copy button. */
+  copyToClipboardLabel: PropTypes.string,
+};
 
 export default ShareButtons;

@@ -2,7 +2,7 @@ import { Heading as HeadingComponent } from '../Typography/Heading/Heading';
 import { Abbreviation as AbbrComponent } from './Abbr/Abbr';
 import { Blockquote } from './Blockquote/Blockquote';
 import { Cite as CiteComponent } from './Cite/Cite';
-import { Code as CodeComponent } from './Code/Code';
+import { Code as CodeComponent } from './Code/Code'; // inline <code> only — see Components/CodeBlock for full block component
 import { Hr as HrComponent } from './Hr/Hr';
 import { Mark as MarkComponent } from './Mark/Mark';
 import { P as PComponent } from './Paragraph/Paragraph';
@@ -181,78 +181,6 @@ const getCaptionForLocaleCode = locale => {
         detail4: 'String',
         detail5:
           'object contains the length of the string. It can also serve as a character counter.',
-      };
-  }
-};
-
-const getCaptionForLocaleCodeBlock = locale => {
-  switch (locale) {
-    case 'english':
-      const engText = {
-        blockCode: `// React component example
-import React from 'react';
-
-const MyComponent = ({ title, children }) => {
-  return (
-    <div className="my-component">
-      <h2>{title}</h2>
-      {children}
-    </div>
-  );
-};
-
-export default MyComponent;`,
-      };
-      return engText;
-    case 'arabic':
-      const arabicText = {
-        blockCode: `// مثال مكون React
-import React from 'react';
-
-const MyComponent = ({ title, children }) => {
-  return (
-    <div className="my-component">
-      <h2>{title}</h2>
-      {children}
-    </div>
-  );
-};
-
-export default MyComponent;`,
-      };
-      return arabicText;
-    case 'japanese':
-      const japaneseText = {
-        blockCode: `// Reactコンポーネントの例
-import React from 'react';
-
-const MyComponent = ({ title, children }) => {
-  return (
-    <div className="my-component">
-      <h2>{title}</h2>
-      {children}
-    </div>
-  );
-};
-
-export default MyComponent;`,
-      };
-      return japaneseText;
-    default:
-      return {
-        blockCode: `// React component example
-import React from 'react';
-
-const MyComponent = ({ title, children }) => {
-  return (
-    <div className="my-component">
-      <h2>{title}</h2>
-      {children}
-    </div>
-  );
-};
-
-export default MyComponent;`,
       };
   }
 };
@@ -538,6 +466,8 @@ export default {
   title: 'Components/Typography',
   parameters: {
     viewMode: 'docs',
+    // Base HTML elements: "Show code" shows the rendered HTML.
+    docs: { source: { html: true } },
     previewTabs: {
       canvas: { hidden: true },
     },
@@ -613,11 +543,9 @@ export const TypographySmall = Template(
   SmallComponent,
   getCaptionForLocaleSmall
 );
+
 export const TypographyCode = Template(CodeComponent, getCaptionForLocaleCode);
-export const TypographyCodeBlock = Template(
-  CodeComponent,
-  getCaptionForLocaleCodeBlock
-);
+
 export const TypographyAbbreviation = Template(
   AbbrComponent,
   getCaptionForLocaleAbbr
@@ -655,6 +583,85 @@ export const TypographyDetails = Template(
   DetailsComponent,
   getLocaleForDetails
 );
+
+const DetailsTagBaseline = ({ summary, details }) => (
+  <details>
+    <summary>{summary}</summary>
+    <p>{details}</p>
+  </details>
+);
+
+export const TypographyDetailsBaseline = Template(
+  DetailsTagBaseline,
+  getLocaleForDetails
+);
+
+export const TypographyAccordion = {
+  render: () => (
+    <div className="mg-accordion">
+      <details open>
+        <summary>What is the Sendai Framework?</summary>
+        <div>
+          <p>
+            The Sendai Framework for Disaster Risk Reduction 2015-2030 is the
+            global roadmap for reducing human and economic loss as a direct
+            result of disasters.
+          </p>
+        </div>
+      </details>
+      <details>
+        <summary>What are the four Sendai priorities for action?</summary>
+        <div>
+          <p>
+            1. Understanding disaster risk. 2. Strengthening disaster risk
+            governance. 3. Investing in disaster risk reduction for resilience.
+            4. Enhancing disaster preparedness for effective response.
+          </p>
+        </div>
+      </details>
+      <details>
+        <summary>How does UNDRR support implementation?</summary>
+        <div>
+          <p>
+            UNDRR supports countries in monitoring progress, developing national
+            DRR strategies, and sharing evidence-based risk knowledge.
+          </p>
+        </div>
+      </details>
+    </div>
+  ),
+  name: 'Accordion',
+};
+
+export const TypographyAccordionFlush = {
+  render: () => (
+    <div
+      className="mg-accordion mg-accordion--flush"
+      style={{ maxWidth: '400px' }}
+    >
+      <details open>
+        <summary>Map Layers & Overlays</summary>
+        <div>
+          <p>
+            Configure hazard exposure, vulnerability indices, and critical
+            infrastructure layers.
+          </p>
+        </div>
+      </details>
+      <details>
+        <summary>Filter by Region</summary>
+        <div>
+          <p>
+            Filter data across Africa, Americas, Arab States, Asia-Pacific, and
+            Europe.
+          </p>
+        </div>
+      </details>
+    </div>
+  ),
+  name: 'Accordion (flush)',
+};
+
 export const TypographyFigcaption = Template(
   FigcaptionComponent,
   getLocaleForFigcaption

@@ -28,7 +28,7 @@ export function PagerJump({
   const [inputValue, setInputValue] = useState('');
 
   const handleSubmit = useCallback(
-    (e) => {
+    e => {
       e.preventDefault();
       const parsed = parseInt(inputValue, 10);
       if (Number.isNaN(parsed) || parsed < 1) return;
@@ -42,7 +42,7 @@ export function PagerJump({
       onPageChange(target);
       setInputValue('');
     },
-    [inputValue, onPageChange, totalPages],
+    [inputValue, onPageChange, totalPages]
   );
 
   const inputId = 'mg-pager-jump-input';
@@ -57,9 +57,13 @@ export function PagerJump({
         className="mg-pager__jump-input"
         type="number"
         min={1}
-        max={totalPages !== null && totalPages !== undefined ? totalPages : undefined}
+        max={
+          totalPages !== null && totalPages !== undefined
+            ? totalPages
+            : undefined
+        }
         value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
+        onChange={e => setInputValue(e.target.value)}
         disabled={isLoading}
         aria-label={jumpToLabel}
       />

@@ -3,17 +3,19 @@ import * as HorizontalCardStories from './HorizontalCard.stories';
 
 <Meta of={HorizontalCardStories} />
 
-> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
 
 # Horizontal card
+
+This draft schema candidate changes `data` → `items` and `imgback`/`imgalt` → `image.{src,alt}`, with `summaryText` → `summary` and `label1`/`label2` → the first two entries of `labels[]`. Existing link handling, geometry and media presentation are retained. See the [schema migration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/MIGRATION-SCHEMA-V2.md) before adopting this unreleased API.
 
 A content teaser card in landscape/side-by-side layout. Image on the left, text on the right. Well suited for content-heavy listings where the image is secondary.
 
 ## When to use
 
-- List-style content pages (search results, filtered listings)
-- Layouts where vertical space is limited and horizontal reading flow is preferred
-- Content with longer titles or summaries that benefit from a wider text area
+- List-style content pages
+- Layouts where horizontal reading flow is preferred
+- Content with longer titles/summaries
 
 ## Anatomy
 
@@ -27,81 +29,114 @@ The entire card is clickable via a stretched link on the title.
 
 <Canvas of={HorizontalCardStories.DefaultHorizontalCard} />
 
+### Longer content
+
+Photos fill their frame when adjacent content makes the card taller, using `object-fit: cover`. Resize to test side-by-side and stacked layouts.
+
+<Canvas of={HorizontalCardStories.LongContent} />
+
 ## Color variants
 
 Use the `variant` prop to change the title accent color. These match the Hero component color system and adapt per theme.
 
-| Variant | Class | Color |
-|---------|-------|-------|
-| `primary` (default) | — | `$mg-color-interactive` (blue) |
-| `secondary` | `mg-card--secondary` | `$mg-color-secondary` (orange) |
-| `tertiary` | `mg-card--tertiary` | `$mg-color-tertiary` (black) |
-| `quaternary` | `mg-card--quaternary` | `$mg-color-quaternary` (red) |
+| Variant             | Class                 | Color                                                                                    |
+| ------------------- | --------------------- | ---------------------------------------------------------------------------------------- |
+| `primary` (default) | —                     | `$mg-color-interactive` (blue)                                                           |
+| `secondary`         | `mg-card--secondary`  | Title `$mg-color-interactive` (blue), plus a `$mg-color-secondary` (orange) leading rule |
+| `tertiary`          | `mg-card--tertiary`   | `$mg-color-tertiary` (black)                                                             |
+| `quaternary`        | `mg-card--quaternary` | `$mg-color-quaternary` (red)                                                             |
+
+**Contrast:** the orange accent carries no text, in either direction. `secondary` used to paint the title with it, at 2.65 against WCAG's 4.5 on the card surface; the title now takes the interactive colour and the accent is a 4px rule on the card's leading edge. That rule is 2.95 against white, under the 3:1 of SC 1.4.11, so it is emphasis rather than the only signal. See [the colour contrast methodology](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text) for the measurements.
 
 Use the variant control below the canvas to preview each option.
 
 ## Title link visibility
 
-By default, card titles display three signals that they are clickable:
-
-1. **Blue color** matching `$mg-color-interactive` (adapts per theme)
-2. **Underline** with `3px` offset
-3. **Chevron indicator** (CSS border triangle via `::after`)
-
-On hover, the underline thickens to `2px`. In RTL layouts, the chevron flips direction automatically.
+Card titles show: blue color, underline (3px offset), and a right-pointing chevron (flips in RTL). On hover, underline intensifies.
 
 ### Opting out
 
 Add `mg-card--plain-title` to disable all link signals while keeping the card clickable.
 
-**In React:**
+**React:** `<HorizontalCard items={data} className="mg-card--plain-title" />`
 
-```jsx
-<HorizontalCard data={data} className="mg-card--plain-title" />
-```
-
-**In Drupal templates or static HTML:**
-
-```html
-<article class="mg-card mg-card__hc mg-card--plain-title">
-  ...
-</article>
-```
-
-## Props
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `data` | Array | Required | Array of card data objects |
-| `variant` | String | `'primary'` | Color variant: `'primary'`, `'secondary'`, `'tertiary'`, `'quaternary'` |
-| `className` | String | — | Additional CSS classes on the card element |
-
-### Data object properties
-
-| Property | Type | Description |
-|----------|------|-------------|
-| `title` | String | Card heading text |
-| `link` | String | URL for the title link and stretched link |
-| `imgback` | String | Image URL |
-| `imgalt` | String | Alt text for the image |
-| `summaryText` | String | Body text (HTML supported) |
-| `label1` | String | First category label |
-| `label2` | String | Second category label |
-| `button` | String | CTA button label |
+**HTML:** `<article class="mg-card mg-card__hc mg-card--plain-title">...</article>`
 
 ## Responsive behavior
 
-| Breakpoint | Layout |
-|------------|--------|
-| Mobile (< 640px) | Stacked: image on top (300px tall), content below |
-| Tablet (640px+) | Side-by-side: 160px image, content fills remaining width |
+| Breakpoint        | Layout                                                   |
+| ----------------- | -------------------------------------------------------- |
+| Mobile (< 640px)  | Stacked: image on top (300px tall), content below        |
+| Tablet (640px+)   | Side-by-side: 160px image, content fills remaining width |
 | Desktop (1024px+) | Side-by-side: 330px image, content fills remaining width |
+
+## Cards without links
+
+Omit `link` (or pass empty string) and the card renders a plain-text title: no chevron, underline, color, stretched link, or hover effect. Labels stay visible.
+
+<Canvas of={HorizontalCardStories.NoLinkHorizontalCard} />
+
+### A button instead of a card link
+
+Set `buttonLink` and leave `link` empty. The title stays plain text and the CTA is an in-flow link.
+
+<Canvas of={HorizontalCardStories.ButtonOnlyHorizontalCard} />
+
+See [Vertical card](?path=/docs/components-cards-vertical-card--docs#cards-without-links) for the full rationale and `href=""` reference.
+
+## Props
+
+| Prop        | Type   | Default     | Description                                                             |
+| ----------- | ------ | ----------- | ----------------------------------------------------------------------- |
+| `items`     | Array  | Required    | Array of card data objects                                              |
+| `variant`   | String | `'primary'` | Color variant: `'primary'`, `'secondary'`, `'tertiary'`, `'quaternary'` |
+| `className` | String | —           | Additional CSS classes on the card element                              |
+
+### Data object properties
+
+| Property     | Type   | Description                                                                                             |
+| ------------ | ------ | ------------------------------------------------------------------------------------------------------- |
+| `title`      | String | Card heading text                                                                                       |
+| `link`       | String | URL for the title link and stretched link. Omit it, or pass an empty string, to render an unlinked card |
+| `image.src`  | String | Image URL                                                                                               |
+| `image.alt`  | String | Alt text for the image                                                                                  |
+| `summary`    | String | Body text (HTML supported)                                                                              |
+| `labels[0]`  | String | First category label                                                                                    |
+| `labels[1]`  | String | Second category label                                                                                   |
+| `button`     | String | CTA button label                                                                                        |
+| `buttonLink` | String | CTA destination. Defaults to `link`; set it to give an unlinked card a button                           |
+
+## Image edges
+
+Photo images meet the card edges, with rounding only at the outer corners. Text
+and controls remain inset by `--mg-card-padding`. Without labels, the title
+starts at that inset without extra metadata spacing; cards without images keep the
+same text inset. Horizontal photos sit above the content below 640px, then fill
+the leading edge beside it (mirrored in RTL). Book and horizontal book cards
+use an unboxed publication teaser with one square cover border, keeping artwork intact.
+
+This is the default for existing React and HTML cards; no markup change is
+needed. Review site overrides that add padding to the card or round every image
+corner: photo cards now apply padding to `.mg-card__content` instead of the
+outer `.mg-card` surface.
 
 ## Changelog
 
-- **2.0.0** — 2026-03-29: **Breaking.** Prop renames to align with canonical card schema ([#884](https://github.com/unisdr/undrr-mangrove/issues/884)): `data` → `items`; `imgback`/`imgalt` → `image.{src,alt}`; `label1`/`label2` → `labels[]`; `summaryText` → `summary`. See [migration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/MIGRATION-SCHEMA-V2.md).
-- **1.2** — 2026-03-14 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): Added themeable card container tokens (`$mg-card-background`, `$mg-card-padding`, `$mg-card-border-radius`). Defaults to transparent/no padding; themes override for tinted card backgrounds (e.g., DELTA uses light gray with padding and rounded corners).
-- **1.1.1** — 2026-03-12: Fix chevron caret orphaning on its own line. Trim trailing whitespace from title text.
-- **1.1** — 2026-03-05: Title links now show blue color, underline, and chevron indicator for better affordance. Added `variant` prop (primary/secondary/tertiary/quaternary) matching the Hero color system. Removed dead `Hovercolors` prop. Added `mg-card--plain-title` CSS opt-out modifier.
-- **1.0.1** — 2025-12-12: Removed unused card share support (`item.share` / `mg-card__share`)
-- **1.0** — 2023-01-24: Released component
+- **2.0.0**, 2026-10-27 ([#891](https://github.com/unisdr/undrr-mangrove/pull/891)): **Unreleased breaking candidate.** Rename `data` → `items` and `imgback`/`imgalt` → `image.{src,alt}`, with `summaryText` → `summary` and `label1`/`label2` → the first two entries of `labels[]`. Preserve current media geometry, optional content and link behaviour while aligning the draft contract.
+
+- **1.6.0**, 2026-10-16: Photo media reaches the outer card edges while text and controls remain inset. Responsive horizontal media fills the leading edge, including in RTL. Titles without labels use a single content inset. Publication teasers use a single cover border; icon cards keep their inset content. Existing HTML classes and props remain supported.
+
+- **1.5.0**, 2026-09-18 ([#1249](https://github.com/unisdr/undrr-mangrove/pull/1249)): Fixes [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196). `mg-card--secondary` no longer paints its title in the orange accent (2.65 on the card surface, 2.37 on DELTA's). The title takes the interactive colour, and the accent becomes a 4px rule on the card's leading edge instead. `--mg-color-secondary` is unchanged. This is a visible change wherever the modifier is used, in all five themes.
+- **1.4.1**, 2026-09-17 ([#1190](https://github.com/unisdr/undrr-mangrove/pull/1190)): Links inside a card summary (`.mg-card__text-link`, and any anchor in `.mg-card__summary`) are underlined at rest instead of only on `:hover`. At 2.09:1 against the body colour, the interactive blue could not distinguish them on its own (WCAG 1.4.1 Use of Colour), and `link-in-text-block` was the most frequent axe violation in the 2.0 pre-release sweep. The underline thickens on hover. Button-styled links are excluded. Card titles are untouched: a linked title has always been underlined, and the `--plain-title` and empty-`href` opt-outs that remove that underline still do.
+- **1.4.0**, 2026-09-10: Plain-text titles for unlinked cards, visible labels, `buttonLink` prop, and `card.scss` fixes for empty `href`.
+- **1.3.5**, 2026-09-09 ([#1109](https://github.com/unisdr/undrr-mangrove/issues/1109)): Photos fill frame height when adjacent content is taller.
+- **1.3.4**, 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic titles/labels use `ui` font role.
+- **1.3.3**, 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Language-specific Arabic typography.
+- **1.3.2**, 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Unified focus states, image hover (book covers excluded), raised surface, elevation.
+- **1.3.1**, 2026-07-08: Fix z-index conflict with MegaMenu.
+- **1.3**, 2026-04-13: Roboto Condensed headings; add `variant` prop.
+- **1.2**, 2026-03-14 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): Themeable card tokens.
+- **1.1.1**, 2026-03-12: Fix chevron orphaning; trim title whitespace.
+- **1.1**, 2026-03-05: Link affordances; `variant` prop; `mg-card--plain-title` modifier.
+- **1.0.1**, 2025-12-12: Remove card share support.
+- **1.0**, 2023-01-24: Initial release.

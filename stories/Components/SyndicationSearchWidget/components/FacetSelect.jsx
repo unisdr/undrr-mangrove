@@ -11,8 +11,15 @@
  * @module SearchWidget/components/FacetSelect
  */
 
-import React, { useMemo, useCallback } from 'react';
-import { useSearchState, useSearchDispatch, actions } from '../context/SearchContext';
+import React, { memo, useMemo, useCallback } from 'react';
+import {
+  useSearchDispatch,
+  useSearchLabels,
+  interpolateLabel,
+  actions,
+} from '../context/SearchContext';
+
+const EMPTY_BUCKETS = [];
 import { SelectDropdown } from './SelectDropdown';
 import {
   ALWAYS_OR_FACETS,
@@ -20,6 +27,16 @@ import {
   parseTypeValue,
   getContentType,
 } from '../utils/constants';
+
+/**
+ * Maps ES subtype field names to their corresponding allowedTypes key.
+ * Used to filter individual subtypes when an editor restricts specific
+ * subtype values (e.g. allowedTypes.publicationTypes for PW publications).
+ */
+const FIELD_TO_SUBTYPE_ALLOWLIST_KEY = {
+  field_news_type: 'newsTypes',
+  field_publication_type: 'publicationTypes',
+};
 
 /**
  * FacetSelect component.
@@ -31,35 +48,57 @@ import {
  * @param {Function} props.getLabel - Function to get label for a value
  * @param {string} props.widgetId - Unique widget ID for accessibility
  * @param {Object} props.allowedTypes - Optional type restrictions
+ * @param {boolean} props.taxonomiesReady - Whether a complete taxonomy term
+ *   list loaded. On facets marked `labelSource: 'taxonomy'`, unselected
+ *   values with no label are hidden only once this is true and at least one
+ *   value in the facet has a label.
+ * @param {Array} props.selectedValues - Selected values of this facet
+ * @param {string} props.operator - 'OR' or 'AND' for this facet
  */
-export function FacetSelect({
+function FacetSelectComponent({
   field,
-  buckets = [],
+  buckets = EMPTY_BUCKETS,
   getLabel,
   widgetId = 'search',
   allowedTypes = null,
+  taxonomiesReady = false,
+  selectedValues = EMPTY_BUCKETS,
+  operator = 'OR',
 }) {
-  const { facets, facetOperators } = useSearchState();
   const dispatch = useSearchDispatch();
+  const labels = useSearchLabels();
 
-  const { key, label, vocabulary, type } = field;
+  const { key, label, vocabulary, type, labelSource } = field;
+
+  // Hide values the taxonomy can't label (unpublished or deleted terms), but
+  // only once a complete term list has loaded, and only when at least one
+  // value in this facet resolves. While loading or after an error every value
+  // would look unlabelled, and an endpoint that omits this vocabulary (or a
+  // langcode filter that drops most of it) would otherwise empty the facet.
+  const hideUnlabelled = useMemo(
+    () =>
+      labelSource === 'taxonomy' &&
+      taxonomiesReady &&
+      buckets.some(
+        bucket =>
+          getLabel(key, bucket.key, vocabulary, { fallback: null }) !== null
+      ),
+    [labelSource, taxonomiesReady, buckets, getLabel, key, vocabulary]
+  );
   const isMultiple = type === 'select-multiple';
-  const selectedValues = facets[key] || [];
 
   // Determine if operator toggle should be shown
   // Only show for multi-select facets with 2+ values that aren't in ALWAYS_OR_FACETS
   const showOperatorToggle =
-    isMultiple &&
-    selectedValues.length >= 2 &&
-    !ALWAYS_OR_FACETS.includes(key);
+    isMultiple && selectedValues.length >= 2 && !ALWAYS_OR_FACETS.includes(key);
 
-  const currentOperator = facetOperators[key] || 'OR';
+  const currentOperator = operator;
 
   /**
    * Handle operator toggle change.
    */
   const handleOperatorChange = useCallback(
-    (newOperator) => {
+    newOperator => {
       dispatch(actions.setFacetOperator(key, newOperator));
     },
     [dispatch, key]
@@ -77,7 +116,7 @@ export function FacetSelect({
 
     // Build options from buckets
     const bucketOptions = buckets
-      .filter((bucket) => {
+      .filter(bucket => {
         // Filter by allowed types if configured
         if (isTypeFacet && allowedTypes) {
           const bucketKey = String(bucket.key);
@@ -86,21 +125,35 @@ export function FacetSelect({
           if (bucket.isVocabulary) {
             if (typeof allowedTypes === 'object' && allowedTypes.vocabularies) {
               // Extract vocabulary ID from the vid: prefix
-              const vocabId = bucketKey.startsWith('vid:') ? bucketKey.slice(4) : bucketKey;
+              const vocabId = bucketKey.startsWith('vid:')
+                ? bucketKey.slice(4)
+                : bucketKey;
               return allowedTypes.vocabularies.includes(vocabId);
             }
-            // No vocabulary restriction configured — show all
+            // No vocabulary restriction configured: show all
             return true;
           }
 
-          // For subtypes, check if parent type is allowed
+          // For subtypes: first check parent type is allowed, then check
+          // any field-specific subtype allowlist (e.g. publicationTypes, newsTypes).
           if (bucket.isSubtype && bucket.parentType) {
             if (Array.isArray(allowedTypes)) {
               return allowedTypes.includes(bucket.parentType);
             }
-            if (typeof allowedTypes === 'object' && allowedTypes.types) {
-              return allowedTypes.types.includes(bucket.parentType);
+            if (typeof allowedTypes === 'object') {
+              if (
+                allowedTypes.types &&
+                !allowedTypes.types.includes(bucket.parentType)
+              ) {
+                return false;
+              }
+              const parsed = parseTypeValue(bucketKey);
+              const subtypeKey = FIELD_TO_SUBTYPE_ALLOWLIST_KEY[parsed.field];
+              if (subtypeKey && allowedTypes[subtypeKey]) {
+                return allowedTypes[subtypeKey].includes(parsed.value);
+              }
             }
+            return true;
           }
           // For parent types, check if type is allowed
           if (Array.isArray(allowedTypes)) {
@@ -112,7 +165,7 @@ export function FacetSelect({
         }
         return true;
       })
-      .map((bucket) => {
+      .map(bucket => {
         const bucketKey = String(bucket.key);
         const isSelected = selectedValues.includes(bucketKey);
 
@@ -134,7 +187,13 @@ export function FacetSelect({
               optionLabel = `${parentInfo.name}: ${optionLabel}`;
             }
           }
+        } else if (hideUnlabelled && !isSelected) {
+          optionLabel = getLabel(key, bucket.key, vocabulary, {
+            fallback: null,
+          });
+          if (optionLabel === null) return null;
         } else {
+          // Selected values keep the raw-ID fallback so they can be deselected
           optionLabel = getLabel(key, bucket.key, vocabulary);
         }
 
@@ -153,12 +212,12 @@ export function FacetSelect({
       .filter(Boolean);
 
     // Track which values we have from buckets
-    const bucketValues = new Set(bucketOptions.map((o) => o.value));
+    const bucketValues = new Set(bucketOptions.map(o => o.value));
 
     // Add selected values that aren't in buckets (so users can deselect them)
     const missingSelectedOptions = selectedValues
-      .filter((v) => !bucketValues.has(v))
-      .map((value) => {
+      .filter(v => !bucketValues.has(v))
+      .map(value => {
         // For type facet, use parseTypeValue
         let optionLabel;
         let isSubtype = false;
@@ -205,19 +264,36 @@ export function FacetSelect({
       });
     }
 
+    // Year: selected first, then newest first
+    if (key === 'year') {
+      return allOptions.sort((a, b) => {
+        if (a.isSelected && !b.isSelected) return -1;
+        if (!a.isSelected && b.isSelected) return 1;
+        return Number(b.value) - Number(a.value);
+      });
+    }
+
     // For other facets, sort selected first, then by count
     return allOptions.sort((a, b) => {
       if (a.isSelected && !b.isSelected) return -1;
       if (!a.isSelected && b.isSelected) return 1;
       return b.count - a.count;
     });
-  }, [buckets, key, vocabulary, getLabel, allowedTypes, selectedValues]);
+  }, [
+    buckets,
+    key,
+    vocabulary,
+    getLabel,
+    allowedTypes,
+    selectedValues,
+    hideUnlabelled,
+  ]);
 
   /**
    * Handle selection change from SelectDropdown.
    */
   const handleChange = useCallback(
-    (newValue) => {
+    newValue => {
       if (isMultiple) {
         // newValue is an array for multi-select
         const values = Array.isArray(newValue) ? newValue : [newValue];
@@ -251,21 +327,27 @@ export function FacetSelect({
       <SelectDropdown
         id={selectId}
         label={label}
-        placeholder={`Select ${label.toLowerCase()}`}
+        placeholder={interpolateLabel(labels.selectPlaceholder, {
+          label: label.toLowerCase(),
+        })}
         options={options}
         value={isMultiple ? selectedValues : selectedValues[0] || ''}
         onChange={handleChange}
         multiple={isMultiple}
         searchThreshold={FACET_SEARCH_THRESHOLD}
+        searchInputPlaceholder={labels.dropdownSearchPlaceholder}
+        noOptionsText={labels.dropdownNoOptions}
       />
       {showOperatorToggle && (
         <div className="mg-search__facet-operator">
           <div className="mg-search__facet-operator-row">
-            <span className="mg-search__facet-operator-label">Match:</span>
+            <span className="mg-search__facet-operator-label">
+              {labels.matchModeGroupLabel}
+            </span>
             <div
               className="mg-search__facet-operator-toggle"
               role="radiogroup"
-              aria-label={`Match mode for ${label}`}
+              aria-label={interpolateLabel(labels.matchModeLabel, { label })}
             >
               <label
                 className={`mg-search__facet-operator-option ${
@@ -281,7 +363,7 @@ export function FacetSelect({
                   checked={currentOperator === 'OR'}
                   onChange={() => handleOperatorChange('OR')}
                 />
-                <span>Any of these</span>
+                <span>{labels.matchModeAny}</span>
               </label>
               <label
                 className={`mg-search__facet-operator-option ${
@@ -297,7 +379,7 @@ export function FacetSelect({
                   checked={currentOperator === 'AND'}
                   onChange={() => handleOperatorChange('AND')}
                 />
-                <span>All of these</span>
+                <span>{labels.matchModeAll}</span>
               </label>
             </div>
           </div>
@@ -311,5 +393,12 @@ export function FacetSelect({
     </fieldset>
   );
 }
+
+/**
+ * Memoised: the selected values and operator arrive as props rather than
+ * from the search state, so typing a query or a new results page doesn't
+ * re-render every dropdown.
+ */
+export const FacetSelect = memo(FacetSelectComponent);
 
 export default FacetSelect;

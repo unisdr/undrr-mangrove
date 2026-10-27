@@ -1,47 +1,70 @@
+/**
+ * Image Caption Molecule
+ *
+ * Composed image figure layout with integrated caption and photographer credit text.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Atom/Images/ImageCaptionCredit/ImageCaptionCredit.mdx
+ */
+@use "../../assets/scss/breakpoints" as *;
+
 /* image caption start */
 .mg-image-caption {
-  border-bottom: 2px solid $mg-color-black;
+  border-bottom: 2px solid rgb(var(--mg-color-black));
 
   @include devicebreak(medium) {
     display: flex;
     justify-content: space-between;
-    padding-bottom: $mg-spacing-150;
+    padding-bottom: var(--mg-spacing-150);
   }
 
-  p {
-    color: $mg-color-neutral-600;
-    font-size: $mg-font-size-200;
-    margin-bottom: $mg-spacing-50;
+  // .mg-image-caption__text wraps caption content that is not a single <p>
+  // (several paragraphs, or bare text). :where() keeps it one element below
+  // the matching p selector, so every rule that overrides the p caption also
+  // overrides the wrapper.
+  p,
+  :where(.mg-image-caption__text) {
+    color: rgb(var(--mg-color-neutral-600));
+    font-size: var(--mg-font-size-200);
+    margin-bottom: var(--mg-spacing-50);
 
     @include devicebreak(medium) {
       border: 0;
-      font-size: $mg-font-size-300;
+      font-size: var(--mg-font-size-300);
       margin: 0;
     }
 
     + .mg-credits {
-      border-top: 1px solid $mg-color-neutral-500;
+      border-top: 1px solid rgb(var(--mg-color-neutral-500));
       display: flex;
       flex-shrink: 0;
       flex-wrap: wrap;
-      margin-bottom: $mg-spacing-50;
-      padding-top: $mg-spacing-50;
+      margin-bottom: var(--mg-spacing-50);
+      padding-top: var(--mg-spacing-50);
 
       @include devicebreak(medium) {
-        border-left: 1px solid $mg-color-neutral-500;
+        border-left: 1px solid rgb(var(--mg-color-neutral-500));
         border-top: 0;
         display: block;
         margin-bottom: 0;
-        margin-left: $mg-spacing-150;
-        padding-left: $mg-spacing-150;
+        margin-left: var(--mg-spacing-150);
+        padding-left: var(--mg-spacing-150);
         padding-top: 0;
       }
     }
   }
 
+  .mg-image-caption__text p {
+    margin: 0 0 var(--mg-spacing-50);
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
   .mg-credits {
     display: flex;
-    margin-bottom: $mg-spacing-50;
+    margin-bottom: var(--mg-spacing-50);
 
     @include devicebreak(medium) {
       border-top: 0;
@@ -51,7 +74,7 @@
     }
 
     strong {
-      margin-left: $mg-spacing-25;
+      margin-left: var(--mg-spacing-25);
 
       @include devicebreak(medium) {
         margin-left: 0;
@@ -62,18 +85,19 @@
 
 [dir="rtl"] {
   .mg-image-caption {
-    p {
+    p,
+    :where(.mg-image-caption__text) {
       @include devicebreak(medium) {
         padding-right: 0;
       }
 
       + .mg-credits {
         @include devicebreak(medium) {
-          border-right: 1px solid $mg-color-neutral-500;
+          border-right: 1px solid rgb(var(--mg-color-neutral-500));
           border-top: 0;
           display: block;
-          margin-right: $mg-spacing-150;
-          padding-right: $mg-spacing-150;
+          margin-right: var(--mg-spacing-150);
+          padding-right: var(--mg-spacing-150);
           padding-top: 0;
         }
       }
@@ -87,7 +111,7 @@
       }
 
       strong {
-        margin-right: $mg-spacing-25;
+        margin-right: var(--mg-spacing-25);
 
         @include devicebreak(medium) {
           margin-right: 0;

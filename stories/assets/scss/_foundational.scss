@@ -1,3 +1,7 @@
+@use "breakpoints" as *;
+@use "mixins" as *;
+@use "config" as *;
+
 /* typography start */
 *,
 *::before,
@@ -7,25 +11,25 @@
 }
 
 html {
-  // Only override the browser default when using the legacy 10px root.
-  // When $mg-html-font-size is 16, skip the override entirely so the
-  // browser default (or user-configured) root font-size is respected.
-  @if $mg-html-font-size != 16 {
-    font-size: $mg-html-font-size * 1px;
-  }
-
+  // No root font-size override: Mangrove uses the browser-standard 16px root
+  // (or the user's configured default). The legacy 10px root was removed in 2.0.
   -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  color: $mg-color-text;
-  font-family: $mg-font-family;
-  font-size: $mg-font-size-300;
-  line-height: $mg-font-line-height-700;
+  color: rgb(var(--mg-color-text));
+  font-family: var(--mg-font-family-text);
+  font-size: var(--mg-font-size-300);
+  line-height: var(--mg-font-line-height-700);
 }
 
+// Buttons take the text role, not ui: they are Roboto today in Latin, and in
+// Arabic the body face is the deliberate choice from
+// unisdr/undrr-mangrove#1089 — text resolves to Noto Sans Arabic there.
 button {
-  font-family: $mg-font-family;
+  font-family: var(--mg-font-family-text);
 }
 
 h1,
@@ -35,40 +39,78 @@ h4,
 h5,
 h6,
 caption {
-  margin: $mg-spacing-100 $mg-spacing-0;
-  padding: $mg-spacing-0;
+  margin: var(--mg-spacing-100) var(--mg-spacing-0);
+  padding: var(--mg-spacing-0);
+  text-wrap: balance;
+}
+
+// h1-h3 are narrative headings and take the heading role. Roboto Condensed is
+// reserved for compact UI labels (cards, tags, hero labels) and decorative
+// chrome (tabs, on-this-page nav, mega menu links) where space efficiency or
+// visual chrome is the design intent; those carry the ui role. Long-form
+// narrative headings need the body face for readability, so heading resolves
+// to Roboto in Latin and differs from text only in Arabic.
+
+// h4-h6 are body size or smaller and stay on the text role, which they get by
+// inheriting from body — no declaration, so a heading nested in a ui container
+// keeps that container's face.
+
+// SCOPED TO ARABIC ON PURPOSE. In Latin, heading and text are both Roboto, so
+// an unconditional `h1, h2, h3` declaration buys nothing here — and it costs a
+// great deal, because it is a MATCHED declaration at (0,0,1) that ties with a
+// consuming theme's own `h1` rule and wins on source order, mangrove.css being
+// loaded last. Two production themes set a licensed brand face on h1-h3 that
+// way (MCR's acta-bold, ARISE's Teko) and would have lost it sitewide. Latin
+// therefore stays on pure inheritance, exactly as it was before
+// unisdr/undrr-mangrove#1098; Arabic, where heading (Noto Kufi Arabic) really
+// does differ from text (Noto Sans Arabic), keeps the matched declaration it
+// already had on main.
+
+// Because the declaration only ever matches Arabic, and Arabic's h1-h3 carried
+// the same matched declaration before #1098, no `ui` container needs to claim
+// its own subtree: a heading nested in `.mg-card__title` or `.mg-hero__title`
+// resolves exactly as it did on main.
+
+// This rule reads the `heading` role, which _variables.scss defines as the
+// Latin face and _fonts.scss re-points to Noto Kufi Arabic. Compile
+// _foundational.scss without _fonts.scss and the rule still matches but
+// resolves to Roboto, which has no Arabic coverage. Every documented import
+// list names both. Keep face loading in the fonts module, which emits its
+// 32 text `@font-face` blocks once for every supported entry point.
+h1:lang(ar),
+h2:lang(ar),
+h3:lang(ar) {
+  font-family: var(--mg-font-family-heading);
 }
 
 h1 {
-  font-family: $mg-font-family;
-  font-size: $mg-font-size-600;
+  font-size: var(--mg-font-size-600);
   letter-spacing: 0.02em;
   line-height: 1.08;
-  text-wrap: balance;
   font-weight: 700;
 }
 
 h2 {
-  font-size: $mg-font-size-500;
+  font-size: var(--mg-font-size-500);
   font-weight: 700;
   line-height: 1.1;
 }
 
 h3 {
-  font-size: $mg-font-size-400;
+  font-size: var(--mg-font-size-400);
   font-weight: 600;
   line-height: 1.15;
 }
 
 h4,
 h5 {
-  font-size: $mg-font-size-300;
+  font-size: var(--mg-font-size-300);
   font-weight: 600;
   line-height: 1.15;
 }
 
 h6 {
-  font-size: $mg-font-size-200;
+  font-size: var(--mg-font-size-200);
   font-weight: 700;
   letter-spacing: 0.024em;
   line-height: 1.15;
@@ -80,33 +122,38 @@ p {
 
 ul,
 ol {
-  margin: 0 0 $mg-spacing-100;
-  padding-left: $mg-spacing-200;
+  margin: 0 0 var(--mg-spacing-100);
+  padding-left: var(--mg-spacing-200);
   list-style-position: outside;
 
   li {
-    margin-bottom: $mg-spacing-0;
-    padding-left: $mg-spacing-0;
+    margin-bottom: var(--mg-spacing-0);
+    padding-left: var(--mg-spacing-0);
   }
 }
 
 dl {
   line-height: 1.37;
-  margin: $mg-spacing-0;
+  margin: var(--mg-spacing-0);
 }
 
 dt {
-  margin-bottom: $mg-spacing-25;
+  font-weight: 600;
+  margin-bottom: var(--mg-spacing-25);
 }
 
 dd {
-  margin-bottom: $mg-spacing-50;
-  margin-inline-start: $mg-spacing-200;
+  margin-bottom: var(--mg-spacing-50);
+  margin-inline-start: var(--mg-spacing-200);
 
   @include devicebreak(medium) {
-    margin-bottom: $mg-spacing-100;
-    margin-inline-start: $mg-spacing-300;
+    margin-bottom: var(--mg-spacing-100);
+    margin-inline-start: var(--mg-spacing-300);
   }
+}
+
+dd + dt {
+  margin-block-start: var(--mg-spacing-100);
 }
 
 header {
@@ -114,7 +161,9 @@ header {
 }
 
 hr {
-  border: 1px solid $mg-color-neutral-200;
+  border: 0;
+  border-block-start: 2px solid rgb(var(--mg-color-neutral-400)); // 3.96:1 on white (non-text contrast)
+  margin-block: var(--mg-spacing-200);
 }
 
 img {
@@ -123,18 +172,62 @@ img {
 }
 
 a {
-  color: $mg-color-interactive;
+  color: rgb(var(--mg-color-interactive));
   text-decoration: none;
 
+  @media (prefers-reduced-motion: no-preference) {
+    transition: color 150ms ease;
+  }
+
   &:hover {
-    color: $mg-color-interactive-active;
+    color: rgb(var(--mg-color-interactive-active));
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    @include mg-focus-ring;
+
     text-decoration: underline;
   }
 }
 
-[dir="rtl"] {
+// Long-form and WYSIWYG content opt into this boundary. Navigation, cards and
+// button-like links carry their purpose through their component treatment;
+// prose links do not, so colour alone is insufficient (WCAG 1.4.1).
+// Retain the reach through CMS classes, with low specificity so component
+// links (including paragraph-wrapped buttons) can own their treatment.
+:where(.mg-content p)
+  a:not(:where(.mg-button, .mg-icon-button, [role="button"])) {
+  text-decoration: underline;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+// RTL list indentation. The direction is wrapped in :where() so these rules
+// carry exactly the specificity of the LTR `ul`, `ol` and `ul li` rules they
+// mirror. A bare [dir="rtl"] made them outrank a component's own list reset
+// (a class rule), so in RTL every unmarked component list (On this page nav,
+// hero tags, breadcrumbs, pager, tabs and more) picked up the prose indent and
+// sat 9-22px inside its content edge. LTR is untouched: these rules only match
+// under an RTL ancestor, and the custom property is only read here.
+:where([dir="rtl"]) {
   ul,
   ol {
+    // The item indent below aligns Arabic text with its bullets. A list
+    // with no bullets (mg-list-unmarked) sets this to 0 on itself; each
+    // list declares its own default, so a bulleted list nested inside an
+    // unmarked one keeps its indent.
+    --mg-list-item-indent-rtl: #{mg-rem(9)};
+
     direction: rtl;
     padding-left: 0;
     padding-right: mg-rem(11);
@@ -145,16 +238,15 @@ a {
 
     li {
       padding-left: 0;
-      padding-right: mg-rem(9);
 
-      @include devicebreak(medium) {
-        // Keep RTL list item text aligned with bullets at medium
-        // https://gitlab.com/undrr/web-backlog/-/issues/2444
-        padding-right: mg-rem(9);
-      }
+      // Keep RTL list item text aligned with bullets
+      // https://gitlab.com/undrr/web-backlog/-/issues/2444
+      padding-right: var(--mg-list-item-indent-rtl);
     }
   }
+}
 
+[dir="rtl"] {
   // 900 weight Roboto does not work well with Arabic
   // https://gitlab.com/undrr/web-backlog/-/issues/1711
   h1,
@@ -164,28 +256,6 @@ a {
   h5,
   h6 {
     font-weight: 700;
-  }
-}
-
-/* Arabic fonts */
-:lang(ar) {
-  /* Body text uses Dubai */
-  body,
-  p {
-    font-family: $mg-font-family-arabic-body;
-  }
-
-  /* Headings use Noto Kufi Arabic */
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
-  header,
-  button,
-  th {
-    font-family: $mg-font-family-arabic-headings;
   }
 }
 

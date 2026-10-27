@@ -1,15 +1,32 @@
+/**
+ * Mega Menu
+ *
+ * Responsive header navigation bar with multi-level dropdown menus, mobile drawer, and keyboard accessibility.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/MegaMenu/MegaMenu.mdx
+ */
+@use "../../assets/scss/mixins" as *;
+@use "../../assets/scss/config" as *;
+
 .mg-mega-wrapper {
   position: relative;
-  background: $mg-color-white;
-  box-shadow: 0 2px 3px 0 rgb(51 51 51 / 0.31);
-  z-index: $mg-z-index-nav;
+  background: rgb(var(--mg-color-white));
+
+  // Paint below the header so opaque logo/trigger surfaces cannot cover it.
+  box-shadow: 0 1px 0 rgb(var(--mg-color-neutral-600) / 0.24);
+  z-index: var(--mg-z-index-nav);
 }
 
 .mg-mega-topbar {
   width: 100%;
   display: flex;
   align-items: flex-start;
-  z-index: $mg-z-index-nav;
+  z-index: var(--mg-z-index-nav);
+
+  // Plain HTML consumers can use this class directly on a navigation list.
+  @include mg-list-unmarked;
+
   padding: 0;
   max-width: $mg-breakpoint-desktop;
   margin: 0 auto;
@@ -18,18 +35,39 @@
     max-width: $mg-breakpoint-desktop-wide;
   }
 
-  // these are note "mobile first" as they seem to cause a glitch with firefox and .mg-container-full-width
-  @media screen and (max-width: $mg-breakpoint-tablet) {
-    padding-left: mg-rem(40); // space for the icon button
-    overflow-x: hidden; // primarily for mobile
+  // Kept max-width based to avoid a Firefox glitch with .mg-container-full-width.
+  @media screen and (width < $mg-breakpoint-tablet) {
+    position: relative;
+    padding-inline-start: mg-rem(40); // space for the icon button
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+  }
+
+  // React keeps the hamburger outside the scrolling rail in both variants.
+  // Avoid sticky flex children: WebKit can scroll them out of view in RTL.
+  @media screen and (width < $mg-breakpoint-tablet) {
+    &:has(> .mg-mega-topbar__nav) {
+      padding-inline-start: 0;
+      overflow: hidden;
+    }
+
+    > .mg-mega-topbar-mobile__icon-button {
+      position: relative;
+      inset: auto;
+      width: mg-rem(40);
+      flex-shrink: 0;
+      align-self: stretch;
+      background: rgb(var(--mg-color-white));
+    }
   }
 
   // --- Branded variant (with inline logo) ---
   &--branded {
     align-items: center;
 
-    @media screen and (max-width: $mg-breakpoint-tablet) {
-      padding-left: 0; // logo replaces the left padding
+    @media screen and (width < $mg-breakpoint-tablet) {
+      padding-inline-start: 0; // logo replaces the left padding
       overflow-x: hidden;
     }
 
@@ -38,12 +76,12 @@
       position: relative;
       width: auto;
       margin-inline-start: auto;
-      background: $mg-color-white;
+      background: rgb(var(--mg-color-white));
       flex-shrink: 0;
       box-shadow: -3px 0 6px -2px rgb(0 0 0 / 0.15);
 
       &:has(.mg-icon-angle-circled-left) {
-        background: $mg-color-white;
+        background: rgb(var(--mg-color-white));
         box-shadow: -3px 0 6px -2px rgb(0 0 0 / 0.15);
       }
     }
@@ -54,7 +92,13 @@
     display: flex;
     justify-content: flex-end;
     flex: 1;
-    list-style: none;
+
+    @media screen and (width < $mg-breakpoint-tablet) {
+      justify-content: flex-start;
+    }
+
+    @include mg-list-unmarked;
+
     margin: 0;
     padding: 0;
   }
@@ -65,7 +109,7 @@
     min-width: 0; // allow shrinking below intrinsic size
     display: flex;
     align-items: center;
-    padding: $mg-spacing-100 $mg-spacing-150;
+    padding: var(--mg-spacing-100) var(--mg-spacing-150);
   }
 
   // Logo image
@@ -87,13 +131,26 @@
     flex: 1;
     padding: 0;
     margin: 0;
-    list-style: none;
 
-    // Hide items on mobile (same as default topbar behavior)
-    @media screen and (max-width: $mg-breakpoint-tablet) {
-      // Items are there but non-interactive on mobile (hamburger opens sidebar)
-      pointer-events: none;
-      overflow: hidden;
+    @include mg-list-unmarked;
+
+    // The branded rail scrolls independently of the logo and hamburger.
+    @media screen and (width < $mg-breakpoint-tablet) {
+      overflow-x: auto;
+      overscroll-behavior-inline: contain;
+      scrollbar-width: none;
+      cursor: grab;
+      user-select: none;
+
+      &:active {
+        cursor: grabbing;
+      }
+
+      .mg-mega-topbar__item-link {
+        cursor: inherit;
+      }
+
+      justify-content: flex-start;
       flex: 1;
       min-width: 0;
     }
@@ -101,21 +158,44 @@
 
   // Hide desktop menu items on mobile/tablet, show on desktop
   &__item {
-    pointer-events: none; // on mobile we only advertise the buttons, but not clickable
-
     @media screen and (min-width: $mg-breakpoint-tablet) {
       display: block;
-      pointer-events: unset;
     }
 
+    // Keep desktop flyout markup hidden on mobile to avoid phantom nav height.
     .mg-mega-content {
       display: none;
     }
 
-    font-size: $mg-font-size-300;
-    color: $mg-color-interactive;
+    @media screen and (min-width: $mg-breakpoint-tablet) {
+      // Desktop closed state: keep the panel in the render tree so clip/opacity
+      // can animate, while visibility + pointer-events keep it non-interactive.
+      .mg-mega-content {
+        display: flex;
+        visibility: hidden;
+        opacity: 0;
+        pointer-events: none;
+        clip-path: ellipse(55% 0% at 50% 0%);
+        transition:
+          opacity var(--mg-motion-duration-medium)
+            var(--mg-motion-easing-standard),
+          clip-path var(--mg-motion-duration-medium)
+            var(--mg-motion-easing-standard),
+          visibility 0s linear var(--mg-motion-duration-medium);
+      }
+    }
+
+    flex-shrink: 0;
+    font-size: var(--mg-font-size-300);
+    color: rgb(var(--mg-color-interactive));
     font-weight: bold;
-    list-style: none;
+
+    // The marker is hidden on the item, not only on the list. A bare
+    // `list-style: none` here would win over the empty-string marker the
+    // parent list sets, and it is the item's marker Safari looks at, so the
+    // list role would be dropped again. Keep the mixin on both.
+    @include mg-list-unmarked;
+
     padding: 0;
     margin: 0;
 
@@ -125,7 +205,7 @@
 
     > a,
     > button {
-      padding: $mg-spacing-150;
+      padding: var(--mg-spacing-150);
       display: block;
       cursor: pointer;
       line-height: mg-rem(18); // normalization
@@ -133,34 +213,65 @@
 
       @media screen and (min-width: $mg-breakpoint-tablet) {
         width: unset;
+
+        // Anchor for the active-tab underline pseudo-element.
+        // Anchored here on the link/button rather than on &__item so &__item
+        // remains position: static, allowing the .mg-mega-content desktop panel
+        // to span the full header wrapper width instead of collapsing to the tab width.
+        position: relative;
+
+        &::after {
+          content: "";
+          position: absolute;
+          inset-inline: 0;
+          bottom: 0;
+          block-size: 3px;
+          background: rgb(var(--mg-color-interactive));
+          opacity: 0;
+          transform: scaleX(0);
+        }
       }
     }
 
     @media screen and (min-width: $mg-breakpoint-tablet) {
       &--active {
-        background: rgba($mg-color-interactive, 0.2);
+        > a::after,
+        > button::after {
+          opacity: 1;
+          transform: scaleX(1);
+        }
 
         a,
         .mg-mega-topbar__item-link {
-          color: $mg-color-interactive;
+          color: rgb(var(--mg-color-interactive));
           text-decoration: none;
         }
 
         a.mg-button-primary {
-          color: $mg-color-white;
+          color: rgb(var(--mg-color-white));
           text-decoration: none;
         }
 
+        // Desktop open state: reveal via clip-path + opacity.
         .mg-mega-content {
-          display: flex;
+          visibility: visible;
+          opacity: 1;
+          pointer-events: auto;
+          clip-path: ellipse(150% 150% at 50% 0%);
+          transition:
+            opacity var(--mg-motion-duration-medium)
+              var(--mg-motion-easing-standard),
+            clip-path var(--mg-motion-duration-medium)
+              var(--mg-motion-easing-standard),
+            visibility 0s linear 0s;
         }
       }
     }
   }
 
   &__item-link {
-    font-family: $mg-font-family-condensed;
-    color: $mg-color-interactive;
+    font-family: var(--mg-font-family-ui);
+    color: rgb(var(--mg-color-interactive));
     background: none;
     border: none;
     font-weight: bold;
@@ -178,7 +289,7 @@
   // Desktop: Make the top level button links larger
   @media screen and (min-width: $mg-breakpoint-tablet) {
     &__item-link {
-      font-size: $mg-font-size-400;
+      font-size: var(--mg-font-size-400);
     }
   }
 }
@@ -192,10 +303,10 @@
   top: 1px;
   align-items: flex-start;
   justify-content: start;
-  background-color: rgba($mg-color-mega-content-bg, 0.7);
-  backdrop-filter: blur(10px);
-  border-radius: $mg-radius-tab;
-  box-shadow: -1px 5px 10px -1px rgb(0 0 0 / 0.25);
+  background-color: rgb(var(--mg-color-neutral-0));
+  box-shadow:
+    inset 0 1px 0 rgb(var(--mg-color-neutral-600) / 0.2),
+    0 18px 45px rgb(var(--mg-color-neutral-900) / 0.14);
   inset-inline-start: 0;
   z-index: 1; // submenu floats above page content within mega-menu stacking context
   width: 100%;
@@ -204,7 +315,14 @@
   @media screen and (min-width: $mg-breakpoint-tablet) {
     display: none;
     flex-direction: row; // Horizontal layout for left/right sections
-    height: mg-rem(350);
+    align-items: stretch; // both panels fill the full panel height (fixes divider)
+    min-height: mg-rem(350);
+
+    // Panel sits at top: 48px; cap at 70 % of viewport so the menu never
+    // dominates the screen. Internal __left/__right panels scroll independently.
+    max-height: 70vh;
+
+    // Each panel scrolls independently; the parent clips overflow.
     overflow: hidden;
     top: mg-rem(48);
     position: absolute;
@@ -217,18 +335,22 @@
   &__left {
     height: 100%;
     width: 100%; // mobile-first
-    background-color: rgba($mg-color-mega-content-bg, 0.8);
+    background-color: rgb(var(--mg-color-neutral-0) / 0.8);
 
     @media screen and (min-width: $mg-breakpoint-tablet) {
       flex-basis: 33%;
+      height: auto; // override mobile height: 100%; let align-items: stretch control cross size
+      min-height: 0; // allow flex child to shrink below content height for scroll
+      overflow-y: auto; // independent scroll, separate from the right panel
     }
   }
   &__banner {
-    padding: $mg-spacing-250;
+    padding: var(--mg-spacing-250);
     header {
-      font-size: $mg-font-size-500;
+      font-family: var(--mg-font-family-ui);
+      font-size: var(--mg-font-size-500);
       font-weight: bold;
-      padding-bottom: $mg-spacing-100;
+      padding-bottom: var(--mg-spacing-100);
     }
     p {
       a {
@@ -245,17 +367,19 @@
 .mg-mega-content__left,
 .mg-mega-content__right,
 .mg-mega-topbar__item-link {
+  // Was `-webkit-focus-ring-color auto 1px`, which hands the indicator to the
+  // browser: a WebKit/Blink-only keyword that renders nothing in Firefox, and
+  // that no Mangrove token can reach. These panels and topbar links sit on
+  // --mg-color-neutral-0, so the two-band ring is legible and consistent with
+  // every other focusable surface in the library.
   &:focus-visible {
-    outline: -webkit-focus-ring-color auto 1px;
-    outline-offset: 1px;
+    @include mg-focus-ring;
   }
 }
 
 .mg-mega-content__left {
-  box-shadow: inset 0 5px 5px -3px rgb(0 0 0 / 0.2);
-
   // RTL-friendly border
-  border-inline-end: 2px solid rgba($mg-color-black, 0.2);
+  border-inline-end: 1px solid rgb(var(--mg-color-neutral-600) / 0.24);
 
   // Mobile-first: Hide section list on mobile
   .mg-mega-content__section-list {
@@ -268,12 +392,12 @@
 
   .mg-mega-content__section-list-link:hover,
   .mg-mega-content__section-list-link {
-    color: $mg-color-interactive-active;
+    color: rgb(var(--mg-color-interactive-active));
   }
 }
 
 .mg-mega-content__section-list {
-  padding-inline: $mg-spacing-200;
+  padding-inline: var(--mg-spacing-200);
 }
 
 .mg-mega-content__section-list-item {
@@ -288,17 +412,20 @@
     // RTL-friendly: Use logical properties for better improvements
     letter-spacing: 0.2px;
     position: relative;
-    padding: $mg-spacing-150 $mg-spacing-250;
-    margin-inline: -$mg-spacing-200; // extend hit area to both edges
+    padding: var(--mg-spacing-150) var(--mg-spacing-250);
+    margin-inline: calc(
+      -1 * var(--mg-spacing-200)
+    ); // extend hit area to both edges
+
     font-weight: 600;
     transition:
-      background-color 150ms ease,
-      color 150ms ease,
-      transform 150ms ease;
+      background-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard),
+      color var(--mg-motion-duration-fast) var(--mg-motion-easing-standard);
 
     &:hover,
     &:focus-visible {
-      background: rgba($mg-color-interactive, 0.15);
+      background: rgb(var(--mg-color-interactive) / 0.15);
       text-decoration: underline;
     }
 
@@ -309,22 +436,19 @@
       position: absolute;
       font-size: mg-rem(30);
       inset-inline-end: auto;
-      padding-inline-start: $mg-spacing-150;
-      margin-inline-end: $mg-spacing-150;
-      transition:
-        transform 150ms ease,
-        inset-inline-start 200ms cubic-bezier(0.4, 0, 0.2, 1),
-        inset-inline-end 200ms cubic-bezier(0.4, 0, 0.2, 1),
-        opacity 150ms ease;
+      padding-inline-start: var(--mg-spacing-150);
+      margin-inline-end: var(--mg-spacing-150);
+      transition: opacity var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard);
       opacity: 0.55;
     }
 
     &--active {
-      padding: $mg-spacing-150 $mg-spacing-250;
-      margin-inline-start: -$mg-spacing-200;
-      border-inline-start: 4px solid $mg-color-interactive; // RTL-friendly vertical rule
+      padding: var(--mg-spacing-150) var(--mg-spacing-250);
+      margin-inline-start: calc(-1 * var(--mg-spacing-200));
+      border-inline-start: 4px solid rgb(var(--mg-color-interactive)); // RTL-friendly vertical rule
       text-decoration: underline;
-      background: rgba($mg-color-interactive, 0.15);
+      background: rgb(var(--mg-color-interactive) / 0.15);
 
       &::after {
         opacity: 1;
@@ -341,55 +465,21 @@
   content: "‹";
 }
 
-/* Brief pulse to draw attention when active becomes visible */
-@keyframes mg-mega-tab-pulse {
-  0% {
-    box-shadow:
-      inset 4px 0 0 0 $mg-color-button,
-      0 0 0 0 rgba($mg-color-interactive, 0);
-  }
-  60% {
-    box-shadow:
-      inset 4px 0 0 0 $mg-color-button,
-      0 0 0 8px rgba($mg-color-interactive, 0.12);
-  }
-  100% {
-    box-shadow:
-      inset 4px 0 0 0 $mg-color-button,
-      0 0 0 0 rgba($mg-color-interactive, 0);
-  }
-}
-
-.mg-mega-content__section-list-link--active {
-  animation: mg-mega-tab-pulse 700ms ease-out 1;
-}
-
-/* Slide motion for right content when tab changes */
-@keyframes mg-mega-content-swap {
-  0% {
-    transform: translateX(8px);
-    opacity: 0.98;
-  }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
+// Public compatibility hook: content changes are immediate, without a slide.
 .mg-mega-content__right--sliding {
-  animation: mg-mega-content-swap 180ms ease-out;
+  animation: none;
 }
 
-/* Stronger keyboard focus ring for accessibility */
+/* Stronger keyboard focus ring for accessibility.
+   Was a hardcoded white inset ring, which is invisible here: the panel is
+   --mg-color-neutral-0 and the focused link tints it only 15%, so white
+   measured 1.28:1. The default focus ring measures 4.22-4.58:1 across the five themes on that tint. */
 .mg-mega-content__section-list-link:focus-visible {
-  outline: 2px solid $mg-color-white;
-  outline-offset: -2px;
+  @include mg-focus-ring;
 }
 
 .mg-mega-content__right {
-  box-shadow: inset 0 5px 5px -3px rgb(0 0 0 / 0.2);
   flex: 1;
-  height: 100%;
   display: flex;
 
   // Mobile-first: full width by default
@@ -406,6 +496,17 @@
 
   // Desktop: Hide mobile menu, show desktop menu
   @media screen and (min-width: $mg-breakpoint-tablet) {
+    // Don't stretch the menu ul to the panel's fixed height. Without this,
+    // CSS multicol fills both columns to 350 px then pushes surplus items
+    // into a third column that overflows and gets clipped by the parent's
+    // overflow: hidden. align-items: flex-start lets the ul be its natural
+    // (content-driven) height so multicol never needs to generate
+    // overflow columns. See https://github.com/unisdr/undrr-mangrove/issues/970.
+    align-items: flex-start;
+    min-height: 0; // allow flex child to shrink below content height for scroll
+    min-width: 0; // prevent flex item from overflowing its allocated width
+    overflow-y: auto; // independent scroll, separate from the left panel
+
     .mg-mega-content__menu--mobile {
       display: none;
     }
@@ -413,35 +514,37 @@
     .mg-mega-content__menu--desktop {
       display: block;
 
-      // Blue flash background that fades out (retriggered via React key)
-      animation: mg-mega-right-flash 400ms ease-out;
-
-      // Staggered slide-in for menu items
-      li {
-        animation: mg-mega-item-slide-in 250ms ease-out both;
-
-        @for $i from 1 through 25 {
-          &:nth-child(#{$i}) {
-            animation-delay: #{($i - 1) * 30}ms;
-          }
-        }
-      }
+      // Every destination is available immediately, including long menus.
     }
   }
 
   ul {
     flex: 1;
-    padding: $mg-spacing-150;
+    padding: var(--mg-spacing-150);
     list-style: none;
-    column-count: auto;
-    column-width: 300px;
-    column-gap: $mg-spacing-200;
-    column-fill: balance;
+
+    // Multicolumn layout only on desktop. This is primarily a Safari fix:
+    // on mobile Safari, descendants with opacity < 1 inside a multicolumn
+    // container are not painted (space reserved, text invisible). Other
+    // browsers render fine either way, and at mobile widths the columns
+    // collapse to 1 anyway, so scoping to tablet+ loses nothing.
+    // See https://github.com/unisdr/undrr-mangrove/issues/939.
+    @media screen and (min-width: $mg-breakpoint-tablet) {
+      column-count: auto;
+
+      // 280px lets 3 columns appear once the right pane reaches ~940px
+      // (i.e. at the $mg-breakpoint-desktop-wide max-width of 1440px).
+      // 300px was too wide — 3 columns never formed within the normal
+      // constrained layout. See https://github.com/unisdr/undrr-mangrove/issues/970.
+      column-width: 280px;
+      column-gap: var(--mg-spacing-200);
+      column-fill: balance;
+    }
 
     // nested menus - RTL-friendly
     ul {
       padding-block: 0;
-      padding-inline: $mg-spacing-150;
+      padding-inline: var(--mg-spacing-150);
       opacity: 0.8;
       break-inside: avoid;
     }
@@ -453,15 +556,15 @@
 
       a {
         display: block;
-        padding: $mg-spacing-50;
+        padding: var(--mg-spacing-50);
         overflow: hidden;
         white-space: wrap;
         text-overflow: clip;
-        color: $mg-color-black;
+        color: rgb(var(--mg-color-black));
         font-weight: bold;
 
         &:hover {
-          color: $mg-color-black;
+          color: rgb(var(--mg-color-black));
           text-decoration: underline;
         }
       }
@@ -469,48 +572,11 @@
   }
 }
 
-/* Subtle blue gradient flash that fades to transparent on right content area */
-@keyframes mg-mega-right-flash {
-  0% {
-    background: linear-gradient(
-      to bottom,
-      rgba($mg-color-interactive, 0.06) 0%,
-      transparent 100%
-    );
-  }
-  100% {
-    background: transparent;
-  }
-}
-
-/* Menu items slide in from the left */
-@keyframes mg-mega-item-slide-in {
-  0% {
-    opacity: 0;
-    transform: translateX(-12px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.mg-icon-button {
-  padding: $mg-spacing-100;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  &:hover {
-    background-color: $mg-color-interactive-active;
-  }
-}
-
 .mg-mega-sidebar-section {
-  list-style: none;
+  // This is the <li> inside .mg-mega-sidebar__list. A bare `list-style: none`
+  // here overrides the empty-string marker the list sets, and the item's
+  // marker is the one Safari inspects, so the list role would be lost again.
+  @include mg-list-unmarked;
 
   ol {
     list-style: none;
@@ -522,17 +588,17 @@
 
     ol li {
       list-style: none;
-      padding-block: $mg-spacing-50;
-      padding-inline-start: $mg-spacing-300; // RTL-friendly
+      padding-block: var(--mg-spacing-50);
+      padding-inline-start: var(--mg-spacing-300); // RTL-friendly
       margin: 0;
 
       a {
-        color: $mg-color-white;
+        color: rgb(var(--mg-color-white));
         text-decoration: none;
       }
 
       &:hover {
-        background: $mg-color-interactive-active;
+        background: rgb(var(--mg-color-interactive-active));
       }
     }
   }
@@ -542,15 +608,15 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: $mg-color-white;
+  color: rgb(var(--mg-color-white));
   cursor: pointer;
-  padding: $mg-spacing-100 $mg-spacing-250;
+  padding: var(--mg-spacing-100) var(--mg-spacing-250);
 
   // Mobile-first: Start with mobile styles
-  background: $mg-color-interactive;
+  background: rgb(var(--mg-color-interactive));
   width: 100%;
   border: none;
-  border-block-end: 1px solid $mg-color-white; // RTL-friendly
+  border-block-end: 1px solid rgb(var(--mg-color-white)); // RTL-friendly
 
   // Desktop: Remove mobile-specific styles
   @media screen and (min-width: $mg-breakpoint-tablet) {
@@ -559,26 +625,32 @@
   }
 
   &:hover {
-    background: $mg-color-interactive-active;
-    color: $mg-color-white;
+    background: rgb(var(--mg-color-interactive-active));
+    color: rgb(var(--mg-color-white));
   }
 
+  // Was `-webkit-focus-ring-color auto 2px` inset by 1px. On mobile this row
+  // is filled with --mg-color-interactive, so an inset brand-adjacent ring is
+  // drawn straight onto the brand colour; the inset two-band keeps the ring
+  // inside the full-bleed row (an outward ring would be clipped by the
+  // sidebar) while giving it a separator to be judged against.
   &:focus-visible {
-    outline: -webkit-focus-ring-color auto 2px;
-    outline-offset: -1px;
+    @include mg-focus-ring-inset;
   }
 
   // Rotate arrow icon when section is expanded
   &[aria-expanded="true"] {
     .mg-icon-angle-circled-left {
       transform: rotate(-90deg);
-      transition: transform 0.3s ease-in-out;
+      transition: transform var(--mg-motion-duration-medium)
+        var(--mg-motion-easing-standard);
     }
   }
 
   // Ensure smooth transition for icon default state
   .mg-icon-angle-circled-left {
-    transition: transform 0.3s ease-in-out;
+    transition: transform var(--mg-motion-duration-medium)
+      var(--mg-motion-easing-standard);
   }
 }
 
@@ -592,8 +664,8 @@
 .mg-mega-sidebar {
   position: absolute;
   overflow: auto;
-  background-color: $mg-color-interactive-active;
-  z-index: $mg-z-index-nav;
+  background-color: rgb(var(--mg-color-interactive-active));
+  z-index: var(--mg-z-index-nav);
 
   // Mobile-first: Full-width mobile sidebar
   width: 100%;
@@ -601,7 +673,8 @@
   max-height: 80vh;
   top: -100%;
   inset-inline: 0; // RTL-friendly
-  transition: top 0.4s ease-in-out;
+  transition: top var(--mg-motion-duration-medium)
+    var(--mg-motion-easing-standard);
   box-shadow: 0 5px 8px -4px rgb(0 0 0 / 0.25);
 
   &.mg-sidebar-open {
@@ -627,7 +700,7 @@
 }
 
 .mg-mega-sidebar__list {
-  background: $mg-color-white;
+  background: rgb(var(--mg-color-white));
   display: flex;
   flex-direction: column;
   padding: 0;
@@ -641,31 +714,46 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: $mg-spacing-150 $mg-spacing-300;
-  color: $mg-color-white;
+  padding: var(--mg-spacing-150) var(--mg-spacing-300);
+  color: rgb(var(--mg-color-white));
   cursor: pointer;
 
   &:hover {
-    background: $mg-color-interactive-active;
+    background: rgb(var(--mg-color-interactive-active));
   }
 }
 
 .mg-mega-topbar-mobile__icon-button {
   // Mobile-first: Display by default
   position: absolute;
-  inset-inline-end: 0; // RTL-friendly
-  background: rgb(0 0 0 / 0); // we let the menu items show through to advertise the contents
-  color: $mg-color-interactive;
+  inset-block: 0;
+
+  // Anchored to both edges of the topbar rather than assumed to be
+  // viewport-wide: a `100vw` overlay overhangs and is clipped by the parent's
+  // `overflow-x` wherever the topbar is narrower than the viewport (a docs
+  // canvas, an embed, any constrained page).
+  inset-inline: 0; // RTL-friendly
+  background: rgb(
+    0 0 0 / 0
+  ); // we let the menu items show through to advertise the contents
+
+  color: rgb(var(--mg-color-interactive));
   font-size: mg-rem(20);
-  width: 100vw;
-  height: 100%;
-  padding: $mg-spacing-100;
+  width: auto;
+  height: auto;
+  min-height: mg-rem(44);
+  padding: var(--mg-spacing-100);
   border: none;
   cursor: pointer;
-  align-items: start;
+  align-items: center;
   justify-content: start;
-  z-index: $mg-z-index-nav-toggle;
+  z-index: var(--mg-z-index-nav-toggle);
   display: flex;
+
+  > .mg-icon {
+    display: flex;
+    line-height: 1;
+  }
 
   // Hide mobile button on desktop
   @media screen and (min-width: $mg-breakpoint-tablet) {
@@ -673,8 +761,8 @@
   }
 
   &:hover {
-    // background: $mg-color-interactive-active;
-    color: rgba($mg-color-interactive, 0.9);
+    // background: rgb(var(--mg-color-interactive-active));
+    color: rgb(var(--mg-color-blue-900) / 0.9);
   }
 
   .mg-mega-topbar {
@@ -683,7 +771,7 @@
 
   &:has(.mg-icon-angle-circled-left) {
     background: rgb(255 255 255 / 0.8);
-    color: $mg-color-interactive-active;
+    color: rgb(var(--mg-color-interactive-active));
     box-shadow: 0 0 4px rgb(0 0 0 / 0.2);
   }
 }
@@ -695,14 +783,15 @@
   position: absolute;
   top: 0;
   inset-inline-start: 0; // RTL-friendly
-  z-index: $mg-z-index-nav - 1;
+  z-index: calc(var(--mg-z-index-nav) - 1);
   display: block;
   overflow: auto;
-  background-color: $mg-color-interactive;
+  background-color: rgb(var(--mg-color-interactive));
   max-height: 80vh;
   height: 80vh;
   transform: translateY(-100vh);
-  transition: transform 0.4s ease-in-out;
+  transition: transform var(--mg-motion-duration-medium)
+    var(--mg-motion-easing-standard);
   box-shadow: 0 5px 8px -4px rgb(0 0 0 / 0.25);
 
   &.mg-mega-mobile-sidebar--open {
@@ -725,7 +814,7 @@
   border: none;
   padding: 0;
   cursor: pointer;
-  z-index: $mg-z-index-nav - 1;
+  z-index: calc(var(--mg-z-index-nav) - 1);
 
   // Desktop: Hide
   @media screen and (min-width: $mg-breakpoint-tablet) {
@@ -738,13 +827,313 @@
   box-shadow: 3px 0 6px -2px rgb(0 0 0 / 0.15);
 }
 
-[dir="rtl"] .mg-mega-topbar--branded .mg-mega-topbar-mobile__icon-button:has(.mg-icon-angle-circled-left) {
+[dir="rtl"]
+  .mg-mega-topbar--branded
+  .mg-mega-topbar-mobile__icon-button:has(.mg-icon-angle-circled-left) {
   box-shadow: 3px 0 6px -2px rgb(0 0 0 / 0.15);
 }
 
-// Arabic
-:lang(ar) {
-  .mg-mega-menu__item-link {
-    font-family: $mg-font-family-arabic-body;
+// Mobile progressive navigation: one stable surface at every depth. Existing
+// desktop classes remain compatible; the rail opens individual sections.
+.mg-mega-mobile-sidebar--progressive {
+  position: fixed;
+  inset: 0 0 auto;
+  width: 100%;
+  height: auto;
+
+  --mg-mega-mobile-viewport: 90vh;
+
+  min-height: min(400px, var(--mg-mega-mobile-viewport));
+  max-height: min(700px, var(--mg-mega-mobile-viewport));
+
+  /* stylelint-disable unit-allowed-list -- dynamic viewport leaves a dismiss area above browser chrome */
+  @supports (height: 100dvh) {
+    --mg-mega-mobile-viewport: 90dvh;
+  }
+  /* stylelint-enable unit-allowed-list */
+  background: rgb(var(--mg-color-neutral-0));
+  color: rgb(var(--mg-color-text));
+  z-index: var(--mg-z-index-modal);
+  overscroll-behavior: contain;
+  opacity: 0;
+  transform: translateX(var(--mg-mega-enter-offset, 8px));
+  transition:
+    opacity var(--mg-motion-duration-fast) var(--mg-motion-easing-standard),
+    transform var(--mg-motion-duration-fast) var(--mg-motion-easing-standard);
+  pointer-events: none;
+
+  &[hidden] {
+    display: none;
+  }
+
+  &.mg-mega-mobile-sidebar--open {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+
+    // Establish the entry frame when the hidden surface becomes rendered.
+    // Transitions also reverse smoothly if a close is interrupted by reopening.
+    @starting-style {
+      opacity: 0;
+      transform: translateX(var(--mg-mega-enter-offset, 8px));
+    }
+  }
+
+  .mg-mega-mobile-sidebar__header {
+    position: sticky;
+    top: 0;
+    z-index: 1; // local header above the scrolling page
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--mg-spacing-100);
+    padding: var(--mg-spacing-100) var(--mg-spacing-200);
+    padding-top: max(var(--mg-spacing-100), env(safe-area-inset-top));
+    background: rgb(var(--mg-color-neutral-0));
+    box-shadow: 0 1px 0 rgb(var(--mg-color-neutral-600) / 0.2);
+  }
+
+  .mg-mega-mobile-sidebar__page > .mg-mega-mobile-sidebar__back {
+    margin-block: calc(-1 * var(--mg-spacing-100)) var(--mg-spacing-150);
+    margin-inline-start: calc(-1 * var(--mg-spacing-50));
+  }
+
+  .mg-mega-mobile-sidebar__back,
+  .mg-mega-mobile-sidebar__close {
+    display: flex;
+    align-items: center;
+    gap: var(--mg-spacing-100);
+    min-height: mg-rem(44);
+    padding: var(--mg-spacing-50);
+    border: 0;
+    background: transparent;
+    color: rgb(var(--mg-color-interactive));
+    font-family: var(--mg-font-family-text);
+    text-align: start;
+    cursor: pointer;
+  }
+
+  .mg-mega-mobile-sidebar__close {
+    flex-shrink: 0;
+    margin-inline-start: auto;
+  }
+
+  .mg-mega-mobile-sidebar__page {
+    padding: var(--mg-spacing-250);
+    padding-bottom: max(var(--mg-spacing-300), env(safe-area-inset-bottom));
+    animation: mg-mega-progressive-enter var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
+  }
+
+  .mg-mega-mobile-sidebar__title {
+    font-family: var(--mg-font-family-ui);
+    font-size: var(--mg-font-size-500);
+    font-weight: 700;
+    line-height: 1.25;
+    margin: 0 0 var(--mg-spacing-150);
+    text-wrap: balance;
+    overflow-wrap: anywhere;
+  }
+
+  .mg-mega-sidebar__list {
+    background: transparent;
+    width: auto;
+    margin-block: var(--mg-spacing-150);
+    margin-inline: calc(-1 * var(--mg-spacing-100));
+    padding: 0;
+
+    @include mg-list-unmarked;
+  }
+
+  .mg-mega-sidebar-section {
+    margin: 0;
+    padding: 0;
+  }
+
+  .mg-mega-sidebar-section__item {
+    min-height: mg-rem(52);
+    gap: var(--mg-spacing-150);
+    padding: var(--mg-spacing-150) var(--mg-spacing-100);
+    color: rgb(var(--mg-color-interactive));
+    background: transparent;
+    border: 0;
+    border-radius: var(--mg-spacing-50);
+    font-family: var(--mg-font-family-ui);
+    font-size: var(--mg-font-size-400);
+    font-weight: 600;
+    line-height: 1.35;
+    text-align: start;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+
+    &:hover {
+      background: rgb(var(--mg-color-interactive) / 0.08);
+    }
+  }
+
+  .mg-mega-mobile-sidebar__page--section .mg-mega-sidebar-section__item {
+    min-height: mg-rem(44);
+    padding-block: var(--mg-spacing-100);
+    font-family: var(--mg-font-family-text);
+    font-size: var(--mg-font-size-300);
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  .mg-mega-mobile-sidebar__title-link {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.12em;
+  }
+
+  .mg-mega-mobile-sidebar__overview {
+    display: inline-flex;
+    align-items: center;
+    min-height: mg-rem(44);
+    color: rgb(var(--mg-color-interactive));
+    text-decoration: underline;
+  }
+
+  .mg-mega-sidebar__list + .mg-mega-mobile-sidebar__intro {
+    margin-top: var(--mg-spacing-250);
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  summary:focus-visible,
+  h2:focus-visible {
+    @include mg-focus-ring-inset;
+  }
+
+  .mg-mega-mobile-sidebar__arrow,
+  .mg-mega-mobile-sidebar__chevron {
+    flex-shrink: 0;
+
+    &:dir(rtl) {
+      transform: scaleX(-1);
+    }
+  }
+}
+
+@keyframes mg-mega-progressive-enter {
+  from {
+    opacity: 0;
+    translate: var(--mg-mega-enter-offset, 8px) 0;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+.mg-mega-mobile-sidebar--progressive:dir(rtl) {
+  --mg-mega-enter-offset: -8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mg-mega-mobile-sidebar--progressive .mg-mega-mobile-sidebar__page {
+    animation: none;
+  }
+}
+
+.mg-mega-topbar__mobile-trigger {
+  @include mg-list-unmarked;
+
+  margin: 0;
+  padding: 0;
+
+  @media screen and (min-width: $mg-breakpoint-tablet) {
+    display: none;
+  }
+}
+
+// The full-screen dialog must escape the nav layer as a stacking unit, so
+// neighbouring sticky page tools cannot cover its close control.
+.mg-mega-wrapper--mobile-open {
+  z-index: var(--mg-z-index-modal);
+}
+
+.mg-mega-mobile-sidebar-overlay {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--mg-motion-duration-fast)
+    var(--mg-motion-easing-standard);
+  background: rgb(var(--mg-color-black) / 0.16);
+
+  &--open {
+    opacity: 1;
+    pointer-events: auto;
+
+    @starting-style {
+      opacity: 0;
+    }
+  }
+}
+
+@supports (backdrop-filter: blur(16px)) or (-webkit-backdrop-filter: blur(16px)) {
+  .mg-mega-mobile-sidebar--progressive {
+    background: rgb(var(--mg-color-neutral-0) / 0.94);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce),
+  (prefers-contrast: more),
+  (prefers-reduced-transparency: reduce),
+  (forced-colors: active) {
+  .mg-mega-mobile-sidebar--progressive {
+    background: rgb(var(--mg-color-neutral-0));
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    transition: none;
+    animation: none;
+
+    &.mg-mega-mobile-sidebar--open,
+    .mg-mega-mobile-sidebar__page {
+      animation: none;
+    }
+  }
+
+  .mg-mega-mobile-sidebar-overlay {
+    transition: none;
+    animation: none;
+  }
+
+  // Reduced motion: keep states, remove transition animation.
+  .mg-mega-topbar__item .mg-mega-content,
+  .mg-mega-topbar__item--active .mg-mega-content,
+  .mg-mega-content__section-list-item .mg-mega-content__section-list-link,
+  .mg-mega-content__section-list-item
+    .mg-mega-content__section-list-link::after,
+  .mg-mega-sidebar,
+  .mg-mega-mobile-sidebar,
+  .mg-mega-sidebar-section__item .mg-icon-angle-circled-left,
+  .mg-mega-sidebar-section__item[aria-expanded="true"]
+    .mg-icon-angle-circled-left {
+    transition: none;
+  }
+}
+
+// Existing plain HTML navigation needs no hamburger gutter or JS enhancement.
+// Keep overflow local to the rail so every destination remains reachable.
+@media screen and (width < $mg-breakpoint-tablet) {
+  .mg-mega-topbar:not(
+    .mg-mega-topbar--branded,
+    :has(.mg-mega-topbar-mobile__icon-button)
+  ) {
+    padding-inline: 0;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: thin;
+
+    > .mg-mega-topbar__item {
+      flex: 0 0 auto;
+    }
+
+    .mg-mega-topbar__item-link:focus-visible {
+      @include mg-focus-ring-inset;
+    }
   }
 }

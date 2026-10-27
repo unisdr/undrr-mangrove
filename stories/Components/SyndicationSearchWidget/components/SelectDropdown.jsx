@@ -37,6 +37,10 @@ import React, {
   useId,
 } from 'react';
 import { createPortal } from 'react-dom';
+import { getOwnerDocument } from '../utils/ownerDocument';
+
+const EMPTY_OPTIONS = [];
+const EMPTY_VALUE = [];
 
 /**
  * SelectDropdown component.
@@ -55,11 +59,13 @@ export function SelectDropdown({
   id,
   label,
   placeholder = 'Select...',
-  options = [],
-  value = [],
+  options = EMPTY_OPTIONS,
+  value = EMPTY_VALUE,
   onChange,
   multiple = false,
   searchThreshold = 8,
+  searchInputPlaceholder = 'Search...',
+  noOptionsText = 'No options found',
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -76,7 +82,7 @@ export function SelectDropdown({
 
   // Generate option ID for aria-activedescendant
   const getOptionId = useCallback(
-    (index) => `${selectId}-option-${index}`,
+    index => `${selectId}-option-${index}`,
     [selectId]
   );
 
@@ -95,9 +101,7 @@ export function SelectDropdown({
   const filteredOptions = useMemo(() => {
     if (!searchQuery.trim()) return options;
     const query = searchQuery.toLowerCase();
-    return options.filter((opt) =>
-      opt.label.toLowerCase().includes(query)
-    );
+    return options.filter(opt => opt.label.toLowerCase().includes(query));
   }, [options, searchQuery]);
 
   // Show search input when we have many options
@@ -107,14 +111,14 @@ export function SelectDropdown({
   const displayText = useMemo(() => {
     if (selectedValues.length === 0) return placeholder;
     if (selectedValues.length === 1) {
-      const selected = options.find((opt) => opt.value === selectedValues[0]);
+      const selected = options.find(opt => opt.value === selectedValues[0]);
       return selected?.label || selectedValues[0];
     }
     return `${selectedValues.length} selected`;
   }, [selectedValues, options, placeholder]);
 
   // Handle backdrop click to close dropdown (prevents click-through to elements below)
-  const handleBackdropClick = useCallback((e) => {
+  const handleBackdropClick = useCallback(e => {
     e.preventDefault();
     e.stopPropagation();
     setIsOpen(false);
@@ -136,10 +140,10 @@ export function SelectDropdown({
 
   // Handle option selection (declared before handleKeyDown which references it)
   const handleOptionClick = useCallback(
-    (optionValue) => {
+    optionValue => {
       if (multiple) {
         const newValues = selectedValues.includes(optionValue)
-          ? selectedValues.filter((v) => v !== optionValue)
+          ? selectedValues.filter(v => v !== optionValue)
           : [...selectedValues, optionValue];
         onChange(newValues);
       } else {
@@ -154,7 +158,7 @@ export function SelectDropdown({
 
   // Handle keyboard navigation
   const handleKeyDown = useCallback(
-    (e) => {
+    e => {
       if (!isOpen) {
         if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') {
           e.preventDefault();
@@ -173,14 +177,14 @@ export function SelectDropdown({
 
         case 'ArrowDown':
           e.preventDefault();
-          setHighlightedIndex((prev) =>
+          setHighlightedIndex(prev =>
             prev < filteredOptions.length - 1 ? prev + 1 : 0
           );
           break;
 
         case 'ArrowUp':
           e.preventDefault();
-          setHighlightedIndex((prev) =>
+          setHighlightedIndex(prev =>
             prev > 0 ? prev - 1 : filteredOptions.length - 1
           );
           break;
@@ -217,21 +221,21 @@ export function SelectDropdown({
 
   // Handle trigger click
   const handleTriggerClick = useCallback(() => {
-    setIsOpen((prev) => !prev);
+    setIsOpen(prev => !prev);
     if (isOpen) {
       setSearchQuery('');
     }
   }, [isOpen]);
 
   // Handle search input change
-  const handleSearchChange = useCallback((e) => {
+  const handleSearchChange = useCallback(e => {
     setSearchQuery(e.target.value);
     setHighlightedIndex(0);
   }, []);
 
   // Check if option is selected
   const isSelected = useCallback(
-    (optionValue) => selectedValues.includes(optionValue),
+    optionValue => selectedValues.includes(optionValue),
     [selectedValues]
   );
 
@@ -270,7 +274,11 @@ export function SelectDropdown({
       </button>
 
       {/* Invisible backdrop to capture clicks outside (prevents click-through) */}
-      {/* Rendered via portal to escape sidebar stacking context */}
+      {/* Desktop selects escape the sidebar stacking context. In the mobile
+          drawer, keep the backdrop inside its stacking context: a body-level
+          modal backdrop would sit above the drawer and intercept option taps.
+          Both targets belong to the mounted select's document (including
+          iframe consumers). */}
       {isOpen &&
         createPortal(
           <div
@@ -279,7 +287,8 @@ export function SelectDropdown({
             onMouseDown={handleBackdropClick}
             aria-hidden="true"
           />,
-          document.body
+          containerRef.current.closest('.mg-search__drawer') ||
+            getOwnerDocument(containerRef.current).body
         )}
 
       {/* Dropdown panel */}
@@ -292,7 +301,7 @@ export function SelectDropdown({
                 ref={searchInputRef}
                 type="text"
                 className="mg-select__search-input"
-                placeholder="Search..."
+                placeholder={searchInputPlaceholder}
                 value={searchQuery}
                 onChange={handleSearchChange}
                 aria-label={`Search ${label}`}
@@ -309,44 +318,66 @@ export function SelectDropdown({
             role="listbox"
             aria-label={label}
             aria-multiselectable={multiple}
+            // Hover is CSS. When the pointer moves over the list, drop the
+            // keyboard highlight so two options don't both look current;
+            // after that, pointer movement costs no renders.
+            onPointerMove={() => {
+              if (highlightedIndex !== -1) setHighlightedIndex(-1);
+            }}
           >
             {filteredOptions.length === 0 ? (
-              <li className="mg-select__empty">No options found</li>
+              <li className="mg-select__empty">{noOptionsText}</li>
             ) : (
               filteredOptions.map((option, index) => (
                 <li
                   key={option.value}
                   id={getOptionId(index)}
                   className={`mg-select__option ${
-                    isSelected(option.value) ? 'mg-select__option--selected' : ''
+                    isSelected(option.value)
+                      ? 'mg-select__option--selected'
+                      : ''
                   } ${index === highlightedIndex ? 'mg-select__option--highlighted' : ''} ${
-                    option.isSubtype && !isSelected(option.value) ? 'mg-select__option--subtype' : ''
+                    option.isSubtype && !isSelected(option.value)
+                      ? 'mg-select__option--subtype'
+                      : ''
                   }`}
                   role="option"
                   aria-selected={isSelected(option.value)}
                   onClick={() => handleOptionClick(option.value)}
-                  onMouseEnter={() => setHighlightedIndex(index)}
                 >
                   {/* Checkbox/Radio indicator */}
                   <span
                     className={`mg-select__indicator ${
-                      multiple ? 'mg-select__indicator--checkbox' : 'mg-select__indicator--radio'
+                      multiple
+                        ? 'mg-select__indicator--checkbox'
+                        : 'mg-select__indicator--radio'
                     }`}
                     aria-hidden="true"
                   >
-                    {isSelected(option.value) && (
-                      multiple ? (
-                        <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
-                          <path d="M10 3L4.5 8.5L2 6" stroke="currentColor" strokeWidth="2" fill="none" />
+                    {isSelected(option.value) &&
+                      (multiple ? (
+                        <svg
+                          width="12"
+                          height="12"
+                          viewBox="0 0 12 12"
+                          fill="currentColor"
+                        >
+                          <path
+                            d="M10 3L4.5 8.5L2 6"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            fill="none"
+                          />
                         </svg>
                       ) : (
                         <span className="mg-select__indicator-dot" />
-                      )
-                    )}
+                      ))}
                   </span>
 
                   {/* Label */}
-                  <span className="mg-select__option-label">{option.label}</span>
+                  <span className="mg-select__option-label">
+                    {option.label}
+                  </span>
 
                   {/* Count badge */}
                   {option.count !== undefined && (

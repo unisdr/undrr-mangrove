@@ -14,8 +14,8 @@ You are advocating for developers who consume **Mangrove**, UNDRR's React compon
 - **npm package**: `@undrr/undrr-mangrove` — consumed by UNDRR's development teams
 - **Primary consumers**: Drupal developers at UNDRR and partner organizations
 - **Integration pattern**: Components loaded as ES modules in Drupal via import maps and wrapper scripts
-- **Storybook docs**: https://unisdr.github.io/undrr-mangrove/ — the primary discovery and reference tool
-- **GitHub repo**: https://github.com/unisdr/undrr-mangrove
+- **Storybook docs**: https://mangrove.undrr.org/ — the primary discovery and reference tool
+- **GitHub repo**: https://github.com/PreventionWeb/undrr-mangrove (public fork; pull requests are merged on `unisdr/undrr-mangrove`, which is not publicly readable)
 - **Onboarding flow**: Developer finds Storybook → reads component docs → integrates in Drupal via wrapper script
 - **Pain points to investigate**: Wrapper script boilerplate, `data-mg-*` attribute contract, theme CSS copying, build process
 

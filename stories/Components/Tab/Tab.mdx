@@ -3,7 +3,7 @@ import * as TabStories from './Tab.stories';
 
 <Meta of={TabStories} />
 
-> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
 
 # Tabs
 
@@ -11,20 +11,56 @@ Tabs let users switch between related groups of content without leaving the page
 
 ## When to use
 
-- Organizing content into sections a user can flip between (e.g. overview, details, resources).
-- The content groups are peers, and users don't need to see them side by side.
+Use tabs when you have two or more named content sections that users might want to switch between, but don't need to compare side by side at the same time.
 
 Don't use tabs for site navigation. Use links or menus instead.
 
 ## Variants
 
-There are two layouts. **Horizontal** is a tab bar along the top, best for 2-5 tabs with short labels. **Stacked** is a vertical, accordion-style layout that works better for longer labels or many sections. On screens narrower than 480 px, horizontal tabs collapse to stacked automatically.
+Two layouts are available. **Horizontal** is best for 2-5 short labels.
+**Stacked** (accordion-style) is better for long labels or many sections.
+Horizontal tabs stay in one row and scroll when needed; use `stackOnMobile` to
+switch horizontal tabs to stacked disclosures below 480px.
 
-<Canvas of={TabStories.Tabs} meta={TabStories} />
+<Canvas of={TabStories.CentredGroup} meta={TabStories} />
+
+### Scrollable horizontal tabs
+
+The tab rail scrolls independently of the content below. Faded edges indicate more tabs; swiping the rail does not change the selected panel. Selecting a tab brings it into view. Use the theme and locale toolbars to inspect the same treatment across brands and languages.
+
+<Canvas of={TabStories.ScrollableGroup} meta={TabStories} />
+
+<Canvas of={TabStories.NarrowContainer} meta={TabStories} />
+
+### Optional mobile stacking
+
+Horizontal scrolling is the default. To restore the older mobile disclosure
+behavior, pass `stackOnMobile` (or `data-mg-js-tabs-stack-on-mobile`). Below
+480px, layout/roles/keyboard behavior switch together; at 480px+ tabs return to
+horizontal. Panels stay mounted so form values persist.
+
+```jsx
+<Tab tabdata={tabdata} stackOnMobile />
+```
+
+```html
+<article
+  class="mg-tabs mg-tabs--horizontal"
+  data-mg-js-tabs
+  data-mg-js-tabs-variant="horizontal"
+  data-mg-js-tabs-stack-on-mobile
+>
+  <!-- Existing horizontal tab markup -->
+</article>
+```
+
+<Canvas of={TabStories.StacksOnMobile} meta={TabStories} />
 
 ### Stacked tabs
 
 <Canvas of={TabStories.StackedTabs} meta={TabStories} />
+
+> For lightweight, zero-JavaScript content disclosures using native HTML `<details>`, see the **[Accordion pattern](?path=/docs/components-typography--docs#accordion-pattern-mg-accordion)**.
 
 ### Stacked as FAQ (filterable, all closed)
 
@@ -38,14 +74,24 @@ There are two layouts. **Horizontal** is a tab bar along the top, best for 2-5 t
 
 <Canvas of={TabStories.StackedSingleOpen} meta={TabStories} />
 
+### Right-to-left example
+
+This example fixes its story locale to Arabic, so its language and direction
+remain Arabic/RTL while other examples follow the preview toolbars. It reuses
+the same component and demonstrates a deliberate reading-direction condition.
+
+<Canvas of={TabStories.RightToLeft} meta={TabStories} />
+
 ## Interactions
 
 **Horizontal tabs:**
-- Hovering highlights the full tab.
-- Clicking a tab opens its panel.
-- Arrow Left/Right moves between tabs (wraps around). Down arrow moves focus into the open panel. Home/End jump to first/last tab.
+
+- A soft fill identifies the selected tab. Hover and keyboard focus have distinct treatments.
+- Clicking a tab opens its panel and reveals the tab in the rail without scrolling the page vertically. Native scrolling alone preserves selection.
+- Arrow Left/Right selects and focuses the adjacent tab (wraps around, with directions reversed in RTL). Down arrow moves focus into the open panel. Home/End select the first/last tab. Initial default and deep-link selection does not steal focus.
 
 **Stacked tabs:**
+
 - Clicking a trigger toggles its panel open/closed independently.
 - Space or Enter activates the focused trigger.
 - Arrow Up/Down moves focus between triggers (wraps around). Home/End jump to first/last trigger.
@@ -55,15 +101,24 @@ URL hashes work as deep links in both variants, e.g. `#mg-tabs__section-tab-2` o
 
 ## Accessibility
 
-**Horizontal tabs** use the standard ARIA tablist pattern: `role="tablist"` on the list, `role="tab"` on triggers with `aria-selected`, and `role="tabpanel"` on panels. Only the active tab is in the Tab order (roving tabindex).
+**Horizontal tabs** follow the ARIA tab pattern (`tablist`, `tab`,
+`tabpanel`, roving tabindex). Only the active tab is in Tab order; arrow keys
+navigate tabs. Name each group with `labels.tabListLabel` (React) or
+`data-mg-js-tabs-label` (HTML, default "Sections"). Without JavaScript, all
+panel content remains visible.
 
-**Stacked tabs** use the ARIA disclosure pattern: `role="button"` with `aria-expanded` and `aria-controls` on triggers, `role="region"` with `aria-labelledby` on panels. Each trigger is independently focusable via Tab. Panels use `hidden="until-found"` so browser find-in-page (Ctrl+F) can reveal collapsed content in Chromium browsers. Firefox and Safari treat this as standard `hidden` (content is still togglable, but not findable via Ctrl+F).
+**Stacked tabs** use an accessible disclosure pattern (`aria-expanded`,
+`aria-controls`, `region`, `aria-labelledby`). In Chromium, collapsed panels are
+findable via Ctrl+F; Firefox/Safari treat them as hidden to find-in-page.
+
+> **Implementation note (for contributors):** Horizontal tabs use `role="tablist"` on the list, `role="tab"` with `aria-selected` on triggers, and `role="tabpanel"` on panels (roving tabindex). Stacked tabs use `role="button"` with `aria-expanded` and `aria-controls` on triggers, `role="region"` with `aria-labelledby` on panels. The `hidden="until-found"` attribute on stacked panels enables Ctrl+F discoverability in Chromium; other browsers fall back to standard `hidden` behavior.
 
 The filter input has an `aria-label` and an `aria-describedby` hint ("Results will filter as you type"). A live region (`role="status"`) announces result counts as the user types, and displays "No matching sections found" visually when there are zero matches.
 
 ## Usage
 
-Tabs are vanilla JavaScript. No React, no build step, just HTML and a script import. If you're already working in React with the Mangrove source, there's also a `<Tab>` wrapper ([see below](#react-usage)).
+Tabs are vanilla JavaScript: HTML plus a module script. A `<Tab>` React wrapper
+is also available in Mangrove source ([see below](#react-usage)).
 
 ### Vanilla JS (recommended)
 
@@ -72,7 +127,10 @@ Tabs are vanilla JavaScript. No React, no build step, just HTML and a script imp
 Pick the Mangrove theme stylesheet for your site ([CDN reference](/?path=/docs/getting-started-integration-cdn-reference--docs) lists all themes).
 
 ```html
-<link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.4.0/css/style.css" />
+<link
+  rel="stylesheet"
+  href="https://assets.undrr.org/mangrove/2.3.0/css/style.css"
+/>
 ```
 
 #### 2. Include the JavaScript
@@ -81,7 +139,10 @@ The script file uses ES module `export` statements, so you **must** load it with
 
 ```html
 <!-- JS: type="module" is required -->
-<script type="module" src="https://assets.undrr.org/static/mangrove/1.4.0/js/tabs.js"></script>
+<script
+  type="module"
+  src="https://assets.undrr.org/mangrove/2.3.0/js/tabs.js"
+></script>
 ```
 
 The script auto-initializes on `DOMContentLoaded` (or immediately if the DOM is already parsed). Module scripts are deferred by default, so `mgTabs()` runs after the DOM is available.
@@ -90,7 +151,7 @@ For manual or dynamic initialization, import the function:
 
 ```html
 <script type="module">
-  import { mgTabs } from 'https://assets.undrr.org/static/mangrove/1.4.0/js/tabs.js';
+  import { mgTabs } from 'https://assets.undrr.org/mangrove/2.3.0/js/tabs.js';
   mgTabs();
 </script>
 ```
@@ -102,52 +163,59 @@ For manual or dynamic initialization, import the function:
 **Horizontal tabs (default)**
 
 ```html
-<article class="mg-tabs mg-tabs--horizontal"
-         data-mg-js-tabs
-         data-mg-js-tabs-variant="horizontal">
-  <ul class="mg-tabs__list">
-    <!-- Tab 1 -->
-    <li class="mg-tabs__item">
-      <a class="mg-tabs__link" href="#mg-tabs__section-tab-1">Tab title 1</a>
-    </li>
-    <li class="mg-tabs-content" data-mg-js-tabs-content>
-      <section class="mg-tabs__section" id="mg-tabs__section-tab-1">
-        <p>Content for tab 1.</p>
+<article
+  class="mg-tabs mg-tabs--horizontal"
+  data-mg-js-tabs
+  data-mg-js-tabs-variant="horizontal"
+  data-mg-js-tabs-label="Programme sections"
+>
+  <div class="mg-tabs__rail">
+    <div class="mg-tabs__scroll">
+      <ul class="mg-tabs__list">
+        <li class="mg-tabs__item">
+          <a class="mg-tabs__link" href="#mg-tabs__section-overview">
+            Overview
+          </a>
+        </li>
+        <li class="mg-tabs__item">
+          <a
+            class="mg-tabs__link"
+            href="#mg-tabs__section-details"
+            data-mg-js-tabs-default="true"
+          >
+            Details
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="mg-tabs__panels">
+    <div class="mg-tabs-content" data-mg-js-tabs-content>
+      <section class="mg-tabs__section" id="mg-tabs__section-overview">
+        <p>Overview content.</p>
       </section>
-    </li>
-
-    <!-- Tab 2 (default selected) -->
-    <li class="mg-tabs__item">
-      <a class="mg-tabs__link" href="#mg-tabs__section-tab-2"
-         data-mg-js-tabs-default="true">Tab title 2</a>
-    </li>
-    <li class="mg-tabs-content" data-mg-js-tabs-content>
-      <section class="mg-tabs__section" id="mg-tabs__section-tab-2">
-        <p>Content for tab 2.</p>
+    </div>
+    <div class="mg-tabs-content" data-mg-js-tabs-content>
+      <section class="mg-tabs__section" id="mg-tabs__section-details">
+        <p>Detail content.</p>
       </section>
-    </li>
-
-    <!-- Tab 3 -->
-    <li class="mg-tabs__item">
-      <a class="mg-tabs__link" href="#mg-tabs__section-tab-3">Tab title 3</a>
-    </li>
-    <li class="mg-tabs-content" data-mg-js-tabs-content>
-      <section class="mg-tabs__section" id="mg-tabs__section-tab-3">
-        <p>Content for tab 3.</p>
-      </section>
-    </li>
-  </ul>
+    </div>
+  </div>
 </article>
 ```
+
+Existing interleaved HTML is also supported: the runtime moves horizontal panels outside the list during initialisation. Keep all panel IDs unique across the page. Panel HTML must be sanitised by the consuming application before it is passed to Mangrove.
 
 **Stacked tabs (accordion-style)**
 
 Change the modifier class and variant attribute:
 
 ```html
-<article class="mg-tabs mg-tabs--stacked"
-         data-mg-js-tabs
-         data-mg-js-tabs-variant="stacked">
+<article
+  class="mg-tabs mg-tabs--stacked"
+  data-mg-js-tabs
+  data-mg-js-tabs-variant="stacked"
+>
   <ul class="mg-tabs__list">
     <li class="mg-tabs__item">
       <a class="mg-tabs__link" href="#mg-tabs__section-item-1">Section 1</a>
@@ -175,29 +243,40 @@ Change the modifier class and variant attribute:
 Add `data-mg-js-tabs-default-open="false"` to start all panels closed, `data-mg-js-tabs-single-open` for accordion behavior, and `data-mg-js-tabs-filterable` for a search input:
 
 ```html
-<article class="mg-tabs mg-tabs--stacked"
-         data-mg-js-tabs
-         data-mg-js-tabs-variant="stacked"
-         data-mg-js-tabs-default-open="false"
-         data-mg-js-tabs-single-open
-         data-mg-js-tabs-filterable
-         data-mg-js-tabs-filter-placeholder="Search questions…">
+<article
+  class="mg-tabs mg-tabs--stacked"
+  data-mg-js-tabs
+  data-mg-js-tabs-variant="stacked"
+  data-mg-js-tabs-default-open="false"
+  data-mg-js-tabs-single-open
+  data-mg-js-tabs-filterable
+  data-mg-js-tabs-filter-placeholder="Search questions…"
+>
   <ul class="mg-tabs__list">
     <li class="mg-tabs__item">
-      <a class="mg-tabs__link" href="#mg-tabs__section-faq-1">What is the Sendai Framework?</a>
+      <a class="mg-tabs__link" href="#mg-tabs__section-faq-1">
+        What is the Sendai Framework?
+      </a>
     </li>
     <li class="mg-tabs-content" data-mg-js-tabs-content>
       <section class="mg-tabs__section" id="mg-tabs__section-faq-1">
-        <p>The Sendai Framework is a voluntary, non-binding agreement for disaster risk reduction.</p>
+        <p>
+          The Sendai Framework is a voluntary, non-binding agreement for
+          disaster risk reduction.
+        </p>
       </section>
     </li>
 
     <li class="mg-tabs__item">
-      <a class="mg-tabs__link" href="#mg-tabs__section-faq-2">How do I report progress?</a>
+      <a class="mg-tabs__link" href="#mg-tabs__section-faq-2">
+        How do I report progress?
+      </a>
     </li>
     <li class="mg-tabs-content" data-mg-js-tabs-content>
       <section class="mg-tabs__section" id="mg-tabs__section-faq-2">
-        <p>Use the Sendai Framework Monitor to track and report implementation.</p>
+        <p>
+          Use the Sendai Framework Monitor to track and report implementation.
+        </p>
       </section>
     </li>
   </ul>
@@ -210,12 +289,13 @@ The filter input, screen-reader-only hint, and status region are injected automa
 
 Exported functions:
 
-| Function | Description |
-|----------|-------------|
-| `mgTabs(scope?, activateDeepLinkOnLoad?)` | Initializes all tab containers. `scope` is an optional `NodeList`; defaults to all `[data-mg-js-tabs]` elements. `activateDeepLinkOnLoad` defaults to `true`. |
-| `mgTabsRuntime(scope?, activateDeepLinkOnLoad?)` | Initializes tabs within a single container element or a parent that contains tab sets; defaults to `document`. Use this for tabs injected after page load. |
-| `mgTabsApplyStackedDefaults(container, tabs, panels)` | Re-applies default open/close state for stacked tabs. Useful after programmatically resetting filter state. |
-| `setDisclosureState(trigger, panel, open)` | Sets the open/close state of a stacked disclosure panel. `open` is a boolean. |
+| Function                                                   | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `mgTabs(scope?, activateDeepLinkOnLoad?, options?)`        | Initializes all tab containers. `scope` is an optional `NodeList`; defaults to all `[data-mg-js-tabs]` elements. `activateDeepLinkOnLoad` defaults to `true`. `options.signal` is an optional `AbortSignal`: aborting it destroys the tab sets this call initialized, and an already-aborted signal skips initialization. Calling it on a tab set that is already initialized resumes that set if it was suspended. Every call first checks the tab sets it has initialized. See [Removing tabs](#removing-tabs).                                                |
+| `mgTabsRuntime(scope?, activateDeepLinkOnLoad?, options?)` | Initializes tabs within a single container element or a parent that contains tab sets; defaults to `document`. Use this for tabs injected after page load. Accepts the same `options.signal` as `mgTabs`.                                                                                                                                                                                                                                                                                                                                                        |
+| `mgTabsDestroy(scope?, preserveState?)`                    | Removes listeners and observers, restores progressively enhanced markup and makes content visible. Call before removing vanilla tab sets for good, or use `options.signal` ([Removing tabs](#removing-tabs)). Every tab set in `scope` is destroyed even if one of them throws; the first error is then rethrown. Pass `true` as the second argument to retain selection, disclosure and filter state for the next initialisation of the same layout; the React wrapper uses this during updates and handles cleanup automatically. Safe to call more than once. |
+| `mgTabsApplyStackedDefaults(container, tabs, panels)`      | Re-applies default open/close state for stacked tabs. Useful after programmatically resetting filter state.                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `setDisclosureState(trigger, panel, open)`                 | Sets the open/close state of a stacked disclosure panel. `open` is a boolean.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 
 If you inject tab markup dynamically (e.g. from an API response), call `mgTabsRuntime()` on the new container:
 
@@ -224,20 +304,111 @@ const newContainer = document.querySelector('#dynamic-tabs');
 mgTabsRuntime(newContainer);
 ```
 
+#### Removing tabs
+
+A tab set listens for events outside its own markup: window `resize`, `orientationchange` and `hashchange`, `document.fonts` `loadingdone`, and a `ResizeObserver` on the rail. Release them before you remove or replace the markup, for example on a route change, when re-rendering a region from an API response, or in a Drupal AJAX update. The React wrapper does this for you.
+
+**Call `mgTabsDestroy()`** with the container, or a parent that contains tab sets, before removing it. It restores the original markup, and calling it again does nothing.
+
+```js
+mgTabsDestroy(container);
+container.remove();
+```
+
+**Or pass an `AbortSignal`** as the third argument and abort it when the tabs go away. This ties the tabs to something your app already cleans up, such as a route or view controller. Aborting destroys only the tab sets that call initialized. A tab set that was already initialized is left as it is, and a signal that is already aborted initializes nothing.
+
+```js
+const controller = new AbortController();
+mgTabsRuntime(region, true, { signal: controller.signal });
+
+// Later, when the region is replaced:
+controller.abort();
+```
+
+**If you forget, removed tab sets are suspended, not destroyed.** When a tab set that has been on the page is found outside the document, the runtime releases the window, `document.fonts` and `ResizeObserver` registrations it holds and leaves everything else as it was: the enhanced markup, the listeners inside the tab set and the current selection. Apart from an `AbortSignal` you passed, nothing outside then refers to the element, so once your app drops it, it can be garbage collected.
+
+While any tab set is initialized, the runtime keeps one window `resize` listener and one `hashchange` listener of its own. They refer to no tab set: each event checks the tab sets it has initialized, which costs a few microseconds for 50 tab sets. They are removed once every tab set has been destroyed.
+
+A removed tab set is found:
+
+- when its rail's `ResizeObserver` reports the size change, which in Chromium is usually within a frame of removal (horizontal tab sets only)
+- otherwise, on the next window resize or hash change, or when one of its own outside listeners fires (an orientation change or font load)
+- or the next time `mgTabs()` or `mgTabsRuntime()` is called for any tab set
+
+A suspended tab set that is put back on the page resumes by itself on the first pointer press, focus, key press or click inside it, on the next window resize or hash change, or when `mgTabs()` or `mgTabsRuntime()` next runs. When one tab set resumes after an interaction, any other re-attached tab sets resume too, including tab sets nested inside it. Re-attaching after a modal closes and reopens, moving a portal target, or re-inserting the same element in an AJAX update keeps the tabs working:
+
+- If the URL hash did not change while the tab set was off the page, the same tab stays selected.
+- If the hash changed and names one of its panels, that panel is selected, as it would have been had the tab set stayed on the page. This also applies when the React wrapper re-renders a re-attached tab set, and to `mgTabsDestroy(container, true)` followed by `mgTabs()`.
+- If the viewport crossed the `stackOnMobile` breakpoint, the tab set switches layout, keeping its selection.
+
+When the resume comes from a pointer press, focus, key press or click, the tab set waits until that interaction has been handled before it follows a changed hash, scrolls the selected tab into view or switches layout. A tap therefore acts on what was under the pointer, and a tab it selects wins over the changed hash. After a pointer press, the wait ends at the click, or 400ms after the pointer is released if no click follows.
+
+Limits:
+
+- Until a removal is found, the outside listeners stay registered.
+- Between being re-attached and resuming, a tab set does not follow hash changes itself and its rail's overflow indicators can be out of date. The next resize, hash change, interaction or `mgTabs()`/`mgTabsRuntime()` call brings it up to date.
+- After an interaction on a tab set that crossed the `stackOnMobile` breakpoint while it was off the page, the old layout stays in place until the interaction has been handled. A tap on a visible tab selects it, and the new layout then opens that tab's panel.
+- A horizontal tab set initialized before it was added to the page is not suspended until it has been seen on the page, so building tabs off-screen and inserting them later is safe. A stacked tab set can be suspended before it is attached and resumes once it is on the page.
+- A tab set that is moved (removed and inserted elsewhere in the same task) is not affected.
+- If suspending or resuming one tab set throws while other tab sets are checked, the error is reported with `reportError()` and the check continues, so `mgTabs()` still initializes the tab sets you passed.
+- An `AbortSignal` you pass keeps a reference to its tab sets until it is aborted or they are destroyed.
+
+**Drupal behaviors** should release tabs in `detach`. Drupal calls `detach` with the trigger `'unload'` before AJAX replaces or removes content. Use `once()` from `core/once` (add it to your library's dependencies) so each container is set up once, however many times `attach` runs.
+
+The snippet uses `import`, so the behavior file must load as a module. Declare it with `attributes: { type: module }` in your `*.libraries.yml`, and keep it out of JavaScript aggregation:
+
+```yaml
+mangrove-tabs:
+  js:
+    # Aggregation can merge this file with classic scripts, where import is a syntax error.
+    js/mangrove-tabs.js: { attributes: { type: module }, preprocess: false }
+  dependencies:
+    - core/drupal
+    - core/once
+```
+
+```js
+import {
+  mgTabsRuntime,
+  mgTabsDestroy,
+} from 'https://assets.undrr.org/mangrove/2.3.0/js/tabs.js';
+
+Drupal.behaviors.mangroveTabs = {
+  attach(context) {
+    once('mg-tabs', '[data-mg-js-tabs]', context).forEach(container => {
+      mgTabsRuntime(container);
+    });
+  },
+  detach(context, settings, trigger) {
+    // 'move' and 'serialize' keep the element on the page.
+    if (trigger !== 'unload') return;
+    // mgTabsDestroy() includes context itself when it is a tab set, which
+    // once() does not: AJAX often replaces the [data-mg-js-tabs] element.
+    mgTabsDestroy(context);
+    once.remove('mg-tabs', '[data-mg-js-tabs]', context);
+    if (context.matches?.('[data-mg-js-tabs]')) once.remove('mg-tabs', context);
+  },
+};
+```
+
+This example calls `mgTabsDestroy()` instead of using a signal because tabs present at page load may already have been set up by auto-initialization, and a signal only applies to tab sets its own call initialized. To use a signal in a behavior, add `data-mg-js-tabs-skip-auto-init` to the markup.
+
 #### Skipping auto-initialization
 
 Add `data-mg-js-tabs-skip-auto-init` to skip a container during auto-init. This is useful when another script must run first (e.g. Drupal behaviors):
 
 ```html
-<article class="mg-tabs mg-tabs--horizontal"
-         data-mg-js-tabs
-         data-mg-js-tabs-skip-auto-init
-         data-mg-js-tabs-variant="horizontal">
+<article
+  class="mg-tabs mg-tabs--horizontal"
+  data-mg-js-tabs
+  data-mg-js-tabs-skip-auto-init
+  data-mg-js-tabs-variant="horizontal"
+>
   <!-- tab markup -->
 </article>
 
 <script type="module">
-  import { mgTabs } from 'https://assets.undrr.org/static/mangrove/1.4.0/js/tabs.js';
+  import { mgTabs } from 'https://assets.undrr.org/mangrove/2.3.0/js/tabs.js';
   // Initialize after other setup is complete
   mgTabs([document.querySelector('[data-mg-js-tabs-skip-auto-init]')]);
 </script>
@@ -247,63 +418,156 @@ When you pass elements explicitly via `scope`, the skip attribute is ignored —
 
 #### Key data attributes
 
-| Attribute | Element | Purpose |
-|-----------|---------|---------|
-| `data-mg-js-tabs` | `article` | Identifies a tab container |
-| `data-mg-js-tabs-variant` | `article` | `"horizontal"` or `"stacked"` |
-| `data-mg-js-tabs-content` | `li` | Wraps each tab's content section |
-| `data-mg-js-tabs-default` | `a.mg-tabs__link` | `"true"` to open this item by default, `"false"` to keep it closed. Overrides the container-level `data-mg-js-tabs-default-open`. |
-| `data-mg-js-tabs-default-open` | `article` | `"true"` opens all stacked panels on load, `"false"` closes all. Absent = open first. Per-item `data-mg-js-tabs-default` overrides this. |
-| `data-mg-js-tabs-single-open` | `article` | Presence-based. When set, only one stacked panel can be open at a time (accordion). `singleOpen` only governs click behavior — it does not enforce a single-open constraint on the initial state. Use `data-mg-js-tabs-default-open="false"` with `data-mg-js-tabs-single-open` for typical accordion behavior. |
-| `data-mg-js-tabs-filterable` | `article` | Presence-based. When set on a stacked container, injects a search input that filters sections by header and content text. |
-| `data-mg-js-tabs-filter-placeholder` | `article` | Custom placeholder text for the filter input. Defaults to "Filter sections...". |
-| `data-mg-js-tabs-skip-auto-init` | `article` | Presence-based. Skips this container during auto-init. Call `mgTabs([element])` to initialize manually. |
+| Attribute                            | Element                                     | Purpose                                                                                                                                                                                                                                                                                                         |
+| ------------------------------------ | ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `data-mg-js-tabs`                    | `article`                                   | Identifies a tab container                                                                                                                                                                                                                                                                                      |
+| `data-mg-js-tabs-variant`            | `article`                                   | `"horizontal"` or `"stacked"`; horizontal scrolls on mobile unless mobile stacking is enabled                                                                                                                                                                                                                   |
+| `data-mg-js-tabs-stack-on-mobile`    | `article`                                   | Presence-based opt-in: horizontal tabs become stacked below 480px. Omit to keep horizontal scrolling. Ignored for explicit stacked tabs.                                                                                                                                                                        |
+| `data-mg-js-tabs-label`              | `article`                                   | Accessible horizontal tablist name, default "Sections"                                                                                                                                                                                                                                                          |
+| `data-mg-js-tabs-content`            | `div` (horizontal) or `li` (stacked/legacy) | Wraps each tab's content section                                                                                                                                                                                                                                                                                |
+| `data-mg-js-tabs-default`            | `a.mg-tabs__link`                           | `"true"` to open this item by default, `"false"` to keep it closed. Overrides the container-level `data-mg-js-tabs-default-open`.                                                                                                                                                                               |
+| `data-mg-js-tabs-default-open`       | `article`                                   | `"true"` opens all stacked panels on load, `"false"` closes all. Absent = open first. Per-item `data-mg-js-tabs-default` overrides this.                                                                                                                                                                        |
+| `data-mg-js-tabs-single-open`        | `article`                                   | Presence-based. When set, only one stacked panel can be open at a time (accordion). `singleOpen` only governs click behavior — it does not enforce a single-open constraint on the initial state. Use `data-mg-js-tabs-default-open="false"` with `data-mg-js-tabs-single-open` for typical accordion behavior. |
+| `data-mg-js-tabs-filterable`         | `article`                                   | Presence-based. When set on a stacked container, injects a search input that filters sections by header and content text.                                                                                                                                                                                       |
+| `data-mg-js-tabs-filter-placeholder` | `article`                                   | Custom placeholder text for the filter input. Defaults to "Filter sections...".                                                                                                                                                                                                                                 |
+| `data-mg-js-tabs-skip-auto-init`     | `article`                                   | Presence-based. Skips this container during auto-init. Call `mgTabs([element])` to initialize manually.                                                                                                                                                                                                         |
 
 ### React usage
 
-The `<Tab>` component renders the same HTML as above and calls `mgTabsRuntime()` on mount. It's available from the Mangrove source but not published as a precompiled bundle on the CDN.
+The `<Tab>` component renders the same HTML as above and calls `mgTabsRuntime()` on mount. It is published as `components/Tab.js` in npm and on the CDN. The bundle imports the browser tabs runtime and requires a DOM at import time; load it on the client rather than during server rendering.
 
 ```jsx
-// Requires the full Mangrove source tree (not available from the npm package alone)
-import { Tab } from 'stories/Components/Tab/Tab';
+import { Tab } from '@undrr/undrr-mangrove/components/Tab.js';
 
 const tabdata = [
   { text: 'Overview', text_id: 'overview', data: '<p>Overview content</p>' },
-  { text: 'Details', text_id: 'details', data: '<p>Detail content</p>', is_default: 'true' },
+  {
+    text: 'Details',
+    text_id: 'details',
+    data: '<p>Detail content</p>',
+    is_default: 'true',
+  },
 ];
 
-<Tab tabdata={tabdata} variant="horizontal" />
+<Tab
+  tabdata={tabdata}
+  variant="horizontal"
+  labels={{ tabListLabel: 'Programme sections' }}
+/>;
 ```
 
 **Props:**
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `tabdata` | `Array` | — | Array of tab objects (see below) |
-| `variant` | `string` | `"horizontal"` | `"horizontal"` or `"stacked"` |
-| `defaultOpen` | `bool` | `undefined` | Stacked only. `true` opens all panels, `false` closes all, `undefined` opens first. Per-item `is_default` overrides. |
-| `singleOpen` | `bool` | `false` | Stacked only. When `true`, only one panel can be open at a time. Only governs click behavior — does not enforce single-open on initial state. Use with `defaultOpen={false}` for typical accordion behavior. |
-| `filterable` | `bool` | `false` | Stacked only. Renders a search input that filters sections by header and content text. Also available via `data-mg-js-tabs-filterable` in vanilla JS. |
-| `filterPlaceholder` | `string` | `"Filter sections…"` | Placeholder text for the filter input. |
+| Prop            | Type     | Default              | Description                                                                                                                                                                                                  |
+| --------------- | -------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `tabdata`       | `Array`  | —                    | Array of tab objects (see below)                                                                                                                                                                             |
+| `variant`       | `string` | `"horizontal"`       | `"horizontal"` or `"stacked"`                                                                                                                                                                                |
+| `stackOnMobile` | `bool`   | `false`              | Horizontal only. Switch to stacked disclosures below 480px; restore the rail at 480px and above.                                                                                                             |
+| `defaultOpen`   | `bool`   | `undefined`          | Stacked only. `true` opens all panels, `false` closes all, `undefined` opens first. Per-item `is_default` overrides.                                                                                         |
+| `singleOpen`    | `bool`   | `false`              | Stacked only. When `true`, only one panel can be open at a time. Only governs click behavior — does not enforce single-open on initial state. Use with `defaultOpen={false}` for typical accordion behavior. |
+| `filterable`    | `bool`   | `false`              | Stacked only. Renders a search input that filters sections by header and content text. Also available via `data-mg-js-tabs-filterable` in vanilla JS.                                                        |
+| `labels`        | `object` | `DEFAULT_TAB_LABELS` | `tabListLabel` names the tablist (default "Sections"); `filterPlaceholder` names the stacked filter input (default "Filter sections…").                                                                      |
 
 Each tab object in `tabdata`:
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `text` | `string` | Tab label |
-| `text_id` | `string` | Unique identifier (used in `id` and `href` attributes) |
-| `data` | `string` | HTML content for the tab panel |
-| `is_default` | `string` | `"true"` to open by default, `"false"` to keep closed. Overrides `defaultOpen`. |
+| Property     | Type     | Description                                                                                                        |
+| ------------ | -------- | ------------------------------------------------------------------------------------------------------------------ |
+| `text`       | `string` | Tab label                                                                                                          |
+| `text_id`    | `string` | Unique identifier (used in `id` and `href` attributes)                                                             |
+| `data`       | `string` | HTML content for the tab panel. Rendered unsanitised — see [Panel HTML trust contract](#panel-html-trust-contract) |
+| `is_default` | `string` | `"true"` to open by default, `"false"` to keep closed. Overrides `defaultOpen`.                                    |
+
+### Panel HTML trust contract
+
+`data` is rendered as HTML, not as text, and Mangrove never sanitises it.
+
+This is deliberate and it will not change. A tab panel holds a whole page
+section — tables, figures, forms, embedded video — and that is the point of the
+prop. There is no escaped mode, and passing the string through a sanitiser would
+strip the iframes and embeds panels exist to carry.
+
+So sanitise it where you build `tabdata`. Usually that is your CMS: a Drupal
+text format, or whatever output filter already decides which embeds an author
+may publish. If you assemble the string yourself from anything a user supplied,
+filter it there — and note that stripping tags to be safe is the wrong tool
+here, because it will take the panel's content with it. Decide what markup a
+panel may contain, and allow that.
+
+Some Mangrove components do sanitise for you: `TextCta`, `Drawer` and the card
+components run [DOMPurify](https://github.com/cure53/DOMPurify) internally. They
+render short authored strings where a default allow-list costs nothing. Tabs are
+not in that group, so do not carry the assumption across.
+
+This applies to the React component only. In the vanilla HTML integration above,
+the panel markup is already in the page and `tabs.js` only enhances it, so there
+is no Mangrove-side injection to reason about — the markup is yours, rendered by
+your own templates.
+
+Tab labels (`text`) and identifiers (`text_id`) are rendered as text and need no
+such handling.
 
 ### See also
 
 - [Vanilla HTML/CSS integration](/?path=/docs/getting-started-integration-vanilla-html-and-css--docs), including a working CodePen example
 - [CDN reference](/?path=/docs/getting-started-integration-cdn-reference--docs) for all asset URLs and versioning
 
+## Migration
+
+### v2.10: centred, scrollable horizontal tabs
+
+Horizontal tabs now stay horizontal below 480px by default. To restore automatic
+mobile stacking, set `stackOnMobile` (`data-mg-js-tabs-stack-on-mobile`).
+Choose `variant="stacked"` (`mg-tabs--stacked` + `data-mg-js-tabs-variant="stacked"`)
+when disclosure behavior is required.
+
+The React wrapper renders separate rail/panel containers. Existing vanilla
+markup is enhanced automatically with preserved panel IDs/hash links, but
+custom selectors expecting panels inside `.mg-tabs__list` must be updated.
+
+Horizontal tabs use `--mg-tab-background--active` and `--mg-tab-indicator--active` for the selected pill. Keep overrides scoped to the theme and check text, selected-state and focus contrast together. For dynamically removed vanilla components, call `mgTabsDestroy(container)` before removing their DOM. React performs this cleanup automatically.
+
+### v2.5: trigger ID change
+
+In version 2.5, the ID of stacked tab trigger elements changed. If you have CSS or JavaScript that selects triggers by ID:
+
+- **Before (≤ 2.4):** `#mg-tabs__section-{id}` targeted both the trigger and the panel
+- **After (2.5+):** `#mg-tabs__section-{id}--trigger` is the trigger; `#mg-tabs__section-{id}` is the panel
+
+You can also select triggers by class (`.mg-tabs__link`) — this works in all versions.
+
+## Runtime UI translations
+
+Use `lang` for built-in copy and `labels` for individual overrides. The
+[shared translation guide](?path=/docs/contributing-ui-translations--docs)
+explains language matching, fallback, direction and hydration precedence.
+
+`components/Tab.js` exports `getTabLabels(lang, labels)`
+for consumers needing the same strings outside React.
+
+The published bundle retains its browser DOM requirement at import time.
+
 ## Changelog
 
-- **2.6** — 2026-03-27: Added `data-mg-js-tabs-skip-auto-init` attribute, `type="module"` self-init, single-element scope support (`mgTabs` wrapper already accepted scope; this release adds the manual-init check and single-element handling)
-- **2.5** — 2026-03-20:
+- **2.12**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance.
+
+- **2.11.4**, 2026-10-26: Added the existing Arabic RTL story to the docs so its fixed locale can be reviewed alongside examples that follow the preview toolbars; component behaviour is unchanged.
+
+- **2.11.3**, 2026-10-15 ([#1357](https://github.com/unisdr/undrr-mangrove/issues/1357)): Stacked-tab indicator rotation uses the medium motion token and standard easing, retaining its reduced-motion gate.
+
+- **2.11.2**, 2026-09-20 ([#1276](https://github.com/unisdr/undrr-mangrove/pull/1276)): React tab panels now carry the opt-in `mg-content` boundary, so paragraph links in caller-supplied long-form panel HTML have the accessible underline treatment. The vanilla `mgTabs()` initializer leaves consumer markup unchanged; add `mg-content` to a hand-authored panel when it contains prose.
+- **2.11.1**, 2026-09-18 ([#1258](https://github.com/unisdr/undrr-mangrove/pull/1258)): Documented the panel HTML trust contract. `TabPanel` renders a tab object's `data` string as HTML and does not sanitise it, which was already true and is unchanged here; no rendering behaviour was touched. Sanitising is the wrong answer for this prop rather than a missing one: a panel carries whole page sections, including the embeds and iframes a default DOMPurify pass would strip, so the filtering belongs in the CMS output filter that decides what an author may publish. The `data` propType said "consumers must sanitise" and nothing else did; the component now carries a block comment with the reasoning and a pointer at the render site, the MDX has a "Panel HTML trust contract" section beside the tab object table, and the AI manifest entry states it, scoped to the React path. Sibling components that do sanitise (`TextCta`, `Drawer`, the cards) are named so the difference reads as a decision. Also labels the component's other `dangerouslySetInnerHTML` (the no-data placeholder) as a fixed string literal rather than caller input, so an audit of the repo's injection sites does not have to work that out twice.
+- **2.11**, 2026-09-17 ([#1183](https://github.com/unisdr/undrr-mangrove/pull/1183)): `mgTabs()` and `mgTabsRuntime()` accept an optional `{ signal }` third argument; aborting it destroys the tab sets that call initialized. For [#1180](https://github.com/unisdr/undrr-mangrove/issues/1180), a tab set removed from the page without `mgTabsDestroy()` is suspended: its window, font and `ResizeObserver` registrations are released when a resize observer notification, outside event or later `mgTabs()`/`mgTabsRuntime()` call finds it detached, and it resumes with its selection on interaction, window resize or hash change, or initialization if it is re-attached. A hash change made while a tab set was suspended is followed when it resumes or is re-initialized; after a pointer press or key press, that and any `stackOnMobile` layout switch wait until the interaction has been handled, and a tab the interaction selects wins. Resuming after an interaction also resumes other re-attached tab sets, including nested ones. While any tab set is initialized, the runtime keeps one window `resize` and one `hashchange` listener that check its tab sets. When the URL hash changed after a selection was retained, the hash now wins on re-initialization. `mgTabsDestroy(scope)` destroys every tab set in scope even if one throws, and an error in one tab set no longer stops `mgTabs()` from initializing others. The React wrapper passes a signal. New "Removing tabs" docs with a Drupal `detach` example.
+- **2.10.2**, 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic tab links now render in Noto Sans Arabic instead of Noto Kufi Arabic. `.mg-tabs__link` reads the `ui` font role rather than naming a typeface, and the component's `:lang(ar)` block is gone. Latin rendering is unchanged.
+- **2.10.1**, 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a tab link whose own language is not Arabic.
+- **2.10**, 2026-09-08 ([#1094](https://github.com/unisdr/undrr-mangrove/issues/1094)): Refined horizontal tabs with centered groups, mobile scrolling, overflow fades, and RTL-aware keyboard behavior. Improved tablist/panel semantics and lifecycle cleanup; React updates preserve selection/disclosure/filter state. `stackOnMobile` remains available for disclosure-style mobile behavior.
+  - Arabic typography ([#1089](https://github.com/unisdr/undrr-mangrove/issues/1089)): Arabic tab links render in Noto Kufi Arabic. The `:lang(ar)` override on `.mg-tabs__link` points at `$mg-font-family-arabic-headings`, which changed from Dubai to Noto Kufi Arabic, so the override once again selects a different family from Arabic body text.
+
+- **2.9**, 2026-08-31 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Updated horizontal and stacked visual treatments (baseline/active state, disclosure rows, hit areas, and motion tokens) and removed per-language story duplication in favor of the global locale toolbar.
+- **2.8**, 2026-06-19 ([mangrove#1056](https://github.com/unisdr/undrr-mangrove/pull/1056)): Consolidated `filterPlaceholder` into `labels` with `DEFAULT_TAB_LABELS` (backwards compatible), and added shared locale label sets for ES/FR/JA/ZH/AR/RU.
+
+- **2.7**, 2026-04-13: `.mg-tabs__link` now uses `$mg-font-family-headings` (Roboto Condensed) instead of `$mg-font-family` (Roboto). The `:lang(ar)` override switched from `$mg-font-family-arabic-body` (Dubai) to `$mg-font-family-arabic-headings` (then Noto Kufi Arabic) to match. Since 2.0.0-alpha.3 both Arabic tokens resolve to Dubai, so this override no longer changes the family.
+- **2.6**, 2026-03-27: Added `data-mg-js-tabs-skip-auto-init` attribute, `type="module"` self-init, single-element scope support (`mgTabs` wrapper already accepted scope; this release adds the manual-init check and single-element handling)
+- **2.5**, 2026-03-20:
   - Added `defaultOpen`, `singleOpen`, and `filterable` props (React) and corresponding `data-mg-js-tabs-*` attributes (vanilla JS)
   - ARIA disclosure pattern for stacked tabs (`role="button"`, `aria-expanded`, `aria-controls`, `hidden="until-found"`)
   - Keyboard: Space/Enter to toggle, Arrow Up/Down with wrapping, Home/End
@@ -311,10 +575,10 @@ Each tab object in `tabdata`:
   - RTL: chevron and padding flipped for Arabic/RTL layouts
   - **Migration:** trigger elements now have ID `{panelId}--trigger` instead of sharing the panel's ID. Update any CSS/JS that selects triggers by `#mg-tabs__section-{id}` to use `#mg-tabs__section-{id}--trigger` or the class `.mg-tabs__link`
   - Exported `setDisclosureState()` and `mgTabsApplyStackedDefaults()` helpers
-- **2.4.1** — 2026-03-02: Rewrote usage docs with vanilla JS and React examples, CDN links, HTML markup, and API reference
-- **2.4** — 2026-02-23: Removed deprecated `Version1Tabs` story
-- **2.3** — 2025-09-15: New `mgTabsRuntime()` function; multi-tab-set support; default tab selection via `data-mg-js-tabs-default`; smooth scroll deep linking; stacked open state tracking
-- **2.2** — 2025-02-05: Append URL hash on clicking a tab
-- **2.1** — 2024-11-07: Allow stacked tabs to be more accordion-like
-- **2.0** — 2024-10-18: **Breaking:** Added `mg-tabs--stacked` and `mg-tabs--horizontal` variants; tab content now inside parent `li`
-- **1.0** — 2022-12-12: Released component
+- **2.4.1**, 2026-03-02: Rewrote usage docs with vanilla JS and React examples, CDN links, HTML markup, and API reference
+- **2.4**, 2026-02-23: Removed deprecated `Version1Tabs` story
+- **2.3**, 2025-09-15: New `mgTabsRuntime()` function; multi-tab-set support; default tab selection via `data-mg-js-tabs-default`; smooth scroll deep linking; stacked open state tracking
+- **2.2**, 2025-02-05: Append URL hash on clicking a tab
+- **2.1**, 2024-11-07: Allow stacked tabs to be more accordion-like
+- **2.0**, 2024-10-18: **Breaking:** Added `mg-tabs--stacked` and `mg-tabs--horizontal` variants; tab content now inside parent `li`
+- **1.0**, 2022-12-12: Released component

@@ -1,3 +1,15 @@
+/**
+ * CTA Button (CtaButton)
+ *
+ * Primary, secondary, and tertiary call-to-action button styles with size variants and motion effects.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Buttons/CtaButton/CtaButton.mdx
+ */
+@use "../../../assets/scss/breakpoints" as *;
+@use "../../../assets/scss/mixins" as *;
+@use "../../../assets/scss/config" as *;
+
 // .mg-buttons {
 //   margin-bottom: 1em;
 //   //Media queries
@@ -16,20 +28,38 @@
 .mg-button {
   align-items: center;
   background: transparent;
+  background-clip: padding-box;
   display: flex;
-  font-size: $mg-font-size-button;
+  font-family: var(--mg-font-family-text);
+  font-size: var(--mg-font-size-button);
   font-weight: 600;
+  gap: var(--mg-spacing-50);
   line-height: 1;
-  border-radius: $mg-radius-button;
-  color: $mg-color-button;
+  border-radius: var(--mg-radius-button);
+  color: rgb(var(--mg-color-button));
   cursor: pointer;
   justify-content: center;
-  padding: $mg-padding-button;
-  border: $mg-border-width-button solid $mg-border-color-button;
+  padding: var(--mg-padding-button);
+  border: var(--mg-border-width-button) solid var(--mg-border-color-button);
 
+  @media (prefers-reduced-motion: no-preference) {
+    transition:
+      background-color 200ms ease,
+      border-color 200ms ease,
+      color 200ms ease,
+      scale var(--mg-motion-duration-fast) var(--mg-motion-easing-standard);
+  }
+
+  &:active:not(.disabled) {
+    scale: 0.96;
+  }
+
+  // Visible, token-driven focus ring. A neutral separator ring plus a
+  // focus-coloured ring reads clearly on any button background (unlike a
+  // same-colour glow), follows the button's border-radius, and is not clipped
+  // by overflow like an outline can be.
   &:focus-visible {
-    box-shadow: 0 0 4px $mg-color-button-background--hover;
-    outline: 0;
+    @include mg-focus-ring;
   }
 
   @include devicebreak(medium) {
@@ -37,39 +67,321 @@
   }
 }
 
-.mg-button + .mg-button {
-  margin-left: mg-rem(10);
+.mg-buttons {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mg-spacing-75);
 }
 
-button {
-  &:focus-visible {
-    box-shadow: 0 0 4px $mg-color-button-background;
-    outline: 0;
+// Icon embedded in text buttons
+.mg-button__icon {
+  display: inline-block;
+  flex-shrink: 0;
+  height: 1.15em;
+  pointer-events: none;
+  shape-rendering: geometricPrecision;
+  vertical-align: middle;
+  width: 1.15em;
+}
+
+// Icon-only button variant for map actions, dismiss/copy controls, and compact toolbars
+.mg-button--icon,
+.mg-icon-button {
+  align-items: center;
+  aspect-ratio: 1;
+  background-clip: padding-box;
+  block-size: mg-rem(36);
+  border-radius: var(--mg-radius-button);
+  display: inline-flex;
+  inline-size: mg-rem(36);
+  justify-content: center;
+  min-block-size: mg-rem(36);
+  min-inline-size: mg-rem(36);
+  padding: 0;
+
+  &--round {
+    border-radius: 50%;
+  }
+
+  &--small {
+    block-size: mg-rem(28);
+    inline-size: mg-rem(28);
+    min-block-size: mg-rem(28);
+    min-inline-size: mg-rem(28);
+    padding: 0;
+  }
+
+  svg {
+    display: block;
+    flex-shrink: 0;
+    pointer-events: none;
+    shape-rendering: geometricPrecision;
+  }
+
+  .mg-icon {
+    // A whole-pixel size keeps the centred glyph on the pixel grid in the
+    // 36px and 28px boxes.
+    font-size: mg-rem(18);
+    line-height: 1;
   }
 }
 
-.mg-button-primary {
-  background-color: $mg-color-button-background;
+// The icon mask is an inline-block that sits on the text baseline, which leaves
+// the font's descender space below it and lifts the glyph about 1.5px above
+// centre. As a block it fills the icon box, so flex centring is exact.
+.mg-button .mg-icon:not([class*="fa-"])::before,
+.mg-icon-button .mg-icon:not([class*="fa-"])::before {
+  display: block;
+}
+
+// Responsive icon button: icon + text on desktop, collapses to compact icon-only on mobile
+.mg-button--responsive-icon {
+  @media (max-width: #{$mg-breakpoint-tablet - 1px}) {
+    aspect-ratio: 1;
+    block-size: mg-rem(36);
+    inline-size: mg-rem(36);
+    min-block-size: mg-rem(36);
+    min-inline-size: mg-rem(36);
+    padding: 0;
+
+    .mg-button__label {
+      clip-path: inset(50%);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      white-space: nowrap;
+      width: 1px;
+    }
+  }
+}
+
+// Standalone .mg-icon-button is a ghost control: it is not paired with a
+// .mg-button-* variant, so it resets the user-agent button chrome itself.
+// The hover fill is the dark interactive colour in every theme, so the icon
+// must switch to the light button foreground with it (WCAG 1.4.11).
+// Components such as Notice and Drawer override the hover with their own
+// neutral treatment.
+.mg-icon-button {
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
 
   &:hover {
-    color: $mg-color-button;
-    background-color: $mg-color-button-background--hover;
+    background-color: rgb(var(--mg-color-interactive-active));
+    color: rgb(var(--mg-color-button));
+  }
+
+  // Forced colours discard the hover fill, so draw an outline instead. It is
+  // scoped to :not(:focus-visible) so the mg-focus-ring outline still wins.
+  @media (forced-colors: active) {
+    &:hover:not(:focus-visible) {
+      outline: 1px solid ButtonText;
+    }
+  }
+}
+
+// Standalone .mg-icon-button may lack the .mg-button base class focus styles
+.mg-icon-button:focus-visible {
+  @include mg-focus-ring;
+}
+
+// Contrast guard, not an endorsement. The variant-capable icon button is
+// .mg-button.mg-button-{variant}.mg-button--icon; .mg-icon-button is the
+// standalone ghost primitive and carries no variant colours. Pairing it with a
+// filled variant is a common mistake because the variant paints a dark fill but
+// the readable foreground lives on .mg-button, which this primitive never has,
+// so the glyph stayed at the inherited body colour on the fill. The rest state
+// now matches the hover, which both variants already set to the same token, so
+// the mistake fails as a redundant class rather than as a 1.4.3 failure. Outline
+// variants are excluded: they set their own foreground on a transparent surface.
+.mg-icon-button:is(.mg-button-primary, .mg-button-secondary):not(
+    .mg-button-outline
+  ) {
+  color: rgb(var(--mg-color-button));
+}
+
+// Removed: a bare `button:focus-visible { box-shadow: 0 0 4px
+// var(--mg-color-button-background); outline: 0; }` rule used to live here.
+
+// Two things were wrong with it. It was an unscoped element selector, so it
+// stripped the user-agent focus ring from every <button> in a consuming page,
+// including buttons Mangrove does not own and cannot style back. And what it
+// put in place was a glow in the button's own fill colour -- invisible against
+// the thing it surrounds -- which is the exact pattern the comment above
+// argues against.
+
+// It is not replaced with a scoped equivalent because none is needed:
+// .mg-button-primary/-secondary/-outline are only ever used alongside
+// .mg-button, which already takes the two-band ring above. Deleting the rule
+// hands unowned buttons back their UA outline, which is the correct default.
+
+// Filled variants paint their fill under the border, so a transparent stroke
+// matches the fill (including hover and context overrides such as Hero) and
+// filled buttons render the same size as outline buttons. Themes can give the
+// stroke a colour through --mg-border-color-button-primary/-secondary.
+.mg-button-primary:not(.mg-button-outline),
+.mg-button-secondary:not(.mg-button-outline),
+.mg-button.disabled {
+  background-clip: border-box;
+}
+
+.mg-button-primary:not(.mg-button-outline) {
+  border-color: var(--mg-border-color-button-primary);
+}
+
+.mg-button-secondary:not(.mg-button-outline) {
+  border-color: var(--mg-border-color-button-secondary);
+}
+
+.mg-button.disabled {
+  border-color: transparent;
+}
+
+.mg-button-primary {
+  background-color: var(--mg-color-button-background);
+
+  &:hover {
+    color: rgb(var(--mg-color-button));
+    background-color: var(--mg-color-button-background--hover);
   }
 }
 
 .mg-button-secondary {
-  background-color: $mg-color-button-secondary-background;
+  background-color: rgb(var(--mg-color-button-secondary-background));
 
   &:hover {
-    color: $mg-color-button;
-    background-color: $mg-color-button-secondary-background--hover;
+    color: rgb(var(--mg-color-button));
+    background-color: rgb(var(--mg-color-button-secondary-background--hover));
+  }
+}
+
+// The outline modifier composes with the existing emphasis variants:
+// .mg-button.mg-button-primary.mg-button-outline or
+// .mg-button.mg-button-secondary.mg-button-outline.
+.mg-button-outline {
+  background-color: transparent;
+}
+
+.mg-button-primary.mg-button-outline {
+  border-color: rgb(var(--mg-color-button-outline-primary));
+  color: rgb(var(--mg-color-button-outline-primary));
+
+  &:hover {
+    background-color: rgb(var(--mg-color-button-outline-primary--hover));
+    color: rgb(var(--mg-color-button));
+  }
+}
+
+.mg-button-secondary.mg-button-outline {
+  border-color: rgb(var(--mg-color-button-outline-secondary));
+  color: rgb(var(--mg-color-button-outline-secondary));
+
+  &:hover {
+    background-color: rgb(var(--mg-color-button-outline-secondary--hover));
+    color: rgb(var(--mg-color-button));
   }
 }
 
 .mg-button.disabled {
-  background-color: $mg-color-neutral-500;
-  color: $mg-color-neutral-0;
+  background-color: rgb(var(--mg-color-neutral-500));
+  color: rgb(var(--mg-color-neutral-0));
   pointer-events: none;
+}
+
+// Compact editorial CTA: text plus a circular directional badge. Consumers opt
+// into this modifier so form submits and utility actions retain their
+// conventional button treatment.
+.mg-button.mg-button-cta {
+  background: transparent;
+  border-color: transparent;
+  color: rgb(var(--mg-color-text));
+  flex: 0 0 auto;
+  justify-content: flex-start;
+  max-inline-size: 100%;
+  min-height: mg-rem(44);
+  overflow-wrap: anywhere;
+  padding: var(--mg-spacing-50) 0;
+  padding-inline-end: calc(#{mg-rem(22)} + var(--mg-spacing-50));
+  position: relative;
+  text-align: start;
+  white-space: normal;
+
+  // The compact editorial treatment keeps its label steady and gives the
+  // directional badge the tactile response instead of scaling the whole row.
+  &:active:not(.disabled) {
+    scale: 1;
+  }
+
+  &::after {
+    align-items: center;
+    background: rgb(var(--mg-color-interactive));
+    border-radius: 50%;
+    color: rgb(var(--mg-color-neutral-0));
+    content: "›";
+    display: inline-flex;
+    flex: 0 0 mg-rem(22);
+    font-family: var(--mg-font-family-text);
+    font-size: mg-rem(18);
+    font-weight: 700;
+    height: mg-rem(22);
+    inline-size: mg-rem(22);
+    inset-block-start: 50%;
+    inset-inline-end: 0;
+    justify-content: center;
+    line-height: 1;
+    padding-block-end: 0.06em; // optically centres the asymmetric chevron
+    padding-inline-start: 0.03em;
+    position: absolute;
+
+    // The shift is a custom property so RTL can flip its direction without
+    // restating the vertical centring that shares this shorthand.
+    translate: var(--mg-cta-arrow-shift, 0) -50%;
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition:
+        background-color var(--mg-motion-duration-fast)
+          var(--mg-motion-easing-standard),
+        translate var(--mg-motion-duration-fast)
+          var(--mg-motion-easing-standard);
+    }
+  }
+
+  &:hover {
+    background: transparent;
+    border-color: transparent;
+    color: rgb(var(--mg-color-interactive-active));
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+
+    &::after {
+      background: rgb(var(--mg-color-interactive-active));
+    }
+
+    // Nudges toward its destination. Only where motion is welcome: without the
+    // transition this is a jump rather than a gesture, which says nothing.
+    @media (prefers-reduced-motion: no-preference) {
+      &::after {
+        --mg-cta-arrow-shift: #{mg-rem(3)};
+      }
+    }
+  }
+
+  &:active::after {
+    scale: 0.96;
+  }
+}
+
+[dir="rtl"] .mg-button.mg-button-cta::after {
+  content: "‹";
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [dir="rtl"] .mg-button.mg-button-cta:hover::after {
+    --mg-cta-arrow-shift: #{mg-rem(-3)};
+  }
 }
 
 // [dir='rtl'] {
@@ -80,7 +392,7 @@ button {
 //           @include transform(rotate(180deg));
 
 //           margin-left: 0;
-//           margin-right: $mg-spacing-25;
+//           margin-right: var(--mg-spacing-25);
 //         }
 
 //         &:hover::after {
@@ -90,10 +402,3 @@ button {
 //     }
 //   }
 // }
-
-// Arabic font override
-:lang(ar) {
-  .mg-button {
-    font-family: $mg-font-family-arabic-headings;
-  }
-}

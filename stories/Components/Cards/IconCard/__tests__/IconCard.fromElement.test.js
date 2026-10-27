@@ -1,5 +1,4 @@
 import iconCardFromElement from '../IconCard.fromElement';
-
 function makeContainer(attrs = {}) {
   const el = document.createElement('div');
   Object.entries(attrs).forEach(([key, value]) => {
@@ -7,12 +6,18 @@ function makeContainer(attrs = {}) {
   });
   return el;
 }
-
 const sampleItems = [
-  { icon: 'mg-icon mg-icon-globe', title: 'Global', summary: 'Worldwide coverage' },
-  { icon: 'mg-icon mg-icon-chart-bar', title: 'Data', link: '/data' },
+  {
+    icon: 'mg-icon mg-icon-globe',
+    title: 'Global',
+    summary: 'Worldwide coverage',
+  },
+  {
+    icon: 'mg-icon mg-icon-chart-bar',
+    title: 'Data',
+    link: '/data',
+  },
 ];
-
 describe('iconCardFromElement', () => {
   it('returns defaults when no data attributes are set', () => {
     const props = iconCardFromElement(makeContainer());
@@ -22,7 +27,6 @@ describe('iconCardFromElement', () => {
       items: [],
     });
   });
-
   it('parses items JSON and boolean/enum attributes', () => {
     const props = iconCardFromElement(
       makeContainer({
@@ -35,17 +39,19 @@ describe('iconCardFromElement', () => {
     expect(props.centered).toBe(true);
     expect(props.variant).toBe('negative');
   });
-
   it('returns empty data array for invalid JSON', () => {
     const props = iconCardFromElement(
-      makeContainer({ items: '{broken' })
+      makeContainer({
+        items: '{broken',
+      })
     );
     expect(props.items).toEqual([]);
   });
-
   it('treats centered as false when not explicitly "true"', () => {
     const props = iconCardFromElement(
-      makeContainer({ centered: 'false' })
+      makeContainer({
+        centered: 'false',
+      })
     );
     expect(props.centered).toBe(false);
   });

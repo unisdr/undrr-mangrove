@@ -14,16 +14,21 @@ export default function textCtaFromElement(container) {
   const headlineLevel = rawLevel >= 2 && rawLevel <= 6 ? rawLevel : 2;
 
   return {
+    eyebrow: dataset.eyebrow || '',
     headline: dataset.headline || '',
     headlineSize: dataset.headlineSize || '600',
     headlineLevel,
     text: dataset.text || '',
     buttons,
     variant: dataset.variant || 'primary',
+    tone: dataset.tone === 'soft' ? 'soft' : 'strong',
     backgroundColor: dataset.backgroundColor || undefined,
     padding: dataset.padding || undefined,
-    image: dataset.image ? { src: dataset.image, alt: dataset.imageAlt || '' } : undefined,
+    image: dataset.image
+      ? { src: dataset.image, alt: dataset.imageAlt || '' }
+      : undefined,
     centered: dataset.centered !== 'false',
+    layout: dataset.layout === 'inline' ? 'inline' : 'stacked',
     className: dataset.className || undefined,
   };
 }

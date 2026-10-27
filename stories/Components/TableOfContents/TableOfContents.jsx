@@ -36,7 +36,10 @@ export default function TableOfContents({
     if (targetElement) {
       // Smooth scroll to the target element
       targetElement.scrollIntoView({
-        behavior: 'smooth',
+        behavior: window.matchMedia?.('(prefers-reduced-motion: reduce)')
+          .matches
+          ? 'auto'
+          : 'smooth',
         block: 'start',
       });
 

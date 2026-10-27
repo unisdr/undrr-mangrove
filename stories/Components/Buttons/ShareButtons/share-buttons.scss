@@ -1,117 +1,200 @@
+/**
+ * Share Buttons
+ *
+ * Social sharing action bar with platform icons (X/Twitter, LinkedIn, Facebook, Email, Copy Link).
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Buttons/ShareButtons/ShareButtons.mdx
+ */
+@use "../../../assets/scss/mixins" as *;
+@use "../../../assets/scss/config" as *;
+
 .mg-share {
-  max-width: 400px;
+  max-inline-size: mg-rem(400);
+  min-inline-size: 0;
   display: flex;
   flex-direction: column;
-  gap: $mg-spacing-100;
+  gap: var(--mg-spacing-100);
 }
 
 .mg-share__header {
-  font-family: $mg-font-family;
-  color: $mg-color-text;
+  font-family: var(--mg-font-family-text);
+  color: rgb(var(--mg-color-text));
   font-weight: 600;
-  font-size: $mg-font-size-300;
-  display: flex;
-  justify-content: start;
+  font-size: var(--mg-font-size-300);
+  margin: 0;
 }
 
 .mg-share__buttons {
   display: flex;
-  gap: $mg-spacing-50;
-  flex-direction: row;
-  justify-content: left;
+  flex-wrap: wrap;
+  gap: var(--mg-spacing-50);
   align-items: center;
 }
 
-.mg-share__button {
-  font-size: $mg-font-size-400;
-  width: mg-rem(40);
-  height: mg-rem(40);
-  padding: $mg-spacing-100;
-  border-radius: $mg-radius-button;
-  background-color: $mg-color-button-background;
-  color: $mg-color-button;
+.mg-share__button,
+.mg-share__copy-button {
+  box-sizing: border-box;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  min-block-size: mg-rem(40);
+  padding: var(--mg-spacing-100);
+  border-radius: var(--mg-radius-button);
+  background-color: transparent;
+  color: rgb(var(--mg-color-text));
   cursor: pointer;
-  border: $mg-border-width-button solid $mg-border-color-button;
+  border: 1px solid transparent;
 
-  // Improve icon rendering quality
-  .mg-icon {
-    font-weight: 100;
-    -webkit-text-stroke: 0.25px $mg-color-button-background;
+  @media (prefers-reduced-motion: no-preference) {
+    transition:
+      background-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard),
+      color var(--mg-motion-duration-fast) var(--mg-motion-easing-standard);
   }
 
   &:hover {
-    background-color: rgba($mg-color-button-background--hover, 0.8);
+    background-color: rgb(var(--mg-color-neutral-50));
+    color: rgb(var(--mg-color-text));
   }
 
   &:focus-visible {
-    box-shadow: 0 0 4px $mg-color-button-background--hover;
-    outline: 0;
+    @include mg-focus-ring;
   }
+
+  @media (forced-colors: active) {
+    border: 1px solid ButtonText;
+  }
+}
+
+.mg-share__button {
+  flex: 0 0 mg-rem(40);
+  inline-size: mg-rem(40);
+  block-size: mg-rem(40);
+  font-size: var(--mg-font-size-400);
 }
 
 .mg-share__copy-button {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  border: 0 solid $mg-border-color-button;
-  color: $mg-color-button;
-  font-family: $mg-font-family;
-  padding: $mg-spacing-100;
-  background-color: rgba($mg-color-button-background, 1);
+  background-color: rgb(var(--mg-color-neutral-25));
+  border-color: rgb(var(--mg-color-neutral-300) / 0.4);
+  gap: var(--mg-spacing-100);
+  max-inline-size: 100%;
+  font-family: var(--mg-font-family-text);
+  text-align: start;
 
   &:hover .mg-share__copy-text {
     text-decoration: underline;
+    text-underline-offset: 0.15em;
   }
 }
 
-.mg-share__clip-icon {
-  flex-shrink: 0;
-  width: 25px;
-  height: 25px;
+.mg-share__clip-icon,
+.mg-share__stack-icon {
+  flex: 0 0 mg-rem(24);
+  inline-size: mg-rem(24);
+  block-size: mg-rem(24);
   display: flex;
   justify-content: center;
   align-items: center;
 
   img {
-    width: 18px;
+    inline-size: mg-rem(18);
   }
 }
 
 .mg-share__copy-text {
-  color: $mg-color-button;
-  font-size: $mg-font-size-100;
-  overflow: hidden;
-  scrollbar-width: 0;
-  height: 17px;
-  flex: auto;
-  align-items: start;
-  margin-right: 1em;
-  margin-left: 1em;
+  min-inline-size: 0;
+  flex: 1;
+  font-size: var(--mg-font-size-250);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
-.mg-share__stack-icon {
-  flex-shrink: 0;
-  width: 25px;
-  height: 25px;
+.mg-share__dialog {
+  box-sizing: border-box;
+  inline-size: min(calc(100% - 2 * var(--mg-spacing-200)), mg-rem(500));
+  max-block-size: calc(100vh - 2 * var(--mg-spacing-200));
+  padding: var(--mg-spacing-300);
+  border: 0;
+  border-block-start: mg-rem(4) solid rgb(var(--mg-color-interactive));
+  border-radius: 0;
+  background: rgb(var(--mg-color-white));
+  color: rgb(var(--mg-color-text));
+  box-shadow: 0 mg-rem(8) mg-rem(32) rgb(var(--mg-color-neutral-900) / 0.25);
+  overflow: auto;
+
+  &::backdrop {
+    background: var(--mg-color-modal-scrim);
+  }
+}
+
+.mg-share__dialog-header {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba($mg-color-button-background, 0.5);
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--mg-spacing-150);
+}
 
-  img {
-    width: 18px;
+.mg-share__dialog-title {
+  margin: 0;
+  font-family: var(--mg-font-family-ui);
+  font-size: var(--mg-font-size-500);
+  line-height: 1.2;
+}
+
+.mg-share__dialog-close {
+  flex: none;
+  inline-size: mg-rem(40);
+  block-size: mg-rem(40);
+  min-inline-size: mg-rem(40);
+  min-block-size: mg-rem(40);
+  margin-inline-start: auto;
+  color: rgb(var(--mg-color-text));
+
+  &:hover {
+    background: rgb(var(--mg-color-neutral-50));
+    color: rgb(var(--mg-color-text));
   }
 }
 
-// Arabic
-:lang(ar) {
-  .mg-share__header,
-  .mg-share__copy-button {
-    font-family: $mg-font-family-arabic-body;
-  }
+.mg-share__dialog-description {
+  margin-block: var(--mg-spacing-150);
+  font-family: var(--mg-font-family-text);
+}
+
+.mg-share__dialog-content {
+  min-inline-size: 0;
+}
+
+.mg-share__dialog-image {
+  display: block;
+  max-inline-size: 100%;
+  max-block-size: mg-rem(220);
+  block-size: auto;
+  margin-inline: auto;
+}
+
+.mg-share__dialog-url {
+  overflow-wrap: anywhere;
+}
+
+.mg-share__dialog-actions,
+.mg-share__dialog-actions-primary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mg-spacing-100);
+}
+
+.mg-share__dialog-actions {
+  justify-content: space-between;
+  margin-block-start: var(--mg-spacing-200);
+}
+
+.mg-share__visually-hidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }

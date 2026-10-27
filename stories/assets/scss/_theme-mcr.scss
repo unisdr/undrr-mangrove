@@ -1,0 +1,12 @@
+// MCR2030 theme — runtime CSS custom property overrides.
+// Applied when .mg-theme-mcr is present on <body> or a wrapping element.
+// ---------------------------------------------------------------------
+// Every token in this block is generated from tokens/mcr.yaml, merged over
+// tokens/mangrove.yaml and tokens/undrr.yaml.
+@use "generated/tokens-mcr" as *;
+@use "tokens-tabs" as *;
+
+.mg-theme-mcr {
+  @include mg-tokens-tabs;
+  @include mg-tokens-mcr;
+}

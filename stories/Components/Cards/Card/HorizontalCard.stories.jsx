@@ -1,5 +1,6 @@
+import { checkPhotoCardEdges } from './cardGeometryChecks';
+import { expect } from 'storybook/test';
 import { HorizontalCard } from './HorizontalCard';
-
 const getCaptionForLocale = locale => {
   switch (locale) {
     case 'english':
@@ -78,31 +79,144 @@ This paper explores health risks from climate change in a global context, settin
       return dummy;
   }
 };
-
 export default {
   title: 'Components/Cards/Horizontal Card',
   component: HorizontalCard,
-
   argTypes: {
     variant: {
       options: ['primary', 'secondary', 'tertiary', 'quaternary'],
-
       control: {
         type: 'inline-radio',
       },
-
       defaultValue: 'primary',
     },
   },
 };
-
 export const DefaultHorizontalCard = {
+  play: checkPhotoCardEdges,
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
     return (
       <HorizontalCard items={caption.contentdata} {...args}></HorizontalCard>
     );
   },
-
   name: 'Horizontal Card',
+};
+
+// Cards should normally be links. These stories cover the cases where they
+// aren't, so the unlinked treatment is exercised alongside the linked one.
+
+export const NoLinkHorizontalCard = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    const unlinked = caption.contentdata.map(item => ({
+      ...item,
+      link: null,
+      button: null,
+    }));
+    return <HorizontalCard items={unlinked} {...args}></HorizontalCard>;
+  },
+  name: 'Without a link',
+};
+export const ButtonOnlyHorizontalCard = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    const buttonOnly = caption.contentdata.map(item => ({
+      ...item,
+      link: null,
+      buttonLink: 'javascript:void(0)',
+    }));
+    return <HorizontalCard items={buttonOnly} {...args}></HorizontalCard>;
+  },
+  name: 'Button only, no card link',
+};
+export const MixedLinkHorizontalCards = {
+  render: (args, { globals: { locale } }) => {
+    const [item] = getCaptionForLocale(locale).contentdata;
+    const mixed = [
+      {
+        ...item,
+      },
+      {
+        ...item,
+        link: null,
+        buttonLink: 'javascript:void(0)',
+      },
+      {
+        ...item,
+        link: null,
+        button: null,
+      },
+    ];
+    return <HorizontalCard items={mixed} {...args}></HorizontalCard>;
+  },
+  name: 'Mixed group (linked, button only, unlinked)',
+};
+export const LongContent = {
+  render: (args, { globals: { locale } }) => {
+    const base = getCaptionForLocale(locale).contentdata[0];
+    return (
+      <div
+        style={{
+          maxWidth: '900px',
+        }}
+      >
+        <HorizontalCard
+          {...args}
+          items={[
+            {
+              ...base,
+              summary: Array(3)
+                .fill(base.summary || base.title)
+                .join(' '),
+            },
+          ]}
+        />
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    await canvasElement.ownerDocument.fonts.ready;
+    const frame = canvasElement
+      .querySelector('.mg-card__visual')
+      .getBoundingClientRect();
+    const image = canvasElement
+      .querySelector('.mg-card__image')
+      .getBoundingClientRect();
+    expect(Math.abs(frame.bottom - image.bottom)).toBeLessThan(1);
+    expect(Math.abs(frame.height - image.height)).toBeLessThan(1);
+  },
+};
+export const NoImageHorizontalCard = {
+  name: 'Horizontal card without image',
+  render: (args, { globals: { locale } }) => {
+    const data = getCaptionForLocale(locale).contentdata.map(item => ({
+      ...item,
+      image: {
+        src: null,
+        alt: null,
+      },
+    }));
+    return <HorizontalCard {...args} items={data} />;
+  },
+  play: checkPhotoCardEdges,
+};
+export const NoLabels = {
+  name: 'Without labels',
+  render: (args, { globals: { locale } }) => {
+    const data = getCaptionForLocale(locale).contentdata.map(item => ({
+      ...item,
+      labels: [null, null],
+    }));
+    return (
+      <div
+        style={{
+          maxWidth: '900px',
+        }}
+      >
+        <HorizontalCard {...args} items={data} />
+      </div>
+    );
+  },
+  play: checkPhotoCardEdges,
 };

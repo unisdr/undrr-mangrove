@@ -1,34 +1,40 @@
 /**
- * @file SearchWidget.scss
- * @description Styles for the UNDRR Search Widget React component.
+ * Syndication Search Widget (Styles)
  *
- * Uses BEM naming convention with mg- prefix for Mangrove components.
- * Designed to work with the UNDRR theme system.
+ * Styles for the UNDRR Search Widget component with faceted filtering and responsive layouts.
  *
- * @see stories/assets/scss/_variables.scss for Mangrove design tokens
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/SyndicationSearchWidget/SyndicationSearchWidget.mdx
  */
-
-// @import "../../assets/scss/variables";
+@use "../Forms/form-base";
+@use "deprecated-teaser-hide" as *;
+@use "../../assets/scss/mixins" as *;
+@use "../../assets/scss/config" as *;
 
 // Component-specific variables (using Mangrove tokens)
 // Colors
-$search-primary: $mg-color-interactive;
-$search-primary-dark: $mg-color-interactive-active;
-$search-chip-bg: $mg-color-blue-50;
-$search-chip-hover: $mg-color-blue-100;
-$search-text: $mg-color-text;
-$search-text-muted: $mg-color-neutral-500;
-$search-border: $mg-color-neutral-100;
-$search-border-light: $mg-color-neutral-50;
-$search-skeleton-bg: $mg-color-neutral-25;
-$search-error-bg: $mg-color-red-50;
-$search-error-border: $mg-color-red-400;
-$search-debug-bg: $mg-color-yellow-light;
-$search-debug-text: $mg-color-yellow-dark;
+$search-primary: rgb(var(--mg-color-interactive));
+$search-primary-dark: rgb(var(--mg-color-interactive-active));
+$search-chip-bg: rgb(var(--mg-color-blue-50));
+$search-chip-hover: rgb(var(--mg-color-blue-100));
+$search-text: rgb(var(--mg-color-text));
+$search-text-muted: rgb(var(--mg-color-neutral-500));
+$search-border: rgb(var(--mg-color-neutral-100));
+$search-border-light: rgb(var(--mg-color-neutral-50));
+$search-skeleton-bg: rgb(var(--mg-color-neutral-25));
+$search-error-bg: rgb(var(--mg-color-red-50));
+$search-error-border: rgb(var(--mg-color-red-400));
+$search-debug-bg: var(--mg-color-yellow-light);
+$search-debug-text: var(--mg-color-yellow-dark);
 
 // Spacing & sizing (component needs rounded corners, base theme has 0)
-$search-radius: $mg-spacing-25;
-$search-input-padding-x: $mg-spacing-250;
+$search-radius: var(--mg-spacing-25);
+
+// Clear button target: 36px square, clear of the WCAG 2.5.8 24x24 minimum.
+$search-clear-size: mg-rem(36);
+
+// Inline-end room for the clear button: its size plus the offset and a small gap.
+$search-input-padding-x: mg-rem(44);
 
 // Screen reader only utility
 .mg-u-sr-only {
@@ -54,59 +60,43 @@ $search-input-padding-x: $mg-spacing-250;
 // Loading Progress Bar
 // ========================================
 
+// Shared ProgressBar owns track, animation, RTL and accessibility modes.
+// Keep the historical wrapper class as the positioning hook.
 .mg-search__progress {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: $search-border-light;
-  overflow: hidden;
-  z-index: 10;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 1; // local stacking within the positioned results region
 }
 
-.mg-search__progress-bar {
-  height: 100%;
-  width: 30%;
-  background: linear-gradient(90deg, $search-primary, $search-primary-dark);
-  animation: mg-search-progress 1.2s ease-in-out infinite;
-}
-
-@keyframes mg-search-progress {
-  0% {
-    transform: translateX(-100%);
-  }
-  50% {
-    transform: translateX(200%);
-  }
-  100% {
-    transform: translateX(400%);
-  }
-}
-
-// Search form
-.mg-search__form {
+// Search form (used by both the in-widget SearchForm and the standalone
+// SyndicationSearchBar). Layout primitives are shared between the two so
+// the detached bar matches the widget's input visually.
+.mg-search__form,
+.mg-search-bar {
   display: flex;
-  gap: $mg-spacing-50;
-  margin-bottom: $mg-spacing-100;
+  gap: 0;
+  margin-bottom: var(--mg-spacing-100);
+  margin-top: 0;
 }
 
-.mg-search__input-wrapper {
+.mg-search__input-wrapper,
+.mg-search-bar__input-wrapper {
   position: relative;
   flex: 1;
 }
 
 .mg-search__input {
-  width: 100%;
-  padding: $mg-spacing-75 $search-input-padding-x $mg-spacing-75 $mg-spacing-100;
-  border: 1px solid $search-border;
-  border-radius: $search-radius;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  @extend %mg-form-input-base;
 
-  &:focus {
-    outline: none;
-    border-color: $search-primary;
-    box-shadow: 0 0 0 3px rgba($search-primary, 0.15);
+  // Override the inline-end padding to leave room for the clear button
+  padding-inline-end: $search-input-padding-x;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition:
+      border-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard),
+      box-shadow var(--mg-motion-duration-fast) var(--mg-motion-easing-standard);
   }
 
   &::placeholder {
@@ -116,84 +106,41 @@ $search-input-padding-x: $mg-spacing-250;
 
 .mg-search__clear {
   position: absolute;
-  right: $search-input-padding-x;
+  inset-inline-end: var(--mg-spacing-50);
   top: 50%;
   transform: translateY(-50%);
-  padding: $mg-spacing-25 $mg-spacing-50;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: $search-clear-size;
+  height: $search-clear-size;
+  padding: 0;
   background: none;
   border: none;
-  font-size: $mg-font-size-200;
-  color: $search-text-muted;
+
+  // Matches the icon-only button glyph size used by CTA buttons and chips.
+  font-size: mg-rem(18);
+  color: $search-text;
   cursor: pointer;
   line-height: 1;
 
   &:hover {
-    color: $search-text;
+    color: $search-primary;
   }
 }
 
-.mg-search__loading {
-  position: absolute;
-  right: $mg-spacing-75;
-  top: 50%;
-  transform: translateY(-50%);
-  width: $mg-spacing-100;
-  height: $mg-spacing-100;
-  border: 2px solid $search-border-light;
-  border-top-color: $search-primary;
-  border-radius: 50%;
-  animation: mg-search-spin 0.8s linear infinite;
-}
-
-@keyframes mg-search-spin {
-  to {
-    transform: translateY(-50%) rotate(360deg);
-  }
-}
-
+// Submit button: visual styling comes from .mg-button / .mg-button-primary.
+// Only layout-specific spacing for the icon + label is defined here.
+// Loading state is conveyed by the widget-level progress strip
+// (.mg-search__progress) and aria-busy, not by a button-side spinner.
 .mg-search__submit {
-  display: flex;
-  align-items: center;
-  gap: $mg-spacing-50;
-  padding: $mg-spacing-75 $mg-spacing-150;
-  font-size: $mg-font-size-100;
-  font-weight: 500;
-  color: #fff;
-  background-color: $search-primary;
-  border: none;
-  border-radius: $search-radius;
-  cursor: pointer;
-  transition: background-color 0.2s;
-
-  &:hover {
-    background-color: $search-primary-dark;
-  }
-
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba($search-primary, 0.3);
-  }
+  gap: 0.5rem;
 }
 
 .mg-search__submit-icon {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-}
-
-// Submit button loading state
-.mg-search__submit--loading {
-  opacity: 0.85;
-  cursor: wait;
-}
-
-.mg-search__submit-spinner {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgb(255 255 255 / 0.3);
-  border-top-color: #fff;
-  border-radius: 50%;
-  animation: mg-search-spin 0.7s linear infinite;
+  line-height: 1;
 }
 
 // Active filters
@@ -201,9 +148,9 @@ $search-input-padding-x: $mg-spacing-250;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: $mg-spacing-50;
-  margin-bottom: $mg-spacing-100;
-  padding: $mg-spacing-75;
+  gap: var(--mg-spacing-50);
+  margin-bottom: var(--mg-spacing-100);
+  padding: var(--mg-spacing-75);
   background: $search-chip-bg;
   border-radius: $search-radius;
 }
@@ -211,14 +158,16 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-search__active-filters-label {
   font-weight: 500;
   color: $search-text;
-  margin-right: $mg-spacing-25;
+  margin-inline-end: var(--mg-spacing-25);
 }
 
 .mg-search__active-filters-list {
   display: flex;
   flex-wrap: wrap;
-  gap: $mg-spacing-50;
-  list-style: none;
+  gap: var(--mg-spacing-50);
+
+  @include mg-list-unmarked;
+
   margin: 0;
   padding: 0;
 }
@@ -226,23 +175,33 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-search__filter-chip {
   display: inline-flex;
   align-items: center;
-  gap: $mg-spacing-50;
-  padding: $mg-spacing-25 $mg-spacing-50;
+  gap: var(--mg-spacing-50);
+  padding: var(--mg-spacing-25) var(--mg-spacing-50);
   color: $search-text;
   background: #fff;
   border: 1px solid $search-border;
   border-radius: $search-radius;
   cursor: pointer;
-  transition: background-color 0.2s, border-color 0.2s;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition:
+      background-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard),
+      border-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard);
+  }
 
   &:hover {
     background: $search-chip-hover;
     border-color: $search-primary;
   }
 
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px $search-primary;
+  // The one rule in this file left on $search-primary when its seven siblings
+  // moved to the focus-ring token, so the widget drew two different focus
+  // colours depending on which control you tabbed to. Also keyed on :focus
+  // rather than :focus-visible, so it fired on mouse clicks too.
+  &:focus-visible {
+    @include mg-focus-ring;
   }
 }
 
@@ -251,13 +210,19 @@ $search-input-padding-x: $mg-spacing-250;
 }
 
 .mg-search__clear-all {
-  padding: $mg-spacing-25 $mg-spacing-75;
+  padding: var(--mg-spacing-25) var(--mg-spacing-75);
   color: $search-primary;
   background: none;
   border: 1px solid $search-primary;
   border-radius: $search-radius;
   cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition:
+      background-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard),
+      color var(--mg-motion-duration-fast) var(--mg-motion-easing-standard);
+  }
 
   &:hover {
     color: #fff;
@@ -268,10 +233,26 @@ $search-input-padding-x: $mg-spacing-250;
 // Content layout
 .mg-search__content {
   display: flex;
-  gap: $mg-spacing-200;
+  gap: var(--mg-spacing-200);
+}
+
+// Results column: the search box and filter chips (sidebar layout) and the
+// results.
+.mg-search__column {
+  flex: 1;
+  min-width: 0;
+}
+
+// The in-widget search box is capped at a comfortable reading width, start
+// aligned, in every layout; on narrow screens it is full width anyway. A
+// form portaled into a searchTarget is outside the widget and left to the
+// host page.
+.mg-search-widget .mg-search__form {
+  max-inline-size: mg-rem(768);
 }
 
 .mg-search__main {
+  position: relative;
   flex: 1;
   min-width: 0;
 }
@@ -285,9 +266,106 @@ $search-input-padding-x: $mg-spacing-250;
   }
 }
 
+// Horizontal facets strip: used when config.facets === 'horizontal'.
+// Renders the same FacetsSidebar contents as a row above results. On
+// narrow viewports the strip is hidden and the mobile filter drawer
+// handles facet selection (same pattern as the sidebar layout).
+.mg-search__facets-strip {
+  margin-bottom: var(--mg-spacing-150);
+
+  // Treat Sort and every facet as direct siblings of the same flex row so
+  // they share a consistent track width and wrap together. Without
+  // display:contents on .mg-search__facet-containers the facets would
+  // share a single nested column, getting squeezed when the row is wide
+  // enough to fit them inline but not wide enough to give each one a
+  // readable width.
+  .mg-search__facets {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: var(--mg-spacing-100) var(--mg-spacing-150);
+  }
+
+  .mg-search__facet-containers {
+    display: contents;
+  }
+
+  // Sort and each facet become equal-width flex cells. The flex-basis of
+  // 200px is the preferred size; min-width keeps them from squeezing
+  // narrower than the longest legend / placeholder, and the flex-grow of
+  // 1 lets them fill the trailing slack on the last wrapped row instead
+  // of leaving a ragged right edge.
+  .mg-search__sort,
+  .mg-search__facet {
+    flex: 1 1 mg-rem(200);
+    min-width: mg-rem(180);
+    max-width: mg-rem(280);
+  }
+
+  @media (width <= 768px) {
+    display: none;
+  }
+}
+
 // Results
 .mg-search__results {
-  transition: opacity 0.2s ease-out;
+  @media (prefers-reduced-motion: no-preference) {
+    transition: opacity var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
+  }
+}
+
+// A new search with results on screen: keep them, dimmed, with an inline
+// loader in the header, instead of swapping in the skeleton.
+// Keep active status text at full contrast; only the retained hits are stale.
+.mg-search__results--refreshing {
+  .mg-search__results-list,
+  .mg-search__results-grid {
+    opacity: 0.6;
+  }
+}
+
+.mg-search__results-loader {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mg-spacing-50);
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  margin-inline-start: auto;
+  color: $search-primary;
+}
+
+// One short fade for a completed set. No per-item delays or movement:
+// results are immediately usable and the base state is fully visible.
+.mg-search__enter {
+  @media (prefers-reduced-motion: no-preference) {
+    animation: mg-search-results-in var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
+  }
+}
+
+@keyframes mg-search-results-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// Server-rendered results ([data-mg-search-ssr], moved into the results
+// region until the first client results). The recommended markup reuses the
+// client classes (.mg-search__results-list, .mg-search__result), which get
+// containment and block images from their own rules; these cover markup
+// that doesn't, so a malformed teaser can't cover the page here either.
+// undrr/web-backlog#3145.
+[data-mg-search-ssr] {
+  position: relative;
+  isolation: isolate;
+
+  :where(.mg-card__visual) img {
+    display: block;
+  }
 }
 
 .mg-search__results-header {
@@ -295,8 +373,8 @@ $search-input-padding-x: $mg-spacing-250;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: $mg-spacing-50;
-  margin-bottom: $mg-spacing-100;
+  gap: var(--mg-spacing-50);
+  margin-bottom: var(--mg-spacing-100);
 }
 
 .mg-search__results-count {
@@ -316,16 +394,24 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-search__filter-btn {
   display: none; // Hidden on desktop by default
   align-items: center;
-  gap: $mg-spacing-25;
-  padding: $mg-spacing-50 $mg-spacing-75;
-  font-size: $mg-font-size-200;
+  gap: var(--mg-spacing-25);
+  padding: var(--mg-spacing-50) var(--mg-spacing-75);
+  font-size: var(--mg-font-size-200);
   font-weight: 500;
   color: $search-primary;
   background: transparent;
   border: 1px solid $search-border;
   border-radius: $search-radius;
   cursor: pointer;
-  transition: background-color 0.15s, border-color 0.15s;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition:
+      background-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard),
+      border-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard);
+  }
+
   white-space: nowrap;
 
   &:hover {
@@ -334,8 +420,7 @@ $search-input-padding-x: $mg-spacing-250;
   }
 
   &:focus-visible {
-    outline: 2px solid $search-primary;
-    outline-offset: 2px;
+    @include mg-focus-ring;
   }
 }
 
@@ -349,8 +434,8 @@ $search-input-padding-x: $mg-spacing-250;
   justify-content: center;
   min-width: 18px;
   height: 18px;
-  padding: 0 $mg-spacing-25;
-  font-size: $mg-font-size-200;
+  padding: 0 var(--mg-spacing-25);
+  font-size: var(--mg-font-size-200);
   font-weight: 600;
   color: #fff;
   background: $search-primary;
@@ -360,13 +445,13 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-search__results-list {
   display: flex;
   flex-direction: column;
-  gap: $mg-spacing-150;
+  gap: var(--mg-spacing-150);
 }
 
 .mg-search__results-more {
-  margin-top: $mg-spacing-150;
-  padding: $mg-spacing-100;
-  font-size: $mg-font-size-200;
+  margin-top: var(--mg-spacing-150);
+  padding: var(--mg-spacing-100);
+  font-size: var(--mg-font-size-200);
   color: $search-text-muted;
   background: $search-chip-bg;
   border-radius: $search-radius;
@@ -375,27 +460,27 @@ $search-input-padding-x: $mg-spacing-250;
 
 .mg-search__results-empty,
 .mg-search__results-placeholder {
-  padding: $mg-spacing-200;
+  padding: var(--mg-spacing-200);
   text-align: center;
   color: $search-text-muted;
 
   p {
-    margin: 0 0 $mg-spacing-50;
+    margin: 0 0 var(--mg-spacing-50);
   }
 }
 
 .mg-search__results-hint {
-  font-size: $mg-font-size-200;
+  font-size: var(--mg-font-size-200);
 }
 
 .mg-search__results-error {
-  padding: $mg-spacing-100;
+  padding: var(--mg-spacing-100);
   background: $search-error-bg;
   border: 1px solid $search-error-border;
   border-radius: $search-radius;
 
   p {
-    margin: 0 0 $mg-spacing-50;
+    margin: 0 0 var(--mg-spacing-50);
 
     &:last-child {
       margin-bottom: 0;
@@ -405,7 +490,13 @@ $search-input-padding-x: $mg-spacing-250;
 
 // Result item
 .mg-search__result {
-  padding-bottom: $mg-spacing-150;
+  // Contain each result: teaser HTML comes from the consuming site's index,
+  // and a malformed teaser's absolutely positioned pieces (e.g. a stretched
+  // link's ::after) otherwise anchor to the page and cover it.
+  // undrr/web-backlog#3145.
+  position: relative;
+  isolation: isolate;
+  padding-bottom: var(--mg-spacing-150);
   border-bottom: 1px solid $search-border-light;
 
   &:last-child {
@@ -414,9 +505,16 @@ $search-input-padding-x: $mg-spacing-250;
   }
 }
 
+// Teaser images are inline by default, and the teaser's field wrappers set
+// a 24px line height, which left a few pixels of descender space under every
+// result image. Block images sit flush in list, card and book cover modes.
+.mg-search__result :where(.mg-card__visual) img {
+  display: block;
+}
+
 .mg-search__result-content {
   display: flex;
-  gap: $mg-spacing-100;
+  gap: var(--mg-spacing-100);
 }
 
 .mg-search__result-image {
@@ -441,8 +539,8 @@ $search-input-padding-x: $mg-spacing-250;
 }
 
 .mg-search__result-title {
-  margin: 0 0 $mg-spacing-50;
-  font-size: $mg-font-size-200;
+  margin: 0 0 var(--mg-spacing-50);
+  font-size: var(--mg-font-size-200);
   font-weight: 600;
   line-height: 1.3;
 
@@ -456,7 +554,7 @@ $search-input-padding-x: $mg-spacing-250;
 
     em {
       font-style: normal;
-      background: rgba($search-primary, 0.1);
+      background: rgb(var(--mg-color-blue-900) / 0.1);
       padding: 0 2px;
     }
   }
@@ -465,14 +563,14 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-search__result-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: $mg-spacing-50;
-  margin-bottom: $mg-spacing-50;
-  font-size: $mg-font-size-150;
+  gap: var(--mg-spacing-50);
+  margin-bottom: var(--mg-spacing-50);
+  font-size: var(--mg-font-size-150);
   color: $search-text-muted;
 }
 
 .mg-search__result-type {
-  padding: $mg-spacing-25 $mg-spacing-50;
+  padding: var(--mg-spacing-25) var(--mg-spacing-50);
   background: $search-chip-bg;
   border-radius: $search-radius;
   text-transform: uppercase;
@@ -482,21 +580,21 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-search__result-domain,
 .mg-search__result-date {
   &::before {
-    content: '•';
-    margin-right: $mg-spacing-50;
+    content: "•";
+    margin-inline-end: var(--mg-spacing-50);
     color: $search-border;
   }
 }
 
 .mg-search__result-snippet {
   margin: 0;
-  font-size: $mg-font-size-150;
+  font-size: var(--mg-font-size-150);
   color: $search-text;
   line-height: 1.6;
 
   em {
     font-style: normal;
-    background: rgba($search-primary, 0.1);
+    background: rgb(var(--mg-color-blue-900) / 0.1);
     padding: 0 2px;
   }
 }
@@ -504,62 +602,60 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-search__result-metrics {
   display: flex;
   flex-wrap: wrap;
-  gap: $mg-spacing-50;
-  margin-bottom: $mg-spacing-50;
+  gap: var(--mg-spacing-50);
+  margin-bottom: var(--mg-spacing-50);
 }
 
 .mg-search__result-metric {
   display: inline-block;
-  padding: $mg-spacing-25 $mg-spacing-50;
-  font-size: $mg-font-size-200;
+  padding: var(--mg-spacing-25) var(--mg-spacing-50);
+  font-size: var(--mg-font-size-200);
   background: $search-debug-bg;
-  border-radius: $mg-spacing-25;
+  border-radius: var(--mg-spacing-25);
 }
 
 // Loading skeleton
 .mg-search__skeleton {
   display: flex;
   flex-direction: column;
-  gap: $mg-spacing-150;
+  gap: var(--mg-spacing-150);
 }
 
 .mg-search__skeleton-item {
-  padding-bottom: $mg-spacing-150;
+  padding-bottom: var(--mg-spacing-150);
   border-bottom: 1px solid $search-border-light;
 }
 
 .mg-search__skeleton-title,
 .mg-search__skeleton-meta,
 .mg-search__skeleton-text {
-  background: linear-gradient(90deg, $search-skeleton-bg 25%, #e8e8e8 50%, $search-skeleton-bg 75%);
-  background-size: 200% 100%;
-  animation: mg-search-shimmer 1.5s infinite;
+  background: $search-skeleton-bg;
   border-radius: $search-radius;
 }
 
 .mg-search__skeleton-title {
-  height: $mg-spacing-150;
+  height: var(--mg-spacing-150);
   width: 70%;
-  margin-bottom: $mg-spacing-75;
+  margin-bottom: var(--mg-spacing-75);
 }
 
 .mg-search__skeleton-meta {
-  height: $mg-spacing-100;
+  height: var(--mg-spacing-100);
   width: 40%;
-  margin-bottom: $mg-spacing-75;
+  margin-bottom: var(--mg-spacing-75);
 }
 
 .mg-search__skeleton-text {
-  height: $mg-spacing-100;
+  height: var(--mg-spacing-100);
   width: 100%;
-  margin-bottom: $mg-spacing-50;
+  margin-bottom: var(--mg-spacing-50);
 
   &--short {
     width: 60%;
   }
 }
 
-// Card skeleton — layout is controlled by mg-grid classes applied in JSX.
+// Card skeleton: layout is controlled by mg-grid classes applied in JSX.
 // Reset the flex declarations inherited from .mg-search__skeleton so they
 // don't fight mg-grid's own flex fallback / CSS grid (@supports) path.
 .mg-search__skeleton--card {
@@ -576,13 +672,11 @@ $search-input-padding-x: $mg-spacing-250;
 
 .mg-search__skeleton-card-image {
   aspect-ratio: 16 / 9;
-  background: linear-gradient(90deg, $search-skeleton-bg 25%, #e8e8e8 50%, $search-skeleton-bg 75%);
-  background-size: 200% 100%;
-  animation: mg-search-shimmer 1.5s infinite;
+  background: $search-skeleton-bg;
 }
 
 .mg-search__skeleton-card-body {
-  padding: $mg-spacing-100;
+  padding: var(--mg-spacing-100);
 
   .mg-search__skeleton-title {
     width: 85%;
@@ -594,25 +688,16 @@ $search-input-padding-x: $mg-spacing-250;
   }
 }
 
-@keyframes mg-search-shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-
 // Facets placeholder
 .mg-search__facets-placeholder {
-  padding: $mg-spacing-100;
+  padding: var(--mg-spacing-100);
   background: $search-chip-bg;
   border-radius: $search-radius;
 }
 
 .mg-search__facets-notice {
   margin: 0;
-  font-size: $mg-font-size-200;
+  font-size: var(--mg-font-size-200);
   color: $search-text-muted;
   text-align: center;
 }
@@ -624,12 +709,12 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-search__facets {
   display: flex;
   flex-direction: column;
-  gap: $mg-spacing-150;
+  gap: var(--mg-spacing-150);
 }
 
 .mg-search__facets-loading {
-  padding: $mg-spacing-100;
-  font-size: $mg-font-size-200;
+  padding: var(--mg-spacing-100);
+  font-size: var(--mg-font-size-200);
   color: $search-text-muted;
   text-align: center;
 }
@@ -637,10 +722,10 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-search__facet-containers {
   display: flex;
   flex-direction: column;
-  gap: $mg-spacing-100;
+  gap: var(--mg-spacing-100);
 }
 
-// Sort Options
+// Sort Options: rendered as a dropdown to match the facet selects.
 .mg-search__sort {
   padding: 0;
   margin: 0;
@@ -648,26 +733,9 @@ $search-input-padding-x: $mg-spacing-250;
 
   legend {
     font-weight: 600;
-    font-size: $mg-font-size-200;
-    margin-bottom: $mg-spacing-50;
+    font-size: var(--mg-font-size-200);
+    margin-bottom: var(--mg-spacing-50);
     color: $search-text;
-  }
-}
-
-.mg-search__sort-option {
-  display: flex;
-  align-items: center;
-  gap: $mg-spacing-50;
-  margin-bottom: $mg-spacing-25;
-
-  input[type="radio"] {
-    margin: 0;
-  }
-
-  label {
-    font-size: $mg-font-size-200;
-    color: $search-text;
-    cursor: pointer;
   }
 }
 
@@ -679,32 +747,34 @@ $search-input-padding-x: $mg-spacing-250;
 
   legend {
     font-weight: 600;
-    font-size: $mg-font-size-200;
-    margin-bottom: $mg-spacing-50;
+    font-size: var(--mg-font-size-200);
+    margin-bottom: var(--mg-spacing-50);
     color: $search-text;
   }
 }
 
 .mg-search__facet-select {
   width: 100%;
-  padding: $mg-spacing-50;
-  font-size: $mg-font-size-200;
-  border: 1px solid $search-border;
-  border-radius: $search-radius;
-  background-color: #fff;
+  padding: var(--mg-spacing-50);
+  font-size: var(--mg-font-size-200);
+  border: 1px solid rgb(var(--mg-color-neutral-600) / 0.22);
+  border-radius: var(--mg-radius-form-input);
+  background-color: rgb(var(--mg-color-neutral-50));
   cursor: pointer;
 
-  &:focus {
+  &:focus-visible {
+    background-color: rgb(var(--mg-color-neutral-0));
     outline: none;
     border-color: $search-primary;
-    box-shadow: 0 0 0 2px rgba($search-primary, 0.15);
+
+    @include mg-focus-ring;
   }
 
   &[multiple] {
     min-height: 100px;
 
     option {
-      padding: $mg-spacing-25 $mg-spacing-50;
+      padding: var(--mg-spacing-25) var(--mg-spacing-50);
 
       &:checked {
         background-color: $search-chip-bg;
@@ -716,7 +786,7 @@ $search-input-padding-x: $mg-spacing-250;
 // Custom facet styling
 // .mg-search__facet--custom {
 //   background: $search-chip-bg;
-//   padding: $mg-spacing-100;
+//   padding: var(--mg-spacing-100);
 //   border-radius: $search-radius;
 // }
 
@@ -729,28 +799,27 @@ $search-input-padding-x: $mg-spacing-250;
   display: inline-flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: $mg-spacing-50;
-  margin-bottom: $mg-spacing-25;
+  gap: var(--mg-spacing-50);
+  margin-bottom: var(--mg-spacing-25);
 }
 
-// Content type badge — uses the system-level .mg-tag atom.
+// Content type badge: uses the system-level .mg-tag atom.
 // No additional styles needed; the class is applied in ResultItem.jsx.
 
 // Site name label in search results
 .mg-search__result-site-name {
   display: inline-block;
   margin: 0;
-  padding: $mg-spacing-25 $mg-spacing-50;
-  font-size: $mg-font-size-200;
+  padding: var(--mg-spacing-25) var(--mg-spacing-50);
+  font-size: var(--mg-font-size-200);
   color: $search-text-muted;
   background: $search-chip-bg;
   border-radius: $search-radius;
 }
 
-
 // Error result styling
 .mg-search__result--error {
-  padding: $mg-spacing-100;
+  padding: var(--mg-spacing-100);
   background: $search-error-bg;
   border: 1px solid $search-error-border;
   border-radius: $search-radius;
@@ -767,38 +836,82 @@ $search-input-padding-x: $mg-spacing-250;
 }
 
 // ========================================
-// Teaser Field Visibility
+// Teaser Field Visibility (DEPRECATED)
 // ========================================
-// Modifier classes on the results container hide specific teaser fields
-// via the visibleTeaserFields config option.
-// Title (.mg-card__title) is intentionally not toggleable.
-// Teaser HTML uses standard mg-card__* BEM wrapper classes added by
-// Drupal teaser templates (see web-backlog#2660).
-
-.mg-search--hide-image .mg-card__visual { display: none; }
-.mg-search--hide-contentType .mg-card__tag { display: none; }
-.mg-search--hide-publicationType .mg-card__publication-type { display: none; }
-.mg-search--hide-date .mg-card__date { display: none; }
-.mg-search--hide-siteName .mg-search__result-site-name { display: none; }
-.mg-search--hide-summary .mg-card__description { display: none; }
-.mg-search--hide-organization .mg-card__organization { display: none; }
+// Teaser field hiding is handled programmatically in DOM output via React.
+// Legacy CSS modifier rules are imported from _deprecated-teaser-hide.scss and
+// scheduled for removal in November 2026.
 
 // ========================================
 // Card Display Mode (mg-grid layout)
 // ========================================
 
 .mg-search__results-grid {
-  gap: $mg-spacing-150;
+  gap: var(--mg-spacing-150);
 
   // Card items within grid
   > [role="listitem"] {
     display: flex;
   }
 
+  // Match vertical cards' row fill without changing standalone book cards.
+  // The book card's existing start alignment keeps cover rows intrinsic.
+  .mg-card__book {
+    block-size: 100%;
+    max-width: none;
+    inline-size: 100%;
+  }
+
   // Remove list-style dividers in grid/card mode
   .mg-search__result {
+    inline-size: 100%;
+    min-inline-size: 0;
     padding-bottom: 0;
     border-bottom: 0;
+  }
+}
+
+// A catalogue aligns captions through a shared media stage, without cropping
+// supplied artwork or inventing a cover for a result that has none. Only search
+// galleries use this staging; standalone publication teasers remain intrinsic.
+.mg-search__results-grid--book {
+  @media (min-width: $mg-breakpoint-tablet) {
+    &:has(.mg-card__visual) {
+      .mg-card__book > .mg-card__visual,
+      .mg-card__book:not(:has(.mg-card__visual))::before {
+        inline-size: 100%;
+        block-size: var(--mg-search-book-cover-height);
+      }
+
+      .mg-card__book:not(:has(.mg-card__visual))::before {
+        content: "";
+      }
+
+      .mg-card__book > .mg-card__visual {
+        aspect-ratio: auto;
+        border: 0;
+        align-items: flex-end;
+        justify-content: flex-start;
+
+        > a {
+          display: flex;
+          align-items: flex-end;
+          justify-content: flex-start;
+          inline-size: 100%;
+          block-size: 100%;
+        }
+
+        img {
+          align-self: flex-end;
+          inline-size: auto;
+          block-size: auto;
+          max-inline-size: 100%;
+          max-block-size: 100%;
+          object-fit: contain;
+          border: 1px solid rgb(var(--mg-color-neutral-600) / 0.2);
+        }
+      }
+    }
   }
 }
 
@@ -808,17 +921,25 @@ $search-input-padding-x: $mg-spacing-250;
 // Animation classes applied via JS (which checks prefers-reduced-motion).
 // ========================================
 
-// Initial hidden state - applied before animation
-.mg-search__result--pending {
-  opacity: 0;
-  transform: translateX(-20px);
-}
+// Legacy consumers may still toggle these classes. Gate the hidden state as
+// well as its transition, so reduced motion never strands a result invisible.
+@media (prefers-reduced-motion: no-preference) {
+  .mg-search__result--pending {
+    opacity: 0;
+    transform: translateX(-20px);
 
-// Animated state - triggers the transition
-.mg-search__result--visible {
-  opacity: 1;
-  transform: translateX(0);
-  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+    &:dir(rtl) {
+      transform: translateX(20px);
+    }
+  }
+
+  .mg-search__result--visible {
+    opacity: 1;
+    transform: translateX(0);
+    transition:
+      opacity var(--mg-motion-duration-fast) var(--mg-motion-easing-standard),
+      transform var(--mg-motion-duration-fast) var(--mg-motion-easing-standard);
+  }
 }
 
 // Stale state - dim results while loading new data
@@ -827,28 +948,8 @@ $search-input-padding-x: $mg-spacing-250;
   pointer-events: none;
 }
 
-// Stale main area with more visible feedback
-.mg-search__main--stale {
-  position: relative;
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: rgb(255 255 255 / 0.4);
-    pointer-events: none;
-    animation: mg-search-pulse 1.5s ease-in-out infinite;
-  }
-}
-
-@keyframes mg-search-pulse {
-  0%, 100% {
-    opacity: 0.3;
-  }
-  50% {
-    opacity: 0.6;
-  }
-}
+// Refresh feedback is retained/dimmed results, inline Loader and the shared
+// progress strip; an additional pulsing overlay would compete with them.
 
 // ========================================
 // Collapsible Filter Sections
@@ -868,12 +969,12 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-search__facet-toggle {
   display: inline-flex;
   align-items: center;
-  gap: $mg-spacing-25;
+  gap: var(--mg-spacing-25);
   background: none;
   border: none;
-  padding: $mg-spacing-50 0;
-  margin-top: $mg-spacing-50;
-  font-size: $mg-font-size-200;
+  padding: var(--mg-spacing-50) 0;
+  margin-top: var(--mg-spacing-50);
+  font-size: var(--mg-font-size-200);
   color: $search-primary;
   cursor: pointer;
   font-weight: 500;
@@ -883,8 +984,7 @@ $search-input-padding-x: $mg-spacing-250;
   }
 
   &:focus-visible {
-    outline: 2px solid $search-primary;
-    outline-offset: 2px;
+    @include mg-focus-ring;
   }
 }
 
@@ -896,7 +996,11 @@ $search-input-padding-x: $mg-spacing-250;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
   border-top: 6px solid currentColor;
-  transition: transform 0.2s ease;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: transform var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
+  }
 
   .mg-search__facet-toggle[aria-expanded="false"] & {
     transform: rotate(-90deg);
@@ -915,22 +1019,46 @@ $search-input-padding-x: $mg-spacing-250;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: $mg-spacing-200;
+  padding: var(--mg-spacing-200);
+}
+
+// Legacy public class: keep compatibility for hand-written Drupal markup.
+// New widget code uses shared Loader. One cycle is 1s; this is a documented
+// looping compatibility exception, not interaction timing. Unlike the shared
+// Loader's designed static reduced-motion state, this legacy markup keeps slow
+// rotation until its consumers can be audited and migrated.
+@keyframes mg-search-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .mg-search__spinner {
+  --mg-search-spinner-duration: 1s;
+
   border: 4px solid $search-border-light;
   border-top: 4px solid $search-primary;
   border-radius: 50%;
   width: 40px;
   height: 40px;
-  animation: mg-search-spin 1s linear infinite;
+  animation: mg-search-spin var(--mg-search-spinner-duration) linear infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation-duration: calc(var(--mg-search-spinner-duration) * 3) !important;
+    animation-iteration-count: infinite !important;
+  }
+
+  @media (forced-colors: active) {
+    border-color: GrayText;
+    border-top-color: CanvasText;
+    forced-color-adjust: none;
+  }
 }
 
 .mg-search__loader-text {
   text-align: center;
   color: $search-text-muted;
-  margin-top: $mg-spacing-100;
+  margin-top: var(--mg-spacing-100);
 }
 
 // ========================================
@@ -942,7 +1070,7 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-select {
   position: relative;
   width: 100%;
-  margin-top: $mg-spacing-50;
+  margin-top: var(--mg-spacing-50);
 }
 
 .mg-select__trigger {
@@ -951,24 +1079,32 @@ $search-input-padding-x: $mg-spacing-250;
   justify-content: space-between;
   width: 100%;
   min-height: 44px; // Touch-friendly
-  padding: $mg-spacing-50 $mg-spacing-75;
-  font-size: $mg-font-size-200;
+  padding: var(--mg-spacing-50) var(--mg-spacing-75);
+  font-size: var(--mg-font-size-300);
   color: $search-text;
-  text-align: left;
-  background: #fff;
-  border: 1px solid $search-border;
-  border-radius: $search-radius;
+  text-align: start;
+  background-color: rgb(var(--mg-color-neutral-50));
+  border: 1px solid rgb(var(--mg-color-neutral-600) / 0.22);
+  border-radius: var(--mg-radius-form-input);
   cursor: pointer;
-  transition: border-color 0.15s, box-shadow 0.15s;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition:
+      border-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard),
+      box-shadow var(--mg-motion-duration-fast) var(--mg-motion-easing-standard);
+  }
 
   &:hover {
     border-color: $search-primary;
   }
 
-  &:focus {
-    outline: none;
+  &:focus-visible {
+    background-color: rgb(var(--mg-color-neutral-0));
     border-color: $search-primary;
-    box-shadow: 0 0 0 2px rgba($search-primary, 0.15);
+    outline: 0;
+
+    @include mg-focus-ring;
   }
 
   .mg-select--open & {
@@ -987,9 +1123,13 @@ $search-input-padding-x: $mg-spacing-250;
 
 .mg-select__trigger-icon {
   flex-shrink: 0;
-  margin-left: $mg-spacing-50;
+  margin-inline-start: var(--mg-spacing-50);
   color: $search-text-muted;
-  transition: transform 0.2s ease;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: transform var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
+  }
 
   .mg-select--open & {
     transform: rotate(180deg);
@@ -999,7 +1139,10 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-select__backdrop {
   position: fixed;
   inset: 0;
-  z-index: $mg-z-index-modal - 1; // portaled select backdrop — uses modal layer to clear all page chrome
+  z-index: calc(
+    var(--mg-z-index-modal) - 1
+  ); // portaled select backdrop: uses modal layer to clear all page chrome
+
   background: transparent;
   cursor: default;
 }
@@ -1009,13 +1152,20 @@ $search-input-padding-x: $mg-spacing-250;
   top: 100%;
   left: 0;
   right: 0;
-  z-index: $mg-z-index-modal; // portaled select dropdown — uses modal layer to clear all page chrome
+  z-index: var(
+    --mg-z-index-modal
+  ); // portaled select dropdown: uses modal layer to clear all page chrome
+
   background: #fff;
   border: 1px solid $search-primary;
   border-top: none;
   border-radius: 0 0 $search-radius $search-radius;
   box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
-  animation: mg-select-fade-in 0.15s ease-out;
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: mg-select-fade-in var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
+  }
 }
 
 @keyframes mg-select-fade-in {
@@ -1030,20 +1180,24 @@ $search-input-padding-x: $mg-spacing-250;
 }
 
 .mg-select__search {
-  padding: $mg-spacing-50;
+  padding: var(--mg-spacing-50);
   border-bottom: 1px solid $search-border-light;
 }
 
 .mg-select__search-input {
   width: 100%;
-  padding: $mg-spacing-50;
-  font-size: $mg-font-size-200;
-  border: 1px solid $search-border;
-  border-radius: $search-radius;
+  padding: var(--mg-spacing-50);
+  font-size: var(--mg-font-size-300);
+  border: 1px solid rgb(var(--mg-color-neutral-600) / 0.22);
+  border-radius: var(--mg-radius-form-input);
+  background-color: rgb(var(--mg-color-neutral-50));
 
-  &:focus {
-    outline: none;
+  &:focus-visible {
+    background-color: rgb(var(--mg-color-neutral-0));
+    outline: 0;
     border-color: $search-primary;
+
+    @include mg-focus-ring;
   }
 
   &::placeholder {
@@ -1054,7 +1208,7 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-select__list {
   list-style: none;
   margin: 0;
-  padding: $mg-spacing-25 0;
+  padding: var(--mg-spacing-25) 0;
   max-height: 240px;
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -1063,11 +1217,15 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-select__option {
   display: flex;
   align-items: center;
-  gap: $mg-spacing-50;
-  padding: $mg-spacing-50 $mg-spacing-75;
+  gap: var(--mg-spacing-50);
+  padding: var(--mg-spacing-50) var(--mg-spacing-75);
   min-height: 40px; // Touch-friendly
   cursor: pointer;
-  transition: background-color 0.1s ease;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: background-color var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
+  }
 
   &:hover,
   &--highlighted {
@@ -1075,7 +1233,7 @@ $search-input-padding-x: $mg-spacing-250;
   }
 
   &--selected {
-    background-color: rgba($search-primary, 0.08);
+    background-color: rgb(var(--mg-color-blue-900) / 0.08);
 
     .mg-select__option-label {
       font-weight: 600;
@@ -1083,8 +1241,11 @@ $search-input-padding-x: $mg-spacing-250;
     }
   }
 
+  // Hover is pure CSS; --highlighted is the keyboard position only, so
+  // moving the pointer over a long list doesn't re-render it.
+  &--selected:hover,
   &--selected#{&}--highlighted {
-    background-color: rgba($search-primary, 0.12);
+    background-color: rgb(var(--mg-color-blue-900) / 0.12);
   }
 }
 
@@ -1092,24 +1253,28 @@ $search-input-padding-x: $mg-spacing-250;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   flex-shrink: 0;
-  border: 2px solid $search-border;
+  border: 2px solid rgb(var(--mg-color-form-check));
   color: $search-primary;
 
   &--checkbox {
-    border-radius: $search-radius;
+    border-radius: var(--mg-radius-form-input);
   }
 
   &--radio {
     border-radius: 50%;
   }
 
+  &:hover {
+    border-color: rgb(var(--mg-color-form-check--hover));
+  }
+
   .mg-select__option--selected & {
-    border-color: $search-primary;
-    background-color: $search-primary;
-    color: #fff;
+    border-color: rgb(var(--mg-color-form-check--checked));
+    background-color: rgb(var(--mg-color-form-check--checked));
+    color: rgb(var(--mg-color-white));
   }
 }
 
@@ -1122,38 +1287,38 @@ $search-input-padding-x: $mg-spacing-250;
 
 .mg-select__option-label {
   flex: 1;
-  font-size: $mg-font-size-200;
+  font-size: var(--mg-font-size-200);
   color: $search-text;
   line-height: 1.4;
 }
 
 .mg-select__option-count {
   flex-shrink: 0;
-  font-size: $mg-font-size-100;
+  font-size: var(--mg-font-size-100);
   color: $search-text-muted;
 }
 
 // Subtype options (indented children under parent content types)
 .mg-select__option--subtype {
-  padding-left: $mg-spacing-150;
+  padding-inline-start: var(--mg-spacing-150);
 
   .mg-select__option-label {
-    font-size: $mg-font-size-100;
+    font-size: var(--mg-font-size-100);
 
     // Add visual connector
     &::before {
       content: "└";
-      margin-right: $mg-spacing-25;
+      margin-inline-end: var(--mg-spacing-25);
       color: $search-text-muted;
     }
   }
 }
 
 .mg-select__empty {
-  padding: $mg-spacing-100;
+  padding: var(--mg-spacing-100);
   text-align: center;
   color: $search-text-muted;
-  font-size: $mg-font-size-200;
+  font-size: var(--mg-font-size-200);
 }
 
 // ========================================
@@ -1163,25 +1328,29 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-search__facet-option {
   display: grid;
   grid-template-columns: 1.25em 1fr auto;
-  padding: $mg-spacing-50;
+  padding: var(--mg-spacing-50);
   border-radius: $search-radius;
   align-items: baseline;
-  gap: 0 $mg-spacing-25;
-  transition: background-color 0.15s ease;
+  gap: 0 var(--mg-spacing-25);
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: background-color var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
+  }
 
   &:hover {
-    background-color: rgba($search-primary, 0.05);
+    background-color: rgb(var(--mg-color-blue-900) / 0.05);
   }
 
   input[type="checkbox"],
   input[type="radio"] {
     margin: 0;
     cursor: pointer;
-    accent-color: $search-primary;
+    accent-color: rgb(var(--mg-color-form-check--checked));
   }
 
   label {
-    padding-left: $mg-spacing-25;
+    padding-inline-start: var(--mg-spacing-25);
     font-weight: normal;
     text-wrap: balance;
     cursor: pointer;
@@ -1196,7 +1365,7 @@ $search-input-padding-x: $mg-spacing-250;
 
   // Selected/checked state
   &:has(input:checked) {
-    background-color: rgba($search-primary, 0.08);
+    background-color: rgb(var(--mg-color-blue-900) / 0.08);
 
     label {
       font-weight: 600;
@@ -1208,12 +1377,12 @@ $search-input-padding-x: $mg-spacing-250;
 // Count badges in facets
 .mg-search__facet-count {
   color: $search-text-muted;
-  font-size: $mg-font-size-200;
+  font-size: var(--mg-font-size-200);
   white-space: nowrap;
 }
 
 // ========================================
-// Mobile Filter Drawer (Left Slide-in)
+// Mobile Filter Drawer (Inline-start Slide-in)
 // ========================================
 // UX patterns informed by:
 // @see https://www.pencilandpaper.io/articles/ux-pattern-analysis-mobile-filters
@@ -1227,8 +1396,13 @@ $search-input-padding-x: $mg-spacing-250;
   position: fixed;
   inset: 0;
   background: rgb(0 0 0 / 0.5);
-  z-index: $mg-z-index-drawer - 1; // backdrop behind drawer panel
-  animation: mg-search-fade-in 0.2s ease-out;
+  z-index: calc(var(--mg-z-index-drawer) - 1); // backdrop behind drawer panel
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: mg-search-fade-in var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
+  }
+
   cursor: pointer; // Indicate clickable to close
 }
 
@@ -1241,24 +1415,42 @@ $search-input-padding-x: $mg-spacing-250;
   }
 }
 
+// The panel, the direction it travels and the side its shadow falls on are
+// all driven by two custom properties flipped under `:dir(rtl)`, the same
+// shape `.mg-drawer--start` uses in Navigation/Drawer. `inset-inline-start`
+// on its own would fight the keyframe, which translates on a physical axis:
+// the resting edge would move to the right in Arabic while the panel still
+// slid in from the left.
 .mg-search__drawer {
+  --mg-search-drawer-offset: -100%;
+  --mg-search-drawer-shadow-offset: 4px;
+
   position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
+  inset-block: 0;
+  inset-inline-start: 0;
   width: min(320px, 85vw); // Max 320px or 85% of viewport
   background: #fff;
-  box-shadow: 4px 0 20px rgb(0 0 0 / 0.15);
+  box-shadow: var(--mg-search-drawer-shadow-offset) 0 20px rgb(0 0 0 / 0.15);
   display: flex;
   flex-direction: column;
-  animation: mg-search-slide-in-left 0.3s ease-out;
-  z-index: $mg-z-index-drawer;
+  z-index: var(--mg-z-index-drawer);
   cursor: default; // Reset cursor inside drawer
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: mg-search-slide-in-start var(--mg-motion-duration-medium)
+      var(--mg-motion-easing-standard);
+  }
+
+  // The shadow points at the page content, so it mirrors with the panel.
+  &:dir(rtl) {
+    --mg-search-drawer-offset: 100%;
+    --mg-search-drawer-shadow-offset: -4px;
+  }
 }
 
-@keyframes mg-search-slide-in-left {
+@keyframes mg-search-slide-in-start {
   from {
-    transform: translateX(-100%);
+    transform: translateX(var(--mg-search-drawer-offset));
   }
   to {
     transform: translateX(0);
@@ -1269,7 +1461,7 @@ $search-input-padding-x: $mg-spacing-250;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: $mg-spacing-100 $mg-spacing-150;
+  padding: var(--mg-spacing-100) var(--mg-spacing-150);
   border-bottom: 1px solid $search-border;
   flex-shrink: 0;
   min-height: 56px; // Consistent header height
@@ -1277,12 +1469,12 @@ $search-input-padding-x: $mg-spacing-250;
 
 .mg-search__drawer-title {
   margin: 0;
-  font-size: $mg-font-size-300;
+  font-size: var(--mg-font-size-300);
   font-weight: 600;
   color: $search-text;
   display: flex;
   align-items: center;
-  gap: $mg-spacing-50;
+  gap: var(--mg-spacing-50);
 }
 
 .mg-search__drawer-count {
@@ -1291,8 +1483,8 @@ $search-input-padding-x: $mg-spacing-250;
   justify-content: center;
   min-width: 22px;
   height: 22px;
-  padding: 0 $mg-spacing-25;
-  font-size: $mg-font-size-200;
+  padding: 0 var(--mg-spacing-25);
+  font-size: var(--mg-font-size-200);
   font-weight: 600;
   color: #fff;
   background: $search-primary;
@@ -1311,7 +1503,13 @@ $search-input-padding-x: $mg-spacing-250;
   border: none;
   border-radius: $search-radius;
   cursor: pointer;
-  transition: background-color 0.15s, color 0.15s;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition:
+      background-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard),
+      color var(--mg-motion-duration-fast) var(--mg-motion-easing-standard);
+  }
 
   &:hover {
     background: $search-chip-bg;
@@ -1319,21 +1517,20 @@ $search-input-padding-x: $mg-spacing-250;
   }
 
   &:focus-visible {
-    outline: 2px solid $search-primary;
-    outline-offset: -2px;
+    @include mg-focus-ring;
   }
 }
 
 .mg-search__drawer-content {
   flex: 1;
   overflow-y: auto;
-  padding: $mg-spacing-100 $mg-spacing-150;
+  padding: var(--mg-spacing-100) var(--mg-spacing-150);
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain; // Prevent scroll chaining
 }
 
 .mg-search__drawer-footer {
-  padding: $mg-spacing-100 $mg-spacing-150;
+  padding: var(--mg-spacing-100) var(--mg-spacing-150);
   border-top: 1px solid $search-border;
   flex-shrink: 0;
   background: #fff; // Ensure footer is opaque
@@ -1343,26 +1540,29 @@ $search-input-padding-x: $mg-spacing-250;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: $mg-spacing-50;
+  gap: var(--mg-spacing-50);
   width: 100%;
   min-height: 48px; // Touch-friendly height
-  padding: $mg-spacing-75 $mg-spacing-100;
-  font-size: $mg-font-size-200;
+  padding: var(--mg-spacing-75) var(--mg-spacing-100);
+  font-size: var(--mg-font-size-200);
   font-weight: 600;
   color: #fff;
   background: $search-primary;
   border: none;
   border-radius: $search-radius;
   cursor: pointer;
-  transition: background-color 0.15s;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: background-color var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
+  }
 
   &:hover {
     background: $search-primary-dark;
   }
 
   &:focus-visible {
-    outline: 2px solid $search-primary-dark;
-    outline-offset: 2px;
+    @include mg-focus-ring;
   }
 }
 
@@ -1408,8 +1608,7 @@ $search-input-padding-x: $mg-spacing-250;
 
 .mg-search__facet-select:focus-visible,
 .mg-search__facet input:focus-visible {
-  outline: 2px solid $search-primary;
-  outline-offset: 2px;
+  @include mg-focus-ring;
 }
 
 // ========================================
@@ -1431,15 +1630,15 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-search__facet-operator {
   display: flex;
   flex-direction: column;
-  gap: $mg-spacing-50;
-  margin-top: $mg-spacing-75;
-  font-size: $mg-font-size-200;
+  gap: var(--mg-spacing-50);
+  margin-top: var(--mg-spacing-75);
+  font-size: var(--mg-font-size-200);
 }
 
 .mg-search__facet-operator-row {
   display: flex;
   align-items: center;
-  gap: $mg-spacing-50;
+  gap: var(--mg-spacing-50);
 }
 
 .mg-search__facet-operator-label {
@@ -1456,17 +1655,24 @@ $search-input-padding-x: $mg-spacing-250;
 
 .mg-search__facet-operator-toggle {
   display: inline-flex;
-  gap: $mg-spacing-25;
+  gap: var(--mg-spacing-25);
 }
 
 .mg-search__facet-operator-option {
   display: flex;
   align-items: center;
-  padding: $mg-spacing-25 $mg-spacing-50;
+  padding: var(--mg-spacing-25) var(--mg-spacing-50);
   cursor: pointer;
-  transition: color 0.15s, border-color 0.15s;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition:
+      color var(--mg-motion-duration-fast) var(--mg-motion-easing-standard),
+      border-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard);
+  }
+
   font-weight: 400;
-  font-size: $mg-font-size-200;
+  font-size: var(--mg-font-size-200);
   user-select: none;
   color: $search-text-muted;
   border-bottom: 2px solid transparent;
@@ -1491,8 +1697,8 @@ $search-input-padding-x: $mg-spacing-250;
 
   // Focus visible for keyboard navigation
   &:focus-within {
-    outline: 2px solid $search-primary;
-    outline-offset: 2px;
+    @include mg-focus-ring;
+
     border-radius: $search-radius;
   }
 }
@@ -1504,7 +1710,7 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-search__filter-chip-connector {
   display: inline-flex;
   align-items: center;
-  margin-right: $mg-spacing-25;
+  margin-inline-end: var(--mg-spacing-25);
   color: $search-text-muted;
   font-weight: 600;
   text-transform: uppercase;
@@ -1513,3 +1719,20 @@ $search-input-padding-x: $mg-spacing-250;
 
 // Pager styles now live in the standalone Pager component.
 // @see stories/Components/Pager/pager.scss
+
+// Skeleton surfaces must stay identifiable when forced colours removes
+// author backgrounds. These shapes are decorative; the status owns meaning.
+@media (forced-colors: active) {
+  .mg-search__skeleton-title,
+  .mg-search__skeleton-meta,
+  .mg-search__skeleton-text,
+  .mg-search__skeleton-card-image,
+  .mg-search__skeleton-card {
+    outline: 1px solid GrayText;
+    outline-offset: -1px;
+  }
+
+  .mg-search__drawer {
+    border-inline-end: 1px solid CanvasText;
+  }
+}

@@ -8,6 +8,8 @@
 import React, { useId } from 'react';
 import PropTypes from 'prop-types';
 
+const EMPTY_OPTIONS = [];
+
 /**
  * Select component.
  *
@@ -33,7 +35,7 @@ export function Select({
   name,
   label,
   hideLabel = false,
-  options = [],
+  options = EMPTY_OPTIONS,
   placeholder,
   value,
   defaultValue,
@@ -96,7 +98,7 @@ export function Select({
             {placeholder}
           </option>
         )}
-        {options.map((option) => (
+        {options.map(option => (
           <option
             key={option.value}
             value={option.value}
@@ -132,7 +134,7 @@ Select.propTypes = {
       value: PropTypes.string.isRequired,
       label: PropTypes.string.isRequired,
       disabled: PropTypes.bool,
-    }),
+    })
   ),
   placeholder: PropTypes.string,
   value: PropTypes.string,

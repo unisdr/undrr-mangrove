@@ -1,130 +1,206 @@
-import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
 import * as TextCtaStories from './TextCta.stories';
 
 <Meta of={TextCtaStories} />
 
-> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
 
 # CTA
 
-A full-width call-to-action banner with heading, rich text body, and action buttons. Uses the same color variant system as Hero (primary, secondary, tertiary, quaternary) and supports custom background colors.
+> **Draft contract:** examples on this branch use the unmerged [schema phase-two proposal](?path=/docs/design-decisions-schema-phase-2-proposal--docs). Published 2.3.0 bundles retain their released prop names.
 
-## Default (primary)
+A promotional block combining heading, copy, and next step. Use for invitations, resources, campaigns, or signup forms. TextCta provides layout and visual treatment; `buttons` link to actions. Compose richer content (forms, custom layouts) with `children`. For single action links without a block, use <LinkTo kind="Components/Buttons/Buttons" story="Editorial CTA">a CTA button</LinkTo>.
+
+## Choose the emphasis
+
+Colour (`variant`) and emphasis (`tone`) are separate. `variant` chooses the theme accent; `tone` chooses emphasis strength.
+
+| Treatment                 | Useful for                                         | Text and actions                                                  |
+| ------------------------- | -------------------------------------------------- | ----------------------------------------------------------------- |
+| `tone="soft"`             | Newsletter, supporting invitations, article blocks | Pale surface, dark text, standard button styling                  |
+| `tone="strong"` (default) | Campaigns, prominent invitations, key actions      | Solid surface, light text, buttons styled for coloured background |
+
+`variant="secondary"` is the exception: it is a pale surface with dark text at both tones, because the orange accent carries no text. See [Accent colours](#accent-colours).
+
+### Soft
+
+A quieter block invites action without dominating surrounding content. Change `variant` to compare colours or `tone` to compare emphasis.
+
+<Canvas of={TextCtaStories.Soft} />
+<Controls of={TextCtaStories.Soft} include={['tone', 'variant', 'centered']} />
+
+### Strong
 
 <Canvas of={TextCtaStories.Default} />
 
-## Secondary variant
+## Compose a form
 
-<Canvas of={TextCtaStories.Secondary} />
+A newsletter signup is one use. The example below supplies an independent FormAction as `children`, using soft tone and start-aligned copy. Submission is a local demonstration only (no data sent, no subscription created).
 
-## Tertiary variant
+<Canvas of={TextCtaStories.Newsletter} />
 
-Used by DELTA Resilience for the "Learn more about the system" CTA.
+```jsx
+<TextCta
+  headline="Stay informed"
+  text="Choose the updates that matter to you."
+  tone="soft"
+  centered={false}
+>
+  <YourSignupForm />
+</TextCta>
+```
 
-<Canvas of={TextCtaStories.Tertiary} />
+For multiple fields, use a regular form layout with action after fields. The site owns form choices, validation, privacy and service integration — none require newsletter-specific CTA props.
 
-## Custom background color
+<Canvas of={TextCtaStories.NewsletterWithPreferences} />
 
-Use `backgroundColor` for any CSS color value, overriding the variant.
+See the <LinkTo kind="Example/Newsletter promotion" story="After article">newsletter promotion pattern</LinkTo>
+for article placement, preferences and simulated validation, failure and confirmation states.
 
-<Canvas of={TextCtaStories.CustomColor} />
+## Arrange the content
 
-## With image
+### With an image
 
-When `image` is provided, the layout switches to a side-by-side grid layout with text on the left and image on the right. Stacks vertically on mobile. Inspired by the IRP Recovery Help Desk CTA pattern.
+Optional image at the inline end (stacks on narrow screens). Placement follows text direction. Provide meaningful `image.alt` or empty string for decorative images.
 
 <Canvas of={TextCtaStories.WithImage} />
 
-## Left-aligned
+### Inline actions
 
-<Canvas of={TextCtaStories.LeftAligned} />
+Use `layout="inline"` for a wide banner with copy and action links side by side.
+It stacks on narrow screens. Supplying composed `children` selects a stacked layout so the copy, content and
+buttons each retain the full available width.
 
-## Headline only
+<Canvas of={TextCtaStories.Inline} />
 
-Works without body text — just a headline and buttons.
+### Alignment and size
 
-<Canvas of={TextCtaStories.HeadlineOnly} />
+Text-only CTAs are centred by default. Set `centered={false}` for start-aligned content (better for forms and longer copy). Image or inline layout disables centring automatically.
 
-## Quaternary variant
+`headlineLevel` sets semantic heading independently of `headlineSize`. `padding` overrides theme spacing when placement needs adjustment.
 
-<Canvas of={TextCtaStories.Quaternary} />
+## Accent colours
 
-## Extra padding
+All four accents support both tones and follow the site theme. Prefer theme accents over custom colours to keep text and action treatments coordinated.
 
-Use the `padding` prop to override the theme default. Combined here with `headlineSize="800"` for a larger heading.
-
-<Canvas of={TextCtaStories.ExtraPadding} />
+**Contrast:** the orange accent carries no text, so `secondary` no longer paints a flat orange panel. Its eyebrow and headline were 2.65 and its 90%-white body 2.42, against WCAG's 4.5. The variant now takes the same surface as `soft` — white under an 8% wash of the accent — with dark eyebrow, headline and body, standard buttons, and the Sendai orange as a 6px leading rule that no copy sits on. `secondary` is therefore a soft surface at both tones; `tertiary` and `quaternary` still go solid under `tone="strong"`. See [the colour contrast methodology](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text) for the measurements.
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `headline` | String | - | Banner heading text |
-| `headlineSize` | String | `'600'` | Font size token applied as `mg-u-font-size-{value}` (e.g. `'400'`, `'600'`, `'800'`) |
-| `headlineLevel` | Number | `2` | Semantic heading level (2–6). Controls the HTML element independently of visual size |
-| `text` | String | - | Body text (HTML supported via `dangerouslySetInnerHTML`) |
-| `buttons` | Array | `[]` | Array of button objects: `{ label, url, type }` |
-| `variant` | String | `'primary'` | Color variant: `'primary'`, `'secondary'`, `'tertiary'`, `'quaternary'` |
-| `backgroundColor` | String | - | Custom CSS background color (overrides variant) |
-| `padding` | String | - | Custom CSS padding (e.g. `'8rem 0'`), overrides theme token |
-| `image` | String | - | Image URL displayed alongside text (triggers side-by-side layout) |
-| `imageAlt` | String | `''` | Alt text for the image |
-| `centered` | Boolean | `true` | Center-align content (auto-disabled when `image` is set) |
-| `className` | String | - | Additional CSS classes |
+| Prop              | Type       | Default     | Description                                                                                                                        |
+| ----------------- | ---------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `eyebrow`         | String     | -           | Optional short label above the headline                                                                                            |
+| `headline`        | String     | -           | Banner heading text                                                                                                                |
+| `headlineSize`    | String     | `'600'`     | Font size token applied as `mg-u-font-size-{value}` (e.g. `'400'`, `'600'`, `'800'`)                                               |
+| `headlineLevel`   | Number     | `2`         | Semantic heading level (2–6). Controls the HTML element independently of visual size                                               |
+| `text`            | String     | -           | Body text (HTML supported via `dangerouslySetInnerHTML`)                                                                           |
+| `children`        | React node | —           | Composed content below the copy, before any buttons. Supply a native form or other content; the CTA does not manage its behaviour. |
+| `buttons`         | Array      | `[]`        | Array of button objects: `{ label, url, type }`                                                                                    |
+| `tone`            | String     | `'strong'`  | Surface emphasis: `'strong'` or `'soft'`. Soft uses a pale accent wash with dark text and normal button styling.                   |
+| `variant`         | String     | `'primary'` | Color variant: `'primary'`, `'secondary'`, `'tertiary'`, `'quaternary'`                                                            |
+| `backgroundColor` | String     | -           | Custom CSS background color (overrides variant)                                                                                    |
+| `padding`         | String     | -           | Custom CSS padding (e.g. `'8rem 0'`), overrides theme token                                                                        |
+| `image`           | Object     | -           | Optional `{ src, alt }` image; a non-empty `src` selects side-by-side layout                                                       |
+| `image.alt`       | String     | `''`        | Image alt text; use an empty string for a decorative image                                                                         |
+| `centered`        | Boolean    | `true`      | Center-align content (auto-disabled when `image` is set)                                                                           |
+| `layout`          | String     | `'stacked'` | Content/action arrangement: `'stacked'` or `'inline'`                                                                              |
+| `className`       | String     | -           | Additional CSS classes                                                                                                             |
 
 ### Button object
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `label` | String | Required | Button text |
-| `url` | String | `'#'` | Button link URL |
-| `type` | String | `'Primary'` | Button style: `'Primary'` or `'Secondary'` |
+| Property  | Type    | Default     | Description                                        |
+| --------- | ------- | ----------- | -------------------------------------------------- |
+| `label`   | String  | Required    | Button text                                        |
+| `url`     | String  | `'#'`       | Button link URL                                    |
+| `type`    | String  | `'Primary'` | Button style: `'Primary'` or `'Secondary'`         |
+| `variant` | String  | `'Default'` | Button treatment: `'Default'` or editorial `'CTA'` |
+| `outline` | Boolean | `false`     | Use the transparent outline treatment              |
+| `target`  | String  | -           | Link browsing context, such as `'_blank'`          |
+| `rel`     | String  | -           | Link relationship tokens                           |
+
+## Integration guidance
+
+Pass React content as `children` to reuse the CTA shell. Heading, copy, optional image, and button API remain independent. Use `centered={false}` for forms and supply appropriate contrasting surfaces. Composed content selects stacked layout even when `layout="inline"`.
+
+Form behaviour, validation, and service integration belong to the caller. For Drupal-owned forms, render CTA classes directly around the native form — do not apply `data-mg-text-cta` hydration to custom form content (current hydrator supports text/button model only, not arbitrary children).
 
 ## Server-rendered / CDN usage
 
-TextCta supports [layered hydration](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md). Use data attributes on a container element:
+The image-object API is shown from this draft branch. Published 2.3.0 bundles
+retain the released URL-valued image API; use this branch’s bundles to evaluate
+the proposal. Existing DOM attribute names remain supported by the bridge.
+
+TextCta supports [layered hydration](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md). Use data attributes on a container element:
 
 ```html
-<div data-mg-text-cta
+<div
+  data-mg-text-cta
+  data-eyebrow="Registration open"
   data-headline="Join the global platform"
   data-text="<p>Register now for the Global Platform.</p>"
   data-buttons='[{"label":"Register","url":"/register"},{"label":"Learn more","url":"/about","type":"Secondary"}]'
-  data-variant="primary">
-</div>
+  data-variant="primary"
+  data-layout="inline"
+></div>
 ```
 
-| Attribute | Default | Description |
-|-----------|---------|-------------|
-| `data-headline` | `''` | Banner heading text |
-| `data-headline-size` | `'600'` | Font size token (e.g. `'400'`, `'600'`, `'800'`) |
-| `data-headline-level` | `2` | Semantic heading level (2–6) |
-| `data-text` | `''` | Body HTML (sanitized via DOMPurify) |
-| `data-buttons` | `[]` | JSON array of button objects: `{ label, url, type }` |
-| `data-variant` | `'primary'` | `'primary'`, `'secondary'`, `'tertiary'`, `'quaternary'` |
-| `data-background-color` | - | Custom CSS background color |
-| `data-padding` | - | Custom CSS padding |
-| `data-image` | - | Image URL (triggers side-by-side layout) |
-| `data-image-alt` | `''` | Alt text for the image |
-| `data-centered` | `'true'` | `'true'` or `'false'` |
+| Attribute               | Default     | Description                                              |
+| ----------------------- | ----------- | -------------------------------------------------------- |
+| `data-eyebrow`          | `''`        | Optional short label above the headline                  |
+| `data-headline`         | `''`        | Banner heading text                                      |
+| `data-headline-size`    | `'600'`     | Font size token (e.g. `'400'`, `'600'`, `'800'`)         |
+| `data-headline-level`   | `2`         | Semantic heading level (2–6)                             |
+| `data-text`             | `''`        | Body HTML (sanitized via DOMPurify)                      |
+| `data-buttons`          | `[]`        | JSON array of button objects: `{ label, url, type }`     |
+| `data-tone`             | `'strong'`  | `'strong'` or `'soft'`                                   |
+| `data-variant`          | `'primary'` | `'primary'`, `'secondary'`, `'tertiary'`, `'quaternary'` |
+| `data-background-color` | -           | Custom CSS background color                              |
+| `data-padding`          | -           | Custom CSS padding                                       |
+| `data-image`            | -           | Image URL (triggers side-by-side layout)                 |
+| `data-image-alt`        | `''`        | Alt text for the image                                   |
+| `data-centered`         | `'true'`    | `'true'` or `'false'`                                    |
+| `data-layout`           | `'stacked'` | `'stacked'` or `'inline'`                                |
 
 ```js
-import createHydrator from "https://assets.undrr.org/static/mangrove/1.4.0/components/hydrate.js";
-import TextCta, { fromElement } from "https://assets.undrr.org/static/mangrove/1.4.0/components/TextCta.js";
-createHydrator({ selector: "[data-mg-text-cta]", component: TextCta, fromElement });
+import createHydrator from 'https://assets.undrr.org/mangrove/2.3.0/components/hydrate.js';
+import TextCta, {
+  fromElement,
+} from 'https://assets.undrr.org/mangrove/2.3.0/components/TextCta.js';
+createHydrator({
+  selector: '[data-mg-text-cta]',
+  component: TextCta,
+  fromElement,
+});
 ```
 
-See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
+See the [hydration guide](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
 
 ## Accessibility
 
 - Uses semantic `<section>` element with `aria-labelledby` pointing to the headline (falls back to `aria-label="Call to action"` when no headline is provided)
 - Headline renders as a proper heading element (`<h2>` by default). Use `headlineLevel` to match the document outline
 - Button text provides clear action labels
-- Color contrast: white text on theme background colors meets WCAG AA
-- Focus states inherited from `.mg-button` base styles
+- Soft tone uses dark text; strong tone uses light text. Check contrast for the chosen theme and any custom backgrounds or child content.
+- The `secondary` accent renders as a pale surface with dark copy at both tones. The orange accent is its leading rule only, because no text colour meets AA on that hue. See [Accent colours](#accent-colours).
+- Soft-tone actions inherit normal button focus styles; strong-tone action links use the inverse focus treatment.
+- Composed forms need visible labels, correctly grouped choices and accessible error/confirmation feedback supplied by their owner.
 
 ## Changelog
 
-- **2.0.0** — 2026-03-29: **Breaking.** Prop renames to align with canonical text-cta schema ([#884](https://github.com/unisdr/undrr-mangrove/issues/884)): `image` (URL string) + `imageAlt` → `image.{src,alt}` object. `fromElement` bridge is updated — Drupal data attributes unchanged. See [migration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/MIGRATION-SCHEMA-V2.md).
-- **1.0** — 2026-03-14 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): First production release. Full-width banner with BEM class structure (`mg-cta`). Supports `variant` prop (primary/secondary/tertiary/quaternary) matching Hero color system, `backgroundColor` for custom colors, `buttons` array prop (multiple buttons with Primary/Secondary types), `text` prop with HTML support (sanitized via DOMPurify), optional `image` for side-by-side layout, `centered` prop, and configurable `headlineSize`/`padding`.
-- **0.1** — 2022-12-12: Initial placeholder (never used in production)
+- **Unreleased, draft schema proposal:** Adopt the schema-aligned input documented in [the migration proposal](?path=/docs/design-decisions-schema-phase-2-proposal--docs), preserving current rendering, accessibility and language handling.
+
+- **1.3.0**, 2026-09-18 ([#1249](https://github.com/unisdr/undrr-mangrove/pull/1249)): Fixes [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196). `variant="secondary"` is no longer a flat orange panel with a white eyebrow (2.65), headline (2.65) and 90%-white body (2.42). It now takes the `soft` surface (white under an 8% wash of the accent) with dark copy and standard buttons, and keeps the Sendai orange as a 6px leading rule. The variant is a soft surface at both tones, so `tone="strong"` no longer changes its fill. `--mg-color-hero--secondary` is unchanged and now drives the rule. This is a visible change wherever the variant is used, in all five themes.
+- **1.2.3**, 2026-09-18 ([#1198](https://github.com/unisdr/undrr-mangrove/pull/1198)): Documented the strong `secondary` accent as a recorded contrast exception: white eyebrow, headline and body on the orange accent meet neither contrast measure at any size. No colour changed; removal is tracked in [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196).
+
+- **1.2.2**, 2026-09-17 ([#1173](https://github.com/unisdr/undrr-mangrove/pull/1173)): Filled buttons on strong surfaces get a light tinted stroke so they keep a visible edge when their fill matches the banner colour.
+
+- **1.2.1**, 2026-09-14 ([#1142](https://github.com/unisdr/undrr-mangrove/pull/1142)): Strong-tone `TextCta` now applies dedicated editorial CTA link colours for `mg-button-cta`, so the label and arrow badge keep proper contrast on dark accent surfaces instead of inheriting generic button link colouring.
+
+- **1.2**, 2026-09-09: Added an optional composed-content slot (for forms and richer CTA layouts), a reusable soft-accent `data-tone`, and consolidated CTA form examples into shared stories. ([web-backlog #2412](https://gitlab.com/undrr/web-backlog/-/work_items/2412))
+
+- **1.1**, 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)):
+  - Added an optional eyebrow and responsive inline content/action layout for wide promotional banners.
+  - Composed action links through `CtaButton`, including editorial, outline and external-link options; hardened text contrast against surrounding typography and made outline borders reliable on dark CTA surfaces.
+- **1.0**, 2026-03-14 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): First production release of the `mg-cta` banner with theme variants, custom background color, button arrays, sanitized HTML text, optional image layout, centered mode, and configurable headline size/padding.
+- **0.1**, 2022-12-12: Initial placeholder (never used in production)

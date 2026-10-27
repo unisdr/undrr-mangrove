@@ -21,7 +21,7 @@ jobs:
       id-token: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0  # Fetch all history for tags
 
@@ -44,12 +44,12 @@ jobs:
           fi
 
       - name: Checkout tag
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{ steps.determine-tag.outputs.tag }}
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: '24'
           registry-url: 'https://registry.npmjs.org'
@@ -59,84 +59,31 @@ jobs:
         run: corepack enable
 
       - name: Install dependencies
-        run: YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install --refresh-lockfile # To allow compatibility with dependency updaters
+        run: yarn install --immutable
 
       - name: Build
-        run: yarn build && yarn build:schemas --validate
+        run: yarn build && yarn build:schemas --validate-only
 
-      # Prepare package for publishing - include dist files and SCSS sources
+      # Assemble the curated npm-package/ directory (dist/ subpaths, SCSS
+      # sources, slimmed package.json). The same script backs the local
+      # `yarn pack:preview` and break-glass release docs (docs/RELEASES.md).
       - name: Prepare package files
-        run: |
-          mkdir -p npm-package/dist
-          cp -r dist/* npm-package/dist/
-
-          # Copy assets to top-level directories
-          if [ -d "dist/assets/js" ]; then
-            mkdir -p npm-package/js
-            cp -r dist/assets/js/* npm-package/js/
-          fi
-
-          if [ -d "dist/assets/css" ]; then
-            mkdir -p npm-package/css
-            cp -r dist/assets/css/* npm-package/css/
-          fi
-
-          if [ -d "dist/assets/error-pages" ]; then
-            mkdir -p npm-package/error-pages
-            cp -r dist/assets/error-pages/* npm-package/error-pages/
-          fi
-
-          if [ -d "dist/fonts" ]; then
-            mkdir -p npm-package/fonts
-            cp -r dist/fonts/* npm-package/fonts/
-          fi
-
-          # Copy components to top-level directory
-          if [ -d "dist/components" ]; then
-            mkdir -p npm-package/components
-            cp -r dist/components/* npm-package/components/
-          fi
-
-          # Copy content schemas (fails loudly if build:schemas did not produce files)
-          mkdir -p npm-package/schemas
-          cp schemas/dist/*.schema.json npm-package/schemas/
-
-          # Copy component SCSS files maintaining structure
-          mkdir -p npm-package/scss
-          find stories -name "*.scss" -type f | while read file; do
-            mkdir -p "npm-package/scss/$(dirname "$file" | sed 's|^stories/||')"
-            cp "$file" "npm-package/scss/$(echo "$file" | sed 's|^stories/||')"
-          done
-
-          cp package.json npm-package/
-          cp README.md npm-package/
-          cp LICENSE npm-package/ || echo "No LICENSE file found"
-
-          # Create a custom package.json for publishing
-          node -e '
-            const pkg = require("./package.json");
-            // Keep only essential fields
-            const newPkg = {
-              name: pkg.name,
-              version: pkg.version,
-              description: pkg.description,
-              main: "dist/index.js",
-              exports: {
-                ".": "./dist/index.js",
-                "./schemas/*": "./schemas/*"
-              },
-              files: ["components/**/*", "css/**/*", "js/**/*", "scss/**/*.scss", "schemas/**/*", "error-pages/**/*", "fonts/**/*"],
-              repository: pkg.repository,
-              keywords: pkg.keywords,
-              author: pkg.author,
-              license: pkg.license
-            };
-
-            require("fs").writeFileSync("npm-package/package.json", JSON.stringify(newPkg, null, 2));
-          '
+        run: node scripts/assemble-npm-package.mjs npm-package
 
       - name: Publish to npm
         working-directory: npm-package
         run: |
           npm pkg set name="@undrr/undrr-mangrove"
-          npm publish --access public --provenance
+          # A prerelease version (e.g. 2.0.0-alpha.1, anything with a hyphen)
+          # must NOT take npm's default "latest" dist-tag, or a plain
+          # `npm install @undrr/undrr-mangrove` would resolve to the unstable
+          # build for every consumer. Publish prereleases under "next" instead;
+          # only clean semver versions become "latest".
+          version="$(node -p "require('./package.json').version")"
+          if [[ "$version" == *-* ]]; then
+            echo "Prerelease version $version -> publishing with dist-tag 'next'"
+            npm publish --access public --provenance --tag next
+          else
+            echo "Stable version $version -> publishing with dist-tag 'latest'"
+            npm publish --access public --provenance
+          fi

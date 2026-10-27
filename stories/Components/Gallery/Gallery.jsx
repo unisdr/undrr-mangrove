@@ -1,9 +1,34 @@
+import { getLanguageProps } from '../../../src/i18n';
+import { getGalleryLabels } from './_labels';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import { Loader } from '../../Utilities/Loader/Loader';
+
+export { getGalleryLabels } from './_labels';
+export { DEFAULT_GALLERY_LABELS } from './_labels';
 // Styles imported via stories/assets/scss/_components.scss to maintain Sass cascade
 
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
+
+// Content contract: see schemas/gallery.schema.js for canonical field names and documented deviations.
+// Everything a browser can put in the focus order inside an injected preview.
+const THUMBNAIL_PREVIEW_FOCUSABLE_SELECTOR = [
+  'a[href]',
+  'area[href]',
+  'button',
+  'input',
+  'select',
+  'textarea',
+  'iframe',
+  'object',
+  'embed',
+  'summary',
+  'audio[controls]',
+  'video[controls]',
+  '[contenteditable]',
+  '[tabindex]',
+].join(',');
 
 function GalleryComponent({
   media,
@@ -16,13 +41,19 @@ function GalleryComponent({
   enableKeyboard = true,
   loop = false,
   onMediaChange,
+  lang,
+  dir,
+  labels,
 }) {
+  const { galleryAriaLabel, prevLabel, nextLabel, loadingLabel } =
+    getGalleryLabels(lang, labels);
   const [activeIndex, setActiveIndex] = useState(initialIndex);
   const [isLoading, setIsLoading] = useState(false);
   const galleryRef = useRef(null);
   const mainImageRef = useRef(null);
   const thumbnailContainerRef = useRef(null);
   const thumbnailRefs = useRef([]);
+  const thumbnailPreviewRefs = useRef([]);
   const touchStartX = useRef(null);
   const touchEndX = useRef(null);
 
@@ -37,18 +68,40 @@ function GalleryComponent({
     }
   }, [activeIndex, activeItem.type]);
 
+  // An `html` thumbnail renders author markup that can contain links, buttons
+  // or form controls. It sits inside `<button role="tab">`, so those would be
+  // nested interactive content and focusable children of an aria-hidden node
+  // (axe `nested-interactive`, `aria-hidden-focus`). `inert` on the preview
+  // takes the whole subtree out of focus order, hit testing and the
+  // accessibility tree; the `tabindex="-1"` sweep covers engines and tools
+  // that do not implement `inert` yet. The tab button itself stays operable.
+  useEffect(() => {
+    thumbnailPreviewRefs.current.forEach(node => {
+      if (!node) return;
+      node.setAttribute('inert', '');
+      node
+        .querySelectorAll(THUMBNAIL_PREVIEW_FOCUSABLE_SELECTOR)
+        .forEach(child => child.setAttribute('tabindex', '-1'));
+    });
+  }, [media]);
+
   // Handle thumbnail click
   const handleThumbnailClick = useCallback(
-    (index) => {
+    index => {
       setActiveIndex(index);
       if (onMediaChange) {
         onMediaChange(index, media[index]);
       }
 
-      // Scroll thumbnail into view
-      if (thumbnailRefs.current[index]) {
-        thumbnailRefs.current[index].scrollIntoView({
-          behavior: 'smooth',
+      // Read the preference at navigation time, from the thumbnail's window.
+      const thumbnail = thumbnailRefs.current[index];
+      if (thumbnail) {
+        const reducedMotion = thumbnail.ownerDocument.defaultView.matchMedia(
+          '(prefers-reduced-motion: reduce)'
+        ).matches;
+        thumbnail.scrollIntoView({
+          // `auto` can inherit a consumer's smooth-scroll CSS.
+          behavior: reducedMotion ? 'instant' : 'smooth',
           block: 'nearest',
           inline: 'center',
         });
@@ -77,7 +130,7 @@ function GalleryComponent({
 
   // Keyboard navigation (scoped to gallery when focused)
   const handleKeyDown = useCallback(
-    (e) => {
+    e => {
       if (!enableKeyboard) return;
 
       switch (e.key) {
@@ -101,16 +154,22 @@ function GalleryComponent({
           break;
       }
     },
-    [enableKeyboard, handleNext, handlePrevious, handleThumbnailClick, media.length]
+    [
+      enableKeyboard,
+      handleNext,
+      handlePrevious,
+      handleThumbnailClick,
+      media.length,
+    ]
   );
 
   // Touch/swipe handlers for mobile
-  const handleTouchStart = (e) => {
+  const handleTouchStart = e => {
     touchStartX.current = e.touches[0].clientX;
     touchEndX.current = null;
   };
 
-  const handleTouchMove = (e) => {
+  const handleTouchMove = e => {
     touchEndX.current = e.touches[0].clientX;
   };
 
@@ -141,10 +200,11 @@ function GalleryComponent({
 
   return (
     <div
+      {...getLanguageProps(lang, dir)}
       ref={galleryRef}
       className={galleryClasses}
       role="region"
-      aria-label="Gallery"
+      aria-label={galleryAriaLabel}
       tabIndex={enableKeyboard ? 0 : undefined}
       onKeyDown={handleKeyDown}
     >
@@ -162,7 +222,11 @@ function GalleryComponent({
               src={activeItem.src}
               alt={activeItem.alt}
               className="mg-gallery__image"
-              aria-describedby={showDescription && activeItem.description ? 'gallery-description' : undefined}
+              aria-describedby={
+                showDescription && activeItem.description
+                  ? 'gallery-description'
+                  : undefined
+              }
             />
           )}
           {activeItem.type === 'video' && (
@@ -174,7 +238,11 @@ function GalleryComponent({
               poster={activeItem.poster}
               onLoadedData={() => setIsLoading(false)}
               onLoadStart={() => setIsLoading(true)}
-              aria-describedby={showDescription && activeItem.description ? 'gallery-description' : undefined}
+              aria-describedby={
+                showDescription && activeItem.description
+                  ? 'gallery-description'
+                  : undefined
+              }
             >
               <track kind="captions" />
               Your browser does not support the video tag.
@@ -188,7 +256,11 @@ function GalleryComponent({
               title={activeItem.title || activeItem.alt}
               allowFullScreen
               onLoad={() => setIsLoading(false)}
-              aria-describedby={showDescription && activeItem.description ? 'gallery-description' : undefined}
+              aria-describedby={
+                showDescription && activeItem.description
+                  ? 'gallery-description'
+                  : undefined
+              }
             />
           )}
           {activeItem.type === 'html' && (
@@ -196,12 +268,16 @@ function GalleryComponent({
               ref={mainImageRef}
               className="mg-gallery__image mg-gallery__html"
               dangerouslySetInnerHTML={{ __html: activeItem.html }}
-              aria-describedby={showDescription && activeItem.description ? 'gallery-description' : undefined}
+              aria-describedby={
+                showDescription && activeItem.description
+                  ? 'gallery-description'
+                  : undefined
+              }
             />
           )}
           {isLoading && (
-            <div className="mg-gallery__loading" aria-live="polite" aria-label="Loading media">
-              <div className="mg-gallery__spinner"></div>
+            <div className="mg-gallery__loading">
+              <Loader size="inline" label={loadingLabel} />
             </div>
           )}
         </div>
@@ -213,7 +289,7 @@ function GalleryComponent({
               className="mg-gallery__arrow mg-gallery__arrow--prev"
               onClick={handlePrevious}
               disabled={!loop && activeIndex === 0}
-              aria-label="Previous item"
+              aria-label={prevLabel}
               type="button"
             >
               ‹
@@ -222,7 +298,7 @@ function GalleryComponent({
               className="mg-gallery__arrow mg-gallery__arrow--next"
               onClick={handleNext}
               disabled={!loop && activeIndex === media.length - 1}
-              aria-label="Next item"
+              aria-label={nextLabel}
               type="button"
             >
               ›
@@ -235,7 +311,7 @@ function GalleryComponent({
               className="mg-gallery__arrow-button mg-gallery__arrow-button--prev"
               onClick={handlePrevious}
               disabled={!loop && activeIndex === 0}
-              aria-label="Previous item"
+              aria-label={prevLabel}
               type="button"
             >
               ‹
@@ -244,7 +320,7 @@ function GalleryComponent({
               className="mg-gallery__arrow-button mg-gallery__arrow-button--next"
               onClick={handleNext}
               disabled={!loop && activeIndex === media.length - 1}
-              aria-label="Next item"
+              aria-label={nextLabel}
               type="button"
             >
               ›
@@ -256,8 +332,12 @@ function GalleryComponent({
       {/* Description area */}
       {showDescription && (activeItem.title || activeItem.description) && (
         <div className="mg-gallery__description" id="gallery-description">
-          {activeItem.title && <div className="mg-gallery__title">{activeItem.title}</div>}
-          {activeItem.description && <p className="mg-gallery__caption">{activeItem.description}</p>}
+          {activeItem.title && (
+            <div className="mg-gallery__title">{activeItem.title}</div>
+          )}
+          {activeItem.description && (
+            <p className="mg-gallery__caption">{activeItem.description}</p>
+          )}
         </div>
       )}
 
@@ -272,11 +352,15 @@ function GalleryComponent({
           {media.map((item, index) => (
             <button
               key={item.id}
-              ref={(el) => (thumbnailRefs.current[index] = el)}
+              ref={el => {
+                thumbnailRefs.current[index] = el;
+              }}
               className={cls(
                 'mg-gallery__thumbnail',
                 index === activeIndex && 'mg-gallery__thumbnail--active',
-                item.type === 'html' && !item.thumbnail && 'mg-gallery__thumbnail--html'
+                item.type === 'html' &&
+                  !item.thumbnail &&
+                  'mg-gallery__thumbnail--html'
               )}
               onClick={() => handleThumbnailClick(index)}
               role="tab"
@@ -286,21 +370,34 @@ function GalleryComponent({
               type="button"
             >
               {item.type === 'html' && !item.thumbnail && item.html ? (
-                <div className="mg-gallery__thumbnail-html-preview" aria-hidden="true">
+                <div
+                  ref={el => {
+                    thumbnailPreviewRefs.current[index] = el;
+                  }}
+                  className="mg-gallery__thumbnail-html-preview"
+                  aria-hidden="true"
+                  inert
+                >
                   <div
                     className="mg-gallery__thumbnail-html-content"
                     dangerouslySetInnerHTML={{ __html: item.html }}
                   />
                 </div>
-              ) : (item.thumbnail || item.src) ? (
+              ) : item.thumbnail || item.src ? (
                 <img src={item.thumbnail || item.src} alt="" loading="lazy" />
               ) : (
-                <span className="mg-gallery__thumbnail-placeholder" aria-hidden="true">
+                <span
+                  className="mg-gallery__thumbnail-placeholder"
+                  aria-hidden="true"
+                >
                   ◫
                 </span>
               )}
               {(item.type === 'video' || item.type === 'embed') && (
-                <span className="mg-gallery__thumbnail-indicator" aria-hidden="true">
+                <span
+                  className="mg-gallery__thumbnail-indicator"
+                  aria-hidden="true"
+                >
                   ▶
                 </span>
               )}
@@ -347,6 +444,17 @@ GalleryComponent.propTypes = {
   loop: PropTypes.bool,
   /** Callback when media item changes: (index, item) => {} */
   onMediaChange: PropTypes.func,
+  /** UI language tag; selects the built-in catalogue, with English fallback. */
+  lang: PropTypes.string,
+  /** Explicit text direction; otherwise known catalogue languages select their direction. */
+  dir: PropTypes.oneOf(['ltr', 'rtl', 'auto']),
+  /** Explicit UI label overrides; omitted keys use the selected catalogue, then English. */
+  labels: PropTypes.shape({
+    galleryAriaLabel: PropTypes.string,
+    prevLabel: PropTypes.string,
+    nextLabel: PropTypes.string,
+    loadingLabel: PropTypes.string,
+  }),
 };
 
 export const Gallery = React.memo(GalleryComponent);

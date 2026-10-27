@@ -5,7 +5,7 @@ import * as OnThisPageNavStories from './OnThisPageNav.stories';
 
 <Meta of={OnThisPageNavStories} />
 
-> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
 
 # On this page nav
 
@@ -15,19 +15,16 @@ A sticky horizontal navigation bar that links to page sections, with scroll-spy 
 
 ## When to use
 
-Use **On this page nav** for long-form content pages (landing pages, reports, directories) where readers benefit from:
-- Seeing the page structure at a glance
-- Jumping quickly between sections
-- Tracking where they are as they scroll
+Use **On this page nav** for long-form pages (landing pages, reports, directories) where readers need quick section jumps and scroll-position context.
 
 ### On this page nav vs Table of contents
 
-| | On this page nav | Table of contents |
-|---|---|---|
-| Position | Sticky at viewport top | Inline within content |
-| Layout | Horizontal bar | Vertical list |
-| Scroll-spy | Yes (highlights active section) | No |
-| Best for | Persistent navigation on long pages | Static overview at the top of content |
+|            | On this page nav                    | Table of contents                     |
+| ---------- | ----------------------------------- | ------------------------------------- |
+| Position   | Sticky at viewport top              | Inline within content                 |
+| Layout     | Horizontal bar                      | Vertical list                         |
+| Scroll-spy | Yes (highlights active section)     | No                                    |
+| Best for   | Persistent navigation on long pages | Static overview at the top of content |
 
 ## Modes
 
@@ -36,10 +33,11 @@ Use **On this page nav** for long-form content pages (landing pages, reports, di
 Place an empty `<nav>` with the activation attribute. The script scans headings and generates links:
 
 ```html
-<nav data-mg-on-this-page-nav
-     data-mg-on-this-page-nav-content=".article-body"
-     class="mg-on-this-page-nav">
-</nav>
+<nav
+  data-mg-on-this-page-nav
+  data-mg-on-this-page-nav-content=".article-body"
+  class="mg-on-this-page-nav"
+></nav>
 ```
 
 ### Explicit
@@ -61,45 +59,53 @@ Provide your own `<ul>` with links. The script activates scroll-spy without scan
 
 ## Data attributes
 
-| Attribute | Values | Default | Purpose |
-|-----------|--------|---------|---------|
-| `data-mg-on-this-page-nav` | (presence) | — | Activates the component |
-| `data-mg-on-this-page-nav-depth` | `"2"`, `"3"`, `"4"` | `"2"` | Max heading level to scan (auto-detect mode) |
-| `data-mg-on-this-page-nav-content` | CSS selector | `document.body` | Scope element for heading scan |
-| `data-mg-on-this-page-nav-label` | string | `"On this page"` | `aria-label` for the nav element |
-| `data-mg-on-this-page-nav-scroll-prev-label` | string | `"Previous navigation items"` | `aria-label` for the prev scroll button. Override for translated text (e.g., `"عناصر التنقل السابقة"` in Arabic). |
-| `data-mg-on-this-page-nav-scroll-next-label` | string | `"Next navigation items"` | `aria-label` for the next scroll button. Override for translated text (e.g., `"عناصر التنقل التالية"` in Arabic). |
-| `data-mg-on-this-page-nav-skip-auto-init` | (presence) | — | Skips this element during auto-init. Call `mgOnThisPageNav([element])` to initialize manually. |
+| Attribute                                    | Values              | Default                       | Purpose                                                                                        |
+| -------------------------------------------- | ------------------- | ----------------------------- | ---------------------------------------------------------------------------------------------- |
+| `data-mg-on-this-page-nav`                   | (presence)          | —                             | Activates the component                                                                        |
+| `data-mg-on-this-page-nav-depth`             | `"2"`, `"3"`, `"4"` | `"2"`                         | Max heading level to scan (auto-detect mode)                                                   |
+| `data-mg-on-this-page-nav-content`           | CSS selector        | `document.body`               | Scope element for heading scan                                                                 |
+| `data-mg-on-this-page-nav-label`             | string              | `"On this page"`              | `aria-label` for the nav element                                                               |
+| `data-mg-on-this-page-nav-scroll-prev-label` | string              | `"Previous navigation items"` | `aria-label` for the prev scroll button (override for translations).                           |
+| `data-mg-on-this-page-nav-scroll-next-label` | string              | `"Next navigation items"`     | `aria-label` for the next scroll button (override for translations).                           |
+| `data-mg-on-this-page-nav-skip-auto-init`    | (presence)          | —                             | Skips this element during auto-init. Call `mgOnThisPageNav([element])` to initialize manually. |
 
 ## CSS custom properties
 
-| Property | Default | Purpose |
-|----------|---------|---------|
-| `--mg-on-this-page-nav-offset` | `0px` | Docking offset for fixed headers above the nav. Accepts any CSS length (e.g. `80px`, `5rem`). Also used for scroll position calculations |
+| Property                       | Default | Purpose                                                                                                                                  |
+| ------------------------------ | ------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `--mg-on-this-page-nav-offset` | `0px`   | Docking offset for fixed headers above the nav. Accepts any CSS length (e.g. `80px`, `5rem`). Also used for scroll position calculations |
 
-Set these in your theme CSS or inline on the element:
+Set the offset on `:root`, so the bar and the page's scroll padding (below) both read it:
 
 ```css
-/* In a Drupal theme — responsive offset for MegaMenu */
-.mg-on-this-page-nav {
-  --mg-on-this-page-nav-offset: 80px;
-}
-
-@media (max-width: 900px) {
-  .mg-on-this-page-nav {
-    --mg-on-this-page-nav-offset: 56px;
-  }
+/* In a Drupal theme: dock below the admin toolbar, when it is there */
+:root {
+  --mg-on-this-page-nav-offset: var(--drupal-displace-offset-top, 0px);
 }
 ```
+
+An offset set on `.mg-on-this-page-nav` itself still docks the bar, but the page's scroll padding cannot see it.
+
+### Scroll padding
+
+While the bar is sticky the script publishes its height on the root as `--mg-on-this-page-nav-block-size` (0px when it is not sticky, for example on a viewport under 400px tall). The stylesheet sets the page's `scroll-padding-top` to the offset plus that height whenever a bar is on the page. Anything the browser scrolls into view, such as keyboard focus, anchors and another component's `scrollIntoView` (a pager returning to the top of its list, say), then lands below the bar instead of under it (WCAG 2.4.11 Focus Not Obscured).
+
+The rule has zero specificity (`:where`), so a site that already sets `html { scroll-padding-top }` keeps its own value and the bar adds nothing. To keep the site's padding and add the bar on top, set `--mg-on-this-page-nav-scroll-padding-base` on `:root` instead of `scroll-padding-top`. The height is written on `<html>`; a page with two bars gets the last one's height.
+
+### Lining up with the content column
+
+The bar is full-bleed, and its links start at the bar's own padding. Add `mg-on-this-page-nav--align-container` to start them at the edge of an `mg-container` content column instead, at every breakpoint. If the content column is narrower than `mg-container`, set `--mg-on-this-page-nav-container` to its width.
 
 ## CTA button
 
 Add a link with the `mg-on-this-page-nav__cta` class. It pins to the end of the bar (right in LTR, left in RTL):
 
 ```html
-<nav data-mg-on-this-page-nav
-     data-mg-on-this-page-nav-content=".article-body"
-     class="mg-on-this-page-nav">
+<nav
+  data-mg-on-this-page-nav
+  data-mg-on-this-page-nav-content=".article-body"
+  class="mg-on-this-page-nav"
+>
   <a href="/subscribe" class="mg-on-this-page-nav__cta">Subscribe to updates</a>
 </nav>
 ```
@@ -111,27 +117,29 @@ In auto-detect mode, the CTA is preserved when the script generates links.
 Add the `mg-on-this-page-nav--exclude` class to any heading to skip it:
 
 ```html
-<h2 class="mg-on-this-page-nav--exclude">This heading won't appear in the nav</h2>
+<h2 class="mg-on-this-page-nav--exclude">
+  This heading won't appear in the nav
+</h2>
 ```
 
 Headings with `mg-u-sr-only` are also excluded.
 
 ## CSS classes
 
-| Class | Element | Purpose |
-|-------|---------|---------|
-| `mg-on-this-page-nav` | `<nav>` | Root container |
-| `mg-on-this-page-nav--hidden` | `<nav>` | Applied when no headings found |
-| `mg-on-this-page-nav--has-left-overflow` | `<nav>` | Added by JS when list is scrolled; enables left-side gradient fade |
-| `mg-on-this-page-nav__list` | `<ul>` | Horizontal scrollable list |
-| `mg-on-this-page-nav__item` | `<li>` | List item wrapper |
-| `mg-on-this-page-nav__link` | `<a>` | Navigation link |
-| `mg-on-this-page-nav__link--active` | `<a>` | Scroll-spy active state |
-| `mg-on-this-page-nav__cta` | `<a>` | Call-to-action button (pinned to logical end) |
-| `mg-on-this-page-nav__scroll-btn` | `<button>` | Injected by JS; scroll arrow button (base class) |
-| `mg-on-this-page-nav__scroll-btn--prev` | `<button>` | Scroll-toward-start button (hidden when at start) |
-| `mg-on-this-page-nav__scroll-btn--next` | `<button>` | Scroll-toward-end button (hidden when at end) |
-| `mg-on-this-page-nav--exclude` | heading | Exclude a heading from auto-detect |
+| Class                                    | Element    | Purpose                                                            |
+| ---------------------------------------- | ---------- | ------------------------------------------------------------------ |
+| `mg-on-this-page-nav`                    | `<nav>`    | Root container                                                     |
+| `mg-on-this-page-nav--hidden`            | `<nav>`    | Applied when no headings found                                     |
+| `mg-on-this-page-nav--has-left-overflow` | `<nav>`    | Added by JS when list is scrolled; enables left-side gradient fade |
+| `mg-on-this-page-nav__list`              | `<ul>`     | Horizontal scrollable list                                         |
+| `mg-on-this-page-nav__item`              | `<li>`     | List item wrapper                                                  |
+| `mg-on-this-page-nav__link`              | `<a>`      | Navigation link                                                    |
+| `mg-on-this-page-nav__link--active`      | `<a>`      | Scroll-spy active state                                            |
+| `mg-on-this-page-nav__cta`               | `<a>`      | Call-to-action button (pinned to logical end)                      |
+| `mg-on-this-page-nav__scroll-btn`        | `<button>` | Injected by JS; scroll arrow button (base class)                   |
+| `mg-on-this-page-nav__scroll-btn--prev`  | `<button>` | Scroll-toward-start button (hidden when at start)                  |
+| `mg-on-this-page-nav__scroll-btn--next`  | `<button>` | Scroll-toward-end button (hidden when at end)                      |
+| `mg-on-this-page-nav--exclude`           | heading    | Exclude a heading from auto-detect                                 |
 
 ## Standalone / vanilla HTML usage
 
@@ -139,43 +147,53 @@ The script file uses ES module `export` statements, so you **must** load it with
 
 ```html
 <!-- HTML: auto-detect mode -->
-<nav class="mg-on-this-page-nav"
-     data-mg-on-this-page-nav
-     data-mg-on-this-page-nav-label="On this page"
-     data-mg-on-this-page-nav-depth="2"
-     data-mg-on-this-page-nav-content=".field--name-body">
-</nav>
+<nav
+  class="mg-on-this-page-nav"
+  data-mg-on-this-page-nav
+  data-mg-on-this-page-nav-label="On this page"
+  data-mg-on-this-page-nav-depth="2"
+  data-mg-on-this-page-nav-content=".field--name-body"
+></nav>
 
 <!-- JS: type="module" is required -->
-<script type="module" src="https://assets.undrr.org/testing/static/mangrove/latest/assets/js/on-this-page-nav.js"></script>
+<script
+  type="module"
+  src="https://assets.undrr.org/mangrove/2.3.0/js/on-this-page-nav.js"
+></script>
 ```
 
 ## Skipping auto-initialization
 
-Add `data-mg-on-this-page-nav-skip-auto-init` to skip a nav during auto-init. This is useful when another script must run first or when content is injected dynamically:
+Add `data-mg-on-this-page-nav-skip-auto-init` to skip a nav during auto-init (for script ordering or dynamically injected content):
 
 ```html
-<nav data-mg-on-this-page-nav
-     data-mg-on-this-page-nav-skip-auto-init
-     data-mg-on-this-page-nav-content=".article-body"
-     class="mg-on-this-page-nav">
-</nav>
+<nav
+  data-mg-on-this-page-nav
+  data-mg-on-this-page-nav-skip-auto-init
+  data-mg-on-this-page-nav-content=".article-body"
+  class="mg-on-this-page-nav"
+></nav>
 
 <script type="module">
-  import { mgOnThisPageNav } from 'https://assets.undrr.org/static/mangrove/latest/assets/js/on-this-page-nav.js';
+  import { mgOnThisPageNav } from 'https://assets.undrr.org/mangrove/2.3.0/js/on-this-page-nav.js';
   // Initialize after other setup is complete
-  mgOnThisPageNav([document.querySelector('[data-mg-on-this-page-nav-skip-auto-init]')]);
+  mgOnThisPageNav([
+    document.querySelector('[data-mg-on-this-page-nav-skip-auto-init]'),
+  ]);
 </script>
 ```
 
-When you pass elements explicitly via `scope`, the skip attribute is ignored — the consumer is intentionally initializing.
+When you pass elements explicitly via `scope`, the skip attribute is ignored.
 
 ## JavaScript API
 
 The component auto-initializes on `DOMContentLoaded` (or immediately if the script loads after the DOM is ready). For dynamic content or manual initialization:
 
 ```js
-import { mgOnThisPageNav, mgOnThisPageNavDestroy } from 'path/to/on-this-page-nav.js';
+import {
+  mgOnThisPageNav,
+  mgOnThisPageNavDestroy,
+} from 'path/to/on-this-page-nav.js';
 
 // Initialize all [data-mg-on-this-page-nav] elements
 mgOnThisPageNav();
@@ -196,7 +214,7 @@ import { useEffect, useRef } from 'react';
 import {
   mgOnThisPageNav,
   mgOnThisPageNavDestroy,
-} from '@undrr/undrr-mangrove/js/on-this-page-nav';
+} from '@undrr/undrr-mangrove/js/on-this-page-nav.js';
 
 function PageWithNav() {
   const navRef = useRef(null);
@@ -231,20 +249,22 @@ function PageWithNav() {
 For explicit mode, provide the `<ul>` in JSX — the JS skips heading scanning and just activates scroll-spy:
 
 ```jsx
-<nav
-  ref={navRef}
-  data-mg-on-this-page-nav
-  className="mg-on-this-page-nav"
->
+<nav ref={navRef} data-mg-on-this-page-nav className="mg-on-this-page-nav">
   <ul className="mg-on-this-page-nav__list">
     <li className="mg-on-this-page-nav__item">
-      <a href="#intro" className="mg-on-this-page-nav__link">Introduction</a>
+      <a href="#intro" className="mg-on-this-page-nav__link">
+        Introduction
+      </a>
     </li>
     <li className="mg-on-this-page-nav__item">
-      <a href="#methods" className="mg-on-this-page-nav__link">Methodology</a>
+      <a href="#methods" className="mg-on-this-page-nav__link">
+        Methodology
+      </a>
     </li>
   </ul>
-  <a href="/report.pdf" className="mg-on-this-page-nav__cta">Download report</a>
+  <a href="/report.pdf" className="mg-on-this-page-nav__cta">
+    Download report
+  </a>
 </nav>
 ```
 
@@ -254,11 +274,63 @@ The `mgOnThisPageNavDestroy` cleanup in the `useEffect` return ensures the Inter
 
 The nav uses `z-index: 11`, which places it above the MegaMenu (10) but below the PageHeader (22) and modals (9998+). When both the MegaMenu and this nav are sticky on the same page, set `--mg-on-this-page-nav-offset` to the MegaMenu's height so the nav docks below it and headings scroll to the correct position.
 
+## Tabs integration
+
+When page content includes [Mangrove Tabs](?path=/docs/components-tabs--docs), the nav automatically opens the correct tab before scrolling to a heading inside it — for both horizontal and stacked (disclosure) variants.
+
+**How it works:** When a nav link points to a heading that lives inside a hidden `.mg-tabs__section`, the click handler finds the corresponding tab trigger (`[data-tabs__item]`) and clicks it programmatically. The tab switch is synchronous, so the heading's position is immediately measurable and the scroll lands in the right place.
+
+No extra configuration is needed. The integration activates whenever a target heading is inside a closed tab panel, regardless of whether the tab uses horizontal or stacked layout.
+
+```html
+<!-- Horizontal tabs: clicking "Risk assessment" in the nav opens tab 1 -->
+<nav
+  data-mg-on-this-page-nav
+  data-mg-on-this-page-nav-content=".article-body"
+  class="mg-on-this-page-nav"
+></nav>
+
+<div class="article-body">
+  <h2 id="overview">Overview</h2>
+  <p>...</p>
+
+  <div
+    class="mg-tabs mg-tabs--horizontal"
+    data-mg-js-tabs
+    data-mg-js-tabs-variant="horizontal"
+  >
+    <ul class="mg-tabs__list">
+      <li class="mg-tabs__item">
+        <a class="mg-tabs__link" href="#mg-tabs__section-risk">
+          Risk assessment
+        </a>
+      </li>
+      <li class="mg-tabs-content" data-mg-js-tabs-content>
+        <section class="mg-tabs__section" id="mg-tabs__section-risk">
+          <h2 id="risk-assessment">Risk assessment</h2>
+          <p>...</p>
+        </section>
+      </li>
+    </ul>
+  </div>
+</div>
+```
+
+Headings inside tab panels appear in the nav list as normal — they are picked up by `querySelectorAll` even when their parent panel is hidden. Initialization order matters: initialize tabs before the nav so panels are in their correct initial state when the nav scans headings.
+
+```js
+// Initialize tabs first, then the nav
+document.querySelectorAll('[data-mg-js-tabs]').forEach(c => mgTabsRuntime(c));
+mgOnThisPageNav();
+```
+
+See the **With tabs content** story for a live example.
+
 ## Accessibility
 
 - **Landmark**: Renders as a `<nav>` with `aria-label`
 - **Active section**: `aria-current="true"` on the active link (correct WCAG 1.3.1 pattern — not `aria-selected`)
-- **List semantics**: `role="list"` on `<ul>` guards against VoiceOver + `list-style: none` bug
+- **List semantics**: `.mg-on-this-page-nav__list` hides its markers with `list-style-type: ""` rather than `list-style: none`, so Safari keeps the implicit `list` role and VoiceOver still announces the item count. You do not need `role="list"` on the `<ul>`. The vanilla script still sets one on lists it generates or adopts, which is belt and braces rather than a requirement
 - **Keyboard**: Standard tab navigation through links and scroll buttons; focused links auto-scroll into view in the nav bar
 - **Focus management**: Clicking a link moves focus to the target heading (`tabindex="-1"`, removed on blur)
 - **Focus visible**: 2px outline on `:focus-visible` for all interactive elements
@@ -274,13 +346,36 @@ The component supports RTL layouts automatically:
 
 - The nav list scrolls right-to-left via CSS flexbox and `overflow-x`
 - The CTA button pins to the left (logical end) via `margin-inline-start: auto`
-- Arabic headings use the Noto Kufi Arabic font family (`:lang(ar)` override)
+- Arabic links and the CTA render in Noto Sans Arabic, via the `ui` font role. The component carries no `:lang(ar)` rule of its own
 - Scroll buttons use direction-neutral labels ("Previous navigation items" / "Next navigation items") and RTL-aware `scrollBy` direction; `getComputedStyle(list).direction` maps which button shows for which overflow direction in RTL
 - **Known open item**: the `mask-image` trailing-edge gradient uses a physical `to right` direction and does not auto-flip in RTL (items scrolled off the right edge in RTL have no fade). A follow-up fix will use logical values or a separate RTL rule
 
 Auto-generated IDs from non-Latin headings preserve the original characters. Provide explicit `id` attributes on headings if you need specific URL fragments.
 
+## Runtime UI translations
+
+Use `lang` for built-in copy and `labels` for individual overrides. The
+[shared translation guide](?path=/docs/contributing-ui-translations--docs)
+explains language matching, fallback, direction and hydration precedence.
+
+OnThisPageNav's repository wrapper follows this contract; there is no published
+`components/OnThisPageNav.js` entry or React hydration adapter. Production vanilla
+markup keeps its documented authored labels and data attributes.
+
 ## Changelog
 
-- **1.1** — 2026-03-28: Added `data-mg-on-this-page-nav-skip-auto-init` attribute, single-element scope support; scroll arrow buttons for horizontal overflow
-- **1.0** — 2026-03-26: Initial release (auto-detect, explicit, CTA, scroll-spy, RTL, a11y) ([web-backlog#337](https://gitlab.com/undrr/web-backlog/-/issues/337))
+- **1.7**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance. The React wrapper updates its accessible name when language changes.
+
+- **1.6.0**, 2026-10-14 ([undrr/web-backlog#2728](https://gitlab.com/undrr/web-backlog/-/work_items/2728)): The script publishes the bar's height as `--mg-on-this-page-nav-block-size` while it is sticky, and the stylesheet sets the page's `scroll-padding-top` to the offset plus that height, so focus, anchors and other components' `scrollIntoView` land below the bar. New `mg-on-this-page-nav--align-container` modifier lines the links up with an `mg-container` content column. At the foot of the page the last link is marked: a short last section can never scroll up into the band the scroll-spy watches, so the previous section stayed marked even straight after following the last link. The check also runs on load and whenever the scroll-spy reports, which happens after the scroll event and used to take the mark straight back, and only applies on pages that scroll at least 120px (or a quarter of the viewport). Listeners and observers are removed by `mgOnThisPageNavDestroy`. Set `--mg-on-this-page-nav-offset` on `:root` for the scroll padding to include it. The scroll padding gives way to a site's own `html { scroll-padding-top }`, and `--mg-on-this-page-nav-scroll-padding-base` lets a site keep its padding and add the bar. In right-to-left pages each fade sits only on a side with links hidden behind it (a new `mg-on-this-page-nav--has-right-overflow` class, set by the script, joins `--has-left-overflow`), and the trailing (left) edge when nothing is hidden. 2.0.1 faded the first link when the list did not overflow.
+- **1.5.4**, 2026-09-19 ([#1267](https://github.com/unisdr/undrr-mangrove/issues/1267)): The React usage snippet imported `@undrr/undrr-mangrove/js/on-this-page-nav` without the extension. Node ESM does not add one, and the package ships no `exports` map that could, so the specifier failed with `ERR_MODULE_NOT_FOUND` against a packed tarball; under a bundler it worked, which is the wrong way round for a vanilla module. It now names `js/on-this-page-nav.js`. Documentation only; the module is unchanged.
+- **1.5.3**, 2026-09-18 ([#1216](https://github.com/unisdr/undrr-mangrove/pull/1216), [#1200](https://github.com/unisdr/undrr-mangrove/issues/1200)): `.mg-on-this-page-nav__list` hides its markers with `list-style: none` followed by `list-style-type: ""` (the new `mg-list-unmarked` mixin), so the implicit `list` role survives Safari without help from the markup. This closes a split between the two implementations: the vanilla script set `role="list"` on the list, the React component did not, and only one of them announced a count. The script still sets the role (belt and braces now, not a requirement), so nothing about the hydration contract changes.
+- **1.5.2**, 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic navigation links and the CTA now render in Noto Sans Arabic instead of Noto Kufi Arabic. Both classes read the `ui` font role rather than naming a typeface, and the component's `:lang(ar)` block is gone. Arabic labels measure about 10.8% narrower than their Latin equivalents, so the horizontal scroller needed no adjustment. Latin rendering is unchanged.
+- **1.5.1**, 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a nav link or CTA whose own language is not Arabic.
+- **1.5**, 2026-09-08 ([#1089](https://github.com/unisdr/undrr-mangrove/issues/1089)): Arabic navigation links render in Noto Kufi Arabic. The `:lang(ar)` override points at `$mg-font-family-arabic-headings`, which changed from Dubai to Noto Kufi Arabic.
+- **1.4**, 2026-08-31 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Replaced the heavy drop shadow with a crisp divider and aligned link, CTA, and scroll-control transitions and focus states with the shared modernisation tokens. Removed redundant per-language story exports in favour of the global locale toolbar.
+- **1.3**, 2026-06-19 ([mangrove#1056](https://github.com/unisdr/undrr-mangrove/pull/1056)): Consolidated `label` prop into a `labels` object with `DEFAULT_ON_THIS_PAGE_LABELS` export. Pass `labels={{ label: '...' }}` instead of `label` directly. Backwards compatible: `DEFAULT_ON_THIS_PAGE_LABELS` covers all keys. Co-located `_labels.js` provides `LABELS_ES/FR/JA/ZH/AR/RU`; locale toolbar now switches translated strings in all stories.
+
+- **1.2**, 2026-04-13: `.mg-on-this-page-nav__link` and `.mg-on-this-page-nav__cta` now use `$mg-font-family-headings` (Roboto Condensed via the semantic alias rather than the raw `-condensed` token). Both font-sizes bumped from `$mg-font-size-250` (14px) to `$mg-font-size-300` (16px) for legibility.
+- **1.1.1**, 2026-04-07 ([web-backlog#337](https://gitlab.com/undrr/web-backlog/-/issues/337)): Tabs integration: nav links to headings inside hidden tab panels now automatically open the correct tab before scrolling
+- **1.1**, 2026-03-28: Added `data-mg-on-this-page-nav-skip-auto-init` attribute, single-element scope support; scroll arrow buttons for horizontal overflow
+- **1.0**, 2026-03-26: Initial release (auto-detect, explicit, CTA, scroll-spy, RTL, a11y) ([web-backlog#337](https://gitlab.com/undrr/web-backlog/-/issues/337))

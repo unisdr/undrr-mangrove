@@ -6,7 +6,14 @@
  */
 
 import React, { useCallback, useId } from 'react';
-import { useSearchConfig, useSearchDispatch, actions } from '../context/SearchContext';
+import {
+  useSearchConfig,
+  useSearchDispatch,
+  useSearchLabels,
+  interpolateLabel,
+  actions,
+} from '../context/SearchContext';
+import { analyticsRegion } from '../utils/constants';
 
 /**
  * SearchForm component.
@@ -15,32 +22,53 @@ import { useSearchConfig, useSearchDispatch, actions } from '../context/SearchCo
  * @param {Object} props - Component props
  * @param {string} props.value - Current query value
  * @param {Function} props.onChange - Query change handler
+ * @param {Function} [props.onSubmit] - Called with the query on submit and
+ *   with '' on clear, to search at once instead of after the typing debounce
  * @param {boolean} props.isStale - Whether results are stale (search pending)
  * @param {boolean} props.isLoading - Whether search is loading
  * @param {string} props.widgetId - Unique widget ID for accessibility
  */
-export function SearchForm({ value, onChange, isStale, isLoading, widgetId = '' }) {
+export function SearchForm({
+  value,
+  onChange,
+  onSubmit,
+  isStale,
+  isLoading,
+  widgetId = '',
+}) {
   const config = useSearchConfig();
   const dispatch = useSearchDispatch();
+  const labels = useSearchLabels();
   const generatedId = useId();
   const inputId = widgetId ? `search-${widgetId}` : generatedId;
 
   const { showSearchBox, minSearchLength } = config;
 
-  const handleSubmit = useCallback((e) => {
-    e.preventDefault();
-    // Form submission doesn't need special handling -
-    // the search is triggered by the value change
-  }, []);
+  const handleSubmit = useCallback(
+    e => {
+      e.preventDefault();
+      // Typing already searches after a pause; Enter and the button search
+      // now.
+      onSubmit?.(value);
+    },
+    [onSubmit, value]
+  );
 
-  const handleChange = useCallback((e) => {
-    onChange(e.target.value);
-  }, [onChange]);
+  const handleChange = useCallback(
+    e => {
+      onChange(e.target.value);
+    },
+    [onChange]
+  );
 
   const handleClear = useCallback(() => {
     onChange('');
-    dispatch(actions.setQuery(''));
-  }, [onChange, dispatch]);
+    if (onSubmit) {
+      onSubmit('');
+    } else {
+      dispatch(actions.setQuery('', { immediate: true }));
+    }
+  }, [onChange, onSubmit, dispatch]);
 
   if (!showSearchBox) {
     return null;
@@ -48,21 +76,21 @@ export function SearchForm({ value, onChange, isStale, isLoading, widgetId = '' 
 
   return (
     <form
-      className="mg-search__form"
+      className="mg-search__form mg-form-action"
       role="search"
-      aria-label="Search content"
+      aria-label={labels.searchFormLabel}
       onSubmit={handleSubmit}
-      data-vf-google-analytics-region="undrr-search-form"
+      data-vf-google-analytics-region={analyticsRegion(config, 'form')}
     >
       <div className="mg-search__input-wrapper">
         <label htmlFor={inputId} className="mg-u-sr-only">
-          Search
+          {labels.searchLabel}
         </label>
         <input
           id={inputId}
           type="search"
-          className="mg-search__input form-control"
-          placeholder="Search..."
+          className="mg-search__input form-control mg-form-action__control"
+          placeholder={labels.searchPlaceholder}
           value={value}
           onChange={handleChange}
           aria-describedby={`${inputId}-hint`}
@@ -73,8 +101,8 @@ export function SearchForm({ value, onChange, isStale, isLoading, widgetId = '' 
         />
         <span id={`${inputId}-hint`} className="mg-u-sr-only">
           {minSearchLength > 1
-            ? `Enter at least ${minSearchLength} characters to search`
-            : 'Enter search terms'}
+            ? interpolateLabel(labels.searchHintMin, { min: minSearchLength })
+            : labels.searchHint}
         </span>
 
         {/* Clear button */}
@@ -83,50 +111,27 @@ export function SearchForm({ value, onChange, isStale, isLoading, widgetId = '' 
             type="button"
             className="mg-search__clear"
             onClick={handleClear}
-            aria-label="Clear search"
+            aria-label={labels.clearSearch}
           >
-            <span aria-hidden="true">&times;</span>
+            <span className="mg-icon mg-icon-close" aria-hidden="true" />
           </button>
-        )}
-
-        {/* Loading/stale indicator */}
-        {(isLoading || isStale) && (
-          <span
-            className="mg-search__loading"
-            aria-hidden="true"
-            title="Searching..."
-          />
         )}
       </div>
 
+      {/* Loading state is conveyed by the widget-level progress strip and
+          aria-busy on the results region; the submit button keeps a stable
+          icon + label to avoid stacking multiple animated indicators. */}
       <button
         type="submit"
-        className={`mg-search__submit btn btn-primary ${isLoading || isStale ? 'mg-search__submit--loading' : ''}`}
-        aria-label={isLoading || isStale ? 'Searching...' : 'Submit search'}
+        className="mg-button mg-button-primary mg-search__submit mg-form-action__action"
+        aria-label={labels.submitSearch}
         aria-busy={isLoading || isStale}
       >
-        <span className="mg-search__submit-text">
-          {isLoading || isStale ? 'Searching' : 'Search'}
-        </span>
         <span className="mg-search__submit-icon" aria-hidden="true">
-          {isLoading || isStale ? (
-            <span className="mg-search__submit-spinner" />
-          ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
-          )}
+          <span className="mg-icon mg-icon-search" />
+        </span>
+        <span className="mg-search__submit-text">
+          {labels.submitSearchText}
         </span>
       </button>
     </form>

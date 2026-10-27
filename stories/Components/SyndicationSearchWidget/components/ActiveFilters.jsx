@@ -6,8 +6,16 @@
  */
 
 import React, { useCallback, useMemo, useId } from 'react';
-import { useSearchState, useSearchConfig, useSearchDispatch, actions } from '../context/SearchContext';
+import {
+  useSearchState,
+  useSearchConfig,
+  useSearchDispatch,
+  useSearchLabels,
+  interpolateLabel,
+  actions,
+} from '../context/SearchContext';
 import { useTaxonomies } from '../hooks/useTaxonomies';
+import { facetsFromDefaults } from '../utils/hashState';
 import {
   getDomain,
   getLanguage,
@@ -25,6 +33,7 @@ export function ActiveFilters() {
   const state = useSearchState();
   const config = useSearchConfig();
   const dispatch = useSearchDispatch();
+  const labels = useSearchLabels();
   const labelId = useId();
   const { getLabel: getTaxonomyLabel } = useTaxonomies();
 
@@ -37,6 +46,11 @@ export function ActiveFilters() {
     facetFields,
   } = config;
 
+  const defaultFacets = useMemo(
+    () => facetsFromDefaults(defaultFilters),
+    [defaultFilters]
+  );
+
   // Build list of chips from active filters
   const chips = useMemo(() => {
     const result = [];
@@ -46,17 +60,23 @@ export function ActiveFilters() {
       if (!values || values.length === 0) continue;
 
       // Find field config
-      const fieldConfig = (facetFields || FACET_FIELDS).find(f => f.key === key);
+      const fieldConfig = (facetFields || FACET_FIELDS).find(
+        f => f.key === key
+      );
       if (!fieldConfig) continue;
 
       // Skip hidden filters
       if (!isFilterVisible(key, visibleFilters)) continue;
 
-      // Skip if matches default value
-      const defaultFilter = defaultFilters?.find(f => f.key === key);
-      if (defaultFilter && values.length === 1 && values[0] === defaultFilter.value) {
+      // Hide a complete baseline group, including repeated configured values.
+      // A changed group (defaults plus extras, or a subset) remains removable.
+      const defaults = new Set(defaultFacets[key] || []);
+      if (
+        defaults.size === new Set(values).size &&
+        values.every(value => defaults.has(value)) &&
+        !(facetOperators[key] === 'AND' && defaults.size > 1)
+      )
         continue;
-      }
 
       // Get operator for this facet (OR is default)
       const operator = facetOperators[key] || 'OR';
@@ -64,7 +84,12 @@ export function ActiveFilters() {
       // Add chip for each value
       for (let i = 0; i < values.length; i++) {
         const value = values[i];
-        const label = getLabelForValue(key, value, fieldConfig.vocabulary, getTaxonomyLabel);
+        const label = getLabelForValue(
+          key,
+          value,
+          fieldConfig.vocabulary,
+          getTaxonomyLabel
+        );
         result.push({
           key,
           value,
@@ -82,7 +107,9 @@ export function ActiveFilters() {
 
     // Process custom facets
     if (customFacetSelections && customFacetConfigs) {
-      for (const [facetId, selectedIndices] of Object.entries(customFacetSelections)) {
+      for (const [facetId, selectedIndices] of Object.entries(
+        customFacetSelections
+      )) {
         if (!selectedIndices || selectedIndices.length === 0) continue;
 
         const customFacet = customFacetConfigs.find(f => f.id === facetId);
@@ -105,21 +132,33 @@ export function ActiveFilters() {
     }
 
     return result;
-  }, [facets, facetOperators, customFacetSelections, facetFields, visibleFilters, defaultFilters, customFacetConfigs, getTaxonomyLabel]);
+  }, [
+    facets,
+    facetOperators,
+    customFacetSelections,
+    facetFields,
+    visibleFilters,
+    defaultFacets,
+    customFacetConfigs,
+    getTaxonomyLabel,
+  ]);
 
   // Handle chip removal
-  const handleRemove = useCallback((chip) => {
-    if (chip.isCustomFacet) {
-      dispatch(actions.removeCustomFacet(chip.key));
-    } else {
-      dispatch(actions.removeFacet(chip.key, chip.value));
-    }
-  }, [dispatch]);
+  const handleRemove = useCallback(
+    chip => {
+      if (chip.isCustomFacet) {
+        dispatch(actions.removeCustomFacet(chip.key));
+      } else {
+        dispatch(actions.removeFacet(chip.key, chip.value));
+      }
+    },
+    [dispatch]
+  );
 
   // Handle clear all
   const handleClearAll = useCallback(() => {
-    dispatch(actions.clearFacets());
-  }, [dispatch]);
+    dispatch(actions.clearFacets({ defaultFilters }));
+  }, [dispatch, defaultFilters]);
 
   // Don't render if disabled or no chips
   if (!showActiveFilters || chips.length === 0) {
@@ -130,10 +169,10 @@ export function ActiveFilters() {
     <div
       className="mg-search__active-filters"
       role="region"
-      aria-label="Active filters"
+      aria-label={labels.activeFiltersRegion}
     >
       <span className="mg-search__active-filters-label" id={labelId}>
-        Filtered by:
+        {labels.filteredBy}
       </span>
 
       <ul
@@ -151,17 +190,23 @@ export function ActiveFilters() {
                   className="mg-search__filter-chip-connector"
                   aria-hidden="true"
                 >
-                  and
+                  {labels.andConnector}
                 </span>
               )}
             <button
               type="button"
               className="mg-search__filter-chip"
               onClick={() => handleRemove(chip)}
-              aria-label={`Remove filter: ${chip.fieldLabel} is ${chip.label}`}
+              aria-label={interpolateLabel(labels.removeFilter, {
+                field: chip.fieldLabel,
+                value: chip.label,
+              })}
             >
               <span className="mg-search__filter-chip-label">{chip.label}</span>
-              <span className="mg-search__filter-chip-remove" aria-hidden="true">
+              <span
+                className="mg-search__filter-chip-remove"
+                aria-hidden="true"
+              >
                 &times;
               </span>
             </button>
@@ -174,15 +219,22 @@ export function ActiveFilters() {
           type="button"
           className="mg-search__clear-all"
           onClick={handleClearAll}
-          aria-label={`Clear all ${chips.length} active filters`}
+          aria-label={interpolateLabel(labels.clearAllFiltersLabel, {
+            count: chips.length,
+          })}
         >
-          Clear all filters
+          {labels.clearAllFilters}
         </button>
       )}
 
       {/* Screen reader announcement */}
       <span className="mg-u-sr-only" role="status" aria-live="polite">
-        {chips.length} active filter{chips.length !== 1 ? 's' : ''}
+        {interpolateLabel(
+          chips.length !== 1
+            ? labels.activeFiltersCountPlural
+            : labels.activeFiltersCount,
+          { count: chips.length }
+        )}
       </span>
     </div>
   );

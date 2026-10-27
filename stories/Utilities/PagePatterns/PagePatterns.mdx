@@ -1,0 +1,36 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './PagePatterns.stories';
+
+<Meta of={Stories} />
+
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
+
+# Reading column
+
+A reading-column utility with an optional sticky contents sidebar, used by
+[content hub](?path=/docs/patterns-content-hub--docs) and
+[landing page](?path=/docs/patterns-landing-pages--docs).
+
+This is a class (not a component); use the markup directly.
+
+## Reading column
+
+<Canvas of={Stories.ReadingColumn} />
+
+```html
+<div class="mg-reading mg-reading--with-contents mg-grid mg-grid--article">
+  <div><!-- contents --></div>
+  <div class="mg-reading__article">…</div>
+</div>
+```
+
+Constrains the article to a readable measure. With `--with-contents`, the first
+child becomes a sticky right sidebar from 48rem upward and stacks above the
+article below that width. Pair `mg-reading--with-contents` with
+`mg-grid mg-grid--article` to get the sidebar column split
+(see [Grid layout](?path=/docs/design-decisions-grid-layout--docs)).
+
+## Changelog
+
+- **1.1**, 2026-09-11 ([undrr/web-backlog#3060](https://gitlab.com/undrr/web-backlog/-/work_items/3060)): Added `--mg-reading-with-contents-width` and moved sidebar column shape to shared `mg-grid--article` (this file now handles placement only).
+- **1.0**, 2026-09-10: Added `mg-reading` as a distributed layout utility. ([#1112](https://github.com/unisdr/undrr-mangrove/issues/1112))

@@ -23,7 +23,10 @@ describe('HorizontalBookCard contract', () => {
       items: [
         {
           title: 'Publication title',
-          image: { src: 'https://example.com/cover.jpg', alt: 'Publication cover' },
+          image: {
+            src: 'https://example.com/cover.jpg',
+            alt: 'Publication cover',
+          },
           labels: ['Report', '2024'],
           summary: 'A comprehensive report on disaster risk.',
           link: 'https://example.com/publication',
@@ -38,7 +41,10 @@ describe('HorizontalBookCard contract', () => {
       items: [
         {
           title: 'Publication title',
-          image: { src: 'https://example.com/cover.jpg', alt: 'Publication cover' },
+          image: {
+            src: 'https://example.com/cover.jpg',
+            alt: 'Publication cover',
+          },
           labels: ['Report', '2024'],
           summary: 'A comprehensive report on disaster risk.',
           link: 'https://example.com/publication',
@@ -49,7 +55,9 @@ describe('HorizontalBookCard contract', () => {
     const { container } = render(<HorizontalBookCard {...fixture} />);
     expect(screen.getByText('Publication title')).toBeInTheDocument();
     expect(screen.getByAltText('Publication cover')).toBeInTheDocument();
-    expect(screen.getByText('A comprehensive report on disaster risk.')).toBeInTheDocument();
+    expect(
+      screen.getByText('A comprehensive report on disaster risk.')
+    ).toBeInTheDocument();
     expect(await axe(container)).toHaveNoViolations();
   });
 });

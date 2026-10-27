@@ -1,37 +1,64 @@
 import { Meta, Source } from '@storybook/addon-docs/blocks';
 import LinkTo from '@storybook/addon-links/react';
+import { IntroLanding } from './components/IntroLanding';
 
 <Meta
   title="Introduction"
   parameters={{
     viewMode: 'docs',
-    previewTabs: {
-      canvas: { hidden: true },
-    },
+    previewTabs: { canvas: { hidden: true } },
     order: 1,
   }}
 />
 
-# Mangrove: UNDRR's component library
+<IntroLanding />
 
-<div
-  style={{
-    display: 'flex',
-    gap: '0.5rem',
-    flexWrap: 'wrap',
-  }}
->
-  <a
-    href="https://github.com/unisdr/undrr-mangrove"
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label="View Mangrove on GitHub"
-  >
-    <img
-      src="https://img.shields.io/badge/View%20on-GitHub-181717?logo=github&logoColor=white"
-      alt="View on GitHub"
-    />
-  </a>
+## Use Mangrove
+
+For most UNDRR sites, start with the versioned stylesheet on `assets.undrr.org`. It requires no package manager or build step.
+
+<Source
+  language="html"
+  code={
+    '<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.3.0/css/style.css" />'
+  }
+/>
+
+Use npm when your project needs Sass customization, React components or local bundling:
+
+<Source language="bash" code="npm install @undrr/undrr-mangrove" />
+
+Upgrading from 1.x? Start with the <LinkTo kind="getting-started-release-notes-v2-0" story="docs">v2.0 release notes</LinkTo>.
+
+Each UNDRR property themes components independently, while sharing semantic component structure so accessibility and syndication improvements propagate consistently. Mangrove is used on [undrr.org](https://www.undrr.org), [PreventionWeb](https://www.preventionweb.net), [MCR2030](https://mcr2030.undrr.org) and partner sites.
+
+### Choose an integration path
+
+{/* prettier-ignore */}
+<ul>
+  <li>
+    <LinkTo kind="getting-started-integration-cdn-reference" story="docs">Hosted CSS</LinkTo>: recommended default for UNDRR sites
+  </li>
+  <li>
+    <LinkTo kind="getting-started-integration-vanilla-html-and-css" story="docs">Vanilla HTML and CSS</LinkTo>: use semantic component markup without a build step
+  </li>
+  <li>
+    <LinkTo kind="getting-started-integration-hydration-guide" story="docs">Hydration</LinkTo>: attach React behaviour to server-rendered HTML from Drupal or Astro
+  </li>
+  <li>
+    <LinkTo kind="getting-started-integration-sass-integration" story="docs">Sass</LinkTo>: customize themes, variables and the build process
+  </li>
+  <li>
+    <LinkTo kind="getting-started-integration-react-integration" story="docs">React</LinkTo>: use components with props-based customization
+  </li>
+  <li>
+    <LinkTo kind="getting-started-ai-and-mcp-integration" story="docs">AI and MCP</LinkTo>: give coding agents structured Mangrove component metadata
+  </li>
+</ul>
+
+## Project health
+
+<div className="mg-intro-badges">
   <a
     href="https://www.npmjs.com/package/@undrr/undrr-mangrove"
     target="_blank"
@@ -44,7 +71,7 @@ import LinkTo from '@storybook/addon-links/react';
     />
   </a>
   <a
-    href="https://github.com/unisdr/undrr-mangrove/blob/main/LICENSE"
+    href="https://github.com/PreventionWeb/undrr-mangrove/blob/main/LICENSE"
     target="_blank"
     rel="noopener noreferrer"
     aria-label="View license"
@@ -54,51 +81,32 @@ import LinkTo from '@storybook/addon-links/react';
       alt="License"
     />
   </a>
+  {/* React Doctor score is a periodic snapshot, not live. Refresh in tandem with README.md
+      after audit sweeps. See docs/AI-CODING-AGENTS.md#component-quality-checks-with-react-doctor. */}
+  <a
+    href="https://www.react.doctor/share?p=%40undrr%2Fundrr-mangrove&s=100&e=0&w=0&f=0"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="View React Doctor report"
+  >
+    <img
+      src="https://www.react.doctor/share/badge?p=%40undrr%2Fundrr-mangrove&s=100&e=0&w=0&f=0"
+      alt="React Doctor: 100/100"
+    />
+  </a>
 </div>
-
-Mangrove provides shared content structures for UNDRR web properties: cards, heroes, navigation, footers, and syndicated content blocks. Each property keeps its own brand colors, component treatments, and application-specific interfaces. The content patterns are shared; your visual identity, application logic, and user experience flows stay yours. Mangrove is used on [undrr.org](https://www.undrr.org), [preventionweb.net](https://www.preventionweb.net), [mcr2030.undrr.org](https://mcr2030.undrr.org), and partner sites.
-
-Each UNDRR property themes components independently. The shared layer is the content structure -- the parts that let syndicated content render correctly and accessibility fixes propagate to every site at once.
-
-Use the theme switcher in the toolbar above to preview components in UNDRR, PreventionWeb, IRP, or MCR2030 styles. For more on what Mangrove covers, what it doesn't, and how it fits alongside other frameworks, see <LinkTo kind="getting-started-about-mangrove" story="docs">About Mangrove</LinkTo>.
-
----
-
-## Getting started
-
-- <LinkTo kind="getting-started-getting-started-guide" story="docs">Getting started guide</LinkTo> -- setup and first component
-- <LinkTo kind="getting-started-about-mangrove" story="docs">About Mangrove</LinkTo> -- what it covers, what it doesn't, why semantic CSS
-- <LinkTo kind="getting-started-integration-vanilla-html-and-css" story="docs">Vanilla HTML/CSS</LinkTo> -- add CSS files and copy HTML structures, no build step
-- <LinkTo kind="getting-started-integration-sass-integration" story="docs">Sass integration</LinkTo> -- custom themes, variable overrides, build process
-- <LinkTo kind="getting-started-integration-react-integration" story="docs">React integration</LinkTo> -- React components with props-based customization
-- <LinkTo kind="getting-started-integration-hydration-guide" story="docs">Hydration guide</LinkTo> -- render React components into server-generated HTML (Drupal, Astro)
-- <LinkTo kind="getting-started-ai-and-mcp-integration" story="docs">AI and MCP integration</LinkTo> -- use AI coding agents with Mangrove's MCP support
-- <LinkTo kind="getting-started-best-practices" story="docs">Best practices</LinkTo> -- accessibility, performance, architecture
-
-## Structure
-
-Mangrove uses a loose [atomic design](https://atomicdesign.bradfrost.com/chapter-2/) approach. The Storybook sidebar is organized as:
-
-- **Getting started**: What Mangrove is, integration guides (HTML/CSS, Sass, React, CDN, hydration)
-- **Contributing**: Component standards, build-a-component tutorial, writing guidelines, architecture, releases
-- **Platform services**: Analytics, critical messaging, cookie consent, content and search syndication (shared UNDRR infrastructure)
-- **Design decisions**: Colors, spacing, typography, and foundational design elements
-- **Components**: Cards, buttons, forms, navigation, and interactive elements
-- **Utilities**: CSS utilities, loaders, and layout helpers
-
-To request a new component or report an issue, [open a GitHub issue](https://github.com/unisdr/undrr-mangrove/issues). [Internal project notes are on the GitLab Wiki](https://git.un.org/undrr/web-backlog/-/wikis/Mangrove:-the-UNDRR-Component-library).
 
 ## Need help?
 
-- Browse components in the sidebar
-- Contact the UNDRR development team with questions
-- [Report bugs on GitHub](https://github.com/unisdr/undrr-mangrove/issues)
-- [Release notes](https://github.com/unisdr/undrr-mangrove/releases) -- what's new in each version
-
-## License
+- Browse the component gallery or use the sidebar to find a specific pattern
+- [Report a bug or request a component](https://github.com/PreventionWeb/undrr-mangrove/issues)
+- <LinkTo kind="getting-started-release-notes-v2-0" story="docs">
+    Read the v2.0 release notes
+  </LinkTo>
+- [Visit the internal project wiki](https://git.un.org/undrr/web-backlog/-/wikis/Mangrove:-the-UNDRR-Component-library)
 
 Components and code are Apache-2.0 licensed. The UNDRR look and feel is proprietary.
 
 ---
 
-Last updated: 19 March 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/Intro.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>
+Last updated: 24 September 2026 · <a href="https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Documentation/Intro.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>

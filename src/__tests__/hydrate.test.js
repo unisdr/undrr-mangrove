@@ -224,8 +224,7 @@ describe('createHydrator', () => {
   });
 
   it('does not clear container when clearContainer is false', () => {
-    document.body.innerHTML =
-      '<div class="target"><p>keep me</p></div>';
+    document.body.innerHTML = '<div class="target"><p>keep me</p></div>';
 
     createHydrator({
       selector: '.target',
@@ -235,6 +234,22 @@ describe('createHydrator', () => {
     });
 
     expect(mockCreateRoot).toHaveBeenCalledTimes(1);
+  });
+
+  it('leaves a data-mg-ssr container for React to replace at its first commit', () => {
+    document.body.innerHTML =
+      '<div class="target" data-mg-ssr><p class="ssr">server</p></div><div class="target"><p>plain</p></div>';
+
+    createHydrator({
+      selector: '.target',
+      component: DummyComponent,
+      fromElement: () => ({ text: 'test' }),
+    });
+
+    const [ssr, plain] = document.querySelectorAll('.target');
+    expect(ssr.querySelector('.ssr')).not.toBeNull();
+    expect(plain.innerHTML).toBe('');
+    expect(mockCreateRoot).toHaveBeenCalledTimes(2);
   });
 
   it('passes identifierPrefix to createRoot for each container', () => {
@@ -253,8 +268,75 @@ describe('createHydrator', () => {
     // Each call should receive an options object with identifierPrefix
     const firstOpts = mockCreateRoot.mock.calls[0][1];
     const secondOpts = mockCreateRoot.mock.calls[1][1];
-    expect(firstOpts.identifierPrefix).toMatch(/-0-$/);
-    expect(secondOpts.identifierPrefix).toMatch(/-1-$/);
+    expect(firstOpts.identifierPrefix).toMatch(/^target-\d+-$/);
+    expect(secondOpts.identifierPrefix).toMatch(/^target-\d+-$/);
+    expect(firstOpts.identifierPrefix).not.toBe(secondOpts.identifierPrefix);
+  });
+
+  it('keeps identifierPrefix unique across update() calls', () => {
+    document.body.innerHTML =
+      '<div id="first"><div class="target"></div></div>';
+
+    const result = createHydrator({
+      selector: '.target',
+      component: DummyComponent,
+      fromElement: () => ({ text: 'test' }),
+    });
+
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = '<div class="target"></div>';
+    document.body.appendChild(wrapper);
+    result.update(wrapper);
+
+    expect(mockCreateRoot).toHaveBeenCalledTimes(2);
+    const prefixes = mockCreateRoot.mock.calls.map(
+      ([, opts]) => opts.identifierPrefix
+    );
+    expect(new Set(prefixes).size).toBe(2);
+  });
+
+  it('keeps identifierPrefix unique across hydrators with the same prefix', () => {
+    document.body.innerHTML = '<div class="one"></div><div class="two"></div>';
+
+    createHydrator({
+      selector: '.one',
+      component: DummyComponent,
+      fromElement: () => ({ text: 'test' }),
+      options: { identifierPrefix: 'shared' },
+    });
+    createHydrator({
+      selector: '.two',
+      component: DummyComponent,
+      fromElement: () => ({ text: 'test' }),
+      options: { identifierPrefix: 'shared' },
+    });
+
+    const prefixes = mockCreateRoot.mock.calls.map(
+      ([, opts]) => opts.identifierPrefix
+    );
+    expect(prefixes).toHaveLength(2);
+    expect(new Set(prefixes).size).toBe(2);
+  });
+
+  it('restarts numbering when the shared root counter is not a valid integer', () => {
+    const key = Symbol.for('undrr.mangrove.hydrate.rootCounter');
+    const saved = globalThis[key];
+    globalThis[key] = Number.NaN;
+    document.body.innerHTML = '<div class="target"></div>';
+
+    try {
+      createHydrator({
+        selector: '.target',
+        component: DummyComponent,
+        fromElement: () => ({ text: 'test' }),
+      });
+
+      const [, opts] = mockCreateRoot.mock.calls[0];
+      expect(opts.identifierPrefix).toBe('target-0-');
+      expect(globalThis[key]).toBe(1);
+    } finally {
+      globalThis[key] = saved;
+    }
   });
 
   it('uses custom identifierPrefix from options', () => {
@@ -268,7 +350,7 @@ describe('createHydrator', () => {
     });
 
     const opts = mockCreateRoot.mock.calls[0][1];
-    expect(opts.identifierPrefix).toBe('custom-0-');
+    expect(opts.identifierPrefix).toMatch(/^custom-\d+-$/);
   });
 
   it('passes error callbacks to createRoot', () => {

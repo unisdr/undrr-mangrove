@@ -1,0 +1,31 @@
+.mg-typography-sample {
+  display: flex;
+  align-items: baseline;
+  padding: 8px 0;
+  border-bottom: 1px solid #ccc;
+  gap: 16px;
+}
+
+.mg-typography-sample__rendered {
+  flex: 1;
+  color: #1a1a1a;
+}
+
+.mg-typography-sample__meta {
+  width: 200px;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.mg-typography-sample__font-name {
+  display: block;
+  font-size: 12px;
+  color: #666;
+}
+
+.mg-typography-sample__font-spec {
+  display: block;
+  font-size: 11px;
+  color: #666;
+  font-family: monospace;
+}

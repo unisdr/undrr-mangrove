@@ -15,7 +15,7 @@ import TableOfContents from '../Components/TableOfContents/TableOfContents';
 
 # Vanilla HTML/CSS integration
 
-The simplest way to use Mangrove - perfect for static sites, legacy projects, or when you want minimal dependencies.
+The simplest way to use Mangrove for static sites, legacy projects, or minimal-dependency builds.
 
 <TableOfContents
   tocData={[
@@ -49,11 +49,11 @@ Add these `<link>` tags to your HTML `<head>`:
     <!-- UNDRR Theme (Choose one) -->
     <link
       rel="stylesheet"
-      href="https://assets.undrr.org/static/mangrove/1.4.0/css/style.css"
+      href="https://assets.undrr.org/mangrove/2.3.0/css/style.css"
     />
 
     <!-- Alternative: Prevention Web Theme -->
-    <!-- <link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.4.0/css/style-preventionweb.css"> -->
+    <!-- <link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.3.0/css/style-preventionweb.css"> -->
   </head>
   <body>
     <!-- Your content here -->
@@ -81,7 +81,7 @@ Add these `<link>` tags to your HTML `<head>`:
 
 ### 2. Copy HTML structures
 
-Browse the component library, click the "HTML" tab, and copy the markup:
+Use the Storybook "HTML" tab for component markup:
 
 ```html
 <!-- Example: Primary Button -->
@@ -92,18 +92,18 @@ Browse the component library, click the "HTML" tab, and copy the markup:
 
 ### Complete page example
 
-[See on CodePen](https://codepen.io/khawkins98/pen/MYwbKwe) — A working template with header, navigation, hero, tabs, footer, analytics, and messaging.
+[See on CodePen](https://codepen.io/khawkins98/pen/MYwbKwe) for a full template (header, navigation, hero, tabs, footer, analytics, messaging).
 
 ## CSS themes
 
-Choose the theme that matches your UNDRR property:
+Choose the stylesheet for your UNDRR property:
 
 **UNDRR (default)** — undrr.org, sendaiframework.org
 
 ```html
 <link
   rel="stylesheet"
-  href="https://assets.undrr.org/static/mangrove/1.4.0/css/style.css"
+  href="https://assets.undrr.org/mangrove/2.3.0/css/style.css"
 />
 ```
 
@@ -112,7 +112,7 @@ Choose the theme that matches your UNDRR property:
 ```html
 <link
   rel="stylesheet"
-  href="https://assets.undrr.org/static/mangrove/1.4.0/css/style-preventionweb.css"
+  href="https://assets.undrr.org/mangrove/2.3.0/css/style-preventionweb.css"
 />
 ```
 
@@ -121,7 +121,7 @@ Choose the theme that matches your UNDRR property:
 ```html
 <link
   rel="stylesheet"
-  href="https://assets.undrr.org/static/mangrove/1.4.0/css/style-mcr.css"
+  href="https://assets.undrr.org/mangrove/2.3.0/css/style-mcr.css"
 />
 ```
 
@@ -130,7 +130,7 @@ Choose the theme that matches your UNDRR property:
 ```html
 <link
   rel="stylesheet"
-  href="https://assets.undrr.org/static/mangrove/1.4.0/css/style-irp.css"
+  href="https://assets.undrr.org/mangrove/2.3.0/css/style-irp.css"
 />
 ```
 
@@ -139,13 +139,13 @@ Choose the theme that matches your UNDRR property:
 ```html
 <link
   rel="stylesheet"
-  href="https://assets.undrr.org/static/mangrove/1.4.0/css/style-delta.css"
+  href="https://assets.undrr.org/mangrove/2.3.0/css/style-delta.css"
 />
 ```
 
 ## Component reference
 
-Quick reference for common CSS classes. See individual component docs for full details.
+Quick reference for common classes (see component docs for full details).
 
 ### Layout and structure
 
@@ -182,7 +182,7 @@ Quick reference for common CSS classes. See individual component docs for full d
 
 - `mg-breadcrumb` - Breadcrumb navigation
 - `mg-menu` - Primary navigation menus
-- `mg-pagination` - Page navigation
+- `mg-pager` - Page navigation
 
 ## Best practices
 
@@ -223,7 +223,7 @@ Use responsive utility classes:
 
 ## JavaScript
 
-Most Mangrove components work without JavaScript. For enhanced interactivity, you have two options.
+Most components work without JavaScript. For interactivity, use vanilla modules or precompiled React bundles.
 
 ### Vanilla JS modules
 
@@ -231,7 +231,7 @@ Some components (like Tabs) have lightweight JavaScript modules:
 
 ```html
 <script type="module">
-  import { mgTabs } from 'https://assets.undrr.org/static/mangrove/1.4.0/js/tabs.js';
+  import { mgTabs } from 'https://assets.undrr.org/mangrove/2.3.0/js/tabs.js';
 
   document.addEventListener('DOMContentLoaded', () => {
     mgTabs();
@@ -239,26 +239,42 @@ Some components (like Tabs) have lightweight JavaScript modules:
 </script>
 ```
 
+| Module         | CDN path                | Use case                                                                                                                                                                                                                                                                                                         |
+| -------------- | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Tabs           | `/js/tabs.js`           | Tabs and stacked disclosures                                                                                                                                                                                                                                                                                     |
+| Show More      | `/js/show-more.js`      | Expand/collapse sections                                                                                                                                                                                                                                                                                         |
+| Copy Button    | `/js/copy-button.js`    | Copy-to-clipboard button                                                                                                                                                                                                                                                                                         |
+| Switch pending | `/js/switch-pending.js` | Saving state for `.mg-switch`. Pass a `save` function, or answer one `mg-switch:save` event for every `data-mg-switch-pending` switch. Revert-on-failure and the timeout are optional, and `mgSwitchAnnouncer()` gives you the announcements alone. See [Checkbox](?path=/docs/components-forms-checkbox--docs). |
+
 ### Precompiled React components
 
-For complex interactive components (MegaMenu, charts, maps), use precompiled React bundles without a build process.
+For complex interactive components (MegaMenu, charts, maps, drawers), use precompiled React bundles without a build process.
 
 **Available components:**
 
-| Component | CDN Path | Use case |
-|-----------|----------|----------|
-| ShareButtons | `/components/ShareButtons.js` | Social sharing |
-| MegaMenu | `/components/MegaMenu.js` | Full navigation with dropdowns |
-| ScrollContainer | `/components/ScrollContainer.js` | Horizontal scrolling |
-| BarChart | `/components/BarChart.js` | Data visualization |
-| MapComponent | `/components/MapComponent.js` | Interactive maps |
-| QuoteHighlight | `/components/QuoteHighlight.js` | Styled pull quotes |
-| Fetcher | `/components/Fetcher.js` | Data fetching wrapper |
-| SyndicationSearchWidget | `/components/SyndicationSearchWidget.js` | PreventionWeb search |
-| IconCard | `/components/IconCard.js` | Icon-based info cards |
-| Gallery | `/components/Gallery.js` | Image gallery with thumbnails |
-| StatsCard | `/components/StatsCard.js` | Statistics display |
-| Pager | `/components/Pager.js` | Pagination controls |
+| Component               | CDN Path                                 | Use case                                    |
+| ----------------------- | ---------------------------------------- | ------------------------------------------- |
+| CopyButton              | `/components/CopyButton.js`              | Copy-to-clipboard button (React hydrated)   |
+| Drawer                  | `/components/Drawer.js`                  | Slide-over drawer and floating panel dialog |
+| Notice                  | `/components/Notice.js`                  | Dismissible notices (React hydrated)        |
+| ServiceNotice           | `/components/ServiceNotice.js`           | Service outage notice with retry            |
+| Tree                    | `/components/Tree.js`                    | Keyboard tree hydrated from a nested list   |
+| TextCta                 | `/components/TextCta.js`                 | Call-to-action text block                   |
+| ShareButtons            | `/components/ShareButtons.js`            | Social sharing                              |
+| MegaMenu                | `/components/MegaMenu.js`                | Full navigation with dropdowns              |
+| ScrollContainer         | `/components/ScrollContainer.js`         | Horizontal scrolling                        |
+| BarChart                | `/components/BarChart.js`                | Data visualization                          |
+| MapComponent            | `/components/MapComponent.js`            | Interactive maps                            |
+| QuoteHighlight          | `/components/QuoteHighlight.js`          | Styled pull quotes                          |
+| Fetcher                 | `/components/Fetcher.js`                 | Data fetching wrapper                       |
+| SyndicationSearchWidget | `/components/SyndicationSearchWidget.js` | PreventionWeb search                        |
+| IconCard                | `/components/IconCard.js`                | Icon-based info cards                       |
+| Gallery                 | `/components/Gallery.js`                 | Image gallery with thumbnails               |
+| UserFeedback            | `/components/UserFeedback.js`            | Feedback collection widget                  |
+| StatsCard               | `/components/StatsCard.js`               | Statistics display                          |
+| Pager                   | `/components/Pager.js`                   | Pagination controls                         |
+
+> **Zero-dependency Alternative**: For lightweight interactions like tabs, show-more toggles, and copy buttons, prefer the zero-dependency vanilla JS scripts from `/js/*.js` (e.g. `/js/copy-button.js`, `/js/tabs.js`, `/js/show-more.js`, `/js/switch-pending.js`) which require **no React runtime**.
 
 React 19 dropped UMD builds, so we use [import maps](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script/type/importmap) with [esm.sh](https://esm.sh/) to provide React dependencies:
 
@@ -266,10 +282,10 @@ React 19 dropped UMD builds, so we use [import maps](https://developer.mozilla.o
 <script type="importmap">
   {
     "imports": {
-      "react": "https://esm.sh/react@19.2.4",
-      "react/jsx-runtime": "https://esm.sh/react@19.2.4/jsx-runtime",
-      "react-dom": "https://esm.sh/react-dom@19.2.4",
-      "react-dom/": "https://esm.sh/react-dom@19.2.4/"
+      "react": "https://esm.sh/react@19.3.0",
+      "react/jsx-runtime": "https://esm.sh/react@19.3.0/jsx-runtime",
+      "react-dom": "https://esm.sh/react-dom@19.3.0",
+      "react-dom/": "https://esm.sh/react-dom@19.3.0/"
     }
   </script>
   <!--
@@ -288,7 +304,7 @@ React 19 dropped UMD builds, so we use [import maps](https://developer.mozilla.o
 
     // Load component from CDN
     const MegaMenuModule = await import(
-      'https://assets.undrr.org/static/mangrove/1.4.0/components/MegaMenu.js'
+      'https://assets.undrr.org/mangrove/2.3.0/components/MegaMenu.js'
     );
 
     // Unwrap ESM/CJS interop - bundle may be double-wrapped as { default: { default: Component } }
@@ -326,7 +342,7 @@ React 19 dropped UMD builds, so we use [import maps](https://developer.mozilla.o
 </body>
 ```
 
-**Tip:** For debugging, use dev builds by adding `?dev` to esm.sh URLs (e.g., `https://esm.sh/react@19.2.4?dev`).
+**Tip:** For debugging, use dev builds by adding `?dev` to esm.sh URLs (e.g., `https://esm.sh/react@19.3.0?dev`).
 
 ### Hydration helper (recommended)
 
@@ -334,8 +350,10 @@ Components that support hydration (ShareButtons, ScrollContainer, QuoteHighlight
 
 ```html
 <script type="module">
-  import createHydrator from 'https://assets.undrr.org/static/mangrove/1.4.0/components/hydrate.js';
-  import ShareButtons, { fromElement } from 'https://assets.undrr.org/static/mangrove/1.4.0/components/ShareButtons.js';
+  import createHydrator from 'https://assets.undrr.org/mangrove/2.3.0/components/hydrate.js';
+  import ShareButtons, {
+    fromElement,
+  } from 'https://assets.undrr.org/mangrove/2.3.0/components/ShareButtons.js';
 
   createHydrator({
     selector: '[data-mg-share-buttons]',
@@ -345,14 +363,17 @@ Components that support hydration (ShareButtons, ScrollContainer, QuoteHighlight
 </script>
 
 <!-- Container with props as data attributes -->
-<section data-mg-share-buttons
+<section
+  data-mg-share-buttons
   data-main-label="Share this"
   data-on-copy-label="Link copied"
-  data-sharing-subject="Sharing Link">
-</section>
+  data-sharing-subject="Sharing Link"
+></section>
 ```
 
-This pattern works for any component with hydration support. See the [Hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API, supported components, and how to add hydration to new components.
+This pattern works for any component with hydration support. See the [Hydration guide](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API, supported components, and how to add hydration to new components.
+
+> **Full-page example:** The [DELTA Resilience homepage on CodePen](https://codepen.io/khawkins98/pen/019d3720-5233-796f-ae0a-dc141475a30f) demonstrates a complete integration — vanilla HTML for PageHeader, Hero, IconCard, TextCta, and Footer with React hydration for MegaMenu and SyndicationSearchWidget. No build tooling required.
 
 ### Manual mounting (for components without hydration support)
 
@@ -364,21 +385,21 @@ Components that don't yet export `fromElement` (BarChart, MapComponent, etc.) ca
 <script type="module">
   import React from 'react';
   import { createRoot } from 'react-dom/client';
-  const MegaMenuModule = await import(
-    'https://assets.undrr.org/static/mangrove/1.4.0/components/MegaMenu.js'
-  );
+  const MegaMenuModule =
+    await import('https://assets.undrr.org/mangrove/2.3.0/components/MegaMenu.js');
   let MegaMenu = MegaMenuModule?.default ?? MegaMenuModule;
   if (typeof MegaMenu !== 'function' && MegaMenu?.default) {
     MegaMenu = MegaMenu.default;
   }
   const container = document.querySelector('[data-mg-mega-menu]');
   if (container) {
-    createRoot(container).render(React.createElement(MegaMenu, { /* props */ }));
+    createRoot(container).render(React.createElement(MegaMenu, {/* props */}));
   }
 </script>
 ```
 
 For most use cases, the vanilla HTML markup (shown in component docs) is simpler. Use precompiled components only when you need:
+
 - Complex interactive behavior (MegaMenu dropdowns, chart interactions)
 - Dynamic data loading
 - State management
@@ -400,17 +421,17 @@ A self-contained page you can save as an `.html` file and open in a browser. It 
     <!-- Mangrove CSS theme -->
     <link
       rel="stylesheet"
-      href="https://assets.undrr.org/static/mangrove/1.4.0/css/style.css"
+      href="https://assets.undrr.org/mangrove/2.3.0/css/style.css"
     />
 
     <!-- Import map: provides React to Mangrove ES module bundles -->
     <script type="importmap">
       {
         "imports": {
-          "react": "https://esm.sh/react@19.2.4",
-          "react/jsx-runtime": "https://esm.sh/react@19.2.4/jsx-runtime",
-          "react-dom": "https://esm.sh/react-dom@19.2.4",
-          "react-dom/": "https://esm.sh/react-dom@19.2.4/"
+          "react": "https://esm.sh/react@19.3.0",
+          "react/jsx-runtime": "https://esm.sh/react@19.3.0/jsx-runtime",
+          "react-dom": "https://esm.sh/react-dom@19.3.0",
+          "react-dom/": "https://esm.sh/react-dom@19.3.0/"
         }
       }
     </script>
@@ -430,8 +451,10 @@ A self-contained page you can save as an `.html` file and open in a browser. It 
 
     <!-- Load the hydration runtime and component, then mount -->
     <script type="module">
-      import createHydrator from 'https://assets.undrr.org/static/mangrove/1.4.0/components/hydrate.js';
-      import ShareButtons, { fromElement } from 'https://assets.undrr.org/static/mangrove/1.4.0/components/ShareButtons.js';
+      import createHydrator from 'https://assets.undrr.org/mangrove/2.3.0/components/hydrate.js';
+      import ShareButtons, {
+        fromElement,
+      } from 'https://assets.undrr.org/mangrove/2.3.0/components/ShareButtons.js';
 
       createHydrator({
         selector: '[data-mg-share-buttons]',
@@ -455,12 +478,12 @@ Track user behavior with GA4 enhancements:
 
 ```html
 <script
-  src="https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js"
+  src="https://assets.undrr.org/analytics/v1.0.0/google_analytics_enhancements.js"
   defer
 ></script>
 ```
 
-See [Analytics enhancements](/?path=/docs/platform-services-analytics-enhancements--docs) for full documentation.
+See <LinkTo kind="platform-services-analytics-enhancements" story="docs">Analytics enhancements</LinkTo> for full documentation.
 
 ### Critical messaging
 
@@ -476,7 +499,7 @@ Optionally add a container for message placement:
 <div class="mg-critical-messaging"></div>
 ```
 
-See [Critical messaging](/?path=/docs/platform-services-critical-messaging--docs) for full documentation.
+See <LinkTo kind="platform-services-critical-messaging" story="docs">Critical messaging</LinkTo> for full documentation.
 
 ## Troubleshooting
 
@@ -485,14 +508,17 @@ See [Critical messaging](/?path=/docs/platform-services-critical-messaging--docs
 Import maps are supported in Chrome 89+, Safari 16.4+, and Firefox 108+. For older browsers, add the [es-module-shims](https://github.com/guybedford/es-module-shims) polyfill before your import map:
 
 ```html
-<script async src="https://ga.jspm.io/npm:es-module-shims@1.10.1/dist/es-module-shims.js"></script>
+<script
+  async
+  src="https://ga.jspm.io/npm:es-module-shims@1.10.1/dist/es-module-shims.js"
+></script>
 <script type="importmap">
   {
     "imports": {
-      "react": "https://esm.sh/react@19.2.4",
-      "react/jsx-runtime": "https://esm.sh/react@19.2.4/jsx-runtime",
-      "react-dom": "https://esm.sh/react-dom@19.2.4",
-      "react-dom/": "https://esm.sh/react-dom@19.2.4/"
+      "react": "https://esm.sh/react@19.3.0",
+      "react/jsx-runtime": "https://esm.sh/react@19.3.0/jsx-runtime",
+      "react-dom": "https://esm.sh/react-dom@19.3.0",
+      "react-dom/": "https://esm.sh/react-dom@19.3.0/"
     }
   }
 </script>
@@ -524,13 +550,14 @@ If a `data-mg-*` container stays empty after the page loads, check these items i
 
 - Explore the component library in the sidebar
 - Use the HTML tab in each component story to copy markup
-- See the [CDN reference](/?path=/docs/getting-started-integration-cdn-reference--docs) for all available assets
+- See the <LinkTo kind="getting-started-integration-cdn-reference" story="docs">CDN reference</LinkTo> for all available assets
+- See the [DELTA Resilience CodePen](https://codepen.io/khawkins98/pen/019d3720-5233-796f-ae0a-dc141475a30f) for a full-page vanilla HTML + hydration example
 - Override CSS variables for theming
-- Consider the [React integration guide](/?path=/docs/getting-started-integration-react-integration--docs) for dynamic applications
-- See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for rendering React components into server-generated containers
+- Consider the <LinkTo kind="getting-started-integration-react-integration" story="docs">React integration guide</LinkTo> for dynamic applications
+- See the [hydration guide](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md) for rendering React components into server-generated containers
 
-Need help? Check the [best practices guide](/?path=/docs/getting-started-best-practices--docs).
+Need help? Check the <LinkTo kind="getting-started-best-practices" story="docs">best practices guide</LinkTo>.
 
 ---
 
-Last updated: 18 March 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/VanillaHtmlCss.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>
+Last updated: 18 March 2026 · <a href="https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Documentation/VanillaHtmlCss.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>

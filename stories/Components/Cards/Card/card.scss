@@ -1,31 +1,100 @@
+/**
+ * Cards
+ *
+ * Card layouts including VerticalCard, HorizontalCard, BookCard, and HorizontalBookCard with responsive media.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Cards/Card/VerticalCard.mdx
+ */
+@use "../../../assets/scss/mixins" as *;
+@use "../../../assets/scss/config" as *;
+
 /* content-card start */
 
 // MG CARD using CSS GRID
 .mg-card {
   display: inline-block;
   position: relative;
-  margin-bottom: $mg-spacing-100;
-  background: $mg-card-background;
-  padding: $mg-card-padding;
-  border-radius: $mg-card-border-radius;
+  isolation: isolate;
+  margin-bottom: var(--mg-spacing-100);
+  background: var(--mg-card-background);
+  padding: var(--mg-card-padding);
+  border-radius: var(--mg-card-border-radius);
+  box-shadow: var(--mg-card-shadow);
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: box-shadow var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
+  }
+
+  &:hover {
+    box-shadow: var(--mg-card-shadow-hover);
+  }
 
   // Vertical CARD
   &__vc {
+    align-content: flex-start;
     display: grid;
-    gap: $mg-spacing-50;
+    gap: var(--mg-spacing-50);
 
     .mg-card__visual {
       aspect-ratio: 16/9;
+      border-radius: calc(var(--mg-card-border-radius) / 2);
       overflow: hidden;
+
+      // Not a focus indicator: a decorative hairline that keeps a pale image
+      // from bleeding into the card surface. Deliberately does NOT read
+      // --mg-color-focus-ring; it is painted on the visual at rest, on every
+      // card, whether or not anything is focused.
+      outline: 1px solid rgb(var(--mg-color-neutral-900) / 0.1);
     }
+
+    &:not(.mg-card__book) .mg-card__image {
+      block-size: 100%;
+      inline-size: 100%;
+    }
+
+    // Fill the available height of whatever contains it by default, not just
+    // when a shared flex/grid row's own align-items: stretch happens to do
+    // it — that only stretches direct siblings in the same row. A card
+    // placed in its own column (three separate <div> wrappers, each sized
+    // by its own content) has no such row to inherit height from, so it
+    // stayed short next to a taller neighbour with nothing visually tying
+    // them together. block-size: 100% resolves against the nearest ancestor
+    // with a real height and falls back to auto with no explicit ancestor
+    // height (the common "one card, nothing to fill" case), so this is safe
+    // to apply unconditionally. Keep media intrinsic and give any remaining
+    // space to the content. Book covers keep their grid.
+    &:not(.mg-card__book) {
+      display: flex;
+      flex-direction: column;
+      block-size: 100%;
+
+      > .mg-card__visual {
+        flex-shrink: 0;
+      }
+
+      > .mg-card__content {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+
+        > .mg-button:last-child {
+          margin-block-start: auto;
+          align-self: flex-start;
+        }
+      }
+    }
+
+    @include mg-card-image-zoom;
   }
 
   // Horizontal CARD
   &__hc {
-    color: $mg-color-neutral-800;
+    color: rgb(var(--mg-color-neutral-800));
     display: grid;
     grid-template-columns: 1fr;
-    gap: $mg-spacing-100;
+    gap: var(--mg-spacing-100);
 
     .mg-card__content {
       grid-column: 1 / 3;
@@ -56,26 +125,57 @@
     }
   }
 
+  // Horizontal card image zoom on hover (book covers excluded — they sit in a
+  // bordered frame where a zoom reads oddly).
+  &__hc:not(.mg-card-book__hc) {
+    .mg-card__image {
+      block-size: 100%;
+    }
+
+    .mg-card__visual {
+      border-radius: calc(var(--mg-card-border-radius) / 2);
+      overflow: hidden;
+
+      // Not a focus indicator: a decorative hairline that keeps a pale image
+      // from bleeding into the card surface. Deliberately does NOT read
+      // --mg-color-focus-ring; it is painted on the visual at rest, on every
+      // card, whether or not anything is focused.
+      outline: 1px solid rgb(var(--mg-color-neutral-900) / 0.1);
+    }
+
+    @include mg-card-image-zoom;
+  }
+
   &__hc.mg-card-book__hc {
+    > .mg-card__content {
+      grid-column: 1 / -1;
+      grid-row: auto;
+      min-inline-size: 0;
+    }
+
     .mg-card__visual {
       align-self: flex-start;
-      border: 1px solid rgba($mg-color-neutral-600, 0.2);
+      border: 1px solid rgb(var(--mg-color-neutral-600) / 0.2);
       max-width: 200px;
       overflow: hidden;
 
       @media (min-width: $mg-breakpoint-mobile) {
         max-width: unset;
       }
-
     }
 
     &:has(.mg-card__visual) {
       grid-template-rows: unset;
-      gap: 0 $mg-spacing-100;
+      gap: var(--mg-spacing-150);
 
       @media (min-width: $mg-breakpoint-mobile) {
-        grid-template-columns: 160px 1fr;
-        grid-template-rows: 1fr auto;
+        grid-template-columns: 160px minmax(0, 1fr);
+        grid-template-rows: auto;
+
+        > .mg-card__content {
+          grid-column: 2;
+          grid-row: 1;
+        }
       }
     }
   }
@@ -94,26 +194,28 @@
   }
 
   &__label {
-    color: $mg-color-tag;
+    color: rgb(var(--mg-color-tag));
     cursor: pointer;
     display: inline-block;
-    font-size: $mg-font-tag;
-    margin-right: $mg-spacing-50;
+    font-size: var(--mg-font-size-250);
+    margin-inline-end: var(--mg-spacing-50);
 
     &:hover {
-      color: $mg-color-tag;
+      color: rgb(var(--mg-color-tag));
     }
   }
 
   &__title {
-    font-size: $mg-font-size-500;
+    font-family: var(--mg-font-family-ui);
+    font-size: var(--mg-font-size-500);
     font-weight: bold;
-    line-height: $mg-font-line-height-500;
-    padding-bottom: $mg-spacing-75;
-    padding-top: $mg-spacing-100;
+    line-height: var(--mg-font-line-height-500);
+    padding-bottom: var(--mg-spacing-75);
+    padding-top: var(--mg-spacing-100);
+    text-wrap: balance;
 
     a {
-      color: $mg-color-interactive;
+      color: rgb(var(--mg-color-interactive));
       cursor: pointer;
       display: inline;
       text-decoration: underline;
@@ -121,7 +223,7 @@
     }
 
     .active {
-      background: $mg-color-neutral-50;
+      background: rgb(var(--mg-color-neutral-50));
       font-weight: bold;
     }
   }
@@ -134,7 +236,7 @@
     position: absolute;
     right: 0;
     top: 0;
-    z-index: 100; // stretched-link cover — local to card stacking context
+    z-index: 1; // stretched-link cover — local to card stacking context
   }
 
   // Inline chevron indicator (CSS border triangle)
@@ -154,14 +256,14 @@
     width: 0.35em;
 
     @media (prefers-reduced-motion: no-preference) {
-      transition: translate 200ms ease;
+      transition: translate var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard);
     }
   }
 
   // Focus: card-level outline when title link is focused via keyboard
   &__title a:focus-visible {
-    outline: 2px solid $mg-color-interactive;
-    outline-offset: 2px;
+    @include mg-focus-ring;
   }
 
   // Hover: thicker underline + nudge chevron
@@ -172,6 +274,85 @@
   &:hover &__title a::after {
     @media (prefers-reduced-motion: no-preference) {
       translate: 0.15em 0;
+    }
+  }
+}
+
+// Photo media forms the card edge; publication teasers preserve complete covers.
+// Clip only the visual so content focus rings can extend beyond the surface.
+.mg-card__vc:not(.mg-card__book),
+.mg-card__hc:not(.mg-card-book__hc) {
+  padding: 0;
+  gap: 0;
+
+  > .mg-card__content {
+    min-inline-size: 0;
+    padding: var(--mg-card-padding);
+  }
+
+  > .mg-card__visual {
+    min-inline-size: 0;
+    border-radius: 0;
+    border-start-start-radius: var(--mg-card-border-radius);
+    border-start-end-radius: var(--mg-card-border-radius);
+    outline-offset: -1px;
+  }
+}
+
+.mg-card__vc:not(.mg-card__book):has(> .mg-card__visual) {
+  > .mg-card__content {
+    padding-block-start: calc(var(--mg-card-padding) + var(--mg-spacing-50));
+  }
+}
+
+.mg-card__hc:not(.mg-card-book__hc) {
+  grid-template-columns: minmax(0, 1fr);
+
+  > .mg-card__content {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  &:has(> .mg-card__visual) {
+    grid-template-rows: 300px auto;
+
+    > .mg-card__content {
+      padding-block-start: calc(var(--mg-card-padding) + var(--mg-spacing-100));
+    }
+
+    @media (min-width: $mg-breakpoint-mobile) {
+      grid-template-columns: 160px minmax(0, 1fr);
+      grid-template-rows: auto;
+
+      > .mg-card__visual {
+        border-start-end-radius: 0;
+        border-end-start-radius: var(--mg-card-border-radius);
+      }
+
+      > .mg-card__content {
+        grid-column: 2;
+        padding-block-start: var(--mg-card-padding);
+        padding-inline-start: calc(
+          var(--mg-card-padding) + var(--mg-spacing-100)
+        );
+      }
+    }
+
+    @media (min-width: $mg-breakpoint-tablet) {
+      grid-template-columns: 330px minmax(0, 1fr);
+    }
+  }
+}
+
+// Without metadata, the title starts at the content inset. Do not stack the
+// media gap and the title's label-separation padding above the first text.
+.mg-card__vc:not(.mg-card__book),
+.mg-card__hc:not(.mg-card-book__hc) {
+  > .mg-card__content:has(> .mg-card__title:first-child) {
+    padding-block-start: var(--mg-card-padding);
+
+    > .mg-card__title {
+      padding-block-start: 0;
     }
   }
 }
@@ -187,11 +368,17 @@
   }
 }
 
-// Color variants (shared accent colours from _variables.scss)
+// Color variants (shared accent colours from _variables.scss). This map is ink:
+// every value here paints a card title, so only a colour that carries text
+// belongs in it. "secondary" resolves to the Sendai orange accent, which is
+// 2.65 on the card surface and 2.37 on DELTA's tinted one, so its title takes
+// the interactive colour like any other card link and the accent moves to a
+// rule instead — see below.
+// docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text
 $card-variant-colours: (
-  "secondary": $mg-color-secondary,
-  "tertiary": $mg-color-tertiary,
-  "quaternary": $mg-color-quaternary,
+  "secondary": rgb(var(--mg-color-interactive)),
+  "tertiary": rgb(var(--mg-color-tertiary)),
+  "quaternary": rgb(var(--mg-color-quaternary)),
 );
 
 @each $name, $color in $card-variant-colours {
@@ -200,11 +387,17 @@ $card-variant-colours: (
   }
 }
 
+// What now tells a secondary card apart: a solid accent rule along its leading
+// edge, with no copy over it.
+.mg-card--secondary {
+  border-inline-start: mg-rem(4) solid rgb(var(--mg-color-secondary));
+}
+
 // Opt-out modifier: plain title (no blue, no underline, no chevron)
 // Double class selector ensures this overrides variant colors regardless of source order
 .mg-card.mg-card--plain-title {
   .mg-card__title a {
-    color: $mg-color-text;
+    color: rgb(var(--mg-color-text));
     text-decoration: none;
   }
 
@@ -213,13 +406,73 @@ $card-variant-colours: (
   }
 }
 
-.mg-card__summary {
-  padding-bottom: $mg-spacing-50;
+// Unlinked cards — a card with no destination must not promise a click.
+// Two shapes arrive here. This library renders an unlinked title as plain text
+// and marks the article `.mg-card--no-link`, which needs no repair. Upstream
+// systems are less careful: Drupal Gutenberg emits `<a href="">`, which the
+// browser treats as a link to the current page — it takes focus, navigating
+// reloads the page, and the stretched `::before` overlay covers the whole card
+// and swallows clicks aimed at the card's own button. Neutralising it here
+// repairs already-published content without an upstream change.
+// CSS can strip the affordances but not the focusability of an `href=""`
+// anchor, so emitting a plain-text title remains the correct fix at the source.
+.mg-card__title a:not([href]),
+.mg-card__title a[href=""] {
+  color: rgb(var(--mg-color-text));
+  cursor: default;
+  pointer-events: none;
+  text-decoration: none;
+
+  // Drop the stretched click target so the card's real controls stay reachable.
+  &::before {
+    content: none;
+  }
+
+  // Drop the chevron: there is nowhere to go.
+  &::after {
+    content: none;
+  }
 }
 
-.mg-card__summary a,
-.mg-card__text-link {
-  color: $mg-color-interactive;
+// A label rendered as a span is metadata, not a control: `.mg-card__label`
+// sets `cursor: pointer` for the linked case, which would otherwise leave an
+// unlinked label offering a click it cannot answer.
+span.mg-card__label {
+  cursor: auto;
+}
+
+// Whole-card hover affordances belong to cards that are clickable. Doubled
+// classes keep these above the variant and horizontal-card hover rules above.
+.mg-card.mg-card--no-link,
+.mg-card:has(.mg-card__title a:not([href])),
+.mg-card:has(.mg-card__title a[href=""]) {
+  &:hover {
+    box-shadow: var(--mg-card-shadow);
+  }
+
+  &:hover .mg-card__image {
+    opacity: 1;
+
+    @media (prefers-reduced-motion: no-preference) {
+      transform: none;
+    }
+  }
+}
+
+.mg-card__summary {
+  padding-bottom: var(--mg-spacing-50);
+  text-wrap: pretty;
+}
+
+// Links inside running summary text carry a permanent underline: the
+// interactive blue sits at 2.09:1 against the body colour, so colour alone
+// cannot distinguish them (WCAG 1.4.1 Use of Colour). Button-styled links
+// inside a summary keep their own treatment.
+.mg-card__summary a:not(.mg-button),
+.mg-card__text-link:not(.mg-button) {
+  color: rgb(var(--mg-color-interactive));
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
 }
 
 .mg-card__summary a,
@@ -227,16 +480,17 @@ $card-variant-colours: (
 .mg-card__label,
 .mg-card .mg-button {
   position: relative;
-  z-index: 101; // above stretched-link cover — local to card stacking context
+  z-index: 2; // above stretched-link cover — local to card stacking context
 }
 
 .mg-card__label {
+  font-family: var(--mg-font-family-ui);
   font-weight: 700;
 }
 
-.mg-card__summary a:hover,
-.mg-card__text-link:hover {
-  text-decoration: underline;
+.mg-card__summary a:not(.mg-button):hover,
+.mg-card__text-link:not(.mg-button):hover {
+  text-decoration-thickness: 2px;
 }
 
 // Book Card variant
@@ -245,11 +499,11 @@ $card-variant-colours: (
 
   .mg-card__visual {
     aspect-ratio: 3/4;
-    border: 1px solid rgba($mg-color-neutral-600, 0.2);
+    border: 1px solid rgb(var(--mg-color-neutral-600) / 0.2);
   }
   .mg-card__title {
-    font-size: $mg-font-size-300;
-    padding-top: $mg-spacing-25;
+    font-size: var(--mg-font-size-300);
+    padding-top: var(--mg-spacing-25);
   }
 }
 
@@ -257,6 +511,61 @@ $card-variant-colours: (
   .mg-card__book {
     max-width: 400px;
   }
+}
+
+// Publication teasers: the cover is the object, without a second raised frame.
+.mg-card.mg-card__book,
+.mg-card.mg-card-book__hc {
+  background: var(--mg-card-publication-background);
+  padding: var(--mg-card-publication-padding);
+  border-radius: var(--mg-card-publication-border-radius);
+  box-shadow: var(--mg-card-publication-shadow);
+
+  &:hover {
+    box-shadow: var(--mg-card-publication-shadow-hover);
+  }
+
+  > .mg-card__visual {
+    aspect-ratio: auto;
+    border-radius: 0;
+    outline: none;
+  }
+
+  .mg-card__image {
+    block-size: auto;
+    object-fit: contain;
+  }
+
+  &:hover .mg-card__image {
+    opacity: 1;
+    transform: none;
+  }
+
+  .mg-card__title:first-child {
+    padding-block-start: 0;
+  }
+
+  &.mg-card--secondary {
+    padding-inline-start: var(--mg-card-padding);
+  }
+}
+
+// An unlinked teaser never advertises elevation on hover, including themed surfaces.
+.mg-card.mg-card__book.mg-card--no-link:hover,
+.mg-card.mg-card-book__hc.mg-card--no-link:hover,
+.mg-card:is(.mg-card__book, .mg-card-book__hc):has(
+    .mg-card__title a:not([href])
+  ):hover,
+.mg-card:is(.mg-card__book, .mg-card-book__hc):has(
+    .mg-card__title a[href=""]
+  ):hover {
+  box-shadow: var(--mg-card-publication-shadow);
+}
+
+.mg-card__book {
+  display: grid;
+  align-content: start;
+  gap: var(--mg-spacing-100);
 }
 
 // END of CARD
@@ -268,7 +577,7 @@ $card-variant-colours: (
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: $mg-spacing-100;
+  gap: var(--mg-spacing-100);
   max-width: 300px;
 
   @media (min-width: $mg-breakpoint-mobile) {
@@ -281,9 +590,9 @@ $card-variant-colours: (
 
   // Classification label above the icon/image inside the visual area
   .mg-card__visual-label {
-    font-size: $mg-font-tag;
+    font-size: var(--mg-font-size-250);
     font-weight: 700;
-    color: $mg-color-tag;
+    color: rgb(var(--mg-color-tag));
     width: 100%;
   }
 
@@ -318,6 +627,16 @@ $card-variant-colours: (
     &:has(.mg-card__image--full),
     &:has(.mg-card__icon-wrap--full) {
       aspect-ratio: 1/1;
+    }
+
+    // Small glyphs and fixed-size badges do not need the illustration frame.
+    &:has(.mg-card__icon-wrap--small) {
+      aspect-ratio: auto;
+    }
+
+    // Fixed-size badges do not need the full illustration frame.
+    &:has(.mg-card__icon-wrap--colored) {
+      aspect-ratio: auto;
     }
   }
 
@@ -355,7 +674,7 @@ $card-variant-colours: (
 
   // Icon class container - uses container query units to scale like images
   .mg-card__icon-wrap {
-    color: $mg-color-interactive;
+    color: rgb(var(--mg-color-interactive));
     line-height: 1;
     display: flex;
     align-items: center;
@@ -395,7 +714,7 @@ $card-variant-colours: (
     // Colored background behind icon (circle by default, rounded rect in Delta)
     &--colored {
       background-color: var(--mg-icon-bg);
-      border-radius: $mg-card-icon-badge-radius;
+      border-radius: var(--mg-card-icon-badge-radius);
       aspect-ratio: 1;
       width: 72px;
       min-width: 72px;
@@ -405,7 +724,7 @@ $card-variant-colours: (
 
       .mg-icon {
         font-size: 32px;
-        color: var(--mg-icon-fg, #{$mg-color-neutral-700});
+        color: var(--mg-icon-fg, rgb(var(--mg-color-neutral-700)));
       }
     }
   }
@@ -413,7 +732,12 @@ $card-variant-colours: (
   // Visual link for logo cards (srOnlyTitle) - stretched link pattern
   .mg-card__visual-link {
     display: block;
-    transition: opacity 200ms ease;
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: opacity var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard);
+    }
+
     width: 100%;
 
     &::after {
@@ -432,8 +756,7 @@ $card-variant-colours: (
       outline: none;
 
       &::after {
-        outline: 2px solid $mg-color-interactive;
-        outline-offset: 2px;
+        @include mg-focus-ring;
       }
     }
   }
@@ -448,12 +771,12 @@ $card-variant-colours: (
   .mg-card__title {
     padding-top: 0;
     margin: 0;
-    font-size: $mg-font-size-500;
+    font-size: var(--mg-font-size-500);
     font-weight: bold;
-    line-height: $mg-font-line-height-500;
+    line-height: var(--mg-font-line-height-500);
 
     a {
-      color: $mg-color-interactive;
+      color: rgb(var(--mg-color-interactive));
       text-decoration: underline;
       text-underline-offset: 3px;
 
@@ -462,45 +785,50 @@ $card-variant-colours: (
       }
 
       &:focus-visible {
-        outline: 2px solid $mg-color-interactive;
-        outline-offset: 2px;
-        border-radius: 2px;
+        @include mg-focus-ring;
       }
     }
   }
 
   .mg-card__cta {
     margin-top: auto;
-    padding-top: $mg-spacing-100;
+    padding-top: var(--mg-spacing-100);
   }
 
   .mg-card__link {
     margin-top: auto;
-    padding-top: $mg-spacing-75;
+    padding-top: var(--mg-spacing-75);
     margin-bottom: 0;
 
     a {
-      color: $mg-color-interactive;
+      color: rgb(var(--mg-color-interactive));
       text-decoration: none;
       position: relative;
-      z-index: 101; // above stretched-link cover — local to card stacking context
+      z-index: 2; // above stretched-link cover — local to card stacking context
 
       &:hover {
         text-decoration: underline;
       }
 
       &:focus-visible {
-        outline: 2px solid $mg-color-interactive;
-        outline-offset: 2px;
-        border-radius: 2px;
+        @include mg-focus-ring;
       }
     }
   }
 
-  // Bordered variant (colored border via CSS custom property)
+  // Bordered variant (colored border via CSS custom property).
+
+  // --mg-card-border is an input hook: IconCard's `borderColor` prop sets it
+  // inline, and no stylesheet defines it. It carries a fallback because the
+  // class is public and a consumer writing the markup by hand does not always
+  // set the property — and an unset custom property drops the whole `border`
+  // declaration, so the modifier silently did nothing at all. The fallback is
+  // the theme's interactive colour, which makes the accent border read as the
+  // brand's in every theme. Set --mg-card-border on the element (or any
+  // ancestor) to override it. See unisdr/undrr-mangrove#1200.
   &--bordered {
-    border: 2px solid var(--mg-card-border);
-    padding: max($mg-card-padding, $mg-spacing-150);
+    border: 2px solid var(--mg-card-border, rgb(var(--mg-color-interactive)));
+    padding: max(var(--mg-card-padding), var(--mg-spacing-150));
   }
 
   // Centered variant
@@ -509,6 +837,14 @@ $card-variant-colours: (
     text-align: center;
 
     .mg-card__visual {
+      // The visual is a column flex container, so its horizontal axis is the
+      // cross axis: justify-content centres it vertically and leaves the icon
+      // pinned left by the inherited align-items: flex-start.
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mg-card__icon-wrap {
       justify-content: center;
     }
 
@@ -517,30 +853,68 @@ $card-variant-colours: (
     }
   }
 
+  // Icon beside the content rather than above it, the arrangement undrr.org
+  // uses for "what would you like to do" route rows.
+  // This owns the visual's size rather than deferring to the imageScale
+  // aspect-ratio rules. Those size the icon from the visual's width via a
+  // container query, and pin --small to a fixed 72px; in a row that leaves an
+  // auto grid column held open at 72px while the glyph draws smaller, which
+  // reads as dead space between the icon and the text.
+  &--horizontal {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    column-gap: var(--mg-spacing-200);
+    max-width: none;
+
+    .mg-card__visual {
+      inline-size: var(--mg-card-icon-size, 3rem);
+      block-size: var(--mg-card-icon-size, 3rem);
+      aspect-ratio: auto;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mg-card__icon-wrap {
+      justify-content: center;
+    }
+
+    .mg-card__icon-wrap .mg-icon,
+    .mg-card__image {
+      inline-size: var(--mg-card-icon-size, 3rem);
+      min-inline-size: 0;
+      font-size: var(--mg-card-icon-size, 3rem);
+    }
+
+    .mg-card__content {
+      min-inline-size: 0;
+    }
+  }
+
   // Negative variant (for dark backgrounds)
   &--negative {
     .mg-card__icon-wrap {
-      color: $mg-color-white;
+      color: rgb(var(--mg-color-white));
     }
 
     .mg-card__label {
-      color: rgba($mg-color-white, 0.8);
+      color: rgb(var(--mg-color-neutral-0) / 0.8);
     }
 
     .mg-card__title,
     .mg-card__title a {
-      color: $mg-color-white;
+      color: rgb(var(--mg-color-white));
     }
 
     .mg-card__summary {
-      color: rgba($mg-color-white, 0.8);
+      color: rgb(var(--mg-color-neutral-0) / 0.8);
     }
 
     .mg-card__link a {
-      color: $mg-color-white;
+      color: rgb(var(--mg-color-white));
 
       &:focus-visible {
-        outline-color: $mg-color-white;
+        outline-color: rgb(var(--mg-color-focus-ring-inverse));
       }
     }
   }
@@ -554,6 +928,7 @@ $card-variant-colours: (
       text-align: center;
 
       .mg-card__visual {
+        align-items: center;
         justify-content: center;
       }
 

@@ -1,12 +1,12 @@
 # Accessibility
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/ACCESSIBILITY.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-accessibility--docs).
+> Edits to this file show up on both [GitHub](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/ACCESSIBILITY.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/getting-started-accessibility--docs).
 
-Accessible design not only helps users with disabilities; it also provides a better user experience for everyone. All components follow the [WCAG 2.2](https://www.w3.org/TR/WCAG22/) AA standard.
-
-All patterns are perceivable, operable, and understandable to users, even when using a screen reader or other assistive technology. However, how you use these elements also affects the accessibility of a product.
+Accessible design improves usability for everyone. Mangrove components target [WCAG 2.2](https://www.w3.org/TR/WCAG22/) AA, but product-level implementation still determines final accessibility.
 
 For the full specification, see the [Web Content Accessibility Guidelines (WCAG) 2.2](https://www.w3.org/TR/WCAG22/).
+
+> **Note:** Targeting WCAG 2.2 AA goes beyond the [United Nations web accessibility mandate](https://www.un.org/en/webaccessibility/index.shtml), which sets WCAG 2.1 AA as the minimum standard for United Nations websites.
 
 ### 1. Semantic HTML
 
@@ -64,11 +64,19 @@ For the full specification, see the [Web Content Accessibility Guidelines (WCAG)
 
 **Loading states**
 
+Announce loading through a live region that is already in the page, and put `aria-busy` on the region whose content is loading, not on the live region: `aria-busy` holds back announcements from the element it is on. A spinner next to that message is decorative.
+
 ```jsx
-<div aria-live="polite" aria-busy={isLoading}>
-  {isLoading ? 'Loading reports...' : `Found ${reports.length} reports`}
+<div role="status" className="mg-u-sr-only">
+  {isLoading ? 'Loading reports' : `Found ${reports.length} reports`}
 </div>
+<section aria-label="Reports" aria-busy={isLoading}>
+  {isLoading && <Loader decorative />}
+  <ReportList reports={reports} />
+</section>
 ```
+
+Screen readers often skip a live region that is inserted already filled, and they do not reliably announce a progress bar's value as it changes. See [Announcing a loader that is inserted by script](https://mangrove.undrr.org/?path=/docs/components-loader--docs#announcing-a-loader-that-is-inserted-by-script) for the two patterns that work, and the [progress bar](https://mangrove.undrr.org/?path=/docs/components-progress-bar--docs) for announcing the start, milestones and completion of a measurable task.
 
 ### 3. Keyboard navigation
 
@@ -110,12 +118,26 @@ function Modal({ isOpen, onClose, children }) {
 
 **Sufficient contrast**
 
+Take colors from the design tokens rather than picking hex values. Each theme redefines the tokens, so a component that reads them keeps its contrast in UNDRR, PreventionWeb, IRP, MCR2030 and DELTA. Color tokens hold sRGB channel triples, so wrap them in `rgb(...)`.
+
 ```scss
-// Ensure WCAG AA compliance (4.5:1 for normal text)
-$mg-text-color: #212529; // High contrast on white
-$mg-text-muted: #6c757d; // 4.5:1 contrast ratio
-$mg-link-color: #0066cc; // Accessible blue
-$mg-error-color: #dc3545; // High contrast red
+// Tokens are checked against WCAG 2.2 AA (4.5:1 for normal text)
+.mg-component {
+  color: rgb(var(--mg-color-text)); // Body text
+  background-color: rgb(var(--mg-color-neutral-0)); // Page surface
+}
+
+.mg-component__meta {
+  color: rgb(var(--mg-color-neutral-500)); // Muted text
+}
+
+.mg-component__link {
+  color: rgb(var(--mg-color-interactive)); // Link
+}
+
+.mg-component__error {
+  color: rgb(var(--mg-color-red-900)); // Error
+}
 ```
 
 **Don't rely solely on color**
@@ -135,9 +157,9 @@ $mg-error-color: #dc3545; // High contrast red
 
 ### 5. Focus management for dynamic content
 
-When content appears dynamically (modals, drawers, notification banners), you must move focus so keyboard and screen reader users know something changed. Move focus to the new content when it opens, and return focus to the trigger element when it closes.
+When content appears dynamically (modals, drawers, notification banners), move focus to the new content and return it to the trigger on close.
 
-For modals, trap focus inside the dialog so Tab and Shift+Tab cycle through only the modal's interactive elements. Use `aria-modal="true"` and `role="dialog"` so screen readers announce the boundary.
+For modals, trap focus within the dialog and use `aria-modal="true"` with `role="dialog"`.
 
 ```jsx
 // Return focus to the trigger when a modal closes
@@ -163,20 +185,23 @@ function ModalTrigger() {
 
 ### 6. Reduced motion
 
-Some users experience motion sickness or distraction from animations. Respect the `prefers-reduced-motion` media query by wrapping transitions and animations so they only run when the user has not requested reduced motion.
+Follow the [motion and animation guidance](MOTION.md) for purpose, tokens, CSS and JavaScript patterns, and browser checks. Optional interaction motion runs only when users have not requested reduced motion; loading indicators use the explicit alternatives below.
+
+Loading indicators need a designed pending state rather than a spinner accidentally frozen by a reset. Under reduced motion the shared [loader](https://mangrove.undrr.org/?path=/docs/components-loader--docs) shows a static dashed ring with a visible loading label; decorative use requires visible pending text from the caller. The indeterminate [progress bar](https://mangrove.undrr.org/?path=/docs/components-progress-bar--docs) shows a still, dashed bar instead of a moving segment. Labels and application messages distinguish pending, completed and failed work; movement does not prove that a request is making progress.
 
 ```scss
 // Only animate when the user allows it
 .mg-card__title a::after {
   @media (prefers-reduced-motion: no-preference) {
-    transition: translate 200ms ease;
+    transition: translate var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
   }
 }
 ```
 
 ### 7. Touch target sizes
 
-WCAG 2.2 criterion 2.5.8 requires interactive targets to be at least 24x24 CSS pixels, with 44x44px recommended. This matters for mobile users and people with motor impairments.
+WCAG 2.2 criterion 2.5.8 requires interactive targets of at least 24x24 CSS pixels (44x44px recommended).
 
 ```scss
 // Ensure minimum touch target size
@@ -193,7 +218,7 @@ If the visual design requires a smaller target (for example, an inline text link
 
 ### 8. Image alt text
 
-Every `<img>` needs an `alt` attribute, but not every image needs descriptive text. Use empty alt (`alt=""`) for decorative images that add no information — icons next to labels, background flourishes, or purely visual separators. For informative images, describe the content and purpose, not the appearance.
+Every `<img>` needs an `alt` attribute. Use empty alt (`alt=""`) for decorative images; use meaningful alt text for informative images.
 
 ```jsx
 // Decorative: icon next to text that already conveys the meaning
@@ -211,7 +236,7 @@ Avoid alt text that starts with "Image of" or "Photo of" — screen readers alre
 
 ### 9. Error identification
 
-When form validation fails, tell users what happened, which field has the problem, and how to fix it. Connect error messages to their fields with `aria-describedby` so screen readers announce the error when the field receives focus. Use `aria-invalid="true"` on the field itself.
+When validation fails, explain what went wrong, identify the field, and explain how to fix it. Use `aria-describedby` and `aria-invalid="true"` so assistive tech announces the error correctly.
 
 ```jsx
 <label htmlFor="email">Email address</label>
@@ -287,6 +312,6 @@ Mangrove ships five themes (UNDRR, PreventionWeb, IRP, MCR2030, DELTA Resilience
 ## Next steps
 
 - [Review checklist](REVIEW-CHECKLIST.md) — pre-submission component checklist (12 accessibility items)
-- [Best practices](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-best-practices--docs) — architecture and styling patterns
-- [Component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) — accessibility requirements for component authors
-- [Testing](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-testing--docs) — jest-axe and manual accessibility testing
+- [Best practices](https://mangrove.undrr.org/?path=/docs/getting-started-best-practices--docs) — architecture and styling patterns
+- [Component standards](https://mangrove.undrr.org/?path=/docs/contributing-component-standards--docs) — accessibility requirements for component authors
+- [Testing](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-testing--docs) — jest-axe and manual accessibility testing

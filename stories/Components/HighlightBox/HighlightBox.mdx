@@ -3,7 +3,7 @@ import * as HighlightBoxStories from './HighlightBox.stories';
 
 <Meta of={HighlightBoxStories} />
 
-> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
 
 # Highlight box
 
@@ -15,7 +15,7 @@ A flexible container component for highlighting important content, including tex
 - **Layout variants**: Full width, Centered (80%), Float start/end (30%)
 - **Responsive**: Float variants stack on mobile
 - **RTL support**: Uses logical properties (inline-start/end, block)
-- **Video support**: Use `.mg-embed-container` wrapper for responsive iframes (see [EmbedContainer](/docs/utilities-embedcontainer--docs))
+- **Video support**: Use `.mg-embed-container` wrapper for responsive iframes (see [EmbedContainer](?path=/docs/components-embedcontainer--docs))
 - **Nested content**: Supports any content including paragraphs, headings, images, videos
 
 ## Examples
@@ -99,7 +99,9 @@ In RTL contexts, float-end appears on the left side of the content.
 </div>
 
 <!-- Combining variants -->
-<div class="mg-highlight-box mg-highlight-box--secondary mg-highlight-box--centered">
+<div
+  class="mg-highlight-box mg-highlight-box--secondary mg-highlight-box--centered"
+>
   <p>Purple background, centered layout</p>
 </div>
 ```
@@ -108,20 +110,20 @@ In RTL contexts, float-end appears on the left side of the content.
 
 ### Tone variants
 
-| Variant | Class | Description |
-|---------|-------|-------------|
-| Default | `mg-highlight-box` | Light background with dark border and shadow |
-| Primary | `mg-highlight-box--primary` | Corporate blue background with white text |
-| Secondary | `mg-highlight-box--secondary` | Sendai purple background with white text |
+| Variant   | Class                         | Description                                  |
+| --------- | ----------------------------- | -------------------------------------------- |
+| Default   | `mg-highlight-box`            | Light background with dark border and shadow |
+| Primary   | `mg-highlight-box--primary`   | Corporate blue background with white text    |
+| Secondary | `mg-highlight-box--secondary` | Sendai purple background with white text     |
 
 ### Layout variants
 
-| Variant | Class | Description |
-|---------|-------|-------------|
-| Full | (default) | 100% width |
-| Centered | `mg-highlight-box--centered` | 80% width, horizontally centered |
+| Variant     | Class                           | Description                                                   |
+| ----------- | ------------------------------- | ------------------------------------------------------------- |
+| Full        | (default)                       | 100% width                                                    |
+| Centered    | `mg-highlight-box--centered`    | 80% width, horizontally centered                              |
 | Float start | `mg-highlight-box--float-start` | 30% width, floats to inline-start (left in LTR, right in RTL) |
-| Float end | `mg-highlight-box--float-end` | 30% width, floats to inline-end (right in LTR, left in RTL) |
+| Float end   | `mg-highlight-box--float-end`   | 30% width, floats to inline-end (right in LTR, left in RTL)   |
 
 ### Responsive behavior
 
@@ -138,12 +140,12 @@ Float variants automatically stack to full width on screens below the tablet bre
 
 ## Styling details
 
-| Property | Value |
-|----------|-------|
-| Padding | 1rem block, 1.5rem inline, 2rem bottom |
-| Border | 1px solid rgba(0, 0, 0, 0.3) for default tone |
-| Shadow | Inset bottom shadow for depth effect |
-| Video | Use `.mg-embed-container` wrapper for responsive embeds |
+| Property | Value                                                   |
+| -------- | ------------------------------------------------------- |
+| Padding  | 1rem block, 1.5rem inline, 2rem bottom                  |
+| Border   | 1px solid rgba(0, 0, 0, 0.3) for default tone           |
+| Shadow   | Inset bottom shadow for depth effect                    |
+| Video    | Use `.mg-embed-container` wrapper for responsive embeds |
 
 ## Browser support
 
@@ -163,5 +165,7 @@ Existing CKEditor content using `.mg-highlight-box` classes will continue to wor
 
 ## Changelog
 
-- **1.1** — 2026-03-10: Removed `.mg-highlight-box:has(iframe)` rule that broke layout on Safari/WebKit mobile. Video embeds now use the [`.mg-embed-container`](/docs/utilities-embedcontainer--docs) utility wrapper instead of applying aspect ratio to the whole container. [`web-backlog#2672`](https://gitlab.com/undrr/web-backlog/-/work_items/2672)
-- **1.0** — 2026-02-04: Initial release with tone variants (default, primary, secondary) and layout variants (full, centered, float-start, float-end)
+- **1.2.1**, 2026-09-17 ([#1193](https://github.com/unisdr/undrr-mangrove/pull/1193)): The "With image" story loaded `via.placeholder.com`, a service that no longer resolves, so the story and the docs page showed a broken image. It now uses `picsum.photos`, as every other story in the library does.
+- **1.2**, 2026-05-07: Force descendants of `primary` / `secondary` variants to inherit the white text color so body text (`<p>`, headings, etc.) stays legible when host CSS (including Storybook's docs theme) applies its own bare-element color rules. ([#926](https://github.com/unisdr/undrr-mangrove/issues/926))
+- **1.1**, 2026-03-10: Removed `.mg-highlight-box:has(iframe)` rule that broke layout on Safari/WebKit mobile. Video embeds now use the [`.mg-embed-container`](?path=/docs/components-embedcontainer--docs) utility wrapper instead of applying aspect ratio to the whole container. [`web-backlog#2672`](https://gitlab.com/undrr/web-backlog/-/work_items/2672)
+- **1.0**, 2026-02-04: Initial release with tone variants (default, primary, secondary) and layout variants (full, centered, float-start, float-end)

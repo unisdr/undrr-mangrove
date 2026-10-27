@@ -27,37 +27,44 @@ import TableOfContents from '../Components/TableOfContents/TableOfContents';
 
 ## What is Mangrove?
 
-Mangrove is UNDRR's component library for consistent, accessible web development. Read **<LinkTo kind="getting-started-about-mangrove" story="docs">About Mangrove</LinkTo>** to understand what's shared across UNDRR web properties and where your project fits.
+Mangrove is UNDRR's component library for consistent, accessible web development. Read **<LinkTo kind="getting-started-about-mangrove" story="docs">About Mangrove</LinkTo>** for platform context.
 
 Mangrove provides:
 
 - Pre-built, tested components ready for production
 - Shared content structures across UNDRR properties
-- WCAG 2.2 AA accessibility compliance
+- Built and tested against WCAG 2.2 AA
 - Works with any tech stack (React, Drupal, static HTML)
 - Copy-paste ready code snippets
 - Live examples and documentation for every component
 
 ## Integration approaches
 
-Choose the approach that fits your project. Each guide has its own quick start with working code examples.
+Choose the integration path that matches your stack.
 
 ### Vanilla HTML/CSS (simplest)
 
 Include CSS via CDN and copy HTML structures from the component docs. No build step, no JavaScript required for most components.
 
 ```html
-<link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.4.0/css/style.css" />
+<link
+  rel="stylesheet"
+  href="https://assets.undrr.org/mangrove/2.3.0/css/style.css"
+/>
 ```
 
-- [See on CodePen](https://codepen.io/khawkins98/pen/MYwbKwe) — a working page with footer widget, analytics, and messaging
-- <LinkTo kind="getting-started-integration-vanilla-html-and-css" story="docs">Vanilla HTML/CSS guide</LinkTo>
+- [See on CodePen](https://codepen.io/khawkins98/pen/MYwbKwe): a working page with footer widget, analytics and messaging
+- <LinkTo kind="getting-started-integration-vanilla-html-and-css" story="docs">
+    Vanilla HTML/CSS guide
+  </LinkTo>
 
 ### Sass integration
 
 Import SCSS source files into your build process for custom themes and variable overrides.
 
-- <LinkTo kind="getting-started-integration-sass-integration" story="docs">Sass integration guide</LinkTo>
+- <LinkTo kind="getting-started-integration-sass-integration" story="docs">
+    Sass integration guide
+  </LinkTo>
 
 ### React components
 
@@ -67,14 +74,18 @@ Install via npm and import React components with props-based customization. The 
 yarn add @undrr/undrr-mangrove
 ```
 
-- <LinkTo kind="getting-started-integration-react-integration" story="docs">React integration guide</LinkTo>
-- A full yarn/npm-installed demo project is in progress ([#849](https://github.com/unisdr/undrr-mangrove/issues/849))
+- <LinkTo kind="getting-started-integration-react-integration" story="docs">
+    React integration guide
+  </LinkTo>
+- A full yarn/npm-installed demo project is in progress ([#849](https://github.com/PreventionWeb/undrr-mangrove/issues/849))
 
 ### Hydration
 
-For Drupal, Astro, or any server-rendered framework that needs React interactivity. Server renders HTML containers with `data-mg-*` attributes; the `createHydrator` runtime mounts React components into them.
+For Drupal, Astro, or other server-rendered frameworks. The server renders HTML containers with `data-mg-*` attributes, then `createHydrator` mounts React behavior.
 
-- <LinkTo kind="getting-started-integration-hydration-guide" story="docs">Hydration guide</LinkTo>
+- <LinkTo kind="getting-started-integration-hydration-guide" story="docs">
+    Hydration guide
+  </LinkTo>
 
 ### CDN and versioning
 
@@ -82,29 +93,31 @@ All assets are served from versioned CDN endpoints. See the <LinkTo kind="gettin
 
 ## Key principles
 
+- When contributing visual or interaction changes, start with the <LinkTo kind="design-decisions-experience-principles" story="docs">experience principles</LinkTo>
 - All CSS classes use the `mg-` prefix (e.g., `mg-card`, `mg-form__input`) to avoid conflicts with your styles
 - Components use semantic HTML with ARIA attributes for accessibility
 - Most components work without JavaScript (progressive enhancement)
-- Supports modern evergreen browsers -- see <LinkTo kind="getting-started-browser-support" story="docs">browser support</LinkTo>
-- Supports right-to-left (RTL) layouts -- components adapt automatically when `dir="rtl"` is set on the document
+- Supports modern evergreen browsers: see <LinkTo kind="getting-started-browser-support" story="docs">browser support</LinkTo>
+- Supports right-to-left (RTL) layouts: components adapt automatically when `dir="rtl"` is set on the document
 
-For the full architectural picture, see the <LinkTo kind="contributing-architecture" story="docs">architecture guide</LinkTo>.
+For deeper context, see the <LinkTo kind="contributing-architecture" story="docs">architecture guide</LinkTo>.
 
 ## Further reading
 
-- <LinkTo kind="getting-started-best-practices" story="docs">Best practices</LinkTo> -- accessibility, performance, architecture
-- <LinkTo kind="platform-services-analytics-enhancements" story="docs">Analytics enhancements</LinkTo> -- shared GA4 configuration
-- <LinkTo kind="platform-services-critical-messaging" story="docs">Critical messaging</LinkTo> -- emergency broadcast system
-- <LinkTo kind="getting-started-ai-and-mcp-integration" story="docs">AI and MCP integration</LinkTo> -- using AI coding tools with Mangrove
-- [Development setup](https://github.com/unisdr/undrr-mangrove?tab=readme-ov-file#development) -- cloning, building, testing, and contributing
+{/* prettier-ignore */}
+- <LinkTo kind="getting-started-best-practices" story="docs">Best practices</LinkTo>: accessibility, performance and architecture
+- <LinkTo kind="platform-services-analytics-enhancements" story="docs">Analytics enhancements</LinkTo>: shared GA4 configuration
+- <LinkTo kind="platform-services-critical-messaging" story="docs">Critical messaging</LinkTo>: emergency broadcast system
+- <LinkTo kind="getting-started-ai-and-mcp-integration" story="docs">AI and MCP integration</LinkTo>: using AI coding tools with Mangrove
+- [Development setup](https://github.com/PreventionWeb/undrr-mangrove?tab=readme-ov-file#development): cloning, building, testing and contributing
 
 ## Need help?
 
 - Browse components in the sidebar for documentation
-- [Report bugs on GitHub](https://github.com/unisdr/undrr-mangrove/issues)
+- [Report bugs on GitHub](https://github.com/PreventionWeb/undrr-mangrove/issues)
 - Contact the UNDRR development team with questions
-- Follow [releases on GitHub](https://github.com/unisdr/undrr-mangrove/releases) for updates
+- Read the <LinkTo kind="getting-started-release-notes-v2-0" story="docs">v2.0 release notes</LinkTo>, and the <LinkTo kind="contributing-changelog" story="docs">changelog</LinkTo> for updates
 
 ---
 
-Last updated: 19 March 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/GettingStarted.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>
+Last updated: 19 March 2026 · <a href="https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Documentation/GettingStarted.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>

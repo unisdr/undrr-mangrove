@@ -172,7 +172,7 @@ export const WithImage = {
       <>
         <h3>Box with Image</h3>
         <img
-          src="https://via.placeholder.com/600x400"
+          src="https://picsum.photos/600/400"
           alt="Placeholder"
           style={{ width: '100%', height: 'auto' }}
         />

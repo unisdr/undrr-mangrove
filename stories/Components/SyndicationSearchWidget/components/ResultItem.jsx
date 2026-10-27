@@ -9,8 +9,54 @@
  * @module SearchWidget/components/ResultItem
  */
 
-import React, { useMemo } from 'react';
-import { getContentType, getTaxonomyVocabulary, isTaxonomyTermResult, DOMAIN_MAP } from '../utils/constants';
+import React, { memo, useMemo } from 'react';
+import {
+  getContentType,
+  getTaxonomyVocabulary,
+  isTaxonomyTermResult,
+  DOMAIN_MAP,
+  TEASER_FIELDS,
+} from '../utils/constants';
+import { useSearchLabels, interpolateLabel } from '../context/SearchContext';
+import {
+  EVENT_TYPES,
+  formatEventDate,
+  toDate,
+  toDateTimeAttribute,
+} from '../utils/dateUtils';
+
+/** Publish date format, shared by every result (local time zone). */
+const PUBLISH_DATE_FORMAT = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+});
+
+/**
+ * Trust boundary: response HTML is rendered unescaped, on purpose.
+ *
+ * Three sites in this file render markup straight from `config.searchEndpoint`
+ * — the pre-rendered teaser blob, and the Elasticsearch `highlight` fields for
+ * a result's title and snippet. None of it is escaped or sanitised, because the
+ * `<em>` wrappers Elasticsearch puts around matched terms are the feature:
+ * escape the response and the tags render as literal text, which is the one
+ * thing highlighting exists to avoid. Stripping tags selectively is the same
+ * problem in a smaller box, and `stripHiddenTeaserFields` below is a field
+ * filter, not a sanitiser.
+ *
+ * So the endpoint is inside the component's trust boundary rather than an
+ * untrusted input, and it is worth naming because the consumer chooses it:
+ * `searchEndpoint` is set through the `config` prop and through
+ * `data-search-endpoint` on the hydration host. Repoint it and the widget will
+ * render whatever that service returns, with no filter in between. This widget
+ * is built for syndication, so the page it renders into is often a partner's
+ * domain rather than UNDRR's. Point it only at a service you trust to return
+ * safe HTML; see "Endpoint trust contract" in SyndicationSearchWidget.mdx for
+ * the consumer-facing statement of the same contract.
+ *
+ * Highlights are built from indexed documents, not from the search string, so
+ * the query is not reflected back into these fields.
+ */
 
 /**
  * Swap card variant classes and image styles on teaser HTML for card display modes.
@@ -19,9 +65,9 @@ import { getContentType, getTaxonomyVocabulary, isTaxonomyTermResult, DOMAIN_MAP
  * This strips existing variant classes and injects the correct variant
  * for the requested display mode.
  *
- * Also rewrites Drupal image style paths so the image aspect ratio matches
- * the card variant: `landscape_16_9` (16:9) for vertical cards, `por` (3:4)
- * for book cards. The itok token is not validated for anonymous requests.
+ * Photo mode rewrites Drupal image styles to landscape_16_9. Book mode
+ * preserves supplied artwork URLs: a portrait derivative can crop cover text,
+ * and display mode alone does not identify an image as publication artwork.
  *
  * @param {string} html - Teaser HTML string
  * @param {string} displayMode - Display mode: 'list', 'card', or 'card-book'
@@ -33,30 +79,24 @@ export function swapCardVariant(html, displayMode) {
     .replace(/\bmg-card__(?:vc|hc)\b/g, '')
     .replace(/\bmg-card-book__hc\b/g, '')
     .replace(/\bmg-card__book\b/g, '');
-  const variant = displayMode === 'card-book'
-    ? 'mg-card__vc mg-card__book'
-    : 'mg-card__vc';
+  const variant =
+    displayMode === 'card-book' ? 'mg-card__vc mg-card__book' : 'mg-card__vc';
   const classWithCardRegex = /class="([^"]*\bmg-card\b[^"]*)"/;
   if (classWithCardRegex.test(result)) {
-    result = result.replace(classWithCardRegex, (_, cls) =>
-      `class="${cls.trim()} ${variant}"`
+    result = result.replace(
+      classWithCardRegex,
+      (_, cls) => `class="${cls.trim()} ${variant}"`
     );
   } else {
-    result = result.replace(/class="([^"]*)"/, (_, cls) =>
-      `class="${cls.trim()} ${variant}"`
+    result = result.replace(
+      /class="([^"]*)"/,
+      (_, cls) => `class="${cls.trim()} ${variant}"`
     );
   }
 
-  // Rewrite Drupal image styles to match the card aspect ratio.
-  // Teaser HTML may arrive with any image style (landscape_16_9, por, etc.).
-  // Card mode needs 16:9 (landscape_16_9), book card mode needs 3:4 (por).
-  // The itok token is not validated for anonymous image style requests.
-  if (displayMode === 'card-book') {
-    result = result.replace(
-      /\/styles\/[^/]+\/public\//g,
-      '/styles/por/public/'
-    );
-  } else {
+  // Only photo cards request a crop. The endpoint must supply complete
+  // publication artwork; do not guess an original URL or force a portrait crop.
+  if (displayMode === 'card') {
     result = result.replace(
       /\/styles\/[^/]+\/public\//g,
       '/styles/landscape_16_9/public/'
@@ -86,20 +126,157 @@ function resolveRelativeUrls(html, baseUrl) {
 }
 
 /**
+ * Strip elements corresponding to hidden teaser fields from HTML string.
+ *
+ * Uses DOMParser in browser/jsdom environment to parse the HTML string,
+ * find elements matching selectors for fields set to `false` in `visibleTeaserFields`,
+ * and remove them from the DOM tree before returning the cleaned HTML string.
+ *
+ * @param {string} html - Teaser HTML string
+ * @param {Object|null} visibleTeaserFields - Map of field keys to booleans. null = all visible.
+ * @returns {string} Cleaned HTML string without hidden field elements.
+ */
+export function stripHiddenTeaserFields(html, visibleTeaserFields) {
+  if (!html || !visibleTeaserFields) return html;
+
+  const fieldsToHide = Object.entries(visibleTeaserFields)
+    .filter(([, visible]) => visible === false)
+    .map(([fieldKey]) => fieldKey);
+
+  if (fieldsToHide.length === 0) return html;
+
+  if (typeof window !== 'undefined' && typeof DOMParser !== 'undefined') {
+    try {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(`<div>${html}</div>`, 'text/html');
+      const container = doc.body.firstElementChild;
+      if (container) {
+        let modified = false;
+        fieldsToHide.forEach(fieldKey => {
+          const fieldConfig = TEASER_FIELDS[fieldKey];
+          if (fieldConfig?.selector) {
+            const elements = container.querySelectorAll(fieldConfig.selector);
+            if (elements.length > 0) {
+              elements.forEach(el => el.remove());
+              modified = true;
+            }
+          }
+        });
+        if (modified) {
+          return container.innerHTML;
+        }
+      }
+    } catch {
+      // Fall back to original html if parsing fails
+    }
+  }
+
+  return html;
+}
+
+/**
  * Debug metrics overlay showing ES score, interestingness, and longevity.
  */
 function ScoreMetrics({ hit, source }) {
   return (
     <span className="mg-search__result-metrics">
-      <span className="mg-search__result-metric">Score: {hit._score?.toFixed(2)}</span>
+      <span className="mg-search__result-metric">
+        Score: {hit._score?.toFixed(2)}
+      </span>
       {source.field_meta_interestingness?.[0] !== undefined && (
-        <span className="mg-search__result-metric">Int: {source.field_meta_interestingness[0]}</span>
+        <span className="mg-search__result-metric">
+          Int: {source.field_meta_interestingness[0]}
+        </span>
       )}
       {source.field_meta_longevity?.[0] !== undefined && (
-        <span className="mg-search__result-metric">Long: {source.field_meta_longevity[0]}</span>
+        <span className="mg-search__result-metric">
+          Long: {source.field_meta_longevity[0]}
+        </span>
       )}
     </span>
   );
+}
+
+/**
+ * Turn a hit's teaser HTML into the markup the widget renders: absolute
+ * URLs, the card variant for the display mode, the site or type badge, and
+ * hidden teaser fields removed. Pure, so ResultItem can memoise it.
+ *
+ * @param {Object} args
+ * @returns {string} HTML
+ */
+export function buildTeaserHtml({
+  teaser,
+  baseUrl,
+  displayMode,
+  visibleTeaserFields,
+  type,
+  domainInfo,
+  domainId,
+}) {
+  // Get domain label for site attribution
+  const domainLabel = domainInfo
+    ? domainInfo.url.replace('https://', '')
+    : domainId;
+
+  // Organizations are assigned to all domains, making the domain badge
+  // meaningless noise, so suppress it and show a type tag instead.
+  const isOrganization = type === 'organization';
+
+  // Resolve relative URLs and swap card variant for card display modes
+  const resolvedTeaser = swapCardVariant(
+    resolveRelativeUrls(teaser, baseUrl),
+    displayMode
+  );
+
+  // Inject badges before the title field.
+  // Node teasers use "field--name-node-title"; taxonomy term teasers use
+  // "field--name-name" for the term name field. Both selectors are coupled
+  // to Drupal's teaser view template class names.
+  //
+  // Skip badge injection entirely when both siteName and contentType are
+  // hidden via visibleTeaserFields: avoids rendering an empty wrapper div.
+  const hideSiteName = visibleTeaserFields?.siteName === false;
+  const hideContentType = visibleTeaserFields?.contentType === false;
+  const skipBadges = hideSiteName && hideContentType;
+
+  let finalHtml = resolvedTeaser;
+  if (!skipBadges) {
+    let titleFieldIndex = finalHtml.indexOf(
+      '<div class="field field--name-node-title'
+    );
+    if (titleFieldIndex === -1) {
+      titleFieldIndex = finalHtml.indexOf('<div class="field field--name-name');
+    }
+    if (titleFieldIndex !== -1) {
+      // Organizations show a content type tag; everything else shows a site name.
+      // Respect visibleTeaserFields: skip the individual badge if its field is hidden,
+      // and skip the wrapper entirely if the relevant badge would be empty.
+      let badgeContent = '';
+      if (isOrganization) {
+        if (!hideContentType) {
+          const typeLabel = getContentType(type)?.name || type;
+          const titleCased = typeLabel.replace(/\b\w/g, c => c.toUpperCase());
+          badgeContent = `<span class="mg-tag">${titleCased}</span>`;
+        }
+      } else {
+        if (!hideSiteName) {
+          badgeContent = `<span class="mg-search__result-site-name">${domainLabel}</span>`;
+        }
+      }
+      if (badgeContent) {
+        const badgeHtml = `<div class="mg-search__result-badges">${badgeContent}</div>`;
+        finalHtml =
+          finalHtml.slice(0, titleFieldIndex) +
+          badgeHtml +
+          finalHtml.slice(titleFieldIndex);
+      }
+    }
+  }
+
+  // Strip hidden teaser fields programmatically from HTML before rendering
+  const cleanHtml = stripHiddenTeaserFields(finalHtml, visibleTeaserFields);
+  return cleanHtml;
 }
 
 /**
@@ -116,12 +293,18 @@ function ScoreMetrics({ hit, source }) {
  * @param {string} props.displayMode - Display mode: 'list', 'card', or 'card-book'
  * @param {Object|null} props.visibleTeaserFields - Teaser field visibility map from config
  */
-export function ResultItem({ hit, showMetrics = false, displayMode = 'list', visibleTeaserFields = null }) {
+function ResultItemComponent({
+  hit,
+  showMetrics = false,
+  displayMode = 'list',
+  visibleTeaserFields = null,
+}) {
+  const labels = useSearchLabels();
   const source = hit._source || {};
   const highlight = hit.highlight || {};
   const isTerm = isTaxonomyTermResult(source);
 
-  // Extract fields — type may arrive as an array from Elasticsearch
+  // Extract fields: type may arrive as an array from Elasticsearch
   const {
     nid,
     title,
@@ -130,18 +313,87 @@ export function ResultItem({ hit, showMetrics = false, displayMode = 'list', vis
     vid,
     field_domain_access: domainArray,
     published_at: publishedAt,
+    event_start: eventStart,
+    event_end: eventEnd,
     teaser,
   } = source;
   const type = Array.isArray(rawType) ? rawType[0] : rawType;
 
   // Get domain info.
-  // Taxonomy terms don't have field_domain_access — use their vocabulary's
+  // Taxonomy terms don't have field_domain_access, so use their vocabulary's
   // default domain (typically preventionweb.net).
+  // Organizations are assigned to every domain, so field_domain_access[0] is
+  // arbitrary (often alphabetically first, e.g. AFRP); they're served
+  // authoritatively only through PreventionWeb, so pin them there.
+  // See undrr/web-backlog#2906.
   const domainId = isTerm
     ? getTaxonomyVocabulary(vid)?.domain || 'www_preventionweb_net'
-    : (Array.isArray(domainArray) ? domainArray[0] : domainArray);
+    : type === 'organization'
+      ? 'www_preventionweb_net'
+      : Array.isArray(domainArray)
+        ? domainArray[0]
+        : domainArray;
   const domainInfo = domainId ? DOMAIN_MAP.get(domainId) : null;
   const baseUrl = domainInfo?.url || 'https://www.preventionweb.net';
+
+  // Teaser processing parses HTML; only redo it when its inputs change.
+  const teaserHtml = useMemo(
+    () =>
+      teaser
+        ? buildTeaserHtml({
+            teaser,
+            baseUrl,
+            displayMode,
+            visibleTeaserFields,
+            type,
+            domainInfo,
+            domainId,
+          })
+        : null,
+    [
+      teaser,
+      baseUrl,
+      displayMode,
+      visibleTeaserFields,
+      type,
+      domainInfo,
+      domainId,
+    ]
+  );
+
+  // Events show when they happen (start, or a start to end range); other
+  // results, and events not yet indexed with event_start, show the publish
+  // date. Index dates arrive as Unix seconds, often wrapped in an array.
+  const displayDate = useMemo(() => {
+    if (EVENT_TYPES.includes(type)) {
+      const eventDate = formatEventDate(eventStart, eventEnd);
+      if (eventDate) return eventDate;
+    }
+    const date = toDate(publishedAt);
+    if (!date) return null;
+    return {
+      text: PUBLISH_DATE_FORMAT.format(date),
+      dateTime: toDateTimeAttribute(date),
+    };
+  }, [type, eventStart, eventEnd, publishedAt]);
+
+  // Get type label: vocabulary name for terms, content type for nodes
+  const typeLabel = useMemo(() => {
+    if (isTerm) {
+      const vocabInfo = getTaxonomyVocabulary(vid);
+      return vocabInfo?.name || vid;
+    }
+    const typeInfo = getContentType(type);
+    return typeInfo?.name || type;
+  }, [isTerm, vid, type]);
+
+  // Build full URL
+  const fullUrl = useMemo(() => {
+    if (!url && nid) return `${baseUrl}/node/${nid}`;
+    if (!url) return '#';
+    if (url.startsWith('http')) return url;
+    return `${baseUrl}${url}`;
+  }, [url, nid, baseUrl]);
 
   /**
    * If the result has no domain access and is not a taxonomy term, show an error.
@@ -152,8 +404,13 @@ export function ResultItem({ hit, showMetrics = false, displayMode = 'list', vis
       <article className="mg-search__result mg-search__result--error">
         {showMetrics && <ScoreMetrics hit={hit} source={source} />}
         <p className="mg-search__result-error">
-          Content item {nid || 'unknown'} has no assigned domain and cannot be shown.{' '}
-          <a href="https://www.undrr.org/contact-us">Report this error</a>.
+          {interpolateLabel(labels.domainAccessError, {
+            nid: nid || 'unknown',
+          })}{' '}
+          <a href="https://www.undrr.org/contact-us">
+            {labels.reportErrorLink}
+          </a>
+          .
         </p>
       </article>
     );
@@ -163,69 +420,27 @@ export function ResultItem({ hit, showMetrics = false, displayMode = 'list', vis
    * Render using pre-rendered teaser HTML.
    * This is the preferred mode as it matches Drupal's theme output.
    */
-  if (teaser) {
-    // Get domain label for site attribution
-    const domainLabel = domainInfo
-      ? domainInfo.url.replace('https://', '')
-      : domainId;
-
-    // Organizations are assigned to all domains, making the domain badge
-    // meaningless noise — suppress it and show a type tag instead.
-    const isOrganization = type === 'organization';
-
-    // Resolve relative URLs and swap card variant for card display modes
-    const resolvedTeaser = swapCardVariant(
-      resolveRelativeUrls(teaser, baseUrl),
-      displayMode
-    );
-
-    // Inject badges before the title field.
-    // Node teasers use "field--name-node-title"; taxonomy term teasers use
-    // "field--name-name" for the term name field. Both selectors are coupled
-    // to Drupal's teaser view template class names.
-    //
-    // Skip badge injection entirely when both siteName and contentType are
-    // hidden via visibleTeaserFields — avoids rendering an empty wrapper div.
-    const hideSiteName = visibleTeaserFields?.siteName === false;
-    const hideContentType = visibleTeaserFields?.contentType === false;
-    const skipBadges = hideSiteName && hideContentType;
-
-    let finalHtml = resolvedTeaser;
-    if (!skipBadges) {
-      let titleFieldIndex = finalHtml.indexOf('<div class="field field--name-node-title');
-      if (titleFieldIndex === -1) {
-        titleFieldIndex = finalHtml.indexOf('<div class="field field--name-name');
-      }
-      if (titleFieldIndex !== -1) {
-        // Organizations show a content type tag; everything else shows a site name.
-        // Respect visibleTeaserFields — skip the individual badge if its field is hidden,
-        // and skip the wrapper entirely if the relevant badge would be empty.
-        let badgeContent = '';
-        if (isOrganization) {
-          if (!hideContentType) {
-            const typeLabel = getContentType(type)?.name || type;
-            const titleCased = typeLabel.replace(/\b\w/g, c => c.toUpperCase());
-            badgeContent = `<span class="mg-tag">${titleCased}</span>`;
-          }
-        } else {
-          if (!hideSiteName) {
-            badgeContent = `<span class="mg-search__result-site-name">${domainLabel}</span>`;
-          }
-        }
-        if (badgeContent) {
-          const badgeHtml = `<div class="mg-search__result-badges">${badgeContent}</div>`;
-          finalHtml = finalHtml.slice(0, titleFieldIndex) + badgeHtml + finalHtml.slice(titleFieldIndex);
-        }
-      }
-    }
-
+  if (teaserHtml !== null) {
     // Use vocabulary name as result type for terms, content type for nodes
     const resultType = isTerm ? vid : type;
 
+    const TeaserContainer = showMetrics ? 'div' : 'article';
+    const teaserContent = (
+      <TeaserContainer
+        className={showMetrics ? undefined : 'mg-search__result'}
+        data-result-type={showMetrics ? undefined : resultType}
+        dangerouslySetInnerHTML={{ __html: teaserHtml }}
+      />
+    );
+
+    if (!showMetrics) return teaserContent;
+
     return (
       <article className="mg-search__result" data-result-type={resultType}>
-        {showMetrics && <ScoreMetrics hit={hit} source={source} />}
-        <div dangerouslySetInnerHTML={{ __html: finalHtml }} />
+        <ScoreMetrics hit={hit} source={source} />
+        {/* Teaser markup from the configured endpoint, rendered as-is. See the
+            trust boundary note at the top of this file. */}
+        {teaserContent}
       </article>
     );
   }
@@ -235,47 +450,19 @@ export function ResultItem({ hit, showMetrics = false, displayMode = 'list', vis
    * Used when teaser HTML is not available in the index.
    */
 
+  // Get domain label
+  const domainLabel = domainInfo?.name;
+
   // Get highlighted content or fallback
   const highlightedTitle = highlight.title?.[0] || title;
   const highlightedBody = highlight.body?.join(' ... ') || '';
 
-  // Format date
-  const formattedDate = useMemo(() => {
-    if (!publishedAt) return null;
-    try {
-      const date = new Date(publishedAt);
-      return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-      });
-    } catch {
-      return null;
-    }
-  }, [publishedAt]);
-
-  // Get type label — vocabulary name for terms, content type for nodes
-  const typeLabel = useMemo(() => {
-    if (isTerm) {
-      const vocabInfo = getTaxonomyVocabulary(vid);
-      return vocabInfo?.name || vid;
-    }
-    const typeInfo = getContentType(type);
-    return typeInfo?.name || type;
-  }, [isTerm, vid, type]);
-
-  // Get domain label
-  const domainLabel = domainInfo?.name;
-
-  // Build full URL
-  const fullUrl = useMemo(() => {
-    if (!url && nid) return `${baseUrl}/node/${nid}`;
-    if (!url) return '#';
-    if (url.startsWith('http')) return url;
-    return `${baseUrl}${url}`;
-  }, [url, nid, baseUrl]);
-
   const resultType = isTerm ? vid : type;
+
+  const hideContentType = visibleTeaserFields?.contentType === false;
+  const hideSiteName = visibleTeaserFields?.siteName === false;
+  const hideDate = visibleTeaserFields?.date === false;
+  const hideSummary = visibleTeaserFields?.summary === false;
 
   return (
     <article className="mg-search__result" data-result-type={resultType}>
@@ -284,6 +471,8 @@ export function ResultItem({ hit, showMetrics = false, displayMode = 'list', vis
         <div className="mg-search__result-text">
           {/* Title */}
           <h3 className="mg-search__result-title">
+            {/* Unescaped so the endpoint's <em> highlight markup survives. See
+                the trust boundary note at the top of this file. */}
             <a
               href={fullUrl}
               dangerouslySetInnerHTML={{ __html: highlightedTitle }}
@@ -291,26 +480,31 @@ export function ResultItem({ hit, showMetrics = false, displayMode = 'list', vis
           </h3>
 
           {/* Metadata line */}
-          <div className="mg-search__result-meta">
-            {typeLabel && (
-              <span className="mg-search__result-type">{typeLabel}</span>
-            )}
-            {domainLabel && type !== 'organization' && (
-              <span className="mg-search__result-domain">{domainLabel}</span>
-            )}
-            {/* Taxonomy terms don't have published_at — skip date */}
-            {!isTerm && formattedDate && (
-              <time
-                className="mg-search__result-date"
-                dateTime={publishedAt}
-              >
-                {formattedDate}
-              </time>
-            )}
-          </div>
+          {(!hideContentType || !hideSiteName || !hideDate) && (
+            <div className="mg-search__result-meta">
+              {!hideContentType && typeLabel && (
+                <span className="mg-search__result-type">{typeLabel}</span>
+              )}
+              {!hideSiteName && domainLabel && type !== 'organization' && (
+                <span className="mg-search__result-domain">{domainLabel}</span>
+              )}
+              {/* Taxonomy terms don't have published_at, so skip date */}
+              {!hideDate && !isTerm && displayDate && (
+                <time
+                  className="mg-search__result-date"
+                  dateTime={displayDate.dateTime}
+                >
+                  {displayDate.text}
+                </time>
+              )}
+            </div>
+          )}
 
           {/* Snippet */}
-          {highlightedBody && (
+          {!hideSummary && highlightedBody && (
+            /* Same contract as the title above: endpoint HTML, kept unescaped
+               for the <em> highlight markup. See the note at the top of this
+               file. */
             <p
               className="mg-search__result-snippet"
               dangerouslySetInnerHTML={{ __html: highlightedBody }}
@@ -321,5 +515,11 @@ export function ResultItem({ hit, showMetrics = false, displayMode = 'list', vis
     </article>
   );
 }
+
+/**
+ * Memoised: a result only re-renders when its hit or display options
+ * change, not on every keystroke or facet count update.
+ */
+export const ResultItem = memo(ResultItemComponent);
 
 export default ResultItem;

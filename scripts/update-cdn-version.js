@@ -19,26 +19,30 @@ if (!fs.existsSync(packageJsonPath)) {
 const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
 const version = packageJson.version;
 
-console.log(`Scanning ${rootDir} to update Mangrove CDN links to version ${version} ${useTesting ? '(testing)' : '(prod)'}${isDryRun ? ' [dry-run]' : ''}...`);
+console.log(
+  `Scanning ${rootDir} to update Mangrove CDN links to version ${version} ${useTesting ? '(testing)' : '(prod)'}${isDryRun ? ' [dry-run]' : ''}...`
+);
 
 // Build replacement target
 const targetBase = useTesting
-  ? `https://assets.undrr.org/static/testing/mangrove/${version}/`
-  : `https://assets.undrr.org/static/mangrove/${version}/`;
+  ? `https://assets.undrr.org/testing/mangrove/${version}/`
+  : `https://assets.undrr.org/mangrove/${version}/`;
 
 // URL matchers for any existing forms
-// - prod latest or semver
-// - testing in either segment ordering ("testing/static" or "static/testing") and latest or semver
+// Canonical versioned URLs plus legacy static/testing forms as inputs.
+// Replacements always use the canonical path; latest remains unpinned.
 const urlPatterns = [
-  /https:\/\/assets\.undrr\.org\/static\/mangrove\/[0-9]+\.[0-9]+\.[0-9]+\//g,
-  /https:\/\/assets\.undrr\.org\/testing\/static\/mangrove\/[0-9]+\.[0-9]+\.[0-9]+\//g,
-  /https:\/\/assets\.undrr\.org\/static\/testing\/mangrove\/[0-9]+\.[0-9]+\.[0-9]+\//g,
+  /https:\/\/assets\.undrr\.org\/(?:testing\/)?mangrove\/[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?\//g,
+  /https:\/\/assets\.undrr\.org\/static\/mangrove\/[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?\//g,
+  /https:\/\/assets\.undrr\.org\/testing\/static\/mangrove\/[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?\//g,
+  /https:\/\/assets\.undrr\.org\/static\/testing\/mangrove\/[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?\//g,
 ];
 
 // Directories to ignore during traversal
 const ignoredDirectories = new Set([
   'node_modules',
   '.git',
+  '.worktrees',
   'dist',
   'build',
   '.next',
@@ -50,13 +54,42 @@ const ignoredDirectories = new Set([
 
 // File extensions considered safe to rewrite as text
 const allowedExtensions = new Set([
-  '.md', '.mdx', '.markdown',
-  '.js', '.jsx', '.ts', '.tsx',
-  '.json', '.yml', '.yaml',
-  '.html', '.htm', '.txt', '.sh',
-  '.css', '.scss', '.sass',
-  '.twig', '.php',
+  '.md',
+  '.mdx',
+  '.markdown',
+  '.js',
+  '.jsx',
+  '.ts',
+  '.tsx',
+  '.json',
+  '.yml',
+  '.yaml',
+  '.html',
+  '.htm',
+  '.txt',
+  '.sh',
+  '.css',
+  '.scss',
+  '.sass',
+  '.twig',
+  '.php',
 ]);
+
+/**
+ * Returns true if the file should be excluded from CDN version rewriting.
+ * Historical release notes (docs/RELEASE-X.Y.md for older versions) contain
+ * fixed CDN URLs that document a specific release and must not be updated.
+ */
+function isIgnoredFile(filePath) {
+  const rel = path.relative(rootDir, filePath).replace(/\\/g, '/');
+  const releaseNoteMatch = rel.match(/^docs\/RELEASE-(.+)\.md$/);
+  if (releaseNoteMatch) {
+    const fileVersion = releaseNoteMatch[1]; // e.g. "1.4"
+    const currentMajorMinor = version.split('.').slice(0, 2).join('.'); // e.g. "1.5"
+    return fileVersion !== currentMajorMinor;
+  }
+  return false;
+}
 
 /**
  * Recursively gather file paths under a directory.
@@ -109,6 +142,7 @@ let changedCount = 0;
 const changedFiles = [];
 
 for (const filePath of files) {
+  if (isIgnoredFile(filePath)) continue;
   let content;
   try {
     content = fs.readFileSync(filePath, 'utf8');
@@ -129,7 +163,9 @@ if (changedCount === 0) {
   console.log('No CDN links needed updating.');
 } else {
   const modeLabel = isDryRun ? 'Would update' : 'Updated';
-  console.log(`\n${modeLabel} ${changedCount} file(s) to point to ${targetBase}`);
+  console.log(
+    `\n${modeLabel} ${changedCount} file(s) to point to ${targetBase}`
+  );
   for (const f of changedFiles) {
     console.log(`- ${path.relative(rootDir, f)}`);
   }

@@ -1,0 +1,231 @@
+{/* Source: Migrated from UNDRR SharePoint style guide pages, April 2026. Original URLs:
+  - https://unitednations.sharepoint.com/sites/UNDRR-DRR-COMMS/SitePages/UNDRR-Brand-Positioning.aspx
+  - https://unitednations.sharepoint.com/sites/UNDRR-DRR-COMMS/SitePages/Logos.aspx
+  - https://unitednations.sharepoint.com/sites/UNDRR-DRR-COMMS/SitePages/Colors-typography.aspx
+  - https://unitednations.sharepoint.com/sites/UNDRR-DRR-COMMS/SitePages/Photography-and-Icons.aspx
+  - https://unitednations.sharepoint.com/sites/UNDRR-DRR-COMMS/SitePages/Web-Style-Guide.aspx
+*/}
+
+import { Meta } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
+import { HighlightBox } from '../../Components/HighlightBox/HighlightBox';
+
+<Meta
+  title="Brand/Brand guidelines"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: {
+      canvas: { hidden: true },
+    },
+  }}
+/>
+
+# Brand guidelines
+
+{/* prettier-ignore */}
+Editorial and visual identity guidance for UNDRR communications. For
+theme-specific colors, typography, and component previews, see
+<LinkTo kind="brand-brand-identity" story="docs">Brand identity</LinkTo> and
+use the toolbar theme picker.
+
+---
+
+## Brand positioning
+
+UNDRR brand voice is anchored in three traits:
+
+<div
+  style={{
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    gap: '1rem',
+    marginBottom: '2rem',
+  }}
+>
+  <HighlightBox variant="primary">
+    <strong>Knowledgeable</strong>
+    <br />
+    Convince people with credible knowledge of what may and will happen.
+  </HighlightBox>
+  <HighlightBox variant="primary">
+    <strong>Approachable</strong>
+    <br />
+    We need to work with all the different stakeholders to complete our mission.
+  </HighlightBox>
+  <HighlightBox variant="primary">
+    <strong>Collaborative</strong>
+    <br />
+    We need to be seen at the same level as the people we are working with.
+  </HighlightBox>
+</div>
+
+### Brand awareness priorities
+
+> "Awareness should be enhanced because frequency and severity of disasters
+> are increasing. However, it is not so much about the organization but more
+> about the agenda."
+>
+> — Mami Mizutori
+
+**How to strengthen awareness:**
+
+- Tailor communication to priority audiences.
+- Engage high-impact groups (private sector, UN country teams, media).
+- Measure outcomes (surveys, analytics, progress feedback).
+- Keep UNDRR visibly connected to UN identity and positioning.
+- Align PreventionWeb and related tools under the undrr.org umbrella.
+- Promote partners while retaining clear ownership where appropriate.
+- Strengthen social presence and rapid prevention/recovery messaging.
+- Keep digital experiences visually consistent with Sendai branding.
+
+---
+
+## Communication guidelines
+
+<HighlightBox>
+  <strong>The inverted pyramid:</strong> Put the key message first, then
+  supporting detail, then background context.
+</HighlightBox>
+
+**Communication rules:**
+
+- **Avoid UN jargon** whenever possible
+- **Frame prevention positively** — use constructive imagery
+- **Center stories on people**, not just issues
+- **Keep web copy concise** — follow inverted-pyramid structure
+- For detailed writing guidance, see the <LinkTo kind="contributing-writing-guidelines" story="docs">Writing guidelines</LinkTo>
+
+---
+
+## Logo usage
+
+{/* Source: https://unitednations.sharepoint.com/sites/UNDRR-DRR-COMMS/SitePages/Logos.aspx */}
+
+{/* prettier-ignore */}
+For logo files and downloads, switch to your property's theme on the <LinkTo kind="brand-brand-identity" story="docs">Brand identity</LinkTo> page.
+
+### UNDRR logo rules
+
+- The organisation officially changed its name from UNISDR to UNDRR. All communication material must display the new name.
+- On web pages, use the horizontal logo for space efficiency. Sub-sites may use
+  logo-only variants where appropriate.
+- **Safety zone**: The safe area around the UNDRR logo equals the width of the "U" in UNDRR.
+- **Background**: avoid busy backgrounds; use inverse (white) logo on dark
+  surfaces.
+
+### Sendai Framework logo
+
+- The Sendai Framework logo should appear on all official publications and online sites.
+- The inverse logo should be placed on dark backgrounds.
+- Sendai logo can support sub-brands; place sub-brand above the color stripe.
+
+### UN and SDG logos
+
+- When using the UN logo, it takes precedence over UNDRR.
+- UNDRR can be used in conjunction with the SDG logo and wheel.
+- Access the official UN/SDG artwork at [United Nations brand resources](https://www.un.org/styleguide/).
+
+---
+
+## Photography guidelines
+
+{/* Source: https://unitednations.sharepoint.com/sites/UNDRR-DRR-COMMS/SitePages/Photography-and-Icons.aspx */}
+
+<div
+  style={{
+    display: 'grid',
+    gridTemplateColumns: 'repeat(2, 1fr)',
+    gap: '1rem',
+    marginBottom: '1.5rem',
+  }}
+>
+  <HighlightBox>
+    <strong>Do:</strong> Illustrations and photography should portray a positive
+    image of disaster prevention and recovery. Human faces and stories should be
+    the focus.
+  </HighlightBox>
+  <HighlightBox variant="secondary">
+    <strong>Don't:</strong> Conference pictures should be kept to the strict
+    minimum. We do not want to convey a conference-focused image of the
+    organization.
+  </HighlightBox>
+</div>
+
+- Photos must always display the credit and source information.
+- Use imagery from the [UNDRR photo selection guide](https://unitednations.sharepoint.com/sites/UNDRR-DRR-COMMS) (intranet) for Sendai Targets and DRR themes.
+
+### Photo sizes
+
+| Use case          | Aspect ratio | Dimensions    |
+| ----------------- | ------------ | ------------- |
+| Hero banner       | 16:6         | 1440 x 540 px |
+| News image        | 16:9         | 1164 x 665 px |
+| Publication cover | 3:4          | 176 x 235 px  |
+| People thumbnail  | 1:1          | 176 x 176 px  |
+
+### Icons
+
+UNDRR uses two icon sets:
+
+- **OCHA humanitarian icons** for natural hazards and disaster-related content. Available free from [ReliefWeb](https://reliefweb.int) and [The Noun Project](https://thenounproject.com).
+- **Mangrove icon set** for web UI. See the full icon set in the <LinkTo kind="components-icons" story="docs">Icons documentation</LinkTo>.
+
+---
+
+## Web elements
+
+{/* Source: https://unitednations.sharepoint.com/sites/UNDRR-DRR-COMMS/SitePages/Web-Style-Guide.aspx */}
+
+UNDRR web properties should feel consistent and connected. These elements are
+shared across sites:
+
+### Page header
+
+The page header carries the Sendai stripe, UNDRR logo, global navigation,
+language selector, and account/tools links.
+
+See: <LinkTo kind="components-pageheader" story="docs">Page header component</LinkTo>, <LinkTo kind="components-navigation-megamenu" story="docs">Mega menu component</LinkTo>
+
+### Footer
+
+The footer is visually shared across sites, with customizable link groups:
+
+- **Stay in touch**: Social channel icons (default: UNDRR channels, can link to sub-channels)
+- **Custom links**: Shortcuts and additional information specific to each site
+- **UNDRR tools**: Same list on all sites
+- **Contact us**: Links to the corporate contact page unless the sub-site has its own
+- **Global footer banner**: Sendai Framework and SDG logos, copyright notice, privacy policy, terms of use
+
+See: <LinkTo kind="components-footer" story="docs">Footer component</LinkTo>
+
+### Typography
+
+External-facing print/web uses **Roboto** (UN official typeface) for body text
+and headings, with **Roboto Condensed** for the hero title and for interface
+chrome such as card titles, tabs and tags. Internal/email communication may use
+Arial. In CSS, name a font role — `var(--mg-font-family-text)`, `-heading`,
+`-display`, `-ui` or `-code` — and never a typeface.
+
+**Language-specific fonts:** Mangrove applies script-specific font overrides via
+`:lang()` selectors (for example `lang="ar"`).
+
+| Language | Selector    | Font override                                        |
+| -------- | ----------- | ---------------------------------------------------- |
+| Arabic   | `:lang(ar)` | Noto Kufi Arabic (headings), Noto Sans Arabic (body) |
+
+See: <LinkTo kind="design-decisions-fonts" story="docs">Fonts documentation</LinkTo>
+
+---
+
+## Resources
+
+{/* prettier-ignore */}
+- <LinkTo kind="brand-brand-identity" story="docs">Brand identity</LinkTo> — theme-specific colors, typography, logos, buttons, and icons
+- <LinkTo kind="brand-about-this-guide" story="docs">About this guide</LinkTo> — overview of all UNDRR web properties
+- <LinkTo kind="contributing-writing-guidelines" story="docs">Writing guidelines</LinkTo> — editorial standards for web content
+- [UNDRR Style Guides (intranet)](https://unitednations.sharepoint.com/sites/UNDRR-DRR-COMMS/SitePages/Style-Guides.aspx) — additional communications guidance for internal UNDRR users (requires UN SharePoint access)
+- [UN web standards](https://www.un.org/styleguide/) — UN-wide branding and style guidance
+
+---
+
+Last updated: 11 April 2026

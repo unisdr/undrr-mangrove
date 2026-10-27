@@ -54,10 +54,7 @@ describe('StatsCard contract', () => {
 
   it('renders the value for each stat in the array', () => {
     const fixture = {
-      stats: [
-        { value: '$223B' },
-        { value: '1.5M' },
-      ],
+      stats: [{ value: '$223B' }, { value: '1.5M' }],
     };
     expect(validate(fixture)).toBe(true);
     render(<StatsCard {...fixture} />);

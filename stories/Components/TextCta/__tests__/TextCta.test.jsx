@@ -19,9 +19,19 @@ describe('TextCta', () => {
     expect(screen.getByText('Join the platform')).toBeInTheDocument();
   });
 
+  it('renders an optional eyebrow', () => {
+    const { container } = render(
+      <TextCta eyebrow="Open source" headline="Build with Mangrove" />
+    );
+
+    expect(container.querySelector('.mg-cta__eyebrow')).toHaveTextContent(
+      'Open source'
+    );
+  });
+
   it('applies headlineSize class', () => {
     const { container } = render(
-      <TextCta headline="Big heading" headlineSize="800" />,
+      <TextCta headline="Big heading" headlineSize="800" />
     );
 
     const heading = container.querySelector('.mg-cta__headline');
@@ -37,7 +47,7 @@ describe('TextCta', () => {
 
   it('renders headline at a custom heading level', () => {
     const { container } = render(
-      <TextCta headline="Custom level" headlineLevel={3} />,
+      <TextCta headline="Custom level" headlineLevel={3} />
     );
 
     const heading = container.querySelector('.mg-cta__headline');
@@ -50,7 +60,7 @@ describe('TextCta', () => {
 
   it('renders sanitized HTML in text prop', () => {
     const { container } = render(
-      <TextCta text="<p>Hello <strong>world</strong></p>" />,
+      <TextCta text="<p>Hello <strong>world</strong></p>" />
     );
 
     const textEl = container.querySelector('.mg-cta__text');
@@ -59,7 +69,7 @@ describe('TextCta', () => {
 
   it('strips dangerous HTML from text prop', () => {
     const { container } = render(
-      <TextCta text='<p>Safe</p><script>alert("xss")</script>' />,
+      <TextCta text='<p>Safe</p><script>alert("xss")</script>' />
     );
 
     const textEl = container.querySelector('.mg-cta__text');
@@ -74,19 +84,44 @@ describe('TextCta', () => {
   it('renders buttons as links', () => {
     render(<TextCta buttons={defaultButtons} />);
 
-    const readMore = screen.getByText('Read more');
+    const readMore = screen.getByRole('link', { name: 'Read more' });
     expect(readMore.tagName).toBe('A');
     expect(readMore).toHaveAttribute('href', '/about');
     expect(readMore).toHaveClass('mg-button-primary');
 
-    const contact = screen.getByText('Contact us');
+    const contact = screen.getByRole('link', { name: 'Contact us' });
     expect(contact).toHaveClass('mg-button-secondary');
   });
 
   it('defaults button href to # when url is missing', () => {
     render(<TextCta buttons={[{ label: 'Click' }]} />);
 
-    expect(screen.getByText('Click')).toHaveAttribute('href', '#');
+    expect(screen.getByRole('link', { name: 'Click' })).toHaveAttribute(
+      'href',
+      '#'
+    );
+  });
+
+  it('composes button variants and external-link attributes', () => {
+    render(
+      <TextCta
+        buttons={[
+          {
+            label: 'View source',
+            url: 'https://example.com',
+            type: 'Secondary',
+            outline: true,
+            target: '_blank',
+            rel: 'noopener noreferrer',
+          },
+        ]}
+      />
+    );
+
+    const link = screen.getByRole('link', { name: 'View source' });
+    expect(link).toHaveClass('mg-button-secondary', 'mg-button-outline');
+    expect(link).toHaveAttribute('target', '_blank');
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer');
   });
 
   // --------------------------------------------------
@@ -111,7 +146,9 @@ describe('TextCta', () => {
 
   it('adds mg-cta--with-image class when image is set', () => {
     const { container } = render(
-      <TextCta image={{ src: 'https://example.com/photo.jpg', alt: 'A photo' }} />,
+      <TextCta
+        image={{ src: 'https://example.com/photo.jpg', alt: 'A photo' }}
+      />
     );
 
     expect(container.firstChild).toHaveClass('mg-cta--with-image');
@@ -133,9 +170,19 @@ describe('TextCta', () => {
 
   it('does not add mg-cta--centered when image is present', () => {
     const { container } = render(
-      <TextCta centered image={{ src: 'https://example.com/photo.jpg' }} />,
+      <TextCta
+        centered
+        image={{ src: 'https://example.com/photo.jpg', alt: '' }}
+      />
     );
 
+    expect(container.firstChild).not.toHaveClass('mg-cta--centered');
+  });
+
+  it('uses the inline layout without centered treatment', () => {
+    const { container } = render(<TextCta layout="inline" centered />);
+
+    expect(container.firstChild).toHaveClass('mg-cta--inline');
     expect(container.firstChild).not.toHaveClass('mg-cta--centered');
   });
 
@@ -194,7 +241,7 @@ describe('TextCta', () => {
         headline="Take action now"
         text="<p>Register for the conference.</p>"
         buttons={defaultButtons}
-      />,
+      />
     );
     expect(await axe(container)).toHaveNoViolations();
   });
@@ -205,8 +252,80 @@ describe('TextCta', () => {
         headline="Recovery Help Desk"
         buttons={[{ label: 'Learn more', url: '#' }]}
         image={{ src: 'https://example.com/photo.jpg', alt: 'Help desk icon' }}
-      />,
+      />
     );
     expect(await axe(container)).toHaveNoViolations();
   });
+});
+
+describe('composed CTA content', () => {
+  it('keeps caller-owned form controls and existing actions independently accessible', async () => {
+    const { container } = render(
+      <TextCta
+        headline="Stay informed"
+        centered={false}
+        buttons={[{ label: 'More information', url: '/about' }]}
+      >
+        <form aria-label="Subscribe">
+          <label htmlFor="cta-email">Email address</label>
+          <input id="cta-email" name="email" type="email" required />
+          <button type="submit">Subscribe</button>
+        </form>
+      </TextCta>
+    );
+    expect(screen.getByRole('form', { name: 'Subscribe' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('textbox', { name: 'Email address' })
+    ).toHaveAttribute('name', 'email');
+    expect(
+      screen.getByRole('link', { name: 'More information' })
+    ).toHaveAttribute('href', '/about');
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it('adds no content wrapper for existing button-only usage', () => {
+    const { container } = render(
+      <TextCta
+        headline="Read more"
+        buttons={[{ label: 'Read', url: '/read' }]}
+      />
+    );
+    expect(
+      container.querySelector('.mg-cta__custom-content')
+    ).not.toBeInTheDocument();
+  });
+});
+
+test('soft tone composes with accent variant without changing the default', () => {
+  const { container, rerender } = render(
+    <TextCta headline="Updates" tone="soft" variant="secondary" />
+  );
+  expect(container.querySelector('section')).toHaveClass(
+    'mg-cta--soft',
+    'mg-cta--secondary'
+  );
+  rerender(<TextCta headline="Updates" />);
+  expect(container.querySelector('section')).not.toHaveClass('mg-cta--soft');
+});
+
+test('composed content uses stacked layout even when inline actions are requested', () => {
+  const { container, rerender } = render(
+    <TextCta
+      headline="Updates"
+      layout="inline"
+      buttons={[{ label: 'Details', url: '/details' }]}
+    >
+      <p>Composed content</p>
+    </TextCta>
+  );
+  expect(container.querySelector('section')).not.toHaveClass('mg-cta--inline');
+  expect(screen.getByText('Composed content')).toBeInTheDocument();
+  rerender(
+    <TextCta
+      headline="Updates"
+      layout="inline"
+      buttons={[{ label: 'Details', url: '/details' }]}
+    />
+  );
+  expect(container.querySelector('section')).toHaveClass('mg-cta--inline');
 });

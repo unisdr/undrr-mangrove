@@ -14,10 +14,18 @@ describe('syndicationSearchWidgetFromElement', () => {
     expect(config).toEqual({});
   });
 
+  it('reads the analytics region prefix', () => {
+    const { config } = syndicationSearchWidgetFromElement(
+      makeContainer({ 'analytics-region-prefix': 'collection-related' })
+    );
+    expect(config.analyticsRegionPrefix).toBe('collection-related');
+  });
+
   it('extracts simple string and number props', () => {
     const { config } = syndicationSearchWidgetFromElement(
       makeContainer({
         'search-endpoint': 'https://example.com/search',
+        'taxonomy-endpoint': 'https://example.com/taxonomy',
         'results-per-page': '10',
         'debounce-delay': '500',
         'min-search-length': '2',
@@ -29,6 +37,7 @@ describe('syndicationSearchWidgetFromElement', () => {
       })
     );
     expect(config.searchEndpoint).toBe('https://example.com/search');
+    expect(config.taxonomyEndpoint).toBe('https://example.com/taxonomy');
     expect(config.resultsPerPage).toBe(10);
     expect(config.debounceDelay).toBe(500);
     expect(config.minSearchLength).toBe(2);
@@ -65,6 +74,72 @@ describe('syndicationSearchWidgetFromElement', () => {
     expect(config).not.toHaveProperty('showSearchBox');
     expect(config).not.toHaveProperty('showFacets');
     expect(config).not.toHaveProperty('enableHashSync');
+    expect(config).not.toHaveProperty('facets');
+  });
+
+  // enableHashSync is a tri-state: boolean true/false or the literal string
+  // 'auto'. The Drupal wrapper auto-disables hash sync when multiple
+  // widgets are mounted on the same page by checking
+  // `config.enableHashSync === 'auto'`; collapsing 'auto' to a boolean
+  // here would silently break that.
+  describe('data-enable-hash-sync', () => {
+    it('preserves the string "auto" as a string', () => {
+      const { config } = syndicationSearchWidgetFromElement(
+        makeContainer({ 'enable-hash-sync': 'auto' })
+      );
+      expect(config.enableHashSync).toBe('auto');
+    });
+
+    it('maps the string "true" to boolean true', () => {
+      const { config } = syndicationSearchWidgetFromElement(
+        makeContainer({ 'enable-hash-sync': 'true' })
+      );
+      expect(config.enableHashSync).toBe(true);
+    });
+
+    it('maps the string "false" to boolean false', () => {
+      const { config } = syndicationSearchWidgetFromElement(
+        makeContainer({ 'enable-hash-sync': 'false' })
+      );
+      expect(config.enableHashSync).toBe(false);
+    });
+  });
+
+  describe('data-facets (union prop)', () => {
+    it('extracts facets="sidebar"', () => {
+      const { config } = syndicationSearchWidgetFromElement(
+        makeContainer({ facets: 'sidebar' })
+      );
+      expect(config.facets).toBe('sidebar');
+    });
+
+    it('extracts facets="horizontal"', () => {
+      const { config } = syndicationSearchWidgetFromElement(
+        makeContainer({ facets: 'horizontal' })
+      );
+      expect(config.facets).toBe('horizontal');
+    });
+
+    it('maps the literal string "false" to boolean false', () => {
+      const { config } = syndicationSearchWidgetFromElement(
+        makeContainer({ facets: 'false' })
+      );
+      expect(config.facets).toBe(false);
+    });
+  });
+
+  it('extracts facetsTarget selector', () => {
+    const { config } = syndicationSearchWidgetFromElement(
+      makeContainer({ 'facets-target': '#left-rail' })
+    );
+    expect(config.facetsTarget).toBe('#left-rail');
+  });
+
+  it('extracts searchTarget selector', () => {
+    const { config } = syndicationSearchWidgetFromElement(
+      makeContainer({ 'search-target': '#hero-search' })
+    );
+    expect(config.searchTarget).toBe('#hero-search');
   });
 
   it('parses JSON defaultFilters', () => {
@@ -133,5 +208,77 @@ describe('syndicationSearchWidgetFromElement', () => {
     );
     expect(config).not.toHaveProperty('interestingnessTiers');
     expect(config).not.toHaveProperty('longevityTiers');
+  });
+
+  it('parses JSON customFilters', () => {
+    const filters = ['type:news', 'region:asia'];
+    const { config } = syndicationSearchWidgetFromElement(
+      makeContainer({ 'custom-filters': JSON.stringify(filters) })
+    );
+    expect(config.customFilters).toEqual(filters);
+  });
+
+  it('parses JSON customFacets', () => {
+    const facets = [{ field: 'region', label: 'Region' }];
+    const { config } = syndicationSearchWidgetFromElement(
+      makeContainer({ 'custom-facets': JSON.stringify(facets) })
+    );
+    expect(config.customFacets).toEqual(facets);
+  });
+
+  it('parses JSON visibleTeaserFields', () => {
+    const fields = ['title', 'date'];
+    const { config } = syndicationSearchWidgetFromElement(
+      makeContainer({ 'visible-teaser-fields': JSON.stringify(fields) })
+    );
+    expect(config.visibleTeaserFields).toEqual(fields);
+  });
+
+  it('ignores malformed JSON for customFilters, customFacets, visibleTeaserFields', () => {
+    const { config } = syndicationSearchWidgetFromElement(
+      makeContainer({
+        'custom-filters': 'not-json',
+        'custom-facets': '{broken',
+        'visible-teaser-fields': '[bad',
+      })
+    );
+    expect(config).not.toHaveProperty('customFilters');
+    expect(config).not.toHaveProperty('customFacets');
+    expect(config).not.toHaveProperty('visibleTeaserFields');
+  });
+
+  describe('data-labels', () => {
+    it('returns labels object when valid JSON is provided', () => {
+      const labelOverrides = {
+        searchPlaceholder: 'Buscar…',
+        submitSearchText: 'Buscar',
+      };
+      const result = syndicationSearchWidgetFromElement(
+        makeContainer({ labels: JSON.stringify(labelOverrides) })
+      );
+      expect(result.labels).toEqual(labelOverrides);
+    });
+
+    it('returns { config, labels } shape when data-labels is present', () => {
+      const result = syndicationSearchWidgetFromElement(
+        makeContainer({ labels: '{"searchLabel":"Chercher"}' })
+      );
+      expect(result).toHaveProperty('config');
+      expect(result).toHaveProperty('labels');
+    });
+
+    it('returns { config } only (no labels key) when data-labels is absent', () => {
+      const result = syndicationSearchWidgetFromElement(makeContainer());
+      expect(result).toHaveProperty('config');
+      expect(result).not.toHaveProperty('labels');
+    });
+
+    it('silently ignores malformed data-labels JSON', () => {
+      const result = syndicationSearchWidgetFromElement(
+        makeContainer({ labels: '{broken json' })
+      );
+      expect(result).toHaveProperty('config');
+      expect(result).not.toHaveProperty('labels');
+    });
   });
 });

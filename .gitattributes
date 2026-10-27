@@ -1,2 +1,8 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# A digest manifest cannot be line-merged. Git will happily combine hashes
+# from both sides without conflicting, producing a baseline that describes
+# neither branch and that nobody is prompted to regenerate. Force a conflict
+# instead; see the $comment in the file for how to resolve one.
+tokens/output-baseline.json -merge

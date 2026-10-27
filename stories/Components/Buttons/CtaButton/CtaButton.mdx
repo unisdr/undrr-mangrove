@@ -20,53 +20,211 @@ export const getCaptionForLocale = locale => {
 
 <Meta of={CtaButtonStories} />
 
-> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
 
 # Buttons
 
-Mangrove's standard button component. Buttons are designed as call-to-action (CTA) elements — they should always direct the user toward a clear next step such as "Read more", "Sign up", or "View documentation."
+Mangrove's standard button component for call-to-action elements like "Read more", "Sign up", or "View documentation."
 
-#### When to use:
+## When to use
 
-- Use buttons to drive a specific user action, not for navigation between pages (use links instead)
-- Each page should have one primary action. Secondary and tertiary options should be used sparingly
-- If there are multiple choices, one button should be the default (primary) and the others secondary or tertiary
+- Drive specific user actions (use links for page navigation)
+- One primary action per page; secondary/tertiary should be sparse
+- For multiple choices, mark one as primary and others secondary/tertiary
 
 #### Variants
 
-| Class | Purpose |
-|-------|---------|
-| `.mg-button.mg-button-primary` | Main call to action — filled background, high contrast |
-| `.mg-button.mg-button-secondary` | Supporting action — lower visual weight than primary |
-| `.mg-button.disabled` | Inactive state — not clickable |
+| Class                                              | Purpose                                                    |
+| -------------------------------------------------- | ---------------------------------------------------------- |
+| `.mg-button.mg-button-primary`                     | Main call to action — filled background, high contrast     |
+| `.mg-button.mg-button-secondary`                   | Supporting action — lower visual weight than primary       |
+| `.mg-button.mg-button-primary.mg-button-outline`   | Primary emphasis with a transparent surface                |
+| `.mg-button.mg-button-secondary.mg-button-outline` | Secondary emphasis with a transparent surface              |
+| `.mg-button.mg-button-primary.mg-button-cta`       | Editorial navigation with a circular direction badge       |
+| `.mg-button.mg-button-{variant}.mg-button--icon`   | Compact square icon-only button (toolbars, map actions)    |
+| `.mg-button--icon--round`                          | Added to the row above: circular floating action button    |
+| `.mg-button--icon--small`                          | Added to the row above: dense 28px toolbar icon button     |
+| `.mg-button--responsive-icon`                      | Icon + text on desktop, collapses to icon-only on mobile   |
+| `.mg-icon-button`                                  | Standalone ghost icon button — takes no other button class |
+| `.mg-icon-button--round`, `.mg-icon-button--small` | Circular and 28px variants of the standalone ghost button  |
+| `.mg-button.disabled`                              | Inactive state — not clickable                             |
 
-### Content
+## Content
 
-- Use clear, action-oriented labels: "Download report", "Sign up", not "Click here"
-- Keep labels short — ideally 2-3 words
+- Use clear, action-oriented labels: "Download report", "Sign up" (not "Click here")
+- Keep labels to 2–3 words
 
 ## Behaviors
 
-Button colors adapt to the active theme (UNDRR, PreventionWeb, DELTA, etc.). In dark contexts like heroes and CTAs, buttons invert to ensure contrast.
+Button colors adapt to the active theme. In dark contexts, buttons invert for contrast.
 
 <Canvas of={CtaButtonStories.DefaultButtons} meta={CtaButtonStories} />
 
-### All variants
+## Editorial CTA
 
-Primary, secondary, and disabled buttons on light and dark backgrounds for easy comparison. Switch themes in the toolbar to see how each variant adapts.
+Use `Variant="CTA"` for navigational prompts in cards, heroes, and section headers. Use the default filled-button treatment for consent, form submission, and utility actions.
+
+<Canvas of={CtaButtonStories.EditorialCta} meta={CtaButtonStories} />
+
+## All variants
+
+Primary, secondary, and disabled buttons on light and dark backgrounds. Switch themes in the toolbar to see how each variant adapts.
 
 <Canvas of={CtaButtonStories.AllVariants} meta={CtaButtonStories} />
 
-### Usage
+## Buttons with icons
 
-- Apply `.mg-button` as the base class, then add a variant class (`.mg-button-primary`, `.mg-button-secondary`)
-- Copy the HTML from the HTML tab of the canvas
+Icons help users recognize frequent actions (download, search, share, filter) faster.
 
-### Interactions
+### Icon with text label
+
+When a visible text label is present, the icon is purely decorative and must have `aria-hidden="true"`. The button derives its accessible name directly from the visible text:
+
+```html
+<button type="button" class="mg-button mg-button-primary">
+  <span class="mg-icon mg-icon-download" aria-hidden="true"></span>
+  <span>Download report (PDF)</span>
+</button>
+```
+
+```jsx
+<button type="button" className="mg-button mg-button-primary">
+  <Icon name="download" />
+  <span>Download report (PDF)</span>
+</button>
+```
+
+<Canvas of={CtaButtonStories.IconWithLabel} meta={CtaButtonStories} />
+
+### Icon-only buttons
+
+Compact square (`.mg-button--icon`), circular (`.mg-button--icon--round`), and dense toolbar (`.mg-button--icon--small`) buttons for actions without visible text labels (e.g. toolbars, map controls, modal close buttons).
+
+```html
+<button
+  type="button"
+  class="mg-button mg-button-primary mg-button--icon"
+  aria-label="Search publications"
+>
+  <span class="mg-icon mg-icon-search" aria-hidden="true"></span>
+</button>
+```
+
+<Canvas of={CtaButtonStories.IconButtons} meta={CtaButtonStories} />
+
+### Two icon-only classes, and which one to use
+
+There are two of them, and they are not interchangeable.
+
+| Use                                                                | Class                                                      | Colour                                            |
+| :----------------------------------------------------------------- | :--------------------------------------------------------- | :------------------------------------------------ |
+| An icon-only button in a brand colour                              | `.mg-button` + `.mg-button-{variant}` + `.mg-button--icon` | From the variant, exactly like a text button      |
+| A borderless control on an existing surface (dismiss, close, copy) | `.mg-icon-button` on its own                               | Transparent, inherits the surrounding text colour |
+
+`.mg-button--icon` is a shape modifier: it makes a `.mg-button` square and centres the icon, and everything else — foreground colour, typography, focus ring — still comes from `.mg-button`. Use it whenever the button should carry a variant colour.
+
+`.mg-icon-button` is a standalone primitive with the same geometry plus its own reset, hover and focus ring. It is what Notice's dismiss control and Drawer's close control use. It deliberately carries no variant colours, so **do not add `.mg-button-primary`, `.mg-button-secondary` or `.mg-button-outline` to it** — those classes only paint a background, and the readable foreground that goes with them lives on `.mg-button`, which a `.mg-icon-button` never has. Since 1.5.2 the filled combination is caught by a contrast guard rather than rendering a dark glyph on the fill, but it is still the wrong markup: `.mg-button-outline` still draws no border on it, and nothing else `.mg-button` provides is there.
+
+```html
+<!-- Wrong: .mg-icon-button takes no variant classes -->
+<button
+  type="button"
+  class="mg-icon-button mg-button-primary mg-icon-button--round"
+>
+  …
+</button>
+
+<!-- Right: a variant-coloured round icon button -->
+<button
+  type="button"
+  class="mg-button mg-button-primary mg-button--icon mg-button--icon--round"
+  aria-label="Add a record"
+>
+  <span class="mg-icon mg-icon-circle-plus" aria-hidden="true"></span>
+</button>
+
+<!-- Right: a ghost control on an existing surface -->
+<button
+  type="button"
+  class="mg-icon-button mg-icon-button--small"
+  aria-label="Dismiss"
+>
+  <span class="mg-icon mg-icon-close" aria-hidden="true"></span>
+</button>
+```
+
+A bare `.mg-icon-button` is a borderless ghost button that can sit on its own or inline within text.
+
+<Canvas of={CtaButtonStories.StandaloneIconButton} meta={CtaButtonStories} />
+
+### Responsive icon buttons
+
+For toolbars and headers where screen space is tight on mobile, use `.mg-button--responsive-icon` with a child `<span class="mg-button__label">`. On tablet and desktop, the button displays both the icon and text label. On mobile screens (`< 768px`), it automatically collapses to a compact 36&times;36px icon-only square button while preserving the full text label in the DOM for screen readers.
+
+```html
+<button
+  type="button"
+  class="mg-button mg-button-primary mg-button--responsive-icon"
+>
+  <span class="mg-icon mg-icon-search" aria-hidden="true"></span>
+  <span class="mg-button__label">Search publications</span>
+</button>
+```
+
+<Canvas of={CtaButtonStories.ResponsiveIconButton} meta={CtaButtonStories} />
+
+## Accessibility guidelines for icon buttons
+
+| Pattern                 | Markup Technique                                                                   | Screen Reader Announcement         | WCAG Compliance                                                   |
+| :---------------------- | :--------------------------------------------------------------------------------- | :--------------------------------- | :---------------------------------------------------------------- |
+| **Icon + visible text** | Visible `<span>Label</span>`, `<span class="mg-icon *" aria-hidden="true"></span>` | Reads visible text directly        | ✅ WCAG 2.5.3 (Label in Name) — DO NOT add redundant `aria-label` |
+| **Icon-only**           | `aria-label="Action description"`, `<span class="mg-icon *" aria-hidden="true">`   | Reads `aria-label` attribute       | ✅ WCAG 4.1.2 (Name, Role, Value) — `aria-label` is mandatory     |
+| **Responsive icon**     | `<span class="mg-button__label">Label</span>`                                      | Reads clipped label on all screens | ✅ WCAG 2.5.3 & 4.1.2 — seamless across mobile and desktop        |
+
+> **Target size notice:** The `--small` variant (28 &times; 28px) meets the WCAG 2.5.8 minimum target size (24px) but not the enhanced target (44px); use it only in dense toolbars where surrounding spacing provides the necessary hit area.
+
+## Usage
+
+- Apply `.mg-button` as the base class, then add an emphasis class (`.mg-button-primary` or `.mg-button-secondary`)
+- Add `.mg-button-outline` for unfilled treatment
+- For an icon-only button in a brand colour, keep `.mg-button` and add `.mg-button--icon`; `.mg-icon-button` is a separate standalone primitive and takes no `.mg-button-*` class
+- Wrap adjacent actions in `.mg-buttons` for consistent, RTL-safe spacing (don't add margins to individual buttons)
+- Copy HTML from the HTML tab in the canvas
+
+## Interactions
 
 - Hover state applies to the entire button
 
 ## Changelog
 
-- **1.1** — 2026-03-22: Add "All variants" comparison story (light + dark backgrounds). Fix secondary button contrast to meet WCAG AA (blue-800/blue-700, was blue-600/blue-400). Fix disabled button contrast (neutral-500 bg + white text). Remove dead `mg-button-arrow` class and `For_Primary` prop. Add `:focus-visible` ring for buttons on dark backgrounds. Tokenize secondary button and hero secondary button colors for theme overriding.
-- **1.0** — 2022-12-12: Released component
+- **1.5.3**, 2026-09-18 ([#1249](https://github.com/unisdr/undrr-mangrove/pull/1249)): Fixes [#1243](https://github.com/unisdr/undrr-mangrove/issues/1243). PreventionWeb and IRP aimed `color.button-background--hover` and `color.button-outline-primary--hover` at the Sendai orange, so hovering a primary button put a white label on the accent at 2.95:1 in both themes. The hover is now a tonal step inside each brand: PreventionWeb `brand.teal-800` (#0c7575, white on it 5.5:1) and IRP `brand.blue-800` (#0d67a3, 6.02:1), the primitives their secondary buttons already use. `cta-button.scss` did not change: this arrived through the token layer, not the component. UNDRR, MCR2030 and DELTA hovers are unaffected.
+- **1.5.2**, 2026-09-18 ([#1225](https://github.com/unisdr/undrr-mangrove/pull/1225)): Fixes [#1201](https://github.com/unisdr/undrr-mangrove/issues/1201). Documents the two icon-only button classes and which one to reach for: `.mg-button--icon` is a shape modifier of `.mg-button` and carries the variant colours, and `.mg-icon-button` is the standalone ghost primitive that takes no `.mg-button-*` class. Combining them was not documented as wrong anywhere, and it rendered a dark glyph on the filled background (2.53:1 on UNDRR primary) because `.mg-button-primary` only sets a background and the readable foreground lives on `.mg-button`.
+  - Added a contrast guard so `.mg-icon-button` with a filled `.mg-button-primary` or `.mg-button-secondary` takes the same `--mg-color-button` foreground its own hover already used. The combination is still the wrong markup (`.mg-button-outline` draws no border on it), but it no longer fails SC 1.4.3. Consumers who patched around it with their own low-specificity `color` rule on `.mg-icon-button` will now get the library value instead.
+  - Indexed the icon-only classes in the AI manifest (`components-buttons-buttons` CSS classes and examples, and the `mg-icon-button` utility entry), so an agent searching for "icon button" finds the documented pattern instead of only the primitive in the compiled CSS.
+
+- **1.5.1**, 2026-09-17 ([#1173](https://github.com/unisdr/undrr-mangrove/pull/1173)): Fixes #1171. A standalone `.mg-icon-button` now owns its ghost styling (transparent fill, no border, pointer cursor) and its hover sets a light foreground on the dark interactive fill, so the icon stays visible in every theme (it was 1.75:1 on MCR2030). In forced-colors mode the hover shows an outline. A MegaMenu rule no longer overrides the primitive's `inline-flex` display and zero padding.
+  - Added a "Standalone icon button" story that shows a bare `.mg-icon-button` on its own and inline within text.
+  - Filled primary, secondary and disabled buttons now paint their fill under the border, so the stroke matches the fill and they render the same size as outline buttons (previously a 1px white border made the fill look smaller). Themes can colour the stroke with the new `--mg-border-color-button-primary` and `--mg-border-color-button-secondary` tokens, which default to `transparent`.
+  - Icons in buttons are now vertically centred (they sat about 1.5px high). Icon-only buttons use an 18px icon so the glyph stays on the pixel grid, and buttons with an icon and a label are now 36px tall, the same as text-only buttons.
+
+- **1.5.0**, 2026-09-16 ([#1157](https://github.com/unisdr/undrr-mangrove/pull/1157)): Added `.mg-button--icon` and `.mg-icon-button` icon-only button variants with square aspect ratio, centered icons, and `.mg-button--icon--round` circular floating action treatment. Added `.mg-button--responsive-icon` for responsive icon+text buttons that collapse to icon-only on mobile, and added intrinsic `gap` spacing and `.mg-button__icon` rules for buttons with leading or trailing icons.
+
+- **1.4.1**, 2026-09-15: Define brand-owned secondary button tokens for PreventionWeb, MCR2030, and IRP themes, resolving an issue where secondary buttons fell back to default UNDRR corporate blue.
+
+- **1.4**, 2026-09-10 ([#1113](https://github.com/unisdr/undrr-mangrove/pull/1113)): The arrow bubble slides a few pixels toward its destination on hover, flipped in RTL and suppressed under `prefers-reduced-motion`, where the shift would be a jump rather than a gesture.
+
+- **1.3.2**, 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a button whose own language is not Arabic.
+- **1.3.1**, 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)):
+  - Refreshed React `CtaButton` instances as compact editorial links with an optically aligned circular direction badge, tactile press state, RTL direction, context-aware hero colours, and safe wrapping for narrow German, French and Arabic labels.
+  - Made the editorial treatment an explicit `Variant="CTA"` option; conventional form and utility actions retain their filled button treatment.
+  - Switched button labels from Roboto Condensed to regular Roboto, strengthened and optically centred the CTA chevron, and kept label/badge geometry stable across hover and focus.
+  - Softened conventional buttons with the shared small-radius token, replaced physical adjacent margins with the RTL-safe `.mg-buttons` gap container, and hardened disabled links so caller props cannot restore navigation.
+  - Added focused behaviour and accessibility coverage, including smoother hover transitions, a clearer token-driven keyboard focus ring, and reduced-motion-aware `scale(0.96)` press feedback.
+  - Kept short editorial labels and their directional badges together by giving the label an explicit wrapper, preventing unnecessary wrapping when the surrounding card has room.
+  - Allowed long translated labels to wrap within narrow containers without pushing the CTA beyond the viewport, while positioning the decorative directional badge independently so it cannot distort label wrapping.
+  - Kept the public anchor markup flat by applying CTA wrapping directly to the link instead of introducing a label-only child element.
+  - Corrected the all-variants story's Hero fixture so its gradient overlay stays behind the dark-context controls instead of covering the Storybook canvas, and added the missing editorial CTA treatment to both light and Hero comparisons.
+- **1.3**, 2026-08-26: Add composable `.mg-button-outline` modifier for primary and secondary emphasis variants.
+- **1.2**, 2026-04-13: `.mg-button` now declares an explicit `font-family: $mg-font-family-headings;` (was inheriting body Roboto). Aligns with the existing `:lang(ar)` override which already used `$mg-font-family-arabic-headings`; Latin and Arabic now match.
+- **1.1**, 2026-03-22: Add "All variants" comparison story (light + dark backgrounds). Fix secondary button contrast to meet WCAG AA (blue-800/blue-700, was blue-600/blue-400). Fix disabled button contrast (neutral-500 bg + white text). Remove dead `mg-button-arrow` class and `For_Primary` prop. Add `:focus-visible` ring for buttons on dark backgrounds. Tokenize secondary button and hero secondary button colors for theme overriding.
+- **1.0**, 2022-12-12: Released component

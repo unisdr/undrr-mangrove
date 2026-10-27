@@ -1,0 +1,74 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as CodeBlockStories from './CodeBlock.stories';
+
+<Meta of={CodeBlockStories} />
+
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
+
+# Code block
+
+A component for displaying formatted source code. Supports plain blocks, syntax highlighting, and an optional filename header bar.
+
+For inline `<code>` snippets inside prose, use the bare HTML element — no component needed. See [Base Typography](?path=/docs/components-typography--docs#code) for inline code styling.
+
+## Examples
+
+### Plain block
+
+A plain dark block — use when no language label is needed:
+
+<Canvas of={CodeBlockStories.Plain} />
+
+**HTML pattern:**
+
+```html
+<pre><code>your code here</code></pre>
+```
+
+Add `data-language="Bash"` to `<pre>` to show a language badge without syntax colouring:
+
+```html
+<pre data-language="Bash"><code>npm install</code></pre>
+```
+
+### Syntax highlighted
+
+Add the `language` prop to enable Prism syntax colouring and an automatic language badge:
+
+<Canvas of={CodeBlockStories.WithLanguage} />
+
+Supported languages: `bash`, `javascript`, `jsx`.
+
+### With line numbers
+
+Add `lineNumbers` to show a gutter (requires `language`):
+
+<Canvas of={CodeBlockStories.WithLineNumbers} />
+
+<Canvas of={CodeBlockStories.WithLineNumbersAndFilename} />
+
+### With filename header
+
+Pass a `filename` prop to wrap the block in a `<figure class="mg-code-block">` with a `<figcaption>` header — useful when the snippet has a clear paste destination:
+
+<Canvas of={CodeBlockStories.WithFilename} />
+
+<Canvas of={CodeBlockStories.WithFilenameAndLanguage} />
+
+**HTML pattern:**
+
+```html
+<figure class="mg-code-block">
+  <figcaption>MyComponent.jsx</figcaption>
+  <pre><code>…</code></pre>
+</figure>
+```
+
+## Changelog
+
+- **1.2.1**, 2026-09-17 ([#1193](https://github.com/unisdr/undrr-mangrove/pull/1193)): Gutter line numbers move from `--mg-color-neutral-400` to `--mg-color-neutral-300`. The old value measured 4.39:1 against the neutral-800 code surface and so failed axe's colour-contrast rule on every line of the two line-number stories; the new value is 6.08:1. The neutral ramp is shared by every theme, so this holds in all five.
+- **1.2.0**, 2026-09-01:
+  - New component extracted from Base Typography
+  - Added `filename` prop for the `figure.mg-code-block` wrapper
+  - Simplified API: `code` (required), `language` (optional), `filename` (optional)
+  - CSS: removed left accent border; clean `border-radius: 6px`; language badge via `data-language` / CSS `:has()`; RTL badge positioning

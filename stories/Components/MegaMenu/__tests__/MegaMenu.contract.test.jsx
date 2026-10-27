@@ -13,9 +13,7 @@ describe('MegaMenu contract', () => {
   });
 
   it('renders a nav element for schema-valid minimal fixture', () => {
-    const { container } = render(
-      <MegaMenu sections={[{ title: 'About' }]} />
-    );
+    const { container } = render(<MegaMenu sections={[{ title: 'About' }]} />);
     expect(container.querySelector('nav')).toBeInTheDocument();
   });
 
@@ -40,9 +38,7 @@ describe('MegaMenu contract', () => {
   });
 
   it('renders a nav with the default aria-label', () => {
-    const { container } = render(
-      <MegaMenu sections={[{ title: 'Home' }]} />
-    );
+    const { container } = render(<MegaMenu sections={[{ title: 'Home' }]} />);
     const nav = container.querySelector('nav');
     expect(nav).toHaveAttribute('aria-label', 'Main Navigation');
   });

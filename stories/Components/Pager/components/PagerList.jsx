@@ -28,7 +28,7 @@ function getVisiblePages(page, totalPages) {
   const halfVisible = Math.floor(maxVisible / 2);
 
   let startPage = Math.max(1, page - halfVisible);
-  let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+  const endPage = Math.min(totalPages, startPage + maxVisible - 1);
 
   // Adjust start if near the end
   if (endPage - startPage < maxVisible - 1) {
@@ -73,21 +73,43 @@ function getVisiblePages(page, totalPages) {
  * @param {number|null} props.totalPages  Total number of pages (null = unknown)
  * @param {Function} props.onPageChange  Called with new page number
  * @param {boolean} [props.isLoading]    Disables all controls when true
+ * @param {string} [props.prevLabel]     Visible text for Previous button
+ * @param {string} [props.nextLabel]     Visible text for Next button
+ * @param {string} [props.goPrevLabel]   aria-label for Previous button
+ * @param {string} [props.goNextLabel]   aria-label for Next button
+ * @param {string} [props.pageLabel]     aria-label template for page buttons ({page} token)
+ * @param {string} [props.currentPageLabel] aria-label for current page ({page} token)
  */
-export function PagerList({ page, totalPages, onPageChange, isLoading = false }) {
+export function PagerList({
+  page,
+  totalPages,
+  onPageChange,
+  isLoading = false,
+  prevLabel = 'Previous',
+  nextLabel = 'Next',
+  goPrevLabel = 'Go to previous page',
+  goNextLabel = 'Go to next page',
+  pageLabel = 'Page {page}',
+  currentPageLabel = 'Page {page}, current page',
+}) {
   const visiblePages = useMemo(
     () => getVisiblePages(page, totalPages),
-    [page, totalPages],
+    [page, totalPages]
   );
 
   const handlePageChange = useCallback(
-    (newPage) => {
+    newPage => {
       if (newPage < 1) return;
-      if (totalPages !== null && totalPages !== undefined && newPage > totalPages) return;
+      if (
+        totalPages !== null &&
+        totalPages !== undefined &&
+        newPage > totalPages
+      )
+        return;
       if (newPage === page) return;
       onPageChange(newPage);
     },
-    [onPageChange, page, totalPages],
+    [onPageChange, page, totalPages]
   );
 
   const handleKeyDown = useCallback(
@@ -97,7 +119,7 @@ export function PagerList({ page, totalPages, onPageChange, isLoading = false })
         handlePageChange(targetPage);
       }
     },
-    [handlePageChange],
+    [handlePageChange]
   );
 
   if (totalPages !== null && totalPages !== undefined && totalPages <= 1) {
@@ -105,7 +127,8 @@ export function PagerList({ page, totalPages, onPageChange, isLoading = false })
   }
 
   const hasPrevious = page > 1;
-  const hasNext = totalPages === null || totalPages === undefined || page < totalPages;
+  const hasNext =
+    totalPages === null || totalPages === undefined || page < totalPages;
 
   return (
     <ul className="mg-pager__list">
@@ -115,9 +138,9 @@ export function PagerList({ page, totalPages, onPageChange, isLoading = false })
           type="button"
           className={`mg-pager__link mg-pager__link--prev ${!hasPrevious ? 'mg-pager__link--disabled' : ''}`}
           onClick={() => handlePageChange(page - 1)}
-          onKeyDown={(e) => handleKeyDown(e, page - 1)}
+          onKeyDown={e => handleKeyDown(e, page - 1)}
           disabled={!hasPrevious || isLoading}
-          aria-label="Go to previous page"
+          aria-label={goPrevLabel}
           aria-disabled={!hasPrevious}
         >
           <svg
@@ -135,12 +158,12 @@ export function PagerList({ page, totalPages, onPageChange, isLoading = false })
           >
             <polyline points="15 18 9 12 15 6" />
           </svg>
-          <span className="mg-pager__text">Previous</span>
+          <span className="mg-pager__text">{prevLabel}</span>
         </button>
       </li>
 
       {/* Page numbers */}
-      {visiblePages.map((item) => {
+      {visiblePages.map(item => {
         if (item.type === 'ellipsis') {
           return (
             <li
@@ -160,9 +183,11 @@ export function PagerList({ page, totalPages, onPageChange, isLoading = false })
               type="button"
               className={`mg-pager__link mg-pager__link--number ${isCurrentPage ? 'mg-pager__link--current' : ''}`}
               onClick={() => handlePageChange(item.number)}
-              onKeyDown={(e) => handleKeyDown(e, item.number)}
+              onKeyDown={e => handleKeyDown(e, item.number)}
               disabled={isLoading}
-              aria-label={`Page ${item.number}${isCurrentPage ? ', current page' : ''}`}
+              aria-label={String(
+                isCurrentPage ? currentPageLabel : pageLabel
+              ).replace(/\{page\}/g, item.number)}
               aria-current={isCurrentPage ? 'page' : undefined}
             >
               {item.number}
@@ -177,12 +202,12 @@ export function PagerList({ page, totalPages, onPageChange, isLoading = false })
           type="button"
           className={`mg-pager__link mg-pager__link--next ${!hasNext ? 'mg-pager__link--disabled' : ''}`}
           onClick={() => handlePageChange(page + 1)}
-          onKeyDown={(e) => handleKeyDown(e, page + 1)}
+          onKeyDown={e => handleKeyDown(e, page + 1)}
           disabled={!hasNext || isLoading}
-          aria-label="Go to next page"
+          aria-label={goNextLabel}
           aria-disabled={!hasNext}
         >
-          <span className="mg-pager__text">Next</span>
+          <span className="mg-pager__text">{nextLabel}</span>
           <svg
             className="mg-pager__icon"
             xmlns="http://www.w3.org/2000/svg"
@@ -209,6 +234,12 @@ PagerList.propTypes = {
   totalPages: PropTypes.number,
   onPageChange: PropTypes.func.isRequired,
   isLoading: PropTypes.bool,
+  prevLabel: PropTypes.string,
+  nextLabel: PropTypes.string,
+  goPrevLabel: PropTypes.string,
+  goNextLabel: PropTypes.string,
+  pageLabel: PropTypes.string,
+  currentPageLabel: PropTypes.string,
 };
 
 export default PagerList;

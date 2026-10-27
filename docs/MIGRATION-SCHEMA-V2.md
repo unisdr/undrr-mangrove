@@ -1,12 +1,12 @@
-# Migrating to schema-aligned props (v2)
+# Draft migration: schema-aligned props
 
-Phase 2 aligns all component props with the canonical content schemas defined in `schemas/`. These are breaking changes to prop names. This guide covers every changed prop and shows before/after examples so you can update your integrations.
+This unmerged Phase 2 proposal renames inputs on selected legacy components to match the proposed contracts in `schemas/`. It has not shipped in Mangrove 2.3.0 and has no assigned release version. The filename is historical; the examples compare the current main API with this draft API. These component contracts do not replace the separate ContentCard/ContentTeaser projections or approve canonical editorial content models.
 
-If you are consuming Mangrove components via npm (`import { VerticalCard } from '@undrr/undrr-mangrove'`), update your JSX props. If you are consuming components via Drupal data attributes, see [Drupal data attribute changes](#drupal-data-attribute-changes).
+If you are consuming Mangrove components via npm (`import { VerticalCard } from '@undrr/undrr-mangrove/components/VerticalCard.js'`), update your JSX props. If you are consuming components via Drupal data attributes, see [Drupal data attribute changes](#drupal-data-attribute-changes).
 
-For background on the schema layer and the full v2.0 changelog, see:
-- [v2.0 release notes](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-release-notes-v2-0--docs) in Storybook (or [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASE-2.0.md))
-- [Design decisions / Content architecture](https://unisdr.github.io/undrr-mangrove/?path=/docs/design-decisions-content-architecture--docs) — schema inventory and authoring guide
+For this branch’s proposal and schema background, see:
+- [Schema phase 2 proposal](?path=/docs/design-decisions-schema-phase-2-proposal--docs) in Storybook (or [source proposal](PROPOSAL-SCHEMA-PHASE-2.md))
+- [Design decisions / Content architecture](?path=/docs/design-decisions-content-architecture--docs) — schema inventory and authoring guide
 
 ---
 
@@ -25,7 +25,7 @@ Applies to: VerticalCard, HorizontalCard, BookCard, HorizontalBookCard, IconCard
 | `data[].summaryText` | `items[].summary` | Renamed for schema alignment |
 
 ```jsx
-// Before (v1)
+// Before (current main)
 <VerticalCard data={[{
   imgback: '/img.jpg',
   imgalt: 'Description',
@@ -36,7 +36,7 @@ Applies to: VerticalCard, HorizontalCard, BookCard, HorizontalBookCard, IconCard
   link: '/page',
 }]} />
 
-// After (v2)
+// After (draft)
 <VerticalCard items={[{
   image: { src: '/img.jpg', alt: 'Description' },
   labels: ['Category', 'Tag'],
@@ -55,14 +55,14 @@ Applies to: VerticalCard, HorizontalCard, BookCard, HorizontalBookCard, IconCard
 | `stats[].summaryText` | `stats[].summary` |
 
 ```jsx
-// Before (v1)
+// Before (current main)
 <StatsCard stats={[{
   value: '1,500+',
   label: 'Disasters recorded',
   summaryText: 'In the reporting period',
 }]} />
 
-// After (v2)
+// After (draft)
 <StatsCard stats={[{
   value: '1,500+',
   label: 'Disasters recorded',
@@ -80,7 +80,7 @@ Applies to: VerticalCard, HorizontalCard, BookCard, HorizontalBookCard, IconCard
 | `imageAlt` | `image.alt` |
 
 ```jsx
-// Before (v1)
+// Before (current main)
 <QuoteHighlight
   quote="Risk reduction is everyone's responsibility."
   attribution="António Guterres"
@@ -88,7 +88,7 @@ Applies to: VerticalCard, HorizontalCard, BookCard, HorizontalBookCard, IconCard
   imageAlt="Portrait of António Guterres"
 />
 
-// After (v2)
+// After (draft)
 <QuoteHighlight
   quote="Risk reduction is everyone's responsibility."
   attribution="António Guterres"
@@ -106,14 +106,14 @@ Applies to: VerticalCard, HorizontalCard, BookCard, HorizontalBookCard, IconCard
 | `SharingTextBody` | `sharingBody` |
 
 ```jsx
-// Before (v1)
+// Before (current main)
 <ShareButtons
   labels={{ mainLabel: 'Share this', onCopy: 'Copied' }}
   SharingSubject="Read this report"
   SharingTextBody="Check out this resource: "
 />
 
-// After (v2)
+// After (draft)
 <ShareButtons
   labels={{ mainLabel: 'Share this', onCopy: 'Copied' }}
   sharingSubject="Read this report"
@@ -131,7 +131,7 @@ Applies to: VerticalCard, HorizontalCard, BookCard, HorizontalBookCard, IconCard
 | `imageAlt` | `image.alt` |
 
 ```jsx
-// Before (v1)
+// Before (current main)
 <TextCta
   headline="Join the global effort"
   text="Disaster risk reduction starts with you."
@@ -139,7 +139,7 @@ Applies to: VerticalCard, HorizontalCard, BookCard, HorizontalBookCard, IconCard
   imageAlt="People collaborating around a table"
 />
 
-// After (v2)
+// After (draft)
 <TextCta
   headline="Join the global effort"
   text="Disaster risk reduction starts with you."
@@ -151,7 +151,7 @@ Applies to: VerticalCard, HorizontalCard, BookCard, HorizontalBookCard, IconCard
 
 ## MegaMenu
 
-No breaking changes. A new optional `ariaLabel` prop is available to set the accessible name for the navigation landmark. The default value is `'Main Navigation'`.
+The draft adds optional `ariaLabel` for the navigation landmark. When omitted, MegaMenu keeps the resolved `labels.navLabel` from its current runtime language catalogue. Explicit `ariaLabel` takes precedence; existing label and direction overrides remain supported.
 
 ```jsx
 // Optional — only needed when the default label doesn't fit
@@ -212,7 +212,7 @@ Components with `fromElement` hydration functions translate DOM data attributes 
 **IconCard** — The `data-items` attribute accepts a JSON array. Update Gutenberg block output to use schema-aligned field names inside each item:
 
 ```json
-// Before (v1 JSON in data-items)
+// Before (current main JSON in data-items)
 [{
   "imgback": "/img.jpg",
   "imgalt": "Description",
@@ -221,7 +221,7 @@ Components with `fromElement` hydration functions translate DOM data attributes 
   "summaryText": "Body text"
 }]
 
-// After (v2 JSON in data-items)
+// After (draft JSON in data-items)
 [{
   "image": { "src": "/img.jpg", "alt": "Description" },
   "labels": ["Category"],
@@ -233,10 +233,10 @@ Components with `fromElement` hydration functions translate DOM data attributes 
 **StatsCard** — The `data-stats` attribute accepts a JSON array. Update Gutenberg block output to use `summary` instead of `summaryText` in each stat item:
 
 ```json
-// Before (v1 JSON in data-stats)
+// Before (current main JSON in data-stats)
 [{ "value": "1,500+", "label": "Disasters", "summaryText": "In the period" }]
 
-// After (v2 JSON in data-stats)
+// After (draft JSON in data-stats)
 [{ "value": "1,500+", "label": "Disasters", "summary": "In the period" }]
 ```
 
@@ -251,10 +251,10 @@ Phase 2 introduces contract tests alongside existing component tests. A contract
 
 This catches regressions where a component silently ignores a required field, and ensures that schema-valid data always produces a renderable result. Contract tests live in each component's `__tests__/` directory alongside existing `.test.jsx` files.
 
-To run all tests including contract tests:
+To build the proposed schemas and run the tests in this branch:
 
 ```bash
 yarn build:schemas && yarn test
 ```
 
-The `yarn build:schemas` step is required first because contract tests import from `schemas/dist/`, which is gitignored and must be built locally.
+Run `yarn build:schemas` after changing a schema source: contract tests import the compiled JSON in `schemas/dist/`, and this draft versions those seven files alongside their sources. Regenerate them rather than editing the JSON by hand.

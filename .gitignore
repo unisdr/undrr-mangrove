@@ -6,8 +6,12 @@ yarn-error.log
 /storybook-static
 /docs-build
 /docs-build-temp
+# Assembled npm package (yarn pack:assemble / pack:preview)
+/npm-package
+/_site
 /stories/assets/css/style*.css
 /stories/assets/css/style*.css.map
+/stories/assets/scss/generated/_tokens-*.scss
 .DS_Store
 .scannerwork
 .vscode/
@@ -22,3 +26,14 @@ CONTRIBUTING_ISSUES.md
 # Ignore npm's package lock, we use yarn
 package-lock.json
 npm-debug.log
+.gstack/
+debug-storybook.log
+.superpowers/
+.worktrees/
+.claude/worktrees/
+
+# Local and CI motion regression evidence
+/artifacts/motion/
+
+# Rich-content browser gate evidence
+/artifacts/rich-content/

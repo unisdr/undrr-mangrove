@@ -1,3 +1,13 @@
+/**
+ * Menu Items
+ *
+ * Accessible menu list, navigation item links, and hover/focus interaction states.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Atom/Typography/Links/Links.mdx
+ */
+@use "../../../assets/scss/mixins" as *;
+
 // * menu item row start *//
 .menu li {
   a {
@@ -9,13 +19,20 @@
     letter-spacing: 0.03em;
 
     &:hover {
-      color: $mg-color-neutral-600;
+      color: rgb(var(--mg-color-neutral-600));
       cursor: pointer;
+      text-decoration: underline;
+    }
+
+    &:focus-visible {
+      @include mg-focus-ring;
+
+      text-decoration: underline;
     }
 
     &.selected {
-      border-bottom: 2px solid $mg-color-red-900;
-      padding-bottom: $mg-spacing-25;
+      border-bottom: 2px solid rgb(var(--mg-color-red-900));
+      padding-bottom: var(--mg-spacing-25);
     }
   }
 }

@@ -33,8 +33,12 @@ describe('TextCta contract', () => {
         text="Join the global movement for resilience."
       />
     );
-    expect(screen.getByText('Act now to reduce disaster risk')).toBeInTheDocument();
-    expect(screen.getByText('Join the global movement for resilience.')).toBeInTheDocument();
+    expect(
+      screen.getByText('Act now to reduce disaster risk')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('Join the global movement for resilience.')
+    ).toBeInTheDocument();
     expect(await axe(container)).toHaveNoViolations();
   });
 
@@ -61,7 +65,11 @@ describe('TextCta contract', () => {
       headline: 'Take action',
       buttons: [
         { label: 'Learn more', url: 'https://example.com', type: 'Primary' },
-        { label: 'Contact us', url: 'https://example.com/contact', type: 'Secondary' },
+        {
+          label: 'Contact us',
+          url: 'https://example.com/contact',
+          type: 'Secondary',
+        },
       ],
     };
     expect(validate(fixture)).toBe(true);
@@ -76,6 +84,8 @@ describe('TextCta contract', () => {
         ]}
       />
     );
-    expect(screen.getByRole('link', { name: 'Learn more' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: 'Learn more' })
+    ).toBeInTheDocument();
   });
 });

@@ -1,0 +1,428 @@
+/**
+ * Hub Header
+ *
+ * Content hub banner header with theme styling, breadcrumb trail, and description copy.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Patterns/ContentHub/ContentHub.mdx
+ */
+@use "../../assets/scss/mixins" as *;
+@use "../../assets/scss/config" as *;
+
+// Deliberately not a tab set and deliberately not the mega menu topbar. Both
+// mark the active item with a 3px bottom border; so does OnThisPageNav. A
+// leading rule is the repo's existing idiom for "the destination you are on"
+// (see mg-mega-content__section-list-link--active), and it is the one
+// horizontal-strip treatment not already spoken for.
+.mg-hub-header {
+  // Every surface-dependent value is a variable, so a surface variant only has
+  // to retarget these and the contrast follows. The colour values reuse Hero's
+  // own tokens, which are theme-aware, so a header and a hero set to the same
+  // surface match in all five themes without hardcoding anything.
+  // Unified is the default. On a colour every link goes white, so the current
+  // item can no longer be marked by colour — weight and the leading rule carry
+  // it, and neither was colour-dependent to begin with.
+  --mg-hub-header-surface: var(--mg-color-hero);
+  --mg-hub-header-banner-surface: var(--mg-color-hero);
+  --mg-hub-header-ink: var(--mg-color-neutral-0);
+  --mg-hub-header-link: var(--mg-color-neutral-0);
+
+  // The global `a:hover` sets --mg-color-interactive-active, and at (0,2,1) it
+  // outspecifies a plain link rule. Unstated, that lands a dark hover colour
+  // meant for white backgrounds on a coloured bar. On a colour the link holds
+  // its colour and the underline carries the hover instead.
+  --mg-hub-header-link-hover: var(--mg-color-neutral-0);
+  --mg-hub-header-marker: var(--mg-color-neutral-0);
+  --mg-hub-header-rule: var(--mg-color-neutral-0);
+  --mg-hub-header-rule-alpha: 0.4;
+  --mg-hub-header-focus: var(--mg-color-focus-ring-inverse);
+
+  // A slight tint stratifies the bar from the banner without drawing a rule
+  // between them. Without it the two are the same flat colour, and a hero image
+  // meeting that slab reads as a rendering fault rather than a boundary.
+  // Darkening only raises the contrast of the white links above it.
+  --mg-hub-header-bar-tint: 0 0 0;
+  --mg-hub-header-bar-tint-alpha: 0.14;
+
+  // hero--secondary is the orange accent, which carries no text at any size —
+  // every link and heading here was white on it at 2.65, and the bar tint
+  // darkened it nowhere near enough. So the surface stays the theme's own hero
+  // colour, which the white ink above is already sized for, and the accent
+  // becomes the rule the bar sits on: a line, with no copy over it.
+  // See docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text
+  &--surface-secondary {
+    // Full-bleed, because the bar it sits under is full-bleed, so the rule
+    // reads as the edge of the header rather than a line inside it.
+    .mg-hub-header__bar {
+      border-block-end: mg-rem(4) solid rgb(var(--mg-color-hero--secondary));
+    }
+  }
+
+  &--surface-tertiary {
+    --mg-hub-header-surface: var(--mg-color-hero--tertiary);
+    --mg-hub-header-banner-surface: var(--mg-color-hero--tertiary);
+
+    // Near-black already: darkening further would not read, so lift instead.
+    --mg-hub-header-bar-tint: 255 255 255;
+    --mg-hub-header-bar-tint-alpha: 0.1;
+  }
+
+  // Detached: the navigation sits on the page background and the banner keeps
+  // its own colour, so the two read as separate blocks.
+  &--surface-detached {
+    --mg-hub-header-surface: var(--mg-color-neutral-0);
+    --mg-hub-header-ink: var(--mg-color-text);
+    --mg-hub-header-link: var(--mg-color-interactive);
+    --mg-hub-header-link-hover: var(--mg-color-interactive-active);
+    --mg-hub-header-marker: var(--mg-color-interactive);
+    --mg-hub-header-rule: var(--mg-color-neutral-300);
+    --mg-hub-header-rule-alpha: 1;
+    --mg-hub-header-focus: var(--mg-color-focus-ring);
+
+    // Nothing to stratify from: the bar and the page share a surface.
+    --mg-hub-header-bar-tint-alpha: 0;
+  }
+
+  // Matches the wider narrow-viewport gutter the page patterns use, so the
+  // header's own content lines up with the content below it.
+  @media (width < 48rem) {
+    &__identity,
+    &__banner-inner {
+      padding-inline: var(--mg-spacing-200);
+    }
+
+    // Once the links wrap to their own line the strip should behave like any
+    // mobile scroller: out to the screen edges, so the fade sits at the edge
+    // and shows there is more to reach rather than stopping short of it.
+    &__nav {
+      margin-inline: calc(var(--mg-spacing-200) * -1);
+    }
+
+    // The gutter, less the padding the first link already carries, so its
+    // label lines up with the hub name above instead of sitting inside it.
+    &__nav ul {
+      padding-inline: calc(var(--mg-spacing-200) - var(--mg-spacing-150));
+      scroll-padding-inline: var(--mg-spacing-200);
+    }
+  }
+
+  // The bar bleeds so a coloured header meets the banner or hero below it with
+  // no seam, while staying its own container.
+  &__bar {
+    background-color: rgb(var(--mg-hub-header-surface));
+    background-image: linear-gradient(
+      rgb(var(--mg-hub-header-bar-tint) / var(--mg-hub-header-bar-tint-alpha)),
+      rgb(var(--mg-hub-header-bar-tint) / var(--mg-hub-header-bar-tint-alpha))
+    );
+
+    // Self-contained breakout. mg-container-full-width paints its bleed with a
+    // z-index:-1 pseudo-element, which disappears behind any ancestor that has
+    // its own opaque background — as these pattern wrappers do.
+    margin-inline-start: calc(50% - 50vw);
+    inline-size: 100vw;
+  }
+
+  // Identity is chrome: this row is the same height and treatment on every page
+  // of the hub, whether or not a banner follows it. Invariance is what stops it
+  // reading as a heading, and what makes it a landmark readers can rely on.
+  &__identity {
+    display: flex;
+    flex-wrap: wrap;
+
+    // Box-centred, not baseline. Baseline alignment is right for text against
+    // text; the section links are 44px hit areas, and so is the name.
+    align-items: center;
+    gap: var(--mg-spacing-100) var(--mg-spacing-150);
+    padding-block: var(--mg-spacing-100);
+  }
+
+  &__name {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+
+    // Matches the section links. At 1.125rem on a 1.5em line plus the old
+    // padding the target was 42px, under the 44px the review checklist asks
+    // for, and the divider it carries fell 2px short of the row.
+    min-block-size: 2.75rem;
+    padding-block: 0;
+    font-size: 1.125rem;
+    font-family: var(--mg-font-family-ui);
+    font-weight: 700;
+    color: rgb(var(--mg-hub-header-ink));
+    text-decoration: none;
+
+    &:hover {
+      color: rgb(var(--mg-hub-header-link-hover));
+      text-decoration: underline;
+    }
+
+    &:focus-visible {
+      box-shadow: 0 0 0 var(--mg-focus-ring-offset)
+        rgb(var(--mg-hub-header-surface));
+      outline: var(--mg-focus-ring-width) solid rgb(var(--mg-hub-header-focus));
+      outline-offset: var(--mg-focus-ring-offset);
+    }
+
+    // The same hairline the mega menu uses between its columns. Suppressed once
+    // the links wrap to their own line, where the line break is the separator
+    // and a trailing rule would hang at the end of a line with nothing after
+    // it — the orphan mark this row already had to design out once.
+    // The links carry 15px of their own inline padding, so the wider padding
+    // here is what puts the rule near the middle of the gap rather than at its
+    // first third, where it read as a mark trailing the name.
+    @media (width >= 48rem) {
+      padding-inline-end: var(--mg-spacing-250);
+      border-inline-end: 1px solid
+        rgb(var(--mg-hub-header-rule) / var(--mg-hub-header-rule-alpha));
+    }
+  }
+
+  &__nav {
+    flex: 1 1 20rem;
+    min-inline-size: 0;
+    position: relative;
+    isolation: isolate;
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      inset-block: 0;
+      inline-size: var(--mg-spacing-300);
+      pointer-events: none;
+      opacity: 0;
+      z-index: 3;
+    }
+
+    &::before {
+      inset-inline-start: 0;
+      background: linear-gradient(
+        to right,
+        rgb(var(--mg-hub-header-surface)),
+        transparent
+      );
+    }
+
+    &::after {
+      inset-inline-end: 0;
+      background: linear-gradient(
+        to left,
+        rgb(var(--mg-hub-header-surface)),
+        transparent
+      );
+    }
+
+    &:dir(rtl)::before {
+      background: linear-gradient(
+        to left,
+        rgb(var(--mg-hub-header-surface)),
+        transparent
+      );
+    }
+
+    &:dir(rtl)::after {
+      background: linear-gradient(
+        to right,
+        rgb(var(--mg-hub-header-surface)),
+        transparent
+      );
+    }
+
+    &[data-overflow-start]::before,
+    &[data-overflow-end]::after {
+      opacity: 1;
+    }
+
+    // Keep labels and the focus ring clear during keyboard navigation.
+    &:has(:focus-visible)::before,
+    &:has(:focus-visible)::after {
+      opacity: 0;
+    }
+
+    ul {
+      display: flex;
+      overflow-x: auto;
+      scrollbar-width: none;
+      scroll-padding-inline: var(--mg-spacing-150);
+
+      @include mg-list-unmarked;
+
+      padding: 0;
+      margin: 0;
+      gap: var(--mg-spacing-50);
+    }
+
+    li {
+      margin: 0;
+      padding: 0;
+    }
+
+    a {
+      display: flex;
+      align-items: center;
+      min-block-size: 2.75rem;
+      padding: var(--mg-spacing-100) var(--mg-spacing-150);
+      scroll-margin-inline: var(--mg-spacing-150);
+      color: rgb(var(--mg-hub-header-link));
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    // Three signals, so the state never rests on colour alone: the current item
+    // stops looking like a link, gains weight, and gains a leading rule.
+    a:hover {
+      color: rgb(var(--mg-hub-header-link-hover));
+      text-decoration: underline;
+    }
+
+    // An underline that hugs the word, not the item's padding box. The padding
+    // box is what Tab, the MegaMenu topbar and OnThisPageNav all underline, and
+    // it is what reads as a tab; hugging the word is link language.
+    // A leading rule was tried first and had to go: on a coloured surface the
+    // marker and the label are both white, so it read as a stray pipe next to
+    // the text rather than a mark — and the row already has a divider after the
+    // hub name.
+    a[aria-current],
+    &-item--ancestor a {
+      font-weight: 700;
+      color: rgb(var(--mg-hub-header-ink));
+      text-decoration: underline;
+      text-decoration-color: rgb(var(--mg-hub-header-marker));
+      text-decoration-thickness: var(--mg-spacing-25);
+
+      // Clears Noto Sans Arabic descenders, which sit lower than Latin ones.
+      text-underline-offset: 0.4em;
+    }
+
+    // Active wins over hover: the current item must not restyle itself into
+    // looking like an ordinary link when the pointer crosses it.
+    a[aria-current]:hover,
+    &-item--ancestor a:hover {
+      color: rgb(var(--mg-hub-header-ink));
+    }
+
+    // Inset, because the list is a scrollport: an outward ring on the first or
+    // last item would be clipped.
+    a:focus-visible {
+      box-shadow:
+        inset 0 0 0 var(--mg-focus-ring-offset)
+          rgb(var(--mg-hub-header-surface)),
+        inset 0 0 0
+          calc(var(--mg-focus-ring-offset) + var(--mg-focus-ring-width))
+          rgb(var(--mg-hub-header-focus));
+      outline: 0;
+
+      @media (forced-colors: active) {
+        outline: var(--mg-focus-ring-width) solid Highlight;
+        outline-offset: calc(var(--mg-focus-ring-width) * -1);
+      }
+    }
+  }
+
+  // The expressive banner. It sits below the navigation on its own surface, so
+  // no link is ever placed over editor-chosen media.
+  &__banner {
+    background-color: rgb(var(--mg-hub-header-banner-surface));
+    color: rgb(var(--mg-color-neutral-0));
+
+    // Self-contained breakout. mg-container-full-width paints its bleed with a
+    // z-index:-1 pseudo-element, which disappears behind any ancestor that has
+    // its own opaque background — as these pattern wrappers do.
+    margin-inline-start: calc(50% - 50vw);
+    inline-size: 100vw;
+  }
+
+  &__banner-inner {
+    display: grid;
+    gap: var(--mg-spacing-250);
+    align-items: center;
+    padding-block: var(--mg-spacing-350);
+  }
+
+  // No font-family: this renders as an h1, which inherits `text` from body and
+  // picks up `heading` in Arabic from _fonts.scss. `display` is reserved for
+  // the hero title, per the review checklist.
+  &__title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.15;
+    text-wrap: balance;
+    margin-block: 0 var(--mg-spacing-150);
+    max-inline-size: 18ch;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--mg-spacing-150);
+    margin-block-start: var(--mg-spacing-250);
+
+    // CtaButton's inverse treatment is scoped to .mg-hero, so a CTA on any
+    // other dark surface falls back to styling meant for a light background:
+    // a dark label on a dark banner, and a label that disappears on hover.
+    // Mirrored here against this component's own surface tokens.
+    a.mg-button.mg-button-cta,
+    a.mg-button.mg-button-cta:hover,
+    a.mg-button.mg-button-cta:visited {
+      background: transparent;
+      border-color: transparent;
+      color: rgb(var(--mg-color-neutral-0));
+
+      &::after {
+        background: rgb(var(--mg-color-neutral-0));
+        color: rgb(var(--mg-hub-header-banner-surface));
+      }
+    }
+
+    a.mg-button:focus-visible {
+      box-shadow: 0 0 0 var(--mg-focus-ring-offset)
+        rgb(var(--mg-color-neutral-0));
+      outline: var(--mg-focus-ring-width) solid
+        rgb(var(--mg-color-focus-ring-inverse));
+      outline-offset: var(--mg-focus-ring-offset);
+    }
+  }
+
+  &__summary {
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    max-inline-size: 46ch;
+    margin: 0;
+  }
+
+  &__media img {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    aspect-ratio: 16 / 9;
+  }
+
+  @media (width >= 48rem) {
+    &__banner-inner {
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    }
+
+    &__media img {
+      aspect-ratio: 4 / 3;
+    }
+  }
+
+  @media (forced-colors: active) {
+    // The underline survives forced colours; only its colour needs restating.
+    &__nav a[aria-current],
+    &__nav-item--ancestor a {
+      text-decoration-color: Highlight;
+    }
+
+    &__nav::before,
+    &__nav::after {
+      display: none;
+    }
+
+    // System scrollbars remain the overflow affordance when fades disappear.
+    &__nav ul {
+      scrollbar-width: auto;
+    }
+  }
+}

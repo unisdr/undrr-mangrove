@@ -1,62 +1,22 @@
-//import { Meta, ArgTypes, Controls, Story, Canvas } from '@storybook/addon-docs/blocks';
+import { withLanguage } from '../../../../.storybook/withLanguage';
 import ShareButtons from './ShareButtons';
-
-const getCaptionForLocale = locale => {
-  switch (locale) {
-    case 'english':
-      const engText = {
-        mainLabel: 'Share this',
-        onCopy: 'Copied',
-      };
-      return engText;
-    case 'arabic':
-      const arabicText = {
-        mainLabel: 'شارك هذا',
-        onCopy: 'تم النسخ',
-      };
-      return arabicText;
-    case 'japanese':
-      const japaneseText = {
-        mainLabel: 'これを共有',
-        onCopy: 'コピーされました',
-      };
-      return japaneseText;
-    default:
-      return {
-        mainLabel: 'Share this',
-        onCopy: 'Copied',
-      };
-  }
-};
 
 export default {
   title: 'Components/Buttons/ShareButtons',
   component: ShareButtons,
-
+  decorators: [withLanguage],
   argTypes: {
     sharingSubject: {
-      control: {
-        type: 'text',
-      },
-
+      control: { type: 'text' },
       defaultValue: 'Sharing Link',
     },
-
     sharingBody: {
-      control: {
-        type: 'text',
-      },
-
+      control: { type: 'text' },
       defaultValue: 'Check out this link: ',
     },
   },
 };
 
 export const DefaultShareButtons = {
-  render: (args, { globals: { locale } }) => {
-    const caption = getCaptionForLocale(locale);
-    return <ShareButtons labels={caption} />;
-  },
-
   name: 'ShareButtons',
 };

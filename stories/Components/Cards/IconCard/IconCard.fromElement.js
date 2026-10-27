@@ -11,6 +11,5 @@ export default function iconCardFromElement(container) {
   } catch {
     props.items = [];
   }
-
   return props;
 }

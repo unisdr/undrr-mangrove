@@ -1,3 +1,5 @@
+import { getLanguageProps } from '../../../src/i18n';
+import { getMegaMenuLabels } from './_labels';
 /**
  * MegaMenu component. Multi-level navigation with sections and items.
  *
@@ -10,8 +12,10 @@
  * `logoHref`, e.g. `data-mg-mega-menu-logo-href="/ar/"` on Arabic pages.
  *
  * @param {Object[]} sections - Array of section objects containing menu structure
+ * @param {string} sections[].title - Top-level menu item label (required)
+ * @param {string} sections[].icon - Optional icon class name shown before the title on desktop topbar (e.g. "mg-icon mg-icon-chart-bar")
  * @param {string} sections[].bannerHeading - Heading text for the section banner
- * @param {string} sections[].bannerDescription - Description text for the section banner
+ * @param {string} sections[].bannerDescription - Description text for the section banner. Rendered via `dangerouslySetInnerHTML` so authored links and inline markup survive; Mangrove does not sanitise it, so sanitise it where the sections array is built. See "Banner HTML trust contract" in MegaMenu.mdx.
  * @param {Object} sections[].bannerButton - Optional button object for the banner
  * @param {string} sections[].bannerButton.label - Label text for the banner button
  * @param {string} sections[].bannerButton.url - URL for the banner button
@@ -26,13 +30,17 @@
  * @param {string} [logoHref='/'] - Where the logo links to. Defaults to `/`; on multilingual sites, pass the language-prefixed root from the CMS (e.g. `/ar/`)
  * @param {number} [logoWidth] - Optional explicit width for CLS prevention
  * @param {number} [logoHeight] - Optional explicit height for CLS prevention
- * @param {string} [ariaLabel='Main Navigation'] - Accessible label for the navigation landmark
  * @returns {JSX.Element} Rendered MegaMenu component
+ *
+ * @see schemas/navigation.schema.js — canonical field names and documented deviations.
  */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useId } from 'react';
 import PropTypes from 'prop-types';
 import { TopBar } from './TopBar/TopBar';
 import { Sidebar } from './TopBar/Sidebar';
+
+export { getMegaMenuLabels } from './_labels';
+export { DEFAULT_MEGAMENU_LABELS } from './_labels';
 
 const MegaMenu = ({
   sections,
@@ -43,17 +51,71 @@ const MegaMenu = ({
   logoHref = '/',
   logoWidth,
   logoHeight,
-  ariaLabel = 'Main Navigation',
+  ariaLabel,
+  lang,
+  dir,
+  labels,
 }) => {
+  const resolvedLabels = getMegaMenuLabels(lang, labels);
+  const { navLabel, closeMobileNavLabel } = resolvedLabels;
+  const sidebarId = useId();
+  const wrapperRef = useRef(null);
+  const [initialSection, setInitialSection] = useState(null);
   const [showSidebar, setShowSidebar] = useState(false);
+  const [retained, setRetained] = useState(false);
+  const present = showSidebar || retained;
   const [activeItem, setActiveItem] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const [jsActive, setJsActive] = useState(false);
 
   const itemListRef = useRef([]);
   const sectionListRef = useRef([]);
 
+  // Keep the surface mounted briefly for its exit transition, but release
+  // focus/scroll and remove it from interaction immediately when closed.
+  useEffect(() => {
+    if (showSidebar) {
+      setRetained(true);
+      return;
+    }
+    if (!retained) return;
+    const surface = wrapperRef.current?.querySelector(
+      '.mg-mega-mobile-sidebar'
+    );
+    // Read the actual CSS timing after closing: tokens can be themed, and
+    // reduced motion/forced colours disable the transition entirely.
+    const style =
+      surface && surface.ownerDocument.defaultView.getComputedStyle(surface);
+    const toMilliseconds = time =>
+      (parseFloat(time) || 0) * (time.trim().endsWith('ms') ? 1 : 1000);
+    const durations = (style?.transitionDuration || '0s')
+      .split(',')
+      .map(toMilliseconds);
+    const delays = (style?.transitionDelay || '0s')
+      .split(',')
+      .map(toMilliseconds);
+    const properties = (style?.transitionProperty || 'all').split(',');
+    const exitDuration = Math.max(
+      0,
+      ...properties.map((property, index) =>
+        property.trim() === 'none'
+          ? 0
+          : durations[index % durations.length] + delays[index % delays.length]
+      )
+    );
+    const timeout = setTimeout(() => setRetained(false), exitDuration);
+    return () => clearTimeout(timeout);
+  }, [showSidebar, retained]);
+
   // Refs for timeout management
   const closeTimeoutRef = useRef(null);
   const openTimeoutRef = useRef(null);
+
+  // Signal that JS has mounted and the sidebar is available to handle mobile nav.
+  // Retain the enhancement marker for consumers of the navigation markup.
+  useEffect(() => {
+    setJsActive(true);
+  }, []);
 
   // Clear all timeouts on unmount
   useEffect(() => {
@@ -63,12 +125,27 @@ const MegaMenu = ({
     };
   }, []);
 
+  const releaseDesktopFocus = () => {
+    const focused = wrapperRef.current?.ownerDocument.activeElement;
+    if (
+      wrapperRef.current?.contains(focused) &&
+      focused.closest('.mg-mega-content')
+    ) {
+      focused
+        .closest('.mg-mega-topbar__item')
+        ?.querySelector('.mg-mega-topbar__item-link')
+        ?.focus();
+      clearTimeout(openTimeoutRef.current);
+    }
+  };
+
   const handleMouseLeave = () => {
     // Clear any pending open timeout
     clearTimeout(openTimeoutRef.current);
 
     // Set timeout to close the menu
     closeTimeoutRef.current = setTimeout(() => {
+      releaseDesktopFocus();
       setActiveItem(null);
     }, delay);
   };
@@ -82,22 +159,40 @@ const MegaMenu = ({
 
     // Set timeout before opening (prevents accidental opens)
     openTimeoutRef.current = setTimeout(() => {
+      const focused = wrapperRef.current?.ownerDocument.activeElement;
+      if (
+        wrapperRef.current?.contains(focused) &&
+        focused.closest('.mg-mega-content') &&
+        focused.closest('.mg-mega-topbar__item') !==
+          itemListRef.current[item]?.closest('.mg-mega-topbar__item')
+      ) {
+        itemListRef.current[item]?.focus();
+        clearTimeout(openTimeoutRef.current);
+      }
       setActiveItem(item);
     }, hoverDelay);
   };
 
   const handleEscape = e => {
     if (e.key === 'Escape') {
+      // Return keyboard focus before the exiting desktop panel becomes inert.
+      const panel = e.target.closest('.mg-mega-content');
+      panel
+        ?.closest('.mg-mega-topbar__item')
+        ?.querySelector('.mg-mega-topbar__item-link')
+        ?.focus();
+      clearTimeout(openTimeoutRef.current);
       setActiveItem(null);
     }
   };
 
   // Close menu when clicking outside
   useEffect(() => {
-    const handleClickOutside = (e) => {
+    const handleClickOutside = e => {
       // Check if click is outside the mega menu wrapper
-      const megaWrapper = document.querySelector('.mg-mega-wrapper');
+      const megaWrapper = wrapperRef.current;
       if (megaWrapper && !megaWrapper.contains(e.target)) {
+        releaseDesktopFocus();
         setActiveItem(null);
       }
     };
@@ -111,19 +206,44 @@ const MegaMenu = ({
     }
   }, [activeItem]);
 
+  useEffect(() => {
+    if (!window.matchMedia) return;
+    const query = window.matchMedia('(min-width: 900px)');
+    const closeOnDesktop = () => {
+      setIsMobile(!query.matches);
+      if (query.matches) setShowSidebar(false);
+    };
+    closeOnDesktop();
+    query.addEventListener('change', closeOnDesktop);
+    return () => query.removeEventListener('change', closeOnDesktop);
+  }, []);
+
   return (
     <nav
-      className="mg-mega-wrapper"
+      {...getLanguageProps(lang, dir)}
+      ref={wrapperRef}
+      className={`mg-mega-wrapper${jsActive ? ' mg-mega-wrapper--js-active' : ''}${present ? ' mg-mega-wrapper--mobile-open' : ''}`}
       onMouseLeave={handleMouseLeave}
       onKeyDown={handleEscape}
-      aria-label={ariaLabel}
+      aria-label={ariaLabel ?? navLabel}
     >
       <TopBar
+        isMobile={isMobile}
+        openMobileSection={index => {
+          setInitialSection(index);
+          setShowSidebar(true);
+        }}
+        sidebarId={sidebarId}
+        labels={resolvedLabels}
         sections={sections}
         handleItemHover={handleItemHover}
-        toggleShowSidebar={() => setShowSidebar(prev => !prev)}
+        toggleShowSidebar={() => {
+          setInitialSection(null);
+          setShowSidebar(prev => !prev);
+        }}
         showSidebar={showSidebar}
         activeItem={activeItem}
+        activateItem={setActiveItem}
         itemListRef={itemListRef}
         sectionListRef={sectionListRef}
         logoSrc={logoSrc}
@@ -134,30 +254,44 @@ const MegaMenu = ({
       />
 
       {/* Backdrop overlay – closes sidebar on click */}
-      {showSidebar && (
+      {present && (
         <button
-          className="mg-mega-mobile-sidebar-overlay"
-          aria-label="Close mobile navigation"
+          className={`mg-mega-mobile-sidebar-overlay${showSidebar ? ' mg-mega-mobile-sidebar-overlay--open' : ''}`}
+          aria-hidden={!showSidebar}
+          aria-label={closeMobileNavLabel}
+          tabIndex={-1}
           onClick={() => setShowSidebar(false)}
         />
       )}
 
-      {/* Sidebar is always mounted for smooth open/close transitions */}
+      {/* Keep the controller mounted so close and reopen reset predictably. */}
       <Sidebar
+        initialSection={initialSection}
+        id={sidebarId}
+        labels={resolvedLabels}
+        onClose={() => setShowSidebar(false)}
+        present={present}
         open={showSidebar}
         sections={sections}
-        itemListRef={itemListRef}
-        sectionListRef={sectionListRef}
       />
     </nav>
   );
 };
 
 MegaMenu.propTypes = {
+  /** Explicit accessible name; omitted values retain the translated navLabel. */
+  ariaLabel: PropTypes.string,
   /** Array of section objects containing the menu structure. */
   sections: PropTypes.arrayOf(
     PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      icon: PropTypes.string,
       bannerHeading: PropTypes.string,
+      /**
+       * Banner copy. Rendered as unsanitised HTML so authored links and inline
+       * markup survive; see "Banner HTML trust contract" in the MDX
+       * documentation.
+       */
       bannerDescription: PropTypes.string,
       bannerButton: PropTypes.shape({
         label: PropTypes.string,
@@ -186,8 +320,21 @@ MegaMenu.propTypes = {
   logoWidth: PropTypes.number,
   /** Explicit height for the logo (CLS prevention). */
   logoHeight: PropTypes.number,
-  /** Accessible label for the navigation landmark */
-  ariaLabel: PropTypes.string,
+  /** UI language tag; selects the built-in catalogue, with English fallback. */
+  lang: PropTypes.string,
+  /** Explicit text direction; otherwise known catalogue languages select their direction. */
+  dir: PropTypes.oneOf(['ltr', 'rtl', 'auto']),
+  /** Explicit UI label overrides; omitted keys use the selected catalogue, then English. */
+  labels: PropTypes.shape({
+    navLabel: PropTypes.string,
+    closeMobileNavLabel: PropTypes.string,
+    menuLabel: PropTypes.string,
+    backLabel: PropTypes.string,
+    allSectionsLabel: PropTypes.string,
+    closeLabel: PropTypes.string,
+    overviewLabel: PropTypes.string,
+    toggleMobileNavLabel: PropTypes.string,
+  }),
 };
 
 export default MegaMenu;

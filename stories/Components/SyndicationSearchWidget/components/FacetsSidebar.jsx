@@ -11,7 +11,11 @@
  */
 
 import React, { useMemo } from 'react';
-import { useSearchState, useSearchConfig, useSearchDispatch, actions } from '../context/SearchContext';
+import {
+  useSearchState,
+  useSearchConfig,
+  useSearchLabels,
+} from '../context/SearchContext';
 import { useTaxonomies } from '../hooks/useTaxonomies';
 import {
   FACET_FIELDS,
@@ -30,12 +34,25 @@ import CustomFacetSelect from './CustomFacetSelect';
  * @param {Object} props - Component props
  * @param {string} props.widgetId - Unique widget ID for accessibility
  */
+// Shared empty list, so memoised facets see an unchanged prop.
+const NO_VALUES = [];
+
 export function FacetsSidebar({ widgetId = 'search' }) {
   const config = useSearchConfig();
-  const { aggregations } = useSearchState();
-  const { getLabel, isLoading: taxonomiesLoading } = useTaxonomies();
+  const { aggregations, facets, facetOperators } = useSearchState();
+  const labels = useSearchLabels();
+  const {
+    getLabel,
+    isLoading: taxonomiesLoading,
+    taxonomiesReady,
+  } = useTaxonomies();
 
-  const { visibleFilters, allowedTypes, customFacets = [], facetFields } = config;
+  const {
+    visibleFilters,
+    allowedTypes,
+    customFacets = [],
+    facetFields,
+  } = config;
 
   // Use config facet fields or default
   const fields = facetFields || FACET_FIELDS;
@@ -48,7 +65,12 @@ export function FacetsSidebar({ widgetId = 'search' }) {
 
   // Build set of subtype field names to skip (they're merged into type)
   const subtypeFields = useMemo(() => {
-    return new Set(Object.values(CONTENT_SUBTYPES).map(config => config.field));
+    return new Set(
+      Object.values(CONTENT_SUBTYPES).flatMap(config => {
+        const configs = Array.isArray(config) ? config : [config];
+        return configs.map(c => c.field);
+      })
+    );
   }, []);
 
   /**
@@ -56,7 +78,7 @@ export function FacetsSidebar({ widgetId = 'search' }) {
    */
   const renderFacets = useMemo(() => {
     return fields
-      .filter((field) => {
+      .filter(field => {
         // Skip hidden filters
         if (!isFilterVisible(field.key, visibleFilters)) {
           return false;
@@ -67,7 +89,7 @@ export function FacetsSidebar({ widgetId = 'search' }) {
         }
         return true;
       })
-      .map((field) => {
+      .map(field => {
         // Special handling for merged type/news_type
         if (field.key === 'type') {
           return (
@@ -78,12 +100,15 @@ export function FacetsSidebar({ widgetId = 'search' }) {
               getLabel={getLabel}
               widgetId={widgetId}
               allowedTypes={allowedTypes}
+              taxonomiesReady={taxonomiesReady}
+              selectedValues={facets[field.key] || NO_VALUES}
+              operator={facetOperators[field.key] || 'OR'}
             />
           );
         }
 
         // Standard facet
-        const buckets = aggregations?.[field.key]?.buckets || [];
+        const buckets = aggregations?.[field.key]?.buckets || NO_VALUES;
         return (
           <FacetSelect
             key={field.key}
@@ -92,10 +117,25 @@ export function FacetsSidebar({ widgetId = 'search' }) {
             getLabel={getLabel}
             widgetId={widgetId}
             allowedTypes={allowedTypes}
+            taxonomiesReady={taxonomiesReady}
+            selectedValues={facets[field.key] || NO_VALUES}
+            operator={facetOperators[field.key] || 'OR'}
           />
         );
       });
-  }, [fields, aggregations, visibleFilters, allowedTypes, subtypeFields, mergedTypeBuckets, getLabel, widgetId]);
+  }, [
+    fields,
+    aggregations,
+    facets,
+    facetOperators,
+    visibleFilters,
+    allowedTypes,
+    subtypeFields,
+    mergedTypeBuckets,
+    getLabel,
+    taxonomiesReady,
+    widgetId,
+  ]);
 
   /**
    * Render custom facets (editor-defined dropdowns).
@@ -106,14 +146,12 @@ export function FacetsSidebar({ widgetId = 'search' }) {
     }
 
     // Sort by weight
-    const sorted = [...customFacets].sort((a, b) => (a.weight || 50) - (b.weight || 50));
+    const sorted = customFacets.toSorted(
+      (a, b) => (a.weight || 50) - (b.weight || 50)
+    );
 
-    return sorted.map((facet) => (
-      <CustomFacetSelect
-        key={facet.id}
-        facet={facet}
-        widgetId={widgetId}
-      />
+    return sorted.map(facet => (
+      <CustomFacetSelect key={facet.id} facet={facet} widgetId={widgetId} />
     ));
   }, [customFacets, widgetId]);
 
@@ -125,7 +163,7 @@ export function FacetsSidebar({ widgetId = 'search' }) {
       {/* Loading indicator for taxonomies */}
       {taxonomiesLoading && (
         <div className="mg-search__facets-loading" aria-live="polite">
-          Loading filters...
+          {labels.loadingFilters}
         </div>
       )}
 

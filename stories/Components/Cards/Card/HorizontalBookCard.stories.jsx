@@ -1,5 +1,10 @@
+import {
+  checkPublicationSurface,
+  checkPublicationOverride,
+  publicationSurfaceOverrides,
+  publicationCoverFixture,
+} from './cardGeometryChecks';
 import { HorizontalBookCard } from './HorizontalBookCard';
-
 const getCaptionForLocale = locale => {
   switch (locale) {
     case 'english':
@@ -78,24 +83,19 @@ This paper explores health risks from climate change in a global context, settin
       return dummy;
   }
 };
-
 export default {
   title: 'Components/Cards/Horizontal Book Card',
   component: HorizontalBookCard,
-
   argTypes: {
     variant: {
       options: ['primary', 'secondary', 'tertiary', 'quaternary'],
-
       control: {
         type: 'inline-radio',
       },
-
       defaultValue: 'primary',
     },
   },
 };
-
 export const DefaultHorizontalBookCard = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
@@ -106,22 +106,81 @@ export const DefaultHorizontalBookCard = {
       ></HorizontalBookCard>
     );
   },
-
   name: 'Horizontal Book Card',
 };
-
 export const HorizontalBookCardNoImageVerticalCard = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
-    const noImageData = caption.contentdata.map(item => {
-      const { image: _image, ...rest } = item;
-      return rest;
-    });
-
+    const noImageData = caption.contentdata.map(item => ({
+      ...item,
+      image: {
+        src: null,
+        alt: null,
+      },
+    }));
     return (
       <HorizontalBookCard items={noImageData} {...args}></HorizontalBookCard>
     );
   },
-
   name: 'Horizontal Book Card Without Image',
+};
+
+// Cards should normally be links. These stories cover the cases where they
+// aren't, so the unlinked treatment is exercised alongside the linked one.
+
+export const NoLinkHorizontalBookCard = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    const unlinked = caption.contentdata.map(item => ({
+      ...item,
+      link: null,
+      button: null,
+    }));
+    return <HorizontalBookCard items={unlinked} {...args}></HorizontalBookCard>;
+  },
+  name: 'Without a link',
+};
+export const ButtonOnlyHorizontalBookCard = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    const buttonOnly = caption.contentdata.map(item => ({
+      ...item,
+      link: null,
+      buttonLink: 'javascript:void(0)',
+    }));
+    return (
+      <HorizontalBookCard items={buttonOnly} {...args}></HorizontalBookCard>
+    );
+  },
+  name: 'Button only, no card link',
+};
+export const NaturalCoverRatio = {
+  name: 'Complete cover without outer frame',
+  render: (args, { globals: { locale } }) => {
+    const data = getCaptionForLocale(locale).contentdata.map(item => ({
+      ...item,
+      image: {
+        src: publicationCoverFixture,
+      },
+    }));
+    return <HorizontalBookCard {...args} items={data} />;
+  },
+  play: checkPublicationSurface,
+};
+export const ThemedSurface = {
+  name: 'Theme-owned publication surface',
+  render: (args, { globals: { locale } }) => (
+    <div style={publicationSurfaceOverrides}>
+      <HorizontalBookCard
+        {...args}
+        items={getCaptionForLocale(locale).contentdata.map(item => ({
+          ...item,
+          image: {
+            src: publicationCoverFixture,
+          },
+        }))}
+      />
+    </div>
+  ),
+  play: checkPublicationOverride,
 };
