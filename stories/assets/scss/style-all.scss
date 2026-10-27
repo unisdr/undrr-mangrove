@@ -17,6 +17,7 @@
 @use "fonts" as *;
 @forward "breakpoints";
 @forward "mixins";
+@use "utilities/index";
 @use "utility" as *;
 @use "foundational" as *;
 @use "components" as *;

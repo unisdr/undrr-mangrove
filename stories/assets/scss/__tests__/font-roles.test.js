@@ -821,6 +821,9 @@ describe('every component names the role it is meant to', () => {
     ['.mg-tag', 'ui'],
     ['.mg-tag--code', 'code'],
     ['.mg-tag-container > :where(span, div, a, li)', 'ui'],
+    // Utility aliases keep the same script-aware role routing as components.
+    ['.mg-u-font-family--base', 'text'],
+    ['.mg-u-font-family--condensed', 'ui'],
     ['.mg-user-feedback__question', 'text'],
     [':where(:lang(ar)) > :where([lang]:not([lang=""], :lang(ar)))', 'text'],
     [

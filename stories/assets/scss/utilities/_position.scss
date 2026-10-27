@@ -1,0 +1,162 @@
+// =============================================================================
+// POSITION UTILITIES
+// =============================================================================
+// Position, inset, and z-index utilities.
+// Naming convention: .mg-u-position--{value}
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// POSITION TYPE
+// -----------------------------------------------------------------------------
+
+.mg-u-position--static {
+  position: static;
+}
+
+.mg-u-position--relative {
+  position: relative;
+}
+
+.mg-u-position--absolute {
+  position: absolute;
+}
+
+.mg-u-position--fixed {
+  position: fixed;
+}
+
+.mg-u-position--sticky {
+  position: sticky;
+}
+
+// -----------------------------------------------------------------------------
+// BASIC POSITIONING
+// -----------------------------------------------------------------------------
+
+.mg-u-top-0 {
+  top: 0;
+}
+
+.mg-u-right-0 {
+  right: 0;
+}
+
+.mg-u-bottom-0 {
+  bottom: 0;
+}
+
+.mg-u-left-0 {
+  left: 0;
+}
+
+// -----------------------------------------------------------------------------
+// Z-INDEX (semantic values)
+// -----------------------------------------------------------------------------
+.mg-u-z-index--dropdown {
+  z-index: 1000;
+}
+
+.mg-u-z-index--sticky {
+  z-index: 1020;
+}
+
+.mg-u-z-index--fixed {
+  z-index: 1030;
+}
+
+.mg-u-z-index--modal-backdrop {
+  z-index: 1040;
+}
+
+.mg-u-z-index--modal {
+  z-index: 1050;
+}
+
+.mg-u-z-index--tooltip {
+  z-index: 1070;
+}
+
+// -----------------------------------------------------------------------------
+// FLOAT
+// -----------------------------------------------------------------------------
+
+.mg-u-float--left {
+  float: left;
+}
+
+.mg-u-float--right {
+  float: right;
+}
+
+.mg-u-float--none {
+  float: none;
+}
+
+// Clear float
+.mg-u-clear--both {
+  clear: both;
+}
+
+// Clearfix
+.mg-u-clearfix::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+// -----------------------------------------------------------------------------
+// OBJECT FIT (for replaced elements like img, video)
+// -----------------------------------------------------------------------------
+
+.mg-u-object-fit--contain {
+  object-fit: contain;
+}
+
+.mg-u-object-fit--cover {
+  object-fit: cover;
+}
+
+.mg-u-object-fit--fill {
+  object-fit: fill;
+}
+
+// Object position
+.mg-u-object-position--top {
+  object-position: top;
+}
+
+.mg-u-object-position--center {
+  object-position: center;
+}
+
+// -----------------------------------------------------------------------------
+// OVERFLOW
+// -----------------------------------------------------------------------------
+
+.mg-u-overflow--auto {
+  overflow: auto;
+}
+
+.mg-u-overflow--hidden {
+  overflow: hidden;
+}
+
+.mg-u-overflow--visible {
+  overflow: visible;
+}
+
+.mg-u-overflow-x--auto {
+  overflow-x: auto;
+}
+
+.mg-u-overflow-x--hidden {
+  overflow-x: hidden;
+}
+
+.mg-u-overflow-y--auto {
+  overflow-y: auto;
+}
+
+.mg-u-overflow-y--hidden {
+  overflow-y: hidden;
+}
