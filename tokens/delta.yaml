@@ -1,0 +1,190 @@
+# DELTA Resilience — sub-brand layer.
+#
+# Merged over tokens/mangrove.yaml + tokens/undrr.yaml and emitted as the
+# .mg-theme-delta block.
+#
+# Sourced from DELTA's production repository and its DLDTS design file, not
+# from a guess: the navy #132e48 this theme was originally built on appears
+# zero times in DELTA's codebase.
+#
+# Regenerate with `yarn build:tokens`.
+
+$brand:
+  id: delta
+  extends: undrr
+  title: DELTA Resilience
+  selector: '.mg-theme-delta'
+
+theme:
+  loaded:
+    $type: string
+    $value: delta
+    $description: >-
+      Runtime marker: lets JS and tooling detect that this brand theme is
+      active, guarding the sub-brand body-class trap. See docs/RELEASE-2.0.md.
+
+brand:
+  $type: color
+  $private: true
+  primary:
+    $value: '#004f91'
+    $description: >-
+      UNDRR Blue. DELTA's own design system labels this swatch "UNDRR Blue -
+      Corporate blue" and marks it Brand. 54 uses in DELTA's code, 1551 fills
+      and 1645 strokes in its Figma file. It is rgb(0 79 145), identical to
+      Mangrove's --mg-color-blue-900: DELTA's brand blue is UNDRR's.
+  primary-800:
+    $value: '#106cb8'
+    $description: >-
+      Hover/active partner of the brand blue, 9 uses in DELTA. Note it is
+      LIGHTER than the base colour, unlike Mangrove's convention of darkening
+      on hover. That is DELTA's actual behaviour, not an error.
+  ink:
+    $value: '#181823'
+    $description: Body text and overlay/shadow base.
+  card-surface:
+    $value: '#f2f2f2'
+    $description: >-
+      Card / subtle surface fill. #f2f2f2 appears 11 times in DELTA; #fafafa,
+      which Mangrove previously guessed, appears once.
+  secondary:
+    $value: '#007b7a'
+    $description: >-
+      UNDRR Teal, DELTA's secondary brand colour. Mangrove previously mapped
+      the secondary button to the same blue as the primary, collapsing a
+      genuine two-colour brand into one.
+  secondary-800:
+    $value: '#006968'
+    $description: >-
+      Hover partner of UNDRR Teal, taken one step DOWN the teal ramp in
+      DELTA's design file (#002323 #004646 #006968 #007B7A #00AFAE). DELTA's
+      stylesheet uses #359999 here, a step UP, but white text on that is
+      3.40:1 and fails WCAG 1.4.3. #006968 is 6.52:1 and comes from DELTA's
+      own ramp, so this is a deliberate, sourced divergence rather than an
+      invented colour — the same call already made for DELTA's field border.
+
+
+color:
+  $type: color
+  interactive: { $value: '{=brand.primary}' }
+  interactive-active: { $value: '{=brand.primary-800}' }
+  tag: { $value: '{color.interactive}' }
+  tag--hover: { $value: '{color.interactive-active}' }
+  button: { $value: '{color.neutral-0}' }
+  button--hover: { $value: '{color.neutral-0}' }
+  button-background:
+    $value: '{=brand.primary}'
+    $format: srgb-rgb-function
+  button-background--hover:
+    $value: '{=brand.primary-800}'
+    $format: srgb-rgb-function
+  button-secondary-background: { $value: '{=brand.secondary}' }
+  button-secondary-background--hover: { $value: '{=brand.secondary-800}' }
+  button-outline-primary: { $value: '{=brand.primary}' }
+  button-outline-primary--hover: { $value: '{=brand.primary-800}' }
+  button-outline-secondary: { $value: '{=brand.secondary}' }
+  button-outline-secondary--hover: { $value: '{=brand.secondary-800}' }
+  text-button: { $value: '{color.neutral-0}' }
+  form-check: { $value: '{color.interactive}' }
+  form-check--hover: { $value: '{color.interactive-active}' }
+  form-check--checked: { $value: '{color.interactive}' }
+  form-focus: { $value: '{color.interactive}' }
+  mega-content-bg: { $value: '{color.white}', $format: literal }
+  hero: { $value: '{=brand.primary}' }
+  hero-title:
+    $value: 'oklch(68.5% 0.169 237.323)'
+    $format: literal
+  hero--tertiary: { $value: '{=brand.ink}', $format: srgb-rgb-function }
+  hero-button-secondary-background:
+    $value: '{=brand.primary}'
+    $format: srgb-rgb-function
+  hero-button-secondary-color: { $value: '{color.white}', $format: literal }
+  tabbar-background: { $value: 'none', $format: literal }
+  tab-background: { $value: '{=brand.primary}', $format: srgb-rgb-function }
+  tab-background--inactive: { $value: '{color.white}', $format: srgb-rgb-function }
+  tab-background--hover:
+    $value: '{=brand.primary}'
+    $format: srgb-rgb-function
+    $alpha: 0.7
+  tab-border: { $value: '{color.blue-200}', $format: srgb-rgb-function }
+  tab-border--hover:
+    $value: '{=brand.primary-800}'
+    $format: srgb-rgb-function
+  tab-border--active: { $value: '{color.blue-200}', $format: srgb-rgb-function }
+  text-tab: { $value: '{color.neutral-700}', $format: srgb-rgb-function }
+  text-tab--hover: { $value: '{color.white}', $format: srgb-rgb-function }
+  text-tab-active: { $value: '{color.white}', $format: srgb-rgb-function }
+
+border-color:
+  $type: color
+  button:
+    $value: transparent
+    $format: literal
+    $description: >-
+      DELTA's filled buttons carry no border. This is the case the channel
+      convention could not express: a triplet cannot say "transparent", which
+      is how the token came to hold two invalid declarations that both
+      collapsed to nothing.
+  hero-button-secondary: { $value: '{color.white}', $format: literal }
+
+radius:
+  $type: dimension
+  tag: { $value: '{spacing.50}' }
+  button: { $value: '{spacing.50}' }
+  form-input: { $value: '{spacing.50}' }
+  tab: { $value: '{spacing.50} {spacing.50} 0 0' }
+  tab-section: { $value: '{spacing.50}' }
+
+padding:
+  $type: dimension
+  button: { $value: '{spacing.100} {spacing.200}' }
+  tab: { $value: '{spacing.150} {spacing.200}' }
+  tab-section: { $value: '{spacing.300}' }
+
+border-width:
+  $type: dimension
+  button: { $value: '1px' }
+
+font-size:
+  button: { $value: '{=font-size.250}', $format: literal }
+
+box-shadow:
+  $type: shadow
+  tab-section: { $value: 'none' }
+
+card:
+  background:
+    $type: color
+    $value: '{=brand.card-surface}'
+    $format: srgb-rgb-function
+  padding: { $type: dimension, $value: '{spacing.150}' }
+  border-radius: { $type: dimension, $value: '{spacing.50}' }
+  icon-badge-radius: { $type: dimension, $value: '15%' }
+
+notice:
+  action-secondary:
+    $type: color
+    $value: '{=brand.secondary-800}'
+    $format: srgb-rgb-function
+    $description: >-
+      UNDRR Teal #007b7a is 5.10:1 on white but 4.26:1 on the offline notice's
+      red-50 tint, which fails WCAG 1.4.3 for the status link. The hover
+      partner #006968 from DELTA's own teal ramp is 5.44:1 there and 4.5:1 or
+      more on every notice surface.
+
+opacity:
+  $type: number
+  hero: { $value: '1' }
+
+hero-overlay:
+  # $format: literal is load-bearing. The base states this as a rem
+  # conversion of a raw number (tokens/mangrove.yaml); DELTA re-values it as
+  # a link, which is CSS syntax and cannot be run through the rem converter.
+  # An override inherits everything it does not restate, so the shape has to
+  # be restated alongside the new value.
+  max-width: { $type: dimension, $value: '{width.600}', $format: literal }
+  padding: { $type: dimension, $value: '{spacing.400}' }
+
+spacing:
+  $type: dimension
+  hero-overlay: { $value: '{=spacing.200} 0', $format: literal }

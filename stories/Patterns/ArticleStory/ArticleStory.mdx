@@ -1,0 +1,78 @@
+import LinkTo from '@storybook/addon-links/react';
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+import * as Stories from './ArticleStory.stories';
+
+<Meta of={Stories} />
+
+# Article full-page reference
+
+This existing reference belongs to <LinkTo kind="Patterns/Content/Article" story="docs">the Article archetype</LinkTo>, alongside its other presentation patterns.
+
+> **Note:** Reference design for [undrr/web-backlog#3060](https://gitlab.com/undrr/web-backlog/-/work_items/3060). Review against the [component checklist](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/REVIEW-CHECKLIST.md).
+
+A full article-page pattern (not just a header): headline, hero image, share,
+body, related content, recommendations, taxonomy tags and feedback. It is a
+reference implementation for comparing hero treatments in
+[undrr/web-backlog#3060](https://gitlab.com/undrr/web-backlog/-/work_items/3060).
+
+- **Header prominence** (`imageProminence`): `large` (full bleed), `compact`
+  (reading-column width), `split` (text and image side-by-side).
+- **Header image source** (`heroImage`): `main`, `alternate`, or `none`,
+  independent of teaser/social image choices.
+
+Fixture content is based on a real undrr.org story:
+[Towards knowledge, action and resolve to address non-economic losses in the Pacific Indigenous Communities Nadi, Fiji](https://www.undrr.org/news/towards-knowledge-action-and-resolve-address-non-economic-losses-pacific-indigenous).
+Metadata and media are reproduced from a saved copy; body text is placeholder
+content sized for realistic reading-column evaluation.
+
+## Large, prominent image
+
+<Canvas of={Stories.LargeImage} />
+
+<Controls of={Stories.LargeImage} />
+
+## Compact image in the reading column
+
+<Canvas of={Stories.CompactImage} />
+
+Image aligns with headline/body width rather than full bleed.
+
+## No image on the article page
+
+<Canvas of={Stories.NoHeroImage} />
+
+Article renders without a hero image; teaser/social image selection stays separate.
+
+## A different image than the teaser
+
+<Canvas of={Stories.AlternateHeroImage} />
+
+Demonstrates decoupling from teaser/social image usage.
+
+## Split hero (text and image side by side)
+
+<Canvas of={Stories.SplitHero} />
+
+Alternative two-column hero using the existing `Hero` component
+(`layout="split"` and `split="2/3"`). Omitting `data[0].media` in `heroImage="none"`
+falls back to a text-only band.
+
+## Building one
+
+Composes existing pieces (`Hero`, `TableOfContents`, `ShareButtons`,
+`VerticalCard`, `Imagecaption`, `UserFeedback`, reading/grid utilities) plus
+story-only `mg-demo-article-*` sizing classes. "Editors' recommendations"
+remains plain markup.
+
+## Changelog
+
+- **1.0.4**, 2026-10-26 ([unisdr/undrr-mangrove#1429](https://github.com/unisdr/undrr-mangrove/pull/1429)): Selects UserFeedback's built-in language through its public `lang` API instead of importing translation data directly.
+
+- **1.0.3**, 2026-10-16 ([#1383](https://github.com/unisdr/undrr-mangrove/pull/1383)): Place the full-page reference beneath its content archetype in navigation, preserving its story and docs IDs.
+
+- **1.0.2**, 2026-09-23: The embedded video title reads "This is how timely early warnings save lives, UNDRR" instead of setting "UNDRR" off with an em dash, following the dash rules in the [Editorial manual](https://mangrove.undrr.org/?path=/docs/contributing-editorial-manual--docs#punctuation).
+- **1.0.1**, 2026-09-20 ([#1276](https://github.com/unisdr/undrr-mangrove/pull/1276)): The reading column opts into `mg-content`, the rich-content boundary. Paragraph links are therefore visibly underlined without changing the separately styled navigation and sharing links.
+- **1.0**, 2026-09-10: Initial article-story reference design with
+  `imageProminence` and `heroImage` controls in English and Arabic, then
+  iterated with split-hero support and shared-style extraction.
+  ([undrr/web-backlog#3060](https://gitlab.com/undrr/web-backlog/-/work_items/3060))

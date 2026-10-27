@@ -38,7 +38,9 @@ function TypeScriptExampleComponent({
       Type={type}
       State="Default"
       variant="contained"
-      style={{ width: `${width}px` }}
+      // maxWidth keeps a wide fixed width from pushing a narrow viewport
+      // sideways; the width prop still sets the intended size.
+      style={{ width: `${width}px`, maxWidth: '100%' }}
       onClick={onClick}
     >
       {label}

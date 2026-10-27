@@ -1,0 +1,81 @@
+/**
+ * Copy button
+ *
+ * One-click copy button with a transient feedback tooltip and aria-live announcements.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Buttons/CopyButton/CopyButton.mdx
+ */
+
+.mg-copy-button {
+  position: relative;
+
+  // Floating micro-feedback tooltip. Scoped here because icon-only copy
+  // controls need transient overlay confirmation without text-swapping layout shifts.
+  // If Mangrove later abstracts a generic Tooltip/Popover primitive (e.g. for
+  // multi-directional positioning, collision detection, or hover cards), this
+  // pattern can migrate to consume that shared atom.
+  &__feedback {
+    position: absolute;
+    bottom: calc(100% + var(--mg-spacing-100));
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    background-color: rgb(var(--mg-color-neutral-900));
+    color: rgb(var(--mg-color-white));
+    padding: var(--mg-spacing-50) var(--mg-spacing-100);
+    border-radius: var(--mg-radius-button);
+    font-family: var(--mg-font-family-ui);
+    font-size: var(--mg-font-size-200);
+    font-weight: 500;
+    line-height: 1.2;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+    // Local stacking: only needs to sit above neighbouring page content.
+    z-index: 10;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.2);
+    transition:
+      opacity var(--mg-motion-duration-fast) var(--mg-motion-easing-standard),
+      transform var(--mg-motion-duration-fast) var(--mg-motion-easing-standard),
+      visibility var(--mg-motion-duration-fast) var(--mg-motion-easing-standard);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 4px;
+      border-style: solid;
+      border-color: rgb(var(--mg-color-neutral-900)) transparent transparent
+        transparent;
+    }
+
+    &--error {
+      white-space: normal;
+      inline-size: max-content;
+      max-inline-size: 16rem;
+      background-color: rgb(var(--mg-color-red-900));
+
+      &::after {
+        border-top-color: rgb(var(--mg-color-red-900));
+      }
+    }
+
+    &--visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+
+  &--copied {
+    border-color: rgb(var(--mg-color-interactive));
+  }
+}

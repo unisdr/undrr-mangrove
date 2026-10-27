@@ -1,5 +1,6 @@
 import { Meta, Markdown } from '@storybook/addon-docs/blocks';
 import TestingGuide from '../../docs/TESTING.md?raw';
+import { linkDocsPages } from './docsPageLinks';
 
 <Meta
   title="Contributing/Build a component/Testing"
@@ -9,8 +10,8 @@ import TestingGuide from '../../docs/TESTING.md?raw';
   }}
 />
 
-<Markdown>{TestingGuide}</Markdown>
+<Markdown>{linkDocsPages(TestingGuide, 'docs/TESTING.md')}</Markdown>
 
 ---
 
-Last updated: 18 March 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/TestingComponents.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>
+Last updated: 18 March 2026 · <a href="https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Documentation/TestingComponents.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>

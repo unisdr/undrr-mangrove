@@ -1,9 +1,11 @@
+import { languageFromElement, labelsFromElement } from '../../../src/i18n';
 export default function galleryFromElement(container) {
   const { dataset } = container;
+  const labels = labelsFromElement(container);
   const props = {
-    initialIndex: dataset.initialIndex
-      ? parseInt(dataset.initialIndex, 10)
-      : 0,
+    ...languageFromElement(container),
+    ...(labels ? { labels } : {}),
+    initialIndex: dataset.initialIndex ? parseInt(dataset.initialIndex, 10) : 0,
     showThumbnails: dataset.showThumbnails !== 'false',
     thumbnailPosition: dataset.thumbnailPosition || 'left',
     showArrows: dataset.showArrows !== 'false',

@@ -4,25 +4,80 @@
 export { default as createHydrator } from './hydrate.js';
 
 // Component exports
-export { default as CookieConsentBanner } from '../stories/Components/CookieConsentBanner';
+// Points at the file, not the directory: there is no index in
+// stories/Components/CookieConsentBanner, so the directory specifier resolved
+// to nothing and took the whole module down with it. See
+// unisdr/undrr-mangrove#1240.
+export { default as CookieConsentBanner } from '../stories/Components/CookieConsentBanner/CookieConsentBanner';
 export { default as ShareButtons } from '../stories/Components/Buttons/ShareButtons/ShareButtons';
 export { default as MegaMenu } from '../stories/Components/MegaMenu/MegaMenu';
 export { default as ScrollContainer } from '../stories/Components/ScrollContainer/ScrollContainer';
-export { default as BarChart } from '../stories/Components/Charts/BarChart/BarChart';
-export { default as MapComponent } from '../stories/Components/Map/MapComponent';
 export { default as QuoteHighlight } from '../stories/Components/QuoteHighlight/QuoteHighlight';
 // CodeBlock is a Storybook documentation component (syntax highlighting via react-syntax-highlighter).
 // Drupal pages use Prism.js directly; no .hydrate.js/.fromElement.js needed for server-side blocks.
 export { CodeBlock } from '../stories/Components/CodeBlock/CodeBlock';
-export { default as Fetcher } from '../stories/Components/Fetcher/Fetcher';
 export { default as SyndicationSearchWidget } from '../stories/Components/SyndicationSearchWidget/SyndicationSearchWidget';
+export {
+  DEFAULT_LABELS,
+  interpolateLabel,
+} from '../stories/Components/SyndicationSearchWidget/context/SearchContext';
 export { Gallery } from '../stories/Components/Gallery/Gallery';
-export { default as IconCard } from '../stories/Components/Cards/IconCard/IconCard';
+// IconCard has no default export; the named form matches how the component is
+// written and how IconCard.hydrate.js re-exports it. See
+// unisdr/undrr-mangrove#1240.
+export { IconCard } from '../stories/Components/Cards/IconCard/IconCard';
 export { default as StatsCard } from '../stories/Components/Cards/StatsCard/StatsCard';
 export { default as Pager } from '../stories/Components/Pager/Pager';
+export { default as FormAction } from '../stories/Components/Forms/FormAction/FormAction';
 export { default as TextCta } from '../stories/Components/TextCta/TextCta';
 export { default as Snackbar } from '../stories/Components/Snackbar/Snackbar';
-export { default as FeaturePromo } from '../stories/Components/FeaturePromo/FeaturePromo';
+export {
+  default as CopyButton,
+  DEFAULT_COPY_BUTTON_LABELS,
+} from '../stories/Components/Buttons/CopyButton/CopyButton';
+export {
+  Drawer,
+  default as DrawerDefault,
+} from '../stories/Components/Navigation/Drawer/Drawer';
+export {
+  Tree,
+  TreeItem,
+  default as TreeDefault,
+} from '../stories/Components/Navigation/Tree/Tree';
+export {
+  default as UserFeedback,
+  DEFAULT_USER_FEEDBACK_LABELS,
+  getUserFeedbackLabels,
+} from '../stories/Components/UserFeedback/UserFeedback';
+export {
+  ServiceNotice,
+  DEFAULT_SERVICE_NOTICE_LABELS,
+  default as ServiceNoticeDefault,
+} from '../stories/Components/ServiceNotice/ServiceNotice';
+export {
+  Notice,
+  default as NoticeDefault,
+} from '../stories/Components/Notice/Notice';
+export { SkipLink } from '../stories/Utilities/SkipLink/SkipLink';
+export { default as ProgressBar } from '../stories/Components/ProgressBar/ProgressBar';
+
+export { ContentTeaser } from '../stories/Patterns/ContentTeaser/ContentTeaser';
+export { ContentCard } from '../stories/Patterns/ContentCard/ContentCard';
+export { DRUPAL_CONTENT_PATTERNS } from '../stories/Integrations/Drupal/contentPatterns';
 
 // Import global styles
 import '../stories/assets/scss/style.scss';
+
+export { getCopyButtonLabels } from '../stories/Components/Buttons/CopyButton/_labels';
+export { getShareButtonsLabels } from '../stories/Components/Buttons/ShareButtons/_labels';
+export { getServiceNoticeLabels } from '../stories/Components/ServiceNotice/_labels';
+export { getSnackbarLabels } from '../stories/Components/Snackbar/_labels';
+export { getDrawerLabels } from '../stories/Components/Navigation/Drawer/_labels';
+export { getGalleryLabels } from '../stories/Components/Gallery/_labels';
+export { getScrollContainerLabels } from '../stories/Components/ScrollContainer/_labels';
+export { getTabLabels } from '../stories/Components/Tab/_labels';
+export { getOnThisPageNavLabels } from '../stories/Components/OnThisPageNav/_labels';
+export { getMegaMenuLabels } from '../stories/Components/MegaMenu/_labels';
+export { getSyndicationSearchWidgetLabels } from '../stories/Components/SyndicationSearchWidget/_labels';
+
+export { default as FeaturePromo } from '../stories/Components/FeaturePromo/FeaturePromo';

@@ -1,57 +1,78 @@
-import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
-import { Authorimg } from './AuthorImages';
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
 import * as AuthorImagesStories from './AuthorImages.stories';
-
-export const getCaptionForLocale = locale => {
-  switch (locale) {
-    case 'english':
-      const engText = {};
-      return engText;
-    case 'arabic':
-      const arabicText = {};
-      return arabicText;
-    case 'japanese':
-      const japaneseText = {};
-      return japaneseText;
-    default:
-      return {};
-  }
-};
 
 <Meta of={AuthorImagesStories} />
 
-> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
 
 # Author image
 
-The Author Image component reveals the photo of the author.
+The Author image component now acts as a compact author block: portrait, name, job title, and organisation in one composable unit.
 
 ### Overview
 
-The Author Image component displays the author's image but does not contain any information.
-
-#### When to use:
-
-- When the image of the author is to be displayed.
+Use it for author bylines, speaker cards, and profile callouts where the photo and the identity text need to stay together.
+The Storybook examples use seeded Random User portraits so the images stay deterministic.
+Pass `href` to make the whole block behave like a link.
+Use `tone="inverse"` when the block sits on a dark background.
+Leave `image` empty when you want a text-only author variant.
+The default example grid also includes a text-only byline so the no-image state is visible without scrolling.
 
 ### Formatting
 
 #### Default
 
-It's circular shaped with an image inside it.
+The block supports horizontal and vertical stacked layouts. The portrait stays paired with a prominent name line and a secondary line for title/org. The accent can be primary, secondary, or tertiary.
 
 ### Behaviors
 
 #### States
 
-There are two states in the Author Image component: Small and Large.
+The component supports Small and Large sizes, horizontal and vertical layouts, plus three highlight colours:
 
-- Small
-- Large
+- horizontal
+- vertical
+- linked
+- inverse
+- no image
+- primary
+- secondary
+- tertiary
 
-<Canvas of={AuthorImagesStories.DefaultAuthorImage} meta={AuthorImagesStories} />
+**Contrast:** the accent drives the avatar ring, the focus outline and the title. `secondary` keeps the Sendai orange ring and hover tint, which carry no copy, but the title and the focus outline no longer take it: the orange is 2.65 as ink on white against WCAG's 4.5, and 2.95 as an outline against the 3.0 a focus indicator needs. The title takes `--mg-color-text` and the focus outline takes the standard focus ring. See [the colour contrast methodology](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text) for the measurements.
+
+<Canvas
+  of={AuthorImagesStories.DefaultAuthorImage}
+  meta={AuthorImagesStories}
+/>
+
+<Canvas
+  of={AuthorImagesStories.NoImageAuthorImage}
+  meta={AuthorImagesStories}
+/>
+
+<Canvas
+  of={AuthorImagesStories.HorizontalAuthorImage}
+  meta={AuthorImagesStories}
+/>
+
+<Canvas
+  of={AuthorImagesStories.VerticalAuthorImage}
+  meta={AuthorImagesStories}
+/>
+
+<Canvas
+  of={AuthorImagesStories.InverseAuthorImage}
+  meta={AuthorImagesStories}
+/>
 
 ## Changelog
 
-- **1.1** — 2026-03-21: Renamed CSS classes to `mg-` prefix (`author__img` → `mg-author-image`). Added BEM modifiers for size (`mg-author-image--large`) and hover color (`mg-author-image--yellow`, etc.). Replaced `defaultProps` with destructured defaults.
-- **1.0** — 2022-12-12: Released component
+- **1.3.1**, 2026-10-15 ([#1357](https://github.com/unisdr/undrr-mangrove/issues/1357)): Hover feedback uses shared motion tokens and changes instantly under reduced motion.
+
+- **1.3.0**, 2026-09-18 ([#1249](https://github.com/unisdr/undrr-mangrove/pull/1249)): Fixes [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196). The `secondary` accent keeps the orange avatar ring and hover tint, which carry no copy, but its title now takes `--mg-color-text` (was the orange accent as ink on white, 2.65) and its focus outline takes `--mg-color-focus-ring` (the orange outline was 2.95, under the 3.0 a focus indicator needs). `--mg-color-secondary` is unchanged. This is a visible change wherever the variant is used, in all five themes.
+- **1.2.2**, 2026-09-18 ([#1198](https://github.com/unisdr/undrr-mangrove/pull/1198)): Documented the `secondary` accent as a recorded contrast exception: the orange accent as title ink on white is 2.65, and no text colour clears AA on that hue. No colour changed; removal is tracked in [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196).
+- **1.2.1**, 2026-09-17 ([#1192](https://github.com/unisdr/undrr-mangrove/pull/1192)): The horizontal layout aligns its text with `text-align: start`, so it follows the reading direction in RTL.
+- **1.2**, 2026-09-14 ([#1147](https://github.com/unisdr/undrr-mangrove/pull/1147)): Reworked the component into a compact author block with horizontal and vertical stacked layouts, optional linking, inverse dark-surface treatment, avatar-only hover tint, and a no-image text-only variant.
+- **1.1**, 2026-03-21: Renamed CSS classes to `mg-` prefix (`author__img` → `mg-author-image`). Added BEM modifiers for size (`mg-author-image--large`) and hover color (`mg-author-image--yellow`, etc.). Replaced `defaultProps` with destructured defaults.
+- **1.0**, 2022-12-12: Released component

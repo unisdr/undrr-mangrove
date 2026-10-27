@@ -1,16 +1,35 @@
 # Release process guide
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASES.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-release-process--docs).
+> Edits to this file show up on both [GitHub](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/RELEASES.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/contributing-release-process--docs).
 
 This guide explains the release process for the UNDRR Mangrove component library.
 
 ## Overview
 
-Releases use **manual versioning** with automated npm publishing. You choose the version number, update `package.json`, tag the release, and CI handles the rest.
+Releases use **manual versioning** with automated npm publishing: choose the
+version, update `package.json`, tag, and let CI publish.
+
+### Where CI runs: unisdr and the PreventionWeb fork
+
+GitHub Actions run on `unisdr/undrr-mangrove` again (2.0.1 was the first release published through CI since the organisation was flagged), but mangrove.undrr.org and the CDN still deploy from the public fork [`PreventionWeb/undrr-mangrove`](https://github.com/PreventionWeb/undrr-mangrove). So a release uses both:
+
+- **`unisdr/undrr-mangrove`:** pull requests are reviewed and merged here, and their checks run here ("Build and Deploy", "PR Title Check", and Chromatic when a draft pull request is marked ready for review or a maintainer requests a manual run). Pushing a `v*` tag runs "Publish to NPM Registry", which publishes with a provenance attestation through npm's trusted publisher. Its "Build and Deploy" also deploys Storybook to `unisdr.github.io/undrr-mangrove`, which has no custom domain; that copy is not the public site.
+- **`PreventionWeb/undrr-mangrove`:** after merging, sync the fork. Its "Build and Deploy" workflow publishes Storybook to mangrove.undrr.org, and "Build and Push dist to dist branch" rebuilds its `dist` branch. npm publishing and Chromatic are disabled on the fork.
+
+  ```bash
+  gh repo sync PreventionWeb/undrr-mangrove --source unisdr/undrr-mangrove --branch main
+  ```
+
+- **The asset library** (`assets.undrr.org/mangrove/latest/`) is built from the fork's `dist` branch, with an npm fallback if the clone fails. The GitLab [shared-web-assets](https://gitlab.com/undrr/common/shared-web-assets/) pipeline builds a snapshot; production changes only after a tagged pipeline's manual `deploy-production-job` deploys that build. A routine pipeline updates testing, not production.
+
+If Actions stop on `unisdr/undrr-mangrove` again, run the pull request checks locally before merging (`yarn lint:check`, `yarn prettier:check`, `yarn test`, `yarn build`, `yarn validate-manifest` and, for component changes, `yarn test-storybook` in Chromium Browser Mode plus the built-site browser gates; see `storybook.yml` for the exact steps), and publish with the [break-glass steps](#break-glass-fully-local-release-ciactions-unavailable), as 2.0.0 was, without a provenance attestation.
 
 ### Why not automated semantic-release?
 
-We follow Conventional Commits for consistent, readable commit history, but we don't use semantic-release for automated version bumps. As a rapidly evolving component library, strict semver automation would produce excessive major version bumps — individual component breaking changes happen frequently during active development, but don't warrant a major library release when the change is scoped to a single component. Manual versioning gives us control over when to signal a significant release to consumers.
+We use Conventional Commits for readable history, but not semantic-release for
+automatic bumps. In an actively evolving component library, strict automation
+would trigger too many major bumps for scoped component-level breaks. Manual
+versioning keeps release signaling intentional.
 
 ## Release steps
 
@@ -32,6 +51,14 @@ yarn validate-manifest
 ```
 
 The validation checks for stale curated data keys, accessibility anti-patterns in HTML examples, and PropTypes coverage.
+
+Then preview the npm tarball exactly as the publish workflow will assemble it, and compare it with the last published version. The comparison lists files added, removed, or with changed content, and should show only what genuinely changed this release. Compiled component bundles always differ in their `Compiled on:` build timestamp; those files are counted but not listed as changed:
+
+```bash
+yarn pack:preview --compare <previous-version>   # e.g. --compare 2.0.0-rc.1
+```
+
+Do not use `npm pack` at the repo root to validate a release. Its source-oriented allowlist differs from the curated package the publish workflow assembles. Pack from `npm-package/` using the commands above. See [Package contents](#package-contents).
 
 ### 2. Update the version
 
@@ -57,33 +84,147 @@ yarn update-cdn-version --dry-run  # preview changes first
 
 This updates CDN URLs in README.md, MDX docs, and story files from the old version to the new one.
 
-### 4. Commit, tag, and push
+#### Re-point the `latest` guidance
 
-```bash
-git add .
-git commit -m "chore(release): v1.3.0"
-git tag v1.3.0
-git push origin main --tags
+`yarn update-cdn-version` rewrites *pinned* version URLs. It does not touch `assets.undrr.org/mangrove/latest/`, and neither does any test: `scripts/__tests__/docs-package-paths.test.js` skips `latest/` on purpose, because `latest/` serves the last deployed shared-web-assets build's snapshot of the PreventionWeb fork's `dist` branch (or its npm fallback) and cannot be resolved against this branch's sources. So `latest/` guidance is checked here, by hand, every release.
+
+A release that changes the major is the one that matters. When `latest` moves to a new major, every `latest/` URL in the docs silently starts serving a different tree: paths that 404ed begin resolving, and paths that resolved begin 404ing. Work through this list:
+
+1. **Find them.** `grep -rn "assets.undrr.org/mangrove/latest" --include='*.md' --include='*.mdx' .`. As of 2.0.0 the hits are this file (this section and the break-glass `curl` check) and the upgrade guidance in `docs/RELEASE-2.0.md` and `docs/RELEASE-2.0.0.md`, which tell readers to move off `latest/`; no doc loads from `latest/`.
+2. **Request each one** against the version being released and confirm it still resolves. A `latest/` URL that 404s after the tag moves is a broken copy-paste on a published page.
+3. **Verify newly published paths and update availability notes.** A module or stylesheet that first ships in this release has no folder on any earlier version, and npm publication alone does not create the CDN version folder. Request its pinned URL once the versioned assets are live, and check that any "Available from" note or install guidance in the release notes page (`docs/RELEASE-X.Y.md`) matches the version that actually shipped.
+4. **Confirm before publishing the release notes**, not after. Each of these is a path a reader copies.
+
+### 4. Update CHANGELOG.md
+
+In `CHANGELOG.md`, rename the `## Unreleased` section to `## X.Y.Z, YYYY-MM-DD` and add a link to the GitHub Release below the heading (the release page is created in step 6, so you can add the link now and it will resolve once the release is published):
+
+```markdown
+## 1.3.0, 2026-01-15
+
+See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v1.3.0) for full details.
 ```
 
-### 5. Monitor the publish
+Then add a fresh empty `## Unreleased` section above it for the next cycle.
 
-The tag push triggers the [NPM Publish workflow](https://github.com/unisdr/undrr-mangrove/actions/workflows/npm-publish.yml), which automatically:
+While the organization was flagged, the GitHub Release opened only for signed-in members, so the manifest build keeps the version and drops the link, and turns pull request and issue links into plain `unisdr/undrr-mangrove#1234` references. `releases.json` and `llms.json` link to the public fork's `CHANGELOG.md` instead (`changelogUrl`).
+
+> **Automated changelog endpoints:** You only maintain `CHANGELOG.md` and per-component `## Changelog` sections in MDX files. The build pipeline (`scripts/ai-manifest/generate-ai-manifest.js`) automatically parses `CHANGELOG.md` to generate the machine-readable `releases.json` endpoint and updates `llms.txt`/`llms.json`. Storybook renders `CHANGELOG.md` directly via `stories/Documentation/Changelog.mdx` without any duplicate files to maintain.
+
+### 5. Merge, tag, and push the tag
+
+Open the release changes as a pull request (`chore(release): prepare X.Y.Z release`), let its checks pass, and squash-merge it. Then tag the merge commit and push only that tag:
+
+```bash
+git switch main && git pull --ff-only
+git tag v1.3.0
+git push origin v1.3.0
+```
+
+Push the single tag rather than `--tags`, which would also push any stray local tags.
+
+### 6. Monitor the publish and sync the fork
+
+The tag push triggers the "Publish to NPM Registry" workflow (`.github/workflows/npm-publish.yml`) on `unisdr/undrr-mangrove`, which:
 
 - Builds the project
-- Packages distribution files and SCSS sources
-- Publishes to the npm registry
+- Packages distribution files and SCSS sources (`scripts/assemble-npm-package.mjs`, the same script as `yarn pack:preview`)
+- Publishes to the npm registry with a provenance attestation (`latest` for a stable version, `next` for one with a hyphen)
 
-### 6. Create a GitHub Release
+```bash
+gh run list --repo unisdr/undrr-mangrove --workflow npm-publish.yml --limit 1
+gh run watch --repo unisdr/undrr-mangrove <run-id> --exit-status
+```
 
-Go to [GitHub Releases](https://github.com/unisdr/undrr-mangrove/releases) and create a release from the tag. Include a summary of changes — you can use the "Generate release notes" button for a starting point.
+A successful run ends with `+ @undrr/undrr-mangrove@X.Y.Z`. The registry takes a few minutes to process the new version, so `npm view` and the dist-tags can show the previous version for a while after the run succeeds.
 
-### 7. Verify
+Then sync the fork (see [Where CI runs](#where-ci-runs-unisdr-and-the-preventionweb-fork)) if you haven't since merging, so mangrove.undrr.org and the fork's `dist` branch pick up the release. If no workflow runs on the tag push, Actions are down on `unisdr/undrr-mangrove`: publish with the [break-glass steps](#break-glass-fully-local-release-ciactions-unavailable) instead.
+
+### 7. Create a GitHub Release
+
+Create a release from the tag on the Releases page of `unisdr/undrr-mangrove`. The public fork has no releases of its own.
+
+Write release notes as a **curated, themed narrative**, not a flat commit list, using the standard format below. Releases from `v2.0.0-rc.1` on follow it (the short rc.3 notes were an exception); see v2.0.0-rc.1 and v2.0.0-rc.2 for worked examples (`gh release view --repo unisdr/undrr-mangrove v2.0.0-rc.1`).
+
+Start from the PRs merged since the previous tag, and read each PR's description rather than relying on commit subjects:
+
+```bash
+git log v2.0.0-rc.1..v2.0.0-rc.2 --oneline
+```
+
+Use GitHub "Generate release notes" as a checklist of what landed, then rewrite it into the format.
+
+#### Release notes format
+
+1. **Title:** the version without the `v` prefix (`2.0.0-rc.2`). Tick **Set as a pre-release** for any version with a hyphen.
+2. **Intro paragraph:** one or two sentences saying what kind of release this is and its main themes, written for consumers. No section heading above it. The template opens a release candidate; a stable major opens with what it is instead ("Mangrove X.0 is the stable release of ...").
+3. **Full detail link:** for a major version line with its own release notes page, link it and its source file on the next line. Otherwise, link the relevant `CHANGELOG.md` section.
+4. **Sections**, as `##` headings, in this order. Leave out any section with nothing in it, and don't add others:
+   - **Breaking and visible changes**: anything a consumer may need to act on or will notice (API or default export changes, changed defaults, appearance changes, renamed ids, moved URLs). Each bullet says what to do.
+   - **New features**: user-visible additions.
+   - **Bug fixes and hardening**: notable fixes, accessibility and contrast fixes, security and robustness.
+   - **Documentation and discoverability**: docs, Storybook, AI manifests (`llms.txt`, `ai-components/`), and the docs host.
+   - **Dependencies**: batched dependency updates, on one line where possible.
+   - **CDN**: always last, with the stylesheet snippet for the new version.
+5. **Bullets:** start with a **bold component or feature name** followed by a colon (or a bold one-sentence summary ending in a full stop for breaking changes), then one or two sentences on consumer impact. End with the PR links, then any issue links, in parentheses, as full URLs. Group closely related sub-items as nested bullets under one parent.
+6. **Leave out** repo-only tooling that doesn't change the published package, Storybook site or manifests (for example pack scripts or CI artifact tweaks). Those belong in `CHANGELOG.md`.
+7. **No attribution lines** (such as "Generated with …") and no commit hashes.
+
+#### Template
+
+~~~markdown
+The Nth release candidate for Mangrove X.Y. It <main themes, in consumer terms>.
+
+Full detail and migration steps: [vX.Y release notes](https://mangrove.undrr.org/?path=/docs/getting-started-release-notes-vX-Y--docs) (source: [`docs/RELEASE-X.Y.md`](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/RELEASE-X.Y.md)).
+
+## Breaking and visible changes
+
+- **<What changed, as a sentence>.** <What consumers see and what to do.> ([#NNNN](https://github.com/unisdr/undrr-mangrove/pull/NNNN))
+
+## New features
+
+- **<Component or feature>:** <what it adds and how to use it>. ([#NNNN](https://github.com/unisdr/undrr-mangrove/pull/NNNN), [#NNNN](https://github.com/unisdr/undrr-mangrove/issues/NNNN))
+
+## Bug fixes and hardening
+
+- **<Area>:** <what was wrong and what is fixed>. ([#NNNN](https://github.com/unisdr/undrr-mangrove/pull/NNNN))
+
+## Documentation and discoverability
+
+- **<Area>:** <what changed for readers or agents>. ([#NNNN](https://github.com/unisdr/undrr-mangrove/pull/NNNN))
+
+## CDN
+```html
+<link rel="stylesheet" href="https://assets.undrr.org/mangrove/X.Y.Z/css/style.css">
+```
+~~~
+
+To create the release from the command line instead of the web UI, save the notes to a file and run:
+
+```bash
+gh release create vX.Y.Z --title X.Y.Z --verify-tag --notes-file release-notes.md
+# add --prerelease for any version with a hyphen
+```
+
+### 8. Verify
 
 - [npm package page](https://www.npmjs.com/package/@undrr/undrr-mangrove) shows the new version
-- [GitHub Releases](https://github.com/unisdr/undrr-mangrove/releases) has the release notes
+- The release on `unisdr/undrr-mangrove` has the release notes: `gh release view --repo unisdr/undrr-mangrove vX.Y.Z`
+- `npm view @undrr/undrr-mangrove dist-tags` shows `latest` on the new version for a stable release, or `next` for a prerelease. A stable release that closes a prerelease line (such as 2.0.0 after the 2.0 release candidates) leaves `next` on the last release candidate, so point it at the stable version too: `npm dist-tag add @undrr/undrr-mangrove@X.Y.Z next`
+- **CDN `latest/`: confirm it picked up the release.** `assets.undrr.org/mangrove/latest/` is not moved by hand and doesn't follow npm's `latest` tag. The GitLab [shared-web-assets](https://gitlab.com/undrr/common/shared-web-assets/) pipeline rebuilds it from the `dist` branch of the PreventionWeb fork each time it runs (on the testing site for every push to its `main`, and in production for a tagged release there), falling back to the latest npm version if the clone fails. So sync the fork and let `dist` rebuild before building the shared-web-assets candidate. Create a tag in shared-web-assets, wait for its tagged pipeline to build, then manually run `deploy-production-job` to deploy those artifacts. Routine pipelines update testing only; the manual job deploys the tagged build's snapshot rather than fetching the current `dist` branch again. Confirm production `latest/` serves the intended version (a `200` status alone does not prove that):
 
-### 8. Update the Drupal theme (if needed)
+  ```bash
+  curl -s https://assets.undrr.org/mangrove/latest/css/style.css | grep -m1 'Version:'   # expect: Version: X.Y.Z
+  ```
+
+- The versioned folder carries the published guidance under `docs/` (the editorial manual and every `llms-*.txt` sub-manifest, from `dist/docs/`), which prompts and integrations can pin to:
+
+  ```bash
+  curl -sI https://assets.undrr.org/mangrove/X.Y.Z/docs/EDITORIAL-MANUAL.md | head -1          # expect 200
+  curl -sI https://assets.undrr.org/mangrove/X.Y.Z/docs/llms-editorial-manual.txt | head -1   # expect 200
+  ```
+
+### 9. Update the Drupal theme (if needed)
 
 If component JS or CSS changed:
 
@@ -95,20 +236,142 @@ Copy built JS from `dist/components/` to `undrr_common/js/mangrove-components/` 
 
 ## Manual npm publish (fallback)
 
-If automated publishing fails, you can trigger it manually:
+If a tag-push publish fails but **Actions is still available**, re-run it manually:
 
-1. Go to [Actions → Publish to NPM Registry](https://github.com/unisdr/undrr-mangrove/actions/workflows/npm-publish.yml)
+1. Go to Actions → Publish to NPM Registry on `unisdr/undrr-mangrove` (the fork's copy of this workflow is disabled, so it has no public run history).
 2. Click "Run workflow"
 3. Optionally enter a specific git tag (leave empty for latest)
+
+A manual re-run for a tag created before `scripts/assemble-npm-package.mjs` existed fails at "Prepare package files", because the workflow checks out the tag and the script is not in it. It fails safely and nothing is published. For those tags, follow the [break-glass steps](#break-glass-fully-local-release-ciactions-unavailable) from a checkout that has the script (for example, copy `scripts/assemble-npm-package.mjs` into the tag checkout and run `node scripts/assemble-npm-package.mjs`).
+
+## Break-glass: fully local release (CI/Actions unavailable)
+
+Use this **only** when GitHub Actions cannot run at all (for example, org
+flag/suspension and all workflows down). This path trades away normal CI
+guarantees.
+
+### Prerequisites
+
+- npm account with **publish rights to the `@undrr` scope** and 2FA configured.
+- Local checkout on the exact commit you intend to tag, fully built and passing (`yarn test`, `yarn lint`, `yarn build`, `yarn validate-manifest`).
+
+### Gate: is token publish allowed?
+
+The package uses [OIDC trusted publishing](#npm-trusted-publishing). If its **Publishing access** setting is "Require two-factor authentication or an automation/granular access token" that's fine, but if it is set to **require trusted publishing**, a `npm login` (token) publish is rejected and this path is impossible; you wait for CI.
+
+**`npm publish --dry-run` does NOT test this.** It packs the tarball but does
+not contact npm auth endpoints, so it cannot reveal trusted-publisher rejection.
+Only two checks are reliable:
+
+1. Check **Settings → Publishing access** on [the package page](https://www.npmjs.com/package/@undrr/undrr-mangrove/access) before starting.
+2. Just attempt the real publish (step 4). A rejected publish **does not consume the version number**, so it is safe to try: it either succeeds or 403s with a clear message.
+
+### 1. Prepare the release
+
+Follow the normal [Release steps](#release-steps) 1–5 (version bump, CDN links, CHANGELOG, commit, tag) and `npm login`. You still commit and tag on `main`; the tag just won't trigger a publish.
+
+### 2. Assemble the package exactly as CI does
+
+The `npm-publish.yml` workflow does **not** publish the repo root. It runs `scripts/assemble-npm-package.mjs`, which builds a curated `npm-package/` directory from `dist/` (compiled `components/`, `css/`, `js/`, `fonts/`, `error-pages/`, the `scss/` sources, and a slimmed `package.json`). Run the same script from the repo root after a clean `yarn build`:
+
+```bash
+yarn pack:assemble   # replaces npm-package/ (gitignored)
+```
+
+The script only deletes an output directory that is inside the repo, outside its source directories, and either empty or a previous package build. Anything else stops it with an error. It also fails if a `dist/` directory it copies from exists but is empty, as the old `cp -r dir/*` step did.
+
+Three things worth knowing:
+
+- **`scss/` is a supported public surface, and its shape is not the repo's.** The SCSS entry points are published under `scss/assets/scss/` (`@undrr/undrr-mangrove/scss/assets/scss/style` compiles against the tarball) because the copy keeps each file's path below `stories/`. The doubled `assets/scss` segment is an artefact of that copy, not a design, but renaming it would break every Sass consumer for no gain, so it stays and the docs name it (unisdr/undrr-mangrove#1266). Documentation must never name these files under `stories/`: no tarball has ever contained a `stories/` directory. `scripts/__tests__/docs-package-paths.test.js` checks every path the documentation names.
+- **The published package has no root entry point, deliberately.** The slimmed `package.json` has no `main` and no `exports`, so `import '@undrr/undrr-mangrove'` does not resolve; consumers import the subpath dirs (`components/`, `css/`, …). Through 2.0.0-rc.2 it carried `main: "dist/index.js"`, a dangling pointer (the slim `files` array excludes `dist/`, so no tarball has ever contained that file), and 2.0.0 drops it rather than starting to ship one (unisdr/undrr-mangrove#1252). Do not add `main` back, and do not add an `exports` map without `"./*": "./*"` alongside: an `exports` map with only a `"."` entry makes every working subpath fail with `ERR_PACKAGE_PATH_NOT_EXPORTED`. `scripts/__tests__/assemble-npm-package.test.js` fails on either.
+- `npm-package/` is gitignored, but still delete it once the release is done so a stale copy is never published later.
+
+### 3. Verify the tarball before publishing
+
+Only pack from `npm-package/` for a release. The repository root has a different, source-oriented allowlist and does not represent what the publish workflow ships.
+
+Confirm contents against the previous published release. The diff should be *only* files that genuinely changed this release:
+
+```bash
+yarn pack:preview --compare <previous-version>
+```
+
+This re-assembles `npm-package/`, prints the file count and unpacked size from `npm pack --dry-run`, downloads the published `<previous-version>` tarball from npm to a temp directory, and prints the files only in one or the other plus the files whose content changed. Files that differ only in the `Compiled on:` build timestamp are counted in a final line, not listed. For a rebuild of an already published version, expect no added, removed or changed files.
+
+### 4. Publish
+
+Confirm you hold publish rights first (`npm access list collaborators @undrr/undrr-mangrove` should show your user as `read-write`). Then, from inside `npm-package/`:
+
+```bash
+# Stable version (clean semver, e.g. 2.0.0):
+npm publish --access public        # NO --provenance: it needs the CI OIDC token and fails locally
+
+# Prerelease version (anything with a hyphen, e.g. 2.0.0-alpha.1):
+npm publish --access public --tag next   # MUST use --tag next, or a plain
+                                         # `npm install @undrr/undrr-mangrove`
+                                         # resolves to the unstable build.
+```
+
+Run this in a **real interactive terminal**: with 2FA enabled, npm prompts for
+OTP and non-interactive shells hang. (Alternative: `--otp=<code>`.)
+
+This is also the real [gate](#gate-is-token-publish-allowed): success means
+token publishing is allowed; 403/trusted-publisher means stop. A rejected
+attempt does not consume the version number.
+
+### 5. Update the CDN `dist` branch
+
+`dist.yml` force-pushes the contents of `dist/` (minus `assets/images` and `assets/icons`) to the `dist` branch on every push to `main`. The copy that feeds the asset library runs on the PreventionWeb fork, so syncing the fork (see [Where CI runs](#where-ci-runs-unisdr-and-the-preventionweb-fork)) is enough. The asset library builds `latest/` from the fork's `dist` branch when its pipeline runs, and produces the versioned `mangrove/X.Y.Z/` path from the npm release (see [the caveat in step 6](#6-create-the-github-release-and-verify)).
+
+Only if the fork's Actions are unavailable too, replicate the push by hand to the fork's `dist` branch, from an **isolated worktree** so your `main` checkout is untouched (with `dist/` freshly built at the tagged commit, and `origin` pointing at the fork):
+
+```bash
+git fetch origin dist
+git worktree add -B dist /tmp/dist-deploy origin/dist
+find /tmp/dist-deploy -maxdepth 1 -mindepth 1 -not -name '.git' -exec rm -rf {} +
+cp -r dist/* /tmp/dist-deploy/
+rm -rf /tmp/dist-deploy/assets/images /tmp/dist-deploy/assets/icons
+git -C /tmp/dist-deploy add -A
+git -C /tmp/dist-deploy commit -m "Deploy dist from <sha> (vX.Y.Z)"
+git -C /tmp/dist-deploy push origin dist
+git worktree remove /tmp/dist-deploy && git branch -D dist   # cleanup
+```
+
+### 6. Create the GitHub Release and verify
+
+Create the release from the tag as usual (steps 7–8), then verify:
+
+```bash
+npm view @undrr/undrr-mangrove dist-tags                     # stable: latest -> X.Y.Z ; prerelease: next -> X.Y.Z-alpha.N and latest UNCHANGED
+npm pack @undrr/undrr-mangrove@X.Y.Z --dry-run 2>&1 | tail -1  # sanity-check file count/size
+curl -s https://assets.undrr.org/mangrove/latest/css/style.css | grep -m1 'Version:'   # stable: expect Version: X.Y.Z
+curl -sI https://assets.undrr.org/mangrove/X.Y.Z/css/style.css  | head -1   # versioned path
+```
+
+The versioned `X.Y.Z/` URL will **404 until the shared-web-assets production deployment publishes it**. After the fork's `dist` rebuild and npm publication, create a tag in shared-web-assets, wait for that pipeline's build, then manually run `deploy-production-job`. This deploys the tagged build's versioned assets and `latest/` snapshot; a routine pipeline or a `dist` push alone does not update production. See [Verify](#8-verify).
+
+Finally, delete the local `npm-package/` once the version is live.
+
+### Trade-offs vs a CI release
+
+| Guarantee | CI release | Break-glass |
+|---|---|---|
+| **Provenance attestation** | Yes (`--provenance` via OIDC) | **No**: `--provenance` needs the CI OIDC token; a local publish omits it |
+| **CDN (`dist` branch)** | Auto on `main` push | Auto once the fork is synced; by hand only if the fork's Actions are down |
+| **Storybook Pages** | Auto-redeployed | Redeployed by the fork once synced |
+| **Chromatic visual regression** | Runs | **Skipped** |
+| **Auditability** | Build tied to a CI run | Only your local shell history |
+
+Prefer restoring CI over repeating this. Every published version through 1.8.1, and from 2.0.1 on, shipped with provenance via the normal flow; a break-glass release (such as 2.0.0) is a deliberate exception.
 
 ## Component changelogs vs project releases
 
 Mangrove tracks changes at two levels:
 
-- **Component changelogs** (in each component's MDX file): Track per-component version history. Update these whenever a PR modifies a component's behavior, API, or appearance. See the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs#changelog-format) for the required format (source: `stories/Documentation/ComponentContribution.mdx` → "Changelog format").
+- **Component changelogs** (in each component's MDX file): Track per-component version history. Update these whenever a PR modifies a component's behavior, API, or appearance. See the [component standards](https://mangrove.undrr.org/?path=/docs/contributing-component-standards--docs#changelog-format) for the required format (source: `stories/Documentation/ComponentContribution.mdx` → "Changelog format").
 - **Project releases** (GitHub Releases): Track library-wide releases. Created during the release process above.
 
-Component changelogs and project releases serve different audiences — component changelogs help developers working with a specific component, while project releases help consumers of the npm package understand what changed between versions.
+Component changelogs and project releases serve different audiences: component changelogs help developers working with a specific component, while project releases help consumers of the npm package understand what changed between versions.
 
 ## Commit message conventions
 
@@ -125,18 +388,20 @@ We use [Conventional Commits](https://www.conventionalcommits.org/) for readable
 | `build:` | Build system or tooling |
 | `ci:` | CI/CD configuration |
 
-PR titles are validated by CI — see `.github/workflows/pr-title-check.yml`.
+PR titles are validated by CI (see `.github/workflows/pr-title-check.yml`).
 
 ## Package contents
 
 Published npm packages include:
 
-- `/components/**/*` — compiled React components (ES modules)
-- `/css/**/*` — compiled CSS files
-- `/js/**/*` — compiled vanilla JavaScript files
-- `/scss/**/*` — source SCSS files
-- `/error-pages/**/*` — static error page templates
-- `/fonts/**/*` — Mangrove icon font
+- `/components/**/*`: compiled React components (ES modules)
+- `/css/**/*`: compiled CSS files
+- `/js/**/*`: compiled vanilla JavaScript files
+- `/scss/**/*`: source SCSS files
+- `/error-pages/**/*`: static error page templates
+- `/fonts/**/*`: Mangrove icon font
+
+The layout and the slimmed `package.json` are produced by `scripts/assemble-npm-package.mjs`, used by both the publish workflow and `yarn pack:assemble` / `yarn pack:preview`. Change that script, not the workflow, to change what is published.
 
 ## CDN distribution
 
@@ -148,29 +413,29 @@ The project maintains a `dist` branch for CDN/static hosting via the [UNDRR stat
 Example CDN URLs:
 
 ```
-# Latest (from dist branch, updated on every push to main)
+# Latest (rebuilt from the fork's dist branch each time the shared-web-assets pipeline runs)
 https://assets.undrr.org/testing/static/mangrove/latest/css/style.css
 https://assets.undrr.org/testing/static/mangrove/latest/components/MegaMenu.js
 
 # Versioned (from tagged releases)
-https://assets.undrr.org/static/mangrove/1.7.0/css/style.css
-https://assets.undrr.org/static/mangrove/1.7.0/components/MegaMenu.js
-https://assets.undrr.org/static/mangrove/1.7.0/js/tabs.js
+https://assets.undrr.org/mangrove/2.3.0/css/style.css
+https://assets.undrr.org/mangrove/2.3.0/components/MegaMenu.js
+https://assets.undrr.org/mangrove/2.3.0/js/tabs.js
 ```
 
 ## CI/CD configuration
 
-| File | Purpose |
-|---|---|
-| `.github/workflows/npm-publish.yml` | npm publish on tag push (`v*`) |
-| `.github/workflows/dist.yml` | Update `dist` branch on `main` push |
-| `.github/workflows/storybook.yml` | Build and deploy Storybook to GitHub Pages |
-| `.github/workflows/chromatic.yml` | Visual regression testing |
-| `.github/workflows/pr-title-check.yml` | Validate PR titles follow Conventional Commits |
+| File | Purpose | Where it runs |
+|---|---|---|
+| `.github/workflows/npm-publish.yml` | npm publish on tag push (`v*`) | `unisdr` only; disabled on the fork |
+| `.github/workflows/dist.yml` | Update `dist` branch on `main` push | Both; the fork's `dist` feeds the asset library |
+| `.github/workflows/storybook.yml` | Build and deploy Storybook to GitHub Pages | Both; the fork serves mangrove.undrr.org |
+| `.github/workflows/chromatic.yml` | Visual regression testing | `unisdr` only (when a pull request opens); disabled on the fork |
+| `.github/workflows/pr-title-check.yml` | Validate PR titles follow Conventional Commits | Both |
 
 ### npm trusted publishing
 
-npm publishing uses [OIDC trusted publishing](https://docs.npmjs.com/trusted-publishers/) instead of long-lived access tokens. GitHub Actions authenticates directly with npm using a short-lived OIDC token — no `NPM_TOKEN` secret is needed.
+npm publishing uses [OIDC trusted publishing](https://docs.npmjs.com/trusted-publishers/) instead of long-lived access tokens. GitHub Actions authenticates directly with npm using a short-lived OIDC token; no `NPM_TOKEN` secret is needed.
 
 This is configured in two places:
 - **npmjs.com**: [package settings → Trusted Publisher](https://www.npmjs.com/package/@undrr/undrr-mangrove/access) links the `unisdr/undrr-mangrove` repo and `npm-publish.yml` workflow
@@ -180,18 +445,18 @@ Published packages include a [provenance attestation](https://docs.npmjs.com/gen
 
 ### Required GitHub secrets
 
-- **`GITHUB_TOKEN`** — built-in, used by workflows
-- **`CHROMATIC_PROJECT_TOKEN`** — for visual regression testing (optional)
+- **`GITHUB_TOKEN`**: built-in, used by workflows
+- **`CHROMATIC_PROJECT_TOKEN`**: for visual regression testing (optional)
 
-No npm token is required — trusted publishing handles authentication via OIDC.
+No npm token is required; trusted publishing handles authentication via OIDC.
 
 ## Troubleshooting
 
 | Symptom | Cause | Fix |
 |---|---|---|
-| npm publish fails with 403/404 | Trusted publisher not configured or misconfigured | Check [package settings](https://www.npmjs.com/package/@undrr/undrr-mangrove/access) — repo, workflow filename, and environment must match |
+| npm publish fails with 403/404 | Trusted publisher not configured or misconfigured | Check [package settings](https://www.npmjs.com/package/@undrr/undrr-mangrove/access): repo, workflow filename and environment must match |
 | npm publish fails with OIDC error | Missing `id-token: write` permission in workflow | Ensure the job has `permissions: id-token: write` |
 | npm publish fails with Corepack error | Missing `corepack enable` step in workflow | Check `npm-publish.yml` has the "Enable Corepack" step |
-| CDN not updated | `dist.yml` workflow failed | Check the workflow run; it runs on every push to `main` |
+| CDN not updated | The fork wasn't synced, its `dist.yml` run failed, or the shared-web-assets pipeline hasn't run since | Sync the fork, check its `dist.yml` run, then run the shared-web-assets pipeline. A GitHub clone failure makes that pipeline fall back to the npm release silently, so check its log |
 | PR title rejected | Doesn't follow Conventional Commits format | Use `feat:`, `fix:`, `docs:`, `chore:`, etc. prefix |
 | Chromatic skipped | Commit or PR title contains `[skip chromatic]` | Intentional; remove the flag to run visual tests |

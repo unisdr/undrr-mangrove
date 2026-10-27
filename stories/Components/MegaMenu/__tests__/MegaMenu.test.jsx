@@ -23,7 +23,7 @@ describe('MegaMenu propTypes', () => {
       MegaMenu.propTypes,
       { sections: [{ bannerHeading: 'x' }] },
       'prop',
-      'MegaMenu',
+      'MegaMenu'
     );
     expect(consoleSpy).toHaveBeenCalled();
     const message = consoleSpy.mock.calls[0][0];
@@ -36,7 +36,7 @@ describe('MegaMenu propTypes', () => {
       MegaMenu.propTypes,
       { sections: [{ title: 'Section', icon: 42 }] },
       'prop',
-      'MegaMenu',
+      'MegaMenu'
     );
     expect(consoleSpy).toHaveBeenCalled();
     const message = consoleSpy.mock.calls[0][0];
@@ -53,7 +53,7 @@ describe('MegaMenu propTypes', () => {
         ],
       },
       'prop',
-      'MegaMenu',
+      'MegaMenu'
     );
     expect(consoleSpy).not.toHaveBeenCalled();
   });

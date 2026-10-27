@@ -3,7 +3,7 @@ import * as BoilerplateStories from './Boilerplate.stories';
 
 <Meta of={BoilerplateStories} />
 
-> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
 
 # Boilerplate
 
@@ -28,7 +28,7 @@ import { Boilerplate } from './Boilerplate';
 
 <Boilerplate title="Hello" variant="primary">
   <p>Body content goes here.</p>
-</Boilerplate>
+</Boilerplate>;
 ```
 
 ### HTML/CSS (Drupal templates)
@@ -62,22 +62,22 @@ Title renders as an `<a>` element with keyboard-visible focus styles.
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `title` | `string` | *required* | Heading text |
-| `href` | `string` | — | Optional link URL for the title |
-| `children` | `ReactNode` | *required* | Body content |
-| `variant` | `'primary' \| 'secondary'` | `'primary'` | Visual variant |
+| Prop       | Type                       | Default     | Description                     |
+| ---------- | -------------------------- | ----------- | ------------------------------- |
+| `title`    | `string`                   | _required_  | Heading text                    |
+| `href`     | `string`                   | —           | Optional link URL for the title |
+| `children` | `ReactNode`                | _required_  | Body content                    |
+| `variant`  | `'primary' \| 'secondary'` | `'primary'` | Visual variant                  |
 
 ## CSS class reference
 
-| Class | Description |
-|-------|-------------|
-| `.mg-boilerplate` | Root container |
-| `.mg-boilerplate--primary` | Primary variant |
+| Class                        | Description       |
+| ---------------------------- | ----------------- |
+| `.mg-boilerplate`            | Root container    |
+| `.mg-boilerplate--primary`   | Primary variant   |
 | `.mg-boilerplate--secondary` | Secondary variant |
-| `.mg-boilerplate__title` | Heading element |
-| `.mg-boilerplate__content` | Body content area |
+| `.mg-boilerplate__title`     | Heading element   |
+| `.mg-boilerplate__content`   | Body content area |
 
 ## Accessibility
 
@@ -87,5 +87,5 @@ Title renders as an `<a>` element with keyboard-visible focus styles.
 
 ## Changelog
 
-- **1.1** — 2026-03-05: Added optional `href` prop for linked titles with focus-visible styles. Updated docs to match component library conventions.
-- **1.0** — Initial boilerplate template
+- **1.1**, 2026-03-05: Added optional `href` prop for linked titles with focus-visible styles. Updated docs to match component library conventions.
+- **1.0**: Initial boilerplate template

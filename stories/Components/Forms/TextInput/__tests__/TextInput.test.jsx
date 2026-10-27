@@ -25,22 +25,18 @@ describe('TextInput', () => {
     const helpId = input.getAttribute('aria-describedby');
     expect(helpId).toBeTruthy();
     expect(document.getElementById(helpId)).toHaveTextContent(
-      '8 characters minimum',
+      '8 characters minimum'
     );
   });
 
   it('renders error text with aria-invalid and role="alert"', () => {
     render(
-      <TextInput
-        label="Email"
-        error
-        errorText="This field is required"
-      />,
+      <TextInput label="Email" error errorText="This field is required" />
     );
     const input = screen.getByLabelText('Email');
     expect(input).toHaveAttribute('aria-invalid', 'true');
     expect(screen.getByRole('alert')).toHaveTextContent(
-      'This field is required',
+      'This field is required'
     );
   });
 
@@ -90,7 +86,7 @@ describe('TextInput', () => {
     render(<TextInput placeholder="Search..." />);
     expect(screen.getByPlaceholderText('Search...')).toHaveAttribute(
       'aria-label',
-      'Search...',
+      'Search...'
     );
   });
 
@@ -117,18 +113,14 @@ describe('TextInput', () => {
 
   it('has no a11y violations', async () => {
     const { container } = render(
-      <TextInput label="Full name" placeholder="Enter your name" />,
+      <TextInput label="Full name" placeholder="Enter your name" />
     );
     expect(await axe(container)).toHaveNoViolations();
   });
 
   it('has no a11y violations in error state', async () => {
     const { container } = render(
-      <TextInput
-        label="Email"
-        error
-        errorText="This field is required"
-      />,
+      <TextInput label="Email" error errorText="This field is required" />
     );
     expect(await axe(container)).toHaveNoViolations();
   });

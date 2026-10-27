@@ -54,7 +54,7 @@ describe('Icon', () => {
 
   it('appends extra className to the class list', () => {
     const { container } = render(
-      <Icon name="globe" className="mg-u-color--interactive" />,
+      <Icon name="globe" className="mg-u-color--interactive" />
     );
     expect(container.firstChild).toHaveClass('mg-u-color--interactive');
     expect(container.firstChild).toHaveClass('mg-icon', 'mg-icon-globe');
@@ -95,9 +95,7 @@ describe('Icon', () => {
   });
 
   it('forwards additional props to the span', () => {
-    const { container } = render(
-      <Icon name="globe" data-testid="my-icon" />,
-    );
+    const { container } = render(<Icon name="globe" data-testid="my-icon" />);
     expect(container.firstChild).toHaveAttribute('data-testid', 'my-icon');
   });
 });

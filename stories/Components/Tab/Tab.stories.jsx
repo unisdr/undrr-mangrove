@@ -1,129 +1,104 @@
+import { withLanguage } from '../../../.storybook/withLanguage';
 // stories\Components\Tab\Tab.stories.jsx
 import { Tab } from './Tab';
+import { expect, within } from 'storybook/test';
+
+// Tab content (tabdata) per locale — separate from UI labels.
 const getCaptionForLocale = locale => {
   switch (locale) {
-    case 'english':
-      const engText = {
-        tabdata: [
-          {
-            text: 'Tab title 1',
-            text_id: 'tab-1',
-            data: 'As the UN Office for Disaster Risk Reduction, UNDRR convenes partners and coordinates activities to create safer, more resilient communities.',
-          },
-          {
-            text: 'Tab title 2',
-            text_id: 'tab-2',
-            data: 'The Sendai Framework is the global roadmap for reducing human and economic loss as a direct result of disasters.',
-            is_default: 'true',
-          },
-          {
-            text: 'Tab title 3 i am a bit longer and go on and on',
-            text_id: 'tab-3',
-            data: 'Midterm Review of the Sendai Framework - Register your interest for consultations on the Political Declaration.',
-          },
-        ],
-      };
-      return engText.tabdata;
     case 'arabic':
-      const arabicText = {
-        tabdata: [
-          {
-            text: 'عنوان التبويب 1',
-            text_id: 'tab-1',
-            data: 'بصفته مكتب الأمم المتحدة للحد من مخاطر الكوارث، يجمع المكتب الشركاء وينسق الأنشطة لإنشاء مجتمعات أكثر أمانًا ومرونة.',
-          },
-          {
-            text: 'عنوان التبويب 2',
-            text_id: 'tab-2',
-            data: 'إطار سنداي هو خارطة الطريق العالمية للحد من الخسائر البشرية والاقتصادية الناتجة مباشرة عن الكوارث.',
-            is_default: 'true',
-          },
-          {
-            text: 'عنوان التبويب 3 وهو أطول قليلاً',
-            text_id: 'tab-3',
-            data: 'المراجعة النصفية لإطار سنداي - سجل اهتمامك للمشاركة في المشاورات حول الإعلان السياسي.',
-          },
-        ],
-      };
-      return arabicText.tabdata;
+      return [
+        {
+          text: 'عنوان التبويب 1',
+          text_id: 'tab-1',
+          data: 'بصفته مكتب الأمم المتحدة للحد من مخاطر الكوارث، يجمع المكتب الشركاء وينسق الأنشطة لإنشاء مجتمعات أكثر أمانًا ومرونة.',
+        },
+        {
+          text: 'عنوان التبويب 2',
+          text_id: 'tab-2',
+          data: 'إطار سنداي هو خارطة الطريق العالمية للحد من الخسائر البشرية والاقتصادية الناتجة مباشرة عن الكوارث.',
+          is_default: 'true',
+        },
+        {
+          text: 'عنوان التبويب 3 وهو أطول قليلاً',
+          text_id: 'tab-3',
+          data: 'المراجعة النصفية لإطار سنداي - سجل اهتمامك للمشاركة في المشاورات حول الإعلان السياسي.',
+        },
+      ];
     case 'japanese':
-      const japaneseText = {
-        tabdata: [
-          {
-            text: 'タブ1',
-            text_id: 'tab-1',
-            data: 'ダミーテキストとは、Webサイトのモックアップを埋めるために使用されるコンテンツの一部を指します。このテキストは、WebデザイナーがWebサイトが完成品としてどのように見えるかをよりよく想像するのに役立ちます。ダミーテキストには何の意味もないことを理解することが重要です。その唯一の目的は、著作権を侵害することなく、「単語のような」コンテンツで空白を埋めることです。',
-          },
-          {
-            text: 'タブ2',
-            text_id: 'tab-2',
-            data: 'このテキストは、WebデザイナーがWebサイトが完成品としてどのように見えるかをよりよく想像するのに役立ちます。ダミーテキストには何の意味もないことを理解することが重要です。その唯一の目的は、著作権を侵害することなく、「単語のような」コンテンツで空白を埋めることです。',
-            is_default: 'true',
-          },
-          {
-            text: 'タブ3',
-            text_id: 'tab-3',
-            data: 'ダミーテキストとは、Webサイトのモックアップを埋めるために使用されるコンテンツの一部を指します。このテキストは、WebデザイナーがWebサイトが完成品としてどのように見えるかをよりよく想像するのに役立ちます。ダミーテキストには何の意味もないことを理解することが重要です。',
-          },
-        ],
-      };
-      return japaneseText.tabdata;
+      return [
+        {
+          text: 'タブ1',
+          text_id: 'tab-1',
+          data: 'ダミーテキストとは、Webサイトのモックアップを埋めるために使用されるコンテンツの一部を指します。このテキストは、WebデザイナーがWebサイトが完成品としてどのように見えるかをよりよく想像するのに役立ちます。ダミーテキストには何の意味もないことを理解することが重要です。その唯一の目的は、著作権を侵害することなく、「単語のような」コンテンツで空白を埋めることです。',
+        },
+        {
+          text: 'タブ2',
+          text_id: 'tab-2',
+          data: 'このテキストは、WebデザイナーがWebサイトが完成品としてどのように見えるかをよりよく想像するのに役立ちます。ダミーテキストには何の意味もないことを理解することが重要です。その唯一の目的は、著作権を侵害することなく、「単語のような」コンテンツで空白を埋めることです。',
+          is_default: 'true',
+        },
+        {
+          text: 'タブ3',
+          text_id: 'tab-3',
+          data: 'ダミーテキストとは、Webサイトのモックアップを埋めるために使用されるコンテンツの一部を指します。このテキストは、WebデザイナーがWebサイトが完成品としてどのように見えるかをよりよく想像するのに役立ちます。ダミーテキストには何の意味もないことを理解することが重要です。',
+        },
+      ];
+    case 'english':
     default:
-      const dummy = {
-        tabdata: [
-          {
-            text: 'Tab title 1',
-            text_id: 'tab-1',
-            data: "<a href='#'>As the UN Office for Disaster Risk Reduction</a>, UNDRR convenes partners and coordinates activities to create safer, more resilient communities.",
-          },
-          {
-            text: 'Tab title 2',
-            text_id: 'tab-2',
-            data: "The Sendai Framework is the <a href='#'>global roadmap</a> for reducing human and economic loss as a direct result of disasters.",
-            is_default: 'true',
-          },
-          {
-            text: 'Tab title 3 i am a bit longer and on and on',
-            text_id: 'tab-3',
-            data: 'Midterm Review of the Sendai Framework - Register your interest for consultations on the Political Declaration.',
-          },
-        ],
-      };
-      return dummy.tabdata;
+      return [
+        {
+          text: 'Tab title 1',
+          text_id: 'tab-1',
+          data: "<a href='#'>As the United Nations Office for Disaster Risk Reduction</a>, UNDRR convenes partners and coordinates activities to create safer, more resilient communities.",
+        },
+        {
+          text: 'Tab title 2',
+          text_id: 'tab-2',
+          data: "The Sendai Framework is the <a href='#'>global roadmap</a> for reducing human and economic loss as a direct result of disasters.",
+          is_default: 'true',
+        },
+        {
+          text: 'Tab title 3 i am a bit longer and on and on',
+          text_id: 'tab-3',
+          data: 'Midterm Review of the Sendai Framework - Register your interest for consultations on the Political Declaration.',
+        },
+      ];
   }
 };
 
 export default {
   title: 'Components/Tabs',
   component: Tab,
+  decorators: [withLanguage],
 };
 
 export const Tabs = {
   render: (args, { globals: { locale } }) => {
     let caption = getCaptionForLocale(locale);
     caption = caption.map(tab => ({ ...tab, is_default: 'false' }));
-    return <Tab tabdata={caption} />;
+    return <Tab {...args} tabdata={caption} />;
   },
 };
 
 export const TabsWithDefault = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
-    return <Tab tabdata={caption} />;
+    return <Tab {...args} tabdata={caption} />;
   },
 };
 
 export const StackedTabs = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
-    return <Tab tabdata={caption} variant="stacked" />;
+    return <Tab {...args} tabdata={caption} variant="stacked" />;
   },
 };
 
 export const StackedWithDefaultOpen = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
-    return <Tab tabdata={caption} variant="stacked" defaultOpen />;
+    return <Tab {...args} tabdata={caption} variant="stacked" defaultOpen />;
   },
   name: 'Stacked with default open',
 };
@@ -145,7 +120,7 @@ export const StackedWithDeepLink = {
             <a href="#mg-tabs__section-tab-3">Open section 3</a>
           </li>
         </ul>
-        <Tab tabdata={caption} variant="stacked" />
+        <Tab {...args} tabdata={caption} variant="stacked" />
       </>
     );
   },
@@ -176,35 +151,207 @@ const faqData = [
 ];
 
 export const StackedAsFaq = {
-  render: () => (
+  render: args => (
     <Tab
+      {...args}
       tabdata={faqData}
       variant="stacked"
       defaultOpen={false}
       filterable
-      filterPlaceholder="Filter questions…"
+      labels={{ filterPlaceholder: 'Filter questions…', ...args.labels }}
     />
   ),
   name: 'Stacked as FAQ',
 };
 
 export const StackedSingleOpen = {
-  render: () => (
-    <Tab tabdata={faqData} variant="stacked" defaultOpen={false} singleOpen />
+  render: args => (
+    <Tab
+      {...args}
+      tabdata={faqData}
+      variant="stacked"
+      defaultOpen={false}
+      singleOpen
+    />
   ),
   name: 'Stacked single-open',
 };
 
 export const StackedFaqAccordion = {
-  render: () => (
+  render: args => (
     <Tab
+      {...args}
       tabdata={faqData}
       variant="stacked"
       defaultOpen={false}
       singleOpen
       filterable
-      filterPlaceholder="Search questions…"
+      labels={{ filterPlaceholder: 'Search questions…', ...args.labels }}
     />
   ),
   name: 'Stacked FAQ accordion',
+};
+
+const sectionData = [
+  ['Overview', 'An overview of the programme and its priorities.'],
+  ['Risk knowledge', 'Evidence and resources to understand disaster risk.'],
+  ['Early warning', 'Early warning systems that reach everyone at risk.'],
+  [
+    'Local resilience',
+    'Support for cities and communities building resilience.',
+  ],
+  ['Progress and reporting', 'Track progress against the Sendai Framework.'],
+  ['Resources', 'Explore publications, tools and learning materials.'],
+].map(([text, summary], index) => ({
+  text,
+  text_id: `rail-${index + 1}`,
+  data: `<p>${summary}</p>`,
+}));
+
+export const CentredGroup = {
+  args: {
+    tabdata: sectionData.slice(0, 3),
+    labels: { tabListLabel: 'Programme sections' },
+  },
+};
+
+export const ScrollableGroup = {
+  args: {
+    tabdata: sectionData,
+    labels: { tabListLabel: 'Programme sections' },
+  },
+};
+
+export const StacksOnMobile = {
+  args: {
+    tabdata: sectionData,
+    stackOnMobile: true,
+    labels: { tabListLabel: 'Programme sections' },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Resize below 480px to switch to stacked disclosures. At 480px and above, the same sections use the horizontal rail. The selected panel is retained when changing layout.',
+      },
+    },
+  },
+};
+
+export const NarrowContainer = {
+  ...ScrollableGroup,
+  decorators: [
+    Story => (
+      <div style={{ maxWidth: '24rem' }}>
+        <Story />
+      </div>
+    ),
+  ],
+};
+
+export const OversizedLabel = {
+  args: {
+    tabdata: sectionData.map((tab, index) =>
+      index === 1
+        ? {
+            ...tab,
+            text: 'Understanding disaster risk and strengthening resilience across communities and institutions',
+          }
+        : tab
+    ),
+  },
+  decorators: [
+    Story => (
+      <div style={{ maxWidth: '24rem' }}>
+        <Story />
+      </div>
+    ),
+  ],
+};
+
+export const OffscreenDefault = {
+  args: {
+    tabdata: sectionData.map((tab, index) => ({
+      ...tab,
+      is_default: index === sectionData.length - 1 ? 'true' : 'false',
+    })),
+  },
+  decorators: [
+    Story => (
+      <div style={{ maxWidth: '24rem' }}>
+        <Story />
+      </div>
+    ),
+  ],
+};
+
+export const HorizontalDeepLink = {
+  render: args => (
+    <>
+      <p>
+        <a href="#mg-tabs__section-rail-6">Open resources</a>
+      </p>
+      <Tab {...args} tabdata={sectionData} />
+    </>
+  ),
+};
+
+export const IndependentGroups = {
+  render: args => (
+    <>
+      <Tab
+        {...args}
+        tabdata={sectionData}
+        labels={{ tabListLabel: 'Programme sections', ...args.labels }}
+      />
+      <Tab
+        {...args}
+        tabdata={sectionData
+          .slice(0, 3)
+          .map(tab => ({ ...tab, text_id: `second-${tab.text_id}` }))}
+        labels={{ tabListLabel: 'Related sections', ...args.labels }}
+      />
+    </>
+  ),
+};
+
+export const RightToLeft = {
+  globals: { locale: 'arabic' },
+  args: { labels: { tabListLabel: 'أقسام البرنامج' } },
+  render: args => (
+    <div dir="rtl" lang="ar">
+      <Tab {...args} tabdata={getCaptionForLocale('arabic')} />
+      <Tab
+        {...args}
+        variant="stacked"
+        filterable
+        tabdata={getCaptionForLocale('arabic').map(tab => ({
+          ...tab,
+          text_id: `stacked-${tab.text_id}`,
+        }))}
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(
+      canvas.getByRole('tablist', { name: 'أقسام البرنامج' })
+    ).toBeInTheDocument();
+    await expect(
+      await canvas.findByPlaceholderText('تصفية الأقسام…')
+    ).toBeInTheDocument();
+    const groups = canvasElement.querySelectorAll('.mg-tabs');
+    await expect(groups).toHaveLength(2);
+    await Promise.all(
+      Array.from(groups, async group => {
+        await expect(group).toHaveAttribute('lang', 'ar');
+        await expect(group).toHaveAttribute('dir', 'rtl');
+        await expect(group).toHaveAttribute(
+          'data-mg-js-tabs-label',
+          'أقسام البرنامج'
+        );
+        await expect(getComputedStyle(group).direction).toBe('rtl');
+      })
+    );
+  },
 };

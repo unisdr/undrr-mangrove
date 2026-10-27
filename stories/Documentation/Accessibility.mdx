@@ -1,5 +1,6 @@
 import { Meta, Markdown } from '@storybook/addon-docs/blocks';
 import AccessibilityGuide from '../../docs/ACCESSIBILITY.md?raw';
+import { linkDocsPages } from './docsPageLinks';
 
 <Meta
   title="Getting started/Accessibility"
@@ -9,8 +10,10 @@ import AccessibilityGuide from '../../docs/ACCESSIBILITY.md?raw';
   }}
 />
 
-<Markdown>{AccessibilityGuide}</Markdown>
+<Markdown>
+  {linkDocsPages(AccessibilityGuide, 'docs/ACCESSIBILITY.md')}
+</Markdown>
 
 ---
 
-Last updated: 18 March 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/Accessibility.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>
+Last updated: 18 March 2026 · <a href="https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Documentation/Accessibility.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>

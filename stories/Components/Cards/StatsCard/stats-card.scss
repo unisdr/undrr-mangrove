@@ -1,3 +1,14 @@
+/**
+ * Stats Card
+ *
+ * Key metric and statistical callout card with large numeral display and descriptive labels.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Cards/StatsCard/StatsCard.mdx
+ */
+@use "../../../assets/scss/breakpoints" as *;
+@use "../../../assets/scss/mixins" as *;
+
 /* Stats Card Component */
 .mg-stats-card {
   width: 100%;
@@ -5,24 +16,24 @@
 
 /* Individual Stat Item - extends mg-card base */
 .mg-stats-card-item {
-  background-color: $mg-color-white;
-  border: 1px solid $mg-color-neutral-200;
-  padding: $mg-spacing-400;
+  background-color: rgb(var(--mg-color-white));
+  border: 1px solid rgb(var(--mg-color-neutral-200));
+  padding: var(--mg-spacing-400);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: $mg-spacing-100;
+  gap: var(--mg-spacing-100);
   position: relative;
   overflow: hidden;
 
   @include devicebreak(small) {
-    padding: $mg-spacing-300;
+    padding: var(--mg-spacing-300);
   }
 
   &__icon {
-    font-size: $mg-font-size-600;
-    color: $mg-color-interactive;
-    margin-bottom: $mg-spacing-100;
+    font-size: var(--mg-font-size-600);
+    color: rgb(var(--mg-color-interactive));
+    margin-bottom: var(--mg-spacing-100);
     line-height: 1;
 
     i {
@@ -31,35 +42,35 @@
   }
 
   &__label {
-    font-family: $mg-font-family-headings;
-    font-size: $mg-font-size-200;
+    font-family: var(--mg-font-family-ui);
+    font-size: var(--mg-font-size-200);
     font-weight: 600;
-    color: $mg-color-tag;
+    color: rgb(var(--mg-color-tag));
     text-transform: uppercase;
     letter-spacing: 0.05em;
     line-height: 1.2;
   }
 
   &__value {
-    font-family: $mg-font-family-headings;
+    font-family: var(--mg-font-family-ui);
 
     // Tabular lining figures: "1,200" and "1,777" align column-wise when stacked
     // and disambiguate condensed digits at display scale.
     font-variant-numeric: tabular-nums lining-nums;
-    font-size: $mg-font-size-900;
+    font-size: var(--mg-font-size-900);
     font-weight: 700;
-    color: $mg-color-interactive;
+    color: rgb(var(--mg-color-interactive));
     line-height: 1;
-    margin: $mg-spacing-100 0;
+    margin: var(--mg-spacing-100) 0;
     overflow-wrap: break-word;
     text-decoration: none;
 
     @include devicebreak(medium) {
-      font-size: $mg-font-size-800;
+      font-size: var(--mg-font-size-800);
     }
 
     @include devicebreak(small) {
-      font-size: $mg-font-size-600;
+      font-size: var(--mg-font-size-600);
     }
   }
 
@@ -76,27 +87,26 @@
     outline: none;
 
     &::after {
-      outline: 2px solid $mg-color-interactive;
-      outline-offset: 2px;
+      @include mg-focus-ring;
     }
   }
 
   &__bottom-label {
-    font-family: $mg-font-family-headings;
-    font-size: $mg-font-size-500;
+    font-family: var(--mg-font-family-ui);
+    font-size: var(--mg-font-size-500);
     font-weight: 600;
-    color: $mg-color-text;
+    color: rgb(var(--mg-color-text));
     line-height: 1.3;
-    margin-bottom: $mg-spacing-50;
+    margin-bottom: var(--mg-spacing-50);
 
     @include devicebreak(small) {
-      font-size: $mg-font-size-400;
+      font-size: var(--mg-font-size-400);
     }
   }
 
   &__summary {
-    font-size: $mg-font-size-400;
-    color: $mg-color-neutral-800;
+    font-size: var(--mg-font-size-400);
+    color: rgb(var(--mg-color-neutral-800));
     line-height: 1.5;
 
     p {
@@ -104,24 +114,24 @@
     }
 
     @include devicebreak(small) {
-      font-size: $mg-font-size-300;
+      font-size: var(--mg-font-size-300);
     }
 
     // Inline links sit above the stretched link
     a {
-      color: $mg-color-interactive;
+      color: rgb(var(--mg-color-interactive));
       text-decoration: underline;
       position: relative;
       z-index: 2; // above stretched-link cover — local to stats-card stacking context
-      transition: opacity 200ms ease;
+      transition: opacity var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard);
 
       &:hover {
         opacity: 0.7;
       }
 
       &:focus {
-        outline: 2px solid $mg-color-interactive;
-        outline-offset: 2px;
+        @include mg-focus-ring;
       }
     }
   }
@@ -135,29 +145,38 @@
 /* Variant: Compact */
 .mg-stats-card--compact {
   .mg-stats-card-item {
-    padding: $mg-spacing-300;
+    padding: var(--mg-spacing-150);
+    gap: var(--mg-spacing-50);
 
     @include devicebreak(small) {
-      padding: $mg-spacing-200;
+      padding: var(--mg-spacing-100);
+    }
+
+    // Compact spacing is owned by the gap, without child margins stacking up.
+    &__icon,
+    &__value,
+    &__bottom-label,
+    &__summary {
+      margin: 0;
     }
 
     &__value {
-      font-size: $mg-font-size-800;
+      font-size: var(--mg-font-size-800);
 
       @include devicebreak(medium) {
-        font-size: $mg-font-size-600;
+        font-size: var(--mg-font-size-600);
       }
 
       @include devicebreak(small) {
-        font-size: $mg-font-size-500;
+        font-size: var(--mg-font-size-500);
       }
     }
 
     &__bottom-label {
-      font-size: $mg-font-size-400;
+      font-size: var(--mg-font-size-400);
 
       @include devicebreak(small) {
-        font-size: $mg-font-size-300;
+        font-size: var(--mg-font-size-300);
       }
     }
   }
@@ -166,11 +185,11 @@
 /* Variant: Highlighted */
 .mg-stats-card--highlighted {
   .mg-stats-card-item {
-    background-color: rgba($mg-color-interactive, 0.05);
-    border-left: 4px solid $mg-color-interactive;
+    background-color: rgb(var(--mg-color-blue-900) / 0.05);
+    border-inline-start: 4px solid rgb(var(--mg-color-interactive));
 
     &:hover {
-      background-color: rgba($mg-color-interactive, 0.08);
+      background-color: rgb(var(--mg-color-blue-900) / 0.08);
     }
   }
 }
@@ -178,38 +197,38 @@
 /* Variant: Negative (for dark backgrounds) */
 .mg-stats-card--negative {
   h2 {
-    color: $mg-color-white;
+    color: rgb(var(--mg-color-white));
   }
 
   .mg-stats-card-item {
     background-color: transparent;
     border-width: 2px;
-    border-color: rgba($mg-color-white, 0.5);
+    border-color: rgb(var(--mg-color-neutral-0) / 0.5);
 
     &__icon {
-      color: $mg-color-white;
+      color: rgb(var(--mg-color-white));
     }
 
     &__label {
-      color: rgba($mg-color-white, 0.8);
+      color: rgb(var(--mg-color-neutral-0) / 0.8);
     }
 
     &__value {
-      color: $mg-color-white;
+      color: rgb(var(--mg-color-white));
     }
 
     &__bottom-label {
-      color: $mg-color-white;
+      color: rgb(var(--mg-color-white));
     }
 
     &__summary {
-      color: rgba($mg-color-white, 0.8);
+      color: rgb(var(--mg-color-neutral-0) / 0.8);
 
       a {
-        color: $mg-color-white;
+        color: rgb(var(--mg-color-white));
 
         &:focus {
-          outline-color: $mg-color-white;
+          outline-color: rgb(var(--mg-color-focus-ring-inverse));
         }
       }
     }
@@ -217,25 +236,14 @@
 
   // Focus styles for linked cards
   .mg-stats-card-item a.mg-stats-card-item__value:focus-visible::after {
-    outline-color: $mg-color-white;
+    outline-color: rgb(var(--mg-color-focus-ring-inverse));
   }
 }
 
-/* RTL Support */
-[dir='rtl'] {
-  .mg-stats-card--highlighted {
-    .mg-stats-card-item {
-      border-left: none;
-      border-right: 4px solid $mg-color-interactive;
-    }
-  }
-}
+/* RTL support is automatic: the highlighted accent uses `border-inline-start`. */
 
-// Arabic font override for stat labels and values.
-:lang(ar) {
-  .mg-stats-card-item__value,
-  .mg-stats-card-item__bottom-label,
-  .mg-stats-card-item__label {
-    font-family: $mg-font-family-arabic-headings;
+@media (prefers-reduced-motion: reduce) {
+  .mg-stats-card-item__summary a {
+    transition: none;
   }
 }

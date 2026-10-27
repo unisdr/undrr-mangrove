@@ -14,10 +14,18 @@ describe('syndicationSearchWidgetFromElement', () => {
     expect(config).toEqual({});
   });
 
+  it('reads the analytics region prefix', () => {
+    const { config } = syndicationSearchWidgetFromElement(
+      makeContainer({ 'analytics-region-prefix': 'collection-related' })
+    );
+    expect(config.analyticsRegionPrefix).toBe('collection-related');
+  });
+
   it('extracts simple string and number props', () => {
     const { config } = syndicationSearchWidgetFromElement(
       makeContainer({
         'search-endpoint': 'https://example.com/search',
+        'taxonomy-endpoint': 'https://example.com/taxonomy',
         'results-per-page': '10',
         'debounce-delay': '500',
         'min-search-length': '2',
@@ -29,6 +37,7 @@ describe('syndicationSearchWidgetFromElement', () => {
       })
     );
     expect(config.searchEndpoint).toBe('https://example.com/search');
+    expect(config.taxonomyEndpoint).toBe('https://example.com/taxonomy');
     expect(config.resultsPerPage).toBe(10);
     expect(config.debounceDelay).toBe(500);
     expect(config.minSearchLength).toBe(2);
@@ -236,5 +245,40 @@ describe('syndicationSearchWidgetFromElement', () => {
     expect(config).not.toHaveProperty('customFilters');
     expect(config).not.toHaveProperty('customFacets');
     expect(config).not.toHaveProperty('visibleTeaserFields');
+  });
+
+  describe('data-labels', () => {
+    it('returns labels object when valid JSON is provided', () => {
+      const labelOverrides = {
+        searchPlaceholder: 'Buscar…',
+        submitSearchText: 'Buscar',
+      };
+      const result = syndicationSearchWidgetFromElement(
+        makeContainer({ labels: JSON.stringify(labelOverrides) })
+      );
+      expect(result.labels).toEqual(labelOverrides);
+    });
+
+    it('returns { config, labels } shape when data-labels is present', () => {
+      const result = syndicationSearchWidgetFromElement(
+        makeContainer({ labels: '{"searchLabel":"Chercher"}' })
+      );
+      expect(result).toHaveProperty('config');
+      expect(result).toHaveProperty('labels');
+    });
+
+    it('returns { config } only (no labels key) when data-labels is absent', () => {
+      const result = syndicationSearchWidgetFromElement(makeContainer());
+      expect(result).toHaveProperty('config');
+      expect(result).not.toHaveProperty('labels');
+    });
+
+    it('silently ignores malformed data-labels JSON', () => {
+      const result = syndicationSearchWidgetFromElement(
+        makeContainer({ labels: '{broken json' })
+      );
+      expect(result).toHaveProperty('config');
+      expect(result).not.toHaveProperty('labels');
+    });
   });
 });

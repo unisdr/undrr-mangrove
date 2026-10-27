@@ -1,0 +1,387 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta
+  title="Design decisions/Data visualisation colours"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: {
+      canvas: { hidden: true },
+    },
+  }}
+/>
+
+export const FALLBACKS = {
+  '--mg-dataviz-categorical-1': '0 79 145',
+  '--mg-dataviz-categorical-2': '216 120 56',
+  '--mg-dataviz-categorical-3': '3 127 127',
+  '--mg-dataviz-categorical-4': '131 54 64',
+  '--mg-dataviz-categorical-5': '105 83 215',
+  '--mg-dataviz-categorical-6': '72 129 82',
+  '--mg-dataviz-categorical-7': '152 64 137',
+  '--mg-dataviz-sequential-blue-1': '0 79 145',
+  '--mg-dataviz-sequential-blue-2': '16 108 184',
+  '--mg-dataviz-sequential-blue-3': '96 147 189',
+  '--mg-dataviz-sequential-blue-4': '154 187 214',
+  '--mg-dataviz-sequential-blue-5': '221 232 240',
+  '--mg-dataviz-sequential-magenta-1': '173 102 161',
+  '--mg-dataviz-sequential-magenta-2': '189 132 179',
+  '--mg-dataviz-sequential-magenta-3': '214 179 208',
+  '--mg-dataviz-sequential-magenta-4': '229 206 225',
+  '--mg-dataviz-sequential-magenta-5': '245 236 243',
+  '--mg-dataviz-sequential-map-900': '8 21 21',
+  '--mg-dataviz-sequential-map-800': '16 41 42',
+  '--mg-dataviz-sequential-map-700': '25 62 62',
+  '--mg-dataviz-sequential-map-600': '33 82 83',
+  '--mg-dataviz-sequential-map-500': '41 103 104',
+  '--mg-dataviz-sequential-map-400': '84 133 134',
+  '--mg-dataviz-sequential-map-300': '127 164 164',
+  '--mg-dataviz-sequential-map-200': '185 209 210',
+  '--mg-dataviz-sequential-map-100': '212 225 225',
+  '--mg-dataviz-sequential-map-50': '248 252 253',
+  '--mg-dataviz-sendai-a-500': '0 0 0',
+  '--mg-dataviz-sendai-a-400': '51 51 51',
+  '--mg-dataviz-sendai-a-300': '90 90 90',
+  '--mg-dataviz-sendai-a-200': '153 153 153',
+  '--mg-dataviz-sendai-a-100': '190 190 190',
+  '--mg-dataviz-sendai-a-50': '230 230 230',
+  '--mg-dataviz-sendai-b-900': '30 13 27',
+  '--mg-dataviz-sendai-b-800': '61 26 55',
+  '--mg-dataviz-sendai-b-700': '94 27 83',
+  '--mg-dataviz-sendai-b-600': '122 51 110',
+  '--mg-dataviz-sendai-b-500': '152 64 137',
+  '--mg-dataviz-sendai-b-400': '173 102 161',
+  '--mg-dataviz-sendai-b-300': '189 132 179',
+  '--mg-dataviz-sendai-b-200': '214 179 208',
+  '--mg-dataviz-sendai-b-100': '229 206 225',
+  '--mg-dataviz-sendai-b-50': '245 236 243',
+  '--mg-dataviz-sendai-c-900': '43 24 11',
+  '--mg-dataviz-sendai-c-800': '86 48 22',
+  '--mg-dataviz-sendai-c-700': '130 72 34',
+  '--mg-dataviz-sendai-c-600': '157 84 35',
+  '--mg-dataviz-sendai-c-500': '216 120 56',
+  '--mg-dataviz-sendai-c-400': '224 147 96',
+  '--mg-dataviz-sendai-c-300': '230 168 127',
+  '--mg-dataviz-sendai-c-200': '239 201 175',
+  '--mg-dataviz-sendai-c-100': '245 221 204',
+  '--mg-dataviz-sendai-c-50': '251 242 235',
+  '--mg-dataviz-sendai-d-900': '1 25 25',
+  '--mg-dataviz-sendai-d-800': '1 51 51',
+  '--mg-dataviz-sendai-d-700': '2 76 76',
+  '--mg-dataviz-sendai-d-600': '2 102 102',
+  '--mg-dataviz-sendai-d-500': '3 127 127',
+  '--mg-dataviz-sendai-d-400': '53 153 153',
+  '--mg-dataviz-sendai-d-300': '104 178 178',
+  '--mg-dataviz-sendai-d-200': '154 204 204',
+  '--mg-dataviz-sendai-d-100': '206 230 230',
+  '--mg-dataviz-sendai-d-50': '230 242 242',
+  '--mg-dataviz-sendai-e-900': '14 26 16',
+  '--mg-dataviz-sendai-e-800': '29 52 33',
+  '--mg-dataviz-sendai-e-700': '43 77 49',
+  '--mg-dataviz-sendai-e-600': '52 95 59',
+  '--mg-dataviz-sendai-e-500': '72 129 82',
+  '--mg-dataviz-sendai-e-400': '109 154 117',
+  '--mg-dataviz-sendai-e-300': '145 179 151',
+  '--mg-dataviz-sendai-e-200': '182 205 186',
+  '--mg-dataviz-sendai-e-100': '218 230 220',
+  '--mg-dataviz-sendai-e-50': '237 242 238',
+  '--mg-dataviz-sendai-f-900': '21 17 43',
+  '--mg-dataviz-sendai-f-800': '42 33 86',
+  '--mg-dataviz-sendai-f-700': '64 46 153',
+  '--mg-dataviz-sendai-f-600': '84 66 172',
+  '--mg-dataviz-sendai-f-500': '105 83 215',
+  '--mg-dataviz-sendai-f-400': '135 117 223',
+  '--mg-dataviz-sendai-f-300': '165 152 231',
+  '--mg-dataviz-sendai-f-200': '180 169 235',
+  '--mg-dataviz-sendai-f-100': '217 211 245',
+  '--mg-dataviz-sendai-f-50': '240 238 251',
+  '--mg-dataviz-sendai-g-900': '26 11 13',
+  '--mg-dataviz-sendai-g-800': '52 22 26',
+  '--mg-dataviz-sendai-g-700': '79 32 38',
+  '--mg-dataviz-sendai-g-600': '96 31 40',
+  '--mg-dataviz-sendai-g-500': '131 54 64',
+  '--mg-dataviz-sendai-g-400': '156 94 102',
+  '--mg-dataviz-sendai-g-300': '181 134 140',
+  '--mg-dataviz-sendai-g-200': '205 175 179',
+  '--mg-dataviz-sendai-g-100': '224 205 207',
+  '--mg-dataviz-sendai-g-50': '243 235 236',
+};
+
+export function readToken(token) {
+  const live =
+    typeof document !== 'undefined'
+      ? getComputedStyle(document.documentElement)
+          .getPropertyValue(token)
+          .trim()
+      : '';
+  // Before the partial is imported into the bundle the live value is empty;
+  // fall back to the documented literal so the page still renders its numbers.
+  return { value: live || FALLBACKS[token] || '', live: Boolean(live) };
+}
+
+export const channels = v => v.split(/\s+/).map(Number);
+export const toHex = v =>
+  '#' +
+  channels(v)
+    .map(c => c.toString(16).padStart(2, '0'))
+    .join('')
+    .toUpperCase();
+
+export const srgb = c => {
+  const x = c / 255;
+  return x > 0.03928 ? Math.pow((x + 0.055) / 1.055, 2.4) : x / 12.92;
+};
+export const luminance = v => {
+  const [r, g, b] = channels(v);
+  return 0.2126 * srgb(r) + 0.7152 * srgb(g) + 0.0722 * srgb(b);
+};
+export const contrast = (a, b) => {
+  const [hi, lo] = [luminance(a), luminance(b)].sort((m, n) => n - m);
+  return (hi + 0.05) / (lo + 0.05);
+};
+
+export function Swatch({ token, note }) {
+  const { value, live } = readToken(token);
+  if (!value) return null;
+  const onWhite = contrast(value, '255 255 255');
+  const onBlack = contrast(value, '0 0 0');
+  const label = onWhite >= 4.5 ? '255 255 255' : '0 0 0';
+  const best = Math.max(onWhite, onBlack);
+  return (
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px',
+        marginBottom: '6px',
+      }}
+    >
+      <div
+        style={{
+          width: '120px',
+          height: '44px',
+          borderRadius: '4px',
+          background: `rgb(${value})`,
+          color: `rgb(${label})`,
+          border: '1px solid rgba(0,0,0,0.12)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '12px',
+          flexShrink: 0,
+        }}
+      >
+        {best.toFixed(2)}:1
+      </div>
+      <div style={{ lineHeight: 1.4 }}>
+        <code style={{ fontSize: '13px' }}>{token}</code>
+        {!live && (
+          <span style={{ fontSize: '11px', color: '#a15' }}> (documented)</span>
+        )}
+        <div style={{ fontSize: '12px', color: '#555' }}>
+          <code>{value}</code> · {toHex(value)} · Y{' '}
+          {luminance(value).toFixed(3)} · white {onWhite.toFixed(2)}:1 · black{' '}
+          {onBlack.toFixed(2)}:1
+        </div>
+        {note && <div style={{ fontSize: '12px', color: '#777' }}>{note}</div>}
+      </div>
+    </div>
+  );
+}
+
+export function Ramp({ label, tokens, note }) {
+  return (
+    <div style={{ marginBottom: '28px' }}>
+      <h4 style={{ margin: '0 0 8px' }}>{label}</h4>
+      {note && (
+        <p style={{ margin: '0 0 10px', fontSize: '13px', color: '#555' }}>
+          {note}
+        </p>
+      )}
+      <div style={{ display: 'flex', marginBottom: '10px' }}>
+        {tokens.map(t => {
+          const { value } = readToken(t);
+          return (
+            <div
+              key={t}
+              title={`${t} — ${toHex(value)}`}
+              style={{
+                flex: 1,
+                height: '36px',
+                background: `rgb(${value})`,
+                border: '1px solid rgba(0,0,0,0.08)',
+              }}
+            />
+          );
+        })}
+      </div>
+      {tokens.map(t => (
+        <Swatch key={t} token={t} />
+      ))}
+    </div>
+  );
+}
+
+export const CATEGORICAL = [
+  '--mg-dataviz-categorical-1',
+  '--mg-dataviz-categorical-2',
+  '--mg-dataviz-categorical-3',
+  '--mg-dataviz-categorical-4',
+  '--mg-dataviz-categorical-5',
+  '--mg-dataviz-categorical-6',
+  '--mg-dataviz-categorical-7',
+];
+
+export const rampTokens = (prefix, steps) => steps.map(s => `${prefix}-${s}`);
+export const TEN = [900, 800, 700, 600, 500, 400, 300, 200, 100, 50];
+
+# Data visualisation colours
+
+Mangrove had no charting palette. This page documents the one established in
+`stories/assets/scss/_tokens-data-viz.scss`. Swatches are read live from the
+compiled custom properties; any value marked **(documented)** has not been
+wired into the bundle yet and is rendered from the literal recorded in the
+source file.
+
+Every contrast ratio on this page is computed in the browser from the resolved
+token value using the WCAG 2.2 formula
+`(L₁ + 0.05) / (L₂ + 0.05)`, where `L` is relative luminance
+`0.2126·R + 0.7152·G + 0.0722·B` over linearised sRGB channels. The figure
+inside each swatch is the better of white-on-fill and black-on-fill; the row
+beneath gives both.
+
+## Where these colours come from
+
+Nothing here was invented or interpolated.
+
+| Group                     | Source                                                                                                                                         |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| Categorical slots         | Documented Sendai target base colours + the UNDRR brand blue. Only the _ordering_ is a design decision.                                        |
+| Sequential blue / magenta | DELTA's shipped chart schemes, `HorizontalBarChart.tsx` → `colorSchemes.cerulean` / `.violet`. Five stops each; they are five stops, not nine. |
+| Sequential map            | The Figma "Map Colours" board, "Main maps #296768" stack, all ten swatches.                                                                    |
+| Sendai target ramps       | The Figma "Color and Tint Stacks" board, all ten swatches per target.                                                                          |
+
+## Three different jobs
+
+- **Categorical** — unordered series (countries, hazard types, sectors).
+- **Sequential** — ordered magnitude (a choropleth, a density scale).
+- **Sendai target** — the fixed semantic identity of a Sendai Framework
+  target. Damage is Target D whether or not teal suits the page.
+
+Mixing them misleads: a sequential ramp on unordered series implies a
+magnitude the data does not have, and categorical hues on a magnitude destroy
+the ordering the reader is meant to see.
+
+## Categorical
+
+The slot order is chosen so a short series is colour-blind safe and a long one
+degrades predictably. Worst pair for the first _N_ slots, measured as the
+smaller of the deuteranope and protanope CIEDE2000 distance
+(Viénot–Brettel–Mollon 1999 LMS simulation):
+
+| Series used | Worst pair | Min ΔE₀₀ under CVD | Verdict                      |
+| ----------- | ---------- | ------------------ | ---------------------------- |
+| 2           | 1 / 2      | 56.8               | safe                         |
+| 3           | 1 / 3      | 19.5               | safe                         |
+| 4           | 1 / 3      | 19.5               | safe                         |
+| 5           | 1 / 5      | 11.1               | marginal                     |
+| 6           | 2 / 6      | 8.3                | **not safe on colour alone** |
+| 7           | 1 / 7      | 3.2                | **not safe on colour alone** |
+
+**Use at most four slots when colour is the only encoding.** Beyond five, add a
+second channel — direct labels, patterns, or shape. Slots 1 and 7 are
+effectively the same colour to a protanope (ΔE₀₀ 3.2), and slots 3 and 7
+differ by only 6.3 to a deuteranope.
+
+<Ramp label="Categorical slots 1–7" tokens={CATEGORICAL} />
+
+Adjacent-slot contrast ratios are low by design (1.0–2.6:1); series fills are
+distinguished by hue and by their own labels, not by luminance against each
+other. WCAG has no contrast requirement between two adjacent data marks, but
+it does require 4.5:1 for any text drawn on one — which is why the palette
+also ships `--mg-dataviz-on-categorical-*`. Only slot 2 (`#D87838`, 3.15:1 on
+white) needs black text; every other slot clears 4.5:1 with white.
+
+## Sequential
+
+All three ramps are monotonic in relative luminance, so the ordering survives
+greyscale printing and every dichromacy.
+
+<Ramp
+  label="Blue (DELTA cerulean) — 5 stops"
+  tokens={[1, 2, 3, 4, 5].map(i => `--mg-dataviz-sequential-blue-${i}`)}
+  note="Verbatim from DELTA's chart component. Five stops. If a chart needs more classes, bin the data to five or use the map ramp — do not interpolate."
+/>
+
+<Ramp
+  label="Magenta (DELTA violet) — 5 stops"
+  tokens={[1, 2, 3, 4, 5].map(i => `--mg-dataviz-sequential-magenta-${i}`)}
+  note="These five stops are exactly stops 6–10 of the Figma Target B ramp: DELTA's second chart scheme is the light half of 'Human Direct Effects' reused generically. Its darkest stop is only 4.04:1 on white, so it cannot carry white text at any stop."
+/>
+
+<Ramp
+  label="Map — 10 stops"
+  tokens={rampTokens('--mg-dataviz-sequential-map', TEN)}
+  note="The documented choropleth scale from the Figma 'Map Colours' board."
+/>
+
+## Sendai target ramps
+
+These are Sendai Framework semantics, not a DELTA design decision — they apply
+to any UNDRR product reporting against the framework.
+
+<Ramp
+  label="Target A"
+  tokens={rampTokens('--mg-dataviz-sendai-a', [500, 400, 300, 200, 100, 50])}
+  note="Deliberately six stops, not ten. The design file's four darkest Target A swatches (#002323 #004646 #006968 #008C8B) are teal — unedited copy-paste residue from the UNDRR teal stack in a ramp whose labelled colour is #000000. They are not tokenised. Stop 500 is pure black; prefer 400 for chart marks so fills are not confused with axes and body text."
+/>
+
+<Ramp
+  label="Target B — Human Direct Effects"
+  tokens={rampTokens('--mg-dataviz-sendai-b', TEN)}
+/>
+
+<Ramp
+  label="Target C — Loss"
+  tokens={rampTokens('--mg-dataviz-sendai-c', TEN)}
+  note="The labelled base #D87838 is 3.15:1 on white, so it is fill-only. Target C text on white must use stop 600 (#9D5423, 5.64:1) or darker."
+/>
+
+<Ramp
+  label="Target D — Damage"
+  tokens={rampTokens('--mg-dataviz-sendai-d', TEN)}
+/>
+
+<Ramp label="Target E" tokens={rampTokens('--mg-dataviz-sendai-e', TEN)} />
+
+<Ramp label="Target F" tokens={rampTokens('--mg-dataviz-sendai-f', TEN)} />
+
+<Ramp label="Target G" tokens={rampTokens('--mg-dataviz-sendai-g', TEN)} />
+
+## Relationship to the existing `--sendai-*` tokens
+
+Mangrove's `--sendai-red|orange|purple|turquoise` ramps are named by colour and
+carry no target semantics. Numerically they are a renumbered slice of
+Mangrove's own brand palette — `--sendai-red-400` is byte-identical to
+`--mg-color-red-600`, `--sendai-red-900` to `--mg-color-red-900`, and so on —
+so they encode PreventionWeb brand hues, not Sendai Framework identities.
+They do not agree with the target ramps above:
+
+| Existing token                     | Nearest target ramp | ΔE₀₀ | Same colour?          |
+| ---------------------------------- | ------------------- | ---- | --------------------- |
+| `--sendai-purple-900` `#962987`    | Target B `#984089`  | 4.5  | no                    |
+| `--sendai-orange-900` `#eb752a`    | Target C `#D87838`  | 3.7  | no                    |
+| `--sendai-turquoise-900` `#00afae` | Target D `#037F7F`  | 16.0 | no                    |
+| `--sendai-red-900` `#c10920`       | Target G `#833640`  | 15.3 | no                    |
+| —                                  | Targets A, E, F     | —    | no counterpart at all |
+
+The new tokens are additive. Nothing in this file changes `--sendai-*`; the two
+sets are documented side by side so the conflict is visible rather than
+averaged away.
+
+## Chart chrome
+
+`--mg-dataviz-surface`, `--mg-dataviz-gridline`, `--mg-dataviz-axis`,
+`--mg-dataviz-label` and `--mg-dataviz-muted-label` alias the neutral palette
+so a theme swap carries them. Gridlines sit below 3:1 on purpose — they are
+decoration and SC 1.4.11 does not apply. The axis line (3.96:1) and tick
+labels (12.63:1 / 5.74:1 on white) are informational and do meet it.

@@ -1,7 +1,17 @@
+/**
+ * Quote Highlight
+ *
+ * Editorial pull quote banner with prominent quotation marks, author attribution, and source citation.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/QuoteHighlight/QuoteHighlight.mdx
+ */
+@use "../../assets/scss/breakpoints" as *;
+
 .mg-quote-highlight {
   display: flex;
   flex-direction: column;
-  border-radius: $mg-spacing-50;
+  border-radius: var(--mg-spacing-50);
   overflow: hidden;
   box-shadow: 0 4px 12px rgb(0 0 0 / 0.08);
 
@@ -15,13 +25,13 @@
   // Alignment variants
   &--full {
     width: 100%;
-    margin-bottom: $mg-spacing-400;
+    margin-bottom: var(--mg-spacing-400);
   }
 
   &--left {
     float: left;
-    margin-right: $mg-spacing-400;
-    margin-bottom: $mg-spacing-400;
+    margin-right: var(--mg-spacing-400);
+    margin-bottom: var(--mg-spacing-400);
     width: 100%;
 
     @include devicebreak(medium) {
@@ -32,14 +42,14 @@
     [dir="rtl"] & {
       float: right;
       margin-right: 0;
-      margin-left: $mg-spacing-400;
+      margin-left: var(--mg-spacing-400);
     }
   }
 
   &--right {
     float: right;
-    margin-left: $mg-spacing-400;
-    margin-bottom: $mg-spacing-400;
+    margin-left: var(--mg-spacing-400);
+    margin-bottom: var(--mg-spacing-400);
     width: 100%;
 
     @include devicebreak(medium) {
@@ -50,7 +60,7 @@
     [dir="rtl"] & {
       float: left;
       margin-left: 0;
-      margin-right: $mg-spacing-400;
+      margin-right: var(--mg-spacing-400);
     }
   }
 
@@ -76,34 +86,34 @@
   }
 
   &__content {
-    padding: $mg-spacing-400;
+    padding: var(--mg-spacing-400);
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
 
     @include devicebreak(medium) {
-      padding: $mg-spacing-500;
+      padding: var(--mg-spacing-500);
     }
   }
 
   &__quote {
     margin: 0;
     position: relative;
-    padding: 0 0 0 $mg-spacing-400;
+    padding: 0 0 0 var(--mg-spacing-400);
     font-weight: 600;
-    font-size: $mg-font-size-400;
+    font-size: var(--mg-font-size-400);
     font-style: italic;
     line-height: 1.5;
-    margin-bottom: $mg-spacing-300;
+    margin-bottom: var(--mg-spacing-300);
     text-wrap: balance;
 
     &::before {
       content: "\201C";
       position: absolute;
       left: 0;
-      top: -$mg-spacing-100;
-      font-size: $mg-font-size-1000;
+      top: calc(-1 * var(--mg-spacing-100));
+      font-size: var(--mg-font-size-1000);
       font-weight: bold;
       color: inherit;
       opacity: 0.5;
@@ -115,7 +125,7 @@
 
     [dir="rtl"] & {
       padding-left: 0;
-      padding-right: $mg-spacing-400;
+      padding-right: var(--mg-spacing-400);
 
       &::before {
         left: auto;
@@ -127,11 +137,11 @@
   &__separator {
     height: 4px;
     width: 100px;
-    margin: $mg-spacing-100 0 $mg-spacing-200 0;
+    margin: var(--mg-spacing-100) 0 var(--mg-spacing-200) 0;
   }
 
   &__attribution {
-    margin-top: $mg-spacing-100;
+    margin-top: var(--mg-spacing-100);
 
     &-wrapper {
       display: flex;
@@ -145,12 +155,12 @@
     &-name {
       font-weight: 600;
       margin: 0;
-      font-size: $mg-font-size-300;
+      font-size: var(--mg-font-size-300);
     }
 
     &-title {
-      margin: $mg-spacing-50 0 0;
-      font-size: $mg-font-size-200;
+      margin: var(--mg-spacing-50) 0 0;
+      font-size: var(--mg-font-size-200);
     }
   }
 
@@ -159,12 +169,12 @@
     height: 50px;
     border-radius: 50%;
     overflow: hidden;
-    margin-right: $mg-spacing-200;
+    margin-right: var(--mg-spacing-200);
     flex-shrink: 0;
 
     [dir="rtl"] & {
       margin-right: 0;
-      margin-left: $mg-spacing-200;
+      margin-left: var(--mg-spacing-200);
     }
   }
 
@@ -199,50 +209,55 @@
 
   // Color variants
   &--light {
-    background-color: rgba($mg-color-interactive, 0.1);
+    background-color: rgb(var(--mg-color-blue-900) / 0.1);
 
     .mg-quote-highlight__quote {
-      color: rgba($mg-color-interactive, 0.9);
+      color: rgb(var(--mg-color-blue-900) / 0.9);
 
       &::before {
-        color: rgba($mg-color-interactive, 0.5);
+        color: rgb(var(--mg-color-blue-900) / 0.5);
       }
     }
 
     .mg-quote-highlight__separator {
-      background-color: rgba($mg-color-interactive, 0.7);
+      background-color: rgb(var(--mg-color-blue-900) / 0.7);
     }
   }
 
   &--dark {
-    background-color: rgba($mg-color-interactive, 0.7);
-    color: $mg-color-white;
+    // Opaque, not a 0.7 wash. Under alpha the quote's contrast depends on
+    // whatever the component is placed over, so the library could only promise
+    // AA on a white page — and on white the wash composited to #4d84b2, which
+    // put the quote, the name and the title at 3.99:1. Solid blue-900 is
+    // 8.31:1 against white text on any backdrop.
+    background-color: rgb(var(--mg-color-blue-900));
+    color: rgb(var(--mg-color-white));
 
     .mg-quote-highlight__quote {
       &::before {
-        color: rgba($mg-color-white, 0.8);
+        color: rgb(var(--mg-color-neutral-0) / 0.8);
       }
     }
 
     .mg-quote-highlight__separator {
-      background-color: $mg-color-white;
+      background-color: rgb(var(--mg-color-white));
     }
   }
 
   &--bright {
-    background-color: $mg-color-white;
-    border: 1px solid $mg-color-neutral-200;
+    background-color: rgb(var(--mg-color-white));
+    border: 1px solid rgb(var(--mg-color-neutral-200));
 
     .mg-quote-highlight__quote {
-      color: $mg-color-neutral-900;
+      color: rgb(var(--mg-color-neutral-900));
 
       &::before {
-        color: $mg-color-neutral-500;
+        color: rgb(var(--mg-color-neutral-500));
       }
     }
 
     .mg-quote-highlight__separator {
-      background-color: rgba($mg-color-interactive, 0.7);
+      background-color: rgb(var(--mg-color-blue-900) / 0.7);
     }
   }
 }

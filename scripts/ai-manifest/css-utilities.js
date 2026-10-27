@@ -10,7 +10,7 @@
  * component SCSS files.
  */
 
-const CDN_BASE = 'https://assets.undrr.org/static/mangrove/{{version}}';
+const CDN_BASE = 'https://assets.undrr.org/mangrove/{{version}}';
 
 const colorShades = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
 
@@ -20,6 +20,31 @@ function bgClass(suffix, desc) {
 
 function textClass(suffix, desc) {
   return { class: `mg-u-color--${suffix}`, description: desc };
+}
+
+/**
+ * The pre-2.0 Sendai accent utilities. Still shipped, still working, and
+ * scheduled for removal in 2.1 — but an agent asked for "Sendai colours" will
+ * reach for these on the name alone, so every entry has to carry the warning
+ * with it rather than relying on a note somewhere else in the file.
+ *
+ * They are named by colour rather than by Sendai meaning: --sendai-red-900 is
+ * byte-identical to --mg-color-red-900, three of the seven framework targets
+ * have no counterpart here at all, and --sendai-turquoise sits 16.0 dE00 from
+ * Target D as the framework's own design system defines it.
+ */
+function deprecatedSendaiClass(className, hue) {
+  return {
+    class: className,
+    description: `DEPRECATED — ${hue} accent. Named by colour, not by Sendai target.`,
+    deprecated: true,
+    removalTarget: '2.1',
+    replacement:
+      'For Sendai Framework target semantics use the --mg-sendai-target-a ' +
+      'through -g custom properties (with their --mg-sendai-on-target-* label ' +
+      'colours). For a plain accent, use the --mg-color-* palette. Do not ' +
+      'emit this class in new code.',
+  };
 }
 
 function colorScale(prefix, name) {
@@ -41,6 +66,25 @@ export default {
     'CSS utility classes provided by UNDRR Mangrove. Include the Mangrove CSS bundle to use these. All classes use the mg- prefix and follow BEM conventions.',
   cdnBaseUrl: `${CDN_BASE}/css/`,
   categories: [
+    {
+      name: 'Rich content',
+      description:
+        'Opt-in trusted editorial HTML, documented in Patterns/Rich content. No sanitisation or layout reset.',
+      classes: [
+        {
+          class: 'mg-content',
+          description:
+            'Semantic prose defaults within the actual body field; classed islands keep their presentation. Existing paragraph links remain underlined through CMS classes. Keep navigation/cards/controls outside where practical; mg-body remains supported.',
+          usage:
+            '<article class="mg-content"><p>Read the <a href="/report">report</a>.</p></article>',
+        },
+        {
+          class: 'mg-content__scroll',
+          description:
+            'Local horizontal overflow wrapper inside mg-content. For genuinely wide content, author tabindex="0", role="region" and a meaningful accessible name; preserve native table/caption/header semantics. Short tables need no added focus stop.',
+        },
+      ],
+    },
     // ---------------------------------------------------------------
     // 1. Layout
     // ---------------------------------------------------------------
@@ -62,7 +106,8 @@ export default {
         },
         {
           class: 'mg-container--padded',
-          description: 'Adds 2rem vertical padding (top and bottom) to the container.',
+          description:
+            'Adds 2rem vertical padding (top and bottom) to the container.',
           usage:
             '<div class="mg-container mg-container--padded">Padded content</div>',
         },
@@ -76,7 +121,7 @@ export default {
         {
           class: 'mg-container-full-width',
           description:
-            'Makes an element break out of its container to span the full viewport width while preserving document flow. Uses CSS Grid and calc(50% - 50vw) margin trick. RTL-safe.',
+            "Paints an element's background across the full viewport width while the element's own box stays inside the container, so content alignment is preserved. RTL-safe. Constraint: the bleed is hidden by any ancestor with an opaque background, because it is painted by a z-index:-1 pseudo-element. Fix by moving that background, adding isolation:isolate to the element, or using margin-inline-start:calc(50% - 50vw) with inline-size:100vw plus an inner mg-container.",
           usage:
             '<div class="mg-container-full-width" style="background-color: #e6edf4;">\n  <div class="mg-container">Full-bleed section content</div>\n</div>',
         },
@@ -84,6 +129,159 @@ export default {
     },
 
     // ---------------------------------------------------------------
+    // 1b. Page composition & data layout
+    // ---------------------------------------------------------------
+    {
+      name: 'Reading column',
+      description:
+        'A reading column with an optional sticky contents sidebar, for a long page whose sections readers arrive wanting.',
+      classes: [
+        {
+          class: 'mg-reading',
+          description:
+            'Reading column. Add mg-reading--with-contents to place a table of contents in a sticky right sidebar above 48rem.',
+          usage:
+            '<div class="mg-reading mg-reading--with-contents">\n  <div class="mg-table-of-contents">…</div>\n  <div class="mg-reading__article">…</div>\n</div>',
+        },
+      ],
+    },
+    {
+      name: 'Table & data utilities',
+      description:
+        'Accessible scrolling container, data table styling, and column/cell modifiers for tabular datasets.',
+      classes: [
+        {
+          class: 'mg-table-scroll-region',
+          description:
+            'Horizontal scrolling wrapper for wide HTML tables. Requires role="region", a descriptive aria-label, and tabindex="0" for keyboard navigation.',
+          usage:
+            '<div class="mg-table-scroll-region" role="region" aria-label="Data table" tabindex="0">\n  <table class="mg-table">\n    …\n  </table>\n</div>',
+        },
+        {
+          class: 'mg-table--data',
+          description:
+            'High-density data table styling with compact padding, subtle dividers, and uppercase styled headers.',
+          usage: '<table class="mg-table mg-table--data">…</table>',
+        },
+        {
+          class: 'mg-table__th--sticky',
+          description:
+            'Sticky header cell that remains anchored at the top during table scrolling.',
+          usage: '<th class="mg-table__th--sticky">Column Header</th>',
+        },
+        {
+          class: 'mg-table__th--sortable',
+          description:
+            'Sortable table header cell containing an accessible button with rotating indicator arrow and aria-sort state.',
+          usage:
+            '<th class="mg-table__th--sortable" aria-sort="ascending">\n  <button type="button" class="mg-table__sort-btn">\n    <span>Name</span>\n    <span class="mg-table__sort-icon" aria-hidden="true">▼</span>\n  </button>\n</th>',
+        },
+        {
+          class: 'mg-table__td--numeric',
+          description:
+            'Right-aligned tabular numeric cell using font-variant-numeric: tabular-nums.',
+          usage: '<td class="mg-table__td--numeric">1,245,600</td>',
+        },
+        {
+          class: 'mg-table__td--code',
+          description:
+            'Monospace code or technical path cell styled with var(--mg-font-family-code).',
+          usage: '<td class="mg-table__td--code">/data/v1/indicators.json</td>',
+        },
+      ],
+    },
+    {
+      name: 'Badges & subtle tags',
+      description:
+        'Compact non-interactive metadata badges and format pills for technical readouts, file extensions, and status labels.',
+      classes: [
+        {
+          class: 'mg-tag--subtle',
+          description:
+            'Non-interactive subtle tag with neutral background and border for secondary metadata.',
+          usage: '<span class="mg-tag mg-tag--subtle">Reference</span>',
+        },
+        {
+          class: 'mg-badge',
+          description:
+            'Compact non-interactive metadata badge pill (alias for subtle tag).',
+          usage: '<span class="mg-badge">Verified</span>',
+        },
+        {
+          class: 'mg-badge--code',
+          description:
+            'Monospace uppercase badge pill ideal for file formats (e.g. PDF, JSON, SVG, CSV).',
+          usage: '<span class="mg-badge mg-badge--code">JSON</span>',
+        },
+      ],
+    },
+    {
+      name: 'Accordion',
+      description:
+        'Grouped <details>/<summary> disclosure stack with clean border separators and animated rotating chevrons.',
+      classes: [
+        {
+          class: 'mg-accordion',
+          description:
+            'Container wrapping multiple <details> elements into a cohesive accordion card.',
+          usage:
+            '<div class="mg-accordion">\n  <details>\n    <summary>Layer settings</summary>\n    <p>Content…</p>\n  </details>\n</div>',
+        },
+        {
+          class: 'mg-accordion--flush',
+          description:
+            'Flush accordion variant without outer lateral borders, designed for nesting inside sidebars or panels.',
+          usage:
+            '<div class="mg-accordion mg-accordion--flush">\n  <details>…</details>\n</div>',
+        },
+      ],
+    },
+    {
+      name: 'Interactive controls',
+      description:
+        'Accessible binary toggles and compact icon action buttons for toolbars, map layers, and settings.',
+      classes: [
+        {
+          class: 'mg-switch',
+          description:
+            'Accessible binary switch toggle with animated sliding thumb and focus ring integration.',
+          usage:
+            '<label class="mg-switch">\n  <input type="checkbox" role="switch" class="mg-switch__input" />\n  <span class="mg-switch__track" aria-hidden="true"><span class="mg-switch__thumb"></span></span>\n  <span class="mg-switch__label">Active layer</span>\n</label>',
+        },
+        {
+          class: 'mg-switch--pending',
+          description:
+            'Pending (busy) switch: the thumb sits at the requested position with a spinning ring (static dotted ring under reduced motion) until the change is confirmed. Prefer aria-busy="true" on .mg-switch__input, which applies the same styles; use this modifier on the label only when the input cannot take attributes. Announce "Saving…", ignored presses ("Still saving…") and the outcome in a role="status" region; revert checked on failure or timeout. Add aria-disabled="true" to also look unavailable: it dims the track without fading the focus ring.',
+          usage:
+            '<label class="mg-switch">\n  <input type="checkbox" role="switch" class="mg-switch__input" aria-busy="true" checked />\n  <span class="mg-switch__track" aria-hidden="true"><span class="mg-switch__thumb"></span></span>\n  <span class="mg-switch__label">Real-time alerts</span>\n</label>\n<p class="mg-form-help" role="status"></p>',
+        },
+        {
+          class: 'mg-button--icon',
+          description:
+            'Shape modifier that makes a .mg-button a square or circular icon-only action button with a centred icon and equal aspect ratio. Always used with .mg-button and an emphasis variant: the foreground colour, typography and focus ring come from .mg-button. Add .mg-button--icon--round for a circular floating action button or .mg-button--icon--small for a 28px dense toolbar button. This is the icon-only button to use when it should carry a brand colour.',
+          usage:
+            '<button type="button" class="mg-button mg-button-secondary mg-button--icon" aria-label="Copy to clipboard">\n  <span class="mg-icon mg-icon-copy" aria-hidden="true"></span>\n</button>',
+        },
+        {
+          class: 'mg-icon-button',
+          description:
+            'Standalone borderless ghost icon button for dismiss, close and copy controls sitting on an existing surface (Notice and Drawer use it). Same 36px square geometry as .mg-button--icon, plus its own reset, hover fill and focus ring, because it is used without .mg-button. It carries no variant colours and takes no .mg-button-* class — .mg-button-primary and .mg-button-secondary only set a background, and .mg-button-outline draws no border on it. For a variant-coloured icon-only button use .mg-button.mg-button-{variant}.mg-button--icon instead. Modifiers: .mg-icon-button--round and .mg-icon-button--small.',
+          usage:
+            '<button type="button" class="mg-icon-button mg-icon-button--small" aria-label="Dismiss">\n  <span class="mg-icon mg-icon-close" aria-hidden="true"></span>\n</button>',
+        },
+        {
+          class: 'mg-range',
+          description:
+            'A styled input[type="range"] slider component supporting continuous and stepped variants.',
+        },
+        {
+          class: 'mg-copy-button',
+          description:
+            'Compact action button that copies a value to the clipboard and shows a brief micro-feedback badge.',
+        },
+      ],
+    },
+
     // 2. Grid
     // ---------------------------------------------------------------
     {
@@ -104,7 +302,8 @@ export default {
         },
         {
           class: 'mg-grid__col-2',
-          description: 'Two-column grid at tablet and above. Single column on mobile.',
+          description:
+            'Two-column grid at tablet and above. Single column on mobile.',
           usage:
             '<div class="mg-grid mg-grid__col-2">\n  <div>Column 1</div>\n  <div>Column 2</div>\n</div>',
         },
@@ -130,6 +329,43 @@ export default {
             'Six-column grid. Tablet: 3 columns. Desktop (1164px+): 6 columns.',
         },
         {
+          class: 'mg-grid__col-7',
+          description:
+            'Seven-column grid. Tablet: 4 columns. Desktop (1164px+): 7 columns.',
+        },
+        {
+          class: 'mg-grid__col-8',
+          description:
+            'Eight-column grid. Tablet: 4 columns. Desktop (1164px+): 8 columns.',
+        },
+        {
+          class: 'mg-grid__col-9',
+          description:
+            'Nine-column grid. Tablet: 4 columns. Desktop (1164px+): 9 columns.',
+        },
+        {
+          class: 'mg-grid__col-10',
+          description:
+            'Ten-column grid. Tablet: 4 columns. Desktop (1164px+): 10 columns.',
+        },
+        {
+          class: 'mg-grid__col-11',
+          description:
+            'Eleven-column grid. Tablet: 4 columns. Desktop (1164px+): 11 columns.',
+        },
+        {
+          class: 'mg-grid__col-12',
+          description:
+            'Twelve-column grid. Tablet: 4 columns. Desktop (1164px+): 12 columns.',
+        },
+        {
+          class: 'mg-grid--auto-fit',
+          description:
+            'Single-row fallback: distributes any number of children across one equal-width row (tablet and above) without a per-count column class. Stacks on mobile.',
+          usage:
+            '<div class="mg-grid mg-grid--auto-fit">\n  <div>Item 1</div>\n  <div>Item 2</div>\n  <div>Item 3</div>\n</div>',
+        },
+        {
           class: 'mg-grid__col--span-2',
           description: 'Child element spans 2 columns.',
         },
@@ -151,7 +387,8 @@ export default {
         },
         {
           class: 'mg-grid__col--span-all',
-          description: 'Child element spans the full width of the grid (grid-column: 1 / -1).',
+          description:
+            'Child element spans the full width of the grid (grid-column: 1 / -1).',
           usage:
             '<div class="mg-grid mg-grid__col-3">\n  <div class="mg-grid__col--span-all">Full-width row</div>\n  <div>Col 1</div>\n  <div>Col 2</div>\n  <div>Col 3</div>\n</div>',
         },
@@ -187,7 +424,8 @@ export default {
     // ---------------------------------------------------------------
     {
       name: 'Responsive display',
-      description: 'Toggle element visibility based on viewport width. Breakpoint: 900px (tablet).',
+      description:
+        'Toggle element visibility based on viewport width. Breakpoint: 900px (tablet).',
       classes: [
         {
           class: 'mg-u-responsive--show-large',
@@ -213,11 +451,13 @@ export default {
           class: 'mg-u-text-wrap-balanced',
           description:
             'Applies CSS text-wrap: balance for more even line breaks in headings.',
-          usage: '<h2 class="mg-u-text-wrap-balanced">A heading that wraps evenly across lines</h2>',
+          usage:
+            '<h2 class="mg-u-text-wrap-balanced">A heading that wraps evenly across lines</h2>',
         },
         {
           class: 'mg-u-text-wrap-pretty',
-          description: 'Applies CSS text-wrap: pretty to optimize wrapping for readability.',
+          description:
+            'Applies CSS text-wrap: pretty to optimize wrapping for readability.',
         },
         {
           class: 'mg-u-comma-between',
@@ -284,7 +524,8 @@ export default {
         },
         {
           class: 'mg-u-align-items-center',
-          description: 'Vertically centers flex children (align-items: center).',
+          description:
+            'Vertically centers flex children (align-items: center).',
         },
         {
           class: 'mg-u-gap-100',
@@ -315,8 +556,7 @@ export default {
         },
         {
           class: 'mg-u-push-center',
-          description:
-            'Centers element horizontally via margin-inline: auto.',
+          description: 'Centers element horizontally via margin-inline: auto.',
         },
       ],
     },
@@ -334,22 +574,39 @@ export default {
         ...colorScale('blue', 'Blue'),
         ...colorScale('orange', 'Orange'),
         ...colorScale('red', 'Red'),
-        { class: 'mg-u-background-color--neutral-0', description: 'Neutral 0 (white) background' },
-        { class: 'mg-u-background-color--neutral-25', description: 'Neutral 25 background' },
-        ...colorShades.filter(s => s >= 50).map(s => ({
-          class: `mg-u-background-color--neutral-${s}`,
-          description: `Neutral ${s} background`,
-        })),
+        {
+          class: 'mg-u-background-color--neutral-0',
+          description: 'Neutral 0 (white) background',
+        },
+        {
+          class: 'mg-u-background-color--neutral-25',
+          description: 'Neutral 25 background',
+        },
+        ...colorShades
+          .filter(s => s >= 50)
+          .map(s => ({
+            class: `mg-u-background-color--neutral-${s}`,
+            description: `Neutral ${s} background`,
+          })),
         bgClass('accent-100', 'Accent 100 background'),
         bgClass('accent-200', 'Accent 200 background'),
         bgClass('accent-300', 'Accent 300 background'),
         bgClass('accent-400', 'Accent 400 background'),
-        bgClass('sendai-red', 'Sendai Framework red background'),
-        bgClass('sendai-orange', 'Sendai Framework orange background'),
-        bgClass('sendai-purple', 'Sendai Framework purple background'),
-        bgClass('sendai-turquoise', 'Sendai Framework turquoise background'),
-        bgClass('interactive', 'Interactive color background (default: blue-900)'),
-        bgClass('interactive-active', 'Interactive active color background (default: blue-700)'),
+        deprecatedSendaiClass('mg-u-background-color--sendai-red', 'red'),
+        deprecatedSendaiClass('mg-u-background-color--sendai-orange', 'orange'),
+        deprecatedSendaiClass('mg-u-background-color--sendai-purple', 'purple'),
+        deprecatedSendaiClass(
+          'mg-u-background-color--sendai-turquoise',
+          'turquoise'
+        ),
+        bgClass(
+          'interactive',
+          'Interactive color background (default: blue-900)'
+        ),
+        bgClass(
+          'interactive-active',
+          'Interactive active color background (default: blue-700)'
+        ),
       ],
     },
 
@@ -367,20 +624,25 @@ export default {
         ...textColorScale('orange', 'Orange'),
         ...textColorScale('red', 'Red'),
         { class: 'mg-u-color--neutral-0', description: 'Neutral 0 text color' },
-        ...colorShades.filter(s => s >= 50).map(s => ({
-          class: `mg-u-color--neutral-${s}`,
-          description: `Neutral ${s} text color`,
-        })),
+        ...colorShades
+          .filter(s => s >= 50)
+          .map(s => ({
+            class: `mg-u-color--neutral-${s}`,
+            description: `Neutral ${s} text color`,
+          })),
         textClass('accent-100', 'Accent 100 text color'),
         textClass('accent-200', 'Accent 200 text color'),
         textClass('accent-300', 'Accent 300 text color'),
         textClass('accent-400', 'Accent 400 text color'),
-        textClass('sendai-red', 'Sendai Framework red text'),
-        textClass('sendai-orange', 'Sendai Framework orange text'),
-        textClass('sendai-purple', 'Sendai Framework purple text'),
-        textClass('sendai-turquoise', 'Sendai Framework turquoise text'),
+        deprecatedSendaiClass('mg-u-color--sendai-red', 'red'),
+        deprecatedSendaiClass('mg-u-color--sendai-orange', 'orange'),
+        deprecatedSendaiClass('mg-u-color--sendai-purple', 'purple'),
+        deprecatedSendaiClass('mg-u-color--sendai-turquoise', 'turquoise'),
         textClass('interactive', 'Interactive color text (default: blue-900)'),
-        textClass('interactive-active', 'Interactive active color text (default: blue-700)'),
+        textClass(
+          'interactive-active',
+          'Interactive active color text (default: blue-700)'
+        ),
       ],
     },
 
@@ -471,7 +733,7 @@ export default {
     {
       name: 'Show more',
       description:
-        'Collapse long content behind a fade. Requires the mg-show-more vanilla JS utility for toggle behavior. Customizable height via the --mg-show-more-height CSS variable (default: 200px).',
+        'Collapse long content behind a fade. Requires the mg-show-more vanilla JS utility for toggle behavior. Customizable height via the --mg-show-more-height CSS variable (default: 200px). Add data-mg-show-more-min-hidden-lines to the toggle to collapse only when enough lines would be hidden.',
       classes: [
         {
           class: 'mg-show-more--collapsed',
@@ -483,6 +745,21 @@ export default {
         {
           class: 'mg-show-more--button',
           description: 'Styled toggle button for the show-more pattern.',
+        },
+      ],
+    },
+
+    {
+      name: 'Skip link',
+      description:
+        'Bypass block for keyboard users. Hidden until focused, then shown in normal flow at the top of the page.',
+      classes: [
+        {
+          class: 'mg-skip-link',
+          description:
+            'Visually hidden anchor that reveals on keyboard focus. Its target must carry both an id and tabindex="-1", or focus stays on the link and only the scroll position moves. Not a substitute for, and not built on, mg-u-sr-only, which has no focus reveal.',
+          usage:
+            '<a class="mg-skip-link" href="#main-content">Skip to main content</a>\n<header id="header">...</header>\n<main id="main-content" tabindex="-1">...</main>',
         },
       ],
     },

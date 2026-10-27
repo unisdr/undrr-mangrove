@@ -15,7 +15,9 @@ const defaultProps = {
 describe('FeaturePromo', () => {
   it('renders as a <section> landmark', () => {
     render(<FeaturePromo {...defaultProps} />);
-    expect(document.querySelector('section.mg-feature-promo')).toBeInTheDocument();
+    expect(
+      document.querySelector('section.mg-feature-promo')
+    ).toBeInTheDocument();
   });
 
   it('renders the image with the provided alt text', () => {
@@ -26,14 +28,20 @@ describe('FeaturePromo', () => {
   });
 
   it('renders an empty alt for decorative images', () => {
-    const { container } = render(<FeaturePromo {...defaultProps} imageAlt="" />);
+    const { container } = render(
+      <FeaturePromo {...defaultProps} imageAlt="" />
+    );
     // alt="" removes the 'img' ARIA role (becomes 'presentation'), so query by tag
-    expect(container.querySelector('img.mg-feature-promo__image')).toHaveAttribute('alt', '');
+    expect(
+      container.querySelector('img.mg-feature-promo__image')
+    ).toHaveAttribute('alt', '');
   });
 
   it('renders the heading as h2 by default', () => {
     render(<FeaturePromo {...defaultProps} />);
-    expect(screen.getByRole('heading', { level: 2, name: defaultProps.heading })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { level: 2, name: defaultProps.heading })
+    ).toBeInTheDocument();
   });
 
   it('renders the heading at the specified headlineLevel', () => {
@@ -71,12 +79,18 @@ describe('FeaturePromo', () => {
   });
 
   it('omits the summary paragraph when no summary is provided', () => {
-    const { container } = render(<FeaturePromo {...defaultProps} summary={undefined} />);
-    expect(container.querySelector('.mg-feature-promo__summary')).not.toBeInTheDocument();
+    const { container } = render(
+      <FeaturePromo {...defaultProps} summary={undefined} />
+    );
+    expect(
+      container.querySelector('.mg-feature-promo__summary')
+    ).not.toBeInTheDocument();
   });
 
   it('applies the variant class', () => {
-    const { container } = render(<FeaturePromo {...defaultProps} variant="secondary" />);
+    const { container } = render(
+      <FeaturePromo {...defaultProps} variant="secondary" />
+    );
     expect(container.firstChild).toHaveClass('mg-feature-promo--secondary');
   });
 
@@ -91,7 +105,9 @@ describe('FeaturePromo', () => {
   });
 
   it('merges extra className onto the root element', () => {
-    const { container } = render(<FeaturePromo {...defaultProps} className="my-custom" />);
+    const { container } = render(
+      <FeaturePromo {...defaultProps} className="my-custom" />
+    );
     expect(container.firstChild).toHaveClass('my-custom');
   });
 

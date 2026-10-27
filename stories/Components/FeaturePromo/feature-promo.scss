@@ -1,16 +1,29 @@
-// Feature Promo component
-// Full-width editorial spotlight with an overlapping image and colour panel.
-// Variables and mixins are imported at the theme level via @use in mangrove.scss.
-// Do not import them here to avoid duplication.
+/**
+ * Feature Promo
+ *
+ * Editorial spotlight with an overlapping image and colour panel.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/FeaturePromo/FeaturePromo.mdx
+ */
+@use "../../assets/scss/breakpoints" as *;
+@use "../../assets/scss/config" as *;
 
-// ------------------------------------------------------------------
 // Component-level custom properties (theme-overridable)
 // ------------------------------------------------------------------
 
-.mg-feature-promo--primary   { --mg-feature-promo-panel-bg: #{$mg-color-interactive}; }
-.mg-feature-promo--secondary { --mg-feature-promo-panel-bg: #{$sendai-purple}; }
-.mg-feature-promo--tertiary  { --mg-feature-promo-panel-bg: #{$sendai-turquoise}; }
-.mg-feature-promo--quaternary{ --mg-feature-promo-panel-bg: #{$sendai-orange}; }
+.mg-feature-promo--primary {
+  --mg-feature-promo-panel-bg: rgb(var(--mg-color-interactive));
+}
+.mg-feature-promo--secondary {
+  --mg-feature-promo-panel-bg: var(--sendai-purple);
+}
+.mg-feature-promo--tertiary {
+  --mg-feature-promo-panel-bg: var(--sendai-turquoise);
+}
+.mg-feature-promo--quaternary {
+  --mg-feature-promo-panel-bg: var(--sendai-orange);
+}
 
 // ------------------------------------------------------------------
 // Base — mobile-first stacked layout
@@ -35,13 +48,16 @@
   }
 
   &__panel {
-    background: var(--mg-feature-promo-panel-bg, #{$mg-color-interactive});
-    color: $mg-color-white;
-    padding: $mg-spacing-400;
+    background: var(
+      --mg-feature-promo-panel-bg,
+      rgb(var(--mg-color-interactive))
+    );
+    color: rgb(var(--mg-color-neutral-0));
+    padding: var(--mg-spacing-400);
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: $mg-spacing-200;
+    gap: var(--mg-spacing-200);
 
     // Ensure all text descendants use the white override regardless of host styles
     * {
@@ -58,13 +74,13 @@
 
   &__summary {
     margin: 0;
-    font-size: mg-rem(16);
+    font-size: var(--mg-font-size-300);
     line-height: 1.6;
   }
 
   &__cta {
     align-self: flex-start;
-    margin-top: $mg-spacing-50;
+    margin-top: var(--mg-spacing-50);
   }
 }
 
@@ -92,8 +108,10 @@
     &__panel {
       grid-column: 7 / 13;
       grid-row: 1;
+
+      // Local overlap within this component, below global overlays.
       z-index: 1;
-      padding: $mg-spacing-500 $mg-spacing-400;
+      padding: var(--mg-spacing-50) 0 var(--mg-spacing-400);
     }
   }
 

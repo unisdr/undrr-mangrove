@@ -1,9 +1,17 @@
-import React from 'react';
+import { withLanguage } from '../../../.storybook/withLanguage';
+import React, { useEffect, useRef } from 'react';
+import createHydrator from '../../../src/hydrate';
 import ScrollContainer from './ScrollContainer.jsx';
+import scrollContainerFromElement from './ScrollContainer.fromElement.js';
+import {
+  ScrollExampleCard,
+  scrollCardExamples,
+} from './ScrollContainerExamples';
 
 export default {
   title: 'Components/ScrollContainer',
   component: ScrollContainer,
+  decorators: [withLanguage],
   argTypes: {
     height: { control: 'text' },
     maxHeight: { control: 'text' },
@@ -14,88 +22,145 @@ export default {
 
 const Template = args => (
   <section style={{ maxWidth: '800px', margin: '0 auto' }}>
-    <ScrollContainer {...args}>
+    <ScrollContainer stretchItems {...args}>
       {/* Example content to demonstrate horizontal scrolling */}
-      {Array(8)
-        .fill()
-        .map((_, i) => (
-          <>
-            <article
-              className="mg-card mg-card__vc"
-              style={{
-                minWidth: '350px',
-                marginRight: '20px',
-                padding: '20px',
-                boxSizing: 'border-box',
-                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-              }}
-            >
-              <div className="mg-card__visual">
-                <img
-                  alt="A person looks on"
-                  className="mg-card__image"
-                  src="https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg"
-                />
-              </div>
-              <div className="mg-card__content">
-                <header className="mg-card__title">
-                  <a href="https://www.undrr.org">
-                    Title in large size with up to two lines of text {i + 1}
-                  </a>
-                </header>
-                <p className="mg-card__summary">
-                  Climate change is a{' '}
-                  <a
-                    className="mg-card__text-link"
-                    href="https://www.undrr.org"
-                  >
-                    global health emergency
-                  </a>
-                  , with impacts felt most acutely by vulnerable populations and
-                  communities. This paper explores health risks from climate
-                  change in a global context, setting out key risks actions
-                </p>
-                <a
-                  className="mg-button mg-button-primary"
-                  role="button"
-                  href="https://www.undrr.org"
-                  type="Primary"
-                >
-                  Primary action
-                </a>
-              </div>
-            </article>
-          </>
-        ))}
+      {[...scrollCardExamples, ...scrollCardExamples.slice(0, 3)].map(
+        (card, i) => (
+          <ScrollExampleCard
+            card={card}
+            index={i}
+            key={`${card.title}-${i}`}
+            showAction
+          />
+        )
+      )}
     </ScrollContainer>
   </section>
 );
 
-export const Default = Template.bind({});
-
-export const CustomHeight = Template.bind({});
-CustomHeight.args = {
-  height: '100px',
-  padding: '1rem',
+export const Default = {
+  render: Template,
 };
 
-export const WithMinWidth = Template.bind({});
-WithMinWidth.args = {
-  minWidth: '1500px',
-  padding: '1rem',
+export const CustomHeight = {
+  render: Template,
+  args: {
+    height: '100px',
+    padding: '1rem',
+  },
 };
 
-export const WithArrows = Template.bind({});
-WithArrows.args = {
-  showArrows: true,
-  minWidth: '1200px', // Force overflow to ensure arrows are active
-  padding: '1rem',
+// minWidth is a floor on the container, and min-width wins over the
+// container's own max-width: 100%. A value wider than the parent therefore
+// overflows it on purpose. The parent here is deliberately narrower than
+// minWidth so the floor is visible, and carries its own overflow-x so the
+// demo shows that without scrolling the whole page on a phone.
+export const WithMinWidth = {
+  render: args => (
+    <section style={{ maxWidth: '800px', margin: '0 auto' }}>
+      <p style={{ marginBottom: '0.5rem' }}>
+        The dashed box below is 240px wide. The scroll container inside it asks
+        for a 320px minimum, so it holds 320px and overflows its parent — the
+        parent carries the overflow rather than the page.
+      </p>
+      <div
+        style={{
+          width: '240px',
+          outline: '2px dashed #767676',
+          outlineOffset: '2px',
+          overflowX: 'auto',
+        }}
+      >
+        <ScrollContainer stretchItems {...args}>
+          {[...scrollCardExamples, ...scrollCardExamples.slice(0, 3)].map(
+            (card, i) => (
+              <ScrollExampleCard
+                card={card}
+                index={i}
+                key={`${card.title}-${i}`}
+                showAction
+              />
+            )
+          )}
+        </ScrollContainer>
+      </div>
+    </section>
+  ),
+  args: {
+    minWidth: '320px',
+    padding: '1rem',
+  },
 };
 
-export const WithCustomStepSize = Template.bind({});
-WithCustomStepSize.args = {
-  showArrows: true,
-  stepSize: 200, // Will scroll by 200px instead of container width
-  minWidth: '1200px', // Force overflow to ensure arrows are active
-  padding: '1rem',
+export const WithArrows = {
+  render: Template,
+  args: {
+    showArrows: true,
+    itemWidth: '350px',
+  },
+};
+
+export const WithCustomStepSize = {
+  render: Template,
+  args: {
+    showArrows: true,
+    stepSize: 200,
+    itemWidth: '350px',
+  },
+};
+
+const hydrationRow = (rowLabel, itemLabel) => `
+  <h3 class="mg-heading-300">${rowLabel}</h3>
+  <div data-mg-scroll-container data-show-arrows="true" data-item-width="240px" data-padding="16" data-aria-label="${rowLabel}">
+    <div class="mg-scroll__content">
+      ${[1, 2, 3, 4, 5, 6]
+        .map(
+          card => `<div style="padding:1rem;min-width:220px;border:1px solid #767676">
+            <p><strong>${itemLabel} ${card}</strong></p>
+            <p>Server-rendered card, hydrated in place.</p>
+          </div>`
+        )
+        .join('')}
+    </div>
+  </div>`;
+
+const HYDRATION_MARKUP =
+  hydrationRow('Row one', 'First row card') +
+  hydrationRow('Row two', 'Second row card');
+
+const TwoOnOnePageDemo = () => {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const host = ref.current;
+    host.innerHTML = HYDRATION_MARKUP;
+    const hydrator = createHydrator({
+      selector: '[data-mg-scroll-container]',
+      component: ScrollContainer,
+      fromElement: scrollContainerFromElement,
+    });
+    return () => {
+      // Unmount outside React's commit phase to avoid unmounting one root
+      // while another is still rendering.
+      setTimeout(() => {
+        hydrator.unmountAll();
+        host.innerHTML = '';
+      });
+    };
+  }, []);
+
+  return <div ref={ref} />;
+};
+
+export const TwoHydratedOnOnePage = {
+  name: 'Two hydrated on one page',
+  render: () => <TwoOnOnePageDemo />,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Two server-rendered scroll containers hydrated with `createHydrator`. Each row keeps its own cards: the content lookup reads only the container it is hydrating.',
+      },
+    },
+  },
 };

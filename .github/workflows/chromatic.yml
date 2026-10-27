@@ -7,17 +7,26 @@ on:
       - 'stories/**'
       - '.storybook/**'
       - 'package.json'
+      - 'yarn.lock'
+      - 'tokens/**'
+      - 'scripts/build-tokens.cjs'
       - '*.config.js'
       - '.github/workflows/chromatic.yml'
   pull_request:
-    types: opened
-    branches: [main, develop]
+    types: [ready_for_review]
+    branches: [main, develop, 'codex/**']
     paths:
       - 'stories/**'
       - '.storybook/**'
       - 'package.json'
+      - 'yarn.lock'
+      - 'tokens/**'
+      - 'scripts/build-tokens.cjs'
       - '*.config.js'
       - '.github/workflows/chromatic.yml'
+
+  # Choose the PR branch to review a material revision without snapshotting every push.
+  workflow_dispatch:
 
 permissions:
   pull-requests: write
@@ -34,15 +43,17 @@ jobs:
     if: ${{ !contains(github.event.head_commit.message, '[skip chromatic]') && !contains(github.event.pull_request.title, '[skip chromatic]') && github.actor != 'dependabot[bot]' }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0 # Required for Chromatic to track changes correctly
+          # Review the same head commit as a manual rerun, not GitHub's synthetic merge.
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - name: Enable Corepack
         run: corepack enable
 
       - name: Set up Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: 'yarn'
@@ -55,7 +66,11 @@ jobs:
 
       - name: Publish to Chromatic
         id: chromatic
-        uses: chromaui/action@v16
+        uses: chromaui/action@v18
+        env:
+          CHROMATIC_BRANCH: ${{ github.head_ref || github.ref_name }}
+          CHROMATIC_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          CHROMATIC_SLUG: ${{ github.repository }}
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           token: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,164 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+import * as NoticeStories from './Notice.stories';
+
+<Meta of={NoticeStories} />
+
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
+
+# Notice / Alert Banner
+
+An in-page container for informational notices, contextual warnings, error alerts, and emergency banners. It stays in the page flow until the condition changes or the reader dismisses it.
+
+Four variants (`info`, `warning`, `negative`, `positive`) share one set of tokens, with modifiers for compact slots, prominent sitewide banners, and canvas overlays. ServiceNotice and the Snackbar toast both render through this component and add no notice styles of their own. `.mg-notice__meta` styles a secondary line in the actions row, such as a countdown.
+
+An outline secondary button (`.mg-button-secondary.mg-button-outline`) in the actions row takes its resting label and border colour from `--mg-notice-action-secondary`. The token defaults to the theme's outline secondary colour; a theme whose colour only clears 4.5:1 on white can darken it for the tinted notice surfaces, as DELTA does.
+
+## When to use
+
+| Need                                                                  | Use                                                                                                 |
+| --------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| A persistent message about the page, a section, or a system condition | **Notice**                                                                                          |
+| A service or embed on the page is degraded or offline                 | [ServiceNotice](?path=/docs/components-notice-service-notice--docs)                                 |
+| Short, temporary feedback after an action (saved, copied, failed)     | [Snackbar](?path=/docs/components-notice-snackbar--docs), a floating Notice that auto-dismisses     |
+| Editorial emphasis inside content (key facts, pull-out boxes)         | [HighlightBox](?path=/docs/components-highlightbox--docs), which carries no severity or live region |
+| A record's workflow state inside a list or table                      | [StatusLabel](?path=/docs/components-status-label--docs)                                            |
+
+## Integration
+
+### 1. Pure HTML / CSS
+
+```html
+<div class="mg-notice mg-notice--warning" role="status">
+  <div class="mg-notice__header">
+    <span
+      class="mg-icon mg-icon-exclamation-triangle mg-notice__icon"
+      aria-hidden="true"
+    ></span>
+    <h3 class="mg-notice__title">Data feed delayed</h3>
+  </div>
+  <div class="mg-notice__description">
+    <p>Live hazard updates are operating with a 15-minute delay.</p>
+  </div>
+  <div class="mg-notice__actions mg-buttons">
+    <button type="button" class="mg-button mg-button-primary">
+      Refresh data
+    </button>
+  </div>
+</div>
+```
+
+Pick the heading element that fits the surrounding outline; `h3` is only the default.
+
+### 2. Emergency banner (`negative` + `--prominent`)
+
+```html
+<div class="mg-notice mg-notice--negative mg-notice--prominent" role="alert">
+  <div class="mg-notice__header">
+    <span
+      class="mg-icon mg-icon-exclamation-triangle mg-notice__icon"
+      aria-hidden="true"
+    ></span>
+    <h2 class="mg-notice__title">Severe weather advisory</h2>
+  </div>
+  <div class="mg-notice__description">
+    <p>High winds and localized flooding expected in coastal regions.</p>
+  </div>
+</div>
+```
+
+### 3. React component
+
+```jsx
+import { Notice } from '@undrr/undrr-mangrove/components/Notice.js';
+
+function MyPage() {
+  return (
+    <Notice
+      variant="warning"
+      title="Unsaved changes"
+      description="You have modified draft indicators that have not yet been published."
+      headingLevel="h2"
+      isDismissible
+      onDismiss={() => trackDismiss()}
+      actions={
+        <button type="button" className="mg-button mg-button-primary">
+          Save now
+        </button>
+      }
+    />
+  );
+}
+```
+
+String `description` values render as plain text. To include links or formatting, pass React nodes as `description` or `children`.
+
+### 4. Drupal Twig with React hydration
+
+```twig
+<div data-mg-notice
+  data-title="{{ 'Scheduled maintenance'|t }}"
+  data-description="{{ 'Services will be briefly unavailable tonight.'|t }}"
+  data-variant="warning"
+  data-heading-level="h2"
+  data-is-dismissible="true">
+</div>
+```
+
+```javascript
+import createHydrator from '@undrr/undrr-mangrove/components/hydrate.js';
+import {
+  Notice,
+  fromElement,
+} from '@undrr/undrr-mangrove/components/Notice.js';
+
+const hydrator = createHydrator({
+  selector: '[data-mg-notice]',
+  component: Notice,
+  fromElement,
+});
+```
+
+## Storybook variations
+
+### Info notice
+
+<Canvas of={NoticeStories.InfoNotice} />
+
+### Warning banner
+
+<Canvas of={NoticeStories.WarningBanner} />
+
+### Negative alert
+
+<Canvas of={NoticeStories.NegativeAlert} />
+
+### Emergency broadcast
+
+<Canvas of={NoticeStories.EmergencyBroadcast} />
+
+### Positive confirmation
+
+<Canvas of={NoticeStories.PositiveConfirmation} />
+
+### Dismissible
+
+<Canvas of={NoticeStories.Dismissible} />
+
+## Component props
+
+<Controls />
+
+## Accessibility
+
+- `info` and `warning` notices render with `role="status"` (a polite live region); `negative` notices render with `role="alert"` (assertive). No separate `aria-live` attribute is added, because the roles already imply it and doubling up causes repeat announcements in some screen readers.
+- A `role="status"` region is only announced when its content changes after it is in the page. For a notice that should be heard when it first appears, render the container first and fill it afterwards, or use `negative` (`role="alert"`). Pass `role={null}` for a static notice that should not be a live region at all.
+- Colour is never the only cue: each notice has a title and an icon, and the severity is repeated in the border and background.
+- The dismiss button has an accessible name (`dismissLabel`) and a visible 2px focus outline using `--mg-color-focus-ring`. The notice hides itself when dismissed, whether or not `onDismiss` is supplied.
+- `headingLevel` lets the title fit the page's heading outline instead of forcing `h3`.
+
+## Changelog
+
+- **1.2.1**, 2026-09-19 ([#1252](https://github.com/unisdr/undrr-mangrove/issues/1252)): The React example imports `@undrr/undrr-mangrove/components/Notice.js` instead of the package root. The root has never resolved on any published version (the tarball ships no `dist/` and no `src/`, and its `main` named a file it does not contain), and 2.0.0 stops advertising it, so the subpath is the only form that works. Documentation only; the component is unchanged. The Drupal hydration snippet is corrected in the same pass: it reached into `@undrr/undrr-mangrove/src/hydrate` and `@undrr/undrr-mangrove/stories/…/Notice.hydrate`, and the tarball ships no `src/` or `stories/` directory at all; `components/hydrate.js` and `components/Notice.js` are the published files, and the latter carries `fromElement` alongside the component.
+- **1.2.0**, 2026-09-17 ([#1190](https://github.com/unisdr/undrr-mangrove/pull/1190)): Dismissing a notice no longer drops focus on `<body>` (WCAG 2.4.3 Focus Order). Focus returns to whatever was focused when the notice appeared, or failing that to the nearest focusable neighbour, searched outwards one ancestor at a time so it lands near where the user was. Matches the focus handling Snackbar already had.
+- **1.1.0**, 2026-09-17 ([#1175](https://github.com/unisdr/undrr-mangrove/pull/1175)): Outline secondary actions inside a notice read the new `--mg-notice-action-secondary` token, so a theme can darken them for the tinted surfaces. DELTA sets it to its darker teal, which lifts the offline notice's status link from 4.26:1 to 5.44:1 (WCAG 1.4.3). Other themes keep their outline secondary colour.
+- **v1.0.0**, 2026-09-16 ([#1164](https://github.com/unisdr/undrr-mangrove/pull/1164)): Initial implementation of the `Notice` / alert banner component (`mg-notice`) with `info`, `warning`, `negative` and `positive` variants, compact, prominent and overlay modifiers, self-managed dismissal, configurable heading level, and Layer 2 hydration ([#1155](https://github.com/unisdr/undrr-mangrove/issues/1155)).

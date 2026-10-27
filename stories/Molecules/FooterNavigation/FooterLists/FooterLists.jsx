@@ -20,7 +20,7 @@ export function FooterLists({
   variant = 'default',
   ...args
 }) {
-  let screen_variant = variant_options[variant];
+  const screen_variant = variant_options[variant];
   return (
     <div
       className={cls('cell', 'medium-2', 'footer-item', `${screen_variant}`)}

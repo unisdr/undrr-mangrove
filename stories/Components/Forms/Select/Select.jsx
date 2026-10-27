@@ -98,7 +98,7 @@ export function Select({
             {placeholder}
           </option>
         )}
-        {options.map((option) => (
+        {options.map(option => (
           <option
             key={option.value}
             value={option.value}
@@ -134,7 +134,7 @@ Select.propTypes = {
       value: PropTypes.string.isRequired,
       label: PropTypes.string.isRequired,
       disabled: PropTypes.bool,
-    }),
+    })
   ),
   placeholder: PropTypes.string,
   value: PropTypes.string,

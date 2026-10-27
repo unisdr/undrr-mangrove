@@ -1,0 +1,141 @@
+/**
+ * Tree
+ *
+ * Accessible tree and nested hierarchy view with expand/collapse and selection states.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Navigation/Tree/Tree.mdx
+ */
+@use "../../../assets/scss/mixins" as *;
+
+.mg-tree {
+  // The selected label uses the text colour, not the interactive colour: IRP's
+  // interactive blue measures 4.02:1 on the selected tint, under SC 1.4.3.
+  // The tint and bold weight carry the selected state in every theme.
+  --mg-tree-item-background--hover: rgb(var(--mg-color-interactive) / 0.06);
+  --mg-tree-item-background--selected: rgb(var(--mg-color-interactive) / 0.12);
+  --mg-tree-item-color--selected: rgb(var(--mg-color-text));
+
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-family: var(--mg-font-family-text);
+
+  &__group {
+    list-style: none;
+    padding: 0;
+    padding-inline-start: var(--mg-spacing-300);
+    margin: 0;
+  }
+
+  // The guide sits under the centre of the parent's toggle: the label
+  // container's inline padding plus half the 1rem toggle, less half the 1px
+  // border. The padding gives the same amount back so child items keep their
+  // position.
+  &--guides &__group {
+    --mg-tree-guide-offset: calc(var(--mg-spacing-100) + 0.5rem - 0.5px);
+    --mg-tree-group-indent: calc(var(--mg-spacing-100) + var(--mg-spacing-200));
+
+    border-inline-start: 1px dashed rgb(var(--mg-color-neutral-300));
+    margin-inline-start: var(--mg-tree-guide-offset);
+    padding-inline-start: calc(
+      var(--mg-tree-group-indent) - var(--mg-tree-guide-offset)
+    );
+  }
+
+  &__item {
+    margin-block: var(--mg-spacing-50);
+    outline: none;
+
+    &:focus-visible > .mg-tree__label-container {
+      @include mg-focus-ring-inset;
+    }
+
+    &--selected > .mg-tree__label-container,
+    &--selected > .mg-tree__label-container:hover {
+      background-color: var(--mg-tree-item-background--selected);
+      font-weight: 700;
+      color: var(--mg-tree-item-color--selected);
+    }
+  }
+
+  &__label-container {
+    display: flex;
+    align-items: center;
+    gap: var(--mg-spacing-100);
+    padding: var(--mg-spacing-50) var(--mg-spacing-100);
+    cursor: pointer;
+    border-radius: var(--mg-radius-button);
+
+    &:hover {
+      background-color: var(--mg-tree-item-background--hover);
+    }
+  }
+
+  &__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 1rem;
+    block-size: 1rem;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  &__icon {
+    display: inline-block;
+    font-size: 0.75rem;
+    transition: transform var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    // RTL: mirror the glyph itself, not this span, so the expanded rotation
+    // below does not replace the mirror. This matches the global
+    // [dir="rtl"] rule for the built-in right-pointing icons and extends it to
+    // any toggleIcon. A mirrored glyph points left, so it turns the other way
+    // to point down.
+    &:dir(rtl)::before {
+      transform: scaleX(-1);
+    }
+
+    &.is-expanded {
+      transform: rotate(90deg);
+    }
+
+    &.is-expanded:dir(rtl) {
+      transform: rotate(-90deg);
+    }
+  }
+
+  &__label {
+    font-family: var(--mg-font-family-ui);
+    color: inherit;
+    text-decoration: none;
+    user-select: none;
+
+    // A leaf has no toggle, so a toggle-sized inset lines its label up with
+    // sibling parents.
+    &:first-child {
+      margin-inline-start: calc(1rem + var(--mg-spacing-100));
+    }
+  }
+
+  // Links are underlined so they read differently from plain-text items. The
+  // colour stays inherited: the interactive colour on the hover tint is below
+  // 4.5:1 in IRP, so hover thickens the underline instead.
+  a.mg-tree__label {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+
+    &:hover {
+      color: inherit;
+      text-decoration-thickness: 2px;
+    }
+  }
+}

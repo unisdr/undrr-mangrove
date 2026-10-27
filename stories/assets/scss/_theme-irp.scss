@@ -1,0 +1,12 @@
+// IRP theme — runtime CSS custom property overrides.
+// Applied when .mg-theme-irp is present on <body> or a wrapping element.
+// ---------------------------------------------------------------------
+// Every token in this block is generated from tokens/irp.yaml, merged over
+// tokens/mangrove.yaml and tokens/undrr.yaml.
+@use "generated/tokens-irp" as *;
+@use "tokens-tabs" as *;
+
+.mg-theme-irp {
+  @include mg-tokens-tabs;
+  @include mg-tokens-irp;
+}

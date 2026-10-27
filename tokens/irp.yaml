@@ -1,0 +1,117 @@
+# IRP (International Recovery Platform) — sub-brand layer.
+#
+# Merged over tokens/mangrove.yaml + tokens/undrr.yaml and emitted as the
+# .mg-theme-irp block. Regenerate with `yarn build:tokens`.
+
+$brand:
+  id: irp
+  extends: undrr
+  title: IRP
+  selector: '.mg-theme-irp'
+
+theme:
+  loaded:
+    $type: string
+    $value: irp
+    $description: >-
+      Runtime marker: lets JS and tooling detect that this brand theme is
+      active, guarding the sub-brand body-class trap. See docs/RELEASE-2.0.md.
+
+brand:
+  $type: color
+  $private: true
+  primary:
+    $value: '#0f78bf'
+    $description: IRP blue. The interactive colour.
+  blue-800:
+    $value: '#0d67a3'
+    $description: >-
+      Deeper partner of the IRP interactive blue. Carries the secondary button
+      fill and, since the primary button's hover left the orange accent, that
+      hover too. White on it is 6.02:1 and 71.1 perceptually, so it clears AA
+      either way, and it sits 6.6 dE2000 from the interactive blue — comfortably
+      past the ~2.3 just-noticeable difference, and of the same order as the
+      base theme's own blue-900 to blue-700 hover (12.2).
+  green:
+    $value: '#8cc63f'
+    $description: >-
+      IRP green, used only by the tab surface — the tabbar rail, the active
+      tab fill and its borders.
+
+color:
+  $type: color
+  interactive: { $value: '{=brand.primary}' }
+  interactive-active: { $value: '{=brand.primary}' }
+  tag: { $value: '{color.interactive}' }
+  tag--hover: { $value: '{color.interactive-active}' }
+  button-background:
+    $value: '{=color.interactive}'
+    $format: srgb-rgb-function
+  # Both hovers used to point at the Sendai orange, which put a white button
+  # label on the accent at 2.95:1 in this theme and in PreventionWeb — the
+  # seventh surface in unisdr/undrr-mangrove#1196, and the one that arrived
+  # through the token layer rather than through a component. The orange carries
+  # no text, so the hover is now a tonal step inside the brand.
+  # See docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text
+  button-background--hover:
+    $value: '{=brand.blue-800}'
+    $format: srgb-rgb-function
+  button-secondary-background: { $value: '{=brand.blue-800}' }
+  button-secondary-background--hover: { $value: '{=brand.primary}' }
+  button-outline-primary: { $value: '{=color.interactive}' }
+  button-outline-primary--hover: { $value: '{=brand.blue-800}' }
+  button-outline-secondary:
+    $value: '{color.button-secondary-background}'
+    $format: literal
+  button-outline-secondary--hover:
+    $value: '{color.button-secondary-background--hover}'
+    $format: literal
+  form-check: { $value: '{color.interactive}' }
+  form-check--hover: { $value: '{color.interactive-active}' }
+  form-check--checked: { $value: '{color.interactive}' }
+  form-focus: { $value: '{color.interactive}' }
+  hero: { $value: '{color.interactive}' }
+  tabbar-background:
+    $value: '{=brand.green}'
+    $format: srgb-rgb-function
+    $alpha: 0.1
+  tab-background:
+    $value: '{=brand.green}'
+    $format: srgb-rgb-function
+    $alpha: 0.3
+  tab-background--inactive:
+    $value: '{color.tabbar-background}'
+    $format: literal
+  tab-background--hover:
+    $value: '{=brand.green}'
+    $format: srgb-rgb-function
+  tab-border: { $value: '{color.neutral-300}', $format: srgb-rgb-function }
+  tab-border--hover:
+    $value: '{=brand.green}'
+    $format: srgb-rgb-function
+    $alpha: 0.1
+  tab-border--active:
+    $value: '{=brand.green}'
+    $format: srgb-rgb-function
+    $alpha: 0.1
+  text-tab: { $value: '{color.neutral-500}', $format: srgb-rgb-function }
+  text-tab-active: { $value: '{color.neutral-700}', $format: srgb-rgb-function }
+
+# Restated so it re-resolves against this theme's outline secondary colour
+# inside .mg-theme-irp instead of keeping the :root value.
+notice:
+  action-secondary:
+    $type: color
+    $value: '{color.button-outline-secondary}'
+    $format: srgb-rgb-function
+
+radius:
+  $type: dimension
+  tag: { $value: '{spacing.50}' }
+  button: { $value: '{spacing.50}' }
+  form-input: { $value: '{spacing.50}' }
+  tab: { $value: '{spacing.0} {spacing.0} 0 0' }
+
+spacing:
+  $type: dimension
+  hero-overlay: { $value: '{=spacing.200} 0', $format: literal }

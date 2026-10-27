@@ -4,15 +4,16 @@ import * as PageHeaderStories from './PageHeader.stories';
 
 <Meta of={PageHeaderStories} />
 
-> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
 
 # Page header
 
-The PageHeader component provides a comprehensive header with UNDRR branding, navigation elements, and visual decoration. It includes the UNDRR logo, language switcher, and the distinctive colored stripe that serves as visual branding. It can also render just the decoration stripe when used in decoration-only mode.
+PageHeader provides UNDRR top-of-page branding: logo, account/language controls,
+and the four-color stripe. It can also render stripe-only mode.
 
 ### Overview
 
-The PageHeader component displays a complete header structure that includes:
+PageHeader includes:
 
 - A dark toolbar section with UNDRR logo and language switcher
 - Responsive design that adapts to different screen sizes
@@ -21,57 +22,66 @@ The PageHeader component displays a complete header structure that includes:
 
 #### When to use:
 
-- Use at the top of all UNDRR website pages to establish brand presence
-- Use to provide consistent navigation and language switching functionality
-- Use to maintain visual consistency across the UNDRR digital ecosystem
-- Use when you need Google Analytics tracking on header interactions
-- Use the decoration-only variant when you only need the brand stripe without navigation
+- Use at the top of UNDRR pages for consistent branding and language switching.
+- Use decoration-only mode when only the stripe is needed.
 
 ### Formatting
 
 #### Default
 
-The PageHeader component renders as a comprehensive header with the UNDRR logo (sourced from [https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg](https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg)), language switcher, and colored decoration stripe.
+Default mode renders the full header with UNDRR logo, language switcher, and
+colored stripe.
 
 <Canvas of={PageHeaderStories.Default} meta={PageHeaderStories} />
 
 #### Decoration Only
 
-The component can render only the colored decoration stripe when you need just the visual branding element without the full header functionality.
+Decoration-only mode renders just the stripe.
 
 <Canvas of={PageHeaderStories.DecorationOnly} meta={PageHeaderStories} />
 
 #### With Custom Languages
 
-The language switcher can be configured with different language options.
+Configure custom language options as needed.
+
+Order languages alphabetically by their English name, and label each in its native form. For the six official UN languages that is Arabic, Chinese, English, French, Russian, Spanish: العربية, 中文, English, Français, Русский, Español. The component renders `languages` in the order given; it does not sort them.
 
 <Canvas of={PageHeaderStories.WithCustomLanguages} meta={PageHeaderStories} />
 
+#### With Language Links
+
+`languageDisplay="links"` shows each language inline in the toolbar instead of behind the icon-only dropdown. The active language is bold. Below the tablet breakpoint the links give way to the regular dropdown, since even a short list wraps under the logo there. Lists longer than `maxLanguageLinks` (default 6, the official UN languages) use the dropdown at every width. The links require JavaScript because they drive the same underlying native `<select>` rather than linking to per-language URLs.
+
+<Canvas of={PageHeaderStories.WithLanguageLinks} meta={PageHeaderStories} />
+
+With more languages than `maxLanguageLinks`, links mode renders the dropdown instead:
+
+<Canvas of={PageHeaderStories.WithManyLanguageLinks} meta={PageHeaderStories} />
+
 #### With Custom Class
 
-The component supports additional CSS classes for custom styling.
+Use `className` for additional styling hooks.
 
 <Canvas of={PageHeaderStories.WithCustomClass} meta={PageHeaderStories} />
 
 ### Content
 
-The PageHeader component includes several content areas:
+PageHeader content areas:
 
 **UNDRR Logo Section:**
 
-- Displays the official UNDRR horizontal logo
-- Logo is linked to the homepage (configurable)
-- Responsive design with mobile-optimized sizing
+- Official UNDRR horizontal logo linked to homepage (configurable)
+- Responsive crop behavior across breakpoints
 
 **Language Switcher:**
 
-- Dropdown with available languages (English, Spanish, Arabic by default)
-- Maintains Drupal form structure for backend integration
-- Includes all necessary data attributes for form processing
+- Icon-only trigger with real overlaid native `<select>` for browser-native
+  dropdown behavior (English/Spanish/Arabic by default)
+- Preserves Drupal form structure and processing attributes
 
 **Visual Decoration:**
 
-- Four colored stripes representing UNDRR brand colors: red (#c10920), purple (#962987), orange (#eb752a), and teal (#00afae)
+- Four brand stripes: red, purple, orange, and teal
 
 > **Implementation note (for contributors):** The stripe colors map to SCSS variables `$sendai-red-900`, `$sendai-purple-900`, `$sendai-orange-900`, and `$sendai-turquoise-900` in `_variables.scss`.
 
@@ -79,12 +89,11 @@ The PageHeader component includes several content areas:
 
 #### States
 
-The PageHeader component maintains static display with interactive elements:
-
-1. **Logo**: Clickable link to homepage (default variant only)
-2. **Language Switcher**: Interactive dropdown for language selection (default variant only)
-3. **Responsive**: Adapts logo size on mobile devices (≤500px)
-4. **Decoration Only**: Renders only the colored stripe when variant is set to 'decoration-only'
+- **Logo** links to homepage in default variant.
+- **Language switcher** opens native dropdown in default variant.
+- **Responsive behavior:** logo crops at ≤1164px and ≤900px; account/language
+  controls stay icon-only.
+- **Decoration-only** renders stripe when `variant="decoration-only"`.
 
 #### Google Analytics integration
 
@@ -96,48 +105,54 @@ The toolbar wrapper sets `data-vf-google-analytics-region="undrr-black-bar"` for
 
 #### React applications
 
-To use the PageHeader component in your React application:
+React usage:
 
-1. Import the component:
+```jsx
+import { PageHeader } from './path/to/PageHeader';
+```
 
-   ```jsx
-   import { PageHeader } from './path/to/PageHeader';
-   ```
+Basic:
 
-2. Basic usage:
+```jsx
+<PageHeader />
+```
 
-   ```jsx
-   <PageHeader />
-   ```
+Decoration-only:
 
-3. Decoration only usage:
+```jsx
+<PageHeader variant="decoration-only" />
+```
 
-   ```jsx
-   <PageHeader variant="decoration-only" />
-   ```
+Custom configuration:
 
-4. With custom configuration:
-   ```jsx
-   <PageHeader
-     logoUrl="https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg"
-     logoAlt="UNDRR Logo"
-     homeUrl="https://www.undrr.org"
-     languages={[
-       { value: 'en', label: 'English', selected: true },
-       { value: 'es', label: 'Español' },
-       { value: 'fr', label: 'Français' },
-     ]}
-   />
-   ```
+```jsx
+<PageHeader
+  logoUrl="https://assets.undrr.org/logos/undrr/undrr-logo-horizontal.svg"
+  logoAlt="UNDRR Logo"
+  homeUrl="https://www.undrr.org"
+  languages={[
+    { value: 'en', label: 'English', selected: true },
+    { value: 'fr', label: 'Français' },
+    { value: 'es', label: 'Español' },
+  ]}
+/>
+```
 
-5. Decoration bar only (no logo, account, or language — for sub-branded sites like DELTA that provide their own navigation):
-   ```jsx
-   <PageHeader showLogo={false} showAccount={false} showLanguage={false} />
-   ```
+Stripe-only toolbar context (no logo/account/language):
+
+```jsx
+<PageHeader showLogo={false} showAccount={false} showLanguage={false} />
+```
+
+Locale-driven logo (no `logoUrl` needed — resolves the Spanish translated logo automatically):
+
+```jsx
+<PageHeader locale="spanish" homeUrl="https://www.undrr.org/es" />
+```
 
 #### Vanilla HTML/CSS
 
-For non-React applications, use these HTML structures:
+For non-React usage, use these HTML structures:
 
 **Full Header:**
 
@@ -164,7 +179,7 @@ For non-React applications, use these HTML structures:
           <a href="/">
             <img
               alt="UNDRR Logo"
-              src="https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg"
+              src="https://assets.undrr.org/logos/undrr/undrr-logo-horizontal.svg"
               width="324"
               height="47"
               title="UNDRR Logo"
@@ -173,11 +188,27 @@ For non-React applications, use these HTML structures:
           </a>
         </section>
 
-        <!-- Language Dropdown Section -->
+        <!-- Account link — icon-only, with a visually hidden (not display:
+             none) text node for its accessible name -->
+        <a title="My account" href="/user">
+          <span
+            class="mg-icon mg-icon-user mg-page-header__toolbar-icon"
+            aria-hidden="true"
+          ></span>
+          <span class="mg-u-sr-only">My account</span>
+        </a>
+
+        <!-- Language Dropdown Section — also icon-only; the <select> is a
+             real, full-size native control, just invisibly overlaid on the
+             icon so it still opens the actual browser dropdown -->
         <section
           id="block-languagedropdownswitcher"
           class="mg-page-header__block mg-page-header__block--language "
         >
+          <span
+            class="mg-icon mg-icon-languages mg-page-header__toolbar-icon mg-page-header__language-icon"
+            aria-hidden="true"
+          ></span>
           <form
             class="mg-page-header__lang-form lang-dropdown-form"
             action="/"
@@ -189,7 +220,6 @@ For non-React applications, use these HTML structures:
               </label>
               <div class="mg-page-header__select-wrapper">
                 <select
-                  style="width:165px"
                   class="mg-page-header__select"
                   id="edit-lang-dropdown-select"
                 >
@@ -220,19 +250,14 @@ For non-React applications, use these HTML structures:
 
 ### CSS and JS references
 
-#### CSS:
+#### CSS
 
-Required CSS files for the component styling:
+Uses `page-header.scss` plus shared tokens/breakpoints, including toolbar
+background and Sendai color variables.
 
-- Component-specific styles: `page-header.scss`
-- Includes responsive breakpoints and mobile optimizations
-- Background image reference: `//www.undrr.org/themes/custom/undrr_common/images/toolbar-background.png`
-- Uses Sendai Framework color variables from `_variables.scss`
+#### JS
 
-#### JS:
-
-- No JavaScript dependencies required for basic functionality
-- Language switcher form can be enhanced with JavaScript for dynamic behavior
+No JS required for base rendering; language form can be progressively enhanced.
 
 ### Accessibility
 
@@ -242,48 +267,68 @@ The PageHeader component follows accessibility best practices:
 - Uses `<div>` element for decoration-only variant as it's purely decorative
 - Includes proper `<section>` elements for each functional area
 - Language switcher has proper form labeling with `sr-only` class for screen readers
+- Account and language controls are icon-only visually, but keep accessible names via `mg-u-sr-only` text (not `title` attributes alone)
+- The language control's visible focus ring is applied on the icon via `:focus-within` while the native `<select>` remains visually hidden
 - Logo image includes proper alt text and title attributes
 - Maintains keyboard navigation for all interactive elements
 - Color contrast meets WCAG AA standards
 
 ### Props
 
-| Prop      | Type   | Default                                                                 | Description                                                                      |
-| --------- | ------ | ----------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| variant     | String  | 'default'                                                               | Component variant ('default' for full header, 'decoration-only' for stripe only) |
-| className   | String  | undefined                                                               | Additional CSS classes to apply                                                  |
-| logoUrl     | String  | 'https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg' | URL for the UNDRR logo image (ignored in decoration-only variant)                |
-| logoAlt     | String  | 'UNDRR Logo'                                                            | Alt text for the logo image (ignored in decoration-only variant)                 |
-| logoTitle   | String  | 'UNDRR Logo'                                                            | Title attribute for the logo image (ignored in decoration-only variant)          |
-| homeUrl     | String  | '/'                                                                     | URL for the logo link (ignored in decoration-only variant)                       |
-| showLogo    | Boolean | true                                                                    | Show or hide the UNDRR logo section                                              |
-| showAccount | Boolean | true                                                                    | Show or hide the "My account" link                                               |
-| showLanguage | Boolean | true                                                                    | Show or hide the language switcher dropdown                                      |
-| languages   | Array   | [English, Spanish, Arabic]                                              | Array of language objects (ignored in decoration-only variant)                   |
-| ...args     | Object  | {}                                                                      | Additional props passed to the root element                                      |
+| Prop             | Type               | Default                                                                                            | Description                                                                                                                                                                                                                                                         |
+| ---------------- | ------------------ | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| variant          | String             | 'default'                                                                                          | Component variant ('default' for full header, 'decoration-only' for stripe only)                                                                                                                                                                                    |
+| className        | String             | undefined                                                                                          | Additional CSS classes to apply                                                                                                                                                                                                                                     |
+| idPrefix         | String             | ''                                                                                                 | Namespace for the header's element ids (`header`, `block-undrrlogo`, `edit-lang-dropdown-select`, ...). Ids are emitted verbatim by default; set a distinct prefix on each header when a page renders more than one                                                 |
+| logoUrl          | String             | 'https://assets.undrr.org/logos/undrr/undrr-logo-horizontal.svg'                                   | URL for the UNDRR logo image (ignored in decoration-only variant)                                                                                                                                                                                                   |
+| logoAlt          | String             | 'UNDRR Logo'                                                                                       | Alt text for the logo image (ignored in decoration-only variant)                                                                                                                                                                                                    |
+| logoTitle        | String             | 'UNDRR Logo'                                                                                       | Title attribute for the logo image (ignored in decoration-only variant)                                                                                                                                                                                             |
+| logoWidth        | String/Number      | '324' (English), or scaled from `logoHeight` and the resolved translated asset's real aspect ratio | Display width of the logo image — not necessarily the source file's raw pixel width. Set explicitly alongside `logoHeight` if `logoUrl` points to a custom, differently-proportioned asset                                                                          |
+| logoHeight       | String/Number      | '47'                                                                                               | Display height of the logo image. `logoWidth` is derived from this and the resolved asset's aspect ratio when not set explicitly — the header always renders the logo at this fixed height rather than the source file's raw pixel size                             |
+| logoLang         | String             | undefined                                                                                          | BCP 47 language tag for the logo image, when `logoUrl` points to a translated wordmark                                                                                                                                                                              |
+| logoCrop         | 'autocrop' \| null | undefined (resolves to 'autocrop', or to `null` when `locale` resolves a translated logo)          | Crop variant passed to the underlying [Logo](?path=/docs/components-logos--docs) component. Set explicitly to override either resolution — e.g. `null` alongside a custom, differently-proportioned `logoUrl`                                                       |
+| locale           | String             | 'english'                                                                                          | Storybook locale key (`'english'`, `'arabic'`, `'french'`, `'japanese'`, `'russian'`, `'spanish'`, `'chinese'`) used to resolve a translated `logoUrl`/`logoLang`/`logoCrop` automatically when `logoUrl` is not set. Unrecognized values keep the English default. |
+| homeUrl          | String             | '/'                                                                                                | URL for the logo link (ignored in decoration-only variant)                                                                                                                                                                                                          |
+| showLogo         | Boolean            | true                                                                                               | Show or hide the UNDRR logo section                                                                                                                                                                                                                                 |
+| showAccount      | Boolean            | true                                                                                               | Show or hide the "My account" link                                                                                                                                                                                                                                  |
+| showLanguage     | Boolean            | true                                                                                               | Show or hide the language switcher                                                                                                                                                                                                                                  |
+| languageDisplay  | String             | 'dropdown'                                                                                         | 'dropdown' (icon-only, opens a native `<select>`) or 'links' (each language inline as its own button above tablet, requires JavaScript)                                                                                                                             |
+| maxLanguageLinks | Number             | 6                                                                                                  | With 'links', the most languages shown inline before falling back to the dropdown                                                                                                                                                                                   |
+| languages        | Array              | [Arabic, English, Spanish]                                                                         | Array of language objects (ignored in decoration-only variant)                                                                                                                                                                                                      |
+| ...args          | Object             | {}                                                                                                 | Additional props passed to the root element                                                                                                                                                                                                                         |
 
 ### Integration Notes
 
-**Drupal Integration:**
+**Drupal integration:** preserves Drupal class names, attributes, and form
+structure.
 
-- Maintains all original Drupal class names and data attributes
-- Form structure preserves backend processing capabilities
-- Hidden form fields included for proper form submission
+**Google Analytics:** includes
+`data-vf-google-analytics-region="undrr-black-bar"`.
 
-**Google Analytics:**
-
-- Includes `data-vf-google-analytics-region="undrr-black-bar"` for tracking
-- Preserves all data attributes required for analytics integration
-
-**Decoration-Only Variant:**
-
-- Renders as a simple `<div>` element with decoration styling
-- Lightweight option for brand consistency without navigation
-- Useful for footers, section dividers, or other decorative contexts
+**Decoration-only variant:** lightweight stripe-only branding block.
 
 ## Changelog
 
-- **1.3** — 2026-03-14 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): Added `showLogo`, `showAccount`, and `showLanguage` boolean props to toggle individual toolbar sections. All default to `true` for backward compatibility. Useful for sub-branded sites (e.g., DELTA) that provide their own navigation and only need the decoration stripe.
-- **1.2** — 2026-02-09: Migrated icon classes from `fa-*` to `mg-icon-*` namespace
-- **1.1** — 2025-10-27: Improved responsiveness of UNDRR logo
-- **1.0** — 2025-06-04: Initial release with decoration stripe, UNDRR logo, language switcher, Google Analytics integration, and decoration-only variant
+- **1.8.1**, 2026-09-24 ([#1291](https://github.com/unisdr/undrr-mangrove/pull/1291)): The custom-languages example replaces a placeholder label with Portuguese and lists its languages (Arabic, French, Portuguese, Spanish) in United Nations order.
+
+- **1.8**, 2026-09-23: `languageDisplay="links"` falls back to the icon dropdown below the tablet breakpoint (replacing the two-letter codes, which wrapped under the logo with longer lists) and when there are more than the new `maxLanguageLinks` (default 6) languages. Default and example languages are now ordered alphabetically by English name, per UN convention.
+
+- **1.7**, 2026-09-14: The logo now renders via the [Logo](?path=/docs/components-logos--docs) atom (`crop="autocrop"`) instead of a raw `<img>`. Added `logoWidth`, `logoHeight`, `logoLang`, `logoCrop`, and `locale` props so translated or differently proportioned logos fit the header correctly.
+
+- **1.6.1**, 2026-09-11 ([PR #1134](https://github.com/unisdr/undrr-mangrove/pull/1134)):
+  - Restored pre-2.0 logo crop behavior on tablet/mobile breakpoints (instead of shrinking with `object-fit: contain`), retuned for the current logo asset.
+  - Updated toolbar controls to icon-only at all widths, enlarged and aligned icon sizing, and moved account-language accessible names to `mg-u-sr-only` text.
+  - Added `languageDisplay="links"` for short language lists (2-4), while keeping `dropdown` as the progressive-enhancement default.
+  - Removed the `Narrow header` story and set the stories to `layout: 'fullscreen'` so docs previews match full-bleed header usage.
+
+- **1.6.0**, 2026-09-10 ([#1114](https://github.com/unisdr/undrr-mangrove/issues/1114)): Fixed duplicate hard-coded IDs by adding `idPrefix` namespacing for header/language elements. Default output remains unchanged when `idPrefix` is omitted, preserving existing Drupal selectors.
+
+- **1.5.1**, 2026-09-09: The default logo URL now uses the canonical assets CDN root. Custom logo URLs remain supported.
+
+- **1.5**, 2026-09-09 ([#1105](https://github.com/unisdr/undrr-mangrove/issues/1105)): Refined toolbar spacing/dividers, improved visible focus and control sizing, and corrected logo breakpoint behavior without cropping. RTL direction handling and existing decoration/background remain unchanged.
+
+- **1.4**, 2026-05-15: Replaced bare `<i>` icon element with `<Icon>` component for correct `aria-hidden` semantics ([#908](https://github.com/unisdr/undrr-mangrove/issues/908))
+- **1.3**, 2026-03-14 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): Added `showLogo`, `showAccount`, and `showLanguage` boolean props to toggle individual toolbar sections. All default to `true` for backward compatibility. Useful for sub-branded sites (e.g., DELTA) that provide their own navigation and only need the decoration stripe.
+- **1.2**, 2026-02-09: Migrated icon classes from `fa-*` to `mg-icon-*` namespace
+- **1.1**, 2025-10-27: Improved responsiveness of UNDRR logo
+- **1.0**, 2025-06-04: Initial release with decoration stripe, UNDRR logo, language switcher, Google Analytics integration, and decoration-only variant

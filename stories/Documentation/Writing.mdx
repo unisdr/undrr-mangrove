@@ -1,5 +1,6 @@
 import { Meta, Markdown } from '@storybook/addon-docs/blocks';
 import WritingGuide from '../../docs/WRITING.md?raw';
+import { linkDocsPages } from './docsPageLinks';
 
 <Meta
   title="Contributing/Writing guidelines"
@@ -9,8 +10,8 @@ import WritingGuide from '../../docs/WRITING.md?raw';
   }}
 />
 
-<Markdown>{WritingGuide}</Markdown>
+<Markdown>{linkDocsPages(WritingGuide, 'docs/WRITING.md')}</Markdown>
 
 ---
 
-Last updated: 18 March 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/Writing.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>
+Last updated: 18 March 2026 · <a href="https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Documentation/Writing.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>

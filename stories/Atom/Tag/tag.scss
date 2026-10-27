@@ -1,123 +1,182 @@
-// Tag — Mangrove-native replacement for .st-tag--spl.
-// -
-// A compact tag used to categorise content (content type, country, theme, etc.).
-// Inherits its background from the --tag-color-background CSS custom property set
-// by each site theme, falling back to the $mg-color-tag token.
-// -
-// Usage:
-//   <span class="mg-tag">Organization</span>
-//   <a href="…" class="mg-tag">Nepal</a>
-//   <span class="mg-tag mg-tag--secondary">Metadata</span>
-//   <span class="mg-tag mg-tag--outline">Subtle</span>
-//   <span class="mg-tag mg-tag--accent">Featured</span>
-//   <div class="mg-tag-container"><span>Auto</span><a href="#">Styled</a></div>
+/**
+ * Tag
+ *
+ * Metadata taxonomy tags, clickable topic chips, and keyword labels with active and hover states.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Atom/Tag/Tag.mdx
+ */
+@use "../../assets/scss/mixins" as *;
+@use "../../assets/scss/config" as *;
 
-.mg-tag {
-  display: inline-block;
-  padding: $mg-spacing-25 $mg-spacing-50;
-  font-family: $mg-font-family-headings;
-  font-size: $mg-font-size-250;
+// Compact taxonomy labels. Keep legacy theme overrides and container markup.
+// :where() gives auto-styled children the same specificity as .mg-tag, so
+// explicit modifiers win regardless of which markup a Drupal view emits.
+.mg-tag,
+.mg-badge,
+.mg-tag-container > :where(span, div, a, li) {
+  --mg-tag-background: var(--tag-color-background, rgb(var(--mg-color-tag)));
+  --mg-tag-background-hover: var(
+    --tag-color-background-hover,
+    rgb(var(--mg-color-tag--hover))
+  );
+  --mg-tag-foreground: rgb(var(--mg-color-neutral-0));
+
+  display: inline-flex;
+  align-items: center;
+  min-block-size: mg-rem(28);
+  min-inline-size: mg-rem(24);
+  box-sizing: border-box;
+  max-inline-size: 100%;
+  padding: var(--mg-spacing-25) var(--mg-spacing-100);
+  border: 1px solid transparent;
+  border-radius: var(--mg-radius-tag);
+  font-family: var(--mg-font-family-ui);
+  font-size: var(--mg-font-size-250);
   font-weight: 500;
-  line-height: 1.4;
-  color: #fff;
-  background-color: $mg-color-tag;
-  background-color: var(--tag-color-background, #{$mg-color-tag});
-  border-radius: $mg-radius-tag;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  vertical-align: middle;
+  color: var(--mg-tag-foreground);
+  background-color: var(--mg-tag-background);
   text-decoration: none;
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    color: #fff;
-    background-color: $mg-color-tag--hover;
-    background-color: var(--tag-color-background-hover, #{$mg-color-tag--hover});
-    text-decoration: none;
-  }
 }
 
-// --secondary: de-emphasised/metadata tags (neutral gray)
 .mg-tag--secondary {
-  background-color: $mg-color-tag-secondary;
-  background-color: var(--tag-color-background-secondary, #{$mg-color-tag-secondary});
-
-  &:hover {
-    background-color: $mg-color-tag-secondary--hover;
-    background-color: var(--tag-color-background-secondary-hover, #{$mg-color-tag-secondary--hover});
-  }
+  --mg-tag-background: var(
+    --tag-color-background-secondary,
+    rgb(var(--mg-color-tag-secondary))
+  );
+  --mg-tag-background-hover: var(
+    --tag-color-background-secondary-hover,
+    rgb(var(--mg-color-tag-secondary--hover))
+  );
 }
 
-// --outline: subtle border-only tag
 .mg-tag--outline {
-  color: $mg-color-tag;
-  color: var(--tag-color-background, #{$mg-color-tag});
-  background-color: transparent;
-  border: 1px solid $mg-color-tag;
-  border-color: var(--tag-color-background, #{$mg-color-tag});
+  --mg-tag-foreground: var(--tag-color-background, rgb(var(--mg-color-tag)));
+  --mg-tag-background: transparent;
+  --mg-tag-background-hover: var(
+    --tag-color-background-outline-hover,
+    rgb(var(--mg-color-blue-50))
+  );
 
-  &:hover {
-    color: $mg-color-tag;
-    color: var(--tag-color-background, #{$mg-color-tag});
-    background-color: $mg-color-blue-50;
-    background-color: var(--tag-color-background-outline-hover, #{$mg-color-blue-50});
-  }
+  border-color: currentColor;
 }
 
-// --accent: featured/highlighted content (orange)
+// The orange accent carries no text at any size, so the accent tag wears it as
+// its edge instead of its fill: the chip is the pale end of the same ramp, the
+// label is --mg-color-text on it at 15.7:1, and the Sendai orange is the border
+// — a rule, with no copy over it. The leading edge is thickened because an
+// orange rule is 2.95 on white and 2.66 on orange-50, under the 3:1 of
+// SC 1.4.11, so it is emphasis and not the chip's only boundary; the fill and
+// the label carry that. See
+// docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text
 .mg-tag--accent {
-  background-color: $mg-color-tag-accent;
-  background-color: var(--tag-color-background-accent, #{$mg-color-tag-accent});
+  --mg-tag-background: var(
+    --tag-color-background-accent,
+    rgb(var(--mg-color-orange-50))
+  );
+  --mg-tag-background-hover: var(
+    --tag-color-background-accent-hover,
+    rgb(var(--mg-color-orange-100))
+  );
+  --mg-tag-foreground: rgb(var(--mg-color-text));
+
+  // Held steady across states on purpose. The obvious move is to swap in
+  // --mg-color-tag-accent--hover, but that is orange-800, which is LIGHTER than
+  // the orange-900 resting border, and it would land on the darker hover fill:
+  // 2.15 against the resting 2.66, so the rule would fade at the moment the
+  // chip is meant to respond. The hover is carried by the fill stepping from
+  // orange-50 to orange-100 and by the underline the base rule adds.
+  border-color: rgb(var(--mg-color-tag-accent));
+  border-inline-start-width: mg-rem(4);
+}
+
+// Subtle, non-interactive metadata badge (e.g. file formats PDF, SVG, JSON)
+.mg-tag--subtle,
+.mg-badge {
+  --mg-tag-background: rgb(var(--mg-color-neutral-50));
+  --mg-tag-background-hover: rgb(
+    var(--mg-color-neutral-50)
+  ); // match resting; non-interactive
+
+  --mg-tag-foreground: rgb(var(--mg-color-neutral-800));
+
+  border-color: rgb(var(--mg-color-neutral-300));
+  cursor: default;
+  font-weight: 500;
+}
+
+.mg-tag--code,
+.mg-badge--code {
+  font-family: var(--mg-font-family-code);
+  font-size: var(--mg-font-size-200);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+// Only destinations are interactive. No hover affordance on static metadata
+// or anchors without href. Real padding keeps neighbouring hit areas separate.
+a.mg-tag[href],
+.mg-tag-container > a[href] {
+  @media (prefers-reduced-motion: no-preference) {
+    transition: background-color var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
+  }
 
   &:hover {
-    background-color: $mg-color-tag-accent--hover;
-    background-color: var(--tag-color-background-accent-hover, #{$mg-color-tag-accent--hover});
+    color: var(--mg-tag-foreground);
+    background-color: var(--mg-tag-background-hover);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  &:focus-visible {
+    @include mg-focus-ring;
+
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
   }
 }
 
-// Adjacent tag spacing
 .mg-tag + .mg-tag {
-  margin-left: $mg-spacing-25;
+  margin-inline-start: var(--mg-spacing-50);
 }
 
-[dir="rtl"] .mg-tag + .mg-tag {
-  margin-left: 0;
-  margin-right: $mg-spacing-25;
-}
-
-// Tag container — auto-styles child elements as tags.
-// Useful for Drupal migration from .st-tag--spl where child markup may not
-// carry individual .mg-tag classes.
 .mg-tag-container {
   display: flex;
   flex-wrap: wrap;
-  gap: $mg-spacing-25;
+  align-items: center;
+  gap: var(--mg-spacing-50);
 
-  > span,
-  > div,
-  > a,
-  > li {
-    display: inline-block;
-    padding: $mg-spacing-25 $mg-spacing-50;
-    font-size: $mg-font-size-250;
-    font-weight: 500;
-    line-height: 1.4;
-    color: #fff;
-    background-color: $mg-color-tag;
-    background-color: var(--tag-color-background, #{$mg-color-tag});
-    border-radius: $mg-radius-tag;
-    text-decoration: none;
-    transition: background-color 0.2s ease;
-
-    &:hover {
-      color: #fff;
-      background-color: $mg-color-tag--hover;
-      background-color: var(--tag-color-background-hover, #{$mg-color-tag--hover});
-      text-decoration: none;
-    }
+  // A container owns spacing, even when children already have .mg-tag.
+  > .mg-tag {
+    margin-inline-start: 0;
   }
 }
 
-// Arabic font override for tags.
-:lang(ar) {
-  .mg-tag {
-    font-family: $mg-font-family-arabic-headings;
+@media (forced-colors: active) {
+  .mg-tag,
+  .mg-tag-container > :where(span, div, a, li) {
+    color: CanvasText;
+    background-color: Canvas;
+    border-color: CanvasText;
+  }
+
+  a.mg-tag[href],
+  .mg-tag-container > a[href] {
+    color: LinkText;
+    border-color: LinkText;
+
+    &:hover {
+      color: LinkText;
+      background-color: Canvas;
+    }
+
+    &:focus-visible {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
   }
 }

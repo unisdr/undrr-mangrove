@@ -1,5 +1,6 @@
 import { Meta, Markdown } from '@storybook/addon-docs/blocks';
 import ReviewChecklist from '../../docs/REVIEW-CHECKLIST.md?raw';
+import { linkDocsPages } from './docsPageLinks';
 
 <Meta
   title="Contributing/Build a component/Review checklist"
@@ -9,8 +10,10 @@ import ReviewChecklist from '../../docs/REVIEW-CHECKLIST.md?raw';
   }}
 />
 
-<Markdown>{ReviewChecklist}</Markdown>
+<Markdown>
+  {linkDocsPages(ReviewChecklist, 'docs/REVIEW-CHECKLIST.md')}
+</Markdown>
 
 ---
 
-Last updated: 21 March 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/docs/REVIEW-CHECKLIST.md" target="_blank" rel="noopener noreferrer">View source on GitHub</a>
+Last updated: 21 March 2026 · <a href="https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/REVIEW-CHECKLIST.md" target="_blank" rel="noopener noreferrer">View source on GitHub</a>

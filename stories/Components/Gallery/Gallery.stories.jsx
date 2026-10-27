@@ -1,3 +1,4 @@
+import { withLanguage } from '../../../.storybook/withLanguage';
 import { Gallery } from './Gallery';
 
 // Sample images (using placeholder service)
@@ -38,6 +39,7 @@ const manyImages = Array.from({ length: 12 }, (_, i) => ({
 export default {
   title: 'Components/Gallery',
   component: Gallery,
+  decorators: [withLanguage],
   argTypes: {
     thumbnailPosition: {
       options: ['left', 'bottom'],
@@ -212,7 +214,7 @@ export const WithCallback = {
     showDescription: true,
     enableKeyboard: true,
     onMediaChange: (index, item) => {
-      console.log('Media changed:', index, item.title);
+      // Callback fires when media changes; use for analytics or state updates
     },
   },
   name: 'With onChange Callback',

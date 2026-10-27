@@ -1,81 +1,84 @@
-// Commented out until we decide if we want to use the cascade or fork the classes
-// #cc-main {
-//   // CSS Variables used by vanilla-cookieconsent
-//   --cc-bg: #fff;
-//   --cc-primary-color: #{$mg-color-text};
-//   --cc-secondary-color: #{$mg-color-neutral-600};
-//   --cc-btn-primary-bg: #{$mg-color-interactive};
-//   --cc-btn-primary-color: #fff;
-//   --cc-btn-primary-border-color: #{$mg-color-interactive};
-//   --cc-btn-primary-hover-bg: #{$mg-color-interactive-active};
-//   --cc-btn-primary-hover-color: #fff;
-//   --cc-btn-secondary-bg: #{$mg-color-neutral-50};
-//   --cc-btn-secondary-color: #{$mg-color-text};
-//   --cc-btn-secondary-border-color: #{$mg-color-neutral-100};
-//   --cc-btn-secondary-hover-bg: #{$mg-color-neutral-100};
-//   --cc-btn-secondary-hover-color: #{$mg-color-text};
-//   --cc-toggle-on-bg: #{$mg-color-interactive};
-//   --cc-toggle-off-bg: #{$mg-color-neutral-400};
-//   --cc-toggle-readonly-bg: #{$mg-color-neutral-200};
-//   --cc-toggle-on-knob-bg: #fff;
-//   --cc-toggle-off-knob-bg: #fff;
-//   --cc-toggle-readonly-knob-bg: #fff;
-//   --cc-cookie-category-block-bg: #{$mg-color-blue-50};
-//   --cc-cookie-category-block-hover-bg: #{$mg-color-blue-100};
-//   --cc-section-border: #{$mg-color-neutral-50};
-//   --cc-cookie-table-border: #{$mg-color-neutral-100};
-//   --cc-separator-border-color: #{$mg-color-neutral-100};
-//   --cc-overlay-bg: rgb(4 6 8 / 0.85);
-//   --cc-webkit-scrollbar-bg: #{$mg-color-neutral-200};
-//   --cc-webkit-scrollbar-hover-bg: #{$mg-color-interactive};
-//   --cc-font-family: #{$mg-font-family};
-//   --cc-modal-border-radius: 0;
-//   --cc-btn-border-radius: 0;
-//   --cc-pm-toggle-border-radius: 4em;
+/**
+ * Cookie Consent Banner
+ *
+ * Fixed bottom GDPR/privacy compliance consent notice with accept/manage preference controls.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/CookieConsentBanner/CookieConsentBanner.mdx
+ */
+@use "../../assets/scss/mixins" as *;
 
-//   // Custom link styles
-//   .cc__link,
-//   a {
-//     color: #{$mg-color-interactive};
-//     text-decoration: underline;
+// Mangrove theme bridge for the externally loaded vanilla-cookieconsent UI.
+// The CDN stylesheet is appended after the local bundle and declares the same
+// custom properties, so these token mappings intentionally carry importance.
+#cc-main {
+  --cc-bg: var(--mg-surface-raised) !important;
+  --cc-primary-color: rgb(var(--mg-color-text)) !important;
+  --cc-secondary-color: rgb(var(--mg-color-neutral-600)) !important;
+  --cc-btn-primary-bg: rgb(var(--mg-color-interactive)) !important;
+  --cc-btn-primary-color: rgb(var(--mg-color-neutral-0)) !important;
+  --cc-btn-primary-border-color: rgb(var(--mg-color-interactive)) !important;
+  --cc-btn-primary-hover-bg: rgb(var(--mg-color-interactive-active)) !important;
+  --cc-btn-primary-hover-color: rgb(var(--mg-color-neutral-0)) !important;
+  --cc-btn-secondary-bg: rgb(var(--mg-color-neutral-50)) !important;
+  --cc-btn-secondary-color: rgb(var(--mg-color-text)) !important;
+  --cc-btn-secondary-border-color: rgb(var(--mg-color-neutral-200)) !important;
+  --cc-btn-secondary-hover-bg: rgb(var(--mg-color-neutral-100)) !important;
+  --cc-btn-secondary-hover-color: rgb(var(--mg-color-text)) !important;
+  --cc-toggle-on-bg: rgb(var(--mg-color-interactive)) !important;
+  --cc-toggle-off-bg: rgb(var(--mg-color-neutral-400)) !important;
+  --cc-toggle-readonly-bg: rgb(var(--mg-color-neutral-200)) !important;
+  --cc-cookie-category-block-bg: rgb(var(--mg-color-neutral-50)) !important;
+  --cc-cookie-category-block-hover-bg: rgb(
+    var(--mg-color-neutral-100)
+  ) !important;
+  --cc-section-border: rgb(var(--mg-color-neutral-200)) !important;
+  --cc-cookie-table-border: rgb(var(--mg-color-neutral-200)) !important;
+  --cc-separator-border-color: rgb(var(--mg-color-neutral-200)) !important;
+  --cc-overlay-bg: rgb(var(--mg-color-neutral-900) / 0.82) !important;
+  --cc-font-family: var(--mg-font-family-text) !important;
+  --cc-modal-border-radius: var(--mg-card-border-radius) !important;
+  --cc-btn-border-radius: var(--mg-radius-button) !important;
 
-//     &:hover {
-//       color: #{$mg-color-interactive-active};
-//     }
-//   }
+  .cc__link,
+  a {
+    color: rgb(var(--mg-color-interactive));
+    text-decoration: underline;
+    text-underline-offset: 0.16em;
 
-//   // Bottom bar consent modal customization
-//   #cm.bar {
-//     border-top: 1px solid #{$mg-color-neutral-100};
-//     box-shadow: 0 -2px 10px rgb(0 0 0 / 0.1);
+    &:hover {
+      color: rgb(var(--mg-color-interactive-active));
+    }
+  }
 
-//     .c-bn {
-//       font-weight: 500;
-//     }
-//   }
+  .c-bn,
+  .cm__btn,
+  .pm__btn {
+    font-family: var(--mg-font-family-text);
+    font-weight: 600;
 
-//   // Preferences modal customization
-//   #s-cnt {
-//     .b-bn {
-//       font-weight: 500;
-//     }
+    @media (prefers-reduced-motion: no-preference) {
+      transition:
+        background-color var(--mg-motion-duration-fast)
+          var(--mg-motion-easing-standard),
+        border-color var(--mg-motion-duration-fast)
+          var(--mg-motion-easing-standard),
+        color var(--mg-motion-duration-fast) var(--mg-motion-easing-standard),
+        scale var(--mg-motion-duration-fast) var(--mg-motion-easing-standard);
+    }
 
-//     .pm__badge {
-//       padding: #{$mg-spacing-25} #{$mg-spacing-50};
-//       background: #{$mg-color-interactive};
-//       color: #fff;
-//       font-size: 0.8rem;
-//       border-radius: 2px;
-//       margin-left: #{$mg-spacing-50};
-//     }
-//   }
+    &:active {
+      scale: 0.96;
+    }
 
-//   // Toggle switches
-//   .c-tgl {
-//     &:checked {
-//       + .c-tgl-btn {
-//         background-color: var(--cc-toggle-on-bg);
-//       }
-//     }
-//   }
-// }
+    &:focus-visible {
+      @include mg-focus-ring;
+    }
+  }
+
+  #cm.bar,
+  .cm--bar {
+    border-block-start: 1px solid rgb(var(--mg-color-neutral-600) / 0.2);
+    box-shadow: 0 -8px 24px rgb(var(--mg-color-neutral-900) / 0.08);
+  }
+}

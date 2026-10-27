@@ -17,7 +17,7 @@ A full-width editorial spotlight placing a large image beside a coloured content
 - **Configurable heading level**: `headlineLevel` (2–6) for correct document outline
 - **Optional CTA**: Link is rendered only when both `ctaLabel` and `ctaUrl` are supplied
 - **External link support**: Adds `target="_blank"` and `rel="noopener noreferrer"` when `ctaExternal` is set
-- **Accessible**: Image alt drives AT visibility; panel text is white on brand-colour backgrounds
+- **Image alternatives**: Image alt text controls assistive-technology visibility. The existing turquoise and orange panel variants still require contrast review before production use.
 
 ## Examples
 
@@ -61,45 +61,53 @@ A full-width editorial spotlight placing a large image beside a coloured content
 <!-- Image left, primary panel -->
 <section class="mg-feature-promo mg-feature-promo--primary">
   <div class="mg-feature-promo__media">
-    <img src="photo.jpg" alt="Descriptive alt text" class="mg-feature-promo__image" />
+    <img
+      src="photo.jpg"
+      alt="Descriptive alt text"
+      class="mg-feature-promo__image"
+    />
   </div>
   <div class="mg-feature-promo__panel">
     <h2 class="mg-feature-promo__heading">Heading text</h2>
     <p class="mg-feature-promo__summary">Optional summary.</p>
-    <a href="/path" class="mg-feature-promo__cta mg-button mg-button--primary">CTA label</a>
+    <a href="/path" class="mg-feature-promo__cta mg-button mg-button-primary">
+      CTA label
+    </a>
   </div>
 </section>
 
 <!-- Image right (reverse) -->
-<section class="mg-feature-promo mg-feature-promo--secondary mg-feature-promo--reverse">
+<section
+  class="mg-feature-promo mg-feature-promo--secondary mg-feature-promo--reverse"
+>
   <!-- same interior structure -->
 </section>
 ```
 
 ### Props
 
-| Prop | Type | Default | Description |
-|---|---|---|---|
-| `image` | `string` | — | Image URL (**required**) |
-| `imageAlt` | `string` | — | Alt text; use `""` for decorative images (**required**) |
-| `heading` | `string` | — | Panel heading text (**required**) |
-| `summary` | `string` | — | Body text beneath the heading |
-| `ctaLabel` | `string` | — | CTA link label; omit to hide CTA |
-| `ctaUrl` | `string` | — | CTA link href; omit to hide CTA |
-| `ctaExternal` | `boolean` | `false` | Opens CTA in a new tab with `noopener` |
-| `reverse` | `boolean` | `false` | Flips layout so image is on the right |
-| `variant` | `'primary' \| 'secondary' \| 'tertiary' \| 'quaternary'` | `'primary'` | Panel colour variant |
-| `headlineLevel` | `2 \| 3 \| 4 \| 5 \| 6` | `2` | Semantic heading level |
-| `className` | `string` | `''` | Additional CSS classes on the root element |
+| Prop            | Type                                                     | Default     | Description                                             |
+| --------------- | -------------------------------------------------------- | ----------- | ------------------------------------------------------- |
+| `image`         | `string`                                                 | —           | Image URL (**required**)                                |
+| `imageAlt`      | `string`                                                 | —           | Alt text; use `""` for decorative images (**required**) |
+| `heading`       | `string`                                                 | —           | Panel heading text (**required**)                       |
+| `summary`       | `string`                                                 | —           | Body text beneath the heading                           |
+| `ctaLabel`      | `string`                                                 | —           | CTA link label; omit to hide CTA                        |
+| `ctaUrl`        | `string`                                                 | —           | CTA link href; omit to hide CTA                         |
+| `ctaExternal`   | `boolean`                                                | `false`     | Opens CTA in a new tab with `noopener`                  |
+| `reverse`       | `boolean`                                                | `false`     | Flips layout so image is on the right                   |
+| `variant`       | `'primary' \| 'secondary' \| 'tertiary' \| 'quaternary'` | `'primary'` | Panel colour variant                                    |
+| `headlineLevel` | `2 \| 3 \| 4 \| 5 \| 6`                                  | `2`         | Semantic heading level                                  |
+| `className`     | `string`                                                 | `''`        | Additional CSS classes on the root element              |
 
 ### Colour variants
 
-| Variant | CSS modifier | Panel colour |
-|---|---|---|
-| Primary | `.mg-feature-promo--primary` | Interactive blue (`$mg-color-interactive`) |
-| Secondary | `.mg-feature-promo--secondary` | Sendai purple |
-| Tertiary | `.mg-feature-promo--tertiary` | Sendai turquoise |
-| Quaternary | `.mg-feature-promo--quaternary` | Sendai orange |
+| Variant    | CSS modifier                    | Panel colour                                |
+| ---------- | ------------------------------- | ------------------------------------------- |
+| Primary    | `.mg-feature-promo--primary`    | Interactive blue (`--mg-color-interactive`) |
+| Secondary  | `.mg-feature-promo--secondary`  | Sendai purple                               |
+| Tertiary   | `.mg-feature-promo--tertiary`   | Sendai turquoise                            |
+| Quaternary | `.mg-feature-promo--quaternary` | Sendai orange                               |
 
 Panel background is driven by `--mg-feature-promo-panel-bg`, which can be overridden per-theme.
 
@@ -108,3 +116,4 @@ Panel background is driven by `--mg-feature-promo-panel-bg`, which can be overri
 ### v1.0
 
 - Initial release with CSS Grid overlap layout, four colour variants, and reverse option
+  - 2026-10-27: synchronize with main, adopt explicit Sass modules and runtime colour/spacing tokens, and use the current primary-button class. Existing colour variants and layout are preserved; contrast review remains required.

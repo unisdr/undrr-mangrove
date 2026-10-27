@@ -1,0 +1,25 @@
+import { Meta, Markdown } from '@storybook/addon-docs/blocks';
+import ChangelogContent from '../../CHANGELOG.md?raw';
+import { linkDocsPages } from './docsPageLinks';
+
+<Meta
+  title="Contributing/Changelog"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: { canvas: { hidden: true } },
+  }}
+/>
+
+<Markdown>{linkDocsPages(ChangelogContent, 'CHANGELOG.md')}</Markdown>
+
+<a
+  href="https://github.com/PreventionWeb/undrr-mangrove/blob/main/CHANGELOG.md"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  View source on GitHub
+</a>
+·
+<a href="releases.json" target="_blank" rel="noopener noreferrer">
+  Machine-readable releases.json
+</a>

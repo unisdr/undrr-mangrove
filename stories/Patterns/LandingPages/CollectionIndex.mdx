@@ -1,0 +1,21 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
+import * as Stories from './CollectionIndex.stories';
+
+<Meta title="Patterns/Content/Collection/Full page/Collection index" />
+
+# Collection full-page reference
+
+A directory into several grouped collections. This differs from the curated single-collection page.
+
+This is a presentation of the <LinkTo kind="Patterns/Content/Collection" story="docs">Collection archetype</LinkTo>, not another content type. Its domain contract remains provisional.
+
+<Canvas of={Stories.IndexLanding} />
+
+<Controls of={Stories.IndexLanding} />
+
+For composition and Drupal Gutenberg guidance, see [Building landing pages](?path=/docs/patterns-building-landing-pages--docs). Shared reference implementation and comparison notes remain in the [topic-page guide](?path=/docs/patterns-landing-pages--docs).
+
+## Changelog
+
+- **0.1.0**, 2026-10-17 ([#1383](https://github.com/unisdr/undrr-mangrove/pull/1383)): Place this existing full-page reference beneath its content archetype; preserve its story URL.

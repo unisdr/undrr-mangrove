@@ -23,17 +23,29 @@ describe('Boilerplate', () => {
   it('applies primary variant by default', () => {
     const { container } = render(<Boilerplate {...defaultProps} />);
 
-    expect(container.querySelector('.mg-boilerplate--primary')).toBeInTheDocument();
+    expect(
+      container.querySelector('.mg-boilerplate--primary')
+    ).toBeInTheDocument();
   });
 
   it('applies secondary variant when specified', () => {
-    const { container } = render(<Boilerplate {...defaultProps} variant="secondary" />);
+    const { container } = render(
+      <Boilerplate {...defaultProps} variant="secondary" />
+    );
 
-    expect(container.querySelector('.mg-boilerplate--secondary')).toBeInTheDocument();
+    expect(
+      container.querySelector('.mg-boilerplate--secondary')
+    ).toBeInTheDocument();
   });
 
   it('renders title as a link when href is provided', () => {
-    render(<Boilerplate {...defaultProps} title="Linked" href="https://example.com" />);
+    render(
+      <Boilerplate
+        {...defaultProps}
+        title="Linked"
+        href="https://example.com"
+      />
+    );
 
     const link = screen.getByRole('link', { name: 'Linked' });
     expect(link).toHaveAttribute('href', 'https://example.com');
@@ -43,13 +55,19 @@ describe('Boilerplate', () => {
     render(<Boilerplate {...defaultProps} title="Plain" />);
 
     expect(screen.getByText('Plain')).toBeInTheDocument();
-    expect(screen.queryByRole('link', { name: 'Plain' })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('link', { name: 'Plain' })
+    ).not.toBeInTheDocument();
   });
 
   it('passes extra props to the root element', () => {
-    const { container } = render(<Boilerplate {...defaultProps} data-testid="custom" />);
+    const { container } = render(
+      <Boilerplate {...defaultProps} data-testid="custom" />
+    );
 
-    expect(container.querySelector('[data-testid="custom"]')).toBeInTheDocument();
+    expect(
+      container.querySelector('[data-testid="custom"]')
+    ).toBeInTheDocument();
   });
 
   it('has no a11y violations', async () => {

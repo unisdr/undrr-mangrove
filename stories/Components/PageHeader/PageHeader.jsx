@@ -1,8 +1,15 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
+import { Icon } from '../../Atom/Icons/Icon';
+import { Logo } from '../../Atom/Logo/Logo';
+import { getUndrrLogoAsset } from '../../Atom/Logo/undrr-logo-assets';
+import { SkipLink } from '../../Utilities/SkipLink/SkipLink';
 
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
+
+const DEFAULT_LOGO_URL =
+  'https://assets.undrr.org/logos/undrr/undrr-logo-horizontal.svg';
 
 /**
  * UNDRR page header with logo, user account link, and language selector.
@@ -11,25 +18,69 @@ const cls = (...classes) =>
 export function PageHeader({
   variant = 'default',
   className,
-  logoUrl = 'https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg',
+  idPrefix = '',
+  skipLinkTarget,
+  skipLinkLabel = 'Skip to main content',
+  logoUrl,
   logoAlt = 'UNDRR Logo',
   logoTitle = 'UNDRR Logo',
+  logoWidth,
+  logoHeight,
+  logoLang,
+  logoCrop,
+  locale = 'english',
   homeUrl = '/',
   showAccount = true,
   showLanguage = true,
   showLogo = true,
+  languageDisplay = 'dropdown',
+  maxLanguageLinks = 6,
   languages = [
+    { value: 'ar', label: 'Arabic' },
     { value: 'en', label: 'English', selected: true },
     { value: 'es', label: 'Spanish' },
-    { value: 'ar', label: 'Arabic' },
   ],
   ...args
 }) {
+  const langSelectRef = useRef(null);
+  // Element ids are Drupal-derived and consumers style and script against
+  // them, so they stay verbatim by default. `idPrefix` namespaces them for
+  // pages that render more than one header, where duplicate ids would break
+  // the language `label`/`select` pairing (WCAG 1.3.1, 4.1.1).
+  const id = name => (idPrefix ? `${idPrefix}-${name}` : name);
+
+  // Past a handful of languages the inline list wraps and crowds the logo,
+  // so it falls back to the dropdown outright rather than overflowing.
+  const showLinks =
+    languageDisplay === 'links' && languages.length <= maxLanguageLinks;
+
   const headerClasses = cls(
     'mg-page-header',
     variant && `mg-page-header--${variant}`,
     className
   );
+
+  // Explicit logoUrl wins. Otherwise resolve the locale-specific white asset
+  // or fall back to the bundled English SVG.
+  const asset = !logoUrl ? getUndrrLogoAsset(locale, 'white') : null;
+  const translatedLogo = asset?.translated ? asset : null;
+  const resolvedLogoUrl = logoUrl || translatedLogo?.src || DEFAULT_LOGO_URL;
+  const resolvedLogoLang =
+    logoLang !== undefined ? logoLang : translatedLogo?.lang;
+  // Keep the fixed header height and derive width from the asset ratio.
+  const resolvedLogoHeight = logoHeight || '47';
+  const resolvedLogoWidth =
+    logoWidth ||
+    (translatedLogo
+      ? String(
+          Math.round(
+            (translatedLogo.width / translatedLogo.height) *
+              Number(resolvedLogoHeight)
+          )
+        )
+      : '324');
+  const resolvedLogoCrop =
+    logoCrop !== undefined ? logoCrop : translatedLogo ? null : 'autocrop';
 
   // If decoration-only variant, render only the decoration stripe
   if (variant === 'decoration-only') {
@@ -44,108 +95,163 @@ export function PageHeader({
   }
 
   return (
-    <header id="header" className={headerClasses} {...args}>
-      {/* Decoration stripe */}
-      <div className="mg-page-header__decoration">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-      </div>
-      <div
-        className="mg-page-header__toolbar-wrapper"
-        data-vf-google-analytics-region="undrr-black-bar"
-      >
-        <div className="mg-page-header__container mg-container">
-          <div className="mg-page-header__region mg-page-header__region--toolbar">
-            {/* UNDRR Logo Section */}
-            {showLogo && (
-              <div
-                id="block-undrrlogo"
-                className="mg-page-header__block mg-page-header__block--logo"
-              >
-                <a href={homeUrl}>
-                  <img
-                    alt={logoAlt}
-                    src={logoUrl}
-                    width="324"
-                    height="47"
-                    title={logoTitle}
-                    className="mg-page-header__logo-img"
-                  />
-                </a>
-              </div>
-            )}
-
-            {/* User icon */}
-            {showAccount && (
-              <a title="My account" href="/user">
-                <i className="mg-icon mg-icon-user" aria-hidden="true"></i>{' '}
-                <span className="mg-page-header__label">My account</span>
-                {/* <span className="mg-page-header__label-mobile">Login</span> */}
-              </a>
-            )}
-
-            {/* Language Dropdown Section */}
-            {showLanguage && (
-              <div className="mg-page-header__block mg-page-header__block--language">
-                <form
-                  className="mg-page-header__lang-form lang-dropdown-form lang_dropdown_form"
-                  id="lang_dropdown_form_lang-dropdown-form"
-                  action="/"
-                  method="post"
-                  acceptCharset="UTF-8"
-                  noValidate
+    <React.Fragment>
+      {skipLinkTarget && (
+        <SkipLink targetId={skipLinkTarget} label={skipLinkLabel} />
+      )}
+      <header id={id('header')} className={headerClasses} {...args}>
+        {/* Decoration stripe */}
+        <div className="mg-page-header__decoration">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+        <div
+          className="mg-page-header__toolbar-wrapper"
+          data-vf-google-analytics-region="undrr-black-bar"
+        >
+          <div className="mg-page-header__container mg-container">
+            <div className="mg-page-header__region mg-page-header__region--toolbar">
+              {/* UNDRR Logo Section */}
+              {showLogo && (
+                <div
+                  id={id('block-undrrlogo')}
+                  className="mg-page-header__block mg-page-header__block--logo"
                 >
-                  <div className="mg-page-header__form-item form-item js-form-item form-type-select js-form-type-select form-item-lang-dropdown-select js-form-item-lang-dropdown-select form-no-label">
-                    <label
-                      htmlFor="edit-lang-dropdown-select"
-                      className="mg-u-sr-only"
-                    >
-                      Select your language
-                    </label>
+                  <a href={homeUrl}>
+                    <Logo
+                      alt={logoAlt}
+                      src={resolvedLogoUrl}
+                      width={resolvedLogoWidth}
+                      height={resolvedLogoHeight}
+                      title={logoTitle}
+                      lang={resolvedLogoLang}
+                      crop={resolvedLogoCrop}
+                      className="mg-page-header__logo-img"
+                    />
+                  </a>
+                </div>
+              )}
 
-                    <div className="mg-page-header__select-wrapper">
-                      <select
-                        style={{ width: '165px' }}
-                        className="mg-page-header__select lang-dropdown-select-element form-select form-control"
-                        data-lang-dropdown-id="lang-dropdown-form"
-                        id="edit-lang-dropdown-select"
-                        name="lang_dropdown_select"
-                        defaultValue={
-                          languages.find(lang => lang.selected)?.value ||
-                          languages[0]?.value
-                        }
-                      >
-                        {languages.map((lang, index) => (
-                          <option key={index} value={lang.value}>
-                            {lang.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+              {/* User icon */}
+              {showAccount && (
+                <a title="My account" href="/user">
+                  <Icon name="user" className="mg-page-header__toolbar-icon" />{' '}
+                  <span className="mg-u-sr-only">My account</span>
+                </a>
+              )}
+
+              {/* Language Section */}
+              {showLanguage && showLinks && (
+                <div className="mg-page-header__block mg-page-header__block--language-links">
+                  <div
+                    className="mg-page-header__language-links"
+                    role="group"
+                    aria-label="Language"
+                  >
+                    {languages.map((lang, index) => {
+                      const isSelected =
+                        lang.selected ??
+                        (!languages.some(l => l.selected) && index === 0);
+                      return (
+                        <button
+                          key={lang.value}
+                          type="button"
+                          className="mg-page-header__language-link"
+                          aria-current={isSelected ? 'true' : undefined}
+                          onClick={() => {
+                            const select = langSelectRef.current;
+                            if (!select) return;
+                            select.value = lang.value;
+                            select.dispatchEvent(
+                              new Event('change', { bubbles: true })
+                            );
+                            if (select.form?.requestSubmit) {
+                              select.form.requestSubmit();
+                            } else {
+                              select.form?.submit();
+                            }
+                          }}
+                        >
+                          {lang.label}
+                        </button>
+                      );
+                    })}
                   </div>
-
-                  <noscript>
-                    <div>
-                      <button
-                        type="submit"
-                        id="edit-submit"
-                        name="op"
-                        value="Go"
-                        className="button js-form-submit form-submit btn"
+                </div>
+              )}
+              {showLanguage && (
+                <div
+                  className={cls(
+                    'mg-page-header__block',
+                    'mg-page-header__block--language',
+                    showLinks && 'mg-page-header__block--language-fallback'
+                  )}
+                >
+                  <Icon
+                    name="languages"
+                    className="mg-page-header__toolbar-icon mg-page-header__language-icon"
+                  />
+                  <form
+                    className="mg-page-header__lang-form lang-dropdown-form lang_dropdown_form"
+                    id={id('lang_dropdown_form_lang-dropdown-form')}
+                    action="/"
+                    method="post"
+                    acceptCharset="UTF-8"
+                    noValidate
+                  >
+                    <div className="mg-page-header__form-item form-item js-form-item form-type-select js-form-type-select form-item-lang-dropdown-select js-form-item-lang-dropdown-select form-no-label">
+                      <label
+                        htmlFor={id('edit-lang-dropdown-select')}
+                        className="mg-u-sr-only"
                       >
-                        Go
-                      </button>
+                        Select your language
+                      </label>
+
+                      <div className="mg-page-header__select-wrapper">
+                        <select
+                          ref={langSelectRef}
+                          title="Select your language"
+                          className="mg-page-header__select lang-dropdown-select-element form-select form-control"
+                          data-lang-dropdown-id="lang-dropdown-form"
+                          id={id('edit-lang-dropdown-select')}
+                          name="lang_dropdown_select"
+                          defaultValue={
+                            languages.find(lang => lang.selected)?.value ||
+                            languages[0]?.value
+                          }
+                        >
+                          {languages.map((lang, index) => (
+                            <option key={index} value={lang.value}>
+                              {lang.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
-                  </noscript>
-                </form>
-              </div>
-            )}
+
+                    <noscript>
+                      <div>
+                        <button
+                          type="submit"
+                          id={id('edit-submit')}
+                          name="op"
+                          value="Go"
+                          className="button js-form-submit form-submit btn"
+                        >
+                          Go
+                        </button>
+                      </div>
+                    </noscript>
+                  </form>
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
+    </React.Fragment>
   );
 }
 
@@ -154,20 +260,88 @@ PageHeader.propTypes = {
   variant: PropTypes.oneOf(['default', 'decoration-only']),
   /** Additional CSS classes */
   className: PropTypes.string,
-  /** URL for the UNDRR logo image */
+  /** Namespace for the header's element ids. Required when a page renders more than one PageHeader. */
+  idPrefix: PropTypes.string,
+  /**
+   * Id of the page's `<main>` element. When set, the header emits a skip link
+   * before itself. The target must also carry `tabIndex={-1}`.
+   */
+  skipLinkTarget: PropTypes.string,
+  /** Label for that skip link. */
+  skipLinkLabel: PropTypes.string,
+  /**
+   * URL for the UNDRR logo image. Explicit `logoUrl` always wins over
+   * `locale` — set it directly to fully control the logo, or leave it unset
+   * and use `locale` to pick up a translated asset automatically.
+   */
   logoUrl: PropTypes.string,
   /** Alt text for the logo image */
   logoAlt: PropTypes.string,
   /** Title attribute for the logo image */
   logoTitle: PropTypes.string,
+  /**
+   * Native width of the logo image. Defaults to '324' (the English
+   * wordmark's proportions) unless `locale` resolves a translated asset,
+   * whose real dimensions are used instead. Update alongside `logoHeight`
+   * if also setting a custom `logoUrl` with different proportions.
+   */
+  logoWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  /** Native height of the logo image. See `logoWidth`. */
+  logoHeight: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  /**
+   * BCP 47 language tag for the logo image. Resolved automatically from
+   * `locale` when a translated asset is used; set explicitly alongside a
+   * custom `logoUrl`.
+   */
+  logoLang: PropTypes.string,
+  /**
+   * Crop variant passed to the underlying Logo component. Resolves to
+   * `'autocrop'` for the default English wordmark (tuned for its ~6.6:1
+   * proportions) and to `null` when `locale` resolves a translated asset
+   * (~2.3-2.9:1 — `'autocrop'` would crop their subtitle line off
+   * vertically). Set explicitly to override either resolution, e.g. `null`
+   * when providing a custom, differently-proportioned `logoUrl`.
+   */
+  logoCrop: PropTypes.oneOf(['autocrop', null]),
+  /**
+   * Storybook locale key (matches Mangrove's other locale-aware components,
+   * e.g. ArticleStory), used to resolve a translated logo asset when
+   * `logoUrl` is not set (see `undrr-logo-assets.js`) — 'english' (default),
+   * 'arabic', 'french', 'japanese', 'russian', 'spanish', 'chinese'. Only
+   * resolves to a translated asset when one is listed there in white (the
+   * toolbar background is dark) — 'japanese' and any unrecognized value are
+   * an intentional no-op that keeps the English default rather than risk a
+   * low-contrast logo. The arabic/french/russian/chinese white assets are
+   * committed pending a CDN publish (undrr/web-backlog#3061) — until then
+   * those locales resolve to a URL that 404s rather than falling back.
+   */
+  locale: PropTypes.string,
   /** URL for the logo link */
   homeUrl: PropTypes.string,
   /** Show or hide the UNDRR logo section */
   showLogo: PropTypes.bool,
   /** Show or hide the "My account" link */
   showAccount: PropTypes.bool,
-  /** Show or hide the language switcher dropdown */
+  /** Show or hide the language switcher */
   showLanguage: PropTypes.bool,
+  /**
+   * How the language switcher is presented. 'dropdown' (default) is an
+   * icon-only trigger that opens a native <select> — works everywhere,
+   * including with JavaScript disabled (see the <noscript> submit button).
+   * 'links' shows each language inline in the toolbar as its own button —
+   * one click instead of open-then-select. Below the tablet breakpoint, and
+   * whenever there are more than `maxLanguageLinks` languages, it falls back
+   * to the dropdown. The buttons require JavaScript (they drive the same
+   * underlying <select> rather than each linking to a real URL, since
+   * `languages` doesn't carry per-language URLs), so 'dropdown' is the safer
+   * default for progressive enhancement.
+   */
+  languageDisplay: PropTypes.oneOf(['dropdown', 'links']),
+  /**
+   * With languageDisplay="links", the most languages shown inline before
+   * falling back to the dropdown. Defaults to 6, the official UN languages.
+   */
+  maxLanguageLinks: PropTypes.number,
   /** Array of language objects: { value, label, selected } */
   languages: PropTypes.arrayOf(
     PropTypes.shape({

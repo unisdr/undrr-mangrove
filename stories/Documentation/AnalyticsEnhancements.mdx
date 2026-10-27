@@ -1,5 +1,6 @@
 import { Meta, Markdown } from '@storybook/addon-docs/blocks';
 import AnalyticsGuide from '../../docs/ANALYTICS.md?raw';
+import { linkDocsPages } from './docsPageLinks';
 
 <Meta
   title="Platform services/Analytics enhancements"
@@ -9,8 +10,8 @@ import AnalyticsGuide from '../../docs/ANALYTICS.md?raw';
   }}
 />
 
-<Markdown>{AnalyticsGuide}</Markdown>
+<Markdown>{linkDocsPages(AnalyticsGuide, 'docs/ANALYTICS.md')}</Markdown>
 
 ---
 
-Last updated: 18 March 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/AnalyticsEnhancements.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>
+Last updated: 18 March 2026 · <a href="https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Documentation/AnalyticsEnhancements.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>

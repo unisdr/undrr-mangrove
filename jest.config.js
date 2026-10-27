@@ -27,12 +27,41 @@ const config = {
   // The regexp pattern or array of patterns that Jest uses to detect test files
   testRegex: ['(/__tests__/.*|\\.(test|spec))\\.(js|jsx)$'],
 
+  // Build output contains copies of the source tree, including its test files.
+  // Those copies compile against a flattened directory layout and fail, so
+  // `yarn test` would break for anyone who had previously run `yarn build`.
+  testPathIgnorePatterns: [
+    '/node_modules/',
+    '/dist/',
+    '/docs-build-temp/',
+    // The Pages workflow renames docs-build-temp to _site before running tests.
+    '/_site/',
+    '/storybook-static/',
+    '<rootDir>/npm-package/',
+    // Local git worktrees (agent and manual) are full checkouts of the repo;
+    // without this, one run can pick up thousands of duplicate test files.
+    '/\\.claude/',
+    '/\\.worktrees/',
+  ],
+
+  // Worktrees and assembled packages contain duplicate package.json names.
+  // Keep the root staging directory out of the module map as well as tests.
+  modulePathIgnorePatterns: [
+    '/\\.claude/',
+    '/\\.worktrees/',
+    '<rootDir>/npm-package/',
+  ],
+
   // A map from regular expressions to paths to transformers
   transform: {
     '^.+\\.(js|jsx)$': 'babel-jest',
     '.+\\.(svg|css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$':
       'jest-transform-stub',
   },
+
+  // Generated build output the suites depend on is not committed, so make
+  // sure it exists before any suite runs. See jest.global-setup.cjs.
+  globalSetup: '<rootDir>/jest.global-setup.cjs',
 
   // Setup files to run before each test
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],

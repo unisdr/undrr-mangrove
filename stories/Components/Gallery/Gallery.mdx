@@ -4,7 +4,7 @@ import * as GalleryStories from './Gallery.stories';
 
 <Meta of={GalleryStories} />
 
-> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
 
 # Gallery
 
@@ -12,18 +12,18 @@ An accessible, responsive gallery component for images, videos, embeds, and cust
 
 ## Overview
 
-The Gallery component displays a collection of media items with thumbnail navigation on the left (desktop) or bottom (mobile). Users can navigate through items by clicking thumbnails, using navigation arrows, or with keyboard controls.
+The Gallery displays a collection of media items with thumbnail navigation (left on desktop, bottom on mobile). Navigate via thumbnail clicks, arrow keys (Left/Right/Home/End), or keyboard.
 
 ### Key features
 
-- Multiple media types: images, videos, embeds (YouTube, Vimeo), and custom HTML
-- Clickable thumbnails on left or bottom
-- Keyboard navigation with arrow keys, Home, End
-- Responsive layout that adapts from desktop to mobile
-- Handles mixed aspect ratios (landscape, portrait, square, panoramic)
-- Full ARIA support and screen reader friendly
-- Optional titles and captions below content
-- Configurable visibility of thumbnails, arrows, and descriptions
+- Multiple media types: images, videos, embeds (YouTube, Vimeo), custom HTML
+- Left or bottom thumbnail navigation
+- Full keyboard support with arrow keys, Home, End
+- Responsive layout adapting desktop to mobile
+- Mixed aspect ratios (landscape, portrait, square, panoramic)
+- Full ARIA support and screen reader accessible
+- Optional titles and captions
+- Configurable thumbnails, arrows, descriptions
 
 ## Basic usage
 
@@ -37,19 +37,19 @@ The default gallery layout with thumbnails on the left, navigation arrows, and d
 
 <Canvas of={GalleryStories.BasicGallery} />
 
-Best for desktop viewing with vertical thumbnail scrolling.
+Vertical layout optimized for desktop.
 
 ### Thumbnails at bottom
 
 <Canvas of={GalleryStories.ThumbnailsBottom} />
 
-Alternative layout with thumbnails below the main image.
+Horizontal layout for mobile-first designs.
 
-## Scrolling with many images
+### Scrolling with many images
 
 <Canvas of={GalleryStories.ManyImages} />
 
-When there are many images, the thumbnail list becomes scrollable. Selected thumbnails automatically scroll into view.
+Thumbnail lists scroll automatically; selected items stay in view.
 
 ## Configuration options
 
@@ -57,25 +57,19 @@ When there are many images, the thumbnail list becomes scrollable. Selected thum
 
 <Canvas of={GalleryStories.WithoutThumbnails} />
 
-Show only the main image with arrow navigation.
-
 ### Without arrows
 
 <Canvas of={GalleryStories.WithoutArrows} />
-
-Navigate only via thumbnail clicks or keyboard.
 
 ### Without descriptions
 
 <Canvas of={GalleryStories.WithoutDescriptions} />
 
-Show images without titles or captions.
-
 ### Minimal configuration
 
 <Canvas of={GalleryStories.Minimal} />
 
-Simplest gallery with only essential features.
+Simplest setup: main image only.
 
 ## Handling different image dimensions
 
@@ -85,35 +79,35 @@ The gallery handles landscape, portrait, square, and panoramic images gracefully
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `media` | array | *required* | Array of media items (see Media item object below) |
-| `initialIndex` | number | `0` | Index of the initially displayed image |
-| `showThumbnails` | boolean | `true` | Show/hide thumbnail list |
-| `thumbnailPosition` | string | `'left'` | Position of thumbnails: `'left'` or `'bottom'` |
-| `showArrows` | boolean | `true` | Show/hide navigation arrows |
-| `showDescription` | boolean | `true` | Show/hide image titles and captions |
-| `enableKeyboard` | boolean | `true` | Enable/disable keyboard navigation |
-| `loop` | boolean | `false` | Enable infinite loop navigation |
-| `arrowStyle` | string | `'overlay'` | Arrow style: `'overlay'` or `'corner'` |
-| `onMediaChange` | function | `undefined` | Callback when media item changes: `(index, item) => {}` |
+| Prop                | Type     | Default     | Description                                             |
+| ------------------- | -------- | ----------- | ------------------------------------------------------- |
+| `media`             | array    | _required_  | Array of media items (see Media item object below)      |
+| `initialIndex`      | number   | `0`         | Index of the initially displayed image                  |
+| `showThumbnails`    | boolean  | `true`      | Show/hide thumbnail list                                |
+| `thumbnailPosition` | string   | `'left'`    | Position of thumbnails: `'left'` or `'bottom'`          |
+| `showArrows`        | boolean  | `true`      | Show/hide navigation arrows                             |
+| `showDescription`   | boolean  | `true`      | Show/hide image titles and captions                     |
+| `enableKeyboard`    | boolean  | `true`      | Enable/disable keyboard navigation                      |
+| `loop`              | boolean  | `false`     | Enable infinite loop navigation                         |
+| `arrowStyle`        | string   | `'overlay'` | Arrow style: `'overlay'` or `'corner'`                  |
+| `onMediaChange`     | function | `undefined` | Callback when media item changes: `(index, item) => {}` |
 
 ### Media item object
 
 Each item in the `media` array should have:
 
-| Property | Type | Required | Description |
-|----------|------|----------|-------------|
-| `id` | string | Yes | Unique identifier for the item |
-| `type` | string | No | Media type: `'image'` (default), `'video'`, `'embed'`, or `'html'` |
-| `src` | string | Conditional | Source URL for image or video (required for image/video types) |
-| `alt` | string | Conditional | Alternative text for accessibility (required for image/video types) |
-| `title` | string | No | Title displayed below main content |
-| `description` | string | No | Description/caption text |
-| `thumbnail` | string | No | Thumbnail image URL (falls back to `src` for images) |
-| `poster` | string | No | Video poster image (video type only) |
-| `embedUrl` | string | No | Embed source URL (embed type only, falls back to `src`) |
-| `html` | string | Conditional | Raw HTML content (required for html type) |
+| Property      | Type   | Required    | Description                                                         |
+| ------------- | ------ | ----------- | ------------------------------------------------------------------- |
+| `id`          | string | Yes         | Unique identifier for the item                                      |
+| `type`        | string | No          | Media type: `'image'` (default), `'video'`, `'embed'`, or `'html'`  |
+| `src`         | string | Conditional | Source URL for image or video (required for image/video types)      |
+| `alt`         | string | Conditional | Alternative text for accessibility (required for image/video types) |
+| `title`       | string | No          | Title displayed below main content                                  |
+| `description` | string | No          | Description/caption text                                            |
+| `thumbnail`   | string | No          | Thumbnail image URL (falls back to `src` for images)                |
+| `poster`      | string | No          | Video poster image (video type only)                                |
+| `embedUrl`    | string | No          | Embed source URL (embed type only, falls back to `src`)             |
+| `html`        | string | Conditional | Raw HTML content (required for html type)                           |
 
 ### Security note for HTML content
 
@@ -150,19 +144,11 @@ The component follows WAI-ARIA best practices:
 
 ## Responsive behavior
 
-**Desktop (≥ 768px):**
-- Thumbnails displayed vertically on the left
-- Main image takes remaining space
-- Description below main image
-- Arrows visible on hover
+**Desktop (≥ 768px):** Thumbnails left, main image right, description below, arrows on hover.
 
-**Mobile (< 768px):**
-- Vertical stack: Main image → Description → Thumbnails
-- Thumbnails scroll horizontally
-- Arrows always visible (smaller size)
+**Mobile (< 768px):** Vertical stack (image → description → thumbnails), horizontal thumbnail scroll, always-visible arrows.
 
-**Thumbnail Position Bottom:**
-- Same responsive behavior, but thumbnails always at bottom
+**Thumbnail Position Bottom:** Thumbnails always at bottom (mobile and desktop).
 
 ## Usage example
 
@@ -231,11 +217,11 @@ function MyGallery() {
 
 ### Don't
 
-- Use identical `id` values for different images
+- Use duplicate `id` values
 - Omit `alt` text
-- Disable keyboard navigation without good reason
-- Use extremely large images without optimization
-- Mix very different image qualities
+- Disable keyboard navigation unnecessarily
+- Use unoptimized images
+- Mix varying image qualities
 
 ## Browser support
 
@@ -247,10 +233,11 @@ function MyGallery() {
 
 ## Server-rendered / CDN usage
 
-Gallery supports [layered hydration](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md). Use data attributes on a container element:
+Gallery supports [layered hydration](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md). Use data attributes on a container element:
 
 ```html
-<div data-mg-gallery
+<div
+  data-mg-gallery
   data-media='[{"id":"1","src":"/photo1.jpg","alt":"Landscape","title":"Mountain View"}]'
   data-initial-index="0"
   data-show-thumbnails="true"
@@ -259,35 +246,64 @@ Gallery supports [layered hydration](https://github.com/unisdr/undrr-mangrove/bl
   data-arrow-style="overlay"
   data-show-description="true"
   data-enable-keyboard="true"
-  data-loop="false">
-</div>
+  data-loop="false"
+></div>
 ```
 
-| Attribute | Default | Description |
-|-----------|---------|-------------|
-| `data-media` | `[]` | JSON array of media item objects (required). Each object with `type` of `'image'` or `'video'` (or no `type`, since `'image'` is the default) must include an `alt` property with descriptive text per WCAG 1.1.1 (Non-text Content). |
-| `data-initial-index` | `0` | Index of the initially displayed item |
-| `data-show-thumbnails` | `'true'` | Show thumbnail navigation (`'true'` or `'false'`) |
-| `data-thumbnail-position` | `'left'` | `'left'` or `'bottom'` |
-| `data-show-arrows` | `'true'` | Show navigation arrows |
-| `data-arrow-style` | `'overlay'` | `'overlay'` or `'corner'` |
-| `data-show-description` | `'true'` | Show title and caption below content |
-| `data-enable-keyboard` | `'true'` | Enable keyboard navigation |
-| `data-loop` | `'false'` | Enable infinite loop navigation |
+| Attribute                 | Default     | Description                                                                                                                                                                                                                           |
+| ------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `data-media`              | `[]`        | JSON array of media item objects (required). Each object with `type` of `'image'` or `'video'` (or no `type`, since `'image'` is the default) must include an `alt` property with descriptive text per WCAG 1.1.1 (Non-text Content). |
+| `data-initial-index`      | `0`         | Index of the initially displayed item                                                                                                                                                                                                 |
+| `data-show-thumbnails`    | `'true'`    | Show thumbnail navigation (`'true'` or `'false'`)                                                                                                                                                                                     |
+| `data-thumbnail-position` | `'left'`    | `'left'` or `'bottom'`                                                                                                                                                                                                                |
+| `data-show-arrows`        | `'true'`    | Show navigation arrows                                                                                                                                                                                                                |
+| `data-arrow-style`        | `'overlay'` | `'overlay'` or `'corner'`                                                                                                                                                                                                             |
+| `data-show-description`   | `'true'`    | Show title and caption below content                                                                                                                                                                                                  |
+| `data-enable-keyboard`    | `'true'`    | Enable keyboard navigation                                                                                                                                                                                                            |
+| `data-loop`               | `'false'`   | Enable infinite loop navigation                                                                                                                                                                                                       |
 
 ```js
-import createHydrator from "https://assets.undrr.org/static/mangrove/1.7.0/components/hydrate.js";
-import { Gallery, fromElement } from "https://assets.undrr.org/static/mangrove/1.7.0/components/Gallery.js";
-createHydrator({ selector: "[data-mg-gallery]", component: Gallery, fromElement });
+import createHydrator from 'https://assets.undrr.org/mangrove/2.3.0/components/hydrate.js';
+import {
+  Gallery,
+  fromElement,
+} from 'https://assets.undrr.org/mangrove/2.3.0/components/Gallery.js';
+createHydrator({
+  selector: '[data-mg-gallery]',
+  component: Gallery,
+  fromElement,
+});
 ```
 
-See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
+See the [hydration guide](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
+
+## Runtime UI translations
+
+Use `lang` for built-in copy and `labels` for individual overrides. The
+[shared translation guide](?path=/docs/contributing-ui-translations--docs)
+explains language matching, fallback, direction and hydration precedence.
+
+`components/Gallery.js` exports `getGalleryLabels(lang, labels)`
+for consumers needing the same strings outside React.
 
 ## Changelog
 
-- **1.2** — 2026-04-13: `.mg-gallery__title` now uses `$mg-font-family-headings` (Roboto Condensed). Added a `:lang(ar)` block routing to `$mg-font-family-arabic-headings`.
-- **1.1** — 2026-03-04: Added hydration support with `fromElement` prop extraction and `createHydrator` integration
-- **1.0** — 2026-01-07: Initial release
+- **1.5**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance.
+
+- **1.4.6**, 2026-10-15 ([#1368](https://github.com/unisdr/undrr-mangrove/issues/1368)): The shared pending-media Loader now shows a static dashed marker with the translated loading label under reduced motion, including forced colours. Its noninteractive loading overlay uses body-size text on a stable surface, stays within the stage for translated labels, and reserves space for navigation arrows and their focus rings.
+- **1.4.5**, 2026-10-15 ([#1357](https://github.com/unisdr/undrr-mangrove/issues/1357)): Uses the shared inline Loader for pending media, including slow reduced-motion rotation and forced-colour visibility. Thumbnail navigation scrolls instantly when reduced motion is requested. Hover transitions use shared motion tokens; the private gallery spinner class and keyframes have been removed.
+
+- **1.4.4**, 2026-09-18 ([#1247](https://github.com/unisdr/undrr-mangrove/pull/1247), [#1235](https://github.com/unisdr/undrr-mangrove/issues/1235)): The thumbnail ref callback is a statement body instead of a parenthesised assignment, so it no longer returns the element it assigns. React 19.3 does not reject that return value (it stores it as the ref cleanup, finds it is not a function and still calls `ref(null)` on detach), so this was correct as written; the hazard React 19 introduced is a ref callback returning a _function_, which silently replaces the detach call. Found by widening ESLint coverage to component `.jsx`, which had never been linted. No visual or behavioural change.
+- **1.4.3**, 2026-09-17 ([#1190](https://github.com/unisdr/undrr-mangrove/pull/1190)): A `type: 'html'` thumbnail preview is now `inert`, and any focusable element inside it is given `tabindex="-1"`. The injected author markup sits inside `<button role="tab">` under `aria-hidden="true"`, so links and buttons in it were focusable children of an aria-hidden node and interactive descendants of a button (axe `aria-hidden-focus` and `nested-interactive`, both serious). The tab itself is unchanged and stays keyboard operable.
+- **1.4.2**, 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic gallery titles now render in Noto Sans Arabic instead of Noto Kufi Arabic. `.mg-gallery__title` reads the `ui` font role rather than naming a typeface, and the component's `:lang(ar)` block is gone. Latin rendering is unchanged.
+- **1.4.1**, 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a gallery title whose own language is not Arabic.
+- **1.4**, 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Preserved the circular carousel control language while raising main and corner navigation arrows to the recommended 44px interaction target across desktop and mobile. Removed redundant per-language story exports in favour of the global locale toolbar.
+
+- **1.3**, 2026-06-19 ([mangrove#1056](https://github.com/unisdr/undrr-mangrove/pull/1056)): Consolidated `galleryAriaLabel`, `prevLabel`, `nextLabel`, `loadingLabel` props into a single `labels` object with `DEFAULT_GALLERY_LABELS` export. Backwards compatible: `DEFAULT_GALLERY_LABELS` covers all keys. Co-located `_labels.js` provides `LABELS_ES/FR/JA/ZH/AR/RU`; locale toolbar now switches translated strings in all stories.
+
+- **1.2**, 2026-04-13: `.mg-gallery__title` now uses `$mg-font-family-headings` (Roboto Condensed). Added a `:lang(ar)` block routing to `$mg-font-family-arabic-headings`.
+- **1.1**, 2026-03-04: Added hydration support with `fromElement` prop extraction and `createHydrator` integration
+- **1.0**, 2026-01-07: Initial release
 
 ---
 

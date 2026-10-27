@@ -8,7 +8,11 @@
  */
 
 // Main component
-export { SyndicationSearchWidget, SearchWidget, default } from './SyndicationSearchWidget';
+export {
+  SyndicationSearchWidget,
+  SearchWidget,
+  default,
+} from './SyndicationSearchWidget';
 
 // Context and hooks
 export {
@@ -21,7 +25,10 @@ export {
   ActionTypes,
 } from './context/SearchContext';
 
-export { useSearch as useSearchHook, useOptimisticSearch } from './hooks/useSearch';
+export {
+  useSearch as useSearchHook,
+  useOptimisticSearch,
+} from './hooks/useSearch';
 export { useTaxonomies } from './hooks/useTaxonomies';
 export { useHashSync } from './hooks/useHashSync';
 

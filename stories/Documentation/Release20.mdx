@@ -1,0 +1,13 @@
+import { Meta, Markdown } from '@storybook/addon-docs/blocks';
+import ReleaseNotes from '../../docs/RELEASE-2.0.md?raw';
+import { linkDocsPages } from './docsPageLinks';
+
+<Meta
+  title="Getting started/Release notes: v2.0"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: { canvas: { hidden: true } },
+  }}
+/>
+
+<Markdown>{linkDocsPages(ReleaseNotes, 'docs/RELEASE-2.0.md')}</Markdown>

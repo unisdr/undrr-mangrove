@@ -59,11 +59,7 @@ export function FeaturePromo({
   return (
     <section className={classes}>
       <div className="mg-feature-promo__media">
-        <img
-          src={image}
-          alt={imageAlt}
-          className="mg-feature-promo__image"
-        />
+        <img src={image} alt={imageAlt} className="mg-feature-promo__image" />
       </div>
       <div className="mg-feature-promo__panel">
         <HeadingTag className="mg-feature-promo__heading">{heading}</HeadingTag>
@@ -71,7 +67,7 @@ export function FeaturePromo({
         {showCta && (
           <a
             href={ctaUrl}
-            className="mg-feature-promo__cta mg-button mg-button--primary"
+            className="mg-feature-promo__cta mg-button mg-button-primary"
             {...(ctaExternal
               ? { target: '_blank', rel: 'noopener noreferrer' }
               : {})}

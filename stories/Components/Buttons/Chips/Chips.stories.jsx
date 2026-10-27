@@ -39,3 +39,31 @@ export const DefaultChips = {
 
   name: 'Chips',
 };
+
+export const Dismissible = {
+  args: {
+    label: 'Earthquake',
+    Type: 'With X',
+  },
+};
+
+export const LongLabels = {
+  render: () => (
+    <div style={{ display: 'grid', gap: '0.75rem', justifyItems: 'start' }}>
+      <Chips label="Disaster risk financing and insurance" href="#" />
+      <Chips
+        label="Réduction des risques de catastrophe"
+        Type="With X"
+        removeLabel="Supprimer le filtre : Réduction des risques de catastrophe"
+      />
+      <div dir="rtl" lang="ar">
+        <Chips
+          label="الحد من مخاطر الكوارث"
+          Type="With X"
+          removeLabel="إزالة عامل التصفية: الحد من مخاطر الكوارث"
+        />
+      </div>
+    </div>
+  ),
+  name: 'Long labels and RTL',
+};
