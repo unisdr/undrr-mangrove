@@ -1,0 +1,32 @@
+// Mangrove's v2 tab colours.
+
+// A mixin rather than a plain :root block, and included inside EACH runtime
+// theme block as well as at :root, because these tokens are var() chains onto
+// theme-owned values. A custom property declared at :root resolves its inner
+// var() against :root and then inherits the already-resolved value, so a
+// theme override never reaches it: `.mg-theme-mcr` repointing
+// --mg-color-interactive would leave --mg-tab-color--active still holding the
+// UNDRR blue it resolved to at :root. Re-emitting the declarations inside the
+// theme block is what makes them re-resolve against that theme's values.
+
+// Horizontal pills use readable theme text on a light brand tint. The legacy filled
+// tab tokens remain available to older markup and explicit stacked sections.
+@mixin mg-tokens-tabs {
+  --mg-tab-color: rgb(var(--mg-color-text));
+  --mg-tab-color--hover: rgb(var(--mg-color-text));
+  --mg-tab-color--active: rgb(var(--mg-color-text));
+  --mg-tab-radius: var(--mg-spacing-300);
+  --mg-tab-rail-padding: max(
+    var(--mg-spacing-75),
+    calc(var(--mg-focus-ring-offset) + var(--mg-focus-ring-width) + 1px)
+  );
+  --mg-tab-rail-gap: var(--mg-spacing-50);
+  --mg-tab-rail-background: rgb(var(--mg-color-neutral-0));
+  --mg-tab-rail-border: rgb(var(--mg-color-neutral-600) / 0.24);
+  --mg-tab-rail-fade-size: var(--mg-spacing-400);
+  --mg-tab-panel-gap: var(--mg-spacing-300);
+  --mg-tab-background--active: rgb(var(--mg-color-interactive) / 0.12);
+  --mg-tab-background--hover: rgb(var(--mg-color-interactive) / 0.06);
+  --mg-tab-indicator--hover: rgb(var(--mg-color-interactive) / 0.45);
+  --mg-tab-indicator--active: rgb(var(--mg-color-interactive));
+}

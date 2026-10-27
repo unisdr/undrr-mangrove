@@ -1,0 +1,81 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as FormActionStories from './FormAction.stories';
+
+<Meta of={FormActionStories} />
+
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
+
+# Form action
+
+Joins one field to one high-priority action as a continuous control. The input and button remain separate semantic elements with independent focus states.
+
+## When to use
+
+- Search, subscribe, apply, check, redeem or compact submission flows.
+- When the action operates only on the immediately adjacent field.
+- When joining the controls makes the relationship faster to understand.
+
+Do not use it for two unrelated actions, destructive actions, multi-step forms, or several fields sharing one submit button. Use a normal form layout and `.mg-buttons` instead.
+
+## Search
+
+<Canvas of={FormActionStories.Search} />
+
+## Subscribe
+
+Visible labels, help text and error text sit outside the joined row and retain their normal form relationships.
+
+<Canvas of={FormActionStories.Subscribe} />
+
+## Select and continue
+
+The control slot also accepts a native select or another single field control.
+
+<Canvas of={FormActionStories.SelectAndContinue} />
+
+## Responsive stacking
+
+Keep short actions joined on mobile. Set `stackOnMobile` when a translated or descriptive action would leave too little room for the field.
+
+<Canvas of={FormActionStories.StackedOnMobile} />
+
+## Right-to-left layouts
+
+Logical corner and margin properties move the action to the inline end without additional markup or overrides.
+
+<Canvas of={FormActionStories.RTL} />
+
+## Usage
+
+```jsx
+<FormAction
+  label="Email address"
+  helpText="A confirmation email will be sent to this address."
+  control={
+    <input
+      className="mg-form-input"
+      type="email"
+      placeholder="name@example.org"
+    />
+  }
+  action={
+    <button className="mg-button mg-button-primary" type="submit">
+      Subscribe
+    </button>
+  }
+/>
+```
+
+For vanilla HTML, apply `.mg-form-action` to the joined row, `.mg-form-action__control` to its field, and `.mg-form-action__action` to its button.
+
+## Accessibility
+
+- The generated field ID connects the visible or visually hidden label to the control.
+- Help and error messages are composed with an existing `aria-describedby` value.
+- Error text sets `aria-invalid` and uses `role="alert"`.
+- The field and action retain separate focus rings and keyboard stops.
+- Both controls retain at least a 44px interaction target.
+
+## Changelog
+
+- **1.0**, 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Added the generic joined field-and-action composition with logical RTL corners, accessible labels and descriptions, optional mobile stacking, React and vanilla HTML usage, and search, subscribe and select examples.

@@ -1,3 +1,5 @@
+@use "../config" as *;
+
 // =============================================================================
 // SIZING UTILITIES
 // =============================================================================
@@ -36,19 +38,19 @@
 
 // Named widths
 .mg-u-width-150 {
-  width: $mg-width-150;
+  width: var(--mg-width-150);
 }
 
 .mg-u-width-300-rem {
-  width: $mg-width-300;
+  width: var(--mg-width-300);
 }
 
 .mg-u-width-400-rem {
-  width: $mg-width-400;
+  width: var(--mg-width-400);
 }
 
 .mg-u-width-600-rem {
-  width: $mg-width-600;
+  width: var(--mg-width-600);
 }
 
 // Responsive widths

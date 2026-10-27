@@ -1,0 +1,117 @@
+# MCR2030 (Making Cities Resilient 2030) — sub-brand layer.
+#
+# Merged over tokens/mangrove.yaml + tokens/undrr.yaml and emitted as the
+# .mg-theme-mcr block. Regenerate with `yarn build:tokens`.
+
+$brand:
+  id: mcr
+  extends: undrr
+  title: MCR2030
+  selector: '.mg-theme-mcr'
+
+theme:
+  loaded:
+    $type: string
+    $value: mcr
+    $description: >-
+      Runtime marker: lets JS and tooling detect that this brand theme is
+      active, guarding the sub-brand body-class trap. See docs/RELEASE-2.0.md.
+
+brand:
+  $type: color
+  $private: true
+  purple:
+    $value: '#591a61'
+    $description: MCR2030 purple. The interactive colour.
+  purple-800:
+    $value: '#6e2677'
+    $description: Hover/active partner of the brand purple.
+  purple-200:
+    $value: '#ded0d7'
+    $description: Tab border tint.
+
+color:
+  $type: color
+  interactive: { $value: '{=brand.purple}' }
+  interactive-active: { $value: '{=brand.purple}' }
+  tag: { $value: '{color.interactive}' }
+  tag--hover: { $value: '{color.interactive-active}' }
+  button-background:
+    $value: '{=color.interactive}'
+    $format: srgb-rgb-function
+  button-background--hover:
+    $value: '{=brand.purple-800}'
+    $format: srgb-rgb-function
+  button-secondary-background: { $value: '{=brand.purple-800}' }
+  button-secondary-background--hover: { $value: '{=brand.purple}' }
+  button-outline-primary: { $value: '{=color.interactive}' }
+  button-outline-primary--hover: { $value: '{=brand.purple-800}' }
+  button-outline-secondary:
+    $value: '{color.button-secondary-background}'
+    $format: literal
+  button-outline-secondary--hover:
+    $value: '{color.button-secondary-background--hover}'
+    $format: literal
+  form-check: { $value: '{color.interactive}' }
+  form-check--hover: { $value: '{color.interactive-active}' }
+  form-check--checked: { $value: '{color.interactive}' }
+  form-focus: { $value: '{color.interactive}' }
+  hero: { $value: '{color.interactive}' }
+  tabbar-background: { $value: 'none', $format: literal }
+  tab-background:
+    $value: '{=brand.purple-800}'
+    $format: srgb-rgb-function
+  tab-background--inactive:
+    $value: '{color.neutral-0}'
+    $format: srgb-rgb-function
+  tab-background--hover:
+    $value: '{=brand.purple-800}'
+    $format: srgb-rgb-function
+    $alpha: 0.6
+  tab-border: { $value: '{=brand.purple-200}', $format: srgb-rgb-function }
+  tab-border--hover:
+    $value: '{=brand.purple-800}'
+    $format: srgb-rgb-function
+  tab-border--active:
+    $value: '{=brand.purple-200}'
+    $format: srgb-rgb-function
+  text-tab: { $value: '{color.neutral-700}', $format: srgb-rgb-function }
+  text-tab--hover: { $value: '{color.neutral-0}', $format: srgb-rgb-function }
+  text-tab-active: { $value: '{color.neutral-0}', $format: srgb-rgb-function }
+
+# Restated so it re-resolves against this theme's outline secondary colour
+# inside .mg-theme-mcr instead of keeping the :root value.
+notice:
+  action-secondary:
+    $type: color
+    $value: '{color.button-outline-secondary}'
+    $format: srgb-rgb-function
+
+radius:
+  $type: dimension
+  tag: { $value: '{spacing.100}' }
+  button: { $value: '{spacing.300}' }
+  form-input: { $value: '{spacing.100}' }
+  tab: { $value: '{spacing.150} {spacing.150} 0 0' }
+  tab-section: { $value: '{spacing.200}' }
+
+padding:
+  $type: dimension
+  button: { $value: '{spacing.150} {spacing.300}' }
+  tab: { $value: '{spacing.200} {spacing.300}' }
+  tab-section: { $value: '{spacing.500}' }
+
+border-width:
+  $type: dimension
+  button: { $value: '2px' }
+
+font-size:
+  button: { $value: '{=font-size.400}', $format: literal }
+
+box-shadow:
+  $type: shadow
+  tab-section: { $value: '{rgb(color.neutral-900 / 0.24)} 0 6px 5px 0' }
+
+spacing:
+  $type: dimension
+  hero-overlay: { $value: '{=spacing.200} 0', $format: literal }

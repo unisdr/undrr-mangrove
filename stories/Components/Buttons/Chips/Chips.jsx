@@ -12,13 +12,27 @@ import PropTypes from 'prop-types';
  * @param {string} props.label  Visible text for the chip
  * @param {string} [props.Type='Default']  Variant: 'Default' (link) or 'With X' (dismiss button)
  */
-export function Chips({ label, Type = 'Default' }) {
+export function Chips({
+  label,
+  Type = 'Default',
+  href = '#',
+  onDismiss,
+  removeLabel,
+  className,
+  ...props
+}) {
+  const classes = ['mg-chip', Type === 'With X' && 'mg-chip__cross', className]
+    .filter(Boolean)
+    .join(' ');
+
   if (Type === 'With X') {
     return (
       <button
+        {...props}
         type="button"
-        className="mg-chip mg-chip__cross"
-        aria-label={`Remove filter: ${label}`}
+        className={classes}
+        aria-label={removeLabel || `Remove filter: ${label}`}
+        onClick={onDismiss}
       >
         {label}
       </button>
@@ -26,7 +40,7 @@ export function Chips({ label, Type = 'Default' }) {
   }
 
   return (
-    <a className="mg-chip" href="#">
+    <a {...props} className={classes} href={href}>
       {label}
     </a>
   );
@@ -37,4 +51,12 @@ Chips.propTypes = {
   label: PropTypes.string.isRequired,
   /** Variant: 'Default' renders a link; 'With X' renders a dismiss button. */
   Type: PropTypes.oneOf(['Default', 'With X']),
+  /** Destination for the default link variant. */
+  href: PropTypes.string,
+  /** Called when the dismissible variant is activated. */
+  onDismiss: PropTypes.func,
+  /** Localised accessible name for the dismissible variant. */
+  removeLabel: PropTypes.string,
+  /** Additional classes to compose with the Mangrove chip classes. */
+  className: PropTypes.string,
 };

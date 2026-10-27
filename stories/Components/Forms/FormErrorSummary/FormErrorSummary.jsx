@@ -66,7 +66,7 @@ FormErrorSummary.propTypes = {
     PropTypes.shape({
       id: PropTypes.string.isRequired,
       message: PropTypes.string.isRequired,
-    }),
+    })
   ).isRequired,
   className: PropTypes.string,
 };

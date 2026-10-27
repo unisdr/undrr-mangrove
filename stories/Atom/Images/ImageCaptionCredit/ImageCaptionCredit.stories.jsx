@@ -67,23 +67,13 @@ export default {
     },
 
     caption: {
-      options: ['true', 'false'],
-
-      control: {
-        type: 'inline-radio',
-      },
-
-      defaultValue: 'true',
+      control: { type: 'boolean' },
+      defaultValue: true,
     },
 
     credit: {
-      options: ['true', 'false'],
-
-      control: {
-        type: 'inline-radio',
-      },
-
-      defaultValue: 'true',
+      control: { type: 'boolean' },
+      defaultValue: true,
     },
   },
 };
@@ -119,6 +109,53 @@ export const DefaultImageWithCreditCaption = {
       We provide tools such as the DRR Community site PreventionWeb,
       publications on good practices, and the Global Assessment Report (GAR)
     </p>
+    <div class="mg-credits">
+      UNDRR/Ghana<br /><strong>Alex Mensah Tenkorang</strong>
+    </div>
+  </figcaption>
+</figure>`,
+      },
+    },
+  },
+};
+
+export const MultiParagraphCaption = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+
+    return (
+      <Images
+        imagelg={sample_imagelg}
+        imagemd={sample_imagemd}
+        imagesm={sample_imagesm}
+        alt="farmland"
+        label={caption.label}
+        paragraph={[
+          <p key="first">{caption.paragraph}</p>,
+          <p key="second">
+            A second paragraph stays in the same caption block, beside the
+            credit on wide screens.
+          </p>,
+        ]}
+        {...args}
+      ></Images>
+    );
+  },
+
+  name: 'Multi-paragraph caption',
+
+  parameters: {
+    docs: {
+      source: {
+        code: `<figure class="mg-image-figcaption">
+  <div class="mg-image-figcaption__cart">
+    <img src="https://picsum.photos/800/450" alt="Disaster preparedness training exercise" />
+  </div>
+  <figcaption class="mg-image-caption">
+    <div class="mg-image-caption__text">
+      <p>Volunteers practise an evacuation drill in Accra.</p>
+      <p>The drill is part of a national early warning programme.</p>
+    </div>
     <div class="mg-credits">
       UNDRR/Ghana<br /><strong>Alex Mensah Tenkorang</strong>
     </div>

@@ -8,7 +8,7 @@ import { addons } from 'storybook/preview-api';
  *
  * Uses linkTo() and addons.getChannel() instead of <a href> to avoid navigating
  * the preview iframe directly — which strips the Storybook UI shell and
- * breaks on GitHub Pages where Storybook is deployed to a subpath.
+ * breaks root-relative links when Storybook is served from a subpath.
  *
  * Uses addons.getChannel().emit('updateGlobals') rather than the useGlobals()
  * hook because Storybook hooks can only be called in story/decorator functions,

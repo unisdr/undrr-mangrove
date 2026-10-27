@@ -2,7 +2,7 @@ import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
 import * as TypographyStories from './TypographyIntegration.stories';
 
 <Meta
-  title="Components/TypographyIntegration/Typography integration example"
+  of={TypographyStories}
   parameters={{
     viewMode: 'docs',
     previewTabs: {
@@ -11,10 +11,27 @@ import * as TypographyStories from './TypographyIntegration.stories';
   }}
 />
 
-> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
 
 # Typography integration
 
 This page demonstrates common typography elements together, to validate spacing, especially list indentation. Tracked in [`web-backlog#2444`](https://gitlab.com/undrr/web-backlog/-/issues/2444).
 
 <Canvas of={TypographyStories.Default} />
+
+## Arabic tracking
+
+The shared script profile in `_fonts.scss` applies `letter-spacing: normal`
+to Arabic elements and their generated labels, including inherited languages
+and regional tags such as `ar-SA`. It is intentionally important so later
+component declarations cannot break joining. Set `lang` at language boundaries:
+`dir="rtl"` alone does not identify a script. Explicit English islands keep
+their component tracking; unmarked text inherits its surrounding language.
+
+See the existing [language-boundary examples](?path=/story/design-decisions-language-boundaries--arabic-page-with-latin-island) for mixed-language content.
+
+## Changelog
+
+- **1.0.2**, 2026-09-20 ([#1096](https://github.com/unisdr/undrr-mangrove/issues/1096)): Centralised the Arabic tracking reset with script routing. Browser checks attached to the existing language-boundary example cover headings, component labels, table headers, generated code labels and nested language islands.
+
+- **1.0.1**, 2026-09-20 ([#1276](https://github.com/unisdr/undrr-mangrove/pull/1276)): The typography example opts into `mg-content`, so its prose links use the accessible inline-link treatment without making the boundary a global element default.

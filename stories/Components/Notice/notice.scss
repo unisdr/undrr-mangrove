@@ -1,0 +1,190 @@
+/**
+ * Notice / Alert Banner
+ *
+ * Universal container for informational callouts, inline warnings, error alerts, and emergency broadcast banners.
+ * ServiceNotice and Snackbar render through this component and add no styles of their own
+ * beyond Snackbar's positioning.
+ * Actions reuse .mg-buttons and the dismiss control reuses .mg-icon-button.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Notice/Notice.mdx
+ */
+
+.mg-notice {
+  --mg-notice-border-color: rgb(var(--mg-color-blue-900) / 0.5);
+  --mg-notice-bg: rgb(var(--mg-color-blue-50));
+  --mg-notice-icon-color: rgb(var(--mg-color-blue-900));
+  --mg-notice-border-width: 4px;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--mg-spacing-100);
+  padding: var(--mg-spacing-150) var(--mg-spacing-200);
+  background-color: var(--mg-notice-bg);
+  border: 1px solid var(--mg-notice-border-color);
+  border-inline-start-width: var(--mg-notice-border-width);
+  border-radius: var(--mg-radius-button);
+  font-family: var(--mg-font-family-text);
+  color: rgb(var(--mg-color-neutral-900));
+  box-sizing: border-box;
+
+  // Info is the base palette above, so it needs no modifier rules.
+  &--warning {
+    --mg-notice-border-color: rgb(var(--mg-color-gold-800) / 0.5);
+    --mg-notice-bg: rgb(var(--mg-color-accent-100) / 0.18);
+    --mg-notice-icon-color: rgb(var(--mg-color-gold-800));
+  }
+
+  &--negative {
+    --mg-notice-border-color: rgb(var(--mg-color-red-900) / 0.4);
+    --mg-notice-bg: rgb(var(--mg-color-red-50));
+    --mg-notice-icon-color: rgb(var(--mg-color-red-900));
+  }
+
+  // Teal accent-400, the same colour StatusLabel uses for "published".
+  &--positive {
+    --mg-notice-border-color: rgb(var(--mg-color-accent-400) / 0.5);
+    --mg-notice-bg: rgb(var(--mg-color-accent-400) / 0.08);
+    --mg-notice-icon-color: rgb(var(--mg-color-accent-400));
+  }
+
+  &--compact {
+    padding: var(--mg-spacing-75) var(--mg-spacing-100);
+    gap: var(--mg-spacing-75);
+
+    .mg-notice__icon {
+      font-size: 1.25em;
+    }
+
+    .mg-notice__title {
+      font-size: var(--mg-font-size-250);
+    }
+
+    .mg-notice__description {
+      font-size: var(--mg-font-size-200);
+    }
+  }
+
+  &--prominent {
+    --mg-notice-border-width: 8px;
+
+    border-radius: 0;
+    padding: var(--mg-spacing-200) var(--mg-spacing-300);
+
+    .mg-notice__icon {
+      font-size: 1.75em;
+    }
+
+    .mg-notice__title {
+      font-size: var(--mg-font-size-400);
+    }
+  }
+
+  &--overlay {
+    --mg-notice-border-width: 1px;
+
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: rgb(var(--mg-color-neutral-0) / 0.94);
+    backdrop-filter: blur(2px);
+    border-radius: inherit;
+    padding: var(--mg-spacing-250);
+
+    // Centre the header as one group instead of spreading icon, title and
+    // badge across the full width of the embed.
+    .mg-notice__header {
+      justify-content: center;
+    }
+
+    .mg-notice__title {
+      flex-grow: 0;
+    }
+
+    .mg-notice__description {
+      max-inline-size: 60ch;
+    }
+
+    .mg-notice__actions {
+      justify-content: center;
+    }
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: var(--mg-spacing-75);
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  &__icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    font-size: 1.5em;
+    line-height: 1;
+    color: var(--mg-notice-icon-color);
+
+    svg {
+      display: block;
+      inline-size: 1em;
+      block-size: 1em;
+      fill: currentColor;
+    }
+  }
+
+  &__title {
+    margin: 0;
+    font-family: var(--mg-font-family-ui);
+    font-size: var(--mg-font-size-300);
+    font-weight: 600;
+    line-height: 1.35;
+    flex-grow: 1;
+  }
+
+  // The tinted notice surfaces are darker than the page the outline secondary
+  // colour is chosen for, so the resting label and border read
+  // --mg-notice-action-secondary, which a theme can darken (DELTA does).
+  // Hover keeps the button's own fill and label.
+  &__actions .mg-button-secondary.mg-button-outline:not(:hover) {
+    border-color: var(--mg-notice-action-secondary);
+    color: var(--mg-notice-action-secondary);
+  }
+
+  &__dismiss {
+    margin-inline-start: auto;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    color: rgb(var(--mg-color-neutral-600));
+
+    &:hover {
+      color: rgb(var(--mg-color-neutral-900));
+      background-color: rgb(var(--mg-color-neutral-900) / 0.08);
+    }
+  }
+
+  // Secondary line in the actions row, such as ServiceNotice's retry countdown.
+  &__meta {
+    margin: 0;
+    font-size: var(--mg-font-size-200);
+    color: rgb(var(--mg-color-neutral-600));
+  }
+
+  &__description {
+    font-size: var(--mg-font-size-250);
+    line-height: 1.5;
+    color: rgb(var(--mg-color-neutral-700));
+
+    p {
+      margin: 0 0 var(--mg-spacing-50);
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}

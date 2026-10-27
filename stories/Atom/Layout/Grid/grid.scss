@@ -1,3 +1,13 @@
+/**
+ * Grid
+ *
+ * Flexible grid system and columnar layout utilities for structured multi-column content.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Atom/Layout/Grid/Grid.mdx
+ */
+@use "../../../assets/scss/config" as *;
+
 /* Our custom css grid based on https://stable.visual-framework.dev/components/vf-grid/ */
 g-grid {
   display: flex;
@@ -5,11 +15,11 @@ g-grid {
 
 .mg-grid > * {
   flex: 1;
-  margin: $mg-spacing-0 $mg-spacing-0 $mg-spacing-100 1.2292%;
+  margin: var(--mg-spacing-0) var(--mg-spacing-0) var(--mg-spacing-100) 1.2292%;
 }
 
 .mg-grid > *:first-child {
-  margin-left: $mg-spacing-0;
+  margin-left: var(--mg-spacing-0);
 }
 
 [class*="mg-grid__"] {
@@ -20,50 +30,50 @@ g-grid {
 // Unfortunately IE11 (which this flexbox grid is for) does not support calc inside of flex
 // So we've hard coded the percentage values. All other modern browsers get to use grid.
 .mg-grid__col-2 > * {
-  flex: $mg-spacing-0 $mg-spacing-0 49.38538%;
+  flex: var(--mg-spacing-0) var(--mg-spacing-0) 49.38538%;
   max-width: 49.38538%;
 
   &:nth-of-type(3n) {
-    margin-left: $mg-spacing-0;
+    margin-left: var(--mg-spacing-0);
   }
 }
 
 .mg-grid__col-3 > * {
-  flex: $mg-spacing-0 $mg-spacing-0 32.51384%;
+  flex: var(--mg-spacing-0) var(--mg-spacing-0) 32.51384%;
   max-width: 32.51384%;
 
   &:nth-of-type(4n) {
-    margin-left: $mg-spacing-0;
+    margin-left: var(--mg-spacing-0);
   }
 }
 
 .mg-grid__col-4 > * {
   // 0.9219246
-  flex: $mg-spacing-0 $mg-spacing-0 24.078%;
+  flex: var(--mg-spacing-0) var(--mg-spacing-0) 24.078%;
   max-width: 24.078%;
 
   &:nth-of-type(5n) {
-    margin-left: $mg-spacing-0;
+    margin-left: var(--mg-spacing-0);
   }
 }
 
 .mg-grid__col-5 > * {
   // 0.98338624
-  flex: $mg-spacing-0 $mg-spacing-0 19.01661%;
+  flex: var(--mg-spacing-0) var(--mg-spacing-0) 19.01661%;
   max-width: 19.01661%;
 
   &:nth-of-type(6n) {
-    margin-left: $mg-spacing-0;
+    margin-left: var(--mg-spacing-0);
   }
 }
 
 .mg-grid__col-6 > * {
   // 1.024360667
-  flex: $mg-spacing-0 $mg-spacing-0 15.6423%;
+  flex: var(--mg-spacing-0) var(--mg-spacing-0) 15.6423%;
   max-width: 15.6423%;
 
   &:nth-of-type(7n) {
-    margin-left: $mg-spacing-0;
+    margin-left: var(--mg-spacing-0);
   }
 }
 
@@ -81,8 +91,8 @@ g-grid {
   .mg-grid {
     display: grid;
     grid-column: main;
-    column-gap: $mg-spacing-200;
-    row-gap: $mg-spacing-200;
+    column-gap: var(--mg-spacing-200);
+    row-gap: var(--mg-spacing-200);
   }
 
   @media (min-width: $mg-breakpoint-tablet) {
@@ -99,7 +109,7 @@ g-grid {
   }
 
   .mg-grid > * {
-    margin: $mg-spacing-0;
+    margin: var(--mg-spacing-0);
     max-width: unset;
   }
 
@@ -144,6 +154,43 @@ g-grid {
 
     .mg-grid__col-6 {
       grid-template-columns: repeat(6, 1fr);
+    }
+  }
+
+  // Support dynamic column counts beyond 6 in modern grid layouts.
+  @media (min-width: $mg-breakpoint-tablet) {
+    @for $i from 7 through 12 {
+      .mg-grid__col-#{$i} {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+  }
+
+  @media (min-width: $mg-breakpoint-desktop) {
+    @for $i from 7 through 12 {
+      .mg-grid__col-#{$i} {
+        grid-template-columns: repeat($i, 1fr);
+      }
+    }
+  }
+
+  // Equal-width fallback when item count has no dedicated column class.
+  @media (min-width: $mg-breakpoint-tablet) {
+    .mg-grid--auto-fit {
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(0, 1fr);
+    }
+  }
+
+  // Reading layout variant: flexible content column plus fixed rail.
+  $mg-grid-article-breakpoint: 48rem;
+  $mg-grid-article-rail-width: 16rem;
+
+  @media (min-width: $mg-grid-article-breakpoint) {
+    .mg-grid--article {
+      grid-template-columns: minmax(0, 1fr) $mg-grid-article-rail-width;
+      column-gap: var(--mg-spacing-300);
+      align-items: start;
     }
   }
 

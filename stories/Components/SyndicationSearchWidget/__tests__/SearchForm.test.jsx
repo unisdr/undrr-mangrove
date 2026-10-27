@@ -113,12 +113,16 @@ describe('SearchForm', () => {
       const button = screen.getByRole('button', { name: /submit search/i });
       expect(button).toHaveTextContent('Search');
       expect(button.querySelector('.mg-icon-search')).toBeInTheDocument();
-      expect(button.querySelector('.mg-search__submit-spinner')).not.toBeInTheDocument();
+      expect(
+        button.querySelector('.mg-search__submit-spinner')
+      ).not.toBeInTheDocument();
     });
 
     it('does not render an in-input loading spinner', () => {
       const { container } = renderWithProvider({ isLoading: true });
-      expect(container.querySelector('.mg-search__loading')).not.toBeInTheDocument();
+      expect(
+        container.querySelector('.mg-search__loading')
+      ).not.toBeInTheDocument();
     });
   });
 

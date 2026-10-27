@@ -1,3 +1,5 @@
+@use "../config" as *;
+
 // =============================================================================
 // TYPOGRAPHY UTILITIES
 // =============================================================================
@@ -10,75 +12,75 @@
 // -----------------------------------------------------------------------------
 
 .mg-u-font-size-100 {
-  font-size: $mg-font-size-100;
+  font-size: var(--mg-font-size-100);
 }
 
 .mg-u-font-size-150 {
-  font-size: $mg-font-size-150;
+  font-size: var(--mg-font-size-150);
 }
 
 .mg-u-font-size-200 {
-  font-size: $mg-font-size-200;
+  font-size: var(--mg-font-size-200);
 }
 
 .mg-u-font-size-250 {
-  font-size: $mg-font-size-250;
+  font-size: var(--mg-font-size-250);
 }
 
 .mg-u-font-size-300 {
-  font-size: $mg-font-size-300;
+  font-size: var(--mg-font-size-300);
 }
 
 .mg-u-font-size-400 {
-  font-size: $mg-font-size-400;
+  font-size: var(--mg-font-size-400);
 }
 
 .mg-u-font-size-500 {
-  font-size: $mg-font-size-500;
+  font-size: var(--mg-font-size-500);
 }
 
 .mg-u-font-size-600 {
-  font-size: $mg-font-size-600;
+  font-size: var(--mg-font-size-600);
 }
 
 .mg-u-font-size-800 {
-  font-size: $mg-font-size-800;
+  font-size: var(--mg-font-size-800);
 }
 
 .mg-u-font-size-900 {
-  font-size: $mg-font-size-900;
+  font-size: var(--mg-font-size-900);
 }
 
 .mg-u-font-size-1000 {
-  font-size: $mg-font-size-1000;
+  font-size: var(--mg-font-size-1000);
 }
 
 .mg-u-font-size-1100 {
-  font-size: $mg-font-size-1100;
+  font-size: var(--mg-font-size-1100);
 }
 
 // Responsive font sizes
 .mg-u-font-size-300--sm {
   @media (width <= $mg-breakpoint-mobile) {
-    font-size: $mg-font-size-300;
+    font-size: var(--mg-font-size-300);
   }
 }
 
 .mg-u-font-size-400--md {
   @media (width >= $mg-breakpoint-tablet) {
-    font-size: $mg-font-size-400;
+    font-size: var(--mg-font-size-400);
   }
 }
 
 .mg-u-font-size-500--md {
   @media (width >= $mg-breakpoint-tablet) {
-    font-size: $mg-font-size-500;
+    font-size: var(--mg-font-size-500);
   }
 }
 
 .mg-u-font-size-600--lg {
   @media (width >= $mg-breakpoint-desktop) {
-    font-size: $mg-font-size-600;
+    font-size: var(--mg-font-size-600);
   }
 }
 
@@ -103,11 +105,11 @@
 // -----------------------------------------------------------------------------
 
 .mg-u-font-family--base {
-  font-family: $mg-font-family;
+  font-family: var(--mg-font-family-text);
 }
 
 .mg-u-font-family--condensed {
-  font-family: $mg-font-family-condensed;
+  font-family: var(--mg-font-family-ui);
 }
 
 // -----------------------------------------------------------------------------
@@ -202,11 +204,11 @@
 }
 
 .mg-u-line-height--tight {
-  line-height: $mg-font-line-height-500;
+  line-height: var(--mg-font-line-height-500);
 }
 
 .mg-u-line-height--normal {
-  line-height: $mg-font-line-height-700;
+  line-height: var(--mg-font-line-height-700);
 }
 
 .mg-u-line-height--relaxed {

@@ -21,7 +21,9 @@ const Demo = ({
   sourceState = 'hidden', // 'shown', 'hidden', or 'none'
   language = 'html',
 }) => {
-  const [isSourceVisible, setIsSourceVisible] = useState(sourceState === 'shown');
+  const [isSourceVisible, setIsSourceVisible] = useState(
+    sourceState === 'shown'
+  );
 
   // Convert React elements to JSX string
   const sourceCode = reactElementToJSXString(children, {

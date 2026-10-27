@@ -1,0 +1,72 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './NewsletterPromotion.stories';
+
+<Meta of={Stories} />
+
+# Newsletter promotion
+
+A composition of existing Mangrove typography, utility classes and form controls,
+not a new signup component or service adapter. Explores [web-backlog #2412](https://gitlab.com/undrr/web-backlog/-/work_items/2412).
+
+Copy, cadence and choices here are illustrative. The form examples simulate a
+response locally: no address is stored or sent, and no subscription is created.
+Use the locale and theme toolbars, and resize the canvas to compare layouts.
+
+## Validation and confirmation
+
+Submit an empty or invalid address to see validation, then a sample address to see
+the simulated confirmation. Focus moves to the confirmation heading and returns
+to the email field when starting again.
+
+<Canvas of={Stories.CompactSignup} />
+
+## Signup with preferences
+
+A regular form layout keeps the action after all the fields it submits. Related
+choices use FormGroup and Checkbox. These optional topics are illustrative; a site
+can supply its own regions, themes, languages or frequency choices.
+
+<Canvas of={Stories.WithPreferences} />
+
+## Below an article
+
+<Canvas of={Stories.AfterArticle} />
+
+## Service failure
+
+Submit a sample address to see an announced error. The form keeps the email and
+selected choices so the reader can retry. Change the response control to compare
+simulated outcomes; doing so resets the example.
+
+<Canvas of={Stories.ServiceError} />
+
+## What belongs where
+
+| Mangrove pattern                            | Site and service integration                                        |
+| ------------------------------------------- | ------------------------------------------------------------------- |
+| Spacing, responsive layout and theme tokens | Article placement and editorial targeting                           |
+| Labels, grouped choices and focus treatment | Copy, options, cadence and consent requirements                     |
+| Validation and feedback presentation        | Server validation, submission, abuse prevention and provider errors |
+| Demonstrations of confirmation states       | Whether signup completes immediately or requires email confirmation |
+
+Use native form markup styled by Mangrove when integrating with Drupal. Let the
+site supply its real action, field names, hidden fields and submission behaviour.
+For provider-hosted forms, link to the signup page or use an appropriately styled
+integration. Do not copy the simulated submission handler into production.
+
+The compact example uses a native input inside FormAction. The preferences example
+uses TextInput, FormGroup and Checkbox. Buttons are native submit buttons with the
+existing Mangrove button classes. The promotional surface uses utility colours and
+shared spacing/radius tokens; it introduces no production CSS or component API.
+
+A production implementation should verify success and failure with its real
+service, expose any required privacy information, and test keyboard use, screen
+reader announcements, RTL, mobile layout and axe checks on the integrated page.
+
+## Changelog
+
+- **1.0.2**, 2026-09-20 ([#1273](https://github.com/unisdr/undrr-mangrove/issues/1273)): Lightened the promotion surface from blue-100 to blue-50. This keeps form help text at 4.86:1 contrast against the surface, meeting WCAG AA without changing the shared help-text colour used by forms on white.
+
+- **1.0.1**, 2026-09-19 ([#1244](https://github.com/unisdr/undrr-mangrove/issues/1244)): Fixed the "Compact signup" story's confirmation-focus assertion, which could never have passed in a real browser. The confirmation heading appears in one commit and is focused by a passive effect in the next, so the DOM query resolved on the first of those and the focus check ran a frame early; it only ever passed under jsdom, where `act()` flushes both together. It now waits for focus. Stories only; the pattern is unchanged. The assertion matters because it is what holds the component to moving focus to the confirmation (a screen reader user otherwise gets no announcement that the sign-up succeeded), and it now runs in CI on every push.
+
+- **1.0**, 2026-09-09: Added article placement, preferences, simulated failure and confirmation, and an interactive validation check. Consolidated visual CTA examples into the CTA component docs. ([web-backlog #2412](https://gitlab.com/undrr/web-backlog/-/work_items/2412))

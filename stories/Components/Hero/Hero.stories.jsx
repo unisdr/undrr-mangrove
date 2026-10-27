@@ -1,22 +1,29 @@
 import React from 'react';
 import { Hero } from './Hero';
+import logo from '../../assets/images/undrr-logo-white.svg';
+
+const resilientInfrastructureWide =
+  'https://www.undrr.org/sites/default/files/styles/ultrawide_16_6/public/2023-11/resilient-infrastructure-pikoso-kz-shutterstock.jpg?h=82ac03c6&itok=26BkbHiW';
+const resilientInfrastructure =
+  'https://www.undrr.org/sites/default/files/2023-11/resilient-infrastructure-pikoso-kz-shutterstock.jpg';
+const disasterRiskWide =
+  'https://www.undrr.org/sites/default/files/styles/ultrawide_16_6/public/2023-03/Shutterstock_656134321-min.jpg?h=90c64985&itok=ukR7hDqu';
 
 const getCaptionForLocale = locale => {
   const contentByLocale = {
     english: {
       contentdata: [
         {
-          title: 'Text in xxl large size<br>&nbsp;Extra large',
+          title: 'Principles for resilient infrastructure',
           summaryText:
-            'Some introductory and summary text that can often occupy multiple lines.<br>&nbsp;This text is after a line break.',
-          detail: 'Detail label: Detail',
-          label: 'Label in medium size',
-          primary_button: 'Primary action',
-          secondary_button: 'Secondary action',
+            'Practical guidance to improve the continuity of critical services and make risk-informed investment decisions.',
+          detail: '72-page publication',
+          label: 'Guidance for resilient systems',
+          primary_button: 'Read the principles',
+          secondary_button: 'Explore infrastructure resilience',
           link: '/#',
-          imgalt: 'A person looks on',
-          imgback:
-            'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+          imgalt: 'Aerial view of a canal through Almaty, Kazakhstan',
+          imgback: resilientInfrastructureWide,
         },
       ],
     },
@@ -30,9 +37,8 @@ const getCaptionForLocale = locale => {
           primary_button: 'إجراء أساسي',
           secondary_button: 'إجراء ثانوي',
           link: null,
-          imgalt: 'شخص ينظر',
-          imgback:
-            'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+          imgalt: 'منظر جوي لقناة عبر ألماتي في كازاخستان',
+          imgback: resilientInfrastructureWide,
         },
       ],
     },
@@ -46,26 +52,24 @@ const getCaptionForLocale = locale => {
           primary_button: 'Primary action',
           secondary_button: 'Secondary action',
           link: '/#',
-          imgalt: 'A person looks on',
-          imgback:
-            'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+          imgalt: 'Aerial view of a canal through Almaty, Kazakhstan',
+          imgback: resilientInfrastructureWide,
         },
       ],
     },
     default: {
       contentdata: [
         {
-          title: 'Text in xxl large size',
+          title: 'Principles for resilient infrastructure',
           summaryText:
-            'Some introductory and summary text that can often occupy multiple lines.',
-          detail: 'Detail label: Detail',
-          label: 'Label in medium size',
-          primary_button: 'Primary action',
-          secondary_button: 'Secondary action',
+            'Practical guidance to improve the continuity of critical services and make risk-informed investment decisions.',
+          detail: '72-page publication',
+          label: 'Guidance for resilient systems',
+          primary_button: 'Read the principles',
+          secondary_button: 'Explore infrastructure resilience',
           link: '/#',
-          imgalt: 'A person looks on',
-          imgback:
-            'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+          imgalt: 'Aerial view of a canal through Almaty, Kazakhstan',
+          imgback: resilientInfrastructureWide,
         },
       ],
     },
@@ -80,7 +84,7 @@ export default {
   tags: ['autodocs'],
   argTypes: {
     variant: {
-      options: ['primary', 'secondary', 'tertiary', 'quaternary'],
+      options: ['primary', 'secondary', 'tertiary', 'quaternary', 'neutral'],
       control: { type: 'inline-radio' },
       description: 'Variant of the Hero component',
       defaultValue: 'primary',
@@ -123,16 +127,16 @@ export const NoLink = {
   args: {
     data: [
       {
-        title: 'Title without a link<br>&nbsp;and a line break',
+        title: 'Shifting to resilient infrastructure',
         summaryText:
-          'This summary supports HTML.<br>&nbsp;Here is some extra text with a line break.',
-        label: 'Label in medium size',
-        detail: 'Detail label: Detail',
-        primary_button: 'Primary action',
-        secondary_button: 'Secondary action',
+          'Prevent new risks and strengthen existing infrastructure challenged by climate change, obsolescence and multisector interdependence.',
+        label: 'Regional Assessment Report 2023',
+        detail: 'Europe and Central Asia',
+        primary_button: 'Explore the report',
+        secondary_button: 'Read the analysis',
         link: null,
-        imgback:
-          'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+        imgalt: 'Aerial view of a canal through Almaty, Kazakhstan',
+        imgback: resilientInfrastructureWide,
       },
     ],
     variant: 'secondary',
@@ -147,15 +151,16 @@ export const WithHtmlInTitle = {
   args: {
     data: [
       {
-        title: 'Custom title<br>with&nbsp;line breaks and spaces',
-        summaryText: 'This is custom summary text.<br>&nbsp;Another line.',
-        label: 'Custom Label',
-        detail: 'Custom Detail',
-        primary_button: 'Custom primary',
-        secondary_button: 'Custom secondary',
+        title: 'Infrastructure resilience<br>can no longer be optional',
+        summaryText:
+          'Critical infrastructure keeps societies functioning. Higher resilience standards can protect lives, development gains and essential services.',
+        label: 'Expert perspective',
+        detail: 'Kamal Kishore, UN Special Representative',
+        primary_button: 'Read the perspective',
+        secondary_button: 'View the principles',
         link: '/#',
-        imgback:
-          'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+        imgalt: 'People walking through terraced rice fields',
+        imgback: disasterRiskWide,
       },
     ],
     variant: 'tertiary',
@@ -163,6 +168,84 @@ export const WithHtmlInTitle = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
     return <Hero data={caption.contentdata} {...args} />;
+  },
+};
+
+export const ImmersiveContained = {
+  name: 'Immersive (contained)',
+  args: {
+    data: [
+      {
+        logo: { src: logo, alt: 'UNDRR' },
+        label: 'Component library and design system',
+        title: 'Build resilient digital experiences together.',
+        summaryText:
+          'Accessible, reusable content patterns help teams move faster while preserving each product’s identity.',
+        imgback: resilientInfrastructureWide,
+        buttons: [
+          { label: 'Get started', url: '#' },
+          { label: 'Browse components', url: '#', type: 'Secondary' },
+        ],
+      },
+    ],
+    contained: true,
+    size: 'immersive',
+  },
+};
+
+// Below the tablet breakpoint the background layout is a different
+// composition: the photograph is a banner across the top and the copy sits on
+// the brand surface underneath it, because copy over the frame could not be
+// made to clear 4.5:1 in any theme (unisdr/undrr-mangrove#1264). That only
+// happens at a mobile viewport, so a desktop canvas cannot show it and the
+// story pins one. The label is the block the old veil failed hardest on, so
+// this story leads with a long one.
+// See docs/COLOUR-CONTRAST-METHODOLOGY.md#the-hero-scrim
+export const MobileBanner = {
+  name: 'Mobile banner and panel',
+  globals: { viewport: { value: '390px-844px', isRotated: false } },
+  args: {
+    data: [
+      {
+        title: 'Early warnings for all by the end of 2027',
+        summaryText:
+          'Every person on Earth should be protected by a multi-hazard early warning system. Four pillars carry the target: knowing the risk, detecting it, communicating it, and being ready to act.',
+        detail: 'Global initiative',
+        label: 'Early warnings for all',
+        primary_button: 'Read the initiative',
+        secondary_button: 'See country progress',
+        link: '/#',
+        imgalt: 'Aerial view of a canal through Almaty, Kazakhstan',
+        imgback: resilientInfrastructureWide,
+      },
+    ],
+    variant: 'primary',
+  },
+};
+
+// A background hero with no photograph. The banner inherits the element's
+// background image, and there is nothing to inherit -- so without the
+// `mg-hero--no-image` class the component now adds, the mobile composition
+// would reserve a third of a phone screen for a photograph that never
+// arrives. The banner collapses to nothing instead and the copy keeps the
+// solid panel. Pinned to a phone viewport for the same reason as the story
+// above.
+export const NoBackgroundImage = {
+  name: 'No background image (mobile)',
+  globals: { viewport: { value: '390px-844px', isRotated: false } },
+  args: {
+    data: [
+      {
+        title: 'Early warnings for all by the end of 2027',
+        summaryText:
+          'Every person on Earth should be protected by a multi-hazard early warning system.',
+        detail: 'Global initiative',
+        label: 'Early warnings for all',
+        primary_button: 'Read the initiative',
+        link: '/#',
+      },
+    ],
+    variant: 'primary',
   },
 };
 
@@ -176,8 +259,8 @@ const splitMediaData = [
     secondary_button: 'Learn more',
     media: {
       type: 'image',
-      src: 'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
-      alt: 'Aerial view of a road through a green forest',
+      src: resilientInfrastructure,
+      alt: 'Aerial view of a canal through Almaty, Kazakhstan',
     },
   },
 ];
@@ -227,8 +310,8 @@ export const SplitWithVideo = {
         primary_button: 'More stories',
         media: {
           type: 'video',
-          src: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-          title: 'Early warning for all — UNDRR',
+          src: 'https://www.youtube.com/embed/lJWNmqYmKEQ',
+          title: 'This is how timely early warnings save lives, UNDRR',
         },
       },
     ],
@@ -255,7 +338,7 @@ export const SplitWithHtml = {
 <div style="padding: 1.5rem; box-sizing: border-box; height: 100%; display: flex; flex-direction: column; gap: 0.75rem;">
   <span style="align-self: flex-start; background: rgba(255, 255, 255, 0.18); color: #fff; font-size: 0.75rem; letter-spacing: 0.05em; text-transform: uppercase; padding: 0.25rem 0.75rem; border-radius: 999px;">Custom composition</span>
   <figure style="margin: 0; flex: 1; position: relative; overflow: hidden; border-radius: 4px;">
-    <img src="https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg" alt="Aerial view of a road through a green forest" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+    <img src="${disasterRiskWide}" alt="People walking through terraced rice fields" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
     <figcaption style="position: absolute; inset-inline: 0; inset-block-end: 0; background: rgba(0, 0, 0, 0.7); color: #fff; padding: 0.5rem 0.75rem; display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; font-size: 0.875rem;">
       <strong>From the cover essay</strong>
       <span>Photo: UNDRR</span>
@@ -269,5 +352,80 @@ export const SplitWithHtml = {
     variant: 'quaternary',
     headingLevel: 'h2',
     split: '1/2',
+  },
+};
+
+// Neutral: a page header on the page's own surface. The eyebrow and the facts
+// line are nodes, so each can hold a link; tags sit below the summary.
+const neutralData = [
+  {
+    label: (
+      <>
+        <a href="https://www.preventionweb.net/collections">Collection</a>
+        <span aria-hidden="true"> · </span>
+        Topic guide
+      </>
+    ),
+    title: 'Wildfire risk assessment',
+    summaryText:
+      'Discover research, assessments and technical resources on future wildfire trends, the science behind wildfire-related compound events, and attribution studies on the influence of climate change.',
+    detail: (
+      <>
+        <a href="#collection-items">36 items</a>
+        <span aria-hidden="true"> · </span>
+        Last updated <time dateTime="2026-07-10">10 July 2026</time>
+      </>
+    ),
+    tags: [
+      {
+        label: 'Wildfire and Bushfire',
+        href: 'https://www.preventionweb.net/taxonomy/term/357',
+      },
+      {
+        label: 'Climate change',
+        href: 'https://www.preventionweb.net/taxonomy/term/311',
+      },
+      {
+        label: 'Risk identification and assessment',
+        href: 'https://www.preventionweb.net/taxonomy/term/333',
+      },
+    ],
+    media: {
+      type: 'image',
+      src: resilientInfrastructure,
+      alt: 'Aerial view of a canal through Almaty, Kazakhstan',
+    },
+  },
+];
+
+export const SplitNeutral = {
+  name: 'Split (neutral surface)',
+  args: {
+    layout: 'split',
+    variant: 'neutral',
+    headingLevel: 'h1',
+    split: '2/3',
+  },
+  render: args => <Hero data={neutralData} {...args} />,
+};
+
+// Tags take the hero's ink, so they stay visible on a coloured surface.
+export const SplitWithTags = {
+  name: 'Split (tags on a coloured surface)',
+  args: {
+    data: [
+      {
+        ...splitMediaData[0],
+        tags: [
+          { label: 'Climate change', href: '#climate-change' },
+          { label: 'Governance', href: '#governance' },
+          { label: 'Financing DRR', href: '#financing' },
+        ],
+      },
+    ],
+    layout: 'split',
+    variant: 'primary',
+    headingLevel: 'h2',
+    split: '2/3',
   },
 };

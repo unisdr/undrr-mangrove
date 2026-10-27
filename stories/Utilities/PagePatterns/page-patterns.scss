@@ -1,0 +1,50 @@
+/**
+ * Page Patterns
+ *
+ * Composite page layout pattern utilities for standard UNDRR editorial templates.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Utilities/PagePatterns/PagePatterns.mdx
+ */
+// Reading-page layout tokens and placement rules.
+
+:root {
+  // Shared width for the article+rail reading layout.
+  --mg-reading-with-contents-width: calc(46rem + var(--mg-spacing-300) + 16rem);
+}
+
+.mg-reading {
+  display: grid;
+  gap: var(--mg-spacing-250);
+}
+
+.mg-reading__article {
+  min-inline-size: 0;
+  max-inline-size: 46rem;
+}
+
+.mg-reading__article section {
+  margin-block-end: var(--mg-spacing-300);
+  scroll-margin-block-start: var(--mg-spacing-200);
+}
+
+// Sidebar-on-wide, stacked-on-narrow placement for table of contents.
+@media (width >= 48rem) {
+  // Prevent unused horizontal space between the text measure and side rail.
+  .mg-reading--with-contents {
+    max-inline-size: var(--mg-reading-with-contents-width);
+  }
+
+  // TableOfContents renders its own wrapper div around the section.
+  .mg-reading--with-contents > div:has(.mg-table-of-contents) {
+    grid-column: 2;
+    grid-row: 1;
+    position: sticky;
+    inset-block-start: var(--mg-spacing-200);
+  }
+
+  .mg-reading--with-contents .mg-reading__article {
+    grid-column: 1;
+    grid-row: 1;
+  }
+}

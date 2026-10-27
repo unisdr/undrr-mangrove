@@ -40,9 +40,7 @@ describe('megaMenuFromElement', () => {
   });
 
   it('returns empty sections array for invalid JSON', () => {
-    const props = megaMenuFromElement(
-      makeContainer({ sections: '{broken' })
-    );
+    const props = megaMenuFromElement(makeContainer({ sections: '{broken' }));
     expect(props.sections).toEqual([]);
   });
 
@@ -54,14 +52,14 @@ describe('megaMenuFromElement', () => {
   it('extracts logo props from data attributes', () => {
     const props = megaMenuFromElement(
       makeContainer({
-        'logo-src': 'https://assets.undrr.org/static/logos/pw/pw-logo.svg',
+        'logo-src': 'https://assets.undrr.org/logos/pw/pw-logo.svg',
         'logo-alt': 'PreventionWeb',
         'logo-href': '/ar/',
         'logo-width': '160',
         'logo-height': '40',
       })
     );
-    expect(props.logoSrc).toBe('https://assets.undrr.org/static/logos/pw/pw-logo.svg');
+    expect(props.logoSrc).toBe('https://assets.undrr.org/logos/pw/pw-logo.svg');
     expect(props.logoAlt).toBe('PreventionWeb');
     expect(props.logoHref).toBe('/ar/');
     expect(props.logoWidth).toBe(160);

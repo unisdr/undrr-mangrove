@@ -54,11 +54,11 @@ describe('PageHeader', () => {
     const { container } = render(<PageHeader variant="decoration-only" />);
 
     expect(
-      container.querySelector('.mg-page-header__decoration'),
+      container.querySelector('.mg-page-header__decoration')
     ).toBeInTheDocument();
     // No toolbar, no logo, no account, no language
     expect(
-      container.querySelector('.mg-page-header__toolbar-wrapper'),
+      container.querySelector('.mg-page-header__toolbar-wrapper')
     ).toBeNull();
     expect(screen.queryByAltText('UNDRR Logo')).toBeNull();
     expect(screen.queryByText('My account')).toBeNull();
@@ -74,12 +74,93 @@ describe('PageHeader', () => {
         logoUrl="/custom-logo.svg"
         logoAlt="Custom logo"
         homeUrl="/home"
-      />,
+      />
     );
 
     const img = screen.getByAltText('Custom logo');
     expect(img).toHaveAttribute('src', '/custom-logo.svg');
     expect(img.closest('a')).toHaveAttribute('href', '/home');
+  });
+
+  // --------------------------------------------------
+  // Locale-driven logo (translated logos)
+  // --------------------------------------------------
+
+  it('keeps the default English logo when no locale is given', () => {
+    render(<PageHeader />);
+
+    const img = screen.getByAltText('UNDRR Logo');
+    expect(img).toHaveAttribute(
+      'src',
+      'https://assets.undrr.org/logos/undrr/undrr-logo-horizontal.svg'
+    );
+    expect(img).not.toHaveAttribute('lang');
+    expect(img).toHaveClass('mg-logo--autocrop');
+  });
+
+  it('resolves the Spanish translated logo, without autocrop', () => {
+    render(<PageHeader locale="spanish" />);
+
+    const img = screen.getByAltText('UNDRR Logo');
+    expect(img).toHaveAttribute(
+      'src',
+      'https://assets.undrr.org/logos/undrr/undrr-logo-es-white.svg'
+    );
+    expect(img).toHaveAttribute('lang', 'es');
+    // Scaled to the header's fixed display height (47, matching the English
+    // default) using the asset's real aspect ratio (971x387) — NOT its raw
+    // pixel dimensions, which would render far larger than the header slot.
+    expect(img).toHaveAttribute('height', '47');
+    expect(img).toHaveAttribute('width', '118');
+    expect(img).not.toHaveClass('mg-logo--autocrop');
+  });
+
+  it('resolves the Arabic translated logo', () => {
+    render(<PageHeader locale="arabic" />);
+
+    const img = screen.getByAltText('UNDRR Logo');
+    expect(img).toHaveAttribute(
+      'src',
+      'https://assets.undrr.org/logos/undrr/undrr-logo-ar-white.svg'
+    );
+    expect(img).toHaveAttribute('lang', 'ar');
+    expect(img).not.toHaveClass('mg-logo--autocrop');
+  });
+
+  it('falls back to the default English logo for a locale with no white asset at all', () => {
+    render(<PageHeader locale="japanese" />);
+
+    const img = screen.getByAltText('UNDRR Logo');
+    expect(img).toHaveAttribute(
+      'src',
+      'https://assets.undrr.org/logos/undrr/undrr-logo-horizontal.svg'
+    );
+    expect(img).not.toHaveAttribute('lang');
+  });
+
+  it('an explicit logoUrl always wins over locale', () => {
+    render(<PageHeader locale="spanish" logoUrl="/custom-logo.svg" />);
+
+    const img = screen.getByAltText('UNDRR Logo');
+    expect(img).toHaveAttribute('src', '/custom-logo.svg');
+    expect(img).not.toHaveAttribute('lang');
+  });
+
+  it('lets logoCrop, logoLang, logoWidth, and logoHeight override the locale-resolved values', () => {
+    render(
+      <PageHeader
+        locale="spanish"
+        logoCrop={null}
+        logoLang="es-MX"
+        logoWidth="500"
+        logoHeight="200"
+      />
+    );
+
+    const img = screen.getByAltText('UNDRR Logo');
+    expect(img).toHaveAttribute('lang', 'es-MX');
+    expect(img).toHaveAttribute('width', '500');
+    expect(img).toHaveAttribute('height', '200');
   });
 
   // --------------------------------------------------
@@ -106,6 +187,141 @@ describe('PageHeader', () => {
   });
 
   // --------------------------------------------------
+  // languageDisplay="links"
+  // --------------------------------------------------
+
+  describe('languageDisplay="links"', () => {
+    const languages = [
+      { value: 'en', label: 'English', selected: true },
+      { value: 'ar', label: 'العربية' },
+      { value: 'es', label: 'Español' },
+    ];
+
+    it('renders a button per language instead of the native select', () => {
+      render(<PageHeader languageDisplay="links" languages={languages} />);
+
+      expect(
+        screen.getByRole('button', { name: 'English' })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: 'العربية' })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: 'Español' })
+      ).toBeInTheDocument();
+      // The select stays in the DOM: the buttons submit through it, and it
+      // is the dropdown shown in their place below tablet (CSS-toggled).
+      const select = screen.getByDisplayValue('English');
+      expect(select.tagName).toBe('SELECT');
+      expect(
+        select.closest('.mg-page-header__block--language-fallback')
+      ).not.toBeNull();
+    });
+
+    it('falls back to the dropdown past maxLanguageLinks', () => {
+      const { container } = render(
+        <PageHeader
+          languageDisplay="links"
+          maxLanguageLinks={2}
+          languages={languages}
+        />
+      );
+
+      expect(screen.queryByRole('button', { name: 'English' })).toBeNull();
+      expect(
+        container.querySelector('.mg-page-header__block--language-fallback')
+      ).toBeNull();
+      expect(screen.getByLabelText('Select your language')).toBeInTheDocument();
+    });
+
+    it('marks the selected language with aria-current', () => {
+      render(<PageHeader languageDisplay="links" languages={languages} />);
+
+      expect(screen.getByRole('button', { name: 'English' })).toHaveAttribute(
+        'aria-current',
+        'true'
+      );
+      expect(
+        screen.getByRole('button', { name: 'العربية' })
+      ).not.toHaveAttribute('aria-current');
+    });
+
+    it('defaults to the first language when none is marked selected', () => {
+      render(
+        <PageHeader
+          languageDisplay="links"
+          languages={[
+            { value: 'fr', label: 'Français' },
+            { value: 'de', label: 'Deutsch' },
+          ]}
+        />
+      );
+
+      expect(screen.getByRole('button', { name: 'Français' })).toHaveAttribute(
+        'aria-current',
+        'true'
+      );
+      expect(
+        screen.getByRole('button', { name: 'Deutsch' })
+      ).not.toHaveAttribute('aria-current');
+    });
+
+    it('drives the underlying select and submits the form on click', () => {
+      render(<PageHeader languageDisplay="links" languages={languages} />);
+
+      const form = document.querySelector('.mg-page-header__lang-form');
+      const requestSubmit = jest.fn();
+      form.requestSubmit = requestSubmit;
+
+      screen.getByRole('button', { name: 'Español' }).click();
+
+      const select = document.querySelector('.mg-page-header__select');
+      expect(select.value).toBe('es');
+      expect(requestSubmit).toHaveBeenCalledTimes(1);
+    });
+
+    it('has no a11y violations', async () => {
+      const { container } = render(
+        <PageHeader languageDisplay="links" languages={languages} />
+      );
+      expect(await axe(container)).toHaveNoViolations();
+    });
+  });
+
+  // --------------------------------------------------
+  // Skip link
+  // --------------------------------------------------
+
+  it('emits no skip link unless a target is given', () => {
+    const { container } = render(<PageHeader />);
+
+    expect(container.querySelector('.mg-skip-link')).toBeNull();
+    expect(container.firstChild).toHaveClass('mg-page-header');
+  });
+
+  it('emits a skip link before the header when a target is given', () => {
+    const { container } = render(<PageHeader skipLinkTarget="main-content" />);
+
+    const link = screen.getByRole('link', { name: 'Skip to main content' });
+
+    expect(link).toHaveAttribute('href', '#main-content');
+    expect(container.firstChild).toBe(link);
+  });
+
+  it('takes a translated skip link label', () => {
+    render(
+      <PageHeader
+        skipLinkTarget="main-content"
+        skipLinkLabel="Aller au contenu principal"
+      />
+    );
+
+    expect(
+      screen.getByRole('link', { name: 'Aller au contenu principal' })
+    ).toBeInTheDocument();
+  });
+
+  // --------------------------------------------------
   // Accessibility
   // --------------------------------------------------
 
@@ -117,5 +333,36 @@ describe('PageHeader', () => {
   it('has no a11y violations in decoration-only variant', async () => {
     const { container } = render(<PageHeader variant="decoration-only" />);
     expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it('keeps the shipped Drupal ids when no idPrefix is given', () => {
+    const { container } = render(<PageHeader />);
+    expect(container.querySelector('#header')).not.toBeNull();
+    expect(container.querySelector('#block-undrrlogo')).not.toBeNull();
+    expect(screen.getByLabelText('Select your language')).toHaveAttribute(
+      'id',
+      'edit-lang-dropdown-select'
+    );
+  });
+
+  // Two stacked headers still leave two banner landmarks, which is inherent to
+  // the demo composition rather than to the ids; axe is not asserted here.
+  it('namespaces its ids so two headers on a page stay valid and labelled', () => {
+    const { container } = render(
+      <div>
+        <PageHeader idPrefix="one" />
+        <PageHeader idPrefix="two" />
+      </div>
+    );
+
+    const ids = Array.from(container.querySelectorAll('[id]')).map(
+      node => node.id
+    );
+    expect(new Set(ids).size).toBe(ids.length);
+
+    const selects = screen.getAllByLabelText('Select your language');
+    expect(selects).toHaveLength(2);
+    expect(selects[0]).toHaveAttribute('id', 'one-edit-lang-dropdown-select');
+    expect(selects[1]).toHaveAttribute('id', 'two-edit-lang-dropdown-select');
   });
 });

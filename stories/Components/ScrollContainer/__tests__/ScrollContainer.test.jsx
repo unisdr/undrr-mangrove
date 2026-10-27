@@ -78,6 +78,79 @@ describe('ScrollContainer Component', () => {
     expect(screen.getByTestId('scroll-item-0')).toBeInTheDocument();
   });
 
+  it('makes the overflow region keyboard-focusable and names its navigation', () => {
+    renderScrollContainer({ ariaLabel: 'Featured publications' });
+
+    expect(document.querySelector('.mg-scroll__container')).toHaveAttribute(
+      'tabindex',
+      '0'
+    );
+    expect(
+      screen.getByRole('navigation', {
+        name: 'Featured publications navigation',
+      })
+    ).toBeInTheDocument();
+  });
+
+  it('adds the shared-height modifier when stretchItems is enabled', () => {
+    const { container } = renderScrollContainer({ stretchItems: true });
+
+    expect(container.querySelector('.mg-scroll__content')).toHaveClass(
+      'mg-scroll__content--stretch'
+    );
+  });
+
+  it('translates navigation names and updates them when the language changes', () => {
+    const { rerender, container } = renderScrollContainer({ lang: 'fr-CA' });
+
+    expect(screen.getByRole('navigation')).toHaveAccessibleName(
+      'Navigation : Contenu défilant'
+    );
+    expect(container.querySelector('.mg-scroll')).toHaveAttribute(
+      'lang',
+      'fr-CA'
+    );
+    expect(
+      screen.getByRole('button', { name: 'Faire défiler à gauche' })
+    ).toBeInTheDocument();
+
+    rerender(
+      <ScrollContainer lang="ar" showArrows ariaLabel="المنشورات">
+        <p>Example</p>
+      </ScrollContainer>
+    );
+    expect(screen.getByRole('navigation')).toHaveAccessibleName(
+      'التنقل في المنشورات'
+    );
+    expect(container.querySelector('.mg-scroll')).toHaveAttribute('dir', 'rtl');
+  });
+
+  it('preserves dedicated content labels and custom navigation templates', () => {
+    renderScrollContainer({
+      lang: 'fr',
+      ariaLabel: 'Reports $& {label}',
+      labels: {
+        ariaLabel: 'Ignored default',
+        navigationLabel: 'Browse {label}',
+      },
+    });
+
+    expect(screen.getByRole('navigation')).toHaveAccessibleName(
+      'Browse Reports $& {label}'
+    );
+  });
+
+  it('uses translated label overrides when no dedicated ariaLabel is supplied', () => {
+    renderScrollContainer({
+      lang: 'fr',
+      labels: { ariaLabel: 'Publications' },
+    });
+
+    expect(screen.getByRole('navigation')).toHaveAccessibleName(
+      'Navigation : Publications'
+    );
+  });
+
   it('shows right arrow when content overflows', () => {
     renderScrollContainer();
 
@@ -180,6 +253,26 @@ describe('ScrollContainer Component', () => {
       left: expect.any(Number),
       behavior: 'smooth',
     });
+  });
+
+  it('disables smooth scrolling when reduced motion is requested', () => {
+    const originalMatchMedia = window.matchMedia;
+    window.matchMedia = jest.fn().mockReturnValue({ matches: true });
+    renderScrollContainer();
+
+    const container = screen
+      .getByRole('button', { name: 'Scroll left' })
+      .closest('.mg-scroll')
+      .querySelector('.mg-scroll__container');
+    container.scrollTo = jest.fn();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Scroll right' }));
+
+    expect(container.scrollTo).toHaveBeenCalledWith({
+      left: expect.any(Number),
+      behavior: 'auto',
+    });
+    window.matchMedia = originalMatchMedia;
   });
 
   it('does not show arrows when showArrows is false', () => {

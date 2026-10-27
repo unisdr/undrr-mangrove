@@ -5,7 +5,9 @@
  * probes in ColorSwatch — no hardcoded hex values to maintain.
  */
 
-const CDN = 'https://assets.undrr.org/static/logos';
+import deltaLogo from '../../../assets/images/delta-logo-placeholder.svg';
+
+const CDN = 'https://assets.undrr.org/logos';
 
 /**
  * CSS class → property mappings for probing theme colors from the DOM.
@@ -135,7 +137,7 @@ export const themes = {
     url: 'deltaresilience.org',
     tagline: 'Data-driven resilience assessment',
     logo: {
-      src: require('../../../assets/images/delta-logo-placeholder.svg'),
+      src: deltaLogo,
       alt: 'DELTA Resilience logo (placeholder)',
       variants: [],
     },

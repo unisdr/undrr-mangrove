@@ -1,3 +1,4 @@
+import { expect } from 'storybook/test';
 import { StatsCard } from './StatsCard';
 
 const getCaptionForLocale = locale => {
@@ -275,6 +276,26 @@ export const WithIcons = {
 
 // Compact variant
 export const Compact = {
+  play: async ({ canvasElement }) => {
+    await canvasElement.ownerDocument.fonts.ready;
+    const card = canvasElement.querySelector('.mg-stats-card-item');
+    const view = canvasElement.ownerDocument.defaultView;
+    const style = view.getComputedStyle(card);
+    const mobile = view.matchMedia('(max-width: 47.9375em)').matches;
+    const rootSize = parseFloat(
+      view.getComputedStyle(canvasElement.ownerDocument.documentElement)
+        .fontSize
+    );
+    expect(parseFloat(style.paddingTop)).toBe(
+      (mobile ? 0.625 : 0.9375) * rootSize
+    );
+    expect(parseFloat(style.rowGap)).toBe(0.3125 * rootSize);
+    for (const child of card.children) {
+      const childStyle = view.getComputedStyle(child);
+      expect(childStyle.marginTop).toBe('0px');
+      expect(childStyle.marginBottom).toBe('0px');
+    }
+  },
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
     return (
@@ -342,5 +363,44 @@ export const Linked = {
         {...args}
       />
     );
+  },
+};
+
+// Illustrative figures; deliberately uneven content exercises sibling heights.
+export const MixedContent = {
+  play: async ({ canvasElement }) => {
+    await canvasElement.ownerDocument.fonts.ready;
+    const cards = [...canvasElement.querySelectorAll('.mg-card')];
+    expect(cards).toHaveLength(3);
+    const rows = new Map();
+    cards.forEach(card => {
+      const { top, bottom } = card.getBoundingClientRect();
+      const key = Math.round(top);
+      rows.set(key, [...(rows.get(key) || []), bottom]);
+    });
+    rows.forEach(bottoms => {
+      expect(Math.max(...bottoms) - Math.min(...bottoms)).toBeLessThan(1);
+    });
+  },
+  args: {
+    title: 'Programme snapshot (illustrative figures)',
+    stats: [
+      { value: '12', bottomLabel: 'Projects' },
+      {
+        label: 'Regional collaboration',
+        value: '48',
+        bottomLabel: 'Partner organizations sharing risk information',
+        summaryText:
+          'Partners share evidence across borders to support local planning, strengthen early warning systems, and reach communities with accessible information before a disaster occurs.',
+      },
+      {
+        icon: 'mg-icon mg-icon-globe',
+        value: '7',
+        bottomLabel: 'Countries',
+        summaryText:
+          'Explore the <a href="#programme-details">programme details</a>.',
+        link: '#country-details',
+      },
+    ],
   },
 };

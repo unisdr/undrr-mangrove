@@ -1,8 +1,14 @@
+import { withLanguage } from '../../../.storybook/withLanguage';
+import { useEffect, useRef } from 'react';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
+import createHydrator from '../../../src/hydrate';
+import fromElement from './MegaMenu.fromElement';
 import MegaMenu from './MegaMenu';
 
 export default {
-  title: 'Components/MegaMenu',
+  title: 'Components/Navigation/MegaMenu',
   component: MegaMenu,
+  decorators: [withLanguage],
   parameters: {
     layout: 'fullscreen',
   },
@@ -443,9 +449,7 @@ const sections = [
 ];
 
 export const Default = {
-  render: (args, { globals: { locale } }) => {
-    return <MegaMenu {...args} />;
-  },
+  render: args => <MegaMenu {...args} />,
 
   args: {
     delay: 5000,
@@ -482,11 +486,11 @@ export const RTL = {
 
 const brandLogos = {
   PreventionWeb: {
-    logoSrc: 'https://assets.undrr.org/static/logos/pw/pw-logo.svg',
+    logoSrc: 'https://assets.undrr.org/logos/pw/pw-logo.svg',
     logoAlt: 'PreventionWeb',
   },
   IRP: {
-    logoSrc: 'https://assets.undrr.org/static/logos/irp/irp-logo.svg',
+    logoSrc: 'https://assets.undrr.org/logos/irp/irp-logo.svg',
     logoAlt: 'International Recovery Platform',
   },
   MCR2030: {
@@ -495,8 +499,7 @@ const brandLogos = {
     logoAlt: 'Making Cities Resilient 2030',
   },
   'Global Platform 2025': {
-    logoSrc:
-      'https://assets.undrr.org/static/logos/gp/2025/GP_2025_logo_web.svg',
+    logoSrc: 'https://assets.undrr.org/logos/gp/2025/GP_2025_logo_web.svg',
     logoAlt: 'Global Platform for Disaster Risk Reduction 2025',
   },
 };
@@ -554,7 +557,7 @@ export const WithIcons = {
 };
 
 // Simple nav — no sidebar/hamburger, links clickable on all screen sizes.
-// Uses the mg-mega-wrapper--simple modifier class on the root element.
+// CSS detects the absent hamburger, removes its gutter and allows mobile overflow scrolling.
 const simpleNavLinks = [
   { title: 'Home', url: '/' },
   { title: 'About', url: '/about' },
@@ -566,18 +569,10 @@ const simpleNavLinks = [
 export const SimpleNav = {
   render: () => (
     <nav className="mg-mega-wrapper" aria-label="Main Navigation">
-      <ul
-        className="mg-mega-topbar | mg-container-full-width"
-        role="menubar"
-        aria-label="Main navigation menu"
-      >
+      <ul className="mg-mega-topbar | mg-container-full-width">
         {simpleNavLinks.map(link => (
-          <li key={link.url} className="mg-mega-topbar__item" role="none">
-            <a
-              href={link.url}
-              role="menuitem"
-              className="mg-mega-topbar__item-link"
-            >
+          <li key={link.url} className="mg-mega-topbar__item">
+            <a href={link.url} className="mg-mega-topbar__item-link">
               {link.title}
             </a>
           </li>
@@ -589,8 +584,188 @@ export const SimpleNav = {
     docs: {
       description: {
         story:
-          'A plain HTML nav bar using Mangrove classes without the React mega menu component or mobile sidebar. Because `mg-mega-wrapper--js-active` is absent, links remain clickable on all screen sizes — the same graceful fallback that applies when JS fails to hydrate.',
+          'A plain HTML nav bar using Mangrove classes without the React mega menu component or mobile sidebar. On mobile, links start at the rail edge and scroll horizontally when they overflow; no additional markup or JavaScript is needed. Because `mg-mega-wrapper--js-active` is absent, links remain clickable on all screen sizes — the same graceful fallback that applies when JS fails to hydrate.',
       },
     },
+  },
+};
+
+export const ProgressiveMobile = {
+  name: 'Progressive mobile navigation',
+  render: args => (
+    <>
+      <MegaMenu {...args} />
+      <main
+        style={{
+          minHeight: '100vh',
+          padding: 'var(--mg-spacing-300)',
+          background: 'rgb(var(--mg-color-interactive) / 0.08)',
+        }}
+      >
+        <h1>Knowledge for a resilient future</h1>
+        <p>
+          Explore resources, research and practical guidance for reducing
+          disaster risk.
+        </p>
+        <h2>Latest publications</h2>
+        <p>Discover evidence and insights from communities around the world.</p>
+        <a href="#resources">Explore resources</a>
+      </main>
+    </>
+  ),
+  globals: { viewport: { value: 'iphone12', isRotated: false } },
+  args: { sections },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'At widths below 900px, scroll the navigation strip and tap a label to open its section, or use the hamburger for all sections. Open a section, continue into a nested group, then use the labelled back control or Close. Existing section data is used unchanged.',
+      },
+    },
+  },
+};
+
+const motionSections = [
+  {
+    title: 'Resources',
+    bannerHeading: 'Resources',
+    bannerDescription: 'Browse publications and practical guidance.',
+    items: ['Publications', 'Guidance'].map(title => ({
+      title,
+      url: `#${title.toLowerCase()}`,
+      items: Array.from({ length: 30 }, (_, index) => ({
+        title: `${title} ${index + 1}`,
+        url: `#${title.toLowerCase()}-${index + 1}`,
+      })),
+    })),
+  },
+];
+
+export const MotionReview = {
+  name: 'Motion: open and category swap',
+  args: { sections: motionSections, hoverDelay: 0, delay: 300 },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Opens a 30-link category, swaps categories rapidly, then leaves the panel open for review. Every destination appears immediately. Repeat with RTL, each theme, reduced motion and forced colours enabled in browser settings.',
+      },
+    },
+  },
+  play: async ({ canvasElement }) => {
+    if (canvasElement.ownerDocument.defaultView.innerWidth < 900) return;
+    const canvas = within(canvasElement);
+    // Vanilla hydration mounts a separate React root after this story commits.
+    // Wait for the rendered control rather than racing its hydration effect.
+    const trigger = await canvas.findByRole('button', { name: 'Resources' });
+    await userEvent.hover(trigger);
+    const category = await canvas.findByRole('menuitem', { name: 'Guidance' });
+    for (const title of ['Guidance', 'Publications', 'Guidance']) {
+      // eslint-disable-next-line no-await-in-loop -- exercise successive, interrupting category changes
+      await userEvent.hover(canvas.getByRole('menuitem', { name: title }));
+      const list = canvasElement.querySelector(
+        '.mg-mega-content__menu--desktop'
+      );
+      const styles = Array.from(list.children, item => {
+        const style =
+          canvasElement.ownerDocument.defaultView.getComputedStyle(item);
+        return { animation: style.animationName, opacity: style.opacity };
+      });
+      // eslint-disable-next-line no-await-in-loop -- assert each category before changing to the next
+      await expect({
+        count: list.children.length,
+        last: list.lastElementChild.textContent,
+        styles,
+      }).toEqual({
+        count: 30,
+        last: `${title} 30`,
+        styles: Array.from({ length: 30 }, () => ({
+          animation: 'none',
+          opacity: '1',
+        })),
+      });
+    }
+    await expect(category).toHaveAttribute('aria-current', 'page');
+  },
+};
+
+export const MobileMotionReview = {
+  name: 'Motion: mobile close and reopen',
+  args: MotionReview.args,
+  globals: { viewport: { value: 'iphone12', isRotated: false } },
+  play: async ({ canvasElement }) => {
+    if (canvasElement.ownerDocument.defaultView.innerWidth >= 900) return;
+    const canvas = within(canvasElement);
+    const opener = canvas.getByRole('button', { name: 'Open navigation menu' });
+    await userEvent.click(opener);
+    let dialog = canvas.getByRole('dialog');
+    await userEvent.click(
+      within(dialog).getByRole('button', { name: 'Resources' })
+    );
+    await userEvent.click(
+      within(dialog).getByRole('button', { name: 'Close mobile navigation' })
+    );
+    await expect(dialog).toHaveAttribute('inert');
+    await expect(opener).toHaveFocus();
+    await userEvent.click(opener);
+    dialog = canvas.getByRole('dialog');
+    await expect(
+      within(dialog).getByRole('heading', { name: 'All sections' })
+    ).toHaveFocus();
+    await userEvent.click(
+      within(dialog).getByRole('button', { name: 'Resources' })
+    );
+    await userEvent.click(
+      within(dialog).getByRole('button', { name: 'Guidance' })
+    );
+    await expect(within(dialog).getAllByRole('link')).toHaveLength(31);
+    // The new page begins its entry animation at opacity zero. Wait for
+    // visible content rather than racing its first animation frame in CI.
+    await waitFor(() =>
+      expect(
+        within(dialog).getByRole('link', { name: 'Guidance 30' })
+      ).toBeVisible()
+    );
+  },
+};
+
+function HydratedMotionExample() {
+  const hostRef = useRef(null);
+  useEffect(() => {
+    const hydrator = createHydrator({
+      selector: '[data-mg-mega-menu]',
+      component: MegaMenu,
+      fromElement,
+    });
+    return () => hydrator.unmountAll();
+  }, []);
+  return (
+    <div
+      ref={hostRef}
+      data-mg-mega-menu
+      data-sections={JSON.stringify(motionSections)}
+      data-hover-delay="0"
+    >
+      <nav aria-label="Navigation fallback">
+        <a href="#publications">Publications</a>
+      </nav>
+    </div>
+  );
+}
+
+export const HydratedMotionReview = {
+  ...MotionReview,
+  name: 'Motion: vanilla hydration',
+  render: () => <HydratedMotionExample />,
+  play: async context => {
+    const canvas = within(context.canvasElement);
+    await canvas.findByRole('navigation', { name: 'Main Navigation' });
+    await expect(
+      context.canvasElement.querySelector('[data-mg-mega-menu]')
+    ).toHaveAttribute('data-mg-hydrated', 'true');
+    await expect(
+      canvas.queryByRole('navigation', { name: 'Navigation fallback' })
+    ).not.toBeInTheDocument();
+    await MotionReview.play(context);
   },
 };

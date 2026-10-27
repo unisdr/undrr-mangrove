@@ -1,10 +1,12 @@
+@use "../config" as *;
+
 // =============================================================================
 // SPACING UTILITIES
 // =============================================================================
 // Margin and padding utilities using Mangrove spacing tokens.
 // Naming convention: .mg-u-{property}-{direction}-{size}
-// Mangrove uses a 10px base font size, so 1rem = 10px.
-// Token suffixes map directly to rem values: -100 = 1rem = 10px
+// Mangrove uses a 16px document root; values come from runtime spacing tokens.
+// Token suffixes name scale steps, not rem values: -100 defaults to 10px.
 // =============================================================================
 
 // -----------------------------------------------------------------------------
@@ -12,20 +14,20 @@
 // Maps token suffix to spacing variable for loop generation
 // -----------------------------------------------------------------------------
 $mg-spacing-scale: (
-  "0": $mg-spacing-0,
-  "25": $mg-spacing-25,
-  "50": $mg-spacing-50,
-  "75": $mg-spacing-75,
-  "100": $mg-spacing-100,
-  "150": $mg-spacing-150,
-  "175": $mg-spacing-175,
-  "200": $mg-spacing-200,
-  "250": $mg-spacing-250,
-  "300": $mg-spacing-300,
-  "400": $mg-spacing-400,
-  "500": $mg-spacing-500,
-  "600": $mg-spacing-600,
-  "800": $mg-spacing-800,
+  "0": var(--mg-spacing-0),
+  "25": var(--mg-spacing-25),
+  "50": var(--mg-spacing-50),
+  "75": var(--mg-spacing-75),
+  "100": var(--mg-spacing-100),
+  "150": var(--mg-spacing-150),
+  "175": var(--mg-spacing-175),
+  "200": var(--mg-spacing-200),
+  "250": var(--mg-spacing-250),
+  "300": var(--mg-spacing-300),
+  "400": var(--mg-spacing-400),
+  "500": var(--mg-spacing-500),
+  "600": var(--mg-spacing-600),
+  "800": var(--mg-spacing-800),
 );
 
 // -----------------------------------------------------------------------------

@@ -10,7 +10,13 @@
  */
 
 import React, { useCallback, useMemo } from 'react';
-import { useSearchState, useSearchDispatch, actions } from '../context/SearchContext';
+import {
+  useSearchState,
+  useSearchDispatch,
+  useSearchLabels,
+  interpolateLabel,
+  actions,
+} from '../context/SearchContext';
 import { SelectDropdown } from './SelectDropdown';
 import { FACET_SEARCH_THRESHOLD } from '../utils/constants';
 
@@ -30,6 +36,7 @@ import { FACET_SEARCH_THRESHOLD } from '../utils/constants';
 export function CustomFacetSelect({ facet, widgetId = 'search' }) {
   const { customFacets } = useSearchState();
   const dispatch = useSearchDispatch();
+  const labels = useSearchLabels();
 
   const { id, title, options = [], multiSelect = false } = facet;
   const selectedValues = customFacets?.[id] || [];
@@ -40,9 +47,7 @@ export function CustomFacetSelect({ facet, widgetId = 'search' }) {
    */
   const dropdownOptions = useMemo(() => {
     return options.flatMap((option, index) =>
-      option.label
-        ? [{ value: String(index), label: option.label }]
-        : []
+      option.label ? [{ value: String(index), label: option.label }] : []
     );
   }, [options]);
 
@@ -51,24 +56,27 @@ export function CustomFacetSelect({ facet, widgetId = 'search' }) {
    * Custom facets store option indices (not query strings) in state.
    * The query builder looks up the actual query strings from config.
    */
-  const handleChange = useCallback((newValue) => {
-    if (multiSelect) {
-      // newValue is an array for multi-select
-      const values = Array.isArray(newValue) ? newValue : [newValue];
-      if (values.length === 0) {
-        dispatch(actions.removeCustomFacet(id));
+  const handleChange = useCallback(
+    newValue => {
+      if (multiSelect) {
+        // newValue is an array for multi-select
+        const values = Array.isArray(newValue) ? newValue : [newValue];
+        if (values.length === 0) {
+          dispatch(actions.removeCustomFacet(id));
+        } else {
+          dispatch(actions.setCustomFacet(id, values));
+        }
       } else {
-        dispatch(actions.setCustomFacet(id, values));
+        // newValue is a single value for single-select
+        if (!newValue || newValue === '') {
+          dispatch(actions.removeCustomFacet(id));
+        } else {
+          dispatch(actions.setCustomFacet(id, [newValue]));
+        }
       }
-    } else {
-      // newValue is a single value for single-select
-      if (!newValue || newValue === '') {
-        dispatch(actions.removeCustomFacet(id));
-      } else {
-        dispatch(actions.setCustomFacet(id, [newValue]));
-      }
-    }
-  }, [dispatch, id, multiSelect]);
+    },
+    [dispatch, id, multiSelect]
+  );
 
   // Don't render if no options
   if (!options || options.length === 0) {
@@ -86,12 +94,16 @@ export function CustomFacetSelect({ facet, widgetId = 'search' }) {
       <SelectDropdown
         id={selectId}
         label={title}
-        placeholder={`Select ${title.toLowerCase()}`}
+        placeholder={interpolateLabel(labels.selectPlaceholder, {
+          label: title.toLowerCase(),
+        })}
         options={dropdownOptions}
-        value={multiSelect ? selectedValues : (selectedValues[0] || '')}
+        value={multiSelect ? selectedValues : selectedValues[0] || ''}
         onChange={handleChange}
         multiple={multiSelect}
         searchThreshold={FACET_SEARCH_THRESHOLD}
+        searchInputPlaceholder={labels.dropdownSearchPlaceholder}
+        noOptionsText={labels.dropdownNoOptions}
       />
     </fieldset>
   );

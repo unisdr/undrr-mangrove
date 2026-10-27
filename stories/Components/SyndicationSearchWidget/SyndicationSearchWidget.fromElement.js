@@ -1,3 +1,4 @@
+import { languageFromElement, labelsFromElement } from '../../../src/i18n';
 /**
  * Extract SyndicationSearchWidget config from a DOM container.
  *
@@ -10,7 +11,13 @@ export default function syndicationSearchWidgetFromElement(container) {
   const config = {};
 
   // Simple string/number props
+  // `data-search-endpoint` is the consumer-facing half of the widget's trust
+  // boundary: ResultItem renders the response HTML unescaped so Elasticsearch
+  // highlight markup survives, so whatever this attribute points at is trusted
+  // to return safe HTML. See the note at the top of components/ResultItem.jsx.
   if (dataset.searchEndpoint) config.searchEndpoint = dataset.searchEndpoint;
+  if (dataset.taxonomyEndpoint)
+    config.taxonomyEndpoint = dataset.taxonomyEndpoint;
   if (dataset.resultsPerPage)
     config.resultsPerPage = parseInt(dataset.resultsPerPage, 10);
   if (dataset.debounceDelay)
@@ -25,6 +32,8 @@ export default function syndicationSearchWidgetFromElement(container) {
   if (dataset.queryAppend) config.queryAppend = dataset.queryAppend;
   if (dataset.facetsTarget) config.facetsTarget = dataset.facetsTarget;
   if (dataset.searchTarget) config.searchTarget = dataset.searchTarget;
+  if (dataset.analyticsRegionPrefix)
+    config.analyticsRegionPrefix = dataset.analyticsRegionPrefix;
 
   // Boolean props (only set if explicitly present)
   if (dataset.showSearchBox !== undefined)
@@ -115,5 +124,16 @@ export default function syndicationSearchWidgetFromElement(container) {
     }
   }
 
-  return { config };
+  // Server-rendered results to keep on screen until the first client results
+  // commit. Captured now, before React's first commit empties the container.
+  const ssrResults = container.querySelector('[data-mg-search-ssr]');
+  if (ssrResults) config.ssrResults = ssrResults;
+
+  const labels = labelsFromElement(container);
+
+  return {
+    config,
+    ...(labels ? { labels } : {}),
+    ...languageFromElement(container),
+  };
 }

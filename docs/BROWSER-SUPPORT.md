@@ -1,8 +1,10 @@
 # Browser support
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/BROWSER-SUPPORT.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-browser-support--docs).
+> Edits to this file show up on both [GitHub](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/BROWSER-SUPPORT.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/getting-started-browser-support--docs).
 
-Mangrove components are tested in major modern browsers. We support the latest stable release and two prior versions of each browser. Older browsers may still work but fall outside our support commitment and are treated as best effort — we won't add workarounds or block releases for them.
+Mangrove is tested in major modern browsers. Support covers the latest stable
+release plus the two prior versions for each browser. Older browsers are
+best-effort only (no dedicated workarounds or release-blocking fixes).
 
 ## Desktop
 
@@ -30,18 +32,24 @@ Some Mangrove features require relatively modern CSS. The minimum browser versio
 | ------- | ------ | ------- | ------ | ---- |
 | CSS `mask-image` (icons) | 120+ (Dec 2023) | 53+ (Apr 2017) | 15.4+ (Mar 2022) | 120+ (Dec 2023) |
 | CSS custom properties / `var()` | 49+ (Mar 2016) | 31+ (Jul 2014) | 9.1+ (Mar 2016) | 15+ (Apr 2017) |
+| Space-separated `rgb(R G B / a)` with token channels | 65+ (Mar 2018) | 52+ (Mar 2017) | 12.1+ (Mar 2019) | 79+ (Jan 2020) |
 | Container queries / `cqi` units | 105+ (Jun 2022) | 110+ (Feb 2023) | 16.0+ (Sep 2022) | 105+ (Jun 2022) |
 | `:has()` selector | 105+ (Jun 2022) | 121+ (Dec 2023) | 15.4+ (Mar 2022) | 105+ (Jun 2022) |
+| `:dir()` selector | 120+ (Dec 2023) | 49+ (Sep 2016) | 16.4+ (Mar 2023) | 120+ (Dec 2023) |
+| `color-mix()` | 111+ (Mar 2023) | 113+ (May 2023) | 16.2+ (Dec 2022) | 111+ (Mar 2023) |
 
 ## Why we don't support older browsers
 
-End-of-life browsers are active security risks. Browsers that no longer receive updates accumulate unpatched vulnerabilities that are publicly documented in CVE databases. Maintaining workarounds for these browsers would mean shipping extra code to the majority of users who are on current browsers, while offering incomplete compatibility to users on software that may have known security vulnerabilities. We recognise that some users, particularly in humanitarian contexts, may have limited access to updated devices — our support policy aims to encourage organisations to keep software current where possible, and to be transparent about what we test against.
+End-of-life browsers carry unpatched security risk and require costly
+workarounds that add weight for most users while still offering partial
+compatibility. This policy keeps support transparent while encouraging current
+software where possible.
 
 ## Screen width
 
-For guidance on supported screen widths, see [the Breakpoints section](https://unisdr.github.io/undrr-mangrove/?path=/docs/design-decisions-breakpoint--docs).
+For guidance on supported screen widths, see [the Breakpoints section](https://mangrove.undrr.org/?path=/docs/design-decisions-breakpoint--docs).
 
 ## Next steps
 
-- [Getting started](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-about-mangrove--docs) — what Mangrove provides and how to use it
-- [CDN reference](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-cdn-reference--docs) — pre-built CSS and JS URLs for quick integration
+- [Getting started](https://mangrove.undrr.org/?path=/docs/getting-started-about-mangrove--docs) — what Mangrove provides and how to use it
+- [CDN reference](https://mangrove.undrr.org/?path=/docs/getting-started-integration-cdn-reference--docs) — pre-built CSS and JS URLs for quick integration

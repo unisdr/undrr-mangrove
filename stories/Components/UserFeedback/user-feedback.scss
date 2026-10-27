@@ -1,0 +1,74 @@
+/**
+ * User Feedback
+ *
+ * Binary page satisfaction widget (Was this page helpful? Yes/No) with response confirmation.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/UserFeedback/UserFeedback.mdx
+ */
+@use "../../assets/scss/mixins" as *;
+@use "../../assets/scss/config" as *;
+
+.mg-user-feedback {
+  align-items: center;
+  box-sizing: border-box;
+  min-block-size: mg-rem(72);
+  padding-block: var(--mg-spacing-100);
+}
+
+.mg-user-feedback__prompt,
+.mg-user-feedback__actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.mg-user-feedback__prompt {
+  gap: var(--mg-spacing-100) var(--mg-spacing-150);
+}
+
+.mg-user-feedback__actions {
+  gap: var(--mg-spacing-100);
+}
+
+.mg-user-feedback__actions .mg-button {
+  min-block-size: mg-rem(40);
+}
+
+.mg-user-feedback__question,
+.mg-user-feedback__confirmation {
+  margin: 0;
+}
+
+.mg-user-feedback__question {
+  font-family: var(--mg-font-family-text);
+  font-size: var(--mg-font-size-250);
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.mg-user-feedback__issue {
+  justify-self: start;
+  text-align: start;
+}
+
+.mg-user-feedback__confirmation {
+  grid-column: 1 / -1;
+}
+
+.mg-user-feedback__confirmation:focus {
+  outline: 0;
+}
+
+.mg-user-feedback__confirmation:focus-visible {
+  border-radius: var(--mg-radius-button);
+
+  @include mg-focus-ring;
+}
+
+@media (min-width: $mg-breakpoint-tablet) {
+  .mg-user-feedback__issue {
+    justify-self: end;
+    text-align: end;
+  }
+}

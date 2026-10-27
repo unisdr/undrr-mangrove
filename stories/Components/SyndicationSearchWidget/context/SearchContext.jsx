@@ -1,3 +1,5 @@
+import { DEFAULT_LABELS, getSyndicationSearchWidgetLabels } from '../_labels';
+export { DEFAULT_LABELS } from '../_labels';
 /**
  * @file SearchContext.jsx
  * @description React Context and reducer for SearchWidget state management.
@@ -9,7 +11,71 @@
  */
 
 import React, { createContext, use, useReducer, useMemo } from 'react';
-import { DEFAULT_CONFIG } from '../utils/constants';
+
+/**
+ * Resolve a label value and substitute `{key}` tokens.
+ *
+ * `template` may be:
+ *   - A plain string with optional `{key}` tokens — tokens are substituted from `vars`.
+ *   - A function `(vars) => string` — called with `vars` and expected to return a
+ *     fully resolved string. Use this for languages with complex plural rules (Russian,
+ *     Arabic, etc.) where two static keys are not enough.
+ *
+ * @param {string|Function} template
+ * @param {Object} [vars={}]
+ * @returns {string}
+ *
+ * @example — static string
+ *   interpolateLabel('{count} results found', { count: 5 }) // '5 results found'
+ *
+ * @example — function for Russian plurals
+ *   interpolateLabel(
+ *     ({ count }) => {
+ *       const form = new Intl.PluralRules('ru').select(count);
+ *       const forms = { one: 'результат', few: 'результата', other: 'результатов' };
+ *       return `Найдено ${count} ${forms[form] ?? forms.other}`;
+ *     },
+ *     { count: 3 }
+ *   ) // 'Найдено 3 результата'
+ */
+export function interpolateLabel(template, vars = {}) {
+  if (typeof template === 'function') {
+    return String(template(vars));
+  }
+  return String(template).replace(/\{(\w+)\}/g, (_, key) =>
+    Object.prototype.hasOwnProperty.call(vars, key) ? vars[key] : `{${key}}`
+  );
+}
+import { DEFAULT_CONFIG, EVENT_SORT_VALUES } from '../utils/constants';
+import { facetsFromDefaults } from '../utils/hashState';
+
+/**
+ * Normalise aggregations from Elasticsearch. The year facet comes from a
+ * `date_histogram` whose bucket keys are epoch milliseconds; the facet UI and
+ * the URL hash use the year itself, which the histogram's `yyyy` format puts
+ * in `key_as_string`.
+ *
+ * @param {Object|undefined} aggregations
+ * @returns {Object|null}
+ */
+export function normaliseAggregations(aggregations) {
+  if (!aggregations) return null;
+  const year = aggregations.year;
+  if (!year?.buckets?.some(bucket => bucket.key_as_string !== undefined)) {
+    return aggregations;
+  }
+  return {
+    ...aggregations,
+    year: {
+      ...year,
+      buckets: year.buckets.map(bucket =>
+        bucket.key_as_string !== undefined
+          ? { ...bucket, key: bucket.key_as_string }
+          : bucket
+      ),
+    },
+  };
+}
 
 /**
  * Initial state for the search widget.
@@ -18,6 +84,13 @@ import { DEFAULT_CONFIG } from '../utils/constants';
 const initialState = {
   // Search query
   query: '',
+
+  // Whether the last query change came from typing (and so is debounced)
+  queryIsTyped: false,
+
+  // defaultQuery applied by the last INITIALIZE. A query still equal to it
+  // hasn't been changed by the reader, so a new defaultQuery replaces it.
+  appliedDefaultQuery: '',
 
   // Active facet filters: { [key]: [values] }
   facets: {},
@@ -28,8 +101,12 @@ const initialState = {
   // Custom facet selections: { [facetId]: [selectedOptionIndices] }
   customFacets: {},
 
-  // Sort order: 'relevance', 'newest', 'oldest'
+  // Sort order: one of SORT_VALUES in utils/constants.js
   sortBy: 'relevance',
+
+  // Once offered, event sorts remain available for this widget session,
+  // including when the controls remount in another layout.
+  hasEventSorts: false,
 
   // Pagination (future use)
   page: 1,
@@ -37,11 +114,15 @@ const initialState = {
   // Search results from Elasticsearch
   results: null,
 
+  // Incremented on each new result set
+  resultsVersion: 0,
+
   // Aggregations from Elasticsearch (for facet counts)
   aggregations: null,
 
-  // Total result count
+  // Total result count and Elasticsearch relation ('eq' = exact, 'gte' = capped)
   totalResults: 0,
+  totalResultsRelation: 'eq',
 
   // Loading state
   isLoading: false,
@@ -74,6 +155,7 @@ export const ActionTypes = {
   SET_LOADING: 'SET_LOADING',
   SET_ERROR: 'SET_ERROR',
   INITIALIZE: 'INITIALIZE',
+  RESTORE_STATE: 'RESTORE_STATE',
   RESET: 'RESET',
 };
 
@@ -86,9 +168,15 @@ export const ActionTypes = {
 function searchReducer(state, action) {
   switch (action.type) {
     case ActionTypes.SET_QUERY:
+      // Same query: keep the page. The input re-syncing a query restored from
+      // the URL must not reset a restored page to 1.
+      if (action.payload === state.query) return state;
       return {
         ...state,
         query: action.payload,
+        // Typing is debounced; a submitted, cleared or URL-driven query is
+        // searched at once.
+        queryIsTyped: !action.immediate,
         page: 1, // Reset to first page on new query
       };
 
@@ -121,7 +209,8 @@ function searchReducer(state, action) {
       // If no value specified, remove entire facet
       if (value === undefined) {
         const { [key]: removed, ...remainingFacets } = state.facets;
-        const { [key]: removedOp, ...remainingOperators } = state.facetOperators;
+        const { [key]: removedOp, ...remainingOperators } =
+          state.facetOperators;
         return {
           ...state,
           facets: remainingFacets,
@@ -136,7 +225,8 @@ function searchReducer(state, action) {
 
       if (newValues.length === 0) {
         const { [key]: removed, ...remainingFacets } = state.facets;
-        const { [key]: removedOp, ...remainingOperators } = state.facetOperators;
+        const { [key]: removedOp, ...remainingOperators } =
+          state.facetOperators;
         return {
           ...state,
           facets: remainingFacets,
@@ -158,7 +248,7 @@ function searchReducer(state, action) {
     case ActionTypes.CLEAR_FACETS:
       return {
         ...state,
-        facets: {},
+        facets: facetsFromDefaults(action.payload?.defaultFilters),
         facetOperators: {},
         customFacets: {},
         page: 1,
@@ -192,7 +282,8 @@ function searchReducer(state, action) {
 
     case ActionTypes.REMOVE_CUSTOM_FACET: {
       const { facetId } = action.payload;
-      const { [facetId]: removed, ...remainingCustomFacets } = state.customFacets;
+      const { [facetId]: removed, ...remainingCustomFacets } =
+        state.customFacets;
 
       return {
         ...state,
@@ -205,6 +296,8 @@ function searchReducer(state, action) {
       return {
         ...state,
         sortBy: action.payload,
+        hasEventSorts:
+          state.hasEventSorts || EVENT_SORT_VALUES.includes(action.payload),
         page: 1,
       };
 
@@ -218,8 +311,13 @@ function searchReducer(state, action) {
       return {
         ...state,
         results: action.payload.hits?.hits || [],
-        aggregations: action.payload.aggregations || null,
+        // Bumped per result set, so the list can animate in a new set.
+        resultsVersion: state.resultsVersion + 1,
+        aggregations: action.keepAggregations
+          ? state.aggregations
+          : normaliseAggregations(action.payload.aggregations),
         totalResults: action.payload.hits?.total?.value || 0,
+        totalResultsRelation: action.payload.hits?.total?.relation || 'eq',
         searchTime: action.payload.took || null,
         isLoading: false,
         error: null,
@@ -240,32 +338,82 @@ function searchReducer(state, action) {
       };
 
     case ActionTypes.INITIALIZE: {
-      const { defaultFilters = [], defaultQuery = '', defaultSort = 'relevance' } = action.payload;
+      const {
+        defaultFilters = [],
+        defaultQuery = '',
+        initialQuery = null,
+        defaultSort = 'relevance',
+        // State read from the URL hash; takes precedence over the defaults.
+        // initialFacets replaces defaultFilters entirely when present.
+        initialFacets = null,
+        initialFacetOperators = null,
+        initialSort = null,
+      } = action.payload;
 
-      // Convert defaultFilters array to facets object
-      const facets = {};
-      defaultFilters.forEach(filter => {
-        if (filter.key && filter.value) {
-          if (!facets[filter.key]) {
-            facets[filter.key] = [];
-          }
-          facets[filter.key].push(filter.value);
-        }
-      });
+      // Keep a query the reader typed or that came from the URL hash. A
+      // query that is still the previous defaultQuery was never changed, so
+      // a new defaultQuery (e.g. edited in a block editor preview) replaces
+      // it, including when the new default is empty.
+      const keepQuery =
+        state.query !== '' && state.query !== state.appliedDefaultQuery;
+
+      const nextDefaultQuery = defaultQuery || '';
+      const query =
+        !state.isInitialized && initialQuery !== null
+          ? initialQuery
+          : keepQuery
+            ? state.query
+            : nextDefaultQuery;
 
       return {
         ...state,
-        // Preserve query if already set (e.g., from URL params via useHashSync)
-        query: state.query || defaultQuery,
-        sortBy: defaultSort,
-        facets,
+        query,
+        appliedDefaultQuery: nextDefaultQuery,
+        // A re-initialise that swaps the query starts again from page 1. The
+        // first INITIALIZE keeps a page restored from the URL hash.
+        page: state.isInitialized && query !== state.query ? 1 : state.page,
+        sortBy: initialSort || defaultSort,
+        hasEventSorts:
+          state.hasEventSorts ||
+          EVENT_SORT_VALUES.includes(defaultSort) ||
+          EVENT_SORT_VALUES.includes(initialSort),
+        facets: initialFacets || facetsFromDefaults(defaultFilters),
+        facetOperators: initialFacets
+          ? initialFacetOperators || {}
+          : state.facetOperators,
+        queryIsTyped: false,
         isInitialized: true,
+      };
+    }
+
+    case ActionTypes.RESTORE_STATE: {
+      // Replace the URL-backed part of the state in one step (browser
+      // back/forward). Missing fields fall back to their initial values.
+      const {
+        query = '',
+        page = 1,
+        sortBy = 'relevance',
+        facets = {},
+        facetOperators = {},
+      } = action.payload;
+      return {
+        ...state,
+        query,
+        page,
+        sortBy,
+        hasEventSorts:
+          state.hasEventSorts || EVENT_SORT_VALUES.includes(sortBy),
+        facets,
+        facetOperators,
+        // Back/forward: search at once.
+        queryIsTyped: false,
       };
     }
 
     case ActionTypes.RESET:
       return {
         ...initialState,
+        hasEventSorts: state.hasEventSorts,
         isInitialized: true,
       };
 
@@ -278,6 +426,11 @@ function searchReducer(state, action) {
  * Context for search configuration (static).
  */
 const SearchConfigContext = createContext(null);
+
+/**
+ * Context for resolved UI labels (English defaults, selected catalogue, overrides).
+ */
+const SearchLabelsContext = createContext(DEFAULT_LABELS);
 
 /**
  * Context for search state (dynamic).
@@ -297,12 +450,26 @@ const SearchDispatchContext = createContext(null);
  * @param {Object} props.config - Search widget configuration
  * @param {React.ReactNode} props.children - Child components
  */
-export function SearchProvider({ config: userConfig, children }) {
+export function SearchProvider({
+  config: userConfig,
+  labels: userLabels,
+  lang,
+  children,
+}) {
   // Merge user config with defaults
-  const config = useMemo(() => ({
-    ...DEFAULT_CONFIG,
-    ...userConfig,
-  }), [userConfig]);
+  const config = useMemo(
+    () => ({
+      ...DEFAULT_CONFIG,
+      ...userConfig,
+    }),
+    [userConfig]
+  );
+
+  // Merge user labels with defaults
+  const labels = useMemo(
+    () => getSyndicationSearchWidgetLabels(lang, userLabels),
+    [lang, userLabels]
+  );
 
   // Initialize reducer with config-based initial state
   const [state, dispatch] = useReducer(searchReducer, initialState);
@@ -312,11 +479,13 @@ export function SearchProvider({ config: userConfig, children }) {
 
   return (
     <SearchConfigContext.Provider value={config}>
-      <SearchStateContext.Provider value={stateValue}>
-        <SearchDispatchContext.Provider value={dispatch}>
-          {children}
-        </SearchDispatchContext.Provider>
-      </SearchStateContext.Provider>
+      <SearchLabelsContext.Provider value={labels}>
+        <SearchStateContext.Provider value={stateValue}>
+          <SearchDispatchContext.Provider value={dispatch}>
+            {children}
+          </SearchDispatchContext.Provider>
+        </SearchStateContext.Provider>
+      </SearchLabelsContext.Provider>
     </SearchConfigContext.Provider>
   );
 }
@@ -332,6 +501,24 @@ export function useSearchConfig() {
     throw new Error('useSearchConfig must be used within a SearchProvider');
   }
   return config;
+}
+
+/**
+ * Hook to access search configuration when a SearchProvider may be absent.
+ * Returns null outside a provider instead of throwing, for hooks that are
+ * exported for standalone use (e.g. useTaxonomies).
+ * @returns {Object|null} Configuration object, or null
+ */
+export function useOptionalSearchConfig() {
+  return use(SearchConfigContext);
+}
+
+/**
+ * Hook to access resolved UI labels.
+ * @returns {Object} Labels object
+ */
+export function useSearchLabels() {
+  return use(SearchLabelsContext);
 }
 
 /**
@@ -372,9 +559,16 @@ export function useSearch() {
  * Action creators for common operations.
  */
 export const actions = {
-  setQuery: (query) => ({
+  /**
+   * @param {string} query
+   * @param {Object} [options]
+   * @param {boolean} [options.immediate] - Search at once rather than after
+   *   the typing debounce (submit, clear, URL).
+   */
+  setQuery: (query, { immediate = false } = {}) => ({
     type: ActionTypes.SET_QUERY,
     payload: query,
+    immediate,
   }),
 
   setFacet: (key, value, replace = true) => ({
@@ -387,8 +581,9 @@ export const actions = {
     payload: { key, value },
   }),
 
-  clearFacets: () => ({
+  clearFacets: options => ({
     type: ActionTypes.CLEAR_FACETS,
+    ...(options ? { payload: options } : {}),
   }),
 
   setFacetOperator: (key, operator) => ({
@@ -401,39 +596,51 @@ export const actions = {
     payload: { facetId, value },
   }),
 
-  removeCustomFacet: (facetId) => ({
+  removeCustomFacet: facetId => ({
     type: ActionTypes.REMOVE_CUSTOM_FACET,
     payload: { facetId },
   }),
 
-  setSort: (sortBy) => ({
+  setSort: sortBy => ({
     type: ActionTypes.SET_SORT,
     payload: sortBy,
   }),
 
-  setPage: (page) => ({
+  setPage: page => ({
     type: ActionTypes.SET_PAGE,
     payload: page,
   }),
 
-  setResults: (results) => ({
+  /**
+   * @param {Object} results - Elasticsearch response
+   * @param {Object} [options]
+   * @param {boolean} [options.keepAggregations] - Keep the current
+   *   aggregations: the request skipped them because only the page changed.
+   */
+  setResults: (results, { keepAggregations = false } = {}) => ({
     type: ActionTypes.SET_RESULTS,
     payload: results,
+    keepAggregations,
   }),
 
-  setLoading: (isLoading) => ({
+  setLoading: isLoading => ({
     type: ActionTypes.SET_LOADING,
     payload: isLoading,
   }),
 
-  setError: (error) => ({
+  setError: error => ({
     type: ActionTypes.SET_ERROR,
     payload: error,
   }),
 
-  initialize: (config) => ({
+  initialize: config => ({
     type: ActionTypes.INITIALIZE,
     payload: config,
+  }),
+
+  restoreState: urlState => ({
+    type: ActionTypes.RESTORE_STATE,
+    payload: urlState,
   }),
 
   reset: () => ({

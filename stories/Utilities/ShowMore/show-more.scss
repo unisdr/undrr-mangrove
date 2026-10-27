@@ -1,3 +1,13 @@
+/**
+ * Show More / Truncation
+ *
+ * Collapsible content container with progressive Show more / Show less disclosure toggle.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Utilities/ShowMore/ShowMore.mdx
+ */
+@use "../../assets/scss/config" as *;
+
 :root {
   --mg-show-more-height: 200px;
 }
@@ -23,4 +33,10 @@
   position: relative;
   z-index: 2; // button sits above the gradient fade-out overlay — local to show-more context
   padding: mg-rem(10) mg-rem(40);
+}
+
+// `.mg-button` sets `display`, which beats the `hidden` attribute the
+// threshold option puts on a toggle with nothing to reveal.
+.mg-show-more--button[hidden] {
+  display: none;
 }
