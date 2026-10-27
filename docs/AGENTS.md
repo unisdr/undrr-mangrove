@@ -17,7 +17,7 @@ Each agent includes:
 
 In Claude Code, reference the agent when asking Claude Code to perform a task:
 
-> "Using the accessibility-auditor agent, audit the MegaMenu component across all 4 themes"
+> "Using the accessibility-auditor agent, audit the MegaMenu component across all 5 themes"
 
 > "As the code-reviewer, review this PR for security, accessibility, and Mangrove conventions"
 
@@ -64,7 +64,7 @@ These agents are adapted from [The Agency](https://github.com/msitarzewski/agenc
 We selected 10 agents most relevant to a Storybook-powered React component library serving a global UN audience, then adapted each one with:
 
 - **Mangrove project context**: Stack details, file conventions, theme system, Drupal integration patterns
-- **Project-specific checklists**: Auditing across 4 themes, RTL support, UN writing guidelines
+- **Project-specific checklists**: Auditing across 5 themes, RTL support, UN writing guidelines
 - **Relevant conventions**: BEM naming, CSF3 stories, `fromElement` hydration pattern, gold standard component references
 - **Trimmed scope**: Removed generic content that doesn't apply to this project
 
@@ -75,7 +75,7 @@ The original repo contains many more agents (China market specialists, game deve
 We chose agents that address Mangrove's core concerns:
 
 1. **Accessibility** — WCAG compliance is mandatory for UN websites
-2. **Multi-brand theming** — 4 themes sharing one component library requires careful brand management
+2. **Multi-brand theming** — 5 themes sharing one component library requires careful brand management
 3. **Global audience** — Cultural sensitivity, RTL support, and inclusive design are essential
 4. **Performance** — Components load on live sites via individual ES modules
 5. **Developer experience** — External teams need to integrate components into Drupal

@@ -1,10 +1,9 @@
+import { getLanguageProps } from '../../../src/i18n';
+import { getScrollContainerLabels } from './_labels';
+export { getScrollContainerLabels } from './_labels';
+export { DEFAULT_SCROLL_LABELS } from './_labels';
 import React, { useRef, useEffect, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
-
-export const DEFAULT_SCROLL_LABELS = {
-  scrollLeftLabel: 'Scroll left',
-  scrollRightLabel: 'Scroll right',
-};
 
 // Separate arrow buttons component
 const ArrowButtons = React.memo(
@@ -59,14 +58,19 @@ const ScrollContainer = ({
   showArrows = false,
   stretchItems = false,
   stepSize = null,
-  ariaLabel = 'Scrollable content',
-  labels = {},
+  ariaLabel,
+  lang,
+  dir,
+  labels,
   ...props
 }) => {
-  const { scrollLeftLabel, scrollRightLabel } = {
-    ...DEFAULT_SCROLL_LABELS,
-    ...labels,
-  };
+  const {
+    ariaLabel: defaultAriaLabel,
+    navigationLabel,
+    scrollLeftLabel,
+    scrollRightLabel,
+  } = getScrollContainerLabels(lang, labels);
+  const resolvedAriaLabel = ariaLabel ?? defaultAriaLabel;
   const containerRef = useRef(null);
   const contentRef = useRef(null);
   const leftButtonRef = useRef(null);
@@ -282,6 +286,7 @@ const ScrollContainer = ({
 
   return (
     <section
+      {...getLanguageProps(lang, dir)}
       className={`mg-scroll${isMobileRef.current ? ' mg-scroll--mobile' : ''}`}
     >
       {showArrows && !isMobileRef.current && (
@@ -289,7 +294,10 @@ const ScrollContainer = ({
           onScroll={scroll}
           leftButtonRef={leftButtonRef}
           rightButtonRef={rightButtonRef}
-          navigationLabel={`${ariaLabel} navigation`}
+          navigationLabel={navigationLabel.replace(
+            '{label}',
+            () => resolvedAriaLabel
+          )}
           scrollLeftLabel={scrollLeftLabel}
           scrollRightLabel={scrollRightLabel}
         />
@@ -337,8 +345,14 @@ ScrollContainer.propTypes = {
   stepSize: PropTypes.number,
   /** Accessible name for this scroll container's arrow navigation. Use a unique value when more than one container appears on a page. */
   ariaLabel: PropTypes.string,
-  /** Translated UI label strings */
+  /** HTML language tag. Built-in labels support en, ar, es, fr, ja, ru and zh. */
+  lang: PropTypes.string,
+  /** Explicit text direction; otherwise known catalogue languages select their direction. */
+  dir: PropTypes.oneOf(['ltr', 'rtl', 'auto']),
+  /** Label overrides; navigationLabel accepts a {label} token for ariaLabel. */
   labels: PropTypes.shape({
+    ariaLabel: PropTypes.string,
+    navigationLabel: PropTypes.string,
     scrollLeftLabel: PropTypes.string,
     scrollRightLabel: PropTypes.string,
   }),
