@@ -131,19 +131,19 @@ The Drupal theme (`undrr_common`) imports Mangrove utilities:
 
 ```scss
 // Import Mangrove design tokens and utilities
-@import "~@undrr/undrr-mangrove/scss/variables";
-@import "~@undrr/undrr-mangrove/scss/breakpoints";
-@import "~@undrr/undrr-mangrove/scss/mixins";
-@import "~@undrr/undrr-mangrove/scss/utilities/index";
+@use "@undrr/undrr-mangrove/scss/assets/scss/variables";
+@use "@undrr/undrr-mangrove/scss/assets/scss/breakpoints";
+@use "@undrr/undrr-mangrove/scss/assets/scss/config";
+@use "@undrr/undrr-mangrove/scss/assets/scss/utilities/index";
 
 // Drupal-specific styles (using Mangrove tokens)
-@import "components/fields";
-@import "components/views";
-@import "components/paragraphs";
+@use "./components/fields";
+@use "./components/views";
+@use "./components/paragraphs";
 
 // Backward compatibility (remove after migration)
-@import "components/drupal-compat";
-@import "components/bootstrap-compat";
+@use "./components/drupal-compat";
+@use "./components/bootstrap-compat";
 ```
 
 ### 2.2 Drupal-specific styles (in Drupal theme)
@@ -155,12 +155,15 @@ These files live in the Drupal theme, not in Mangrove:
 // Drupal field display styling using Mangrove tokens
 .field--label {
   font-weight: 600;
-  margin-bottom: $mg-spacing-100;
+  margin-bottom: var(--mg-spacing-100);
 }
 ```
 
 **File**: `themes/custom/undrr_common/scss/components/_drupal-compat.scss`
 ```scss
+// This local module explicitly loads the selectors it extends.
+@use "@undrr/undrr-mangrove/scss/assets/scss/utilities/index";
+
 // Backward compatibility for legacy classes
 // Remove once all templates are migrated
 .dp-fl { @extend .mg-u-display--flex; }
