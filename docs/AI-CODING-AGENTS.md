@@ -21,6 +21,18 @@ and verify an override as well as the default across all five themes.
 
 For UI copy, examples, documentation and changelogs, follow the [Editorial manual](EDITORIAL-MANUAL.md#spelling): Oxford `-ize`/`-ization` forms such as organization, organize, normalize and localize, alongside British forms such as colour, behaviour, centre and programme. Keep source field names, API identifiers and proper names intact. Check linked Storybook labels when correcting spelling.
 
+### Resolve interface translations at runtime
+
+Before adding or changing built-in UI labels, read [UI translations](UI-TRANSLATIONS.md).
+Use the shared pure helpers in `src/i18n.js` with component-owned catalogues.
+React selects labels from explicit `lang`; hydration selects `data-lang` before
+the nearest HTML `lang`. Preserve consumer overrides, regional and unsupported
+language metadata, explicit direction, and function-valued search labels. Do
+not add browser-global language reads to render, let story decorators replace
+runtime translation, or describe separate vanilla modules as automatically
+translated. Check dialogs and portals as well as the main root, and update
+published hydration metadata with the component documentation.
+
 ### Separate archetypes, profiles, presentations and consumer mappings
 
 Organize content patterns around reader needs, not a list of CMS bundles. Reuse Article for news/commentary, Event for general events/programme sessions, Reference entry for definitions/hazard profiles, and Opportunity for jobs. Profiles own editorial differences; presentations select page/teaser/card content; layout supplies geometry. Group existing full-page examples beneath their owning content archetype in Storybook: Article, Publication, Collection or Landing page. Pin existing CSF IDs when changing titles so shared story/docs URLs survive. Hub home is a Landing page variant; persistent hub navigation also composes with detail pages and does not redefine their content types. Do not expose old page-pattern names as competing top-level content families.

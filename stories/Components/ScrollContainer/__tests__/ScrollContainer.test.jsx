@@ -100,6 +100,57 @@ describe('ScrollContainer Component', () => {
     );
   });
 
+  it('translates navigation names and updates them when the language changes', () => {
+    const { rerender, container } = renderScrollContainer({ lang: 'fr-CA' });
+
+    expect(screen.getByRole('navigation')).toHaveAccessibleName(
+      'Navigation : Contenu défilant'
+    );
+    expect(container.querySelector('.mg-scroll')).toHaveAttribute(
+      'lang',
+      'fr-CA'
+    );
+    expect(
+      screen.getByRole('button', { name: 'Faire défiler à gauche' })
+    ).toBeInTheDocument();
+
+    rerender(
+      <ScrollContainer lang="ar" showArrows ariaLabel="المنشورات">
+        <p>Example</p>
+      </ScrollContainer>
+    );
+    expect(screen.getByRole('navigation')).toHaveAccessibleName(
+      'التنقل في المنشورات'
+    );
+    expect(container.querySelector('.mg-scroll')).toHaveAttribute('dir', 'rtl');
+  });
+
+  it('preserves dedicated content labels and custom navigation templates', () => {
+    renderScrollContainer({
+      lang: 'fr',
+      ariaLabel: 'Reports $& {label}',
+      labels: {
+        ariaLabel: 'Ignored default',
+        navigationLabel: 'Browse {label}',
+      },
+    });
+
+    expect(screen.getByRole('navigation')).toHaveAccessibleName(
+      'Browse Reports $& {label}'
+    );
+  });
+
+  it('uses translated label overrides when no dedicated ariaLabel is supplied', () => {
+    renderScrollContainer({
+      lang: 'fr',
+      labels: { ariaLabel: 'Publications' },
+    });
+
+    expect(screen.getByRole('navigation')).toHaveAccessibleName(
+      'Navigation : Publications'
+    );
+  });
+
   it('shows right arrow when content overflows', () => {
     renderScrollContainer();
 

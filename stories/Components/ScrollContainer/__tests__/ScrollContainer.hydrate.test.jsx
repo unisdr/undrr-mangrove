@@ -71,4 +71,33 @@ describe('ScrollContainer hydration', () => {
       second.querySelector('[aria-label="Second row navigation"]')
     ).toBeInTheDocument();
   });
+
+  it('hydrates inherited and local languages without injecting English navigation text', () => {
+    document.body.innerHTML = `
+      <section lang="fr">
+        <div id="inherited" data-mg-scroll-container data-show-arrows="true"><p>First</p></div>
+        <div id="local" data-mg-scroll-container data-lang="ar" data-show-arrows="true"
+          data-aria-label="المنشورات"><p>Second</p></div>
+      </section>
+    `;
+
+    act(() => {
+      hydrator = createHydrator({
+        selector: '[data-mg-scroll-container]',
+        component: ScrollContainer,
+        fromElement,
+      });
+    });
+
+    expect(document.querySelector('#inherited nav')).toHaveAccessibleName(
+      'Navigation : Contenu défilant'
+    );
+    expect(document.querySelector('#local nav')).toHaveAccessibleName(
+      'التنقل في المنشورات'
+    );
+    expect(document.querySelector('#local .mg-scroll')).toHaveAttribute(
+      'dir',
+      'rtl'
+    );
+  });
 });
