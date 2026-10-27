@@ -1,3 +1,6 @@
+/** Runtime UI labels for UserFeedback; shared by production and Storybook. */
+import { createLabelResolver } from '../../../src/i18n';
+
 export const LABELS_ES = {
   question: '¿Te ha resultado útil esta página?',
   yes: 'Sí',
@@ -61,3 +64,26 @@ export const LABELS_RU = {
   confirmationLink: 'рассказать нам подробнее',
   confirmationAfterLink: '.',
 };
+export const DEFAULT_USER_FEEDBACK_LABELS = {
+  question: 'Is this page useful?',
+  yes: 'Yes',
+  no: 'No',
+  reportIssue: 'Report an issue on this page',
+  confirmationBeforeLink:
+    'Thank you for your feedback. If you would like, you can also',
+  confirmationSeparator: ' ',
+  confirmationLink: 'tell us more',
+  confirmationAfterLink: '.',
+};
+
+export const getUserFeedbackLabels = createLabelResolver(
+  DEFAULT_USER_FEEDBACK_LABELS,
+  {
+    ar: LABELS_AR,
+    es: LABELS_ES,
+    fr: LABELS_FR,
+    ja: LABELS_JA,
+    ru: LABELS_RU,
+    zh: LABELS_ZH,
+  }
+);

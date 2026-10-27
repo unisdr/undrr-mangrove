@@ -74,6 +74,14 @@ horizontal. Panels stay mounted so form values persist.
 
 <Canvas of={TabStories.StackedSingleOpen} meta={TabStories} />
 
+### Right-to-left example
+
+This example fixes its story locale to Arabic, so its language and direction
+remain Arabic/RTL while other examples follow the preview toolbars. It reuses
+the same component and demonstrates a deliberate reading-direction condition.
+
+<Canvas of={TabStories.RightToLeft} meta={TabStories} />
+
 ## Interactions
 
 **Horizontal tabs:**
@@ -121,7 +129,7 @@ Pick the Mangrove theme stylesheet for your site ([CDN reference](/?path=/docs/g
 ```html
 <link
   rel="stylesheet"
-  href="https://assets.undrr.org/mangrove/2.2.0/css/style.css"
+  href="https://assets.undrr.org/mangrove/2.3.0/css/style.css"
 />
 ```
 
@@ -133,7 +141,7 @@ The script file uses ES module `export` statements, so you **must** load it with
 <!-- JS: type="module" is required -->
 <script
   type="module"
-  src="https://assets.undrr.org/mangrove/2.2.0/js/tabs.js"
+  src="https://assets.undrr.org/mangrove/2.3.0/js/tabs.js"
 ></script>
 ```
 
@@ -143,7 +151,7 @@ For manual or dynamic initialization, import the function:
 
 ```html
 <script type="module">
-  import { mgTabs } from 'https://assets.undrr.org/mangrove/2.2.0/js/tabs.js';
+  import { mgTabs } from 'https://assets.undrr.org/mangrove/2.3.0/js/tabs.js';
   mgTabs();
 </script>
 ```
@@ -363,7 +371,7 @@ mangrove-tabs:
 import {
   mgTabsRuntime,
   mgTabsDestroy,
-} from 'https://assets.undrr.org/mangrove/2.2.0/js/tabs.js';
+} from 'https://assets.undrr.org/mangrove/2.3.0/js/tabs.js';
 
 Drupal.behaviors.mangroveTabs = {
   attach(context) {
@@ -400,7 +408,7 @@ Add `data-mg-js-tabs-skip-auto-init` to skip a container during auto-init. This 
 </article>
 
 <script type="module">
-  import { mgTabs } from 'https://assets.undrr.org/mangrove/2.2.0/js/tabs.js';
+  import { mgTabs } from 'https://assets.undrr.org/mangrove/2.3.0/js/tabs.js';
   // Initialize after other setup is complete
   mgTabs([document.querySelector('[data-mg-js-tabs-skip-auto-init]')]);
 </script>
@@ -426,11 +434,10 @@ When you pass elements explicitly via `scope`, the skip attribute is ignored —
 
 ### React usage
 
-The `<Tab>` component renders the same HTML as above and calls `mgTabsRuntime()` on mount. It's available from the Mangrove source but not published as a precompiled bundle on the CDN.
+The `<Tab>` component renders the same HTML as above and calls `mgTabsRuntime()` on mount. It is published as `components/Tab.js` in npm and on the CDN. The bundle imports the browser tabs runtime and requires a DOM at import time; load it on the client rather than during server rendering.
 
 ```jsx
-// Requires the full Mangrove source tree (not available from the npm package alone)
-import { Tab } from 'stories/Components/Tab/Tab';
+import { Tab } from '@undrr/undrr-mangrove/components/Tab.js';
 
 const tabdata = [
   { text: 'Overview', text_id: 'overview', data: '<p>Overview content</p>' },
@@ -528,7 +535,22 @@ In version 2.5, the ID of stacked tab trigger elements changed. If you have CSS 
 
 You can also select triggers by class (`.mg-tabs__link`) — this works in all versions.
 
+## Runtime UI translations
+
+Use `lang` for built-in copy and `labels` for individual overrides. The
+[shared translation guide](?path=/docs/contributing-ui-translations--docs)
+explains language matching, fallback, direction and hydration precedence.
+
+`components/Tab.js` exports `getTabLabels(lang, labels)`
+for consumers needing the same strings outside React.
+
+The published bundle retains its browser DOM requirement at import time.
+
 ## Changelog
+
+- **2.12**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance.
+
+- **2.11.4**, 2026-10-26: Added the existing Arabic RTL story to the docs so its fixed locale can be reviewed alongside examples that follow the preview toolbars; component behaviour is unchanged.
 
 - **2.11.3**, 2026-10-15 ([#1357](https://github.com/unisdr/undrr-mangrove/issues/1357)): Stacked-tab indicator rotation uses the medium motion token and standard easing, retaining its reduced-motion gate.
 

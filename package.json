@@ -1,6 +1,6 @@
 {
   "name": "@undrr/undrr-mangrove",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Mangrove design System for UNDRR",
   "main": "src/index.js",
   "type": "module",
@@ -79,8 +79,11 @@
     "docker-test": "docker exec -it undrr-mangrove-client-1 bash -c \"yarn test\"",
     "test:sass-equivalence": "node scripts/check-sass-equivalence.mjs",
     "test-storybook:watch": "vitest --project=storybook",
+    "test:storybook-direction": "node scripts/test-storybook-direction.mjs",
     "test:storybook-html": "node scripts/test-storybook-html.mjs",
-    "test:storybook-themes": "node scripts/test-storybook-themes.mjs"
+    "test:storybook-themes": "node scripts/test-storybook-themes.mjs",
+    "extract:source-metadata": "node scripts/ai-manifest/extract-source-metadata.mjs",
+    "generate-ai-manifest:source": "yarn extract:source-metadata && node scripts/ai-manifest/generate-ai-manifest.js --build-dir=.cache/manifest-source"
   },
   "keywords": [],
   "author": "",
@@ -162,7 +165,6 @@
     "sass": "^1.105.1",
     "sass-loader": "17.0.1",
     "storybook": "^10.6.3",
-    "storybook-addon-rtl": "3.0.2",
     "style-loader": "4.0.0",
     "stylelint": "~17.16.0",
     "stylelint-config-recommended-scss": "17.0.1",

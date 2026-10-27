@@ -1,10 +1,5 @@
-/**
- * @file _labels.js
- * @description Translated label sets for MegaMenu.
- *
- * Imported by MegaMenu.stories.jsx for the global locale toolbar. Never import
- * from .stories files.
- */
+/** Runtime UI labels for MegaMenu; shared by production and Storybook. */
+import { createLabelResolver } from '../../../src/i18n';
 
 // ---------------------------------------------------------------------------
 // Spanish (es)
@@ -95,3 +90,23 @@ export const LABELS_RU = {
   navLabel: 'Основная навигация',
   closeMobileNavLabel: 'Закрыть мобильную навигацию',
 };
+
+export const DEFAULT_MEGAMENU_LABELS = {
+  navLabel: 'Main Navigation',
+  closeMobileNavLabel: 'Close mobile navigation',
+  menuLabel: 'Menu',
+  backLabel: 'Back',
+  allSectionsLabel: 'All sections',
+  closeLabel: 'Close',
+  overviewLabel: 'Overview',
+  toggleMobileNavLabel: 'Open navigation menu',
+};
+
+export const getMegaMenuLabels = createLabelResolver(DEFAULT_MEGAMENU_LABELS, {
+  ar: LABELS_AR,
+  es: LABELS_ES,
+  fr: LABELS_FR,
+  ja: LABELS_JA,
+  ru: LABELS_RU,
+  zh: LABELS_ZH,
+});

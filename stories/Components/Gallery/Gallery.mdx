@@ -263,11 +263,11 @@ Gallery supports [layered hydration](https://github.com/PreventionWeb/undrr-mang
 | `data-loop`               | `'false'`   | Enable infinite loop navigation                                                                                                                                                                                                       |
 
 ```js
-import createHydrator from 'https://assets.undrr.org/mangrove/2.2.0/components/hydrate.js';
+import createHydrator from 'https://assets.undrr.org/mangrove/2.3.0/components/hydrate.js';
 import {
   Gallery,
   fromElement,
-} from 'https://assets.undrr.org/mangrove/2.2.0/components/Gallery.js';
+} from 'https://assets.undrr.org/mangrove/2.3.0/components/Gallery.js';
 createHydrator({
   selector: '[data-mg-gallery]',
   component: Gallery,
@@ -277,7 +277,18 @@ createHydrator({
 
 See the [hydration guide](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
 
+## Runtime UI translations
+
+Use `lang` for built-in copy and `labels` for individual overrides. The
+[shared translation guide](?path=/docs/contributing-ui-translations--docs)
+explains language matching, fallback, direction and hydration precedence.
+
+`components/Gallery.js` exports `getGalleryLabels(lang, labels)`
+for consumers needing the same strings outside React.
+
 ## Changelog
+
+- **1.5**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance.
 
 - **1.4.6**, 2026-10-15 ([#1368](https://github.com/unisdr/undrr-mangrove/issues/1368)): The shared pending-media Loader now shows a static dashed marker with the translated loading label under reduced motion, including forced colours. Its noninteractive loading overlay uses body-size text on a stable surface, stays within the stage for translated labels, and reserves space for navigation arrows and their focus rings.
 - **1.4.5**, 2026-10-15 ([#1357](https://github.com/unisdr/undrr-mangrove/issues/1357)): Uses the shared inline Loader for pending media, including slow reduced-motion rotation and forced-colour visibility. Thumbnail navigation scrolls instantly when reduced motion is requested. Hover transitions use shared motion tokens; the private gallery spinner class and keyframes have been removed.
