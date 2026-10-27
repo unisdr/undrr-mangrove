@@ -1,3 +1,4 @@
+import { languageFromElement, labelsFromElement } from '../../../src/i18n';
 export const RETRY_EVENT = 'mg-service-notice:retry';
 
 /**
@@ -35,14 +36,7 @@ export const RETRY_EVENT = 'mg-service-notice:retry';
 export default function serviceNoticeFromElement(container) {
   const { dataset } = container;
 
-  let parsedLabels = {};
-  if (dataset.labels) {
-    try {
-      parsedLabels = JSON.parse(dataset.labels);
-    } catch {
-      // Ignore malformed JSON
-    }
-  }
+  const parsedLabels = labelsFromElement(container) ?? {};
 
   const title =
     dataset.title ||
@@ -76,6 +70,7 @@ export default function serviceNoticeFromElement(container) {
       : undefined;
 
   return {
+    ...languageFromElement(container),
     title,
     description,
     status: dataset.status === 'offline' ? 'offline' : 'degraded',
@@ -83,9 +78,9 @@ export default function serviceNoticeFromElement(container) {
     isCompact: dataset.isCompact === 'true' || isCompactClass,
     isOverlay: dataset.isOverlay === 'true' || isOverlayClass,
     onRetry,
-    retryLabel: dataset.retryLabel || undefined,
+    retryLabel: dataset.retryLabel ?? undefined,
     statusUrl: dataset.statusUrl || undefined,
-    statusUrlLabel: dataset.statusUrlLabel || undefined,
+    statusUrlLabel: dataset.statusUrlLabel ?? undefined,
     countdownSeconds: toInt(dataset.countdownSeconds) ?? null,
     maxAutoRetries: toInt(dataset.maxAutoRetries),
     labels: Object.keys(parsedLabels).length > 0 ? parsedLabels : undefined,

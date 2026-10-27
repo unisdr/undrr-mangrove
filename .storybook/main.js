@@ -19,7 +19,6 @@ export default {
     },
     '@storybook/addon-links',
     fileURLToPath(new URL('./addons/html/preset.js', import.meta.url)),
-    'storybook-addon-rtl',
     '@storybook/addon-a11y',
     '@storybook/addon-vitest',
     '@chromatic-com/storybook',

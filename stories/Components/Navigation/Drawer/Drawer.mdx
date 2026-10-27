@@ -90,7 +90,7 @@ Use matching CSS and JavaScript versions.
 ```html
 <link
   rel="stylesheet"
-  href="https://assets.undrr.org/mangrove/2.2.0/css/style.css"
+  href="https://assets.undrr.org/mangrove/2.3.0/css/style.css"
 />
 
 <button
@@ -125,7 +125,7 @@ Use matching CSS and JavaScript versions.
 
 <script
   type="module"
-  src="https://assets.undrr.org/mangrove/2.2.0/js/drawer.js"
+  src="https://assets.undrr.org/mangrove/2.3.0/js/drawer.js"
 ></script>
 ```
 
@@ -282,7 +282,18 @@ The hydrated drawer keeps its own open state. Clicking a trigger toggles it and 
 
 This component is a prototype and subject to change. The API and behavior may be updated based on user feedback and usability testing.
 
+## Runtime UI translations
+
+Use `lang` for built-in copy and `labels` for individual overrides. The
+[shared translation guide](?path=/docs/contributing-ui-translations--docs)
+explains language matching, fallback, direction and hydration precedence.
+
+`components/Drawer.js` exports `getDrawerLabels(lang, labels)`
+for consumers needing the same strings outside React.
+
 ## Changelog
+
+- **1.2**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance.
 
 - **1.1.2**, 2026-10-15 ([#1357](https://github.com/unisdr/undrr-mangrove/issues/1357)): Under reduced motion, drawer descendants disable transition properties so the global reset cannot briefly animate inherited visibility and block focus. Opening immediately focuses the close button; closing restores the trigger in the drawer's owning document.
 
