@@ -105,7 +105,7 @@ function loadContentSchemas() {
       );
       const implementors = schema['x-mangrove']?.implementors || [];
       for (const name of implementors) {
-        componentToSchema.set(name, schema);
+        componentToSchema.set(name, { schema, file });
       }
     } catch (err) {
       console.warn(
@@ -2253,9 +2253,10 @@ async function main() {
 
     // Content schema — canonical field definitions from schemas/dist/
     if (contentSchemas.has(name)) {
-      const schema = contentSchemas.get(name);
+      const { schema, file } = contentSchemas.get(name);
       detail.contentSchema = {
         $id: schema.$id,
+        sourceUrl: `${PUBLIC_REPO_BLOB_MAIN}schemas/dist/${encodeURIComponent(file)}`,
         title: schema.title,
         description: schema.description,
         fields: schema.properties,
@@ -2704,7 +2705,7 @@ If you are writing a list of your own with \`list-style: none\` and no Mangrove 
 
 Canonical JSON Schema definitions for component data contracts. Components with schemas include a contentSchema field in their detail JSON with field definitions, required fields, and deviation notes (where current prop names differ from canonical names).
 
-Schema source: https://github.com/unisdr/undrr-mangrove/tree/main/schemas
+Schema source: ${PUBLIC_REPO_URL}/tree/main/schemas
 
 The component index is not the whole library. Three things live elsewhere, and searching only the index will tell you they do not exist:
 
