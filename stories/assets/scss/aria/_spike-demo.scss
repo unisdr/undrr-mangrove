@@ -7,7 +7,7 @@
  * React Aria primitive and state styles for the gallery.
  * This file is imported by the Storybook spike stories, not by `yarn build:aria`.
  */
-@import "react-aria";
+@use "react-aria" as *;
 
 .aria-spike-table-scroll {
   border-radius: var(--mg-aria-radius-surface);

@@ -9,8 +9,8 @@
  * Composition styles for the Storybook spike demos belong in _spike-demo.scss,
  * which is not part of the distributed CSS surface.
  */
-@import "./runtime-theme-aliases";
-@import "./tokens-shared";
+@use "./runtime-theme-aliases" as *;
+@use "./tokens-shared" as *;
 
 // Keep the adapter in the opt-in artifact. Values resolve on each theme
 // element so changing mg-theme-* at runtime also updates React Aria controls.
