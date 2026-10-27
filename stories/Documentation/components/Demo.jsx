@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
-import reactElementToJSXString from 'react-element-to-jsx-string';
+import { renderToStaticMarkup } from 'react-dom/server';
+import {
+  replaceReactIds,
+  stripReactPreloads,
+} from '../../../.storybook/docsSourceRender';
 import { Source } from '@storybook/addon-docs/blocks';
 
 /**
- * Demo component that renders children and automatically shows the JSX source code.
+ * Demo component that renders children and automatically shows the rendered HTML source code.
  * Use this in MDX files to show visual demos with copyable code.
  *
  * @example
@@ -25,20 +29,15 @@ const Demo = ({
     sourceState === 'shown'
   );
 
-  // Convert React elements to JSX string
-  const sourceCode = reactElementToJSXString(children, {
-    showFunctions: false,
-    showDefaultProps: false,
-    useBooleanShorthandSyntax: true,
-    useFragmentShortSyntax: true,
-    sortProps: false,
-    // Convert className to class for HTML output
-    filterProps: [],
-  })
-    // Convert className to class for HTML-like output
-    .replace(/className=/g, 'class=')
-    // Remove style objects (they're React-specific)
-    .replace(/\s*style=\{\{[^}]+\}\}/g, '');
+  // Match the shared docs-source cleanup and keep valid HTML attributes/styles.
+  const sourceCode = replaceReactIds(
+    stripReactPreloads(
+      renderToStaticMarkup(<>{children}</>, {
+        identifierPrefix: 'mgdocsid-',
+      })
+    ),
+    'utility-demo'
+  );
 
   const styles = {
     container: {
