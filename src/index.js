@@ -79,3 +79,5 @@ export { getTabLabels } from '../stories/Components/Tab/_labels';
 export { getOnThisPageNavLabels } from '../stories/Components/OnThisPageNav/_labels';
 export { getMegaMenuLabels } from '../stories/Components/MegaMenu/_labels';
 export { getSyndicationSearchWidgetLabels } from '../stories/Components/SyndicationSearchWidget/_labels';
+
+export { default as FeaturePromo } from '../stories/Components/FeaturePromo/FeaturePromo';

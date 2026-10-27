@@ -102,6 +102,7 @@ export const NOT_PUBLIC = {
 // manifest with "Validation passed" and a green test suite — the failure mode
 // this file exists to prevent, reached through the file itself.
 export const MIN_PROPERTIES = {
+  'components-featurepromo': 1,
   'components-buttons-buttons': 1,
   'components-syndicated-search': 3,
   'components-cards-icon-card': 4,
@@ -134,6 +135,7 @@ export const MIN_PROPERTIES = {
 // list of matchers: one ending in "-" claims every property starting with it,
 // anything else claims that exact name.
 export const OWNERS = {
+  'components-featurepromo': ['--mg-feature-promo-'],
   'components-images-author-image': ['--mg-author-image-'],
   'components-syndicated-search': [
     '--mg-search-drawer-',
@@ -172,6 +174,8 @@ export const OWNERS = {
 // default is not repeated here, because the generator carries it separately
 // and a repeated value is a value that goes stale.
 export const PROPERTY_DOCS = {
+  '--mg-feature-promo-panel-bg':
+    'Panel background colour, selected by the existing primary, secondary, tertiary or quaternary variant; may be overridden by a theme.',
   // AuthorImage
   '--mg-author-image-accent': 'Colour of the ring drawn around the avatar.',
   '--mg-author-image-avatar-size': 'Width and height of the circular avatar.',

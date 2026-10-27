@@ -143,6 +143,7 @@ export default [
       ServiceNotice:
         './stories/Components/ServiceNotice/ServiceNotice.hydrate.js',
       Notice: './stories/Components/Notice/Notice.hydrate.js',
+      FeaturePromo: './stories/Components/FeaturePromo/FeaturePromo.jsx',
       // Vanilla components (bundled for AI manifest auto-rendering)
       Chips: './stories/Components/Buttons/Chips/Chips.jsx',
       CtaButton: './stories/Components/Buttons/CtaButton/CtaButton.entry.js',
