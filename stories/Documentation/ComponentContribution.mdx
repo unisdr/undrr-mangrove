@@ -537,13 +537,13 @@ UNDRR websites serve content in Arabic and other right-to-left (RTL) languages. 
 
 ### How RTL is triggered
 
-The Storybook locale toolbar (globe icon) controls text direction. Selecting **Arabic** sets `dir="rtl"` and `lang="ar"` on the document and on the `#storybook-root` element. The runtime globals `window.UNDRR.langCode` and `window.UNDRR.dir` are also updated. Selecting any other locale resets to `dir="ltr"`.
+The Storybook locale toolbar (globe icon) controls text direction. Selecting **Arabic** sets `dir="rtl"` and `lang="ar"` on the document and on the `#storybook-root` element. The runtime globals `window.UNDRR.langCode` and `window.UNDRR.dir` are also updated. Selecting any other locale uses `dir="ltr"` unless **Force right-to-left** is selected in the **Text direction** toolbar. **Locale direction** restores that locale’s direction; Arabic remains RTL.
 
-Use this toolbar as the canonical language switcher for component stories. Read `context.globals.locale` in the story or apply a shared locale-label decorator; do not add one exported story per language. A dedicated RTL or translation-stress story is appropriate only when it demonstrates a distinct layout or interaction condition, such as directional chart axes or deliberately constrained long labels.
+Use this toolbar as the canonical language switcher for component stories. For components with built-in catalogues, map `context.globals.locale` to the runtime `lang` prop while preserving explicit story args and label overrides. Follow the [UI translation contract](?path=/docs/contributing-ui-translations--docs); a decorator that replaces `labels` with an entire catalogue can conceal broken runtime selection. Keep translated content fixtures separate, and do not add one exported story per language. A dedicated RTL or translation-stress story is appropriate only when it demonstrates a distinct layout or interaction condition, such as directional chart axes or deliberately constrained long labels.
 
-> **Note:** `window.UNDRR.langCode` stores the English-language name of the locale (e.g., `'arabic'`, `'english'`, `'japanese'`), not an ISO 639-1 code. To get the ISO code (e.g., `'ar'`, `'en'`), use the `langArr` mapping in `.storybook/preview.js` or the `lang` attribute on the `<html>` element.
+> **Note:** `window.UNDRR.langCode` stores the English-language name of the locale (e.g., `'arabic'`, `'english'`, `'japanese'`), not an ISO 639-1 code. To get the ISO code (e.g., `'ar'`, `'en'`), use the `LANGUAGE_CODES` mapping in `.storybook/language.js` or the `lang` attribute on the `<html>` element.
 
-This logic lives in `.storybook/preview.js` in the `getLangCode` decorator. There is also a legacy manual RTL toggle (`setDirection` decorator) that can override the locale setting.
+This logic lives in `.storybook/language.js`, called from preview loaders, the `getLangCode` decorator and the globals listener for docs-only pages. The native toolbar retains the `addonRtl` global for existing links; no external RTL addon or manager-DOM lookup is required.
 
 ### SCSS patterns for RTL
 

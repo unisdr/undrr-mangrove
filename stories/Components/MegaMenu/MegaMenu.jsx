@@ -1,3 +1,5 @@
+import { getLanguageProps } from '../../../src/i18n';
+import { getMegaMenuLabels } from './_labels';
 /**
  * MegaMenu component. Multi-level navigation with sections and items.
  *
@@ -35,16 +37,8 @@ import PropTypes from 'prop-types';
 import { TopBar } from './TopBar/TopBar';
 import { Sidebar } from './TopBar/Sidebar';
 
-export const DEFAULT_MEGAMENU_LABELS = {
-  navLabel: 'Main Navigation',
-  closeMobileNavLabel: 'Close mobile navigation',
-  menuLabel: 'Menu',
-  backLabel: 'Back',
-  allSectionsLabel: 'All sections',
-  closeLabel: 'Close',
-  overviewLabel: 'Overview',
-  toggleMobileNavLabel: 'Open navigation menu',
-};
+export { getMegaMenuLabels } from './_labels';
+export { DEFAULT_MEGAMENU_LABELS } from './_labels';
 
 const MegaMenu = ({
   sections,
@@ -55,12 +49,11 @@ const MegaMenu = ({
   logoHref = '/',
   logoWidth,
   logoHeight,
-  labels = DEFAULT_MEGAMENU_LABELS,
+  lang,
+  dir,
+  labels,
 }) => {
-  const resolvedLabels = {
-    ...DEFAULT_MEGAMENU_LABELS,
-    ...labels,
-  };
+  const resolvedLabels = getMegaMenuLabels(lang, labels);
   const { navLabel, closeMobileNavLabel } = resolvedLabels;
   const sidebarId = useId();
   const wrapperRef = useRef(null);
@@ -224,6 +217,7 @@ const MegaMenu = ({
 
   return (
     <nav
+      {...getLanguageProps(lang, dir)}
       ref={wrapperRef}
       className={`mg-mega-wrapper${jsActive ? ' mg-mega-wrapper--js-active' : ''}${present ? ' mg-mega-wrapper--mobile-open' : ''}`}
       onMouseLeave={handleMouseLeave}
@@ -321,7 +315,11 @@ MegaMenu.propTypes = {
   logoWidth: PropTypes.number,
   /** Explicit height for the logo (CLS prevention). */
   logoHeight: PropTypes.number,
-  /** Translated UI labels. All keys are optional; existing label objects remain supported. */
+  /** UI language tag; selects the built-in catalogue, with English fallback. */
+  lang: PropTypes.string,
+  /** Explicit text direction; otherwise known catalogue languages select their direction. */
+  dir: PropTypes.oneOf(['ltr', 'rtl', 'auto']),
+  /** Explicit UI label overrides; omitted keys use the selected catalogue, then English. */
   labels: PropTypes.shape({
     navLabel: PropTypes.string,
     closeMobileNavLabel: PropTypes.string,
