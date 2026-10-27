@@ -200,7 +200,7 @@ This is what a compiled schema file looks like. The full source is in
 
 ### Pre-built JSON files
 
-Built JSON Schema files are published in the npm package under `schemas/`:
+The proposed package layout includes built JSON Schema files under `schemas/`. These files have not shipped in Mangrove 2.3.0:
 
 ```
 schemas/card.schema.json
@@ -217,18 +217,20 @@ schemas/text-cta.schema.json
 Any JSON Schema 2020-12 validator works. Example with [ajv](https://ajv.js.org/):
 
 ```js
-import { createAjv } from '@undrr/undrr-mangrove/schemas/ajv-setup.js';
+import Ajv2020 from 'ajv/dist/2020.js';
+import addFormats from 'ajv-formats';
 import cardSchema from '@undrr/undrr-mangrove/schemas/card.schema.json';
 
-const validate = createAjv().compile(cardSchema);
+const ajv = new Ajv2020({ strict: false, allErrors: true });
+addFormats(ajv);
+ajv.addFormat('html', true);
+const validate = ajv.compile(cardSchema);
 const valid = validate(myCardData);
 
 if (!valid) console.error(validate.errors);
 ```
 
-`createAjv()` is the shared factory — it configures AJV 2020-12 with `strict: false`,
-`allErrors: true`, `ajv-formats`, and the custom `html` format. Use it instead of
-instantiating AJV directly so all consumers share the same validation behavior.
+External consumers install `ajv` and `ajv-formats` and configure the validator as shown. Inside the Mangrove source checkout, tests share the equivalent `createAjv()` factory in `schemas/ajv-setup.js`; that development helper is not included in the npm package.
 
 ### Rebuilding schemas locally
 
