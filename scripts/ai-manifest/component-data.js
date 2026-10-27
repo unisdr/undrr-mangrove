@@ -638,13 +638,13 @@ export const COMPONENT_DATA = {
     description:
       'Card with icon or image, title, summary, and optional CTA. Variants: default, centered, negative (dark background). Orientation: vertical (icon above the content) or horizontal (icon beside it, for route rows); horizontal sizes the visual itself, so imageScale does not apply. Image scale options: small (recommended for navigation glyphs), medium, large, full. Small glyphs do not reserve an illustration frame. Supports custom icon background/foreground colors (iconColor, iconFgColor), border color, and label position (top or content area).',
     hydration: {
-      note: "The whole card set comes from one JSON attribute, so renderedHtml is only a preview of the markup the component produces. Render an empty data-mg-icon-card container carrying data-items and hydrate it. Malformed JSON is swallowed and renders an empty set, so validate the attribute server-side. The orientation prop has no data attribute, so the horizontal layout is React-only. Each item's summaryText accepts inline HTML and is sanitised with DOMPurify.",
+      note: "The whole card set comes from one JSON attribute, so renderedHtml is only a preview of the markup the component produces. Render an empty data-mg-icon-card container carrying data-items and hydrate it. Malformed JSON is swallowed and renders an empty set, so validate the attribute server-side. The orientation prop has no data attribute, so the horizontal layout is React-only. Each item's summary accepts inline HTML and is sanitised with DOMPurify.",
       selector: '[data-mg-icon-card]',
       modules: hydrationModules('IconCard'),
       dataAttributes: {
         'data-mg-icon-card': 'Marks the container to hydrate (required).',
         'data-items':
-          'JSON array of card objects, mapped to the data prop (required). title is required on every object; the rest — id, icon, iconSize, imgback, imgalt, imageScale, iconColor, iconFgColor, borderColor, label, visualLabel, srOnlyTitle, summaryText, link, linkText, button, buttonType — are the per-card options in the component props. The onClick prop is the only one that cannot be expressed in JSON. Invalid JSON renders nothing.',
+          'JSON array of card objects, mapped to the items prop (required). title is required on every object; the rest — id, icon, iconSize, image ({src, alt}), imageScale, iconColor, iconFgColor, borderColor, labels, visualLabel, srOnlyTitle, summary, link, linkText, button, buttonType — are the per-card options in the component props. The onClick prop is the only one that cannot be expressed in JSON. Invalid JSON renders nothing.',
         'data-centered': '"true" to centre the card contents.',
         'data-variant': '"default" (default) or "negative" for dark surfaces.',
       },
@@ -655,8 +655,8 @@ export const COMPONENT_DATA = {
         markup: `<div data-mg-icon-card
   data-variant="default"
   data-items='[
-    {"title":"Sendai Framework","summaryText":"Priorities, targets and indicators.","icon":"mg-icon mg-icon-book","link":"/sendai-framework","linkText":"Read the framework"},
-    {"title":"Terminology","summaryText":"Agreed definitions for disaster risk reduction.","icon":"mg-icon mg-icon-search","link":"/terminology","linkText":"Browse terms"}
+    {"title":"Sendai Framework","summary":"Priorities, targets and indicators.","icon":"mg-icon mg-icon-book","link":"/sendai-framework","linkText":"Read the framework"},
+    {"title":"Terminology","summary":"Agreed definitions for disaster risk reduction.","icon":"mg-icon mg-icon-search","link":"/terminology","linkText":"Browse terms"}
   ]'></div>`,
       }),
     },
@@ -715,7 +715,7 @@ export const COMPONENT_DATA = {
       dataAttributes: {
         'data-mg-stats-card': 'Marks the container to hydrate (required).',
         'data-stats':
-          'JSON array of stat objects (required; one to three recommended). value is required on every object; icon, label, bottomLabel, summaryText and link are optional. summaryText allows inline HTML links. Invalid JSON renders nothing.',
+          'JSON array of stat objects (required; one to three recommended). value is required on every object; icon, label, bottomLabel, summary and link are optional. summary allows inline HTML links. Invalid JSON renders nothing.',
         'data-title': 'Optional heading above the figures.',
         'data-variant':
           '"default", "compact", "highlighted" or "negative" (for dark surfaces).',
@@ -2873,6 +2873,8 @@ npm run build</code></pre>
       selector: '[data-mg-mega-menu]',
       modules: hydrationModules('MegaMenu'),
       dataAttributes: {
+        'data-aria-label':
+          'Explicit navigation name; omission retains labels.navLabel from the runtime language catalogue.',
         'data-lang':
           'UI language tag, selected before nearest HTML lang, then English. Supports en, ar, es, fr, ja, ru and zh with regional variants.',
         dir: 'Explicit direction on the hydration container: ltr, rtl or auto. Overrides inferred direction.',

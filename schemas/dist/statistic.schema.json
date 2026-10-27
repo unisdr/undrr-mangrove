@@ -74,14 +74,11 @@
   "title": "Statistic",
   "description": "Statistics display with icon, value, labels, and optional description. Used for key metrics and data highlights.",
   "x-mangrove": {
-    "version": "1.0.0",
-    "phase": 1,
+    "version": "2.0.0",
+    "phase": 2,
     "implementors": [
       "StatsCard",
       "StatsCardItem"
-    ],
-    "deviations": {
-      "stats[].summary": "Current component uses `summaryText` as the prop name."
-    }
+    ]
   }
 }

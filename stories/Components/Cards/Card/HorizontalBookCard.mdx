@@ -7,6 +7,8 @@ import * as HorizontalBookCardStories from './HorizontalBookCard.stories';
 
 # Horizontal book card
 
+This draft schema candidate changes `data` → `items` and `imgback`/`imgalt` → `image.{src,alt}`, with `summaryText` → `summary` and `label1`/`label2` → the first two entries of `labels[]`. Existing link handling, geometry and media presentation are retained. See the [schema migration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/MIGRATION-SCHEMA-V2.md) before adopting this unreleased API.
+
 A horizontal card variant for publications. Displays a portrait cover image on the left with title, summary, labels, and a CTA on the right. Ideal for detailed publication listings where you need both a cover image and descriptive text.
 
 ## When to use
@@ -50,7 +52,7 @@ Use the `variant` prop to change the title accent color.
 
 Card titles show: blue color, underline, and a chevron indicator. Add `mg-card--plain-title` to disable these signals.
 
-**React:** `<HorizontalBookCard data={data} className="mg-card--plain-title" />`
+**React:** `<HorizontalBookCard items={data} className="mg-card--plain-title" />`
 
 **HTML:** `<article class="mg-card mg-card__hc mg-card-book__hc mg-card--plain-title">...</article>`
 
@@ -79,23 +81,23 @@ See [Vertical card](?path=/docs/components-cards-vertical-card--docs#cards-witho
 
 | Prop        | Type   | Default     | Description                                                             |
 | ----------- | ------ | ----------- | ----------------------------------------------------------------------- |
-| `data`      | Array  | Required    | Array of card data objects                                              |
+| `items`     | Array  | Required    | Array of card data objects                                              |
 | `variant`   | String | `'primary'` | Color variant: `'primary'`, `'secondary'`, `'tertiary'`, `'quaternary'` |
 | `className` | String | —           | Additional CSS classes on the card element                              |
 
 ### Data object properties
 
-| Property      | Type   | Description                                                                                             |
-| ------------- | ------ | ------------------------------------------------------------------------------------------------------- |
-| `title`       | String | Card heading text                                                                                       |
-| `link`        | String | URL for the title link and stretched link. Omit it, or pass an empty string, to render an unlinked card |
-| `imgback`     | String | Cover image URL                                                                                         |
-| `imgalt`      | String | Alt text for the cover image                                                                            |
-| `summaryText` | String | Body text (HTML supported)                                                                              |
-| `label1`      | String | First category label                                                                                    |
-| `label2`      | String | Second category label                                                                                   |
-| `button`      | String | CTA button label                                                                                        |
-| `buttonLink`  | String | CTA destination. Defaults to `link`; set it to give an unlinked card a button                           |
+| Property     | Type   | Description                                                                                             |
+| ------------ | ------ | ------------------------------------------------------------------------------------------------------- |
+| `title`      | String | Card heading text                                                                                       |
+| `link`       | String | URL for the title link and stretched link. Omit it, or pass an empty string, to render an unlinked card |
+| `image.src`  | String | Cover image URL                                                                                         |
+| `image.alt`  | String | Alt text for the cover image                                                                            |
+| `summary`    | String | Body text (HTML supported)                                                                              |
+| `labels[0]`  | String | First category label                                                                                    |
+| `labels[1]`  | String | Second category label                                                                                   |
+| `button`     | String | CTA button label                                                                                        |
+| `buttonLink` | String | CTA destination. Defaults to `link`; set it to give an unlinked card a button                           |
 
 ## Publication surface
 
@@ -139,6 +141,8 @@ and cover-to-caption gaps are separate. Unlinked cards keep the resting shadow
 on hover. The secondary accent retains a leading inset from `--mg-card-padding`.
 
 ## Changelog
+
+- **2.0.0**, 2026-10-27 ([#891](https://github.com/unisdr/undrr-mangrove/pull/891)): **Unreleased breaking candidate.** Rename `data` → `items` and `imgback`/`imgalt` → `image.{src,alt}`, with `summaryText` → `summary` and `label1`/`label2` → the first two entries of `labels[]`. Preserve current media geometry, optional content and link behaviour while aligning the draft contract.
 
 - **1.6.0**, 2026-10-16: Remove the outer publication card surface and padding; retain a single square cover border, natural cover proportions and clear caption spacing. Publication covers no longer zoom or fade on hover. Add five publication surface tokens so themes can restore enclosure independently of photo cards.
 

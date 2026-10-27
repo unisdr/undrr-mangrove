@@ -1,19 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { CardTitle, resolveCardLink } from './cardParts';
-
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
 // Content contract: see schemas/card.schema.js for canonical field names and documented deviations.
-export function BookCard({ data, variant = 'primary', className }) {
+export function BookCard({ items, variant = 'primary', className }) {
   const variantClass =
     variant && variant !== 'primary' ? `mg-card--${variant}` : null;
   return (
     <>
-      {data.map((item, index) => {
+      {items.map((item, index) => {
         const link = resolveCardLink(item.link);
-
         return (
           <article
             key={index}
@@ -26,11 +24,11 @@ export function BookCard({ data, variant = 'primary', className }) {
               className
             )}
           >
-            {item.imgback && (
+            {item.image?.src && (
               <div className="mg-card__visual">
                 <img
-                  src={item.imgback}
-                  alt={item.imgalt}
+                  src={item.image?.src}
+                  alt={item.image?.alt}
                   className="mg-card__image"
                 />
               </div>
@@ -50,9 +48,8 @@ export function BookCard({ data, variant = 'primary', className }) {
     </>
   );
 }
-
 BookCard.propTypes = {
-  data: PropTypes.array.isRequired,
+  items: PropTypes.array.isRequired,
   variant: PropTypes.oneOf(['primary', 'secondary', 'tertiary', 'quaternary']),
   className: PropTypes.string,
 };

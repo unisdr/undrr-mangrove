@@ -11,6 +11,8 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 ## Unreleased
 
+- Draft schema-aligned API proposal: rename legacy card, statistic, quote, share and call-to-action inputs and add schema contract tests. This branch remains a draft; the actual 2.0 and subsequent release history is preserved.
+
 ## 2.3.0, 2026-10-27
 
 See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.3.0) for full details.

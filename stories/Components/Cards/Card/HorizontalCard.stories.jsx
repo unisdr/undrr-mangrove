@@ -1,7 +1,6 @@
 import { checkPhotoCardEdges } from './cardGeometryChecks';
 import { expect } from 'storybook/test';
 import { HorizontalCard } from './HorizontalCard';
-
 const getCaptionForLocale = locale => {
   switch (locale) {
     case 'english':
@@ -10,16 +9,16 @@ const getCaptionForLocale = locale => {
           {
             contenttile: 'Content tag',
             title: 'Title in large size',
-            summaryText: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
+            summary: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
 by vulnerable populations and communities.
 This paper explores health risks from climate change in a global context, setting out key risks actions`,
-            label1: 'Label 1',
-            label2: 'Label 2',
+            labels: ['Label 1', 'Label 2'],
             button: 'Primary action',
             link: 'javascript:void(0)',
-            imgalt: 'A person looks on',
-            imgback:
-              'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+            image: {
+              src: 'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+              alt: 'A person looks on',
+            },
           },
         ],
       };
@@ -30,14 +29,14 @@ This paper explores health risks from climate change in a global context, settin
           {
             contenttile: 'علامة المحتوى',
             title: 'عنوان بحجم كبير',
-            summaryText: `يُعد تغير المناخ <a href="#" class="mg-card__text-link">حالة طوارئ صحية عالمية</a>، حيث تشعر الفئات السكانية والمجتمعات الأكثر ضعفاً بتأثيراته بشكل أكبر. تستكشف هذه الورقة المخاطر الصحية الناجمة عن تغير المناخ في سياق عالمي.`,
-            label1: 'التسمية 1',
-            label2: 'التسمية 2',
+            summary: `يُعد تغير المناخ <a href="#" class="mg-card__text-link">حالة طوارئ صحية عالمية</a>، حيث تشعر الفئات السكانية والمجتمعات الأكثر ضعفاً بتأثيراته بشكل أكبر. تستكشف هذه الورقة المخاطر الصحية الناجمة عن تغير المناخ في سياق عالمي.`,
+            labels: ['التسمية 1', 'التسمية 2'],
             button: 'الإجراء الأساسي',
             link: 'javascript:void(0)',
-            imgalt: 'شخص ينظر',
-            imgback:
-              'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+            image: {
+              src: 'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+              alt: 'شخص ينظر',
+            },
           },
         ],
       };
@@ -50,9 +49,10 @@ This paper explores health risks from climate change in a global context, settin
             title: '投稿のタイトルはここにあり、2行です',
             button: '続きを読む',
             link: 'javascript:void(0)',
-            imgalt: 'A person looks on',
-            imgback:
-              'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+            image: {
+              src: 'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+              alt: 'A person looks on',
+            },
           },
         ],
       };
@@ -63,49 +63,43 @@ This paper explores health risks from climate change in a global context, settin
           {
             contenttile: 'Horizontal card',
             title: 'Title in large size',
-            summaryText: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
+            summary: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
 by vulnerable populations and communities.
 This paper explores health risks from climate change in a global context, setting out key risks actions`,
-            label1: 'Label 1',
-            label2: 'Label 2',
+            labels: ['Label 1', 'Label 2'],
             button: 'Primary action',
             link: 'javascript:void(0)',
-            imgalt: 'A person looks on',
-            imgback:
-              'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+            image: {
+              src: 'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+              alt: 'A person looks on',
+            },
           },
         ],
       };
       return dummy;
   }
 };
-
 export default {
   title: 'Components/Cards/Horizontal Card',
   component: HorizontalCard,
-
   argTypes: {
     variant: {
       options: ['primary', 'secondary', 'tertiary', 'quaternary'],
-
       control: {
         type: 'inline-radio',
       },
-
       defaultValue: 'primary',
     },
   },
 };
-
 export const DefaultHorizontalCard = {
   play: checkPhotoCardEdges,
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
     return (
-      <HorizontalCard data={caption.contentdata} {...args}></HorizontalCard>
+      <HorizontalCard items={caption.contentdata} {...args}></HorizontalCard>
     );
   },
-
   name: 'Horizontal Card',
 };
 
@@ -120,13 +114,10 @@ export const NoLinkHorizontalCard = {
       link: null,
       button: null,
     }));
-
-    return <HorizontalCard data={unlinked} {...args}></HorizontalCard>;
+    return <HorizontalCard items={unlinked} {...args}></HorizontalCard>;
   },
-
   name: 'Without a link',
 };
-
 export const ButtonOnlyHorizontalCard = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
@@ -135,40 +126,48 @@ export const ButtonOnlyHorizontalCard = {
       link: null,
       buttonLink: 'javascript:void(0)',
     }));
-
-    return <HorizontalCard data={buttonOnly} {...args}></HorizontalCard>;
+    return <HorizontalCard items={buttonOnly} {...args}></HorizontalCard>;
   },
-
   name: 'Button only, no card link',
 };
-
 export const MixedLinkHorizontalCards = {
   render: (args, { globals: { locale } }) => {
     const [item] = getCaptionForLocale(locale).contentdata;
     const mixed = [
-      { ...item },
-      { ...item, link: null, buttonLink: 'javascript:void(0)' },
-      { ...item, link: null, button: null },
+      {
+        ...item,
+      },
+      {
+        ...item,
+        link: null,
+        buttonLink: 'javascript:void(0)',
+      },
+      {
+        ...item,
+        link: null,
+        button: null,
+      },
     ];
-
-    return <HorizontalCard data={mixed} {...args}></HorizontalCard>;
+    return <HorizontalCard items={mixed} {...args}></HorizontalCard>;
   },
-
   name: 'Mixed group (linked, button only, unlinked)',
 };
-
 export const LongContent = {
   render: (args, { globals: { locale } }) => {
     const base = getCaptionForLocale(locale).contentdata[0];
     return (
-      <div style={{ maxWidth: '900px' }}>
+      <div
+        style={{
+          maxWidth: '900px',
+        }}
+      >
         <HorizontalCard
           {...args}
-          data={[
+          items={[
             {
               ...base,
-              summaryText: Array(3)
-                .fill(base.summaryText || base.title)
+              summary: Array(3)
+                .fill(base.summary || base.title)
                 .join(' '),
             },
           ]}
@@ -188,31 +187,34 @@ export const LongContent = {
     expect(Math.abs(frame.height - image.height)).toBeLessThan(1);
   },
 };
-
 export const NoImageHorizontalCard = {
   name: 'Horizontal card without image',
   render: (args, { globals: { locale } }) => {
     const data = getCaptionForLocale(locale).contentdata.map(item => ({
       ...item,
-      imgback: null,
-      imgalt: null,
+      image: {
+        src: null,
+        alt: null,
+      },
     }));
-    return <HorizontalCard {...args} data={data} />;
+    return <HorizontalCard {...args} items={data} />;
   },
   play: checkPhotoCardEdges,
 };
-
 export const NoLabels = {
   name: 'Without labels',
   render: (args, { globals: { locale } }) => {
     const data = getCaptionForLocale(locale).contentdata.map(item => ({
       ...item,
-      label1: null,
-      label2: null,
+      labels: [null, null],
     }));
     return (
-      <div style={{ maxWidth: '900px' }}>
-        <HorizontalCard {...args} data={data} />
+      <div
+        style={{
+          maxWidth: '900px',
+        }}
+      >
+        <HorizontalCard {...args} items={data} />
       </div>
     );
   },

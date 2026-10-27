@@ -7,6 +7,8 @@ import * as VerticalCardStories from './VerticalCard.stories';
 
 # Vertical card
 
+This draft schema candidate changes `data` → `items` and `imgback`/`imgalt` → `image.{src,alt}`, with `summaryText` → `summary` and `label1`/`label2` → the first two entries of `labels[]`. Existing link handling, geometry and media presentation are retained. See the [schema migration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/MIGRATION-SCHEMA-V2.md) before adopting this unreleased API.
+
 A content teaser card in portrait/stacked layout. Image on top, text below. Used across all UNDRR sites for news, events, publications, and general content listings.
 
 ## When to use
@@ -79,7 +81,7 @@ Card titles show: blue color, underline (3px offset), and a right-pointing chevr
 
 Add `mg-card--plain-title` to disable link signals while keeping the card clickable.
 
-**React:** `<VerticalCard data={data} className="mg-card--plain-title" />`
+**React:** `<VerticalCard items={data} className="mg-card--plain-title" />`
 
 **HTML:** `<article class="mg-card mg-card__vc mg-card--plain-title">...</article>`
 
@@ -97,10 +99,10 @@ Set `buttonLink` and leave `link` empty. The title stays plain text and the CTA 
 
 ```jsx
 <VerticalCard
-  data={[
+  items={[
     {
       title: 'Jobs and Careers',
-      summaryText: 'Stay current on the latest vacancies.',
+      summary: 'Stay current on the latest vacancies.',
       button: 'Browse vacancies',
       buttonLink: 'https://www.preventionweb.net/community/careers',
     },
@@ -130,25 +132,25 @@ Linked and unlinked cards frequently sit in the same row. They should read as on
 
 | Prop        | Type   | Default     | Description                                                             |
 | ----------- | ------ | ----------- | ----------------------------------------------------------------------- |
-| `data`      | Array  | Required    | Array of card data objects                                              |
+| `items`     | Array  | Required    | Array of card data objects                                              |
 | `variant`   | String | `'primary'` | Color variant: `'primary'`, `'secondary'`, `'tertiary'`, `'quaternary'` |
 | `className` | String | —           | Additional CSS classes on the card element                              |
 
 ### Data object properties
 
-| Property      | Type   | Description                                                                                             |
-| ------------- | ------ | ------------------------------------------------------------------------------------------------------- |
-| `title`       | String | Card heading text                                                                                       |
-| `link`        | String | URL for the title link and stretched link. Omit it, or pass an empty string, to render an unlinked card |
-| `target`      | String | Optional browsing context shared by the title and CTA links                                             |
-| `rel`         | String | Optional link relationship shared by the title and CTA links                                            |
-| `imgback`     | String | Image URL                                                                                               |
-| `imgalt`      | String | Alt text for the image                                                                                  |
-| `summaryText` | String | Body text (HTML supported)                                                                              |
-| `label1`      | String | First category label                                                                                    |
-| `label2`      | String | Second category label                                                                                   |
-| `button`      | String | CTA button label                                                                                        |
-| `buttonLink`  | String | CTA destination. Defaults to `link`; set it to give an unlinked card a button                           |
+| Property     | Type   | Description                                                                                             |
+| ------------ | ------ | ------------------------------------------------------------------------------------------------------- |
+| `title`      | String | Card heading text                                                                                       |
+| `link`       | String | URL for the title link and stretched link. Omit it, or pass an empty string, to render an unlinked card |
+| `target`     | String | Optional browsing context shared by the title and CTA links                                             |
+| `rel`        | String | Optional link relationship shared by the title and CTA links                                            |
+| `image.src`  | String | Image URL                                                                                               |
+| `image.alt`  | String | Alt text for the image                                                                                  |
+| `summary`    | String | Body text (HTML supported)                                                                              |
+| `labels[0]`  | String | First category label                                                                                    |
+| `labels[1]`  | String | Second category label                                                                                   |
+| `button`     | String | CTA button label                                                                                        |
+| `buttonLink` | String | CTA destination. Defaults to `link`; set it to give an unlinked card a button                           |
 
 ## Accessibility
 
@@ -174,6 +176,8 @@ corner: photo cards now apply padding to `.mg-card__content` instead of the
 outer `.mg-card` surface.
 
 ## Changelog
+
+- **2.0.0**, 2026-10-27 ([#891](https://github.com/unisdr/undrr-mangrove/pull/891)): **Unreleased breaking candidate.** Rename `data` → `items` and `imgback`/`imgalt` → `image.{src,alt}`, with `summaryText` → `summary` and `label1`/`label2` → the first two entries of `labels[]`. Preserve current media geometry, optional content and link behaviour while aligning the draft contract.
 
 - **1.7.0**, 2026-10-16: Photo media reaches the outer card edges while text and controls remain inset. Responsive horizontal media fills the leading edge, including in RTL. Titles without labels use a single content inset. Publication teasers use a single cover border; icon cards keep their inset content. Existing HTML classes and props remain supported.
 

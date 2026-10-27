@@ -521,58 +521,57 @@ function buildSampleProps(React) {
         'Platform services will undergo brief routine updates tonight.',
     },
     VerticalCard: {
-      data: [
+      items: [
         {
           title: 'Building resilience through early warning systems',
           link: '/news/resilience',
-          imgback: 'https://picsum.photos/600/400',
-          imgalt: 'Workshop',
-          label1: 'Early warning',
-          summaryText: 'New partnerships strengthen disaster preparedness.',
+          image: { src: 'https://picsum.photos/600/400', alt: 'Workshop' },
+          labels: ['Early warning'],
+          summary: 'New partnerships strengthen disaster preparedness.',
         },
       ],
     },
     HorizontalCard: {
-      data: [
+      items: [
         {
           title: 'Climate adaptation strategies',
           link: '/news/climate',
-          imgback: 'https://picsum.photos/400/300',
-          imgalt: 'Meeting',
-          label1: 'Climate',
-          summaryText: 'Integrated approaches to climate resilience.',
+          image: { src: 'https://picsum.photos/400/300', alt: 'Meeting' },
+          labels: ['Climate'],
+          summary: 'Integrated approaches to climate resilience.',
         },
       ],
     },
     BookCard: {
-      data: [
+      items: [
         {
           title: 'Global Assessment Report 2024',
           link: '/publications/gar-2024',
-          imgback: 'https://picsum.photos/300/400',
-          imgalt: 'GAR 2024 cover',
+          image: {
+            src: 'https://picsum.photos/300/400',
+            alt: 'GAR 2024 cover',
+          },
         },
       ],
     },
     HorizontalBookCard: {
-      data: [
+      items: [
         {
           title: 'Sendai Framework Monitor Report',
           link: '/publications/sendai',
-          imgback: 'https://picsum.photos/300/400',
-          imgalt: 'Cover',
-          label1: 'DRR',
-          summaryText: 'Progress on implementation.',
+          image: { src: 'https://picsum.photos/300/400', alt: 'Cover' },
+          labels: ['DRR'],
+          summary: 'Progress on implementation.',
         },
       ],
     },
     IconCard: {
-      data: [
+      items: [
         {
           icon: 'mg-icon mg-icon-globe',
           imageScale: 'medium',
           title: 'Global risk assessment',
-          summaryText: 'Analysis of disaster risk trends.',
+          summary: 'Analysis of disaster risk trends.',
           link: '/risk',
           linkText: 'Learn more',
         },

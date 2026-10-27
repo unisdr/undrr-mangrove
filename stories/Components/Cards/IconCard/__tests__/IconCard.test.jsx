@@ -5,17 +5,26 @@ import { IconCard } from '../IconCard';
 
 /** Helper to build a minimal data array for IconCard. */
 function makeData(overrides = {}) {
-  return [{ title: 'Test card', ...overrides }];
+  return [
+    {
+      title: 'Test card',
+      ...overrides,
+    },
+  ];
 }
-
 describe('IconCard', () => {
   // --------------------------------------------------
   // Basic rendering
   // --------------------------------------------------
 
   it('renders title and summary text', () => {
-    render(<IconCard data={makeData({ summaryText: 'Card description' })} />);
-
+    render(
+      <IconCard
+        items={makeData({
+          summary: 'Card description',
+        })}
+      />
+    );
     expect(screen.getByText('Test card')).toBeInTheDocument();
     expect(screen.getByText('Card description')).toBeInTheDocument();
   });
@@ -26,13 +35,15 @@ describe('IconCard', () => {
 
   it('renders icon span when data item has icon classes', () => {
     const { container } = render(
-      <IconCard data={makeData({ icon: 'mg-icon mg-icon-globe' })} />
+      <IconCard
+        items={makeData({
+          icon: 'mg-icon mg-icon-globe',
+        })}
+      />
     );
-
     const iconWrap = container.querySelector('.mg-card__icon-wrap');
     expect(iconWrap).toBeInTheDocument();
     expect(iconWrap).toHaveAttribute('aria-hidden', 'true');
-
     const glyph = iconWrap.querySelector('.mg-icon.mg-icon-globe');
     expect(glyph).toBeInTheDocument();
   });
@@ -41,17 +52,20 @@ describe('IconCard', () => {
   // Image rendering
   // --------------------------------------------------
 
-  it('renders image when imgback is set', () => {
+  it('renders image when image.src is set', () => {
     render(
       <IconCard
-        data={makeData({
-          imgback: '/images/photo.jpg',
-          imgalt: 'A photograph',
+        items={makeData({
+          image: {
+            src: '/images/photo.jpg',
+            alt: 'A photograph',
+          },
         })}
       />
     );
-
-    const img = screen.getByRole('img', { name: 'A photograph' });
+    const img = screen.getByRole('img', {
+      name: 'A photograph',
+    });
     expect(img).toHaveAttribute('src', '/images/photo.jpg');
     expect(img).toHaveClass('mg-card__image');
   });
@@ -63,28 +77,32 @@ describe('IconCard', () => {
   it('applies --mg-icon-bg custom property and --colored modifier for iconColor', () => {
     const { container } = render(
       <IconCard
-        data={makeData({ icon: 'mg-icon mg-icon-globe', iconColor: '#f4b8a8' })}
+        items={makeData({
+          icon: 'mg-icon mg-icon-globe',
+          iconColor: '#f4b8a8',
+        })}
       />
     );
-
     const iconWrap = container.querySelector('.mg-card__icon-wrap');
     expect(iconWrap).toHaveClass('mg-card__icon-wrap--colored');
-    expect(iconWrap).toHaveStyle({ '--mg-icon-bg': '#f4b8a8' });
+    expect(iconWrap).toHaveStyle({
+      '--mg-icon-bg': '#f4b8a8',
+    });
   });
-
   it('applies --mg-icon-fg custom property for iconFgColor', () => {
     const { container } = render(
       <IconCard
-        data={makeData({
+        items={makeData({
           icon: 'mg-icon mg-icon-globe',
           iconColor: '#f4b8a8',
           iconFgColor: '#333',
         })}
       />
     );
-
     const iconWrap = container.querySelector('.mg-card__icon-wrap');
-    expect(iconWrap).toHaveStyle({ '--mg-icon-fg': '#333' });
+    expect(iconWrap).toHaveStyle({
+      '--mg-icon-fg': '#333',
+    });
   });
 
   // --------------------------------------------------
@@ -93,12 +111,17 @@ describe('IconCard', () => {
 
   it('applies --mg-card-border custom property and --bordered modifier for borderColor', () => {
     const { container } = render(
-      <IconCard data={makeData({ borderColor: '#e8963a' })} />
+      <IconCard
+        items={makeData({
+          borderColor: '#e8963a',
+        })}
+      />
     );
-
     const article = container.querySelector('article');
     expect(article).toHaveClass('mg-card__icon--bordered');
-    expect(article).toHaveStyle({ '--mg-card-border': '#e8963a' });
+    expect(article).toHaveStyle({
+      '--mg-card-border': '#e8963a',
+    });
   });
 
   // --------------------------------------------------
@@ -108,49 +131,46 @@ describe('IconCard', () => {
   it('renders visualLabel inside .mg-card__visual', () => {
     const { container } = render(
       <IconCard
-        data={makeData({ visualLabel: 'Data', icon: 'mg-icon mg-icon-globe' })}
+        items={makeData({
+          visualLabel: 'Data',
+          icon: 'mg-icon mg-icon-globe',
+        })}
       />
     );
-
     const visual = container.querySelector('.mg-card__visual');
     const visualLabel = visual.querySelector('.mg-card__visual-label');
     expect(visualLabel).toBeInTheDocument();
     expect(visualLabel).toHaveTextContent('Data');
     expect(visualLabel.tagName).toBe('SPAN');
   });
-
   it('always renders label inside .mg-card__content regardless of visualLabel', () => {
     const { container } = render(
       <IconCard
-        data={makeData({
-          label: 'Category',
+        items={makeData({
+          labels: ['Category'],
           visualLabel: 'Data',
           icon: 'mg-icon mg-icon-globe',
         })}
       />
     );
-
     const content = container.querySelector('.mg-card__content');
     const label = content.querySelector('.mg-card__label');
     expect(label).toBeInTheDocument();
     expect(label).toHaveTextContent('Category');
   });
-
   it('supports both visualLabel and label on the same card', () => {
     const { container } = render(
       <IconCard
-        data={makeData({
-          label: 'Category',
+        items={makeData({
+          labels: ['Category'],
           visualLabel: 'Data',
           icon: 'mg-icon mg-icon-globe',
         })}
       />
     );
-
     const visual = container.querySelector('.mg-card__visual');
     const visualLabel = visual.querySelector('.mg-card__visual-label');
     expect(visualLabel).toHaveTextContent('Data');
-
     const content = container.querySelector('.mg-card__content');
     const contentLabel = content.querySelector('.mg-card__label');
     expect(contentLabel).toHaveTextContent('Category');
@@ -163,14 +183,13 @@ describe('IconCard', () => {
   it('renders screen-reader-only title when srOnlyTitle is true', () => {
     const { container } = render(
       <IconCard
-        data={makeData({
+        items={makeData({
           srOnlyTitle: true,
           link: '/example',
           icon: 'mg-icon mg-icon-globe',
         })}
       />
     );
-
     const header = container.querySelector('.mg-card__title');
     expect(header).toHaveClass('mg-u-sr-only');
     expect(header).toHaveTextContent('Test card');
@@ -179,24 +198,25 @@ describe('IconCard', () => {
     const visualLink = container.querySelector('.mg-card__visual-link');
     expect(visualLink).toHaveAttribute('href', '/example');
   });
-
   it('supports client-side navigation handlers without requiring a link URL', () => {
     const onClick = jest.fn(event => event.preventDefault());
     render(
       <IconCard
-        data={makeData({
+        items={makeData({
           icon: 'mg-icon mg-icon-globe',
           linkText: 'Explore',
           onClick,
         })}
       />
     );
-
-    const titleLink = screen.getByRole('link', { name: 'Test card' });
-    const actionLink = screen.getByRole('link', { name: 'Explore' });
+    const titleLink = screen.getByRole('link', {
+      name: 'Test card',
+    });
+    const actionLink = screen.getByRole('link', {
+      name: 'Explore',
+    });
     expect(titleLink).toHaveAttribute('href', '#');
     expect(actionLink).toHaveAttribute('href', '#');
-
     fireEvent.click(titleLink);
     fireEvent.click(actionLink);
     expect(onClick).toHaveBeenCalledTimes(2);
@@ -209,39 +229,35 @@ describe('IconCard', () => {
   it('has no a11y violations', async () => {
     const { container } = render(
       <IconCard
-        data={[
+        items={[
           {
             title: 'Resilience',
             icon: 'mg-icon mg-icon-globe',
-            summaryText: 'Building disaster resilience worldwide.',
+            summary: 'Building disaster resilience worldwide.',
             link: '/resilience',
           },
         ]}
       />
     );
-
     expect(await axe(container)).toHaveNoViolations();
   });
-
   it('has no a11y violations with borderColor and iconColor', async () => {
     const { container } = render(
       <IconCard
-        data={[
+        items={[
           {
             title: 'Colored card',
             icon: 'mg-icon mg-icon-globe',
             iconColor: '#f4b8a8',
             borderColor: '#e8963a',
-            summaryText: 'A styled card.',
+            summary: 'A styled card.',
           },
         ]}
       />
     );
-
     expect(await axe(container)).toHaveNoViolations();
   });
 });
-
 const sass = require('sass');
 const path = require('path');
 
@@ -259,7 +275,6 @@ const css = () => {
   }
   return compiled;
 };
-
 const ruleFor = selector => {
   const match = css().match(
     new RegExp(
@@ -268,7 +283,6 @@ const ruleFor = selector => {
   );
   return match ? match[1] : '';
 };
-
 describe('icon card layout', () => {
   test("centred cards centre the icon on the visual's cross axis", () => {
     // The visual is a column flex container, so justify-content centres it
@@ -277,7 +291,6 @@ describe('icon card layout', () => {
     const rule = ruleFor('.mg-card__icon--centered .mg-card__visual');
     expect(rule).toMatch(/align-items:\s*center/);
   });
-
   test('horizontal cards give the visual an explicit size', () => {
     // imageScale pins --small to 72px and sizes the glyph by container query;
     // in a row that holds the column open wider than the icon drawn in it.

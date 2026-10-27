@@ -93,12 +93,11 @@
   "title": "Gallery",
   "description": "Media gallery supporting images, videos, embeds, and HTML content with thumbnails and navigation.",
   "x-mangrove": {
-    "version": "1.0.0",
-    "phase": 1,
+    "version": "2.0.0",
+    "phase": 2,
     "implementors": [
       "Gallery"
     ],
-    "deviations": {},
     "notes": "Gallery also accepts presentation-only props (showThumbnails, thumbnailPosition, showArrows, arrowStyle, showDescription, enableKeyboard, loop, initialIndex) that are component configuration, not content data."
   }
 }

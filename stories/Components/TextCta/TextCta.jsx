@@ -22,8 +22,7 @@ const EMPTY_BUTTONS = [];
  * @param {Array}  props.buttons - Array of button objects: { label, url, type }
  * @param {string} props.variant - Color variant: 'primary' (default), 'secondary', 'tertiary', 'quaternary'
  * @param {string} props.backgroundColor - Custom CSS background color (overrides variant)
- * @param {string} props.image - Optional image URL displayed alongside the text content
- * @param {string} props.imageAlt - Alt text for the image
+ * @param {Object} props.image - Optional schema-aligned image with src and alt
  * @param {string} props.headlineSize - Font size token for headline (e.g. '600', '800'). Maps to `mg-u-font-size-{value}`
  * @param {number} props.headlineLevel - Semantic heading level (2–6). Controls the HTML element (h2, h3, etc.) independently of visual size
  * @param {string} props.padding - Custom CSS padding (overrides theme token)
@@ -43,13 +42,12 @@ export function TextCta({
   backgroundColor,
   padding,
   image,
-  imageAlt = '',
   centered = true,
   layout = 'stacked',
   className,
   children,
 }) {
-  const hasImage = !!image;
+  const hasImage = !!image?.src;
   const inlineActions = layout === 'inline' && children == null;
   const headlineId = useId();
   const HeadingTag = `h${headlineLevel}`;
@@ -123,7 +121,7 @@ export function TextCta({
 
         {hasImage && (
           <div className="mg-cta__image">
-            <img src={image} alt={imageAlt} />
+            <img src={image?.src} alt={image?.alt ?? ''} />
           </div>
         )}
       </div>
@@ -171,10 +169,8 @@ TextCta.propTypes = {
   backgroundColor: PropTypes.string,
   /** Custom CSS padding (overrides theme token) */
   padding: PropTypes.string,
-  /** Image URL displayed alongside text (triggers side-by-side layout) */
-  image: PropTypes.string,
-  /** Alt text for the image */
-  imageAlt: PropTypes.string,
+  /** Schema-aligned image displayed alongside text (triggers side-by-side layout). */
+  image: PropTypes.shape({ src: PropTypes.string, alt: PropTypes.string }),
   /** Center-align content (auto-disabled when image is set) */
   centered: PropTypes.bool,
   /** Content and action arrangement */

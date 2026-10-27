@@ -34,8 +34,7 @@ const QuoteHighlight = ({
   quote,
   attribution,
   attributionTitle,
-  imageSrc,
-  imageAlt,
+  image,
   backgroundColor = 'light',
   variant = 'line',
   alignment = 'full',
@@ -43,7 +42,7 @@ const QuoteHighlight = ({
   ...props
 }) => {
   const baseClass = 'mg-quote-highlight';
-  const hasImage = !!imageSrc;
+  const hasImage = !!image?.src;
 
   return (
     <section
@@ -75,8 +74,8 @@ const QuoteHighlight = ({
               {hasImage && (
                 <div className={`${baseClass}__portrait-container`}>
                   <img
-                    src={imageSrc}
-                    alt={imageAlt || `${attribution || 'Quote'} image`}
+                    src={image?.src}
+                    alt={image?.alt ?? `${attribution || 'Quote'} image`}
                     className={`${baseClass}__portrait`}
                   />
                 </div>
@@ -112,8 +111,8 @@ const QuoteHighlight = ({
       {variant === 'image' && hasImage && (
         <div className={`${baseClass}__image-container`}>
           <img
-            src={imageSrc}
-            alt={imageAlt || `${attribution || 'Quote'} image`}
+            src={image?.src}
+            alt={image?.alt ?? `${attribution || 'Quote'} image`}
             className={`${baseClass}__image`}
           />
         </div>
@@ -139,10 +138,8 @@ QuoteHighlight.propTypes = {
    * sanitised with DOMPurify.
    */
   attributionTitle: PropTypes.string,
-  /** URL for the image to display */
-  imageSrc: PropTypes.string,
-  /** Alt text for the image */
-  imageAlt: PropTypes.string,
+  /** Image using the proposed schema-aligned source and alternative text. */
+  image: PropTypes.shape({ src: PropTypes.string, alt: PropTypes.string }),
   /** Background color variant */
   backgroundColor: PropTypes.oneOf(['light', 'dark', 'bright']),
   /** Component variant: 'line' (with separator line) or 'image' (with image) */

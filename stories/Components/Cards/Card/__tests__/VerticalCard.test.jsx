@@ -1,15 +1,14 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { VerticalCard } from '../VerticalCard';
-
 describe('VerticalCard', () => {
   it('shares link destination attributes between its title and CTA', () => {
     render(
       <VerticalCard
-        data={[
+        items={[
           {
             title: 'Explore Mangrove',
-            summaryText: 'Read the component guidance.',
+            summary: 'Read the component guidance.',
             button: 'Open guidance',
             link: '#guidance',
             target: '_top',
@@ -18,10 +17,12 @@ describe('VerticalCard', () => {
         ]}
       />
     );
-
-    const title = screen.getByRole('link', { name: 'Explore Mangrove' });
-    const action = screen.getByRole('link', { name: 'Open guidance' });
-
+    const title = screen.getByRole('link', {
+      name: 'Explore Mangrove',
+    });
+    const action = screen.getByRole('link', {
+      name: 'Open guidance',
+    });
     expect(title).toHaveAttribute('href', '#guidance');
     expect(title).toHaveAttribute('target', '_top');
     expect(title).toHaveAttribute('rel', 'help');

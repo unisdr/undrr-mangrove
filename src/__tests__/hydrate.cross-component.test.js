@@ -26,7 +26,7 @@ import iconCardFromElement from '../../stories/Components/Cards/IconCard/IconCar
 // act() only gives its flush guarantee when the environment opts in.
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
-const cardItems = title => JSON.stringify([{ title, summaryText: 'Summary' }]);
+const cardItems = title => JSON.stringify([{ title, summary: 'Summary' }]);
 
 function hydrateCards() {
   return createHydrator({

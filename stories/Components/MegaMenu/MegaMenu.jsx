@@ -51,6 +51,7 @@ const MegaMenu = ({
   logoHref = '/',
   logoWidth,
   logoHeight,
+  ariaLabel,
   lang,
   dir,
   labels,
@@ -224,7 +225,7 @@ const MegaMenu = ({
       className={`mg-mega-wrapper${jsActive ? ' mg-mega-wrapper--js-active' : ''}${present ? ' mg-mega-wrapper--mobile-open' : ''}`}
       onMouseLeave={handleMouseLeave}
       onKeyDown={handleEscape}
-      aria-label={navLabel}
+      aria-label={ariaLabel ?? navLabel}
     >
       <TopBar
         isMobile={isMobile}
@@ -278,6 +279,8 @@ const MegaMenu = ({
 };
 
 MegaMenu.propTypes = {
+  /** Explicit accessible name; omitted values retain the translated navLabel. */
+  ariaLabel: PropTypes.string,
   /** Array of section objects containing the menu structure. */
   sections: PropTypes.arrayOf(
     PropTypes.shape({

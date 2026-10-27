@@ -15,8 +15,8 @@ describe('shareButtonsFromElement', () => {
 
     expect(props.labels.mainLabel).toBe('Share this');
     expect(props.labels.onCopy).toBe('Link copied');
-    expect(props.SharingSubject).toBe('Sharing Link');
-    expect(props.SharingTextBody).toBe('');
+    expect(props.sharingSubject).toBe('Sharing Link');
+    expect(props.sharingBody).toBe('');
   });
 
   it('extracts localized labels from data attributes', () => {
@@ -30,8 +30,8 @@ describe('shareButtonsFromElement', () => {
 
     expect(props.labels.mainLabel).toBe('Partager');
     expect(props.labels.onCopy).toBe('Lien copié');
-    expect(props.SharingSubject).toBe('Partage de lien');
-    expect(props.SharingTextBody).toBe('Consultez ce lien : ');
+    expect(props.sharingSubject).toBe('Partage de lien');
+    expect(props.sharingBody).toBe('Consultez ce lien : ');
   });
 
   it('falls back to defaults for missing attributes', () => {
@@ -42,7 +42,7 @@ describe('shareButtonsFromElement', () => {
 
     expect(props.labels.mainLabel).toBe('カスタム');
     expect(props.labels.onCopy).toBe('Link copied');
-    expect(props.SharingSubject).toBe('Sharing Link');
-    expect(props.SharingTextBody).toBe('');
+    expect(props.sharingSubject).toBe('Sharing Link');
+    expect(props.sharingBody).toBe('');
   });
 });

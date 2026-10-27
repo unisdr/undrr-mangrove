@@ -3,20 +3,18 @@ import PropTypes from 'prop-types';
 import DOMPurify from 'dompurify';
 import { CtaButton } from '../../Buttons/CtaButton/CtaButton';
 import { CardLabel, CardTitle, resolveCardLink } from './cardParts';
-
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
 // Content contract: see schemas/card.schema.js for canonical field names and documented deviations.
-export function HorizontalCard({ data, variant = 'primary', className }) {
+export function HorizontalCard({ items, variant = 'primary', className }) {
   const variantClass =
     variant && variant !== 'primary' ? `mg-card--${variant}` : null;
   return (
     <>
-      {data.map((item, index) => {
+      {items.map((item, index) => {
         const link = resolveCardLink(item.link);
         const buttonLink = resolveCardLink(item.buttonLink) ?? link;
-
         return (
           <article
             key={index}
@@ -28,21 +26,21 @@ export function HorizontalCard({ data, variant = 'primary', className }) {
               className
             )}
           >
-            {item.imgback && (
+            {item.image?.src && (
               <div className="mg-card__visual">
                 <img
-                  src={item.imgback}
-                  alt={item.imgalt}
+                  src={item.image?.src}
+                  alt={item.image?.alt}
                   className="mg-card__image"
                 />
               </div>
             )}
 
             <div className="mg-card__content">
-              {(item.label1 || item.label2) && (
+              {(item.labels?.[0] || item.labels?.[1]) && (
                 <div className="mg-card__meta">
-                  <CardLabel label={item.label1} link={link} />
-                  <CardLabel label={item.label2} link={link} />
+                  <CardLabel label={item.labels?.[0]} link={link} />
+                  <CardLabel label={item.labels?.[1]} link={link} />
                 </div>
               )}
 
@@ -52,12 +50,12 @@ export function HorizontalCard({ data, variant = 'primary', className }) {
                 target={item.target}
                 rel={item.rel}
               />
-              {item.summaryText && (
+              {item.summary && (
                 <p
                   className="mg-card__summary"
                   // eslint-disable-next-line react/no-danger -- sanitized HTML contract; DOMPurify sanitizes caller input
                   dangerouslySetInnerHTML={{
-                    __html: DOMPurify.sanitize(item.summaryText),
+                    __html: DOMPurify.sanitize(item.summary),
                   }}
                 />
               )}
@@ -78,9 +76,8 @@ export function HorizontalCard({ data, variant = 'primary', className }) {
     </>
   );
 }
-
 HorizontalCard.propTypes = {
-  data: PropTypes.array.isRequired,
+  items: PropTypes.array.isRequired,
   variant: PropTypes.oneOf(['primary', 'secondary', 'tertiary', 'quaternary']),
   className: PropTypes.string,
 };

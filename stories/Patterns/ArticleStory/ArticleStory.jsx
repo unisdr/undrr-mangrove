@@ -193,17 +193,17 @@ const words = {
       {
         title:
           'Santiago Network expands support for loss and damage in the Pacific',
-        summaryText:
+        summary:
           'New technical assistance helps Pacific communities document and respond to non-economic losses.',
       },
       {
         title: 'How traditional knowledge strengthens community-based DRR',
-        summaryText:
+        summary:
           'Local and Indigenous knowledge systems are shaping how Pacific communities plan for disaster risk.',
       },
       {
         title: 'Upcoming: LCIPP Pacific Regional Gathering follow-up',
-        summaryText:
+        summary:
           'Indigenous leaders and technical partners meet to carry the Nadi consultation’s findings forward.',
       },
     ],
@@ -341,18 +341,18 @@ const words = {
     relatedCards: [
       {
         title: 'شبكة سانتياغو توسّع الدعم للخسائر والأضرار في المحيط الهادئ',
-        summaryText:
+        summary:
           'مساعدة تقنية جديدة تساعد مجتمعات المحيط الهادئ على توثيق الخسائر غير الاقتصادية والاستجابة لها.',
       },
       {
         title:
           'كيف تعزز المعرفة التقليدية الحد من مخاطر الكوارث المرتكز على المجتمع',
-        summaryText:
+        summary:
           'تُشكّل أنظمة المعرفة المحلية والأصلية طريقة تخطيط مجتمعات المحيط الهادئ لمخاطر الكوارث.',
       },
       {
         title: 'قادم: متابعة اللقاء الإقليمي لمنصة LCIPP في المحيط الهادئ',
-        summaryText:
+        summary:
           'يجتمع قادة الشعوب الأصلية والشركاء التقنيون لمواصلة نتائج مشاورة نادي.',
       },
     ],
@@ -397,7 +397,7 @@ export function ArticleStory({
 
   const shareButtons = (
     <ShareButtons
-      SharingSubject={text.title}
+      sharingSubject={text.title}
       labels={arabic ? SHARE_LABELS_AR : undefined}
     />
   );
@@ -543,11 +543,13 @@ export function ArticleStory({
             <h2>{text.related}</h2>
             <div className="mg-grid mg-grid__col-3">
               <VerticalCard
-                data={text.relatedCards.map((card, index) => ({
+                items={text.relatedCards.map((card, index) => ({
                   ...card,
                   link: `https://www.undrr.org/news/related-story-${index + 1}`,
-                  imgback: relatedImage,
-                  imgalt: '',
+                  image: {
+                    src: relatedImage,
+                    alt: '',
+                  },
                 }))}
               />
             </div>

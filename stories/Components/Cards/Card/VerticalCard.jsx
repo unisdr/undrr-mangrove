@@ -3,20 +3,18 @@ import PropTypes from 'prop-types';
 import DOMPurify from 'dompurify';
 import { CtaButton } from '../../Buttons/CtaButton/CtaButton';
 import { CardLabel, CardTitle, resolveCardLink } from './cardParts';
-
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
 // Content contract: see schemas/card.schema.js for canonical field names and documented deviations.
-export function VerticalCard({ data, variant = 'primary', className }) {
+export function VerticalCard({ items, variant = 'primary', className }) {
   const variantClass =
     variant && variant !== 'primary' ? `mg-card--${variant}` : null;
   return (
     <>
-      {data.map((item, index) => {
+      {items.map((item, index) => {
         const link = resolveCardLink(item.link);
         const buttonLink = resolveCardLink(item.buttonLink) ?? link;
-
         return (
           <article
             key={index}
@@ -28,21 +26,21 @@ export function VerticalCard({ data, variant = 'primary', className }) {
               className
             )}
           >
-            {item.imgback && (
+            {item.image?.src && (
               <div className="mg-card__visual">
                 <img
-                  src={item.imgback}
-                  alt={item.imgalt}
+                  src={item.image?.src}
+                  alt={item.image?.alt}
                   className="mg-card__image"
                 />
               </div>
             )}
 
             <div className="mg-card__content">
-              {(item.label1 || item.label2) && (
+              {(item.labels?.[0] || item.labels?.[1]) && (
                 <div className="mg-card__meta">
-                  <CardLabel label={item.label1} link={link} />
-                  <CardLabel label={item.label2} link={link} />
+                  <CardLabel label={item.labels?.[0]} link={link} />
+                  <CardLabel label={item.labels?.[1]} link={link} />
                 </div>
               )}
 
@@ -52,12 +50,12 @@ export function VerticalCard({ data, variant = 'primary', className }) {
                 target={item.target}
                 rel={item.rel}
               />
-              {item.summaryText && (
+              {item.summary && (
                 <p
                   className="mg-card__summary"
                   // eslint-disable-next-line react/no-danger -- sanitized HTML contract; DOMPurify sanitizes caller input
                   dangerouslySetInnerHTML={{
-                    __html: DOMPurify.sanitize(item.summaryText),
+                    __html: DOMPurify.sanitize(item.summary),
                   }}
                 />
               )}
@@ -78,19 +76,19 @@ export function VerticalCard({ data, variant = 'primary', className }) {
     </>
   );
 }
-
 VerticalCard.propTypes = {
-  data: PropTypes.arrayOf(
+  items: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string.isRequired,
       link: PropTypes.string,
       target: PropTypes.string,
       rel: PropTypes.string,
-      imgback: PropTypes.string,
-      imgalt: PropTypes.string,
-      summaryText: PropTypes.string,
-      label1: PropTypes.string,
-      label2: PropTypes.string,
+      image: PropTypes.shape({
+        src: PropTypes.string,
+        alt: PropTypes.string,
+      }),
+      summary: PropTypes.string,
+      labels: PropTypes.arrayOf(PropTypes.string),
       button: PropTypes.string,
       /** CTA destination. Defaults to `link`; set it to give an unlinked card a button. */
       buttonLink: PropTypes.string,

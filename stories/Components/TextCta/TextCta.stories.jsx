@@ -73,10 +73,16 @@ export const WithImage = {
   args: {
     headline:
       'Recovery Help Desk: A service of the IRP, responding to requests for support with building back better in recovery from disasters.',
-    buttons: [{ label: 'Learn more about the Recovery Help Desk', url: '#' }],
-    image:
-      'https://recovery.preventionweb.net/sites/default/files/2021-12/Recovery%20Help%20Desk%20Icon%20Background%20White_1.png',
-    imageAlt: 'Recovery Help Desk',
+    buttons: [
+      {
+        label: 'Learn more about the Recovery Help Desk',
+        url: '#',
+      },
+    ],
+    image: {
+      src: 'https://recovery.preventionweb.net/sites/default/files/2021-12/Recovery%20Help%20Desk%20Icon%20Background%20White_1.png',
+      alt: 'Recovery Help Desk',
+    },
     backgroundColor: '#1671cc',
   },
 };

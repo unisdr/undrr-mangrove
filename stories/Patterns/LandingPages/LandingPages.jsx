@@ -339,9 +339,9 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
                 <div className="mg-grid mg-grid__col-3">
                   <IconCard
                     orientation="horizontal"
-                    data={page.routes.map(([title, summaryText, icon], i) => ({
+                    items={page.routes.map(([title, summaryText, icon], i) => ({
                       title,
-                      summaryText,
+                      summary: summaryText,
                       link: links.routes[i],
                       icon: `mg-icon mg-icon-${icon}`,
                     }))}
@@ -358,7 +358,7 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
                   <div className="mg-grid mg-grid__col-2">
                     <IconCard
                       orientation="horizontal"
-                      data={page.facts.map((fact, index) => ({
+                      items={page.facts.map((fact, index) => ({
                         title: fact,
                         icon: `mg-icon mg-icon-${factIcons[index]}`,
                       }))}
@@ -371,9 +371,9 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
                 <h2>{page.relatedHeading}</h2>
                 <div className="mg-grid mg-grid__col-3">
                   <VerticalCard
-                    data={page.related.map(([title, summaryText]) => ({
+                    items={page.related.map(([title, summaryText]) => ({
                       title,
-                      summaryText,
+                      summary: summaryText,
                       link: links.related,
                     }))}
                   />
@@ -447,11 +447,13 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
                   </p>
                   <div className="mg-grid mg-grid__col-3">
                     <BookCard
-                      data={titles.map(title => ({
+                      items={titles.map(title => ({
                         title,
                         link: links.publication,
-                        imgback: heroImage,
-                        imgalt: '',
+                        image: {
+                          src: heroImage,
+                          alt: '',
+                        },
                       }))}
                     />
                   </div>

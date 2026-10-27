@@ -8,8 +8,7 @@ export default {
     quote: { control: 'text' },
     attribution: { control: 'text' },
     attributionTitle: { control: 'text' },
-    imageSrc: { control: 'text' },
-    imageAlt: { control: 'text' },
+    image: { control: 'object' },
     backgroundColor: {
       control: { type: 'select' },
       options: ['light', 'dark', 'bright'],
@@ -49,9 +48,10 @@ const baseImageArgs = {
   attribution: 'Mami Mizutori',
   attributionTitle:
     'Special Representative of the UN Secretary-General for Disaster Risk Reduction and head of UNDRR',
-  imageSrc:
-    'https://www.undrr.org/sites/default/files/styles/por/public/2020-12/2019-01-10_SRSG-Mami-Mizutori-HD_003.jpg',
-  imageAlt: 'Mami Mizutori portrait',
+  image: {
+    src: 'https://www.undrr.org/sites/default/files/styles/por/public/2020-12/2019-01-10_SRSG-Mami-Mizutori-HD_003.jpg',
+    alt: 'Mami Mizutori portrait',
+  },
   variant: 'image',
   backgroundColor: 'light',
   alignment: 'full',
@@ -94,18 +94,20 @@ export const LineVariantBright = {
 export const LineVariantWithPortrait = {
   args: {
     ...baseLineArgs,
-    imageSrc:
-      'https://www.undrr.org/sites/default/files/styles/por/public/2020-12/2019-01-10_SRSG-Mami-Mizutori-HD_003.jpg',
-    imageAlt: 'Mami Mizutori portrait',
+    image: {
+      src: 'https://www.undrr.org/sites/default/files/styles/por/public/2020-12/2019-01-10_SRSG-Mami-Mizutori-HD_003.jpg',
+      alt: 'Mami Mizutori portrait',
+    },
   },
 };
 
 export const LineVariantWithImage = {
   args: {
     ...baseLineArgs,
-    imageSrc:
-      'https://www.undrr.org/sites/default/files/styles/por/public/2020-12/2019-01-10_SRSG-Mami-Mizutori-HD_003.jpg',
-    imageAlt: 'Mami Mizutori portrait',
+    image: {
+      src: 'https://www.undrr.org/sites/default/files/styles/por/public/2020-12/2019-01-10_SRSG-Mami-Mizutori-HD_003.jpg',
+      alt: 'Mami Mizutori portrait',
+    },
     variant: 'image',
   },
 };
@@ -127,9 +129,10 @@ export const LeftAlignedQuoteWithPortrait = {
     alignment: 'left',
     quote:
       "One doesn't have to look <a href='#'>hard</a> to find examples of how disasters are becoming worse.",
-    imageSrc:
-      'https://www.undrr.org/sites/default/files/styles/por/public/2020-12/2019-01-10_SRSG-Mami-Mizutori-HD_003.jpg',
-    imageAlt: 'Mami Mizutori portrait',
+    image: {
+      src: 'https://www.undrr.org/sites/default/files/styles/por/public/2020-12/2019-01-10_SRSG-Mami-Mizutori-HD_003.jpg',
+      alt: 'Mami Mizutori portrait',
+    },
   },
   decorators: [alignmentDecorator],
 };
@@ -151,9 +154,10 @@ export const RightAlignedQuoteWithPortrait = {
     alignment: 'right',
     quote:
       "One doesn't have to look hard to find examples of how disasters are becoming worse.",
-    imageSrc:
-      'https://www.undrr.org/sites/default/files/styles/por/public/2020-12/2019-01-10_SRSG-Mami-Mizutori-HD_003.jpg',
-    imageAlt: 'Mami Mizutori portrait',
+    image: {
+      src: 'https://www.undrr.org/sites/default/files/styles/por/public/2020-12/2019-01-10_SRSG-Mami-Mizutori-HD_003.jpg',
+      alt: 'Mami Mizutori portrait',
+    },
   },
   decorators: [alignmentDecorator],
 };

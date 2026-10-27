@@ -37,6 +37,8 @@ export const getCaptionForLocale = locale => {
 
 # ShareButtons
 
+> **Draft contract:** examples on this branch use the unmerged [schema phase-two proposal](?path=/docs/design-decisions-schema-phase-2-proposal--docs). Published 2.3.0 bundles retain their released prop names.
+
 A widget with share buttons for social media that open new tabs or copy the link to clipboard.
 
 ## Overview
@@ -123,6 +125,8 @@ fallback labels. Supplying a language uses that runtime catalogue. The QR dialog
 receives the share row's language and direction.
 
 ## Changelog
+
+- **Unreleased, draft schema proposal:** Adopt the schema-aligned input documented in [the migration proposal](?path=/docs/design-decisions-schema-phase-2-proposal--docs), preserving current rendering, accessibility and language handling.
 
 - **1.11**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance.
 

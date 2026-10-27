@@ -8,6 +8,8 @@ import * as StatsCardStories from './StatsCard.stories';
 
 # Stats card
 
+> **Draft contract:** examples on this branch use the unmerged [schema phase-two proposal](?path=/docs/design-decisions-schema-phase-2-proposal--docs). Published 2.3.0 bundles retain their released prop names.
+
 A flexible component for displaying statistics and key metrics in an engaging, scannable format.
 
 ## Overview
@@ -80,7 +82,7 @@ Add a `link` prop to make entire stat cards clickable. Cursor changes to pointer
 | `bottomLabel` | string        | No       | Label that appears below the value                     |
 | `label`       | string        | No       | Optional label above the value                         |
 | `icon`        | string        | No       | Optional icon class (e.g., "mg-icon fa-globe")         |
-| `summaryText` | string        | No       | Optional descriptive text (supports inline HTML links) |
+| `summary`     | string        | No       | Optional descriptive text (supports inline HTML links) |
 | `link`        | string        | No       | URL to make the entire stat card clickable             |
 
 ## Usage
@@ -93,13 +95,13 @@ Add a `link` prop to make entire stat cards clickable. Cursor changes to pointer
       label: 'Target A',
       value: '45%',
       bottomLabel: 'Mortality reduction',
-      summaryText: 'Decrease in disaster mortality rates.',
+      summary: 'Decrease in disaster mortality rates.',
     },
     {
       label: 'Target B',
       value: '2.3M',
       bottomLabel: 'People affected',
-      summaryText: 'Reduction in affected people per 100,000.',
+      summary: 'Reduction in affected people per 100,000.',
     },
   ]}
 />
@@ -113,7 +115,7 @@ Add a `link` prop to make entire stat cards clickable. Cursor changes to pointer
     {
       value: '1,500+',
       bottomLabel: 'Cities enrolled',
-      summaryText: 'Click to view all cities.',
+      summary: 'Click to view all cities.',
       link: 'https://mcr2030.undrr.org/cities',
     },
   ]}
@@ -163,6 +165,8 @@ createHydrator({
 See the [hydration guide](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
 
 ## Changelog
+
+- **Unreleased, draft schema proposal:** Adopt the schema-aligned input documented in [the migration proposal](?path=/docs/design-decisions-schema-phase-2-proposal--docs), preserving current rendering, accessibility and language handling.
 
 - **1.4.8**, 2026-10-16: Reduce compact card padding and internal gaps; remove stacked value, icon, label and summary margins so compact statistics use a denser rhythm.
 

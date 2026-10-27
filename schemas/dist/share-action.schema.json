@@ -35,14 +35,10 @@
   "title": "Share Action",
   "description": "Configuration for social sharing buttons with customizable labels and email content.",
   "x-mangrove": {
-    "version": "1.0.0",
-    "phase": 1,
+    "version": "2.0.0",
+    "phase": 2,
     "implementors": [
       "ShareButtons"
-    ],
-    "deviations": {
-      "sharingSubject": "Current component uses PascalCase `SharingSubject` prop.",
-      "sharingBody": "Current component uses PascalCase `SharingTextBody` prop. Schema renames to `sharingBody` (camelCase, drops redundant \"Text\")."
-    }
+    ]
   }
 }

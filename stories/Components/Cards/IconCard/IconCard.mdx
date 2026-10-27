@@ -7,6 +7,8 @@ import * as IconCardStories from './IconCard.stories';
 
 # Icon card
 
+This draft schema candidate changes `data` → `items` and `imgback`/`imgalt` → `image.{src,alt}`, with `summaryText` → `summary` and `label` → the first entry of `labels[]`. Existing link handling, geometry and media presentation are retained. See the [schema migration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/MIGRATION-SCHEMA-V2.md) before adopting this unreleased API.
+
 A versatile card with an icon or image, content, and optional call-to-action. Use for feature highlights, service offerings, visual navigation, process steps, or category cards.
 
 ## When to use
@@ -81,7 +83,7 @@ Use `iconColor` to add a circular colored background behind the icon (or as a st
 
 | Prop       | Type    | Default     | Description                                 |
 | ---------- | ------- | ----------- | ------------------------------------------- |
-| `data`     | Array   | Required    | Array of card data objects                  |
+| `items`    | Array   | Required    | Array of card data objects                  |
 | `centered` | Boolean | `false`     | Center-align content                        |
 | `variant`  | String  | `'default'` | Visual variant: `'default'` or `'negative'` |
 
@@ -89,25 +91,25 @@ Use `iconColor` to add a circular colored background behind the icon (or as a st
 
 These properties align with VerticalCard and HorizontalCard for consistency:
 
-| Property      | Type    | Required    | Description                                                                                                                                                                             |
-| ------------- | ------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `icon`        | String  | Optional    | Icon class name (e.g., `"mg-icon mg-icon-globe"`)                                                                                                                                       |
-| `imgback`     | String  | Optional    | Image URL (alternative to `icon`)                                                                                                                                                       |
-| `imgalt`      | String  | Optional    | Alt text for image                                                                                                                                                                      |
-| `iconColor`   | String  | -           | Background color for the icon badge (CSS color value). Can be used without `icon` to render a color-only swatch.                                                                        |
-| `iconFgColor` | String  | -           | Foreground (glyph) color for the icon. Pass any CSS color value to override the default gray (e.g., `'#ffffff'` for white).                                                             |
-| `borderColor` | String  | -           | Border color for the card (CSS color value). Renders a 2px solid border via the `--mg-card-border` custom property. Omit it for the theme's interactive colour.                         |
-| `iconSize`    | Number  | `72`        | Intrinsic image width/height when `imageScale` is omitted; does not size CSS glyphs                                                                                                     |
-| `imageScale`  | String  | -           | Scale for icons and images: `'small'` (72px), `'medium'` (50%), `'large'` (75%), `'full'` (100%). Small glyphs use a fixed 58px size; medium, large and full use container query units. |
-| `label`       | String  | Optional    | Badge or category label text                                                                                                                                                            |
-| `visualLabel` | String  | Optional    | Text label rendered above the icon/image in the visual area                                                                                                                             |
-| `title`       | String  | Required    | Card heading text (required for accessibility)                                                                                                                                          |
-| `srOnlyTitle` | Boolean | `false`     | Visually hide title but keep for screen readers (for logo cards)                                                                                                                        |
-| `summaryText` | String  | Optional    | Card body text (HTML supported)                                                                                                                                                         |
-| `link`        | String  | Optional    | URL for card link                                                                                                                                                                       |
-| `linkText`    | String  | Optional    | Text for text link CTA                                                                                                                                                                  |
-| `button`      | String  | Optional    | Button label text                                                                                                                                                                       |
-| `buttonType`  | String  | `'Primary'` | Button style: `'Primary'` or `'Secondary'`                                                                                                                                              |
+| Property      | Type     | Required    | Description                                                                                                                                                                             |
+| ------------- | -------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `icon`        | String   | Optional    | Icon class name (e.g., `"mg-icon mg-icon-globe"`)                                                                                                                                       |
+| `image.src`   | String   | Optional    | Image URL (alternative to `icon`)                                                                                                                                                       |
+| `image.alt`   | String   | Optional    | Alt text for image                                                                                                                                                                      |
+| `iconColor`   | String   | -           | Background color for the icon badge (CSS color value). Can be used without `icon` to render a color-only swatch.                                                                        |
+| `iconFgColor` | String   | -           | Foreground (glyph) color for the icon. Pass any CSS color value to override the default gray (e.g., `'#ffffff'` for white).                                                             |
+| `borderColor` | String   | -           | Border color for the card (CSS color value). Renders a 2px solid border via the `--mg-card-border` custom property. Omit it for the theme's interactive colour.                         |
+| `iconSize`    | Number   | `72`        | Intrinsic image width/height when `imageScale` is omitted; does not size CSS glyphs                                                                                                     |
+| `imageScale`  | String   | -           | Scale for icons and images: `'small'` (72px), `'medium'` (50%), `'large'` (75%), `'full'` (100%). Small glyphs use a fixed 58px size; medium, large and full use container query units. |
+| `labels`      | String[] | Optional    | Badge or category labels; the first entry is displayed                                                                                                                                  |
+| `visualLabel` | String   | Optional    | Text label rendered above the icon/image in the visual area                                                                                                                             |
+| `title`       | String   | Required    | Card heading text (required for accessibility)                                                                                                                                          |
+| `srOnlyTitle` | Boolean  | `false`     | Visually hide title but keep for screen readers (for logo cards)                                                                                                                        |
+| `summary`     | String   | Optional    | Card body text (HTML supported)                                                                                                                                                         |
+| `link`        | String   | Optional    | URL for card link                                                                                                                                                                       |
+| `linkText`    | String   | Optional    | Text for text link CTA                                                                                                                                                                  |
+| `button`      | String   | Optional    | Button label text                                                                                                                                                                       |
+| `buttonType`  | String   | `'Primary'` | Button style: `'Primary'` or `'Secondary'`                                                                                                                                              |
 
 > **Implementation note (for contributors):** `iconFgColor` is applied via the `--mg-icon-fg` CSS custom property on the icon element. `borderColor` is applied via `--mg-card-border`.
 
@@ -143,12 +145,12 @@ Writing the class in plain HTML works without setting anything:
 
 ```jsx
 <IconCard
-  data={[
+  items={[
     {
       icon: 'mg-icon mg-icon-cubes',
       imageScale: 'small',
       title: 'Components',
-      summaryText: 'Browse all UNDRR components.',
+      summary: 'Browse all UNDRR components.',
       linkText: 'Browse components →',
       link: '/components',
     },
@@ -161,13 +163,15 @@ Writing the class in plain HTML works without setting anything:
 ```jsx
 <IconCard
   centered
-  data={[
+  items={[
     {
-      imgback: '/icons/feature.png',
+      image: {
+        src: '/icons/feature.png',
+        alt: 'Feature icon',
+      },
       imageScale: 'medium',
-      imgalt: 'Feature icon',
       title: 'Features',
-      summaryText: 'Explore our features.',
+      summary: 'Explore our features.',
       button: 'Learn more',
       link: '/features',
     },
@@ -179,12 +183,12 @@ Writing the class in plain HTML works without setting anything:
 
 ```jsx
 <IconCard
-  data={[
+  items={[
     {
       icon: 'mg-icon mg-icon-chart-bar',
       iconColor: '#f4b8a8',
       title: 'Analytics',
-      summaryText: 'Data analysis that drives DRR applications.',
+      summary: 'Data analysis that drives DRR applications.',
     },
   ]}
 />
@@ -197,14 +201,18 @@ For logo cards where the image is self-explanatory, use `srOnlyTitle: true` to v
 ```jsx
 <IconCard
   centered
-  data={[
+  items={[
     {
-      imgback: '/logos/partner-logo.svg',
-      imgalt: 'Partner Organization logo',
+      image: {
+        src: '/logos/partner-logo.svg',
+        alt: 'Partner Organization logo',
+      },
       imageScale: 'medium',
-      title: 'Partner Organization', // Required for accessibility
-      srOnlyTitle: true, // Visually hidden
-      summaryText: 'Description of the partner organization.',
+      title: 'Partner Organization',
+      // Required for accessibility
+      srOnlyTitle: true,
+      // Visually hidden
+      summary: 'Description of the partner organization.',
       link: '/partners/org',
     },
   ]}
@@ -217,16 +225,16 @@ IconCard renders individual cards. When displaying multiple cards in a grid, wra
 
 ```jsx
 <div className="mg-grid mg-grid__col-3">
-  <IconCard centered data={[{/* card data */}]} />
-  <IconCard centered data={[{/* card data */}]} />
-  <IconCard centered data={[{/* card data */}]} />
+  <IconCard centered items={[{/* card data */}]} />
+  <IconCard centered items={[{/* card data */}]} />
+  <IconCard centered items={[{/* card data */}]} />
 </div>
 ```
 
 ## Accessibility
 
 - Icons are decorative and announced as hidden to screen readers
-- Images require descriptive alt text via `imgalt`
+- Images require descriptive alt text via `image.alt`
 - When a `link` is provided, the entire card surface is clickable as a single link
 - **Logo cards**: Set `srOnlyTitle: true` to visually hide the title while keeping it accessible for screen readers
 - Buttons and links have visible focus states
@@ -241,7 +249,7 @@ IconCard renders individual cards. When displaying multiple cards in a grid, wra
 
 - Use clear, concise titles (3–5 words)
 - Keep summaries brief (1–2 sentences)
-- Provide `imgalt` text for images
+- Provide `image.alt` text for images
 - Use consistent icon sizes in grids
 - Test with locale toolbar for RTL
 
@@ -261,9 +269,9 @@ If upgrading from the previous IconCard API:
 | `icon` (SVG string) | `icon` (class name) | Now uses CSS classes like `"mg-icon mg-icon-globe"` (matches StatsCard) |
 | `alignment`         | Removed             | RTL is automatic via CSS                                                |
 | `stackedLayout`     | Removed             | Always vertical now                                                     |
-| `description`       | `summaryText`       | Aligns with VerticalCard                                                |
-| `image`             | `imgback`           | Aligns with VerticalCard                                                |
-| `imageAlt`          | `imgalt`            | Aligns with VerticalCard                                                |
+| `description`       | `summary`           | Aligns with VerticalCard                                                |
+| `image`             | `image.src`         | Aligns with VerticalCard                                                |
+| `imageAlt`          | `image.alt`         | Aligns with VerticalCard                                                |
 
 ## Server-rendered / CDN usage
 
@@ -272,7 +280,7 @@ IconCard supports [layered hydration](https://github.com/PreventionWeb/undrr-man
 ```html
 <div
   data-mg-icon-card
-  data-items='[{"icon":"mg-icon mg-icon-globe","imageScale":"small","title":"Components","summaryText":"Browse all components.","link":"/components"}]'
+  data-items='[{"icon":"mg-icon mg-icon-globe","imageScale":"small","title":"Components","summary":"Browse all components.","link":"/components"}]'
   data-centered="false"
   data-variant="default"
 ></div>
@@ -299,6 +307,8 @@ createHydrator({
 See the [hydration guide](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
 
 ## Changelog
+
+- **2.0.0**, 2026-10-27 ([#891](https://github.com/unisdr/undrr-mangrove/pull/891)): **Unreleased breaking candidate.** Rename `data` → `items` and `imgback`/`imgalt` → `image.{src,alt}`, with `summaryText` → `summary` and `label` → the first entry of `labels[]`. Preserve current media geometry, optional content and link behaviour while aligning the draft contract.
 
 - **1.5.0**, 2026-10-16: Navigation examples use small icons, and small glyphs no longer reserve a proportional illustration frame. Explicit medium, large and full scales remain available for illustrations.
 

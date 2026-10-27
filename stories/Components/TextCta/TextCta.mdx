@@ -8,6 +8,8 @@ import * as TextCtaStories from './TextCta.stories';
 
 # CTA
 
+> **Draft contract:** examples on this branch use the unmerged [schema phase-two proposal](?path=/docs/design-decisions-schema-phase-2-proposal--docs). Published 2.3.0 bundles retain their released prop names.
+
 A promotional block combining heading, copy, and next step. Use for invitations, resources, campaigns, or signup forms. TextCta provides layout and visual treatment; `buttons` link to actions. Compose richer content (forms, custom layouts) with `children`. For single action links without a block, use <LinkTo kind="Components/Buttons/Buttons" story="Editorial CTA">a CTA button</LinkTo>.
 
 ## Choose the emphasis
@@ -60,7 +62,7 @@ for article placement, preferences and simulated validation, failure and confirm
 
 ### With an image
 
-Optional image at the inline end (stacks on narrow screens). Placement follows text direction. Provide meaningful `imageAlt` or empty string for decorative images.
+Optional image at the inline end (stacks on narrow screens). Placement follows text direction. Provide meaningful `image.alt` or empty string for decorative images.
 
 <Canvas of={TextCtaStories.WithImage} />
 
@@ -99,8 +101,8 @@ All four accents support both tones and follow the site theme. Prefer theme acce
 | `variant`         | String     | `'primary'` | Color variant: `'primary'`, `'secondary'`, `'tertiary'`, `'quaternary'`                                                            |
 | `backgroundColor` | String     | -           | Custom CSS background color (overrides variant)                                                                                    |
 | `padding`         | String     | -           | Custom CSS padding (e.g. `'8rem 0'`), overrides theme token                                                                        |
-| `image`           | String     | -           | Image URL displayed alongside text (triggers side-by-side layout)                                                                  |
-| `imageAlt`        | String     | `''`        | Alt text for the image                                                                                                             |
+| `image`           | Object     | -           | Optional `{ src, alt }` image; a non-empty `src` selects side-by-side layout                                                       |
+| `image.alt`       | String     | `''`        | Image alt text; use an empty string for a decorative image                                                                         |
 | `centered`        | Boolean    | `true`      | Center-align content (auto-disabled when `image` is set)                                                                           |
 | `layout`          | String     | `'stacked'` | Content/action arrangement: `'stacked'` or `'inline'`                                                                              |
 | `className`       | String     | -           | Additional CSS classes                                                                                                             |
@@ -125,9 +127,9 @@ Form behaviour, validation, and service integration belong to the caller. For Dr
 
 ## Server-rendered / CDN usage
 
-The new `tone` and `children` options are shown from the local build and are not
-available in the published alpha.4 bundle. Use a release containing these changes
-when integrating them. The CDN example below demonstrates the existing button API.
+The image-object API is shown from this draft branch. Published 2.3.0 bundles
+retain the released URL-valued image API; use this branch’s bundles to evaluate
+the proposal. Existing DOM attribute names remain supported by the bridge.
 
 TextCta supports [layered hydration](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md). Use data attributes on a container element:
 
@@ -185,6 +187,8 @@ See the [hydration guide](https://github.com/PreventionWeb/undrr-mangrove/blob/m
 - Composed forms need visible labels, correctly grouped choices and accessible error/confirmation feedback supplied by their owner.
 
 ## Changelog
+
+- **Unreleased, draft schema proposal:** Adopt the schema-aligned input documented in [the migration proposal](?path=/docs/design-decisions-schema-phase-2-proposal--docs), preserving current rendering, accessibility and language handling.
 
 - **1.3.0**, 2026-09-18 ([#1249](https://github.com/unisdr/undrr-mangrove/pull/1249)): Fixes [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196). `variant="secondary"` is no longer a flat orange panel with a white eyebrow (2.65), headline (2.65) and 90%-white body (2.42). It now takes the `soft` surface (white under an 8% wash of the accent) with dark copy and standard buttons, and keeps the Sendai orange as a 6px leading rule. The variant is a soft surface at both tones, so `tone="strong"` no longer changes its fill. `--mg-color-hero--secondary` is unchanged and now drives the rule. This is a visible change wherever the variant is used, in all five themes.
 - **1.2.3**, 2026-09-18 ([#1198](https://github.com/unisdr/undrr-mangrove/pull/1198)): Documented the strong `secondary` accent as a recorded contrast exception: white eyebrow, headline and body on the orange accent meet neither contrast measure at any size. No colour changed; removal is tracked in [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196).

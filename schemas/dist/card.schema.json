@@ -150,22 +150,14 @@
   "title": "Card",
   "description": "Content card representing a single item (article, event, publication) with image, labels, title, summary, and call-to-action. Covers vertical, horizontal, book, and icon card variants.",
   "x-mangrove": {
-    "version": "1.0.0",
-    "phase": 1,
+    "version": "2.0.0",
+    "phase": 2,
     "implementors": [
       "VerticalCard",
       "HorizontalCard",
       "BookCard",
       "HorizontalBookCard",
       "IconCard"
-    ],
-    "deviations": {
-      "items": "Current components use `data` as the prop name for the items array.",
-      "items[].image": "Current components use `imgback` (URL string) and `imgalt` (string) as flat properties instead of a nested image object.",
-      "items[].image.src": "Maps to current `imgback` prop.",
-      "items[].image.alt": "Maps to current `imgalt` prop.",
-      "items[].labels": "Current components use `label1` and `label2` as separate string props instead of an array. IconCard uses a single `label` string.",
-      "items[].summary": "Current components use `summaryText` as the prop name."
-    }
+    ]
   }
 }
