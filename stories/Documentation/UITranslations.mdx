@@ -1,0 +1,13 @@
+import { Meta, Markdown } from '@storybook/addon-docs/blocks';
+import UITranslations from '../../docs/UI-TRANSLATIONS.md?raw';
+import { linkDocsPages } from './docsPageLinks';
+
+<Meta
+  title="Contributing/UI translations"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: { canvas: { hidden: true } },
+  }}
+/>
+
+<Markdown>{linkDocsPages(UITranslations, 'docs/UI-TRANSLATIONS.md')}</Markdown>

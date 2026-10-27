@@ -56,6 +56,7 @@ export const DOC_PAGE_IDS = {
   'docs/SEARCH-WIDGET-EDITOR-GUIDE.md':
     'components-syndicated-search-editor-configuration--docs',
   'docs/TESTING.md': 'contributing-build-a-component-testing--docs',
+  'docs/UI-TRANSLATIONS.md': 'contributing-ui-translations--docs',
   'docs/WRITING.md': 'contributing-writing-guidelines--docs',
 };
 
