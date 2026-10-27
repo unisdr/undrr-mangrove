@@ -3,7 +3,7 @@ import * as TypeScriptStories from './TypeScriptExampleComponent.stories';
 
 <Meta of={TypeScriptStories} />
 
-> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
 
 # TypeScript demo component
 
@@ -25,7 +25,7 @@ This component demonstrates use of TypeScript in Storybook components while main
 - **Optional props** with `onClick?: () => void`
 - **JSDoc comments** on the component and its props (visible in Storybook's controls panel)
 - **Explicit return type** (`JSX.Element`) on the component function
-- **CSF3 stories** using `Meta` and `StoryObj` from `@storybook/react`
+- **CSF3 stories** using `Meta` and `StoryObj` from `@storybook/react-vite`
 
 ## Working with non-TypeScript code
 
@@ -44,5 +44,8 @@ declare module '../path/to/SomeJsComponent' {
 
 ## Changelog
 
-- **1.1.0** — 2026-03-12: Updated to CSF3 story format, added JSDoc comments, typed `type` prop as union, added explicit return type
-- **1.0.0** — Initial TypeScript demo component
+- **1.1.2**, 2026-10-16: Story types use the Vite framework package following the Storybook builder migration; the component API and rendering are unchanged.
+
+- **1.1.1**, 2026-09-17 ([#1193](https://github.com/unisdr/undrr-mangrove/pull/1193)): The rendered button adds `max-width: 100%` alongside the `width` prop, so a width wider than the viewport no longer makes the page scroll horizontally.
+- **1.1.0**, 2026-03-12: Updated to CSF3 story format, added JSDoc comments, typed `type` prop as union, added explicit return type
+- **1.0.0**: Initial TypeScript demo component

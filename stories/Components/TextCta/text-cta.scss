@@ -1,7 +1,20 @@
+/**
+ * Text CTA
+ *
+ * Call-to-action banner supporting color variants, headings, rich text copy, and button groups.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/TextCta/TextCta.mdx
+ */
+@use "../../assets/scss/breakpoints" as *;
+@use "../../assets/scss/config" as *;
+
 /* CTA banner start */
 
 .mg-cta {
-  padding: $mg-cta-padding;
+  --mg-cta-accent: var(--mg-color-hero);
+
+  padding: var(--mg-cta-padding);
   background-color: var(--mg-cta-bg, initial);
 
   &__inner {
@@ -12,18 +25,27 @@
     max-width: 800px;
   }
 
-  &__headline {
-    color: $mg-color-white;
+  .mg-cta__eyebrow {
+    color: rgb(var(--mg-color-neutral-0));
+    font-size: mg-rem(12);
     font-weight: 700;
-    margin-bottom: $mg-spacing-100;
+    letter-spacing: 0.09em;
+    margin: 0 0 var(--mg-spacing-75);
   }
 
-  &__text {
-    color: rgba($mg-color-white, 0.9);
-    margin-bottom: $mg-spacing-150;
+  .mg-cta__headline {
+    color: rgb(var(--mg-color-white));
+    font-weight: 700;
+    margin-bottom: var(--mg-spacing-100);
+  }
+
+  .mg-cta__text {
+    color: rgb(var(--mg-color-neutral-0) / 0.9);
+    margin-bottom: var(--mg-spacing-150);
 
     p {
-      margin-bottom: $mg-spacing-75;
+      color: inherit;
+      margin-bottom: var(--mg-spacing-75);
 
       &:last-child {
         margin-bottom: 0;
@@ -31,16 +53,23 @@
     }
 
     a {
-      color: $mg-color-white;
+      color: rgb(var(--mg-color-white));
       text-decoration: underline;
     }
+  }
+
+  &__custom-content {
+    grid-column: 1 / -1;
+    min-width: 0;
+    margin-block-start: var(--mg-spacing-150);
+    text-align: start;
   }
 
   &__actions {
     display: flex;
     flex-wrap: wrap;
-    gap: $mg-spacing-100;
-    margin-top: $mg-spacing-150;
+    gap: var(--mg-spacing-100);
+    margin-top: var(--mg-spacing-150);
   }
 
   &__image {
@@ -64,13 +93,34 @@
     }
   }
 
+  // Horizontal text/action composition for wide promotional banners.
+  &--inline {
+    .mg-cta__body {
+      max-width: none;
+    }
+
+    @include devicebreak(medium) {
+      .mg-cta__body {
+        align-items: center;
+        display: grid;
+        gap: var(--mg-spacing-300);
+        grid-template-columns: minmax(0, 1fr) auto;
+      }
+
+      .mg-cta__actions {
+        justify-content: flex-end;
+        margin-top: 0;
+      }
+    }
+  }
+
   // Side-by-side layout when image is present
   &--with-image {
     .mg-cta__inner {
       display: grid;
       grid-template-columns: 1fr;
       align-items: center;
-      gap: $mg-spacing-200;
+      gap: var(--mg-spacing-200);
     }
 
     .mg-cta__body {
@@ -95,44 +145,124 @@
 
   // Color variants — same system as Hero
   &--primary {
-    background-color: $mg-color-hero;
+    --mg-cta-accent: var(--mg-color-hero);
+
+    background-color: rgb(var(--mg-color-hero));
   }
 
+  // The orange accent carries no text at any size, so this variant no longer
+  // paints it flat under an eyebrow, a headline and a 90%-white body. It takes
+  // the soft treatment below — a white surface under an 8% wash of the accent,
+  // with dark copy — and keeps the accent as a solid leading rule, which no
+  // copy sits on. See
+  // docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text
   &--secondary {
-    background-color: $mg-color-hero--secondary;
+    --mg-cta-accent: var(--mg-color-hero--secondary);
+
+    border-inline-start: mg-rem(6) solid rgb(var(--mg-cta-accent));
   }
 
   &--tertiary {
-    background-color: $mg-color-hero--tertiary;
+    --mg-cta-accent: var(--mg-color-hero--tertiary);
+
+    background-color: rgb(var(--mg-color-hero--tertiary));
   }
 
   &--quaternary {
-    background-color: $mg-color-hero--quaternary;
+    --mg-cta-accent: var(--mg-color-hero--quaternary);
+
+    background-color: rgb(var(--mg-color-hero--quaternary));
   }
 
-  // Button overrides for dark backgrounds (matches Hero pattern)
-  a.mg-button,
-  a.mg-button:hover,
-  a.mg-button:visited {
-    color: $mg-color-hero;
+  &--soft,
+  &--secondary {
+    background-color: rgb(var(--mg-color-neutral-0));
+    background-image: linear-gradient(
+      rgb(var(--mg-cta-accent) / 0.08),
+      rgb(var(--mg-cta-accent) / 0.08)
+    );
+
+    .mg-cta__eyebrow,
+    .mg-cta__headline {
+      color: rgb(var(--mg-color-neutral-900));
+    }
+
+    .mg-cta__text {
+      color: rgb(var(--mg-color-neutral-800));
+
+      a {
+        color: rgb(var(--mg-color-interactive));
+      }
+    }
   }
 
-  a.mg-button-primary {
-    background-color: $mg-color-neutral-0;
-  }
+  // Strong surfaces need inverse buttons; soft surfaces use normal buttons.
+  // --secondary is a soft surface too, since the orange accent left its fill.
+  &:where(:not(.mg-cta--soft, .mg-cta--secondary)) {
+    // Light tinted stroke keeps filled buttons visible on the strong surface.
+    --mg-border-color-button-primary: rgb(var(--mg-color-neutral-0) / 0.72);
+    --mg-border-color-button-secondary: rgb(var(--mg-color-neutral-0) / 0.72);
 
-  a.mg-button-secondary,
-  a.mg-button-secondary:hover,
-  a.mg-button-secondary:visited {
-    background-color: $mg-color-hero-button-secondary-background;
-    color: $mg-color-hero-button-secondary-color;
-    border-color: $mg-border-color-hero-button-secondary;
-  }
+    // Button overrides for dark backgrounds (matches Hero pattern)
+    a.mg-button:not(.mg-button-cta),
+    a.mg-button:not(.mg-button-cta):hover,
+    a.mg-button:not(.mg-button-cta):visited {
+      color: rgb(var(--mg-color-hero));
+    }
 
-  a.mg-button:focus-visible {
-    box-shadow: 0 0 0 2px $mg-color-neutral-0;
-    outline: 2px solid $mg-color-neutral-0;
-    outline-offset: 2px;
+    a.mg-button-primary:not(.mg-button-cta) {
+      background-color: rgb(var(--mg-color-neutral-0));
+    }
+
+    // Editorial link-style CTA used by CtaButton.
+    a.mg-button.mg-button-cta,
+    a.mg-button.mg-button-cta:hover,
+    a.mg-button.mg-button-cta:visited {
+      background: transparent;
+      border-color: transparent;
+      color: rgb(var(--mg-color-neutral-0));
+
+      &::after {
+        background: rgb(var(--mg-color-neutral-0));
+        color: rgb(var(--mg-cta-accent));
+      }
+    }
+
+    a.mg-button-secondary:not(.mg-button-cta),
+    a.mg-button-secondary:not(.mg-button-cta):hover,
+    a.mg-button-secondary:not(.mg-button-cta):visited {
+      background-color: var(--mg-color-hero-button-secondary-background);
+      color: rgb(var(--mg-color-hero-button-secondary-color));
+      border-color: rgb(var(--mg-border-color-hero-button-secondary));
+    }
+
+    .mg-cta__text code,
+    .mg-cta__text .mg-code {
+      background: rgb(var(--mg-color-neutral-0) / 0.12);
+      box-shadow: inset 0 0 0 1px rgb(var(--mg-color-neutral-0) / 0.24);
+      color: rgb(var(--mg-color-neutral-0));
+    }
+
+    a.mg-button.mg-button-outline,
+    a.mg-button.mg-button-outline:hover,
+    a.mg-button.mg-button-outline:visited {
+      background-color: transparent;
+      border-color: rgb(var(--mg-color-neutral-0) / 0.72);
+      border-style: solid;
+      border-width: var(--mg-border-width-button, 1px);
+      color: rgb(var(--mg-color-neutral-0));
+    }
+
+    a.mg-button.mg-button-outline:hover {
+      background-color: rgb(var(--mg-color-neutral-0) / 0.12);
+      border-color: rgb(var(--mg-color-neutral-0));
+    }
+
+    a.mg-button:focus-visible {
+      box-shadow: 0 0 0 2px rgb(var(--mg-color-neutral-0));
+      outline: 2px solid rgb(var(--mg-color-focus-ring-inverse));
+      outline-offset: 2px;
+    }
   }
 }
 

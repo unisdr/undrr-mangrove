@@ -1,0 +1,240 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as StatusLabelStories from './StatusLabel.stories';
+
+<Meta of={StatusLabelStories} />
+
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
+
+# Status label
+
+A workflow status shown as a coloured indicator followed by the status name. Use it in record and event lists, on a record's own page, and anywhere a piece of content has an editorial state a reader or editor needs to see.
+
+CSS only. There is no React component and no JavaScript — the markup is two elements, so Drupal, Twig, and plain HTML consumers can emit it directly.
+
+## Usage
+
+### HTML
+
+```html
+<span class="mg-status-label mg-status-label--published">
+  <span class="mg-status-label__indicator"></span>
+  Published
+</span>
+```
+
+The indicator is an empty `<span>`, not an icon font or an image, so it needs no alternative text. The status name is always present as real text.
+
+### The four DELTA statuses
+
+| Modifier                                | Label                        | Indicator | Shape           |
+| --------------------------------------- | ---------------------------- | --------- | --------------- |
+| `.mg-status-label--draft`               | Draft                        | `#f4e496` | Rounded square  |
+| `.mg-status-label--waiting-information` | Waiting for more information | `#bcae67` | Capsule         |
+| `.mg-status-label--waiting-validation`  | Waiting for validation       | `#fec124` | Rounded diamond |
+| `.mg-status-label--published`           | Published                    | `#0a6969` | Circle          |
+
+### Service health states
+
+| Modifier                     | Typical label | Indicator             | Shape    |
+| ---------------------------- | ------------- | --------------------- | -------- |
+| `.mg-status-label--warning`  | Degraded      | `--mg-color-gold-800` | Triangle |
+| `.mg-status-label--negative` | Offline       | `--mg-color-red-900`  | Octagon  |
+
+They are used by [ServiceNotice](?path=/docs/components-notice-service-notice--docs) and suit any service or system health state.
+
+Used without a modifier the indicator is neutral grey. Prefer that for a status outside this workflow rather than borrowing a colour that already means something else.
+
+## Where these values come from
+
+The colours, the geometry, and the four status names are taken from the DELTA design system board **"Status Labels for Records and Events"** (Elements & Patterns → 02 Components).
+
+The colour-to-label mapping was read off the board's own swatch/label pairs. Each 44 × 44 swatch sits directly to the left of its label, and the two are vertically centred on each other to within 2px:
+
+| Swatch (y range)      | Label (y range)                          | Centres     |
+| --------------------- | ---------------------------------------- | ----------- |
+| `#f4e496` (2720–2764) | Draft (2728–2758)                        | 2742 / 2743 |
+| `#bcae67` (2768–2812) | Waiting for more information (2775–2805) | 2790 / 2790 |
+| `#fec124` (2817–2861) | Waiting for validation (2822–2852)       | 2839 / 2837 |
+| `#0a6969` (2863–2907) | Published (2869–2899)                    | 2885 / 2884 |
+
+The dot-plus-text shape rather than a filled pill is also from the file: the board's own table example and its "Colors in Status Dropdown" both draw a 14px circle, an 8px gap, and the status name at 16px. No filled status pill appears anywhere on the design system pages.
+
+Two of the four colours were already in Mangrove: `--mg-color-accent-100` is `#f4e496` and `--mg-color-accent-400` is `#0a6969`. The published teal differs from the Figma swatch by one unit in the blue channel (`#0a6969` vs `#0a696a`) — the existing token is used rather than a near-duplicate. `--mg-color-accent-500` and `--mg-color-accent-600` were added for the remaining two.
+
+## Shape as well as colour
+
+Each status has its own shape. This is not a fix for a WCAG failure — the status name is always rendered as text next to the indicator, so the meaning is not carried by colour alone. Three other things make the second cue worth having.
+
+**Some of the colours are close to each other under colour vision deficiency.** The seven fills were simulated at full severity and compared pairwise. Two things matter for reading the numbers below. The simulation matrices must be applied in **linear** RGB: run against gamma-encoded sRGB they put Degraded and Offline 36 CIE76 apart and hide the collision completely. And CIE76 overstates separation in the yellow-green region this palette lives in, so CIEDE2000 is quoted beside it — roughly **2.3 dE2000 is the just-noticeable difference**, below which two colours are the same colour.
+
+Two models are quoted because one model's answer is not a finding. Machado et al. (2009) and Viénot et al. (1999) agree closely on protanopia and deuteranopia; they disagree on tritanopia, where Viénot's linear S-cone approximation is the weaker of the two and its tritan column should not be read on its own.
+
+Each cell is CIE76 / dE2000, Machado above and Viénot below.
+
+| Pair                                                  | Normal      | Protanopia  | Deuteranopia  | Tritanopia  |
+| ----------------------------------------------------- | ----------- | ----------- | ------------- | ----------- |
+| Degraded / Offline                                    | 58.6 / 33.8 | 25.3 / 12.6 | **3.3 / 1.1** | 59.4 / 17.0 |
+|                                                       | 58.6 / 33.8 | 30.0 / 14.9 | **1.7 / 0.6** | 11.6 / 8.9  |
+| Draft / Waiting for more information                  | 19.6 / 13.4 | 19.4 / 13.5 | 19.6 / 13.3   | 19.2 / 13.3 |
+|                                                       | 19.6 / 13.4 | 19.5 / 13.5 | 19.6 / 13.4   | 25.3 / 13.6 |
+| Draft / Waiting for validation                        | 41.7 / 15.0 | 39.7 / 12.6 | 37.3 / 11.2   | 21.6 / 12.3 |
+|                                                       | 41.7 / 15.0 | 36.4 / 12.2 | 41.1 / 11.9   | 4.6 / 2.3   |
+| Neutral / Draft                                       | 42.9 / 24.2 | 43.7 / 24.0 | 42.8 / 24.2   | 18.3 / 17.5 |
+|                                                       | 42.9 / 24.2 | 43.0 / 24.6 | 45.3 / 25.7   | 98.6 / 39.3 |
+| Waiting for more information / Waiting for validation | 43.7 / 16.1 | 40.7 / 12.5 | 40.4 / 13.8   | 20.4 / 11.6 |
+|                                                       | 43.7 / 16.1 | 37.6 / 12.1 | 44.0 / 14.1   | 20.7 / 11.3 |
+| Neutral / Published                                   | 48.9 / 41.4 | 40.4 / 34.4 | 44.5 / 38.9   | 48.6 / 40.2 |
+|                                                       | 48.9 / 41.4 | 40.1 / 34.2 | 44.4 / 38.8   | 78.6 / 43.6 |
+
+The one result both models agree on is the one that matters: **Degraded and Offline are the same olive mark to a reader with deuteranopia**, at 1.1 and 0.6 dE2000 against a 2.3 threshold. Nothing about that is marginal. Draft and "waiting for more information" sit around 13 dE2000 for everyone, colour-blind or not — visible, but the closest pair in normal vision. The draft/validation tritan figure of 2.3 is Viénot only; Machado puts the same pair at 12.3, so treat it as a caution rather than a measurement.
+
+**The component is CSS only.** Consumers write their own markup, so the indicator will be reused without its label — in a table cell, a card corner, a filter chip. Mangrove cannot stop that, and when it happens the colour really is the only cue. A shape keeps those uses legible.
+
+**A second cue is faster for everyone.** Scanning a long list for "everything still in draft" is a shape-matching task, not a reading task.
+
+The mapping is conventional rather than arbitrary, so the marks carry their usual meaning where they have one:
+
+| Status                       | Shape           | Why                                                                                                                                    |
+| ---------------------------- | --------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| No modifier                  | Circle          | The base class names no status, so it keeps the plain dot.                                                                             |
+| Draft                        | Rounded square  | A flat, inert block — nothing has moved yet.                                                                                           |
+| Waiting for more information | Capsule         | A blank line still to be filled in.                                                                                                    |
+| Waiting for validation       | Rounded diamond | The flowchart decision mark — and the draft square turned on its point, because the record has not changed, only whose hands it is in. |
+| Published                    | Circle          | The settled end state, and the mark the DELTA board draws.                                                                             |
+| Degraded                     | Triangle        | The caution triangle.                                                                                                                  |
+| Offline                      | Octagon         | The stop sign.                                                                                                                         |
+
+Published and the neutral base share the circle. Their colours are the pair that stays furthest apart in every simulation (34+ dE2000), so shape is not what has to separate them.
+
+### Why the palette is not rebalanced instead
+
+The obvious response to the table above is to pick better colours rather than add shapes. That was measured, and it does not work. Recording the result here so the question does not get reopened without the numbers.
+
+Two goals pull against each other. Non-text contrast wants every fill dark enough to hold 3:1 against a white page, which compresses all seven into the bottom third of the lightness range. Colour-vision separation wants them spread across lightness, because a dichromat has one fewer hue axis and reads most of the difference as lightness. The seven statuses cannot have both.
+
+That is not specific to these colours. Mangrove already measured the same wall for charts and wrote the answer into `--mg-dataviz-categorical-safe-count: 4`: the data-visualisation palette, assembled from documented Sendai target colours and ordered specifically to degrade well, holds up to four series on colour alone and falls to 3.2 dE2000 at seven. **Seven unordered categories is past what colour can carry, for anyone's palette.**
+
+Searching every combination the design system already owns, with the hue associations held (grey neutral, amber waiting, teal published, red offline) and every fill required to clear 3:1 on white, the best achievable worst-pair is **2.34 dE2000** — still at the just-noticeable difference, merely moved from Degraded/Offline onto a different pair. It costs all four DELTA status colours, replaces them with four browns whose worst normal-vision pair drops from 13.4 to 6.8 dE2000 (so the set gets harder to read for the majority of users in exchange), and it leaves the four fills so dark that the neutral-500 ring falls to 1.0-1.8:1 against them and stops reading as a ring at all.
+
+Nor is there a one-token fix. Moving only Degraded off `--mg-color-gold-800` onto a lighter orange lifts that pair from 0.6 to 11.9 dE2000, but the collision reappears between Degraded and "waiting for more information" at 1.5 dE2000, while Degraded's own contrast falls from 5.58:1 to 3.15:1 and it no longer matches the `--mg-color-gold-800` icon and rule of the notice it sits inside.
+
+So the palette stays as the DELTA board defines it, and the second cue is a shape. A shape is free of all three costs: it does not move a brand colour, it survives forced colours where the fills do not, and it works at seven categories where colour stops at four.
+
+### Why the marks look like one set
+
+Seven marks that appear in the same column have to read as one family, or the list looks like a collection of unrelated symbols. Three rules do that work:
+
+- **Every mark is convex and simple.** The first shaped release drew "waiting for more information" as a plus. A concave mark beside six convex ones reads as a different species, its twelve corners make it the visually heaviest thing in the set at the smallest size, and its inner corners are exactly where a stroke has least room to run. It is a capsule now.
+- **Every corner is softened at one radius, proportional to `--mg-status-label-indicator-size`.** Mangrove 2 gives `--mg-radius-button`, `--mg-radius-tag`, `--mg-radius-form-input` and `--mg-card-border-radius` a single value; these marks follow the same instinct. Nothing in the set ends in a sharp point, including the triangle, whose three corners are chamfered.
+- **Every mark carries the same ring,** exactly `--mg-status-label-indicator-border-width` on every edge, so the ring is one device rather than a different treatment per shape.
+
+Five of the seven are a rounded rectangle underneath — the circle is a full radius, the capsule a wide short one, the diamond the draft square rotated 45° — so they keep a real CSS `border` and the ring costs nothing. Only the triangle and the octagon need a `clip-path`, and the ring for those two is described under [Non-text contrast](#accessibility) below.
+
+## Accessibility
+
+- **SC 1.4.1 Use of colour.** The status name is always rendered as text, so the indicator is reinforcement, never the message. Do not build an indicator-only variant. The shapes are a second cue on top of that, not the thing that satisfies the criterion.
+- **SC 1.4.3 Contrast (minimum).** The label text resolves to `--mg-color-text` (`#1a1a1a`), 17.40:1 on a white page and 15.63:1 on a tinted panel.
+- **SC 1.4.11 Non-text contrast.** The four indicator fills are 1.28:1 (draft), 1.63:1 (waiting for validation), 2.24:1 (waiting for more information) and 6.49:1 (published) against white; the neutral base is 1.60:1, degraded 5.58:1 and offline 6.31:1. On the surfaces these actually appear on the ratios are slightly lower again — multiply by about 0.83 for a status sitting on `--mg-color-red-50`, which is where the offline mark appears inside a negative notice. Four of the seven would be close to invisible unbounded, so every indicator carries a 1px `--mg-color-neutral-500` ring at 5.74:1. Because the dots are decorative the ring is not strictly required by 1.4.11, but without it the component looks broken on a white page. Set `--mg-status-label-indicator-border-width: 0` to remove it.
+
+  **The ring is load-bearing, and dropping it is a real choice rather than a cosmetic one.** It is the only part of the four pale marks that clears 3:1, so on a `0` ring those four statuses are carried by their fill alone at 1.3-2.2:1. Drop the ring only where the indicator sits on a surface dark enough to give the fills their own boundary. Forced colours used to be a second reason not to: the base indicator is drawn as a `Canvas` centre inside a `CanvasText` ring, so at `0` it had neither ring nor contrasting fill and disappeared from the row altogether. It no longer does — in forced colours the base indicator carries an inset `CanvasText` outline that coincides with the ring at any width and is what is left of its edge at `0` ([#1211](https://github.com/unisdr/undrr-mangrove/issues/1211)).
+
+  The ring is exactly `--mg-status-label-indicator-border-width` wide on every edge of every shape. On the five marks that are a rounded rectangle underneath it is a real CSS `border`. The triangle and the octagon need a `clip-path`, which cuts through a border, so those two paint the ring colour as their own background and lay the fill on a `::before` clipped to an inner polygon — one whose vertices are moved along their own angle bisectors by the miter offset, which shifts every edge in by the ring width rather than shrinking the whole shape. Measured on a 160px indicator with a 10px ring, every edge of both shapes falls within a pixel of 10px. Before this, the `::before` was inset and re-clipped to the same polygon, which scaled it: the ring came out 1px on the octagon, 0.71px on the diamond, 0.32px at the plus's inner corners and nothing at all at the triangle's apex ([#1208](https://github.com/unisdr/undrr-mangrove/issues/1208)).
+
+- **Forced colours.** Windows High Contrast repaints every background in a system colour, which would leave the fills identical and the shapes doing all the work. The indicators opt out of forcing and redraw themselves: each named status is a solid `CanvasText` mark, and the base indicator keeps a `Canvas` centre inside a `CanvasText` ring so it stays the one hollow mark and does not collapse into published. Because that ring is also the whole of the hollow mark's edge, the base indicator carries an inset 1px `CanvasText` outline in this mode as well: it lands exactly where the ring is, so it is invisible at any ring width, and it is the mark's edge when the ring has been set to `0` ([#1211](https://github.com/unisdr/undrr-mangrove/issues/1211)). The six named statuses are solid and need none, so they do not get one. The offline octagon is chamfered at 25% rather than the 29.3% of a regular octagon, which is the most circle-like octagon there is, so its silhouette still separates from the published circle at 14px in this mode.
+- **Grouping.** When several statuses appear together as a legend, use `.mg-status-label-group` on a `<ul>` so screen readers announce the count. The class hides the bullet with `list-style-type: ""` rather than `list-style: none`, because Safari drops the implicit `list` role from a list with no marker and stops announcing the count ([#1209](https://github.com/unisdr/undrr-mangrove/issues/1209)). An empty string is a marker, so the semantics survive, and it renders nothing and reserves no space. You do not need `role="list"` on the `<ul>`; if your own list does not use this class, add one or the other.
+- **RTL.** The component is laid out with flex and logical properties. The indicator moves to the right of the text under `dir="rtl"` with no extra CSS. Every shape is symmetrical about its vertical axis, so none of them needs mirroring.
+- **Zoom.** The indicator sizes are multiples of `--mg-status-label-indicator-size`, which is set in `rem`, so the shapes scale with browser zoom and with a larger default font size.
+- **Print.** The triangle and the octagon have no border, so both their ring and their fill are `background-color`, and a browser printing with background graphics off would drop them outright while the other five were reduced to an empty ring. A `@media print` block declares those backgrounds essential so all seven marks survive, the same fix `icons.scss` makes for mask-image icons. A host page whose print reset sets `background: transparent !important` will still clear them; the status name is text, so the row still reads.
+- **Alignment.** The shapes have different bounding boxes, but each one is pulled back to `--mg-status-label-indicator-size` of inline space with a compensating `margin-inline`, so a column or a table cell of statuses keeps one text alignment edge and the wider marks overhang it slightly, as an optically centred glyph should. The diamond is rotated with a `transform`, which is a paint-time operation and leaves the layout box alone.
+
+<Canvas of={StatusLabelStories.RightToLeft} />
+
+## Examples
+
+### All statuses
+
+<Canvas of={StatusLabelStories.AllStatuses} />
+
+### Service health
+
+<Canvas of={StatusLabelStories.ServiceHealth} />
+
+### Neutral
+
+<Canvas of={StatusLabelStories.Neutral} />
+
+### In a table
+
+<Canvas of={StatusLabelStories.InATable} />
+
+### In a dense list
+
+<Canvas of={StatusLabelStories.DenseList} />
+
+## CSS class reference
+
+| Class                                   | Description                              |
+| --------------------------------------- | ---------------------------------------- |
+| `.mg-status-label`                      | Base element; indicator plus text        |
+| `.mg-status-label__indicator`           | The indicator (decorative, empty)        |
+| `.mg-status-label--draft`               | Draft                                    |
+| `.mg-status-label--waiting-validation`  | Waiting for validation                   |
+| `.mg-status-label--waiting-information` | Waiting for more information             |
+| `.mg-status-label--published`           | Published                                |
+| `.mg-status-label--warning`             | Service degraded                         |
+| `.mg-status-label--negative`            | Service offline                          |
+| `.mg-status-label-group`                | Unstyled list wrapper for several labels |
+
+## Design tokens
+
+| Token                                              | Default                  | Description                                        |
+| -------------------------------------------------- | ------------------------ | -------------------------------------------------- |
+| `--mg-status-label-gap`                            | `--mg-spacing-75`        | Space between indicator and text                   |
+| `--mg-status-label-font-size`                      | `16px`                   | Label text size                                    |
+| `--mg-status-label-color`                          | `--mg-color-text`        | Label text colour                                  |
+| `--mg-status-label-indicator-size`                 | `14px`                   | Indicator size; each shape is a multiple of it     |
+| `--mg-status-label-indicator-radius`               | `50%`                    | Corner radius of the base indicator                |
+| `--mg-status-label-indicator-border-width`         | `1px`                    | Indicator ring width, on every edge of every shape |
+| `--mg-status-label-indicator-border-color`         | `--mg-color-neutral-500` | Indicator ring colour                              |
+| `--mg-status-label-indicator`                      | `--mg-color-neutral-100` | Neutral indicator fill                             |
+| `--mg-status-label-indicator--draft`               | `--mg-color-accent-100`  | Draft                                              |
+| `--mg-status-label-indicator--waiting-validation`  | `--mg-color-accent-500`  | Waiting for validation                             |
+| `--mg-status-label-indicator--waiting-information` | `--mg-color-accent-600`  | Waiting for more information                       |
+| `--mg-status-label-indicator--published`           | `--mg-color-accent-400`  | Published                                          |
+| `--mg-status-label-indicator--warning`             | `--mg-color-gold-800`    | Service degraded, shared with ServiceNotice        |
+| `--mg-status-label-indicator--negative`            | `--mg-color-red-900`     | Service offline, shared with ServiceNotice         |
+
+`--mg-status-label-indicator-radius` shapes the base indicator and the published circle. The five status shapes set their own geometry, so changing the radius does not round them off.
+
+The stylesheet also defines `--mg-status-label-indicator-ring`, which is internal plumbing rather than a token: it carries the ring width into the inner polygons of the triangle and the octagon, which need it as a `<length>` even when it is zero. Set `--mg-status-label-indicator-border-width`, and leave that one alone. Do not set `background-color`, `border`, `border-radius`, `width`, `height` or `transform` on `.mg-status-label__indicator` directly either — a border is cut through by a clip path, a fill on the element hides the ring, and a transform replaces the diamond.
+
+### Theming
+
+No theme overrides any of the seven indicator fills, so all five brands render the same status palette. That is deliberate rather than an omission: the four workflow colours come from the DELTA design board and the two service-health colours are shared with ServiceNotice, but all of them ship as Mangrove base tokens in `_variables.scss`, not as DELTA's own — none of `_theme-delta.scss`, `_theme-preventionweb.scss`, `_theme-irp.scss` or `_theme-mcr.scss` redefines one. These are functional states, not brand identity, and a status that changed colour per site would stop being one status.
+
+A brand that genuinely needs its own palette should redefine the fills inside its `.mg-theme-*` block rather than restyling the modifiers. That means all seven: the six suffixed properties `--mg-status-label-indicator--draft`, `--waiting-validation`, `--waiting-information`, `--published`, `--warning` and `--negative`, plus the unsuffixed `--mg-status-label-indicator`, which is the neutral base fill and is easy to miss because it carries no suffix. Read "Why the palette is not rebalanced instead" first — the separation limits are measured, and the alternatives are worse on contrast, on normal vision, or on both.
+
+## Changelog
+
+- **1.2.3**, 2026-09-18 ([#1233](https://github.com/unisdr/undrr-mangrove/pull/1233)): Three documentation corrections. No colour, token, markup or compiled CSS changed.
+  - **Theming.** The note said consumers redefine "the four" `--mg-status-label-indicator--*` properties and that PreventionWeb, IRP and MCR2030 "inherit DELTA's". Both were wrong. There are seven fills: six carrying the `--*` suffix (`--draft`, `--waiting-validation`, `--waiting-information`, `--published`, `--warning`, `--negative`) and the unsuffixed `--mg-status-label-indicator`, the neutral base, which is the easy one to miss. And no theme overrides any of them: all seven are Mangrove base tokens in `_variables.scss`, and none of `_theme-delta.scss`, `_theme-preventionweb.scss`, `_theme-irp.scss` or `_theme-mcr.scss` redefines one, so all five brands render the same status palette by design. The four workflow colours come from the DELTA design board, but they do not ship as DELTA's tokens.
+  - **Custom-property table.** It listed five of the seven fills; `--mg-status-label-indicator--warning` and `--negative`, added in 1.1.0 and documented everywhere else, were missing.
+  - **The data-viz cross-reference.** "Falls to 2.2 dE2000 at seven" contradicted `_tokens-data-viz.scss`, which publishes ΔE 3.2 for the same pair by the same method. Recomputed from the categorical palette with the Viénot 1999 projections in linear RGB: the SCSS table is right at every N and this page was wrong, so it now says 3.2. The derivation is written down in [`COLOUR-CONTRAST-METHODOLOGY.md`](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md), "How colour-vision separation is measured", so the next person does not have to redo it.
+  - The 1.2.0 entry below is corrected in place for a unit that dangled: 2.3 is a dE2000 just-noticeable difference, and quoting it straight after a CIE76 figure read as though 3.3 cleared it, which is the opposite of the finding.
+- **1.2.2**, 2026-09-18 ([#1224](https://github.com/unisdr/undrr-mangrove/pull/1224), [#1211](https://github.com/unisdr/undrr-mangrove/issues/1211)): The base indicator survives `--mg-status-label-indicator-border-width: 0` in forced colours. It is the one hollow mark in the set (a `Canvas` centre inside a `CanvasText` ring), so with the ring dropped it was a `Canvas` mark on a `Canvas` background and vanished from the row, at every indicator size. It now carries an inset 1px `CanvasText` outline in forced colours, which coincides with the ring at any width and is the whole of its edge at `0`. Nothing else moves: an outline takes no space in any box model, so the mark keeps its size, its fill and its text alignment edge, and the clipped triangle and octagon still offset their inner polygons by the author's ring width rather than by a forced minimum. The six named statuses are solid `CanvasText` shapes, survive a missing ring on their own and are explicitly left without the outline. Normal rendering is untouched: the rule lives inside the `@media (forced-colors: active)` block, and a pixel diff of all seven marks at three indicator sizes and both ring widths is identical before and after, so the opt-out still removes the ring where it is meant to.
+- **1.2.1**, 2026-09-18 ([#1216](https://github.com/unisdr/undrr-mangrove/pull/1216), [#1200](https://github.com/unisdr/undrr-mangrove/issues/1200)): `.mg-status-label-group` now gets its markerless-but-still-a-list treatment from the shared `mg-list-unmarked` mixin instead of its own copy of the two declarations. Same compiled CSS. The pattern this component introduced in 1.2.0 is now the house rule and is applied to Breadcrumbs, Pager, OnThisPageNav, Legend, HubHeader, MegaMenu and the search widget's filter list.
+- **1.2.0**, 2026-09-18 ([#1206](https://github.com/unisdr/undrr-mangrove/pull/1206)): Each status now has a shape as well as a colour: draft a rounded square, waiting for more information a capsule, waiting for validation a rounded diamond, degraded a chamfered triangle, offline an octagon. Published and the base indicator keep the circle. This is a visible change on every existing status label, and it needs no markup change: the shapes come from CSS on the same empty `<span>`.
+  - The shapes are a second cue, not a fix for a WCAG failure: the status name is still always present as text. They matter because several of the colours are close under colour vision deficiency (degraded and offline are 3.3 CIE76 / 1.1 dE2000 apart simulated for deuteranopia, against a just-noticeable difference of about 2.3 dE2000; it is the dE2000 figure that is under the threshold, not the CIE76 one), because a CSS-only component gets reused without its label, and because a redundant cue is faster to scan.
+  - The palette itself is unchanged, and that is a measured decision rather than an omission (see "Why the palette is not rebalanced instead"). The seven fills were re-measured in two simulation models applied in linear RGB, and no palette assembled from the tokens this system owns does better than 2.34 dE2000 at the worst pair while holding 3:1 on white and the hue associations, which is no real improvement and costs the DELTA colours, the normal-vision separation and the ring.
+  - The seven marks are drawn as one family: all convex, all softened at one corner radius proportional to the indicator size, all carrying the same ring. Five of them are a rounded rectangle underneath (the diamond is the draft square rotated 45°), so they keep a real CSS `border`; only the triangle and the octagon need a `clip-path`.
+  - The ring is now exactly `--mg-status-label-indicator-border-width` on every edge of every shape ([#1208](https://github.com/unisdr/undrr-mangrove/issues/1208)). The two clipped marks clip their fill to an inner polygon offset along each vertex's angle bisector instead of insetting the box and rescaling the same polygon, which used to give a different ring width on every edge and none at all on the two palest statuses.
+  - `.mg-status-label-group` hides its bullet with `list-style-type: ""` instead of `list-style: none`, so Safari keeps the list role and VoiceOver announces the item count the docs promise ([#1209](https://github.com/unisdr/undrr-mangrove/issues/1209)). No `role="list"` is needed on the `<ul>`.
+  - In forced colours the indicators now draw themselves in system colours instead of disappearing into the forced background, and a `@media print` block keeps the background-drawn marks on the page when a browser prints without background graphics.
+  - The shapes have different bounding boxes, so each one carries a compensating `margin-inline` and still occupies exactly `--mg-status-label-indicator-size` of inline space: a column or a table of statuses keeps one text alignment edge.
+  - `--mg-status-label-indicator-radius` still shapes the base indicator and the published circle; the five status shapes set their own geometry and ignore it. Every other `--mg-status-label-*` token behaves as before, including `--mg-status-label-indicator-border-width: 0` to drop the ring.
+  - New "In a dense list" story, where scanning is what the second cue buys.
+- **1.1.1**, 2026-09-17 ([#1174](https://github.com/unisdr/undrr-mangrove/pull/1174)): Added a service health story and AI manifest coverage for the `--warning` and `--negative` modifiers (#1172).
+  - In right-to-left layouts, `.mg-status-label-group` no longer picks up inline padding from the global list rules, so labels sit flush with the inline start.
+- **1.1.0**, 2026-09-16 ([#1164](https://github.com/unisdr/undrr-mangrove/pull/1164)): Added `--warning` and `--negative` service health modifiers and their indicator tokens, used by ServiceNotice.
+- **1.0.1**, 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a status label whose own language is not Arabic.
+- **1.0**, 2026-09-02: Initial release. Colours, geometry and status names sourced from the DELTA design system board "Status Labels for Records and Events".

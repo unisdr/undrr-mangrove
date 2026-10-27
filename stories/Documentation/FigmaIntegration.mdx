@@ -1,0 +1,17 @@
+import { Meta, Markdown } from '@storybook/addon-docs/blocks';
+import FigmaGuide from '../../docs/FIGMA-INTEGRATION.md?raw';
+import { linkDocsPages } from './docsPageLinks';
+
+<Meta
+  title="Getting started/Integration/Figma and Mangrove"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: { canvas: { hidden: true } },
+  }}
+/>
+
+<Markdown>{linkDocsPages(FigmaGuide, 'docs/FIGMA-INTEGRATION.md')}</Markdown>
+
+---
+
+Last updated: 8 October 2026 · <a href="https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/FIGMA-INTEGRATION.md" target="_blank" rel="noopener noreferrer">View source on GitHub</a>

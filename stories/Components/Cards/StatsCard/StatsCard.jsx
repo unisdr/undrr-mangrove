@@ -22,14 +22,20 @@ export function StatsCard({
   const baseClass = 'mg-stats-card';
   const statsCount = stats.length;
 
-  // Use mg-grid system for layout
-  const gridClasses = statsCount > 0 ? `mg-grid mg-grid__col-${statsCount}` : 'mg-grid';
+  // Use mg-grid system for layout. The numbered column classes cover 1–12; past
+  // that, fall back to the single-row auto-fit modifier so a large stat set
+  // still fits one row instead of collapsing to a stacked single column.
+  const MAX_GRID_COLUMNS = 12;
+  let gridClasses = 'mg-grid';
+  if (statsCount > 0 && statsCount <= MAX_GRID_COLUMNS) {
+    gridClasses = `mg-grid mg-grid__col-${statsCount}`;
+  } else if (statsCount > MAX_GRID_COLUMNS) {
+    gridClasses = 'mg-grid mg-grid--auto-fit';
+  }
 
-  const classes = [
-    baseClass,
-    variant && `${baseClass}--${variant}`,
-    className,
-  ].filter(Boolean).join(' ');
+  const classes = [baseClass, variant && `${baseClass}--${variant}`, className]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <section className={classes} aria-label={title || 'Statistics'} {...props}>
@@ -63,7 +69,8 @@ StatsCard.propTypes = {
       /** Label displayed above the value (e.g., "Target A") */
       label: PropTypes.string,
       /** The main statistic value (e.g., "1,500+", "45%", "$223B") */
-      value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+        .isRequired,
       /** Label displayed below the value */
       bottomLabel: PropTypes.string,
       /** Optional descriptive text (supports inline HTML links) */

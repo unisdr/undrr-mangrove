@@ -1,16 +1,26 @@
+/**
+ * Footer
+ *
+ * Site-wide mega footer with branding, navigation columns, copyright, and social links.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Footer/Footer.mdx
+ */
+@use "../../assets/scss/config" as *;
+
 .mg-footer {
   --mg-gutenberg-spacer: 0;
 }
 
 .mg-footer--about-footer {
   text-wrap: balance;
-  color: $mg-color-white;
-  padding-bottom: $mg-spacing-200;
-  padding-top: $mg-spacing-200;
+  color: rgb(var(--mg-color-white));
+  padding-bottom: var(--mg-spacing-200);
+  padding-top: var(--mg-spacing-200);
 
   a,
   a:hover {
-    color: $mg-color-white;
+    color: rgb(var(--mg-color-white));
   }
 
   .container {
@@ -19,47 +29,40 @@
 }
 
 .mg-footer--about-footer--links {
-  font-family: $mg-font-family-headings;
-  font-size: $mg-font-size-500;
+  font-family: var(--mg-font-family-ui);
+  font-size: var(--mg-font-size-500);
   display: inline-flex;
   flex-wrap: wrap;
   gap: mg-rem(7.5) mg-rem(20);
 }
 
-// Arabic font override for about-footer links.
-:lang(ar) {
-  .mg-footer--about-footer--links {
-    font-family: $mg-font-family-arabic-headings;
-  }
-}
-
 .mg-footer--about-footer--description {
-  font-size: $mg-font-size-400;
+  font-size: var(--mg-font-size-400);
 }
 
 // Utility footer bar — secondary navigation below the main footer
 // Used by sub-branded sites (e.g. DELTA) for product-level links
 .mg-footer-bar {
-  border-top: 1px solid $mg-color-neutral-200;
-  padding: $mg-spacing-150 0;
-  font-size: $mg-font-size-300;
-  color: $mg-color-neutral-600;
+  border-top: 1px solid rgb(var(--mg-color-neutral-200));
+  padding: var(--mg-spacing-150) 0;
+  font-size: var(--mg-font-size-300);
+  color: rgb(var(--mg-color-neutral-600));
 
   &__row {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    gap: $mg-spacing-100;
+    gap: var(--mg-spacing-100);
   }
 
   &__links {
     display: flex;
     flex-wrap: wrap;
-    gap: $mg-spacing-50 $mg-spacing-200;
+    gap: var(--mg-spacing-50) var(--mg-spacing-200);
 
     a {
-      color: $mg-color-interactive;
+      color: rgb(var(--mg-color-interactive));
     }
   }
 
@@ -70,8 +73,8 @@
 
   &__divider {
     border: 0;
-    border-top: 1px solid $mg-color-neutral-200;
-    margin: $mg-spacing-100 0;
+    border-top: 1px solid rgb(var(--mg-color-neutral-200));
+    margin: var(--mg-spacing-100) 0;
   }
 }
 

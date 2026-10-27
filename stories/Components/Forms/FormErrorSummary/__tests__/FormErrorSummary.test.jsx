@@ -16,19 +16,13 @@ describe('FormErrorSummary', () => {
 
   it('renders the title and error messages', () => {
     render(<FormErrorSummary errors={errors} />);
-    expect(
-      screen.getByText('There is a problem'),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText('Enter a valid email address'),
-    ).toBeInTheDocument();
+    expect(screen.getByText('There is a problem')).toBeInTheDocument();
+    expect(screen.getByText('Enter a valid email address')).toBeInTheDocument();
     expect(screen.getByText('Enter your full name')).toBeInTheDocument();
   });
 
   it('renders a custom title', () => {
-    render(
-      <FormErrorSummary title="Fix the following" errors={errors} />,
-    );
+    render(<FormErrorSummary title="Fix the following" errors={errors} />);
     expect(screen.getByText('Fix the following')).toBeInTheDocument();
   });
 
@@ -60,23 +54,23 @@ describe('FormErrorSummary', () => {
   it('applies BEM class names', () => {
     const { container } = render(<FormErrorSummary errors={errors} />);
     expect(
-      container.querySelector('.mg-form-error-summary'),
+      container.querySelector('.mg-form-error-summary')
     ).toBeInTheDocument();
     expect(
-      container.querySelector('.mg-form-error-summary__title'),
+      container.querySelector('.mg-form-error-summary__title')
     ).toBeInTheDocument();
     expect(
-      container.querySelector('.mg-form-error-summary__list'),
+      container.querySelector('.mg-form-error-summary__list')
     ).toBeInTheDocument();
   });
 
   it('applies custom className', () => {
     const { container } = render(
-      <FormErrorSummary errors={errors} className="my-custom" />,
+      <FormErrorSummary errors={errors} className="my-custom" />
     );
     expect(container.querySelector('.my-custom')).toBeInTheDocument();
     expect(
-      container.querySelector('.mg-form-error-summary.my-custom'),
+      container.querySelector('.mg-form-error-summary.my-custom')
     ).toBeInTheDocument();
   });
 
@@ -119,7 +113,7 @@ describe('FormErrorSummary', () => {
         <FormErrorSummary errors={errors} />
         <input id="email" aria-label="Email" />
         <input id="name" aria-label="Name" />
-      </div>,
+      </div>
     );
     const emailLink = screen.getByText('Enter a valid email address');
     expect(emailLink.closest('a')).toHaveAttribute('href', '#email');
@@ -134,14 +128,14 @@ describe('FormErrorSummary', () => {
     const { container } = render(
       <FormErrorSummary
         errors={[{ id: 'email', message: 'Enter a valid email address' }]}
-      />,
+      />
     );
     expect(await axe(container)).toHaveNoViolations();
   });
 
   it('has no a11y violations with custom title', async () => {
     const { container } = render(
-      <FormErrorSummary title="Fix the following errors" errors={errors} />,
+      <FormErrorSummary title="Fix the following errors" errors={errors} />
     );
     expect(await axe(container)).toHaveNoViolations();
   });

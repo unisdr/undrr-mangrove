@@ -1,3 +1,4 @@
+import { withLanguage } from '../../../.storybook/withLanguage';
 /**
  * @file _storyHelpers.jsx
  * @description Shared helpers for the SyndicationSearchWidget story files.
@@ -117,7 +118,7 @@ import { SyndicationSearchWidget } from '@undrr/mangrove/SyndicationSearchWidget
  * controls consistent.
  */
 export const widgetMetaShared = {
-  decorators: [withInlineDescription],
+  decorators: [withInlineDescription, withLanguage],
   parameters: {
     layout: 'padded',
     docs: {

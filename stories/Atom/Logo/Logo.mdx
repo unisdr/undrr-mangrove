@@ -9,7 +9,7 @@ import logoSquareWhite from '../../assets/images/undrr-logo-square-white.svg';
 
 <Meta of={LogoStories} />
 
-> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
 
 # UNDRR logos
 
@@ -17,18 +17,13 @@ The UNDRR logo is a keystone element of the identity and is used to represent th
 
 ### Overview
 
-The UNDRR logo is the keystone element of the identity program and should be used to represent the entire organization.
-
-When to use:
-
-- To promote business.
-- To create an identity for the organization.
+The UNDRR logo represents the organization. Use it consistently for official UNDRR branding.
 
 ### Formatting
 
 #### Default
 
-Within the design system, the logo is used in the header and footer components. The logo is available in blue or white.
+Within the design system, the logo is used in the header and footer components. It comes in blue and white.
 
 ### Content
 
@@ -40,7 +35,7 @@ A well-established and consistently presented identity is a very valuable asset.
 
 [Download](images/undrr-logo-blue.svg)
 
-This is the default logo and is used primarily in the header of every page as well as country sites.
+Switch Storybook's Locale toolbar to see translated blue wordmarks where published. Chinese has no blue asset, and Japanese falls back to English.
 
 <Canvas of={LogoStories.DefaultUndrrLogoBlue} meta={LogoStories} />
 
@@ -50,7 +45,7 @@ This is the default logo and is used primarily in the header of every page as we
 
 [Download](images/undrr-logo-white.svg)
 
-Used when the logo is placed on a dark background.
+Use on dark backgrounds. The Locale toolbar shows white translated wordmarks where they exist; Japanese falls back to English.
 
 <Canvas of={LogoStories.DefaultUndrrLogoWhite} meta={LogoStories} />
 
@@ -62,10 +57,35 @@ The horizontal variant is preferred, but not always suitable. Therefore a "squar
 
 <Canvas of={LogoStories.DefaultUndrrLogoSquareWhite} meta={LogoStories} />
 
+### Translated logos
+
+Language-specific wordmarks are published to [assets.undrr.org](https://assets.undrr.org/logos/undrr/): black/blue as raster PNGs (`undrr-logo-{lang}-{color}.png`), white as SVG (`undrr-logo-{lang}-white.svg`). Color coverage varies by language:
+
+| Language       | Colors available   | Published     |
+| -------------- | ------------------ | ------------- |
+| Arabic (`ar`)  | black, blue, white | yes           |
+| Spanish (`es`) | black, blue, white | yes           |
+| French (`fr`)  | black, blue, white | yes           |
+| Russian (`ru`) | black, blue, white | yes           |
+| Chinese (`zh`) | black, white       | no blue asset |
+
+The blue and white stories resolve these automatically via `getUndrrLogoAsset` (`undrr-logo-assets.js`). The `black` color is not surfaced by a story; call `getUndrrLogoAsset(locale, 'black')` directly if you need it.
+
+Pass the `lang` prop (a BCP 47 tag matching the wordmark's language) as correct, valid markup — treat it as a hint rather than a guarantee, since screen readers generally read `alt` text using the page's ambient language and support for honoring `lang` set directly on an `<img>` varies by browser/AT combination.
+
+**Do not combine translated logos with `crop="autocrop"`** (below): the translated assets are much closer to square than the default English wordmark, so the crop box cuts off the subtitle line.
+
+### Autocropping variant
+
+Set `crop="autocrop"` to crop the logo to a fixed box below the desktop breakpoint instead of shrinking the whole image with `object-fit: contain`. This keeps the wordmark legible at small sizes and is what the [page header](?path=/docs/components-pageheader--docs) uses by default. The crop box is tuned for the default English horizontal wordmark only.
+
+<Canvas of={LogoStories.AutocroppingUndrrLogo} meta={LogoStories} />
+
 #### Interactions
 
 - By clicking on the logo, the website is _always_ redirected to the UNDRR.org homepage.
 
 ## Changelog
 
-- **1.0** — 2024-09-12: Released component
+- **1.1**, 2026-09-14: Added translated logo assets (ar, es, fr, ru, zh), the `crop="autocrop"` variant (`mg-logo--autocrop`), and the `undrr-logo-assets.js` resolver used by the logo stories and page header. Added `title`, `width`, `height`, `lang`, `crop`, and `className` props.
+- **1.0**, 2024-09-12: Released component

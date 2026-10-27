@@ -29,13 +29,37 @@ describe('Hero — background layout (default)', () => {
   it('applies background image via inline style', () => {
     const { container } = render(<Hero data={[baseItem]} />);
     const section = container.querySelector('.mg-hero');
-    expect(section).toHaveStyle(
-      `background-image: url(${baseItem.imgback})`
+    expect(section).toHaveStyle(`background-image: url(${baseItem.imgback})`);
+  });
+
+  // Below 900px the background layout reserves --mg-hero-banner-block-size
+  // for a banner that takes its photograph from the element's own computed
+  // background-image. With no photograph there is nothing to inherit, and the
+  // reserved band would be a third of a phone screen of flat brand colour
+  // above the copy. No selector can ask whether a background image resolved,
+  // so the component states it and hero.scss collapses the banner. The inline
+  // style is also dropped rather than left to emit `url(undefined)`, which
+  // every image-less hero used to request and 404.
+  // See unisdr/undrr-mangrove#1264.
+  it('marks an image-less hero and emits no background-image', () => {
+    const { imgback, ...noImage } = baseItem;
+    const { container } = render(<Hero data={[noImage]} />);
+    const section = container.querySelector('.mg-hero');
+    expect(section).toHaveClass('mg-hero--no-image');
+    expect(section.getAttribute('style')).toBeNull();
+  });
+
+  it('does not mark a hero that has an image', () => {
+    const { container } = render(<Hero data={[baseItem]} />);
+    expect(container.querySelector('.mg-hero')).not.toHaveClass(
+      'mg-hero--no-image'
     );
   });
 
   it('renders a variant class', () => {
-    const { container } = render(<Hero data={[baseItem]} variant="secondary" />);
+    const { container } = render(
+      <Hero data={[baseItem]} variant="secondary" />
+    );
     expect(container.querySelector('.mg-hero--secondary')).toBeInTheDocument();
   });
 
@@ -47,6 +71,47 @@ describe('Hero — background layout (default)', () => {
   it('does not render mg-hero--split class', () => {
     const { container } = render(<Hero data={[baseItem]} />);
     expect(container.querySelector('.mg-hero--split')).not.toBeInTheDocument();
+  });
+
+  it('supports contained and immersive presentation classes', () => {
+    const { container } = render(
+      <Hero data={[baseItem]} contained size="immersive" />
+    );
+
+    expect(container.querySelector('.mg-hero')).toHaveClass(
+      'mg-hero--contained',
+      'mg-hero--immersive'
+    );
+  });
+
+  it('renders an optional logo and structured action links', () => {
+    const onClick = jest.fn();
+    render(
+      <Hero
+        data={[
+          {
+            ...baseItem,
+            primary_button: undefined,
+            logo: { src: '/logo.svg', alt: 'UNDRR' },
+            buttons: [
+              { label: 'Get started', url: '/start' },
+              { label: 'Browse', type: 'Secondary', onClick },
+            ],
+          },
+        ]}
+      />
+    );
+
+    expect(screen.getByRole('img', { name: 'UNDRR' })).toHaveAttribute(
+      'src',
+      '/logo.svg'
+    );
+    expect(screen.getByRole('link', { name: 'Get started' })).toHaveAttribute(
+      'href',
+      '/start'
+    );
+    screen.getByRole('link', { name: 'Browse' }).click();
+    expect(onClick).toHaveBeenCalledTimes(1);
   });
 });
 
@@ -77,31 +142,25 @@ describe('Hero — headingLevel', () => {
 
 describe('Hero — split layout', () => {
   it('renders mg-hero--split class', () => {
-    const { container } = render(
-      <Hero data={[splitItem]} layout="split" />
-    );
+    const { container } = render(<Hero data={[splitItem]} layout="split" />);
     expect(container.querySelector('.mg-hero--split')).toBeInTheDocument();
   });
 
   it('does not apply background-image inline style', () => {
-    const { container } = render(
-      <Hero data={[splitItem]} layout="split" />
-    );
+    const { container } = render(<Hero data={[splitItem]} layout="split" />);
     const section = container.querySelector('.mg-hero--split');
-    expect(section).not.toHaveStyle('background-image: url(https://example.com/image.jpg)');
+    expect(section).not.toHaveStyle(
+      'background-image: url(https://example.com/image.jpg)'
+    );
   });
 
   it('renders __split-grid container', () => {
-    const { container } = render(
-      <Hero data={[splitItem]} layout="split" />
-    );
+    const { container } = render(<Hero data={[splitItem]} layout="split" />);
     expect(container.querySelector('.mg-hero__split-grid')).toBeInTheDocument();
   });
 
   it('applies default split class mg-hero--split-2-3', () => {
-    const { container } = render(
-      <Hero data={[splitItem]} layout="split" />
-    );
+    const { container } = render(<Hero data={[splitItem]} layout="split" />);
     expect(container.querySelector('.mg-hero--split-2-3')).toBeInTheDocument();
   });
 
@@ -123,7 +182,34 @@ describe('Hero — split layout', () => {
     const { container } = render(
       <Hero data={[splitItem]} layout="split" variant="secondary" />
     );
-    expect(container.querySelector('.mg-hero--split.mg-hero--secondary')).toBeInTheDocument();
+    expect(
+      container.querySelector('.mg-hero--split.mg-hero--secondary')
+    ).toBeInTheDocument();
+  });
+
+  it('does not force its link colour into the author-supplied media slot', () => {
+    const { container } = render(
+      <Hero
+        layout="split"
+        data={[
+          {
+            title: 'Split hero',
+            summaryText: 'Lede <a href="/lede">in the copy</a>.',
+            media: {
+              type: 'html',
+              html: '<p><a href="/credit" id="credit">Photo credit</a></p>',
+            },
+          },
+        ]}
+      />
+    );
+    // The rule must reach the hero's own copy...
+    expect(container.querySelector('.mg-hero__content a')).toBeInTheDocument();
+    // ...and stop at the media subtree, which is the author's.
+    const credit = container.querySelector('#credit');
+    expect(credit).toBeInTheDocument();
+    expect(credit.closest('.mg-hero__content')).toBeNull();
+    expect(credit.closest('.mg-hero__overlay')).toBeNull();
   });
 
   it('renders media image', () => {
@@ -143,10 +229,15 @@ describe('Hero — split layout', () => {
   });
 
   it('renders gracefully without media (no __media element)', () => {
-    const { container } = render(
-      <Hero data={[baseItem]} layout="split" />
-    );
+    const { container } = render(<Hero data={[baseItem]} layout="split" />);
     expect(container.querySelector('.mg-hero__media')).not.toBeInTheDocument();
+  });
+
+  it('collapses the split grid to one column without media, instead of leaving an empty track', () => {
+    const { container } = render(<Hero data={[baseItem]} layout="split" />);
+    expect(
+      container.querySelector('.mg-hero__split-grid--no-media')
+    ).toBeInTheDocument();
   });
 
   it('renders headingLevel inside split layout', () => {
@@ -175,9 +266,14 @@ describe('Hero — split layout media types', () => {
     const { container } = render(<Hero data={[videoItem]} layout="split" />);
     const iframe = container.querySelector('.mg-hero__media-iframe');
     expect(iframe).toBeInTheDocument();
-    expect(iframe).toHaveAttribute('src', 'https://www.youtube.com/embed/abc123');
+    expect(iframe).toHaveAttribute(
+      'src',
+      'https://www.youtube.com/embed/abc123'
+    );
     expect(iframe).toHaveAttribute('title', 'UNDRR video');
-    expect(container.querySelector('.mg-hero__media--video')).toBeInTheDocument();
+    expect(
+      container.querySelector('.mg-hero__media--video')
+    ).toBeInTheDocument();
   });
 
   it('falls back to a default iframe title when media.title is omitted', () => {
@@ -195,12 +291,17 @@ describe('Hero — split layout media types', () => {
   it('renders raw HTML when media.type="html"', () => {
     const htmlItem = {
       ...baseItem,
-      media: { type: 'html', html: '<p class="custom-embed">Custom widget</p>' },
+      media: {
+        type: 'html',
+        html: '<p class="custom-embed">Custom widget</p>',
+      },
     };
     const { container } = render(<Hero data={[htmlItem]} layout="split" />);
     const slot = container.querySelector('.mg-hero__media--html');
     expect(slot).toBeInTheDocument();
-    expect(slot.querySelector('.custom-embed')).toHaveTextContent('Custom widget');
+    expect(slot.querySelector('.custom-embed')).toHaveTextContent(
+      'Custom widget'
+    );
   });
 
   it('renders an image when media.type is omitted (backwards compatible)', () => {
@@ -239,6 +340,142 @@ describe('Hero — accessibility', () => {
     };
     const { container } = render(
       <Hero data={[videoItem]} layout="split" headingLevel="h2" />
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+});
+
+describe('Hero — neutral variant, linked eyebrow and facts, tags', () => {
+  const neutralItem = {
+    ...splitItem,
+    label: (
+      <>
+        <a href="/collections">Collection</a> · Topic guide
+      </>
+    ),
+    detail: (
+      <>
+        <a href="#items">36 items</a> · Last updated 10 July 2026
+      </>
+    ),
+    tags: [
+      { label: 'Wildfire', href: '/taxonomy/term/357' },
+      { label: 'Climate change' },
+    ],
+  };
+
+  it('adds the neutral modifier', () => {
+    const { container } = render(
+      <Hero data={[neutralItem]} layout="split" variant="neutral" />
+    );
+    expect(container.querySelector('.mg-hero')).toHaveClass(
+      'mg-hero--split',
+      'mg-hero--neutral'
+    );
+  });
+
+  it('renders links in the eyebrow and the facts line', () => {
+    render(<Hero data={[neutralItem]} layout="split" variant="neutral" />);
+    expect(screen.getByRole('link', { name: 'Collection' })).toHaveAttribute(
+      'href',
+      '/collections'
+    );
+    const count = screen.getByRole('link', { name: '36 items' });
+    expect(count.closest('.mg-hero__label.detail')).toBeInTheDocument();
+  });
+
+  it('renders tags as a list named Topics, after the facts line', () => {
+    const { container } = render(
+      <Hero data={[neutralItem]} layout="split" variant="neutral" />
+    );
+    const list = screen.getByRole('list', { name: 'Topics' });
+    expect(list).toHaveClass('mg-hero__tags');
+    expect(list.previousElementSibling).toHaveClass('meta-detail');
+    expect(list.nextElementSibling).toHaveClass('mg-hero__buttons');
+    expect(screen.getAllByRole('listitem')).toHaveLength(2);
+    const link = screen.getByRole('link', { name: 'Wildfire' });
+    expect(link).toHaveClass('mg-tag');
+    expect(link).toHaveAttribute('href', '/taxonomy/term/357');
+    expect(
+      container.querySelector('.mg-hero__tags span.mg-tag')
+    ).toHaveTextContent('Climate change');
+  });
+
+  it('names the tag list with tagsLabel', () => {
+    render(
+      <Hero
+        data={[{ ...neutralItem, tagsLabel: 'Sujets' }]}
+        layout="split"
+        variant="neutral"
+      />
+    );
+    expect(screen.getByRole('list', { name: 'Sujets' })).toBeInTheDocument();
+  });
+
+  it('omits the summary when there is none', () => {
+    const { container } = render(
+      <Hero
+        data={[{ ...neutralItem, summaryText: undefined }]}
+        layout="split"
+        variant="neutral"
+      />
+    );
+    expect(container.querySelector('.mg-hero__summaryText')).toBeNull();
+  });
+
+  it('gives a button a fixed analytics label', () => {
+    render(
+      <Hero
+        data={[
+          {
+            ...neutralItem,
+            primary_button: undefined,
+            buttons: [
+              {
+                label: 'Browse 36 items',
+                url: '#items',
+                type: 'Secondary',
+                analyticsLabel: 'Collection: browse items',
+              },
+            ],
+          },
+        ]}
+        layout="split"
+        variant="neutral"
+      />
+    );
+    expect(
+      screen.getByRole('link', { name: 'Browse 36 items' })
+    ).toHaveAttribute('data-vf-analytics-label', 'Collection: browse items');
+  });
+
+  it('renders no tag container without tags', () => {
+    const { container } = render(<Hero data={[splitItem]} layout="split" />);
+    expect(container.querySelector('.mg-hero__tags')).toBeNull();
+  });
+
+  it('keeps string labels and details exactly as before', () => {
+    const { container } = render(
+      <Hero data={[{ ...splitItem, detail: 'Plain detail' }]} layout="split" />
+    );
+    expect(container.querySelector('.mg-hero__label').outerHTML).toBe(
+      '<span class="mg-hero__label">Test Label</span>'
+    );
+    expect(container.querySelector('.mg-hero__label.detail').outerHTML).toBe(
+      '<span class="mg-hero__label detail">Plain detail</span>'
+    );
+  });
+
+  it('drops the photograph in the background layout', () => {
+    const { container } = render(<Hero data={[baseItem]} variant="neutral" />);
+    const section = container.querySelector('.mg-hero');
+    expect(section).toHaveClass('mg-hero--no-image', 'mg-hero--neutral');
+    expect(section.getAttribute('style')).toBeNull();
+  });
+
+  it('has no detectable accessibility violations', async () => {
+    const { container } = render(
+      <Hero data={[neutralItem]} layout="split" variant="neutral" />
     );
     expect(await axe(container)).toHaveNoViolations();
   });

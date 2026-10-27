@@ -1,0 +1,60 @@
+/**
+ * Form Action
+ *
+ * Button row and submission action container for web forms.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Forms/FormAction/FormAction.mdx
+ */
+@use "../../../assets/scss/config" as *;
+
+.mg-form-action {
+  align-items: stretch;
+  display: flex;
+  margin-top: var(--mg-spacing-25);
+  max-width: 100%;
+
+  &__control {
+    border-end-end-radius: 0;
+    border-start-end-radius: 0;
+    flex: 1 1 auto;
+    margin-top: 0;
+    min-width: 0;
+  }
+
+  > .mg-button.mg-form-action__action,
+  &__action {
+    align-self: stretch;
+    border-end-start-radius: 0;
+    border-start-start-radius: 0;
+    flex: 0 0 auto;
+    margin-inline-start: -1px;
+    min-height: mg-rem(46);
+    position: relative;
+  }
+
+  &__control:focus-visible,
+  &__action:focus-visible {
+    z-index: 1;
+  }
+
+  &--stack-mobile {
+    @media (width <= $mg-breakpoint-mobile) {
+      flex-direction: column;
+      gap: var(--mg-spacing-50);
+
+      .mg-form-action__control {
+        border-radius: var(--mg-radius-form-input);
+        margin-inline-start: 0;
+        width: 100%;
+      }
+
+      > .mg-button.mg-form-action__action,
+      .mg-form-action__action {
+        border-radius: var(--mg-radius-button);
+        margin-inline-start: 0;
+        width: 100%;
+      }
+    }
+  }
+}

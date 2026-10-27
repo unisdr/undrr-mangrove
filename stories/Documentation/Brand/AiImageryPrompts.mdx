@@ -15,11 +15,31 @@ import { DocCallout } from './components/DocCallout';
 # AI imagery prompts
 
 <DocCallout variant="warning">
-  <strong>Prototype guidance, under review (May 2026).</strong> The Brand section is a working draft pending UNDRR Communications confirmation. Treat its claims as provisional and contribute corrections via <a href="https://github.com/unisdr/undrr-mangrove/issues">a GitHub issue</a> or <code>undrrcomms@un.org</code>.
+  <strong>Prototype guidance, under review (May 2026).</strong> The Brand
+  section is a working draft pending UNDRR Communications confirmation. Treat
+  its claims as provisional and contribute corrections via{' '}
+  <a href="https://github.com/unisdr/undrr-mangrove/issues">a GitHub issue</a>{' '}
+  or <code>undrrcomms@un.org</code>.
 </DocCallout>
 
 <DocCallout variant="warning">
-  <strong>Work in progress – output quality is not yet where UNDRR needs it (May 2026).</strong> The workflow below (one-sentence brief → language model applies brand block → image prompt → image model) is sound in principle, but current image-model output frequently fails one or more brand checks. Known shortcomings include: faces still trend photo-real even when "stylised" is requested; disability representation gets tokenised, omitted, or rendered with medicalised cues; named-country specificity collapses into regional pastiche; rendered text leaks through despite explicit instructions; older persons and larger-bodied adults appear in background roles rather than as protagonists. Treat every output as a draft to evaluate against the pre-publish checklist, never as a finished asset. For anything publishable today, commission credited photography or illustration. Contribute prompt refinements and example outputs that improve adherence via <a href="https://github.com/unisdr/undrr-mangrove/issues">GitHub issues</a>.
+  <strong>
+    Work in progress – output quality is not yet where UNDRR needs it (May
+    2026).
+  </strong>{' '}
+  The workflow below (one-sentence brief → language model applies brand block →
+  image prompt → image model) is sound in principle, but current image-model
+  output frequently fails one or more brand checks. Known shortcomings include:
+  faces still trend photo-real even when "stylised" is requested; disability
+  representation gets tokenised, omitted, or rendered with medicalised cues;
+  named-country specificity collapses into regional pastiche; rendered text
+  leaks through despite explicit instructions; older persons and larger-bodied
+  adults appear in background roles rather than as protagonists. Treat every
+  output as a draft to evaluate against the pre-publish checklist, never as a
+  finished asset. For anything publishable today, commission credited
+  photography or illustration. Contribute prompt refinements and example outputs
+  that improve adherence via{' '}
+  <a href="https://github.com/unisdr/undrr-mangrove/issues">GitHub issues</a>.
 </DocCallout>
 
 You do not write the image prompt. A language model does, given (a) your one-sentence brief and (b) the UNDRR brand block below. Then you paste the result into Midjourney, DALL-E, Imagen, or Stable Diffusion to generate the image.
@@ -31,9 +51,9 @@ This page gives you the brand block, a worked example, and reference material. R
 ## The workflow
 
 1. **Write a one-sentence conceptual brief** about what you want to convey. Not a prompt – a brief.
-   - *"I want to show how community-led DRR practices protect neighbourhood forests and coastal communities."*
-   - *"I want a hero image about disaster-risk financing at the national-government level."*
-   - *"I want an explainer illustration of multi-hazard early warning systems."*
+   - _"I want to show how community-led DRR practices protect neighbourhood forests and coastal communities."_
+   - _"I want a hero image about disaster-risk financing at the national-government level."_
+   - _"I want an explainer illustration of multi-hazard early warning systems."_
 2. **Paste the brief plus the UNDRR brand block** (below) into Gemini, Claude, or ChatGPT.
 3. **The language model returns a complete on-brand image prompt.** It applies the 13 UNDRR standing rules to your specific brief and asks up to three clarifying questions if the brief is thin (country? level? roles?).
 4. **Paste that prompt into your image model** (Midjourney, DALL-E, Imagen, Stable Diffusion).
@@ -76,7 +96,7 @@ The brand block, the worked example, and the reference prompts on this page all 
 
 ## Worked example
 
-**Conceptual brief:** *"I want to show how community-led DRR practices protect neighbourhood forests and coastal communities."*
+**Conceptual brief:** _"I want to show how community-led DRR practices protect neighbourhood forests and coastal communities."_
 
 **You paste:** the brand block above, then your brief on the last line.
 
@@ -86,7 +106,7 @@ The brand block, the worked example, and the reference prompts on this page all 
 2. Which scale – a single village, a sub-national programme, or a national initiative?
 3. Which DRR practice – mangrove restoration, slope stabilisation, community early-warning, urban tree canopy, something else?
 
-**You answer** (for example): *"Vanuatu, Efate Island. Village-scale community programme. Mangrove restoration."*
+**You answer** (for example): _"Vanuatu, Efate Island. Village-scale community programme. Mangrove restoration."_
 
 **The LLM returns** (something like):
 
@@ -102,16 +122,22 @@ The brand block, the worked example, and the reference prompts on this page all 
 
 For sub-brand work, add a line to your conceptual brief naming the sub-brand. The LLM will swap the primary colour and layer in the sub-brand's visual emphasis (read <LinkTo kind="brand-sub-brand-rationale" story="docs">sub-brand rationale</LinkTo> for the cues each sub-brand wants).
 
-| Sub-brand | Primary to substitute | Sub-brand visual cues to bolt in |
-| --- | --- | --- |
-| PreventionWeb | `#0a6969` teal | Real research artifacts, methodology in progress, citation-rich tables |
-| MCR2030 | `#591a61` purple | Plural cities of varied scale, municipal staff as protagonists, accessible infrastructure |
-| IRP | `#0f78bf` bright blue | Recovery in progress (not the disaster), named partner organisations, the build-back-better verb |
-| ARISE | `#921d2c` burgundy | Local SME owners and workers as protagonists, partnership models, never aid-recipient framings |
-| DELTA Resilience | `#132e48` dark navy | National-government data analysts, real methodological artifacts, Collect / Analyze / Insights spine |
+| Sub-brand        | Primary to substitute | Sub-brand visual cues to bolt in                                                                     |
+| ---------------- | --------------------- | ---------------------------------------------------------------------------------------------------- |
+| PreventionWeb    | `#0a6969` teal        | Real research artifacts, methodology in progress, citation-rich tables                               |
+| MCR2030          | `#591a61` purple      | Plural cities of varied scale, municipal staff as protagonists, accessible infrastructure            |
+| IRP              | `#0f78bf` bright blue | Recovery in progress (not the disaster), named partner organisations, the build-back-better verb     |
+| ARISE            | `#921d2c` burgundy    | Local SME owners and workers as protagonists, partnership models, never aid-recipient framings       |
+| DELTA Resilience | `#132e48` dark navy   | National-government data analysts, real methodological artifacts, Collect / Analyze / Insights spine |
 
 <DocCallout variant="warning">
-  <strong>Colour swap alone is not enough.</strong> Each sub-brand has distinct visual emphasis that must be layered into the brief before the LLM generates the prompt. See <LinkTo kind="brand-sub-brand-rationale" story="docs">sub-brand rationale</LinkTo>.
+  <strong>Colour swap alone is not enough.</strong> Each sub-brand has distinct
+  visual emphasis that must be layered into the brief before the LLM generates
+  the prompt. See{' '}
+  <LinkTo kind="brand-sub-brand-rationale" story="docs">
+    sub-brand rationale
+  </LinkTo>
+  .
 </DocCallout>
 
 ---
@@ -168,11 +194,26 @@ If a standing-rule check fails, **do not publish** – regenerate with a tighter
 
 ## Related
 
-- <LinkTo kind="brand-ai-imagery-policy" story="docs">AI imagery policy</LinkTo> – the 13 standing rules the brand block assumes
-- <LinkTo kind="brand-anti-patterns" story="docs">Anti-patterns</LinkTo> – pre-publish checklist
-- <LinkTo kind="brand-visual-voice" story="docs">Visual voice</LinkTo> – the broader visual rules
-- <LinkTo kind="brand-written-voice" story="docs">Written voice</LinkTo> – the six-register taxonomy and copy-rewriter prompts
-- <LinkTo kind="brand-sub-brand-rationale" story="docs">Sub-brand rationale</LinkTo> – per-property emphasis to layer into sub-brand briefs
+- <LinkTo kind="brand-ai-imagery-policy" story="docs">
+    AI imagery policy
+  </LinkTo>
+  – the 13 standing rules the brand block assumes
+- <LinkTo kind="brand-anti-patterns" story="docs">
+    Anti-patterns
+  </LinkTo>
+  – pre-publish checklist
+- <LinkTo kind="brand-visual-voice" story="docs">
+    Visual voice
+  </LinkTo>
+  – the broader visual rules
+- <LinkTo kind="brand-written-voice" story="docs">
+    Written voice
+  </LinkTo>
+  – the six-register taxonomy and copy-rewriter prompts
+- <LinkTo kind="brand-sub-brand-rationale" story="docs">
+    Sub-brand rationale
+  </LinkTo>
+  – per-property emphasis to layer into sub-brand briefs
 
 ---
 

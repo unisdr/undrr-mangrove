@@ -1,3 +1,9 @@
+import {
+  checkPublicationSurface,
+  checkPublicationOverride,
+  publicationSurfaceOverrides,
+  publicationCoverFixture,
+} from './cardGeometryChecks';
 import { BookCard } from './BookCard';
 
 const getCaptionForLocale = locale => {
@@ -96,4 +102,112 @@ export const DefaultBookCard = {
   },
 
   name: 'Book Card',
+};
+
+// Cards should normally be links. A book cover without a destination still
+// needs a readable title, just without the link affordances.
+
+export const NoLinkBookCard = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    const unlinked = caption.contentdata.map(item => ({
+      ...item,
+      link: null,
+    }));
+
+    return (
+      <div
+        style={{
+          maxWidth: '200px',
+        }}
+      >
+        <BookCard data={unlinked} {...args}></BookCard>
+      </div>
+    );
+  },
+
+  name: 'Without a link',
+};
+
+export const MixedTitleLengths = {
+  render: (args, { globals: { locale } }) => {
+    const base = getCaptionForLocale(locale).contentdata[0];
+    const titles =
+      locale === 'arabic'
+        ? [
+            'إطار سنداي',
+            'الحد من مخاطر الكوارث وبناء القدرة على الصمود',
+            'دليل عملي لدعم المجتمعات المحلية في تخطيط نظم الإنذار المبكر الشاملة للجميع',
+          ]
+        : [
+            'Sendai Framework',
+            'Disaster risk reduction and resilience',
+            'A practical guide to inclusive early warning systems and community preparedness',
+          ];
+    return (
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns:
+            'repeat(auto-fit, minmax(min(100%, 180px), 200px))',
+          gap: '1rem',
+        }}
+      >
+        <BookCard
+          {...args}
+          data={titles.map((title, index) => ({
+            ...base,
+            title,
+            link: `#publication-${index + 1}`,
+          }))}
+        />
+      </div>
+    );
+  },
+};
+
+export const NaturalCoverRatio = {
+  name: 'Complete cover without outer frame',
+  render: (args, { globals: { locale } }) => {
+    const data = getCaptionForLocale(locale).contentdata.map(item => ({
+      ...item,
+      imgback: publicationCoverFixture,
+    }));
+    return <BookCard {...args} data={data} />;
+  },
+  play: checkPublicationSurface,
+};
+
+export const ThemedSurface = {
+  name: 'Theme-owned publication surface',
+  render: (args, { globals: { locale } }) => (
+    <div style={publicationSurfaceOverrides}>
+      <BookCard
+        {...args}
+        data={getCaptionForLocale(locale).contentdata.map(item => ({
+          ...item,
+          imgback: publicationCoverFixture,
+        }))}
+      />
+    </div>
+  ),
+  play: checkPublicationOverride,
+};
+
+// Gutenberg's supported book shape omits mg-card__vc.
+export const PlainHtmlBook = {
+  name: 'Publication with CMS classes',
+  render: () => (
+    <article className="mg-card mg-card__book">
+      <div className="mg-card__visual">
+        <img className="mg-card__image" src={publicationCoverFixture} alt="" />
+      </div>
+      <div className="mg-card__content">
+        <header className="mg-card__title">
+          <a href="#cms-publication">Publication title</a>
+        </header>
+      </div>
+    </article>
+  ),
+  play: checkPublicationSurface,
 };

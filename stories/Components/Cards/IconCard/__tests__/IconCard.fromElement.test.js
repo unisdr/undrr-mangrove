@@ -9,7 +9,11 @@ function makeContainer(attrs = {}) {
 }
 
 const sampleItems = [
-  { icon: 'mg-icon mg-icon-globe', title: 'Global', summaryText: 'Worldwide coverage' },
+  {
+    icon: 'mg-icon mg-icon-globe',
+    title: 'Global',
+    summaryText: 'Worldwide coverage',
+  },
   { icon: 'mg-icon mg-icon-chart-bar', title: 'Data', link: '/data' },
 ];
 
@@ -37,16 +41,12 @@ describe('iconCardFromElement', () => {
   });
 
   it('returns empty data array for invalid JSON', () => {
-    const props = iconCardFromElement(
-      makeContainer({ items: '{broken' })
-    );
+    const props = iconCardFromElement(makeContainer({ items: '{broken' }));
     expect(props.data).toEqual([]);
   });
 
   it('treats centered as false when not explicitly "true"', () => {
-    const props = iconCardFromElement(
-      makeContainer({ centered: 'false' })
-    );
+    const props = iconCardFromElement(makeContainer({ centered: 'false' }));
     expect(props.centered).toBe(false);
   });
 });

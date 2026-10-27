@@ -1,0 +1,47 @@
+/**
+ * Logo
+ *
+ * UNDRR and partner logo presentation styles, scaling, and bilingual language variants.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Atom/Logo/Logo.mdx
+ */
+@use "../../assets/scss/config" as *;
+
+.mg-logo {
+  display: block;
+  max-inline-size: 100%;
+  block-size: auto;
+  object-fit: contain;
+
+  // Pre-2.0 behavior: crop to a fixed box on mobile/tablet instead of
+  // letterboxing, so the logo stays legible at small sizes. The box aspect
+  // ratio (~3.75:1) is tuned to the current logo asset
+  // (assets.undrr.org/logos/undrr/undrr-logo-horizontal.svg, natural aspect
+  // ~6.92:1): it crops right after the "UNDRR" wordmark, before the "United
+  // Nations Office for..." subtitle starts. The pre-2.0 dimensions
+  // (190x48 / 110x30, ~3.96:1) were tuned for a different,
+  // differently-proportioned logo asset and sliced mid-glyph into the
+  // subtitle on this one — if the logo asset changes again, re-check this
+  // crop rather than assuming the ratio still holds. Confirmed against the
+  // translated logos (assets.undrr.org/logos/undrr/): they're ~2.3-2.9:1,
+  // not ~6.6:1+, so this box crops their subtitle line off vertically
+  // instead of horizontally — do not apply this modifier to them (see the
+  // `crop` prop doc in Logo.jsx). `object-position`'s horizontal anchor
+  // (0%, i.e. left) also assumes LTR crop framing; it isn't exercised by
+  // any asset in use today (translated logos don't use this modifier), but
+  // revisit it before pairing autocrop with an RTL-only asset.
+  &--autocrop {
+    @media (max-width: $mg-breakpoint-desktop) {
+      inline-size: mg-rem(180);
+      block-size: mg-rem(48);
+      object-fit: cover;
+      object-position: 0% 50%;
+    }
+
+    @media (max-width: $mg-breakpoint-tablet) {
+      inline-size: mg-rem(112);
+      block-size: mg-rem(30);
+    }
+  }
+}

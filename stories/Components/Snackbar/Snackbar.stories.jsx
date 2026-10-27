@@ -1,8 +1,10 @@
+import { withLanguage } from '../../../.storybook/withLanguage';
 import { ShowOffSnackbar, SnackbarPreview } from './Snackbar.jsx';
 
 export default {
-  title: 'Components/Snackbar',
+  title: 'Components/Notice/Snackbar',
   component: ShowOffSnackbar,
+  decorators: [withLanguage],
   parameters: {
     docs: {
       description: {

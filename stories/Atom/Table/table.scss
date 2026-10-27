@@ -1,19 +1,27 @@
+/**
+ * Table
+ *
+ * Accessible tabular data styling with striped, bordered, and responsive scrolling variants.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Atom/Table/Table.mdx
+ */
+@use "../../assets/scss/breakpoints" as *;
+@use "../../assets/scss/mixins" as *;
+@use "../../assets/scss/config" as *;
+
 /* table tag start */
 .mg-table {
   border-collapse: collapse;
   border-spacing: 0;
   width: 100%;
-  word-break: auto-phrase; // https://gitlab.com/undrr/web-backlog/-/issues/2053
-  text-wrap: balance;
-
-  @include devicebreak(medium) {
-    width: auto;
-  }
+  overflow-wrap: anywhere;
+  text-wrap: wrap;
 
   &.mg-table--small {
     th,
     td {
-      font-size: $mg-font-size-250;
+      font-size: var(--mg-font-size-250);
       -webkit-text-size-adjust: 100%;
     }
   }
@@ -23,7 +31,7 @@
       @extend %border-none;
 
       &:nth-child(even) {
-        background-color: $mg-color-neutral-25;
+        background-color: rgb(var(--mg-color-neutral-25));
       }
     }
   }
@@ -33,7 +41,7 @@
 
     th,
     td {
-      border: 1px solid $mg-color-neutral-400;
+      border: 1px solid rgb(var(--mg-color-neutral-400));
       border-collapse: collapse;
       box-sizing: border-box;
       min-width: 50px;
@@ -62,14 +70,14 @@
 
     &.mg-table--border {
       tr {
-        border: 1px solid $mg-color-neutral-400;
+        border: 1px solid rgb(var(--mg-color-neutral-400));
 
         th,
         td {
           @extend %border-none;
 
           @include devicebreak(medium) {
-            border: 1px solid $mg-color-neutral-400;
+            border: 1px solid rgb(var(--mg-color-neutral-400));
           }
         }
       }
@@ -79,20 +87,28 @@
 
 .mg-table th,
 .mg-table td {
-  font-size: $mg-font-size-300;
+  font-size: var(--mg-font-size-300);
   line-height: 1.4;
-  padding: $mg-spacing-25;
+  padding: var(--mg-spacing-100) var(--mg-spacing-150);
+  text-align: start;
   vertical-align: top;
-
-  @include devicebreak(medium) {
-    padding: $mg-spacing-25 $mg-spacing-200 $mg-spacing-25 $mg-spacing-25;
-  }
 }
 
 .mg-table thead tr th {
-  // background-color: $mg-color-neutral-300;
+  // background-color: rgb(var(--mg-color-neutral-300));
   font-weight: 600;
+}
+
+.mg-table .mg-table__cell--start {
+  text-align: start;
+}
+
+.mg-table .mg-table__cell--center {
   text-align: center;
+}
+
+.mg-table .mg-table__cell--end {
+  text-align: end;
 }
 
 .mg-table tbody tr {
@@ -116,15 +132,129 @@
   }
 }
 
-[dir="rtl"] {
-  .mg-table th,
-  .mg-table td {
-    text-align: right;
+// Keep compact density available explicitly.
+.mg-table.mg-table--small th,
+.mg-table.mg-table--small td {
+  padding: var(--mg-spacing-50) var(--mg-spacing-100);
+}
 
-    @include devicebreak(medium) {
-      padding: $mg-spacing-25 $mg-spacing-25 $mg-spacing-25 $mg-spacing-200;
-    }
+.mg-table-scroll-region {
+  max-inline-size: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+
+  > .mg-table {
+    min-inline-size: mg-rem(600);
+  }
+
+  &:focus-visible {
+    @include mg-focus-ring-inset;
   }
 }
 
-/* table tag end */
+// Data table variant: compact density, subtle borders, styled header row
+.mg-table.mg-table--data {
+  font-size: var(--mg-font-size-250);
+
+  th,
+  td {
+    font-size: var(--mg-font-size-250);
+    border-bottom: 1px solid rgb(var(--mg-color-neutral-200));
+    padding: var(--mg-spacing-50) var(--mg-spacing-100);
+  }
+
+  thead th {
+    background-color: rgb(var(--mg-color-neutral-50));
+    border-bottom: 2px solid rgb(var(--mg-color-neutral-300));
+    color: rgb(var(--mg-color-neutral-800));
+    font-size: var(--mg-font-size-200);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  tbody tr:hover {
+    background-color: rgb(var(--mg-color-neutral-25));
+  }
+}
+
+// Sticky header cell for scrolling tables and data grids
+.mg-table__th--sticky {
+  background-color: rgb(var(--mg-color-neutral-0));
+  box-shadow: 0 1px 0 rgb(var(--mg-color-neutral-300));
+  position: sticky;
+  top: 0;
+  z-index: 2; // local stacking context within table scroll region
+}
+
+// Right-aligned tabular numeric cells
+.mg-table .mg-table__td--numeric,
+.mg-table .mg-table__th--numeric {
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}
+
+// Monospace code / file path cells
+.mg-table__td--code {
+  font-family: var(--mg-font-family-code);
+}
+
+// Match the density selectors at cell level, including --small + --data.
+.mg-table td.mg-table__td--code {
+  font-size: var(--mg-font-size-200);
+}
+
+// Sortable header button with accessible sort indicators
+.mg-table__th--sortable {
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+
+  .mg-table__sort-btn {
+    all: unset;
+    align-items: center;
+    color: inherit;
+    cursor: pointer;
+    display: inline-flex;
+    font: inherit;
+    gap: var(--mg-spacing-50);
+    justify-content: space-between;
+    width: 100%;
+
+    &:focus-visible {
+      @include mg-focus-ring-inset;
+    }
+  }
+
+  .mg-table__sort-icon {
+    display: inline-block;
+    flex-shrink: 0;
+    height: 0.75em;
+    opacity: 0.35;
+    transition:
+      transform var(--mg-motion-duration-fast) var(--mg-motion-easing-standard),
+      opacity var(--mg-motion-duration-fast) var(--mg-motion-easing-standard);
+    width: 0.75em;
+  }
+
+  &:hover .mg-table__sort-icon {
+    opacity: 0.8;
+  }
+
+  &[aria-sort="ascending"] .mg-table__sort-icon {
+    opacity: 1;
+    transform: rotate(180deg);
+  }
+
+  &[aria-sort="descending"] .mg-table__sort-icon {
+    opacity: 1;
+    transform: rotate(0deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mg-table__th--sortable .mg-table__sort-icon {
+    transition: none;
+  }
+}

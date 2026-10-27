@@ -4,7 +4,7 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import CopyPlugin from 'copy-webpack-plugin';
 import webpack from 'webpack';
-import webpackEntry from './webpack.entries.js';
+import { DEV_ONLY_GLOBS } from './scripts/assemble-npm-package.mjs';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 const currentFilePath = fileURLToPath(import.meta.url);
@@ -17,12 +17,24 @@ const analyzeBundle = process.env.ANALYZE === 'true';
 export default [
   {
     mode: packMode,
-    cache: { type: 'filesystem' },
-    entry: webpackEntry('js'),
+    cache: { type: 'filesystem', name: `assets-${packMode}` },
+    // The asset pass: it compiles nothing and exists for the CopyPlugin
+    // patterns below, which are what put the vanilla modules, the compiled
+    // CSS, the fonts and the error pages into dist/assets/.
+    //
+    // It used to take glob-discovered entries from webpack.entries.js and
+    // was documented as emitting dist/js/*.min.js, but the glob doubled a
+    // path segment and matched nothing, so no such bundle was ever emitted
+    // and nothing consumes one: the npm `js/` directory and the CDN both
+    // serve the unminified copies CopyPlugin makes. See
+    // unisdr/undrr-mangrove#1253.
+    entry: {},
     output: {
+      // Only `path` matters here: it is where CopyPlugin writes. The
+      // `[name].min.js` filename and the UMD library target that used to sit
+      // beside it described the bundle this config never emitted, so they
+      // named a format nothing in the repository has ever produced.
       path: path.resolve(currentDirPath, 'dist'),
-      filename: '[name].min.js',
-      libraryTarget: 'umd',
     },
     externals: {},
     module: {
@@ -46,6 +58,23 @@ export default [
     },
     optimization: {
       minimize: packMode === 'production', // Minimize only in production mode
+      // DO NOT DELETE THIS LIST. It is load-bearing even with no entry,
+      // because minimizers run over every asset CopyPlugin emits, not just
+      // over bundles.
+      //
+      // webpack 5's default list minifies JS, CSS *and* HTML. Replacing it
+      // with CssMinimizerPlugin alone is what makes the copied assets what
+      // the CDN and the npm `js/` directory actually serve today:
+      //  - dist/assets/js/*.js stay byte for byte what a contributor wrote,
+      //    because no JS minifier is in the list;
+      //  - dist/assets/error-pages/*.html and the icon-font demo page stay
+      //    readable, because no HTML minifier is in the list;
+      //  - dist/assets/css/*.css keep their header comment, because of
+      //    `discardComments: false` below.
+      // Deleting the list does not merely stop minifying the CSS — it
+      // silently starts minifying the published JS and HTML as well.
+      // Verified by building both ways: every file under dist/assets/js,
+      // dist/assets/error-pages and dist/assets/css changes.
       minimizer: [
         new CssMinimizerPlugin({
           minimizerOptions: {
@@ -62,6 +91,10 @@ export default [
     plugins: [
       new MiniCssExtractPlugin(),
       new CopyPlugin({
+        // These copy whole source trees, so Jest specs that sit beside the
+        // sources would otherwise land in dist/ and from there in the npm
+        // tarball and every versioned CDN folder. See issue
+        // unisdr/undrr-mangrove#1218.
         patterns: [
           { from: 'stories/assets', to: 'assets' },
           {
@@ -72,13 +105,19 @@ export default [
             from: 'stories/assets/fonts/mangrove-icon-set',
             to: 'fonts/mangrove-icon-set',
           },
-        ],
+        ].map(pattern => ({
+          ...pattern,
+          globOptions: { ignore: DEV_ONLY_GLOBS },
+        })),
       }),
     ],
   },
   {
     mode: packMode, // Set mode dynamically
-    cache: { type: 'filesystem' },
+    cache:
+      packMode === 'development'
+        ? { type: 'filesystem', name: 'components-development' }
+        : false,
     entry: {
       hydrate: './src/hydrate.js',
       // Drupal-integrated components (hydration + npm)
@@ -87,11 +126,9 @@ export default [
       MegaMenu: './stories/Components/MegaMenu/MegaMenu.hydrate.js',
       ScrollContainer:
         './stories/Components/ScrollContainer/ScrollContainer.hydrate.js',
-      BarChart: './stories/Components/Charts/BarChart/BarChart.jsx',
-      MapComponent: './stories/Components/Map/MapComponent.jsx',
+      UserFeedback: './stories/Components/UserFeedback/UserFeedback.hydrate.js',
       QuoteHighlight:
         './stories/Components/QuoteHighlight/QuoteHighlight.hydrate.js',
-      Fetcher: './stories/Components/Fetcher/Fetcher.jsx',
       SyndicationSearchWidget:
         './stories/Components/SyndicationSearchWidget/SyndicationSearchWidget.hydrate.js',
       IconCard: './stories/Components/Cards/IconCard/IconCard.hydrate.js',
@@ -99,25 +136,36 @@ export default [
       StatsCard: './stories/Components/Cards/StatsCard/StatsCard.hydrate.js',
       Pager: './stories/Components/Pager/Pager.hydrate.js',
       TextCta: './stories/Components/TextCta/TextCta.hydrate.js',
+      CopyButton:
+        './stories/Components/Buttons/CopyButton/CopyButton.hydrate.js',
+      Drawer: './stories/Components/Navigation/Drawer/Drawer.hydrate.js',
+      Tree: './stories/Components/Navigation/Tree/Tree.hydrate.js',
+      ServiceNotice:
+        './stories/Components/ServiceNotice/ServiceNotice.hydrate.js',
+      Notice: './stories/Components/Notice/Notice.hydrate.js',
       // Vanilla components (bundled for AI manifest auto-rendering)
       Chips: './stories/Components/Buttons/Chips/Chips.jsx',
-      CtaButton: './stories/Components/Buttons/CtaButton/CtaButton.jsx',
+      CtaButton: './stories/Components/Buttons/CtaButton/CtaButton.entry.js',
       TextInput: './stories/Components/Forms/TextInput/TextInput.jsx',
       Select: './stories/Components/Forms/Select/Select.jsx',
       Checkbox: './stories/Components/Forms/Checkbox/Checkbox.jsx',
       Radio: './stories/Components/Forms/Radio/Radio.jsx',
+      SegmentedControl:
+        './stories/Components/Forms/SegmentedControl/SegmentedControl.jsx',
       Textarea: './stories/Components/Forms/Textarea/Textarea.jsx',
       FormGroup: './stories/Components/Forms/FormGroup/FormGroup.jsx',
       FormErrorSummary:
         './stories/Components/Forms/FormErrorSummary/FormErrorSummary.jsx',
+      FormAction: './stories/Components/Forms/FormAction/FormAction.jsx',
+      ContentTeaser: './stories/Patterns/ContentTeaser/ContentTeaser.jsx',
+      ContentCard: './stories/Patterns/ContentCard/ContentCard.jsx',
+      DrupalContentPatterns: './stories/Integrations/Drupal/contentPatterns.js',
       VerticalCard: './stories/Components/Cards/Card/VerticalCard.jsx',
       HorizontalCard: './stories/Components/Cards/Card/HorizontalCard.jsx',
       BookCard: './stories/Components/Cards/Card/BookCard.jsx',
       HorizontalBookCard:
         './stories/Components/Cards/Card/HorizontalBookCard.jsx',
       Breadcrumbs: './stories/Components/Breadcrumbs/Breadcrumbs.jsx',
-      // Deprecated (February 2026) — removal planned by end of 2026. Use Pager instead.
-      // Pagination: './stories/Components/Pagination/Pagination.jsx',
       Tab: './stories/Components/Tab/Tab.jsx',
       Hero: './stories/Components/Hero/Hero.jsx',
       PageHeader: './stories/Components/PageHeader/PageHeader.jsx',
@@ -126,7 +174,11 @@ export default [
       EmbedContainer: './stories/Utilities/EmbedContainer/EmbedContainer.jsx',
       FullWidth: './stories/Utilities/FullWidth/FullWidth.jsx',
       Loader: './stories/Utilities/Loader/Loader.jsx',
+      ProgressBar: './stories/Components/ProgressBar/ProgressBar.jsx',
       ShowMore: './stories/Utilities/ShowMore/ShowMore.jsx',
+      SkipLink: './stories/Utilities/SkipLink/SkipLink.entry.js',
+      Range: './stories/Components/Forms/Range/Range.jsx',
+      Legend: './stories/Components/DataViz/Legend/Legend.jsx',
     },
     externals: {
       react: 'react',
@@ -142,8 +194,11 @@ export default [
     },
     plugins: [
       new webpack.BannerPlugin({
-        banner: `This is a UNDRR Mangrove component: https://github.com/unisdr/undrr-mangrove?tab=readme-ov-file
-Compiled on: ${new Date().toISOString()}`,
+        banner: `UNDRR Mangrove component library
+Storybook:    https://mangrove.undrr.org/
+LLMs context: https://mangrove.undrr.org/llms.txt
+Repository:   https://github.com/PreventionWeb/undrr-mangrove
+Compiled on:  ${new Date().toISOString()}`,
         raw: false,
         entryOnly: false,
         stage: webpack.Compilation.PROCESS_ASSETS_STAGE_REPORT,
@@ -169,10 +224,18 @@ Compiled on: ${new Date().toISOString()}`,
               // Ignore project-level .babelrc.json and babel.config.js so
               // the ESM component bundles don't get core-js polyfill
               // require() calls injected by babel-plugin-polyfill-corejs3.
-              cacheDirectory: true,
+              cacheDirectory: packMode === 'development',
               configFile: false,
               babelrc: false,
-              presets: [['@babel/preset-react', { runtime: 'automatic' }]],
+              presets: [
+                [
+                  '@babel/preset-react',
+                  {
+                    runtime: 'automatic',
+                    development: packMode === 'development',
+                  },
+                ],
+              ],
             },
           },
         },

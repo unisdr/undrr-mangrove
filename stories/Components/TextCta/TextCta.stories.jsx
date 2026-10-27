@@ -1,4 +1,6 @@
+import { CtaExampleForm, ctaExampleWords } from './_examples';
 import { TextCta } from './TextCta';
+import { INLINE_CTA_ARGS } from './_fixtures';
 
 export default {
   title: 'Components/CTA',
@@ -10,9 +12,9 @@ export default {
 
 export const Default = {
   args: {
-    headline: 'United Nations Office for Disaster Risk Reduction',
-    text: '<p>Together, we can achieve the global goal set by the UN Secretary-General that every person on the planet is covered by an early warning system within the next 5 years.</p>',
-    buttons: [{ label: 'Read more', url: '#' }],
+    headline: 'Turn knowledge into action',
+    text: '<p>Discover practical resources and connect with people working to reduce disaster risk.</p>',
+    buttons: [{ label: 'Read more', url: '#', variant: 'CTA' }],
   },
 };
 
@@ -63,6 +65,10 @@ export const LeftAligned = {
   },
 };
 
+export const Inline = {
+  args: INLINE_CTA_ARGS,
+};
+
 export const WithImage = {
   args: {
     headline:
@@ -89,5 +95,53 @@ export const ExtraPadding = {
     variant: 'tertiary',
     headlineSize: '800',
     padding: '8rem 0',
+  },
+};
+
+export const Soft = {
+  args: {
+    headline: 'Stay connected',
+    text: '<p>Discover the latest ideas, research and opportunities to reduce disaster risk.</p>',
+    buttons: [{ label: 'Explore updates', url: '#' }],
+    tone: 'soft',
+    centered: false,
+  },
+};
+
+export const Newsletter = {
+  args: { tone: 'soft', centered: false, padding: 'clamp(1rem, 4vw, 2rem)' },
+  render: (args, { globals }) => {
+    const text = ctaExampleWords[globals.locale] || ctaExampleWords.english;
+    return (
+      <TextCta
+        {...args}
+        eyebrow={text.eyebrow}
+        headline={text.news}
+        text={text.newsText}
+      >
+        <CtaExampleForm key={globals.locale} text={text} tone={args.tone} />
+      </TextCta>
+    );
+  },
+};
+export const NewsletterWithPreferences = {
+  args: { tone: 'soft', centered: false, padding: 'clamp(1rem, 4vw, 2rem)' },
+  render: (args, { globals }) => {
+    const text = ctaExampleWords[globals.locale] || ctaExampleWords.english;
+    return (
+      <TextCta
+        {...args}
+        eyebrow={text.eyebrow}
+        headline={text.news}
+        text={text.newsText}
+      >
+        <CtaExampleForm
+          key={globals.locale}
+          text={text}
+          preferences
+          tone={args.tone}
+        />
+      </TextCta>
+    );
   },
 };

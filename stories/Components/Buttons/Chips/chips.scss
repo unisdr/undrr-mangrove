@@ -1,35 +1,83 @@
+/**
+ * Chips
+ *
+ * Interactive filter and selection chip buttons with selected/unselected states.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Buttons/Chips/Chips.mdx
+ */
+@use "../../../assets/scss/mixins" as *;
+@use "../../../assets/scss/config" as *;
+
 .mg-chip {
   align-items: center;
-  background: $mg-color-neutral-50;
-  border-radius: 20px;
-  box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
+  background: rgb(var(--mg-color-neutral-50));
+  border: 0;
+  border-radius: 999px;
+  box-sizing: border-box;
+  box-shadow: var(--mg-shadow-raised);
+  color: rgb(var(--mg-color-text));
+  cursor: pointer;
   display: inline-flex;
-  min-height: $mg-spacing-250;
-  padding: $mg-spacing-25 $mg-spacing-50;
+  font-family: var(--mg-font-family-text);
+  font-size: var(--mg-font-size-250);
+  font-weight: 500;
+  justify-content: center;
+  line-height: 1.25;
+  min-height: mg-rem(40);
+  padding: var(--mg-spacing-50) var(--mg-spacing-150);
+  text-align: start;
+  text-decoration: none;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition:
+      background-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard),
+      box-shadow var(--mg-motion-duration-fast) var(--mg-motion-easing-standard),
+      color var(--mg-motion-duration-fast) var(--mg-motion-easing-standard),
+      scale var(--mg-motion-duration-fast) var(--mg-motion-easing-standard);
+  }
 
   &:hover {
-    background-color: $mg-color-neutral-300;
+    background-color: rgb(var(--mg-color-neutral-300));
+    color: rgb(var(--mg-color-text));
+    text-decoration: none;
   }
 
-  &.mg-chip__cross {
-    &::before {
-      // background: url(#{$img-path-Iconfourback}/times-red.svg) no-repeat left;
-      content: "";
-      display: inline-flex;
-      height: 22px;
-      margin-left: -$mg-spacing-25;
-      margin-right: $mg-spacing-25;
-      padding-right: mg-rem(14);
-      position: relative;
-      top: 0;
-      width: auto;
+  &:active {
+    scale: 0.96;
+  }
+
+  &:focus-visible {
+    border-radius: 999px;
+
+    @include mg-focus-ring;
+  }
+
+  @media (forced-colors: active) {
+    border: 1px solid ButtonText;
+
+    // Deliberately does NOT read --mg-color-focus-ring. In forced-colors
+    // mode the UA discards author colours, so a token would be dropped and
+    // the ring lost; `Highlight` is the system keyword the OS substitutes
+    // with the user's own chosen focus colour. Leave as-is.
+    &:focus-visible {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
     }
   }
-}
 
-[dir="rtl"] {
-  .mg-chip__cross::before {
-    margin-left: $mg-spacing-25;
-    margin-right: -$mg-spacing-25;
+  &.mg-chip__cross::after {
+    align-items: center;
+    content: "×";
+    display: inline-flex;
+    flex: 0 0 mg-rem(20);
+    font-size: mg-rem(18);
+    font-weight: 400;
+    height: mg-rem(20);
+    justify-content: center;
+    line-height: 1;
+    margin-inline-end: calc(-1 * var(--mg-spacing-50));
+    margin-inline-start: var(--mg-spacing-50);
   }
 }

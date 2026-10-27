@@ -1,32 +1,34 @@
-import { Meta, Story, Canvas, Controls, Primary } from '@storybook/addon-docs/blocks';
+import {
+  Meta,
+  Story,
+  Canvas,
+  Controls,
+  Primary,
+} from '@storybook/addon-docs/blocks';
 import { ShowOffSnackbar, SnackbarPreview } from './Snackbar.jsx';
 import * as SnackbarStories from './Snackbar.stories';
 
 <Meta of={SnackbarStories} />
 
-> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
 
 # Snackbar
 
-Snackbars provide brief notifications or feedback messages to users about an operation's status.
-They appear temporarily at the top of the screen and automatically disappear after a set time.
+Brief notifications or feedback messages about an operation's status. Appears temporarily at the top of the screen and automatically disappears after a set time.
 
-## Overview
-
-The Snackbar component is designed for displaying short, non-blocking notifications to users.
-It's particularly useful for conveying status information without interrupting the user's workflow.
+The toast body is a [Notice](?path=/docs/components-notice-notice--docs), so severities share Notice's colours, icons and spacing: `error` maps to `negative`, `success` to `positive`.
 
 <Primary />
 <Controls />
 
 ## Features
 
-- **Multiple Severity Levels**: Supports error, warning, info, and success states with appropriate color coding and icons
-- **Automatic Dismissal**: Disappears automatically after a configurable time
-- **Manual Dismissal**: Can be dismissed by clicking the close button
-- **Keyboard Accessibility**: Supports keyboard navigation and can be dismissed with the Escape key
-- **Screen Reader Support**: Enhanced for screen reader users with appropriate ARIA attributes
-- **Responsive Design**: Works well on both desktop and mobile devices
+- **Multiple severity levels** — Error, warning, info, success with appropriate icons and colors
+- **Automatic dismissal** — Disappears after configurable time
+- **Manual dismissal** — Close button available
+- **Keyboard accessible** — Dismissible with Escape key
+- **Screen reader support** — ARIA attributes for announcements
+- **Responsive** — Works on desktop and mobile
 
 ## Visual examples
 
@@ -59,8 +61,6 @@ It's particularly useful for conveying status information without interrupting t
 />
 
 ## Interactive example
-
-The example below shows an interactive Snackbar that you can show and hide with the button:
 
 <Canvas of={SnackbarStories.Snackbar} meta={SnackbarStories} />
 
@@ -95,42 +95,54 @@ function MyComponent() {
 }
 ```
 
-### Component props
+## Component props
 
-| Prop              | Type     | Default | Description                                                                                                                             |
-| ----------------- | -------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| severity          | string   | -       | Determines the appearance and icon of the snackbar. Options: 'error', 'warning', 'info', 'success'                                      |
-| opened            | boolean  | false   | Controls whether the snackbar is visible                                                                                                |
-| message           | string   | -       | The text content to display in the snackbar                                                                                             |
-| onClose           | function | -       | Callback function executed when the snackbar is closed (via button click or timeout)                                                    |
-| openedMiliseconds | number   | -       | Duration in milliseconds before the snackbar automatically closes. If not provided, the snackbar will remain open until manually closed |
+| Prop              | Type     | Default | Description                                                                       |
+| ----------------- | -------- | ------- | --------------------------------------------------------------------------------- |
+| severity          | string   | —       | Appearance and icon: 'error', 'warning', 'info', 'success'                        |
+| opened            | boolean  | false   | Controls visibility                                                               |
+| message           | string   | —       | Text content to display                                                           |
+| onClose           | function | —       | Callback when closed (button click or timeout)                                    |
+| openedMiliseconds | number   | —       | Duration before auto-closing. If not provided, remains open until manually closed |
 
-## Accessibility considerations
+## Accessibility
 
-The Snackbar component follows accessibility best practices:
-
-- Uses appropriate ARIA roles (`role="alert"`)
-- Announces message severity for screen readers
-- Supports keyboard navigation (close button is focusable)
-- Can be dismissed with the Escape key
-- Maintains sufficient color contrast for readability
-- Auto-focuses the close button when opened for easy dismissal
+- `error` and `warning` toasts use `role="alert"` (assertive); `info` and `success` use `role="status"` (polite). The body is mounted only while open, so it is announced when it appears and is not duplicated by an `aria-live` wrapper
+- Announces severity for screen readers
+- While closed there is no off-screen close button in the tab order
+- Dismissible with Escape key
+- A persistent toast (no `openedMiliseconds`) moves focus to its close button; an auto-dismissing toast leaves focus where it is, so it cannot vanish from under the reader
+- On close, focus returns to the element that had it before the toast opened
+- While sliding out, the toast is `aria-hidden` and inert, then unmounted
 
 ## Mobile considerations
 
-The component is designed to be fully responsive:
-
-- Adapts to smaller screen sizes
-- Provides larger touch targets on mobile devices
-- Ensures buttons meet minimum size requirements (44px) for touch interactions
-- Uses appropriate spacing for mobile viewports
+- Responsive layout adapts to smaller screens
+- Close button uses the standard `.mg-button` sizing
+- Proper spacing for mobile viewports
 
 ## See also
 
 - [Form validation example](?path=/docs/example-form-validation--docs&args=errorDisplay:toast) — working form that uses Snackbar for toast errors alongside inline field errors
 
+## Runtime UI translations
+
+Use `lang` for built-in copy and `labels` for individual overrides. The
+[shared translation guide](?path=/docs/contributing-ui-translations--docs)
+explains language matching, fallback, direction and hydration precedence.
+
+Snackbar's repository wrapper follows this contract; there is no published
+`components/Snackbar.js` entry or React hydration adapter. Production vanilla
+markup keeps its documented authored labels and data attributes.
+
 ## Changelog
 
-- **1.2** — 2026-02-23: Fix: `onClose` stored in ref to prevent re-firing timer/keyboard/focus effects on re-renders; close button focus only triggers on `opened` transition
-- **1.1** — 2025-04-28: Accessibility improvements (screen reader announcements, ARIA attributes, focus management, Escape key); mobile-responsive layout; updated severity colors for contrast; modernized Sass functions
-- **1.0** — 2023-12-20: Initial release
+- **2.1**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance.
+
+- **2.0.0**, 2026-09-16 ([#1164](https://github.com/unisdr/undrr-mangrove/pull/1164)): **Breaking (visual):** the toast now renders through Notice instead of its own filled colour styles, so it matches Notice and ServiceNotice. Hardcoded severity colours, `SnackbarIcons.jsx` and the custom close-button styles are removed. The body mounts only while open (staying hidden and inert through the slide-out), focus returns to its previous element on close, auto-dismissing toasts no longer take focus, and the redundant `aria-live` wrapper is gone. The props API is unchanged; `severity` now defaults to `info`, and `info`/`success` toasts announce politely (`role="status"`) instead of as alerts.
+- **1.4**, 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Aligned the action with the shared 44px target, button radius and motion tokens; replaced physical message spacing with logical spacing for RTL; removed a duplicate error-state rule and redundant per-language story exports in favour of the global locale toolbar.
+- **1.3**, 2026-06-19 ([mangrove#1056](https://github.com/unisdr/undrr-mangrove/pull/1056)): Consolidated `closeLabel` and `closeAriaLabel` props into a single `labels` object with `DEFAULT_SNACKBAR_LABELS` export. Backwards compatible: `DEFAULT_SNACKBAR_LABELS` covers all keys. Co-located `_labels.js` provides `LABELS_ES/FR/JA/ZH/AR/RU`; locale toolbar now switches translated strings in all stories.
+
+- **1.2**, 2026-02-23: Fix: `onClose` stored in ref to prevent re-firing timer/keyboard/focus effects on re-renders; close button focus only triggers on `opened` transition
+- **1.1**, 2025-04-28: Accessibility improvements (screen reader announcements, ARIA attributes, focus management, Escape key); mobile-responsive layout; updated severity colors for contrast; modernized Sass functions
+- **1.0**, 2023-12-20: Initial release

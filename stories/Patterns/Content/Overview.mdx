@@ -1,0 +1,114 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
+import { CONTENT_FAMILIES } from './contentFamilies';
+
+<Meta title="Patterns/Content/Overview" />
+
+# Content patterns
+
+Content archetypes organize patterns by reader need rather than CMS bundle. The registry and guides also call an archetype a content family. **Article** covers news and commentary; **Event** covers general events and programme sessions; **Reference entry** covers definitions and hazard profiles; **Opportunity** starts with a job profile. Organization includes general and coordination-platform profiles.
+
+Keep three decisions separate: **archetype/profile** describes editorial meaning, **presentation** selects a full page, teaser or card, and **layout** defines geometry such as a horizontal listing. A profile is not another card variant. Existing page examples appear beneath their owning archetype: Article, Publication, Collection and Landing page. Hub home is a Landing page variant; persistent hub navigation also supports detail pages without redefining their content types. Existing story and docs URLs remain available through explicit stable IDs.
+
+Family files own presentation specifications and profile projections. The shared teaser renderer reads those projections without importing CMS bindings. Canonical models remain provisional; a teaser's optional fields do not define a complete page model.
+
+## Drupal integration
+
+Drupal is a major consumer. Its explicit bundle-to-archetype/profile bindings stay in Mangrove at `stories/Integrations/Drupal/contentPatterns.js` and are published as `DRUPAL_CONTENT_PATTERNS` from the separate `components/DrupalContentPatterns.js` entry. News maps to Article/news and blog to Article/commentary. These are provisional bundle defaults, not authoritative per-record classifications. Gutenberg blocks can compose report pages and collection directories as well as topic pages; production adapters must discriminate by content purpose before adopting these bindings. Page references demonstrate composition rather than establishing Drupal entity identity. Bindings may evolve without reorganizing the pattern library. They select profiles only; production field adapters and domain/link policy still need implementation and review.
+
+National platform provisionally maps to Organization/coordination-platform, preserving its existing teaser selection. An activity-led portal may map to Landing page instead; the consumer's purpose should determine that choice.
+
+## Presentation coverage
+
+**Experimental** means an implemented presentation with a provisional contract. **Reference** links an existing page example whose family contract is still provisional. **Stub** means not designed or implemented: a reserved place with no callable component or import. Card presentations are now experimental implementations with their own compact field selection; vertical and book are alternate layouts. Full-page stubs remain reserved where no implementation exists.
+
+<table>
+  <thead>
+    <tr>
+      <th>Content family</th>
+      <th>Full page</th>
+      <th>Teaser</th>
+      <th>Card</th>
+    </tr>
+  </thead>
+  <tbody>
+    {CONTENT_FAMILIES.map(family => (
+      <tr key={family.id}>
+        <th scope="row">
+          <LinkTo kind={`Patterns/Content/${family.name}`} story="docs">
+            {family.name}
+          </LinkTo>
+        </th>
+        <td>
+          {family.presentations.fullPage.status === 'reference'
+            ? 'Reference'
+            : 'Stub'}
+        </td>
+        <td>{family.presentations.teaser.status}</td>
+        <td>{family.presentations.card.status}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+## Understanding an archetype
+
+Drupal is a starting reference for the meaning of content and the tasks it supports, alongside Mangrove’s existing page patterns. Each family guide records a narrative and provisional reader and functional needs. Node type descriptions and available fields inform those needs; teaser and card display configuration informs what a particular presentation selects.
+
+These are distinct kinds of evidence. A hidden teaser field can still matter on a full page. An available CMS field is not automatically public, mandatory or useful in every presentation. Reader needs can extend beyond the current Drupal implementation, and multiple bundles can map to one archetype or profile. Keep the consumer mapping in Mangrove while allowing it to evolve independently.
+
+## Building a presentation
+
+Start from the content family's meaning and the reader's task. Define required and optional information, omission rules and source mapping for that presentation. Compose shared components after those decisions. An existing horizontal teaser does not establish the layout, fields or actions of a full page; a generic vertical card does not establish a content-specific card pattern.
+
+For example, Resource has implemented experimental teaser and card presentations and an explicit full-page stub. Its full-page information architecture has not been specified. Publication has a report-page reference and a teaser, with vertical and book card layouts preserving the complete cover. Keep source taxonomies, dates and identity distinct even when a particular presentation combines labels for display.
+
+<LinkTo kind="Patterns/Content teaser" story="docs">
+  Shared teaser implementation and contract reference
+</LinkTo>
+
+## Adoption decisions
+
+Audited Drupal field selection establishes provenance, not suitability for every listing. Event and job cards deliberately add occurrence dates or closing deadlines and supplied status to support decisions before opening a result. An optional publication date is separately labelled. Use a richer teaser when location, participation details or a summary is essential to choosing a result; the archetype’s reader needs remain design criteria.
+
+Resource, Event and Publication can overlap in subject matter. Classify by the reader’s main task: using or learning from a resource, participating at a scheduled time, or identifying and reading a published document. The authoring tool does not determine an archetype. Publication and privacy decisions apply across all presentations, including commitment funding, beneficiary and contact information.
+
+## Provisional contract alignment
+
+The earlier [content-contract proposal #881](https://github.com/unisdr/undrr-mangrove/issues/881), [schema PR #885](https://github.com/unisdr/undrr-mangrove/pull/885) and [prop-alignment draft #891](https://github.com/unisdr/undrr-mangrove/pull/891) remain proposals to reconcile. Their component contracts and the editorial archetypes in this guide describe different levels:
+
+| Boundary              | Responsibility                                                                                                                                                                          |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Content model         | Editorial meaning and relationships, such as an event’s occurrence and participation information. Canonical models remain provisional.                                                  |
+| Presentation contract | Selected card or teaser information, omission rules and date-role constraints. The current normalized inputs are experimental projections.                                              |
+| Component interface   | Rendering inputs and options such as heading level and vertical or book layout. Layout does not change content meaning or field selection.                                              |
+| Consumer adapter      | Source extraction, per-record classification, publication visibility, localization and destination policy. Drupal bindings select profiles but do not implement these responsibilities. |
+
+The proposed next step is to formalize the implemented card and teaser projections, reusing shared image, link, attribution and date definitions while retaining profile-specific constraints. Validate real Drupal adapter fixtures against those contracts, then verify that accepted records render correctly in both layouts, including omission and accessibility behaviour. This would provide a concrete consumer for the schema work; the current illustrative fixtures and renderer tests do not establish a production adapter or complete that adoption gate.
+
+Reconcile differences explicitly before adopting the older card schema: one record versus an `items` collection, plain-text versus HTML summaries, linked label values and cardinality, permitted root-relative destinations and distinct date roles. Keep semantic date values separate from localized display labels and text. Do not weaken a presentation’s constraints simply to match the older generic component schema.
+
+Keep full-page contracts provisional until their information architecture and content selection are designed. The `content-patterns.json` catalogue describes needs, selection and implementation status; it is not a validating content schema. Broad legacy prop renames and their migration/versioning decisions belong to a separate reviewed change. Standalone contracts can initially live in Mangrove and be published as JSON for consumers without a React runtime; a separate package is a later ownership and versioning decision.
+
+## External design references
+
+The comparison below uses published guidance reviewed on 17 October 2026. The application to Mangrove is our interpretation, not evidence that these systems use the same archetype model or that Mangrove’s patterns have been user-tested.
+
+| System                                                                                                                                           | Published approach                                                                                                                 | Application to Mangrove                                                                                                                                                             |
+| ------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [GOV.UK patterns](https://design-system.service.gov.uk/patterns/) and [Publishing Design Guide](https://design-guide.publishing.service.gov.uk/) | Task-focused patterns compose components; publishing templates describe page-level content structure.                              | Keep reusable UI, reader tasks and page compositions distinct. The publishing guide is the closer reference for editorial pages.                                                    |
+| [USWDS collection](https://designsystem.digital.gov/components/collection/)                                                                      | Related articles, events and documents share a listing component with optional images, descriptions and metadata.                  | Share rendering primitives while selecting metadata for the reader’s decision. Its collection component corresponds to listing UI, not necessarily Mangrove’s Collection archetype. |
+| [Canada.ca template selection](https://design.canada.ca/find-right-template-design-pattern-web-content.html)                                     | Task and content questions guide template and pattern selection; where no dedicated template exists, compose appropriate patterns. | Document when an archetype fits, reuse presentations and leave undeveloped pages explicit rather than inventing a template for every CMS bundle.                                    |
+| [ONS document list](https://service-manual.ons.gov.uk/design-system/components/document-list)                                                    | An experimental shared document list has download, search and featured-news variants; publication dates use semantic time markup.  | Make presentation context and maturity explicit. Mangrove’s visible labels for coexisting date roles are a design decision, not a claimed ONS rule.                                 |
+
+## AI and integration
+
+The generated `content-patterns.json` catalogue records every family's model and presentation status separately from the usable component catalogue. Stubs carry no import or component entry. AI agents must preserve those status distinctions and must not fabricate a working page from a stub. Drupal bindings are included in the discovery catalogue; field adapters, domain policy and canonical schema decisions remain explicit production gates.
+
+## Changelog
+
+- **0.1.0**, 2026-10-17 ([#1383](https://github.com/unisdr/undrr-mangrove/pull/1383)): Organize content patterns by family, connect existing references and experimental teasers, reserve explicit full-page stubs and implement card field projections with vertical and book layouts.
+
+  - Describe all archetypes through provisional reader and functional needs informed by Drupal content definitions, independently of presentation field selection.
+
+  - Record the provisional boundaries and adoption path for the earlier content-contract proposals, without publishing a canonical schema or migrating legacy props.

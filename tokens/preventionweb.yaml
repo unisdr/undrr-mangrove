@@ -1,0 +1,110 @@
+# PreventionWeb — sub-brand layer.
+#
+# Merged over tokens/mangrove.yaml + tokens/undrr.yaml (see $brand.extends)
+# and emitted as the .mg-theme-preventionweb block. Sub-brands are deltas
+# applied over Mangrove's :root, which is why they can link to UNDRR
+# primitives such as {color.orange-900}.
+#
+# Regenerate with `yarn build:tokens`.
+
+$brand:
+  id: preventionweb
+  extends: undrr
+  title: PreventionWeb
+  selector: '.mg-theme-preventionweb'
+
+theme:
+  loaded:
+    $type: string
+    $value: preventionweb
+    $description: >-
+      Runtime marker: lets JS and tooling detect that this brand theme is
+      active, guarding the sub-brand body-class trap. See docs/RELEASE-2.0.md.
+
+brand:
+  $type: color
+  $private: true
+  primary:
+    $value: '#0a6969'
+    $description: PreventionWeb teal. The one primitive this brand states.
+  teal-800:
+    $value: '#0c7575'
+    $description: >-
+      Lighter partner of the brand teal. Carries the secondary button fill and,
+      since the primary button's hover left the orange accent, that hover too.
+      White on it is 5.5:1 and 69.7 perceptually, so it clears AA either way,
+      and it sits 4.2 dE2000 from the brand teal — comfortably past the ~2.3
+      just-noticeable difference, though a shallower step than the base theme's
+      own blue-900 to blue-700 hover (12.2).
+
+color:
+  $type: color
+  interactive: { $value: '{=brand.primary}' }
+  interactive-active: { $value: '{=brand.primary}' }
+  tag: { $value: '{color.interactive}' }
+  tag--hover: { $value: '{color.interactive-active}' }
+  button-background:
+    $value: '{=color.interactive}'
+    $format: srgb-rgb-function
+  # Both hovers used to point at the Sendai orange, which put a white button
+  # label on the accent at 2.95:1 in this theme and in IRP — the seventh surface
+  # in unisdr/undrr-mangrove#1196, and the one that arrived through the token
+  # layer rather than through a component. The orange carries no text, so the
+  # hover is now a tonal step inside the brand instead of a jump to the accent.
+  # See docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text
+  button-background--hover:
+    $value: '{=brand.teal-800}'
+    $format: srgb-rgb-function
+  button-secondary-background: { $value: '{=brand.teal-800}' }
+  button-secondary-background--hover: { $value: '{=brand.primary}' }
+  button-outline-primary: { $value: '{=color.interactive}' }
+  button-outline-primary--hover: { $value: '{=brand.teal-800}' }
+  button-outline-secondary:
+    $value: '{color.button-secondary-background}'
+    $format: literal
+  button-outline-secondary--hover:
+    $value: '{color.button-secondary-background--hover}'
+    $format: literal
+  form-check: { $value: '{color.interactive}' }
+  form-check--hover: { $value: '{color.interactive-active}' }
+  form-check--checked: { $value: '{color.interactive}' }
+  form-focus: { $value: '{color.interactive}' }
+  hero: { $value: '{color.interactive}' }
+  tabbar-background:
+    $value: '{=color.interactive}'
+    $format: srgb-rgb-function
+    $alpha: 0.1
+  tab-background:
+    $value: '{=color.interactive}'
+    $format: srgb-rgb-function
+    $alpha: 0.1
+  tab-background--inactive:
+    $value: '{color.tabbar-background}'
+    $format: literal
+  tab-background--hover:
+    $value: '{=color.interactive}'
+    $format: srgb-rgb-function
+    $alpha: 0.2
+  tab-border: { $value: '{color.interactive}', $format: srgb-rgb-function }
+  tab-border--hover: { $value: '{color.interactive}', $format: srgb-rgb-function }
+  tab-border--active: { $value: '{color.tab-background}', $format: literal }
+  text-tab: { $value: '{color.neutral-700}', $format: srgb-rgb-function }
+  text-tab--hover: { $value: '{color.neutral-700}', $format: srgb-rgb-function }
+  text-tab-active: { $value: '{color.neutral-900}', $format: srgb-rgb-function }
+
+# Restated so it re-resolves against this theme's outline secondary colour
+# inside .mg-theme-preventionweb instead of keeping the :root value.
+notice:
+  action-secondary:
+    $type: color
+    $value: '{color.button-outline-secondary}'
+    $format: srgb-rgb-function
+
+radius:
+  $type: dimension
+  button: { $value: '{spacing.50}' }
+  tab: { $value: '{spacing.50} {spacing.50} 0 0' }
+
+spacing:
+  $type: dimension
+  hero-overlay: { $value: '{=spacing.200} 0', $format: literal }

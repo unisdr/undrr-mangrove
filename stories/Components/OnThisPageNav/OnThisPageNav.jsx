@@ -1,9 +1,14 @@
+import { getLanguageProps } from '../../../src/i18n';
+import { getOnThisPageNavLabels } from './_labels';
 import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import {
   mgOnThisPageNav,
   mgOnThisPageNavDestroy,
 } from '../../assets/js/on-this-page-nav';
+
+export { getOnThisPageNavLabels } from './_labels';
+export { DEFAULT_ON_THIS_PAGE_LABELS } from './_labels';
 
 /**
  * Storybook wrapper for the OnThisPageNav vanilla JS component.
@@ -13,7 +18,7 @@ import {
  * @param {Object} props
  * @param {string} [props.depth]            Max heading level to scan ("2", "3", "4")
  * @param {string} [props.contentSelector]  CSS selector for heading scan scope
- * @param {string} [props.label]            aria-label for the nav
+ * @param {object} [props.labels]           UI label overrides
  * @param {Array<{href: string, text: string}>} [props.items] Explicit nav items (skips auto-detect)
  * @param {string} [props.ctaHref]          CTA link URL
  * @param {string} [props.ctaText]          CTA link text
@@ -21,11 +26,14 @@ import {
 export default function OnThisPageNav({
   depth = '2',
   contentSelector = null,
-  label = 'On this page',
+  lang,
+  dir,
+  labels,
   items = null,
   ctaHref = null,
   ctaText = null,
 }) {
+  const { label } = getOnThisPageNavLabels(lang, labels);
   const navRef = useRef(null);
 
   useEffect(() => {
@@ -41,6 +49,7 @@ export default function OnThisPageNav({
 
   return (
     <nav
+      {...getLanguageProps(lang, dir)}
       ref={navRef}
       data-mg-on-this-page-nav
       data-mg-on-this-page-nav-depth={depth}
@@ -48,6 +57,7 @@ export default function OnThisPageNav({
         'data-mg-on-this-page-nav-content': contentSelector,
       })}
       data-mg-on-this-page-nav-label={label}
+      aria-label={label}
       className="mg-on-this-page-nav"
     >
       {items && (
@@ -62,10 +72,7 @@ export default function OnThisPageNav({
         </ul>
       )}
       {ctaHref && ctaText && (
-        <a
-          href={ctaHref}
-          className="mg-on-this-page-nav__cta"
-        >
+        <a href={ctaHref} className="mg-on-this-page-nav__cta">
           {ctaText}
         </a>
       )}
@@ -78,8 +85,14 @@ OnThisPageNav.propTypes = {
   depth: PropTypes.string,
   /** CSS selector to scope heading scan (defaults to document.body) */
   contentSelector: PropTypes.string,
-  /** Accessible label for the nav element */
-  label: PropTypes.string,
+  /** UI language tag; selects the built-in catalogue, with English fallback. */
+  lang: PropTypes.string,
+  /** Explicit text direction; otherwise known catalogue languages select their direction. */
+  dir: PropTypes.oneOf(['ltr', 'rtl', 'auto']),
+  /** Explicit UI label overrides; omitted keys use the selected catalogue, then English. */
+  labels: PropTypes.shape({
+    label: PropTypes.string,
+  }),
   /** Explicit nav items (skips auto-detect when provided) */
   items: PropTypes.arrayOf(
     PropTypes.shape({

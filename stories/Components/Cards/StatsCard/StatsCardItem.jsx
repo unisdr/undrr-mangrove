@@ -1,4 +1,3 @@
-/* eslint-disable react/no-danger */
 import React from 'react';
 import PropTypes from 'prop-types';
 import DOMPurify from 'dompurify';
@@ -29,7 +28,9 @@ export function StatsCardItem({
     baseClass,
     link && `${baseClass}--linked`,
     className,
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   // Render value as link or data element
   const valueContent = link ? (
@@ -49,20 +50,15 @@ export function StatsCardItem({
           <span className={icon}></span>
         </span>
       )}
-      {label && (
-        <span className={`${baseClass}__label`}>
-          {label}
-        </span>
-      )}
+      {label && <span className={`${baseClass}__label`}>{label}</span>}
       {valueContent}
       {bottomLabel && (
-        <strong className={`${baseClass}__bottom-label`}>
-          {bottomLabel}
-        </strong>
+        <strong className={`${baseClass}__bottom-label`}>{bottomLabel}</strong>
       )}
       {summaryText && (
         <p
           className={`${baseClass}__summary`}
+          // eslint-disable-next-line react/no-danger -- sanitized HTML contract; DOMPurify sanitizes caller input
           dangerouslySetInnerHTML={{
             __html: DOMPurify.sanitize(summaryText),
           }}

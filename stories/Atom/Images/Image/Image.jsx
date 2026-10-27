@@ -21,9 +21,9 @@ export const Image = ({ className, Type }) => {
   };
   return (
     <>
-      {Type == 'img' ? (
+      {Type === 'img' ? (
         <>
-          {className == 'lazy' ? (
+          {className === 'lazy' ? (
             <img
               src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
               alt={image.alt}
@@ -36,7 +36,7 @@ export const Image = ({ className, Type }) => {
         </>
       ) : (
         <>
-          {className == 'lazy' ? (
+          {className === 'lazy' ? (
             <picture className={className}>
               <source
                 media="(min-width:1024px)"

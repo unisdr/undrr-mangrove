@@ -2,7 +2,7 @@
 
 This guide covers the development setup and workflow for contributing to the UNDRR Mangrove component library.
 
-For more detailed information, see the [Getting Started Guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-getting-started-guide--docs).
+For more detailed information, see the [Getting Started Guide](https://mangrove.undrr.org/?path=/docs/getting-started-getting-started-guide--docs).
 
 ## Related guides
 
@@ -19,10 +19,10 @@ For more detailed information, see the [Getting Started Guide](https://unisdr.gi
 
 These guides live inside Storybook and cover component standards, integration, and best practices:
 
-- [Getting started guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-getting-started-guide--docs) — onboarding, installation methods, and integration options
-- [Component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) — component structure, code conventions, and PR process
-- [Testing components](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-testing--docs) — testing strategies within Storybook
-- [Best practices](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-best-practices--docs) — accessibility, performance, and architecture guidance
+- [Getting started guide](https://mangrove.undrr.org/?path=/docs/getting-started-getting-started-guide--docs) — onboarding, installation methods, and integration options
+- [Component standards](https://mangrove.undrr.org/?path=/docs/contributing-component-standards--docs) — component structure, code conventions, and PR process
+- [Testing components](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-testing--docs) — testing strategies within Storybook
+- [Best practices](https://mangrove.undrr.org/?path=/docs/getting-started-best-practices--docs) — accessibility, performance, and architecture guidance
 
 ## Prerequisites
 
@@ -68,15 +68,12 @@ make run
 
 ## Development Workflow
 
-### Branch Strategy
+### Branch and commit workflow
 
-- `main` - Primary branch, auto-deploys to GitHub Pages
-- Feature branches - Create from `main` for new work
-- No `dev` branch is used
-
-### Branch naming convention
-
-Branch names use a conventional prefix matching the commit type, followed by a short kebab-case description:
+- `main` is the primary branch and auto-deploys to GitHub Pages.
+- Create short-lived feature branches from `main`.
+- No `dev` branch is used.
+- Name branches with a conventional prefix plus short kebab-case description:
 
 ```
 feat/short-description       — new features
@@ -86,30 +83,36 @@ docs/short-description       — documentation only
 refactor/short-description   — code restructuring
 ```
 
-### Creating features
+Typical flow:
 
-1. Create a branch from `main`
+1. Create a branch from `main`.
+2. Implement your changes.
+3. Run `yarn test` and `yarn lint`.
+4. Open a PR to `main` with linked issues and passing CI.
 
-   ```bash
-   git checkout -b feat/your-feature-name
-   ```
+### Dependency maintenance
 
-2. Make your changes following the coding standards
+Run `yarn check:dependencies` after dependency updates. It checks for compatible
+duplicate React packages, requires React and React DOM to resolve to one matching
+version, and checks every locked Storybook framework/addon/CLI package against
+the core version. Storybook's independently versioned `global` and `icons`
+support packages are exempt. Update each framework family together rather than
+leaving older nested copies in the lockfile.
 
-3. Test your changes
+Before retaining a version-specific resolution, check that a dependency still
+requests that exact range. Removing an obsolete resolution should leave
+`yarn.lock` unchanged under `yarn install --immutable`.
 
-   ```bash
-   yarn test
-   yarn lint
-   ```
+CI builds run independently for each ref. A newer commit cancels the previous
+build of that same ref; it does not cancel other PRs or an active Pages
+deployment. Only the deployment job shares the `pages` concurrency lock.
 
-4. Create a pull request against `main`
-   - Reference relevant GitHub or GitLab issues
-   - Ensure CI passes
+The assembled `npm-package/` directory is excluded from Jest's test discovery and
+module map. Tests can still read its files explicitly to verify package output.
 
-### Commit Message Convention
+### Commit message convention
 
-We use conventional commits for readable history and PR title validation:
+Use conventional commits for readable history and PR-title validation:
 
 - `fix:` - Bug fixes (patch release)
 - `feat:` - New features (minor release)
@@ -120,6 +123,8 @@ We use conventional commits for readable history and PR title validation:
 - `style:` - Code style changes
 
 Include `BREAKING CHANGE:` in the commit body for major releases.
+
+A local `commit-msg` hook enforces this format. It is installed by `yarn install` (via `prepare` and `core.hooksPath`) or manually with `yarn hooks:install`. The hook also rejects AI-assistant attribution trailers/lines (bot `Co-authored-by`, `Claude-Session:`, and "Generated with …"). Use `--no-verify` only in emergencies.
 
 ## Available Scripts
 
@@ -210,7 +215,7 @@ Other child themes (`iddrr`, `wtad`) and base themes (`base`, `ev_base`, `undrr_
 
 ## Component development
 
-See the [component guide](COMPONENT-GUIDE.md) for the step-by-step tutorial and the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) in Storybook for code standards (React patterns, BEM, PropTypes, JSDoc, TypeScript, import order).
+See the [component guide](COMPONENT-GUIDE.md) for the step-by-step tutorial and the [component standards](https://mangrove.undrr.org/?path=/docs/contributing-component-standards--docs) in Storybook for code standards (React patterns, BEM, PropTypes, JSDoc, TypeScript, import order).
 
 ### TypeScript support
 

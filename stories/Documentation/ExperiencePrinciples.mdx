@@ -1,0 +1,118 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
+import TableOfContents from '../Components/TableOfContents/TableOfContents';
+import ExperiencePrincipleExamples from './components/ExperiencePrincipleExamples';
+
+<Meta
+  title="Design decisions/Experience principles"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: {
+      canvas: { hidden: true },
+    },
+  }}
+/>
+
+# Experience principles
+
+<TableOfContents
+  tocData={[
+    { id: 'intent', text: 'Intent' },
+    { id: 'scope-and-ownership', text: 'Scope and ownership' },
+    { id: 'decision-order', text: 'Decision order' },
+    { id: 'principles', text: 'Principles' },
+    { id: 'acceptance-checks', text: 'Acceptance checks' },
+    { id: 'change-evidence', text: 'Change evidence' },
+  ]}
+  showNumbers={false}
+/>
+
+## Intent
+
+Mangrove is evolving towards a lighter, softer digital experience. We retain accessibility, themes and institutional clarity while reducing visual hardness where unnecessary.
+
+**Clear, calm and approachable** describes the intent. Interfaces should feel authoritative without severity. Observable outcomes: fewer competing boundaries, stable layouts, clear affordances, consistent geometry and visible states in every theme.
+
+## Scope and ownership
+
+Mangrove defines shared semantics, accessibility, content structure, interaction behaviour, geometry and themeable capabilities. Themes own colour identity and surface expression. They may change radii, fills, typography and accent treatments, but must not weaken the accessible interaction baseline.
+
+Promote repeated behaviour and themeable capability to shared components. Put property-specific visual expression in documented theme tokens.
+
+## Decision order
+
+When principles compete, decide in this order:
+
+1. User need and safety
+2. Accessibility and semantic meaning
+3. Content comprehension
+4. Shared behaviour and compatibility
+5. Theme and brand expression
+6. Visual polish
+
+Emergency communication, dense data and task completion take priority over a softer appearance.
+
+## Principles
+
+### Keep the foundation, refine the expression
+
+Prefer evolution over replacement. Preserve semantic HTML, established content models, `mg-` class contracts, responsive behaviour and theme compatibility. Prefer additive tokens and variants. Treat changed defaults as consumer-visible changes and document migration impact.
+
+### Let content lead
+
+Hierarchy should come from typography, spacing and meaningful imagery before decoration. Use readable line lengths and deliberate rhythm. Keep labels and actions concise.
+
+<ExperiencePrincipleExamples example="content" />
+
+### Soften with restraint
+
+Use token-driven corner radii, lightly tinted surfaces and gentle separation. Softer does not mean pill-shaped, borderless or vague. Structural boundaries must remain apparent, especially in forms, tables and dense information.
+
+<ExperiencePrincipleExamples example="softness" />
+
+<ExperiencePrincipleExamples example="density" />
+
+### Make actions obvious and comfortable
+
+Buttons, links and controls should have consistent geometry, clear states and generous targets. Meet WCAG 2.2 minimum of 24 by 24 CSS pixels and aim for 44 by 44 where space permits. Icon weight, spacing and alignment should feel balanced at normal and zoomed sizes.
+
+<ExperiencePrincipleExamples example="actions" />
+
+<ExperiencePrincipleExamples example="forms" />
+
+### Prefer quiet depth to heavy chrome
+
+Use whitespace, tonal contrast and subtle elevation before strong outlines. Never rely on tint or shadow alone. Preserve required 3:1 non-text contrast and explicit boundaries in forced-colours mode.
+
+### Use motion as feedback
+
+Motion should confirm an interaction or explain a state change. Keep it brief, interruptible and restrained. Respect reduced-motion preferences. Follow the [motion and animation guidance](?path=/docs/design-decisions-motion--docs) for timing, loading indicators and reduced-motion alternatives.
+
+### Accessibility is the constraint, not the compromise
+
+Every refinement must preserve or improve contrast, focus visibility, keyboard operation, touch operation, target size, zoom behaviour and screen-reader meaning. Never use softness or animation as the only way to communicate state.
+
+### Design once for every theme
+
+Express shared capability through semantic tokens and component variants. A refinement is incomplete if it only works in the default theme.
+
+## Acceptance checks
+
+Test all five Mangrove themes, keyboard/pointer/touch interaction, all relevant states (hover, focus, active, disabled, loading, error), mobile/tablet/desktop widths, 200% text sizing/400% zoom, RTL layouts, forced-colours mode and reduced-motion preferences.
+
+Use the <LinkTo kind="getting-started-accessibility" story="docs">accessibility guidance</LinkTo> and <LinkTo kind="contributing-build-a-component-review-checklist" story="docs">component review checklist</LinkTo>.
+
+## Change evidence
+
+For a visual refinement, include:
+
+1. The user or system problem being solved
+2. Before and after evidence at representative viewports
+3. Relevant interaction and validation states
+4. The themes and accessibility conditions checked
+5. Why the change belongs to the component, a shared token or a specific theme
+6. Compatibility, changelog and migration impact when defaults change
+
+Before changing a system-wide default, prove the pattern on representative contexts.
+
+Related foundations: <LinkTo kind="design-decisions-colors" story="docs">colours</LinkTo>, <LinkTo kind="design-decisions-typography" story="docs">typography</LinkTo>, <LinkTo kind="design-decisions-spacing" story="docs">spacing</LinkTo> and <LinkTo kind="getting-started-integration-theming-guide" story="docs">theming</LinkTo>.

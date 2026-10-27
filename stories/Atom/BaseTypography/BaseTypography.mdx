@@ -1,4 +1,10 @@
-import { Canvas, Meta, Story, Source, Anchor } from '@storybook/addon-docs/blocks';
+import {
+  Canvas,
+  Meta,
+  Story,
+  Source,
+  Anchor,
+} from '@storybook/addon-docs/blocks';
 import * as BaseTypographyStories from './BaseTypography.stories';
 
 import { Heading } from './../Typography/Heading/Heading';
@@ -62,11 +68,33 @@ export const getCaptionForLocaleHeading = locale => {
 
 <Meta of={BaseTypographyStories} />
 
-> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
 
 # Base typography
 
-Basic elements which the design system has some styling listed here, you can use the elements as it is, without any specific CSS classes.
+Base HTML typography elements with Mangrove baseline styling. Use these tags
+without extra utility classes unless a pattern calls for them.
+
+## Rich content boundary
+
+See the [Rich content pattern](?path=/docs/patterns-rich-content--docs) for the complete editorial HTML contract, scoped semantic defaults, component boundaries and safe adoption checklist. `.mg-body` remains supported without deprecation.
+
+Wrap long-form or WYSIWYG-authored markup in `.mg-content`. It is the opt-in
+boundary for semantic element defaults: prose links are underlined at rest, and
+blockquotes and citations receive their Mangrove typography. Navigation,
+buttons, cards and other component controls stay outside this boundary and own
+their presentation themselves.
+
+```html
+<article class="mg-content">
+  <p>
+    Read the
+    <a href="/report">full report</a>
+    .
+  </p>
+  <blockquote>Quoted material.</blockquote>
+</article>
+```
 
 <Anchor storyId="foundation-typography-basetypography--abbreviation" />
 
@@ -108,9 +136,8 @@ export const getCaptionForLocaleAbbr = locale => {
   }
 };
 
-Abbreviation component defines an abbreviation or an acronym, like "HTML", "CSS", "Mr.", "Dr.", "ASAP", "ATM".
-
-- We can use the <code>abbr tag</code> in any component, to display as a tooltip when you hover over the element.
+Use `<abbr>` for abbreviations or acronyms such as HTML, CSS, or UNDRR terms.
+Provide the expanded form in the `title` attribute.
 
 Typographic scale when using abbreviation in text component:
 
@@ -155,9 +182,7 @@ export const getCaptionForLocaleBlockquote = locale => {
   }
 };
 
-The Blockquote component specifies a section that is quoted from another source.
-
-- We can use <code>blockquote</code> in any component to render the text found within the <code>blockquote tag</code> as indented text
+Use `<blockquote>` for quoted content from another source.
 
 Typographic scale when using blockquote in text component:
 
@@ -186,9 +211,7 @@ export const getCaptionForLocaleCite = locale => {
   }
 };
 
-The Cite component defines the title of a creative work (e.g. a book, a poem, a song, a movie, a painting, a sculpture, etc.).
-
-- We can use <code>cite</code> in any component to render the text found within the <code>cite tag</code>.
+Use `<cite>` for the title/source of a creative work.
 
 Typographic scale when using cite in text component:
 
@@ -252,15 +275,15 @@ Use `<code>` inline within prose to render technical terms in the browser's defa
   meta={BaseTypographyStories}
 />
 
-For syntax-highlighted blocks, plain dark blocks, and filename-header wrappers, see the **[CodeBlock component](/docs/components-codeblock--docs)**.
+For syntax-highlighted blocks, plain dark blocks, and filename-header wrappers, see the **[CodeBlock component](?path=/docs/components-codeblock--docs)**.
 
 <Anchor storyId="foundation-typography-basetypography--details" />
 
 ## Details
 
-The details tag creates a disclosure widget in which information is visible only when the widget is toggled into an "open" state. A summary or label must be provided using the `summary` element.
-
-Mangrove applies a light baseline to all `<details>` elements — a pointer cursor on the summary and a branded focus ring — keeping the browser's native disclosure marker intact. For a richer card treatment, add the `mg-details` class.
+`<details>` creates a disclosure widget with a required `<summary>` label.
+Mangrove adds baseline pointer/focus styling while preserving native disclosure
+behavior. For richer card treatment, add `mg-details`.
 
 export const getLocaleForDetails = locale => {
   switch (locale) {
@@ -305,11 +328,49 @@ Bare `<details>` with Mangrove's baseline styling — native disclosure marker, 
   meta={BaseTypographyStories}
 />
 
+### Accordion pattern (`.mg-accordion`)
+
+Wrap multiple `<details>` elements inside a `.mg-accordion` container for grouped disclosures with flush borders, animated rotating chevrons, and consistent spacing (e.g. FAQ lists, layer toggles, secondary metadata panels).
+
+<Canvas
+  of={BaseTypographyStories.TypographyAccordion}
+  meta={BaseTypographyStories}
+/>
+
+```html
+<div class="mg-accordion">
+  <details open>
+    <summary>First section</summary>
+    <div>
+      <p>Panel content goes here.</p>
+    </div>
+  </details>
+  <details>
+    <summary>Second section</summary>
+    <div>
+      <p>Panel content goes here.</p>
+    </div>
+  </details>
+</div>
+```
+
+Use `.mg-accordion--flush` to remove lateral borders when nesting inside sidebars, cards, or narrow panels:
+
+<Canvas
+  of={BaseTypographyStories.TypographyAccordionFlush}
+  meta={BaseTypographyStories}
+/>
+
+> **Accordion vs. Stacked Tabs:**
+>
+> - Use `.mg-accordion` for lightweight, zero-JavaScript content disclosures using native HTML `<details>` and `<summary>` where multiple sections can be opened simultaneously (e.g. FAQs, nested filter panels, progressive metadata).
+> - For mutually exclusive panels requiring strict single-tab visibility and full WAI-ARIA keyboard navigation (arrow keys, `role="tablist"`, `role="tab"`, `role="tabpanel"`), see the **[Tabs component (Stacked tabs)](?path=/docs/components-tabs--docs#stacked-tabs)**.
+
 <Anchor storyId="foundation-typography-basetypography--figcaption" />
 
 ## Figcaption
 
-The <code>figcaption</code> tag is used to caption the image. The <code>figcaption</code> tag is used with the <code>figure</code> tag.
+Use `<figcaption>` with `<figure>` to provide media captions.
 
 export const getLocaleForFigcaption = locale => {
   switch (locale) {
@@ -348,7 +409,7 @@ export const getLocaleForFigcaption = locale => {
 
 ## Headings
 
-We can use the <code>h1/h2/h3/h4/h5/h6 tags</code> in any component to display the headings. h1 for most important heading to h6 for least important heading.
+Use heading tags `<h1>` through `<h6>` in semantic order.
 
 Typographic scale when using headings in text component:
 
@@ -389,9 +450,7 @@ export const getCaptionForLocaleHr = locale => {
   }
 };
 
-The Hr component defines a thematic break in an HTML page (e.g. a shift of topic).
-
-- We can use the <code>hr tag</code> in any component to display the horizontal break.
+Use `<hr>` for thematic breaks between content sections.
 
 Typographic scale when using hr in text component:
 
@@ -417,9 +476,7 @@ export const getCaptionForLocaleMark = locale => {
   }
 };
 
-The Mark component define the marked text. It is used to highlight the part of the text in a paragraph.
-
-- We can use the <code>mark</code> in any component to render the text found within the <code>mark tag</code> as text with a light yellow background
+Use `<mark>` to highlight inline text within a paragraph.
 
 Typographic scale when using mark in text component:
 
@@ -432,11 +489,7 @@ Typographic scale when using mark in text component:
 
 ## Ordered List
 
-An ordered list is used if there is a relation/hierarchy between list items. Ordered list items begin with a number generally.
-
-Start an ordered list with the <code>o1</code> tag.
-
-Add a <code>li</code> tag for each list item
+Use ordered lists (`<ol>`) when item order matters.
 
 <Canvas
   of={BaseTypographyStories.TypographyListOrdered}
@@ -447,11 +500,7 @@ Add a <code>li</code> tag for each list item
 
 ## Unordered List
 
-An unordered list is used if there is no hierarchy required. Unordered lists start with a bullet.
-
-Start an unordered list with the <code>u1</code> tag.
-
-Add a <code>li</code> tag for each list item
+Use unordered lists (`<ul>`) when item order does not matter.
 
 <Canvas
   of={BaseTypographyStories.TypographyListUnordered}
@@ -462,9 +511,7 @@ Add a <code>li</code> tag for each list item
 
 ## Description List
 
-A description list is a list of terms, with a description of each term.
-
-The <code>dl</code> tag defines the description list, the <code>dt</code> tag defines the term (name), and the <code>dd</code> tag describes each term.
+Use description lists (`<dl>`) for term/definition pairs with `<dt>` and `<dd>`.
 
 <Canvas
   of={BaseTypographyStories.TypographyListDescription}
@@ -503,25 +550,23 @@ export const getCaptionForLocaleParagraph = locale => {
   }
 };
 
-The Paragraph component defines a paragraph.
-
-- We can use the <code>p tag</code> in any component to define a paragraph.
+Use `<p>` for standard paragraph text.
 
 ### Size prop
 
 The optional `size` prop applies a responsive font-size utility class (`mg-u-font-size-{size}`). Use the controls below to preview each size.
 
-| Size | Mobile | Desktop (>=48em) |
-|------|--------|-------------------|
-| `150` | 1.125rem | 1.125rem |
-| `200` | 1.25rem | 1.25rem |
-| `250` | 1.4rem | 1.4rem |
-| `300` | 1.6rem | 1.6rem |
-| `400` | 1.6rem | 1.8rem |
-| `500` | 1.8rem | 2.3rem |
-| `600` | 2.3rem | 3.2rem |
-| `800` | 3.2rem | 3.6rem |
-| `900` | 3.6rem | 4rem |
+| Size  | Mobile   | Desktop (>=48em) |
+| ----- | -------- | ---------------- |
+| `150` | 1.125rem | 1.125rem         |
+| `200` | 1.25rem  | 1.25rem          |
+| `250` | 1.4rem   | 1.4rem           |
+| `300` | 1.6rem   | 1.6rem           |
+| `400` | 1.6rem   | 1.8rem           |
+| `500` | 1.8rem   | 2.3rem           |
+| `600` | 2.3rem   | 3.2rem           |
+| `800` | 3.2rem   | 3.6rem           |
+| `900` | 3.6rem   | 4rem             |
 
 When no `size` is set, the paragraph inherits its font size from the surrounding context.
 
@@ -564,9 +609,7 @@ export const getCaptionForLocaleQuotation = locale => {
   }
 };
 
-The Quotation component defines a short quotation.
-
-- We can use the <code>q</code> in any component to render quotation marks around the text found within the <code>q tag</code>.
+Use `<q>` for short inline quotations.
 
 Typographic scale when using quotation in text component:
 
@@ -599,9 +642,7 @@ export const getCaptionForLocaleSmall = locale => {
   }
 };
 
-The Small component defines smaller text (like copyright and other side-comments).
-
-- We can use the <code>small</code> in any component to makes text one font size smaller in the HTML document.
+Use `<small>` for secondary text such as legal notes or side comments.
 
 Typographic scale when using small in text component:
 
@@ -689,14 +730,23 @@ export const getCaptionForLocaleList = locale => {
 
 ## Changelog
 
-- **1.2** — 2025-07-14 ([#865](https://github.com/unisdr/undrr-mangrove/issues/865)):
+- **2.4.2**, 2026-10-15 ([#1277](https://github.com/unisdr/undrr-mangrove/issues/1277), [#1357](https://github.com/unisdr/undrr-mangrove/issues/1357)): Linked the dedicated rich-content pattern and its compatibility/adoption contract. Details hover transitions use the fast motion token and standard easing, retaining their reduced-motion gate.
+
+- **2.4.1**, 2026-09-20 ([#1273](https://github.com/unisdr/undrr-mangrove/issues/1273)): Added `.mg-content` as the opt-in long-form and WYSIWYG typography boundary. Paragraph links inside it are underlined at rest; blockquote and cite styling now supports it alongside the existing `.mg-body` alias. Navigation, buttons and card links are not affected.
+
+- **2.4.0**, 2026-09-16 ([#1157](https://github.com/unisdr/undrr-mangrove/pull/1157)): Added the `.mg-accordion` and `.mg-accordion--flush` patterns for grouped `<details>` disclosures with flush border dividers, animated rotating chevrons, and nested layer support.
+- **2.3.1**, 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography now follows the computed language of each element rather than the page root, so a `lang="en"` island inside an Arabic page renders in the Latin families.
+- **2.3**, 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Aligned the enhanced `.mg-details` disclosure marker with stacked tabs by replacing directional triangles with tokenised circular plus/minus controls, logical RTL positioning, a 48px summary target, and tactile hover/press states. Bare `<details>` retains its native marker.
+  - Refined inline code as a compact theme-aware technical surface with interactive-colour tinting, shared radius semantics, a modern system-monospace stack, disabled ligatures, and coherent decoration when snippets wrap.
+
+- **1.2**, 2025-07-14 ([#865](https://github.com/unisdr/undrr-mangrove/issues/865)):
   - Refactored `details`/`summary` styles to opt-in `mg-details` class; bare `<details>` receives a light baseline (pointer cursor, branded focus ring) without altering the native disclosure marker
   - Replaced `outline: 0` on `summary` with explicit `:focus-visible` style for keyboard accessibility
   - Improved `hr` with brand-blue top border and vertical breathing room
   - Improved `dt` with bold weight for clear labelling without link ambiguity; added `dd + dt` group spacing
   - Redesigned code block: removed left accent border in favour of clean full-radius dark block; added language badge (top-right) via `data-language` attribute or CSS `:has()` for syntax-highlighted output; added `figure.mg-code-block` + `figcaption` wrapper for Vercel-inspired filename headers
-- **1.1** — 2026-03-05 ([web-backlog#2661](https://gitlab.com/undrr/web-backlog/-/issues/2661)):
+- **1.1**, 2026-03-05 ([web-backlog#2661](https://gitlab.com/undrr/web-backlog/-/issues/2661)):
   - Added optional `size` prop to Paragraph component for applying font-size utility classes
-  - Fixed Paragraph `label` prop support — callers passing `label` instead of `detail` now render correctly
+  - Fixed Paragraph `label` prop support: callers passing `label` instead of `detail` now render correctly
   - Added whitelist validation for `size` prop values
-- **1.0** — Released component
+- **1.0**: Released component

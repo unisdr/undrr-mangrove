@@ -1,0 +1,114 @@
+# UNDRR — the corporate brand layer.
+#
+# UNDRR is a sub-brand of the Mangrove base, exactly like PreventionWeb, IRP,
+# MCR2030 and DELTA. It is separated out so that "use Mangrove without UNDRR
+# branding" is expressible; today the base and the UNDRR identity are
+# conflated in _variables.scss and cannot be told apart.
+#
+# It is marked `default: true`, so the generator merges it over the base and
+# emits the pair as Mangrove's `:root`. That is what Mangrove's :root has
+# always contained, and the other brands are deltas applied over it — see
+# `$brand.extends` in the sub-brand sources.
+#
+# Regenerate with `yarn build:tokens`.
+
+$brand:
+  id: undrr
+  output: mangrove
+  default: true
+  title: UNDRR
+  selector: ':root'
+
+color:
+  $type: color
+
+  # UNDRR corporate blue (#004f91) and its tint ramp.
+  blue-50: { $value: '#e6edf4' }
+  blue-100: { $value: '#ccdce9' }
+  blue-200: { $value: '#b3cade' }
+  blue-300: { $value: '#99b9d3' }
+  blue-400: { $value: '#80a7c8' }
+  blue-500: { $value: '#6695bd' }
+  blue-600: { $value: '#4d84b2' }
+  blue-700: { $value: '#3372a7' }
+  blue-800: { $value: '#1a619c' }
+  blue-900:
+    $value: '#004f91'
+    $description: >-
+      UNDRR corporate blue. Also DELTA's brand blue: DELTA's own design file
+      labels this swatch "UNDRR Blue - Corporate blue" and marks it Brand.
+
+  # Sendai orange (#eb752a) and its tint ramp.
+  #
+  # The top of this ramp is a non-text accent. No text colour clears AA on
+  # orange-900 or orange-800: white is 2.95 and 2.65 against WCAG's 4.5, and
+  # black, which passes WCAG at 7.11 and 7.92, still misses the perceptual
+  # body-text floor (57.4 and 61.1 against 63). Use them for borders, rules,
+  # icon fills and blocks with no copy over them. They are also too close to
+  # white to carry a boundary on their own: orange-900 on white is 2.95 and
+  # orange-900 on orange-50 is 2.66, both under the 3:1 of SC 1.4.11, so an
+  # orange edge is decoration and must never be the only thing that identifies
+  # a component or a state.
+  #
+  # The pale end of the ramp is the text-bearing end: orange-50 and orange-100
+  # carry --mg-color-text at 15.7:1 and 14.1:1 (88.8 and 83.8 perceptually).
+  # See docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text
+  orange-50: { $value: '#fdf1ea' }
+  orange-100: { $value: '#fbe3d4' }
+  orange-200: { $value: '#f9d6bf' }
+  orange-300: { $value: '#f7c8aa' }
+  orange-400: { $value: '#f5ba95' }
+  orange-500: { $value: '#f3ac7f' }
+  orange-600: { $value: '#f19e6a' }
+  orange-700: { $value: '#ef9155' }
+  orange-800: { $value: '#ed833f' }
+  orange-900: { $value: '#eb752a' }
+
+  # The single override that carries the brand. Everything derived from
+  # `interactive` in the base — tag, button, outline, form check, focus ring
+  # and hero — moves with it, because references resolve after this file is
+  # merged over the base.
+  interactive: { $value: '{color.blue-900}' }
+  interactive-active: { $value: '{color.blue-700}' }
+
+  # The orange accent, as three named roles. Non-text, like the ramp steps they
+  # point at: do not put copy on a surface painted with these, and do not use
+  # them as ink on white. Nothing in the library does either any more — the last
+  # surfaces that did were changed in unisdr/undrr-mangrove#1196 and #1243, and
+  # every pair is now asserted in
+  # stories/assets/scss/__tests__/tokens-contract.test.js.
+  # `tag-accent` is the accent tag's border, not its fill; the fill is the pale
+  # end of the same ramp. `tag-accent--hover` now has no consumer in the
+  # library: it is orange-800, lighter than the resting orange-900 border, so
+  # using it on hover faded the rule to 2.15 just as the chip responded. It
+  # stays published at its value only so this release does not also remove a
+  # token. Setting it in a theme layer does nothing — no rule reads it — so it
+  # is not a hook for "a distinct accent hover", and it should be retired
+  # rather than rewired: the reason it has no consumer is that the one use it
+  # ever had made the component worse.
+  # See docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text
+  secondary: { $value: '{color.orange-800}' }
+  tag-accent: { $value: '{color.orange-900}' }
+  tag-accent--hover: { $value: '{color.orange-800}' }
+  button-secondary-background: { $value: '{color.blue-800}' }
+  button-secondary-background--hover: { $value: '{color.blue-700}' }
+
+  # Tabs: UNDRR's tabbar is a blue-tinted rail, where the brand-free base is
+  # neutral.
+  tabbar-background: { $value: '{color.blue-50}', $format: srgb-rgb-function }
+  tab-background: { $value: '{color.blue-200}', $format: srgb-rgb-function }
+  tab-background--inactive:
+    $value: '{color.blue-50}'
+    $format: srgb-rgb-function
+  tab-background--hover:
+    $value: '{color.blue-800}'
+    $format: srgb-rgb-function
+  tab-border--active: { $value: '{color.blue-800}', $format: srgb-rgb-function }
+
+# Corporate alias published under the UNDRR prefix rather than Mangrove's.
+# One of the few tokens whose name predates the path convention.
+undrr:
+  $type: color
+  corporate-blue:
+    $name: '--undrr-color-corporate-blue'
+    $value: '{color.blue-900}'

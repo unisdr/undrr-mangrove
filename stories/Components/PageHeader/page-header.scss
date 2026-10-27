@@ -1,33 +1,63 @@
+/**
+ * Page Header
+ *
+ * Standardized page heading banner with title, breadcrumbs, category metadata, and intro text.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/PageHeader/PageHeader.mdx
+ */
+@use "../../assets/scss/mixins" as *;
+@use "../../assets/scss/config" as *;
+
 .mg-page-header {
   // Base styles for page header
 
   .mg-page-header__container {
+    padding-inline: mg-rem(10);
+
     @media (max-width: $mg-breakpoint-tablet) {
       max-width: 100%;
     }
   }
 
   &__toolbar-wrapper {
-    background: #333
-      url(//www.undrr.org/themes/custom/undrr_common/images/toolbar-background.png)
+    background: rgb(var(--mg-color-neutral-700))
+      url("https://www.undrr.org/themes/custom/undrr_common/images/toolbar-background.png")
       no-repeat center center;
-    box-shadow: 0 2px 4px 0 rgb(0 0 0 / 0.3);
-    z-index: $mg-z-index-header;
-
-    @media (width >= $mg-breakpoint-tablet) {
-      .mg-page-header__container {
-        padding: 0;
-      }
-    }
+    border-block-end: 1px solid rgb(var(--mg-color-neutral-0) / 0.16);
+    z-index: var(--mg-z-index-header);
   }
 
   &__region--toolbar {
     display: flex;
     align-items: center;
-    gap: mg-rem(10);
+    gap: var(--mg-spacing-50);
+    flex-wrap: wrap;
+    padding-block: var(--mg-spacing-50);
 
     a {
-      color: #fff;
+      color: rgb(var(--mg-color-neutral-0));
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-block-size: mg-rem(40);
+      min-inline-size: mg-rem(40);
+
+      // Ring the icon, not the full 40x40 tap target — now that the
+      // account link is icon-only (no visible text filling that box), a
+      // ring on the <a> itself reads as oversized against the icon. Same
+      // pattern as .mg-page-header__block--language:focus-within below.
+      // The base `a:focus-visible` rule in _foundational.scss still rings
+      // the anchor itself (that rule applies to every link site-wide) —
+      // cancel it here or the two rings stack.
+      &:focus-visible {
+        outline: none;
+        box-shadow: none;
+
+        .mg-page-header__toolbar-icon {
+          @include mg-focus-ring;
+        }
+      }
     }
 
     .fa {
@@ -41,22 +71,123 @@
 
   &__block--logo {
     flex-grow: 1;
-    padding: mg-rem(5) 0 mg-rem(5) 1px;
+    min-inline-size: 0;
+    padding-block: var(--mg-spacing-50);
   }
 
-  &__logo-img {
-    @media (max-width: $mg-breakpoint-desktop) {
-      object-fit: cover;
-      width: 190px;
-      height: 48px;
-      object-position: 0% 50%;
+  // Shared by the account and language icons so they scale together —
+  // ~20% larger than plain inherited text size, since they're now the
+  // toolbar's only visible affordance for each control (no adjacent label).
+  &__toolbar-icon {
+    font-size: 1.2em;
+  }
+
+  // Icon-only trigger at every width — language is a settings action, not
+  // primary content, so the current selection doesn't need to stay visibly
+  // spelled out (compare the account link, which is icon-only below tablet
+  // for the same reason). The native <select> stays in the DOM at full
+  // size, just visually hidden and overlaid on top of the icon, so it's
+  // still a real, keyboard- and screen-reader-operable control: clicking
+  // or tapping the icon opens the actual native dropdown, not a
+  // custom-built menu/panel.
+  &__block--language {
+    position: relative;
+    display: flex;
+    align-items: center;
+    inline-size: mg-rem(40); // matches the account link's tap target
+    block-size: mg-rem(40);
+
+    // Extra breathing room from the account link, on top of the toolbar's
+    // shared gap (--mg-spacing-50) — this boundary separates two distinct
+    // controls and reads as cramped at the same gap used for icon-to-label
+    // spacing within a single control.
+    margin-inline-start: var(--mg-spacing-75);
+
+    > form {
+      position: absolute;
+      inset: 0;
     }
 
-    @media (max-width: $mg-breakpoint-desktop) {
-      width: 110px;
-      height: 30px;
+    &:focus-within .mg-page-header__language-icon {
+      @include mg-focus-ring;
     }
   }
+
+  &__language-icon {
+    position: absolute;
+    inset-inline-start: 50%;
+    inset-block-start: 50%;
+    transform: translate(-50%, -50%);
+    color: rgb(var(--mg-color-neutral-0));
+
+    // The invisible <select> sits on top and handles the actual click —
+    // let pointer events pass through the icon to it.
+    pointer-events: none;
+  }
+
+  // languageDisplay="links" — an inline list of language buttons instead of
+  // the icon-only dropdown, for sites with few enough languages that
+  // spelling them out directly is worth the toolbar space. Only above
+  // tablet: on narrower screens even a short list wraps under the logo, so
+  // the links hide and the regular dropdown (.mg-page-header__block--
+  // language-fallback) takes over. display: none, not just visual hiding,
+  // so only one of the two controls is ever in the tab order and the
+  // accessibility tree.
+  &__block--language-links {
+    display: flex;
+    align-items: center;
+    margin-inline-start: var(--mg-spacing-75);
+
+    @media (max-width: $mg-breakpoint-tablet) {
+      display: none;
+    }
+  }
+
+  &__block--language-fallback {
+    @media (min-width: $mg-breakpoint-tablet + 1) {
+      display: none;
+    }
+  }
+
+  &__language-links {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--mg-spacing-100);
+  }
+
+  &__language-link {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: mg-rem(40);
+    padding-inline: var(--mg-spacing-75);
+    border: none;
+    border-radius: var(--mg-radius-button);
+    background: none;
+    color: rgb(var(--mg-color-neutral-0));
+    font-family: inherit;
+    font-size: var(--mg-font-size-250);
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &:focus-visible {
+      @include mg-focus-ring;
+    }
+
+    // Bold, matching how the account link's text used to read before it
+    // went icon-only — the current language is the one piece of state this
+    // control needs to communicate at a glance.
+    &[aria-current="true"] {
+      font-weight: bold;
+    }
+  }
+
+  // Sizing and crop behavior now live on the Logo atom itself
+  // (stories/Atom/Logo/logo.scss, .mg-logo--autocrop) — this class is kept
+  // as a styling hook for consumers targeting the header's logo image.
 
   &__select-wrapper {
     height: auto;
@@ -78,21 +209,34 @@
     }
   }
 
+  // Always an invisible tap target exactly the size of the icon above it
+  // (see .mg-page-header__block--language) — a real, focusable,
+  // screen-reader- and keyboard-operable native <select>, just not
+  // visually rendered. opacity (not display/visibility) is what keeps it
+  // operable; the focus ring shows on the icon instead
+  // (.mg-page-header__block--language:focus-within), since a ring on an
+  // invisible element wouldn't be visible. direction: inherit and a
+  // readable font-size still matter here even though the closed box is
+  // invisible: browsers render the open dropdown's option list using
+  // these, so RTL languages and legible option text still depend on them.
   &__select {
-    width: auto !important;
-    min-width: auto;
-    height: 30px;
-    padding-right: 30px;
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    min-width: 0;
+    padding: 0;
     border: none;
-    border-radius: 0;
-    font-size: $mg-font-size-300;
     background-color: transparent;
-    color: #fff;
-    direction: rtl;
-    line-height: mg-rem(20);
+    direction: inherit;
+    font-size: var(--mg-font-size-300);
+    opacity: 0;
+    cursor: pointer;
+    outline: none;
 
     option {
-      color: #333;
+      color: rgb(var(--mg-color-text));
+      background: rgb(var(--mg-color-neutral-0));
     }
   }
 
@@ -110,41 +254,20 @@
       display: inline-block;
 
       &:nth-child(1) {
-        background: $sendai-red-900;
+        background: var(--sendai-red-900);
       }
 
       &:nth-child(2) {
-        background: $sendai-purple-900;
+        background: var(--sendai-purple-900);
       }
 
       &:nth-child(3) {
-        background: $sendai-orange-900;
+        background: var(--sendai-orange-900);
       }
 
       &:nth-child(4) {
-        background: $sendai-turquoise-900;
+        background: var(--sendai-turquoise-900);
       }
     }
-  }
-}
-
-.mg-page-header__label {
-  display: inline-block;
-  font-size: $mg-font-tag;
-  font-weight: bold;
-  margin-right: $mg-spacing-25;
-  padding: $mg-spacing-25 0;
-
-  @media (max-width: $mg-breakpoint-tablet) {
-    display: none;
-  }
-}
-
-// Label for mobile
-.mg-page-header__label-mobile {
-  display: none;
-
-  @media (max-width: $mg-breakpoint-tablet) {
-    display: unset;
   }
 }

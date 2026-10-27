@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Pager } from './Pager';
 
 export default {
-  title: 'Components/Pager',
+  title: 'Components/Navigation/Pager',
   component: Pager,
   argTypes: {
     page: { control: 'number' },

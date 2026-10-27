@@ -21,6 +21,7 @@ describe('textCtaFromElement', () => {
 
     const props = textCtaFromElement(
       createContainer({
+        eyebrow: 'Open source',
         headline: 'Join the platform',
         'headline-size': '800',
         'headline-level': '3',
@@ -32,10 +33,12 @@ describe('textCtaFromElement', () => {
         image: 'https://example.com/photo.jpg',
         'image-alt': 'A photo',
         centered: 'false',
+        layout: 'inline',
         'class-name': 'my-custom',
-      }),
+      })
     );
 
+    expect(props.eyebrow).toBe('Open source');
     expect(props.headline).toBe('Join the platform');
     expect(props.headlineSize).toBe('800');
     expect(props.headlineLevel).toBe(3);
@@ -50,6 +53,7 @@ describe('textCtaFromElement', () => {
     expect(props.image).toBe('https://example.com/photo.jpg');
     expect(props.imageAlt).toBe('A photo');
     expect(props.centered).toBe(false);
+    expect(props.layout).toBe('inline');
     expect(props.className).toBe('my-custom');
   });
 
@@ -60,6 +64,7 @@ describe('textCtaFromElement', () => {
   it('returns defaults for a bare element', () => {
     const props = textCtaFromElement(createContainer());
 
+    expect(props.eyebrow).toBe('');
     expect(props.headline).toBe('');
     expect(props.headlineSize).toBe('600');
     expect(props.headlineLevel).toBe(2);
@@ -71,6 +76,7 @@ describe('textCtaFromElement', () => {
     expect(props.image).toBeUndefined();
     expect(props.imageAlt).toBe('');
     expect(props.centered).toBe(true);
+    expect(props.layout).toBe('stacked');
     expect(props.className).toBeUndefined();
   });
 
@@ -92,7 +98,7 @@ describe('textCtaFromElement', () => {
 
   it('handles malformed JSON gracefully', () => {
     const props = textCtaFromElement(
-      createContainer({ buttons: '{not valid json' }),
+      createContainer({ buttons: '{not valid json' })
     );
 
     expect(props.buttons).toEqual([]);
@@ -123,15 +129,25 @@ describe('textCtaFromElement', () => {
 
   it('clamps invalid headline-level to 2', () => {
     const props = textCtaFromElement(
-      createContainer({ 'headline-level': '99' }),
+      createContainer({ 'headline-level': '99' })
     );
     expect(props.headlineLevel).toBe(2);
   });
 
   it('clamps non-numeric headline-level to 2', () => {
     const props = textCtaFromElement(
-      createContainer({ 'headline-level': 'abc' }),
+      createContainer({ 'headline-level': 'abc' })
     );
     expect(props.headlineLevel).toBe(2);
   });
+});
+
+test('extracts optional soft tone and preserves strong as the default', () => {
+  expect(textCtaFromElement(createContainer({ tone: 'soft' })).tone).toBe(
+    'soft'
+  );
+  expect(textCtaFromElement(createContainer()).tone).toBe('strong');
+  expect(textCtaFromElement(createContainer({ tone: 'invalid' })).tone).toBe(
+    'strong'
+  );
 });

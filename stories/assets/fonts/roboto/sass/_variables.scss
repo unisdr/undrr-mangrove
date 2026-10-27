@@ -1,2 +1,1 @@
-$FontName: "Roboto" !default;
-$font-version: "2.137" !default;
+@forward "../../../scss/font-paths" show $FontName, $font-version;

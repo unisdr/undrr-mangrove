@@ -1,0 +1,125 @@
+/**
+ * Empty State
+ *
+ * Placeholder presentation for empty search results, missing data, or filtered-out views.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Atom/EmptyState/EmptyState.mdx
+ */
+// Empty state — what a list, table, chart or dashboard tile shows when it has
+// no content to show.
+// -
+// Sourced from the DELTA design system boards "Empty State – Indicators and
+// Charts", "Empty State – Records List" and "Empty State – Analysis": a
+// centred grey glyph above a short message, with a compact form for indicator
+// tiles and chart wells.
+// -
+// Two deliberate departures from those boards, both for WCAG 2.2 AA:
+//   * the boards set "No data" in black at 25% opacity (1.6:1). The text token
+//     here is neutral-500 (5.74:1 on white).
+//   * the boards show only a message. This adds an optional action slot,
+//     because an empty state that cannot be acted on is a dead end.
+// -
+// Usage:
+//   <div class="mg-empty-state">
+//     <div class="mg-empty-state__media" aria-hidden="true"><svg …></svg></div>
+//     <h2 class="mg-empty-state__title">No records yet</h2>
+//     <p class="mg-empty-state__description">…</p>
+//     <div class="mg-empty-state__actions"><a class="mg-button" …>Add</a></div>
+//   </div>
+
+.mg-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--mg-empty-state-gap);
+  padding: var(--mg-empty-state-padding);
+  font-family: var(--mg-font-family-text);
+  text-align: center;
+
+  &__media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--mg-empty-state-media-size);
+    block-size: var(--mg-empty-state-media-size);
+
+    // Inline SVGs drawn with currentColor pick this up; so does an icon font.
+    color: var(--mg-empty-state-media-color);
+
+    > svg,
+    > img {
+      inline-size: 100%;
+      block-size: auto;
+    }
+  }
+
+  // Class, not a tag: the heading level belongs to the page, and inside a
+  // table cell a <p> is often the honest choice.
+  &__title {
+    margin: 0;
+    font-family: var(--mg-font-family-ui);
+    font-size: var(--mg-empty-state-title-font-size);
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--mg-empty-state-title-color);
+  }
+
+  &__description {
+    max-inline-size: var(--mg-empty-state-max-inline-size);
+    margin: 0;
+    font-size: var(--mg-empty-state-text-font-size);
+    line-height: 1.5;
+    color: var(--mg-empty-state-text-color);
+    text-wrap: pretty;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--mg-empty-state-actions-gap);
+    align-items: center;
+    justify-content: center;
+    margin-block-start: var(--mg-spacing-50);
+  }
+}
+
+// --panel: a tinted well, for a dashboard tile or a chart that has no series.
+.mg-empty-state--panel {
+  background-color: var(--mg-empty-state-panel-background);
+  border-radius: var(--mg-empty-state-panel-radius);
+}
+
+// --compact: indicator tiles and small chart wells, where the message is a
+// bare "No data" and there is no room for a heading.
+.mg-empty-state--compact {
+  gap: var(--mg-spacing-50);
+  padding: var(--mg-empty-state-compact-padding);
+
+  .mg-empty-state__media {
+    inline-size: var(--mg-empty-state-compact-media-size);
+    block-size: var(--mg-empty-state-compact-media-size);
+  }
+
+  .mg-empty-state__title,
+  .mg-empty-state__description {
+    font-size: var(--mg-empty-state-compact-font-size);
+  }
+}
+
+// --start: left-aligned in LTR, right-aligned in RTL.
+.mg-empty-state--start {
+  align-items: flex-start;
+  text-align: start;
+
+  .mg-empty-state__actions {
+    justify-content: flex-start;
+  }
+}
+
+// Inside a table, the empty state lives in a full-width cell so the table's
+// row/column semantics stay intact.
+.mg-empty-state-cell {
+  padding: 0;
+  text-align: center;
+}

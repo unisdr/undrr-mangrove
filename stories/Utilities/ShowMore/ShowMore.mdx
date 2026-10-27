@@ -3,15 +3,30 @@ import * as ShowMoreStories from './ShowMore.stories';
 
 <Meta of={ShowMoreStories} />
 
-> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
 
 # Show more
 
-A vanilla JavaScript utility that collapses content behind a "show more" button. This is **not a React component** — it works with plain HTML and is initialized by calling the `mgShowMore()` function. The React wrapper in Storybook is only used here for demonstration purposes.
+A vanilla JavaScript utility that collapses content behind a "show more" button. It works with plain HTML through `mgShowMore()` and also provides a React wrapper.
+
+## React labels and dynamic content
+
+Set `labelCollapsed` and `labelOpen` per instance; their defaults are "Show more"
+and "Show less". Labels update when the props change, including while expanded.
+The legacy item `button_text` field is accepted but no longer controls the
+initial rendered label: use `labelCollapsed` to keep server-rendered and enhanced
+wording consistent. The old field was already replaced on initialisation.
+
+Each item initialises only its own toggle and removes its handlers on unmount.
+Items added after mount work immediately; existing expanded items stay expanded.
+React-owned toggles opt out of the vanilla document-wide auto-initialiser.
+The vanilla API remains idempotent and now returns an optional cleanup function
+that removes only handlers installed by that call.
 
 ## Default
 
-The button is placed directly after the collapsible content.
+The button is placed directly after the collapsible content. Use the locale
+toolbar to preview translated content and toggle labels, including Arabic.
 
 <Canvas of={ShowMoreStories.DefaultShowMore} />
 
@@ -21,9 +36,83 @@ The toggle button does not need to be inside or adjacent to the content containe
 
 <Canvas of={ShowMoreStories.DetachedButton} />
 
+## Two on one page
+
+Two toggles may share a target selector — the default one, or the same class on
+two blocks — as long as each pair sits in its own parent. Each toggle then
+reveals its own content. Two toggles under the _same_ parent still cannot be
+told apart — see "How the target is resolved" below.
+
+<Canvas of={ShowMoreStories.TwoOnOnePage} />
+
+## Only when long
+
+Add `data-mg-show-more-min-hidden-lines` (React: `minHiddenLines`) to collapse content only when it runs at least that many lines past the collapsed height. Shorter content stays open and the toggle gets `hidden`, so a template can wrap every body field in ShowMore without offering a "Show more" that reveals one more sentence.
+
+- The collapsed height comes from CSS: the computed `max-height` of `.mg-show-more--collapsed`, which is `--mg-show-more-height`. Any unit works; `lh` sizes it in lines of the content's own line height.
+- A line is the content's computed `line-height`. An empty attribute means 1 line.
+- The decision does not depend on whether the content is open, so it cannot flip back and forth. It is made again, in the next animation frame, when the content resizes, until the reader uses the toggle.
+- Ship the toggle with `hidden` in server markup. Without JavaScript the content is simply open and no dead button shows; the script reveals the toggle when it is needed.
+
+For "show about 8 lines, but collapse only when at least 6 more would be hidden" (so only bodies over about 14 lines collapse), as the [Collection page](?path=/docs/patterns-collection-page--docs) does:
+
+<Canvas of={ShowMoreStories.OnlyWhenLong} />
+
+<Source
+  language="html"
+  code={`
+<div id="collection-body" style="--mg-show-more-height: 8lh">
+  <p>Body text of any length…</p>
+</div>
+<button type="button" hidden
+   class="mg-button mg-button-secondary mg-show-more--button"
+   data-mg-show-more="true"
+   data-mg-show-more-target="#collection-body"
+   data-mg-show-more-min-hidden-lines="6"
+   data-mg-show-more-label-collapsed="Show more"
+   data-mg-show-more-label-open="Show less">
+  <span data-mg-show-more-label>Show more</span><span class="mg-u-sr-only"> about this collection</span>
+</button>
+`}
+/>
+
+### Hidden context in the label
+
+When the toggle contains a `[data-mg-show-more-label]` element, only that element's text changes on each toggle, so visually hidden context beside it ("about this collection") stays in the accessible name.
+
+### Show less
+
+Collapsing a long block pulls the toggle up the page, often out of view. When that happens the script scrolls the heading just before the content (or the content itself) back into view. It honours `scroll-padding-top`, so a sticky bar such as [On this page nav](?path=/docs/components-navigation-on-this-page-nav--docs) does not cover it, and `prefers-reduced-motion`.
+
+### Analytics
+
+The toggle carries `data-vf-analytics-label`, which the UNDRR click tracker reads: "Show more" while collapsed and "Show less" while open, in English whatever the page language. Set `data-mg-show-more-analytics-collapsed` and `data-mg-show-more-analytics-open` for page-specific labels. A `data-vf-analytics-label` you set yourself, without those two, is left as it is.
+
 ## How it works
 
 The `mgShowMore()` function finds all elements with `data-mg-show-more` and wires up click handlers. On click, the targeted container's `mg-show-more--collapsed` class is toggled, which controls `max-height`, `overflow`, and a CSS `mask-image` fade.
+
+### How the target is resolved
+
+A toggle's target selector is resolved nearest scope first: the script climbs
+the toggle's ancestors and takes the first match it finds inside one.
+
+Revealed content need not be a sibling or descendant of its toggle, so there is
+no container the lookup can be confined to — but it can be ordered. For the
+canonical markup the walk finds the adjacent wrapper. For two blocks in
+separate subtrees each toggle finds its own, so two toggles left on the default
+`.mg-show-more--container` no longer both drive the first block.
+
+A target elsewhere on the page is still found. For a toggle that is in the
+document the walk ends at `<html>`, which contains everything else, so its last
+step is the document-wide lookup — the detached button above resolves the same
+way it always did. The walk is never worse than the old `document.querySelector`;
+it only prefers a nearer match when there is one.
+
+Two toggles inside the **same** parent cannot be told apart this way: the first
+scope holding one target holds both, and the earlier one in document order wins.
+Give each of those its own selector, ideally an `id` — which is what the React
+wrapper does for you.
 
 ### HTML structure
 
@@ -34,25 +123,78 @@ The `mgShowMore()` function finds all elements with `data-mg-show-more` and wire
 </div>
 
 <!-- Toggle button (can be anywhere on the page) -->
-<a href="#"
+
+<button type="button"
    class="mg-button mg-button-primary mg-show-more--button"
    data-mg-show-more="true"
    data-mg-show-more-target=".my-content"
    data-mg-show-more-label-open="Show less"
    data-mg-show-more-label-collapsed="Show more">
   Show more
-</a>
+</button>
 `} />
+
+The toggle must be a `<button type="button">`. Earlier versions of these docs
+showed an `<a href="#">`; that anchor announced as a link and offered a dead
+destination when the script failed to load. `mgShowMore()` still adds
+`role="button"` and a Space handler to an anchor it finds, so existing markup
+keeps working, but new markup should use a button.
+
+### Accessibility
+
+`mgShowMore()` wires these for you — do not hand-write them:
+
+- `aria-controls` on the toggle, pointing at the content container. If the
+  container has no `id`, the script assigns one (`mg-show-more-target-N`).
+- `role="button"` on a toggle that is not already a `<button>`, together with
+  a `keydown` handler so Space activates it. An anchor does not respond to
+  Space on its own, and `role="button"` promises that it does.
+- Expansion when keyboard focus enters a collapsed container, so Tab never
+  parks focus on a control clipped out of view (WCAG 2.4.7 Focus Visible,
+  2.4.11 Focus Not Obscured).
+
+#### The collapse is visual only, and the toggle is not a disclosure
+
+The toggle deliberately carries **no `aria-expanded`**, and the component is
+not a disclosure widget in the WAI-ARIA sense. Collapsing is done with
+`max-height`, `overflow: hidden` and a `mask-image` fade. All three are paint
+and layout effects: the clipped text stays in the accessibility tree and the
+clipped controls stay in the tab order. Verified in Chromium against the
+collapsed container — the accessibility tree lists every clipped paragraph,
+and tabbing goes straight through a link below the clip line.
+
+So a screen reader reads the whole block whether it looks collapsed or not.
+An `aria-expanded="false"` on the toggle would be a false statement about the
+content, which is worse than no statement: it tells a screen reader user
+there is hidden content to reveal when there is none, and it makes the toggle
+look like a control they need to operate when operating it changes nothing
+they can perceive. Nothing is lost to them — the content is all there.
+
+Making the toggle an honest disclosure would mean genuinely hiding the
+remainder (`hidden`, `display: none` or `content-visibility: hidden`), and
+that is incompatible with a fade that cuts mid-line: you can only hide whole
+elements, and the component's documented content model is a single run of
+text in one container, with no child boundary to cut at. Choosing a real
+disclosure therefore means giving up the fade, which is a visual change for
+every consumer. Until that is decided, the component says nothing it cannot
+back up.
+
+If you need a true disclosure — content that is genuinely hidden until
+revealed — build it from whole elements and toggle `hidden` on them, rather
+than reaching for this utility.
 
 ### Data attributes
 
-| Attribute | Required | Description |
-|---|---|---|
-| `data-mg-show-more` | Yes | Set to `"true"` on the toggle button to register it |
-| `data-mg-show-more-target` | No | CSS selector for the content container. Defaults to `".mg-show-more--container"` |
-| `data-mg-show-more-label-collapsed` | No | Button text when content is collapsed. Defaults to "Show more" |
-| `data-mg-show-more-label-open` | No | Button text when content is expanded. Defaults to "Show less" |
-| `data-mg-show-more-skip-auto-init` | No | Presence-based. Skips this button during auto-init. Call `mgShowMore([element])` to initialize manually. |
+| Attribute                               | Required | Description                                                                                                                            |
+| --------------------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `data-mg-show-more`                     | Yes      | Set to `"true"` on the toggle button to register it                                                                                    |
+| `data-mg-show-more-target`              | No       | CSS selector for the content container, resolved nearest ancestor first. Defaults to `".mg-show-more--container"`                      |
+| `data-mg-show-more-label-collapsed`     | No       | Button text when content is collapsed. Defaults to "Show more"                                                                         |
+| `data-mg-show-more-label-open`          | No       | Button text when content is expanded. Defaults to "Show less"                                                                          |
+| `data-mg-show-more-skip-auto-init`      | No       | Presence-based. Skips this button during auto-init. Call `mgShowMore([element])` to initialize manually.                               |
+| `data-mg-show-more-min-hidden-lines`    | No       | Collapse only when the content runs at least this many lines past the collapsed height (empty means 1); otherwise the toggle is hidden |
+| `data-mg-show-more-analytics-collapsed` | No       | Analytics label while collapsed. Defaults to "Show more"                                                                               |
+| `data-mg-show-more-analytics-open`      | No       | Analytics label while open. Defaults to "Show less"                                                                                    |
 
 ### JavaScript initialization
 
@@ -60,7 +202,7 @@ The script file uses ES module `export` statements, so you **must** load it with
 
 <Source language="html" code={`
 <!-- JS: type="module" is required -->
-<script type="module" src="https://assets.undrr.org/static/mangrove/1.7.0/js/show-more.js"></script>
+<script type="module" src="https://assets.undrr.org/mangrove/2.3.0/js/show-more.js"></script>
 `} />
 
 The script auto-initializes on `DOMContentLoaded` (or immediately if the DOM is already parsed). Module scripts are deferred by default, so no wrapper is needed.
@@ -68,7 +210,7 @@ The script auto-initializes on `DOMContentLoaded` (or immediately if the DOM is 
 For dynamically added content, import and call the init function:
 
 <Source language="js" code={`
-import { mgShowMore } from 'https://assets.undrr.org/static/mangrove/1.7.0/js/show-more.js';
+import { mgShowMore } from 'https://assets.undrr.org/mangrove/2.3.0/js/show-more.js';
 
 // Initialize specific buttons
 mgShowMore([myButton]);
@@ -76,23 +218,24 @@ mgShowMore([myButton]);
 
 ### API
 
-| Function | Description |
-|----------|-------------|
+| Function             | Description                                                                                                                            |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
 | `mgShowMore(scope?)` | Initializes show-more buttons. `scope` is an optional `NodeList` or array of elements; defaults to all `[data-mg-show-more]` elements. |
 
 ### Skipping auto-initialization
 
-Add `data-mg-show-more-skip-auto-init` to skip a button during auto-init. This is useful when another script must run first (e.g. Drupal behaviors):
+Add `data-mg-show-more-skip-auto-init` to skip a button during auto-init. This is useful when another script must run first (e.g. Drupal behaviors). Call `mgShowMore` yourself once that setup is complete:
 
 <Source language="html" code={`
-<a data-mg-show-more data-mg-show-more-skip-auto-init
-   data-mg-show-more-target=".my-content">Show more</a>
+<button type="button" data-mg-show-more data-mg-show-more-skip-auto-init
+   data-mg-show-more-target=".my-content">Show more</button>
 
 <script type="module">
-  import { mgShowMore } from 'https://assets.undrr.org/static/mangrove/1.7.0/js/show-more.js';
-  // Initialize after other setup is complete
+  import {mgShowMore} from
+  'https://assets.undrr.org/mangrove/2.3.0/js/show-more.js';
   mgShowMore([document.querySelector('[data-mg-show-more-skip-auto-init]')]);
 </script>
+
 `} />
 
 When you pass elements explicitly via `scope`, the skip attribute is ignored — the consumer is intentionally initializing.
@@ -107,15 +250,35 @@ The collapsed height is controlled by the `--mg-show-more-height` CSS custom pro
   --mg-show-more-height: 150px;
 }
 
-/* Or per instance */
+/_ Or per instance _/
 .my-content {
-  --mg-show-more-height: 300px;
+--mg-show-more-height: 300px;
 }
 `} />
 
 ## Changelog
 
-- **1.2** — 2026-03-27: Added `data-mg-show-more-skip-auto-init` attribute, `type="module"` self-init, idempotency guard, single-element scope support
-- **1.1.1** — 2026-03-05: Fixed event listener leak — target click handler now registers once at init instead of on every toggle; clicking expanded content no longer inadvertently collapses it
-- **1.1** — 2026-02-23: Replaced white gradient overlay with CSS `mask-image` for background-agnostic fade effect
-- **1.0** — 2023-08-24: Released component
+- **1.7**, 2026-10-14 ([undrr/web-backlog#2728](https://gitlab.com/undrr/web-backlog/-/work_items/2728)): **Behaviour change for existing toggles:** the analytics label is now written to `data-vf-analytics-label`, the attribute the UNDRR click tracker reads, and names the action ("Show more" or "Show less"). The script used to write it to `data-data-vf-google-analytics-label`, which nothing read, so toggles reported their visible, translated text. Expect those clicks to appear under the new labels. Also new:
+  - `data-mg-show-more-min-hidden-lines` (React: `minHiddenLines`) collapses content only when at least that many lines would be hidden. The collapsed height is read from CSS, so the decision cannot flip with the open state. Re-measures run in an animation frame and never click the toggle.
+  - Initialisation and re-measures change state without clicking the toggle, so they no longer reach click listeners (such as one that reports clicks to analytics). Two paths still call `item.click()` on purpose, because they stand for a reader's action: keyboard focus moving into collapsed content, and a click on the collapsed content itself. The Drupal ShowMore wrapper relies on those clicks.
+  - A toggle shipped `hidden` is revealed when it is needed.
+  - A `[data-mg-show-more-label]` child keeps visually hidden context in the toggle's name.
+  - Collapsing scrolls the content's heading back into view when the toggle has left the viewport.
+  - Per-state analytics labels, and a `.mg-show-more--button[hidden]` rule, because `.mg-button` sets `display`.
+  - New "Only when long" story.
+
+- **1.6**, 2026-09-20 ([#1239](https://github.com/unisdr/undrr-mangrove/issues/1239)): Added translated per-instance React labels with generic defaults, scoped per-item enhancement, dynamic-item support and lifecycle cleanup. The default story's locale toolbar previews both translated toggle labels. Regression tests cover late items, translation changes and StrictMode cleanup.
+
+- **1.5**, 2026-09-18 ([#1238](https://github.com/unisdr/undrr-mangrove/pull/1238), [#1228](https://github.com/unisdr/undrr-mangrove/issues/1228)): Two toggles sharing a target selector each reveal their own content. `mgShowMore()` resolved the target with `document.querySelector`, so two toggles left on the default `.mg-show-more--container` both drove the first block on the page. The target is now resolved nearest scope first: the script climbs the toggle's ancestors and takes the first match inside one, falling back to the document if the walk reaches `<html>` without matching. Revealed content need not be a sibling or descendant of its toggle, so the lookup cannot be confined to a container, but it can be ordered, and ordering it is never worse. Canonical markup finds the adjacent wrapper, two blocks in separate subtrees each find their own, and a genuinely detached target resolves exactly as before.
+  - The React `ShowMore` wrapper pointed each toggle at `.${collapsable_wrapper_class}`. Its items are flat siblings, so they share a parent and the ancestor walk cannot separate them: two items given the same wrapper class still collided. Each item now carries a minted id (`mg-show-more-{useId}-{index}`) and its toggle targets that id. `collapsable_wrapper_class` goes back to being what its documentation always said it was (a styling hook), and it no longer has to be unique. Consumers reading the class off the rendered markup are unaffected; the wrapper keeps it.
+  - A new "Two on one page" story renders two vanilla toggles on the default selector and two React items sharing a wrapper class. Tests cover two instances on one page for both paths.
+- **1.4**, 2026-09-18 ([#1193](https://github.com/unisdr/undrr-mangrove/pull/1193)): Breaking: deleted the deprecated `ShowMore.scss` alias, which only forwarded to `show-more.scss` and emitted a deprecation `@warn`. The npm package no longer ships `scss/Utilities/ShowMore/ShowMore.scss`; import `scss/Utilities/ShowMore/show-more` instead. No CSS behaviour change.
+- **1.3**, 2026-09-17 ([#1190](https://github.com/unisdr/undrr-mangrove/pull/1190)): **Visible change to the documented markup.** The toggle is now `<button type="button">` rather than `<a href="#">`, and `mgShowMore()` maintains `aria-controls` on it, assigning the target an id when it has none. The anchor announced as a link and offered a dead destination if the script failed to load (WCAG 4.1.2). An anchor still present in consumer markup keeps working and is given `role="button"`, so copied markup does not break, but new markup should use a button.
+  - An anchor toggle now also gets a `keydown` handler, so Space activates it as `role="button"` promises. The click handler already suppressed the `href="#"` jump.
+  - The toggle does **not** carry `aria-expanded`, and the docs now say why. The collapse is `max-height` plus `overflow: hidden` plus a `mask-image` fade, all of which clip visually while leaving the content in the accessibility tree and the tab order, so there is no hidden content for `aria-expanded` to describe. An earlier draft of this change added it; it was removed rather than shipped as a claim the CSS does not deliver. Turning the utility into a real disclosure means hiding whole elements and losing the mid-line fade, which is a visual change held for its own decision.
+  - Focus entering a collapsed container now expands it. `overflow: hidden` left Tab landing on links clipped out of view in a box that cannot scroll to reveal them (WCAG 2.4.7, 2.4.11).
+  - The counter behind the generated `mg-show-more-target-N` ids moved from module scope to a `globalThis` symbol and now skips ids already present in the document, so two loaded copies of the script cannot mint the same id (the hazard fixed for `createHydrator` in [#1178](https://github.com/unisdr/undrr-mangrove/pull/1178)).
+- **1.2**, 2026-03-27: Added `data-mg-show-more-skip-auto-init` attribute, `type="module"` self-init, idempotency guard, single-element scope support
+- **1.1.1**, 2026-03-05: Fixed event listener leak: target click handler now registers once at init instead of on every toggle; clicking expanded content no longer inadvertently collapses it
+- **1.1**, 2026-02-23: Replaced white gradient overlay with CSS `mask-image` for background-agnostic fade effect
+- **1.0**, 2023-08-24: Released component
