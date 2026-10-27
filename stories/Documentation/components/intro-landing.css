@@ -1,0 +1,71 @@
+.mg-intro {
+  color: rgb(var(--mg-color-neutral-900));
+  padding-block-end: var(--mg-spacing-300);
+}
+
+.mg-intro > .mg-hero {
+  border-radius: var(--mg-radius-button);
+  overflow: hidden;
+}
+
+/*
+ * Storybook's docs typography reset ties in specificity with .mg-hero__title
+ * (both are a single class selector, since :where() zeroes everything inside
+ * it) and wins the tie because it's injected later, turning the immersive
+ * hero title black. Bump specificity to restore the hero's own title color.
+ */
+.mg-intro .mg-hero__title {
+  color: rgb(var(--mg-color-hero-title));
+}
+
+.mg-intro__statement {
+  padding-block: clamp(var(--mg-spacing-300), 8vw, var(--mg-spacing-600));
+}
+
+.mg-intro__statement > p {
+  color: rgb(var(--mg-color-neutral-700));
+  font-size: clamp(1.0625rem, 1.8vw, 1.3125rem);
+  line-height: 1.65;
+  margin: 0;
+}
+
+.mg-intro__eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  margin: 0 0 var(--mg-spacing-75);
+  text-transform: uppercase;
+}
+
+.mg-intro__section {
+  border-top: 1px solid rgb(var(--mg-color-neutral-400));
+  margin-top: clamp(var(--mg-spacing-300), 7vw, var(--mg-spacing-500));
+  padding-top: clamp(var(--mg-spacing-250), 6vw, var(--mg-spacing-400));
+}
+
+.mg-intro__statement h2,
+.mg-intro__section-heading h2 {
+  color: inherit;
+  font-size: clamp(1.875rem, 4vw, 3.25rem);
+  letter-spacing: -0.035em;
+  line-height: 1.08;
+  margin: 0;
+}
+
+.mg-intro__section-heading {
+  margin-bottom: var(--mg-spacing-200);
+}
+
+.mg-intro__section-heading > p:last-child {
+  color: rgb(var(--mg-color-neutral-700));
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  margin: var(--mg-spacing-100) 0 0;
+  max-width: 48rem;
+}
+
+.mg-intro__section .mg-card__icon {
+  height: 100%;
+  max-width: none;
+  min-height: 19rem;
+}

@@ -23,7 +23,7 @@ describe('Radio', () => {
 
   it('renders label before radio when labelPosition is "before"', () => {
     const { container } = render(
-      <Radio label="Option A" value="a" name="test" labelPosition="before" />,
+      <Radio label="Option A" value="a" name="test" labelPosition="before" />
     );
     const wrapper = container.querySelector('.mg-form-check');
     const children = Array.from(wrapper.children);
@@ -33,7 +33,7 @@ describe('Radio', () => {
 
   it('renders label after radio by default', () => {
     const { container } = render(
-      <Radio label="Option A" value="a" name="test" />,
+      <Radio label="Option A" value="a" name="test" />
     );
     const wrapper = container.querySelector('.mg-form-check');
     const children = Array.from(wrapper.children);
@@ -54,7 +54,7 @@ describe('Radio', () => {
   it('calls onChange when clicked', () => {
     const handleChange = jest.fn();
     render(
-      <Radio label="Option A" value="a" name="test" onChange={handleChange} />,
+      <Radio label="Option A" value="a" name="test" onChange={handleChange} />
     );
     fireEvent.click(screen.getByRole('radio'));
     expect(handleChange).toHaveBeenCalled();
@@ -67,14 +67,14 @@ describe('Radio', () => {
 
   it('applies BEM class names', () => {
     const { container } = render(
-      <Radio label="Option A" value="a" name="test" />,
+      <Radio label="Option A" value="a" name="test" />
     );
     expect(container.querySelector('.mg-form-check')).toBeInTheDocument();
     expect(
-      container.querySelector('.mg-form-check__input--radio'),
+      container.querySelector('.mg-form-check__input--radio')
     ).toBeInTheDocument();
     expect(
-      container.querySelector('.mg-form-check__label'),
+      container.querySelector('.mg-form-check__label')
     ).toBeInTheDocument();
   });
 
@@ -83,7 +83,7 @@ describe('Radio', () => {
       <FormGroup legend="Choose">
         <Radio label="A" value="a" name="group" defaultChecked />
         <Radio label="B" value="b" name="group" />
-      </FormGroup>,
+      </FormGroup>
     );
     const radios = screen.getAllByRole('radio');
     expect(radios[0]).toBeChecked();
@@ -102,12 +102,12 @@ describe('Radio', () => {
         name="test-error"
         error
         errorText="Please select an option"
-      />,
+      />
     );
     const radio = screen.getByRole('radio');
     expect(radio).toHaveAttribute('aria-invalid', 'true');
     expect(screen.getByRole('alert')).toHaveTextContent(
-      'Please select an option',
+      'Please select an option'
     );
   });
 
@@ -119,13 +119,13 @@ describe('Radio', () => {
         name="test-error"
         error
         errorText="Please select an option"
-      />,
+      />
     );
     const radio = screen.getByRole('radio');
     const describedBy = radio.getAttribute('aria-describedby');
     expect(describedBy).toBeTruthy();
     expect(document.getElementById(describedBy)).toHaveTextContent(
-      'Please select an option',
+      'Please select an option'
     );
   });
 
@@ -136,17 +136,22 @@ describe('Radio', () => {
 
   it('does not render error text when error is false', () => {
     render(
-      <Radio label="Option A" value="a" name="test" errorText="Should not appear" />,
+      <Radio
+        label="Option A"
+        value="a"
+        name="test"
+        errorText="Should not appear"
+      />
     );
     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
   });
 
   it('applies error BEM class to input', () => {
     const { container } = render(
-      <Radio label="Option A" value="a" name="test" error errorText="Error" />,
+      <Radio label="Option A" value="a" name="test" error errorText="Error" />
     );
     expect(
-      container.querySelector('.mg-form-check__input--error'),
+      container.querySelector('.mg-form-check__input--error')
     ).toBeInTheDocument();
   });
 
@@ -156,7 +161,7 @@ describe('Radio', () => {
 
   it('has no a11y violations', async () => {
     const { container } = render(
-      <Radio label="Option A" value="a" name="test" />,
+      <Radio label="Option A" value="a" name="test" />
     );
     expect(await axe(container)).toHaveNoViolations();
   });
@@ -169,7 +174,7 @@ describe('Radio', () => {
         name="test-error"
         error
         errorText="Please select an option"
-      />,
+      />
     );
     expect(await axe(container)).toHaveNoViolations();
   });
@@ -179,7 +184,7 @@ describe('Radio', () => {
       <FormGroup legend="Priority">
         <Radio label="Low" value="low" name="priority" />
         <Radio label="High" value="high" name="priority" />
-      </FormGroup>,
+      </FormGroup>
     );
     expect(await axe(container)).toHaveNoViolations();
   });

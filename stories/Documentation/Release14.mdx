@@ -1,5 +1,6 @@
 import { Meta, Markdown } from '@storybook/addon-docs/blocks';
 import ReleaseNotes from '../../docs/RELEASE-1.4.md?raw';
+import { linkDocsPages } from './docsPageLinks';
 
 <Meta
   title="Getting started/Release notes: v1.4"
@@ -9,4 +10,4 @@ import ReleaseNotes from '../../docs/RELEASE-1.4.md?raw';
   }}
 />
 
-<Markdown>{ReleaseNotes}</Markdown>
+<Markdown>{linkDocsPages(ReleaseNotes, 'docs/RELEASE-1.4.md')}</Markdown>

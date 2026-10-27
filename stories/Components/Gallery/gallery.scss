@@ -1,8 +1,20 @@
+/**
+ * Gallery
+ *
+ * Thumbnail grid gallery and full-screen lightbox image viewer with keyboard navigation.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Gallery/Gallery.mdx
+ */
+@use "../../assets/scss/breakpoints" as *;
+@use "../../assets/scss/mixins" as *;
+@use "../../assets/scss/config" as *;
+
 /* Photo Gallery Component */
 .mg-gallery {
   position: relative;
   display: grid;
-  gap: $mg-spacing-200;
+  gap: var(--mg-spacing-200);
   width: 100%;
 
   // Mobile: stack vertically (main → description → thumbnails)
@@ -37,7 +49,7 @@
   &__main {
     grid-area: main;
     position: relative;
-    background-color: $mg-color-white;
+    background-color: rgb(var(--mg-color-white));
     overflow: hidden;
   }
 
@@ -47,14 +59,13 @@
   }
 
   &:focus-visible {
-    outline: 2px solid $mg-color-interactive;
-    outline-offset: 2px;
+    @include mg-focus-ring;
   }
 
   &__image-wrapper {
     width: 100%;
     aspect-ratio: 16 / 9;
-    background-color: $mg-color-neutral-50;
+    background-color: rgb(var(--mg-color-neutral-50));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -84,7 +95,7 @@
     width: 100%;
     height: 100%;
     overflow: auto;
-    padding: $mg-spacing-200;
+    padding: var(--mg-spacing-200);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -98,45 +109,51 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    color: rgb(var(--mg-color-interactive));
+    font-size: var(--mg-spacing-300);
     z-index: 3; // loading spinner above nav buttons — local to gallery stacking context
-  }
 
-  &__spinner {
-    width: $mg-spacing-300; // 30px
-    height: $mg-spacing-300;
-    border: 4px solid $mg-color-neutral-300;
-    border-top-color: $mg-color-interactive;
-    border-radius: 50%;
-    animation: mg-gallery-spin 0.8s linear infinite;
-  }
+    @media (prefers-reduced-motion: reduce) {
+      // The shared Loader reveals translated text. Keep it inside the stage
+      // and give the label a stable surface over arbitrary video/posters.
+      width: max-content;
 
-  @keyframes mg-gallery-spin {
-    to {
-      transform: rotate(360deg);
+      // Reserve both 44px arrow targets, their largest inset, and a focus gap.
+      $navigation-space: calc(
+        #{mg-rem(44)} + var(--mg-spacing-100) + var(--mg-spacing-50)
+      );
+
+      max-width: calc(100% - 2 * $navigation-space);
+      box-sizing: border-box;
+      pointer-events: none;
+      padding: var(--mg-spacing-75);
+      background: rgb(var(--mg-color-neutral-0));
+      color: rgb(var(--mg-color-text));
+      font-size: var(--mg-font-size-300);
     }
   }
 
   // Description area
   &__description {
     grid-area: description;
-    padding: $mg-spacing-150 0;
+    padding: var(--mg-spacing-150) 0;
 
     @include devicebreak(medium) {
-      padding: $mg-spacing-150;
+      padding: var(--mg-spacing-150);
     }
   }
 
   &__title {
-    font-family: $mg-font-family-headings;
-    font-size: $mg-font-size-400;
+    font-family: var(--mg-font-family-ui);
+    font-size: var(--mg-font-size-400);
     font-weight: 700;
-    margin-bottom: $mg-spacing-50;
-    color: $mg-color-text;
+    margin-bottom: var(--mg-spacing-50);
+    color: rgb(var(--mg-color-text));
   }
 
   &__caption {
-    font-size: $mg-font-size-300;
-    color: $mg-color-neutral-800;
+    font-size: var(--mg-font-size-300);
+    color: rgb(var(--mg-color-neutral-800));
     line-height: 1.5;
     margin: 0;
   }
@@ -145,8 +162,8 @@
   &__thumbnails {
     grid-area: thumbnails;
     display: flex;
-    gap: $mg-spacing-100;
-    padding: $mg-spacing-100 0;
+    gap: var(--mg-spacing-100);
+    padding: var(--mg-spacing-100) 0;
 
     // Mobile: horizontal scroll
     flex-direction: row;
@@ -172,22 +189,23 @@
 
     // Custom scrollbar styling
     scrollbar-width: thin;
-    scrollbar-color: $mg-color-neutral-500 $mg-color-neutral-100;
+    scrollbar-color: rgb(var(--mg-color-neutral-500))
+      rgb(var(--mg-color-neutral-100));
 
     &::-webkit-scrollbar {
-      width: $mg-spacing-50;
-      height: $mg-spacing-50;
+      width: var(--mg-spacing-50);
+      height: var(--mg-spacing-50);
     }
 
     &::-webkit-scrollbar-track {
-      background: $mg-color-neutral-100;
+      background: rgb(var(--mg-color-neutral-100));
     }
 
     &::-webkit-scrollbar-thumb {
-      background: $mg-color-neutral-500;
+      background: rgb(var(--mg-color-neutral-500));
 
       &:hover {
-        background: $mg-color-neutral-600;
+        background: rgb(var(--mg-color-neutral-600));
       }
     }
   }
@@ -195,17 +213,20 @@
   // Individual thumbnail button
   &__thumbnail {
     flex-shrink: 0;
-    width: $mg-spacing-400; // 50px
-    height: $mg-spacing-400;
+    width: var(--mg-spacing-400); // 50px
+    height: var(--mg-spacing-400);
     border: none;
     border-left: 4px solid transparent;
     overflow: hidden;
     cursor: pointer;
-    background: $mg-color-neutral-100;
+    background: rgb(var(--mg-color-neutral-100));
     padding: 0;
     position: relative;
 
-    @include transition(border-color 0.2s ease);
+    @include transition(
+      border-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard)
+    );
 
     @include devicebreak(medium) {
       width: 100%;
@@ -214,8 +235,8 @@
     }
 
     .mg-gallery--thumbnails-bottom & {
-      width: $mg-spacing-400;
-      height: $mg-spacing-400;
+      width: var(--mg-spacing-400);
+      height: var(--mg-spacing-400);
       border-left: none;
       border-bottom: 4px solid transparent;
     }
@@ -229,11 +250,11 @@
     }
 
     &:hover {
-      border-left-color: $mg-color-neutral-400;
+      border-left-color: rgb(var(--mg-color-neutral-400));
 
       .mg-gallery--thumbnails-bottom & {
         border-left-color: transparent;
-        border-bottom-color: $mg-color-neutral-400;
+        border-bottom-color: rgb(var(--mg-color-neutral-400));
       }
     }
 
@@ -242,12 +263,11 @@
     }
 
     &:focus-visible {
-      outline: 2px solid $mg-color-interactive;
-      outline-offset: 2px;
+      @include mg-focus-ring;
     }
 
     &--active {
-      border-left-color: $mg-color-interactive;
+      border-left-color: rgb(var(--mg-color-interactive));
 
       &::after {
         content: "";
@@ -257,13 +277,13 @@
         bottom: 0;
         width: 1px;
         opacity: 0.5;
-        background: $mg-color-white;
+        background: rgb(var(--mg-color-white));
         pointer-events: none;
       }
 
       .mg-gallery--thumbnails-bottom & {
         border-left-color: transparent;
-        border-bottom-color: $mg-color-interactive;
+        border-bottom-color: rgb(var(--mg-color-interactive));
 
         &::after {
           top: auto;
@@ -277,7 +297,7 @@
     }
 
     &--html {
-      background: $mg-color-neutral-200;
+      background: rgb(var(--mg-color-neutral-200));
     }
   }
 
@@ -287,8 +307,8 @@
     justify-content: center;
     width: 100%;
     height: 100%;
-    font-size: $mg-font-size-400;
-    color: $mg-color-neutral-600;
+    font-size: var(--mg-font-size-400);
+    color: rgb(var(--mg-color-neutral-600));
   }
 
   &__thumbnail-html-preview {
@@ -301,7 +321,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: $mg-color-neutral-50;
+    background: rgb(var(--mg-color-neutral-50));
   }
 
   &__thumbnail-html-content {
@@ -329,14 +349,14 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: $mg-spacing-200; // 20px
-    height: $mg-spacing-200;
+    width: var(--mg-spacing-200); // 20px
+    height: var(--mg-spacing-200);
     display: flex;
     align-items: center;
     justify-content: center;
     background: rgb(0 0 0 / 0.6);
-    color: $mg-color-white;
-    font-size: $mg-font-size-100; // 10px
+    color: rgb(var(--mg-color-white));
+    font-size: var(--mg-font-size-100); // 10px
     pointer-events: none;
     padding-left: 2px;
   }
@@ -346,59 +366,66 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: $mg-spacing-300;
-    height: $mg-spacing-300;
+    width: mg-rem(44);
+    height: mg-rem(44);
     border: none;
-    background: $mg-color-neutral-700;
-    color: $mg-color-white;
-    font-size: $mg-font-size-400;
+    border-radius: 50%;
+    background: rgb(var(--mg-color-neutral-700));
+    color: rgb(var(--mg-color-white));
+    font-size: var(--mg-font-size-400);
     cursor: pointer;
     z-index: 2; // nav button above gallery images — local to gallery stacking context
     display: flex;
     align-items: center;
     justify-content: center;
 
-    @include transition(background-color 0.2s, opacity 0.2s);
+    @include transition(
+      background-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard),
+      opacity var(--mg-motion-duration-fast) var(--mg-motion-easing-standard)
+    );
 
     &:hover {
-      background: $mg-color-neutral-600;
+      background: rgb(var(--mg-color-neutral-600));
     }
 
     &:focus {
       outline: none;
     }
 
+    // The pill is dark --mg-color-neutral-700, but the ring is offset 2px, so
+    // it is drawn clear of the pill on the --mg-color-neutral-50 letterbox of
+    // __image-wrapper, not on the pill. Measured there the default ring is
+    // 4.50:1 and an inverse ring 1.24:1 -- invisible. Keep the default ring.
     &:focus-visible {
-      outline: 2px solid $mg-color-interactive;
-      outline-offset: 2px;
+      @include mg-focus-ring;
     }
 
     &:disabled {
-      background: $mg-color-neutral-300;
+      background: rgb(var(--mg-color-neutral-300));
       cursor: not-allowed;
       opacity: 0.5;
     }
 
     &--prev {
-      left: $mg-spacing-100;
+      left: var(--mg-spacing-100);
     }
 
     &--next {
-      right: $mg-spacing-100;
+      right: var(--mg-spacing-100);
     }
 
-    // Smaller arrows on mobile to avoid overlap with content
+    // Keep the recommended target size on touch viewports; use the inset to
+    // reduce overlap with the media rather than shrinking the control.
     @include devicebreak(small) {
-      width: $mg-spacing-250;
-      height: $mg-spacing-250;
-      font-size: $mg-font-size-300;
+      font-size: var(--mg-font-size-300);
 
       &--prev {
-        left: $mg-spacing-50;
+        left: var(--mg-spacing-50);
       }
 
       &--next {
-        right: $mg-spacing-50;
+        right: var(--mg-spacing-50);
       }
     }
   }
@@ -406,42 +433,50 @@
   // Corner arrow controls (bottom right position)
   &__arrow-controls {
     position: absolute;
-    bottom: $mg-spacing-100;
-    right: $mg-spacing-100;
+    bottom: var(--mg-spacing-100);
+    right: var(--mg-spacing-100);
     display: flex;
-    gap: $mg-spacing-100;
+    gap: var(--mg-spacing-100);
     z-index: 2; // arrow controls above gallery images — local to gallery stacking context
   }
 
   &__arrow-button {
-    width: $mg-spacing-300;
-    height: $mg-spacing-300;
+    width: mg-rem(44);
+    height: mg-rem(44);
     border: none;
-    background: $mg-color-neutral-700;
-    color: $mg-color-white;
-    font-size: $mg-font-size-400;
+    border-radius: 50%;
+    background: rgb(var(--mg-color-neutral-700));
+    color: rgb(var(--mg-color-white));
+    font-size: var(--mg-font-size-400);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
 
-    @include transition(background-color 0.2s, opacity 0.2s);
+    @include transition(
+      background-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard),
+      opacity var(--mg-motion-duration-fast) var(--mg-motion-easing-standard)
+    );
 
     &:hover {
-      background: $mg-color-neutral-600;
+      background: rgb(var(--mg-color-neutral-600));
     }
 
     &:focus {
       outline: none;
     }
 
+    // The pill is dark --mg-color-neutral-700, but the ring is offset 2px, so
+    // it is drawn clear of the pill on the --mg-color-neutral-50 letterbox of
+    // __image-wrapper, not on the pill. Measured there the default ring is
+    // 4.50:1 and an inverse ring 1.24:1 -- invisible. Keep the default ring.
     &:focus-visible {
-      outline: 2px solid $mg-color-interactive;
-      outline-offset: 2px;
+      @include mg-focus-ring;
     }
 
     &:disabled {
-      background: $mg-color-neutral-300;
+      background: rgb(var(--mg-color-neutral-300));
       cursor: not-allowed;
       opacity: 0.5;
     }
@@ -460,11 +495,11 @@
       border-right: 4px solid transparent;
 
       &:hover {
-        border-right-color: $mg-color-neutral-400;
+        border-right-color: rgb(var(--mg-color-neutral-400));
       }
 
       &--active {
-        border-right-color: $mg-color-interactive;
+        border-right-color: rgb(var(--mg-color-interactive));
 
         &::after {
           left: auto;
@@ -475,32 +510,33 @@
 
     &__arrow--prev {
       left: auto;
-      right: $mg-spacing-100;
+      right: var(--mg-spacing-100);
 
       @include devicebreak(small) {
-        right: $mg-spacing-50;
+        right: var(--mg-spacing-50);
       }
     }
 
     &__arrow--next {
       right: auto;
-      left: $mg-spacing-100;
+      left: var(--mg-spacing-100);
 
       @include devicebreak(small) {
-        left: $mg-spacing-50;
+        left: var(--mg-spacing-50);
       }
     }
 
     &__arrow-controls {
       right: auto;
-      left: $mg-spacing-100;
+      left: var(--mg-spacing-100);
     }
   }
 }
 
-// Arabic font override for gallery title.
-:lang(ar) {
-  .mg-gallery__title {
-    font-family: $mg-font-family-arabic-headings;
+@media (prefers-reduced-motion: reduce) {
+  .mg-gallery__thumbnail,
+  .mg-gallery__arrow,
+  .mg-gallery__arrow-button {
+    transition: none;
   }
 }

@@ -8,17 +8,22 @@ import PropTypes from 'prop-types';
  * @param {Array<{text: string}>} props.data  Ordered breadcrumb items; the last item is the current page
  * @param {string} [props.Color]              Color variant ('White' applies the white modifier class)
  */
-export function Breadcrumbcomponent({ data, Color, ...args }) {
+export function Breadcrumbcomponent({
+  data,
+  Color,
+  navLabel = 'breadcrumbs',
+  ...args
+}) {
   const lastIndex = data.length - 1;
 
   let colorClass = '';
-  if (Color == 'White') {
+  if (Color === 'White') {
     colorClass = 'mg-breadcrumb--white';
   }
 
   return (
     <nav
-      aria-label="breadcrumbs"
+      aria-label={navLabel}
       className={['mg-breadcrumb', `${colorClass}`].join(' ').trim()}
     >
       <ul>
@@ -33,9 +38,7 @@ export function Breadcrumbcomponent({ data, Color, ...args }) {
 
           return (
             <li key={i}>
-              <a href="#">
-                {item.text}
-              </a>
+              <a href="#">{item.text}</a>
             </li>
           );
         })}
@@ -53,4 +56,6 @@ Breadcrumbcomponent.propTypes = {
   ).isRequired,
   /** Color variant ('White' applies the white modifier class) */
   Color: PropTypes.string,
+  /** Accessible label for the nav element */
+  navLabel: PropTypes.string,
 };

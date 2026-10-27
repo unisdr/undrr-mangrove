@@ -1,3 +1,4 @@
+import { expect } from 'storybook/test';
 import { IconCard } from './IconCard';
 
 // Content translations for locale-aware stories
@@ -127,6 +128,16 @@ export default {
 
 // Default - Left aligned with text link
 export const Default = {
+  play: async ({ canvasElement }) => {
+    await canvasElement.ownerDocument.fonts.ready;
+    const visual = canvasElement.querySelector('.mg-card__visual');
+    const glyph = visual.querySelector('.mg-icon');
+    const view = canvasElement.ownerDocument.defaultView;
+    expect(
+      parseFloat(view.getComputedStyle(glyph).fontSize)
+    ).toBeLessThanOrEqual(72);
+    expect(visual.getBoundingClientRect().height).toBeLessThanOrEqual(73);
+  },
   render: (args, { globals: { locale } }) => {
     const content = getContent(locale);
     return (
@@ -135,7 +146,7 @@ export const Default = {
         data={[
           {
             icon: componentIcon,
-            imageScale: 'medium',
+            imageScale: 'small',
             title: content.components.title,
             summaryText: content.components.summaryText,
             linkText: content.components.linkText,
@@ -186,7 +197,7 @@ export const WithLabel = {
         data={[
           {
             icon: componentIcon,
-            imageScale: 'medium',
+            imageScale: 'small',
             label: content.latestFeatures.label,
             title: content.latestFeatures.title,
             summaryText: content.latestFeatures.summaryText,
@@ -213,7 +224,7 @@ export const GridLayout = {
           data={[
             {
               icon: componentIcon,
-              imageScale: 'medium',
+              imageScale: 'small',
               title: content.components.title,
               summaryText: content.components.summaryText,
               linkText: content.components.linkText,
@@ -226,7 +237,7 @@ export const GridLayout = {
           data={[
             {
               icon: settingsIcon,
-              imageScale: 'medium',
+              imageScale: 'small',
               title: content.configuration.title,
               summaryText: content.configuration.summaryText,
               linkText: content.configuration.linkText,
@@ -239,7 +250,7 @@ export const GridLayout = {
           data={[
             {
               icon: bookIcon,
-              imageScale: 'medium',
+              imageScale: 'small',
               title: content.documentation.title,
               summaryText: content.documentation.summaryText,
               linkText: content.documentation.linkText,
@@ -254,6 +265,20 @@ export const GridLayout = {
 
 // Mixed content - demonstrating different CTA options
 export const MixedContent = {
+  play: async ({ canvasElement }) => {
+    await canvasElement.ownerDocument.fonts.ready;
+    const cards = [...canvasElement.querySelectorAll('.mg-card')];
+    expect(cards).toHaveLength(3);
+    const rows = new Map();
+    cards.forEach(card => {
+      const { top, bottom } = card.getBoundingClientRect();
+      const key = Math.round(top);
+      rows.set(key, [...(rows.get(key) || []), bottom]);
+    });
+    rows.forEach(bottoms => {
+      expect(Math.max(...bottoms) - Math.min(...bottoms)).toBeLessThan(1);
+    });
+  },
   render: (args, { globals: { locale } }) => {
     const content = getContent(locale);
     return (
@@ -263,7 +288,7 @@ export const MixedContent = {
           data={[
             {
               icon: componentIcon,
-              imageScale: 'medium',
+              imageScale: 'small',
               title: content.getStarted.title,
               summaryText: content.getStarted.summaryText,
               button: content.getStarted.button,
@@ -277,7 +302,7 @@ export const MixedContent = {
           data={[
             {
               icon: settingsIcon,
-              imageScale: 'medium',
+              imageScale: 'small',
               title: content.configuration.title,
               summaryText: content.configuration.summaryText,
               linkText: content.configuration.linkText,
@@ -290,7 +315,7 @@ export const MixedContent = {
           data={[
             {
               icon: bookIcon,
-              imageScale: 'medium',
+              imageScale: 'small',
               title: content.documentation.title,
               summaryText: content.documentation.summaryText,
             },
@@ -313,7 +338,7 @@ export const WithLogo = {
         data={[
           {
             imgback:
-              'https://assets.undrr.org/static/logos/undrr/undrr-logo-square-blue.svg',
+              'https://assets.undrr.org/logos/undrr/undrr-logo-square-blue.svg',
             imgalt: 'UNDRR logo',
             imageScale: 'large',
             title: 'UNDRR',
@@ -328,7 +353,7 @@ export const WithLogo = {
         {...args}
         data={[
           {
-            imgback: 'https://assets.undrr.org/static/logos/irp/irp-logo.svg',
+            imgback: 'https://assets.undrr.org/logos/irp/irp-logo.svg',
             imgalt: 'IRP logo',
             imageScale: 'large',
             title: 'International Recovery Platform',
@@ -343,7 +368,7 @@ export const WithLogo = {
         {...args}
         data={[
           {
-            imgback: 'https://assets.undrr.org/static/logos/pw/pw-logo.svg',
+            imgback: 'https://assets.undrr.org/logos/pw/pw-logo.svg',
             imgalt: 'PreventionWeb logo',
             imageScale: 'large',
             title: 'PreventionWeb',
@@ -372,7 +397,7 @@ export const Negative = {
         data={[
           {
             icon: componentIcon,
-            imageScale: 'medium',
+            imageScale: 'small',
             title: content.components.title,
             summaryText: content.components.summaryText,
             linkText: content.components.linkText,
@@ -477,6 +502,21 @@ export const RealWorldImages = {
 
 // Feature cards with colored icon backgrounds (DELTA Resilience pattern)
 export const FeatureCards = {
+  play: async ({ canvasElement }) => {
+    await canvasElement.ownerDocument.fonts.ready;
+    const visuals = [...canvasElement.querySelectorAll('.mg-card__visual')];
+    expect(visuals.length).toBeGreaterThan(0);
+    visuals.forEach(visual => {
+      const badge = visual.querySelector('.mg-card__icon-wrap--colored');
+      expect(badge).not.toBeNull();
+      expect(
+        Math.abs(
+          visual.getBoundingClientRect().height -
+            badge.getBoundingClientRect().height
+        )
+      ).toBeLessThan(1);
+    });
+  },
   render: args => (
     <div className="mg-grid mg-grid__col-3">
       <IconCard
@@ -610,4 +650,42 @@ export const MixedIconTypes = {
   args: {
     centered: true,
   },
+};
+
+const horizontalRoutes = [
+  {
+    icon: 'mg-icon mg-icon-tags',
+    title: 'Understand the indicators',
+    summaryText:
+      'What the 38 indicators measure, and how the framework connects to the SDGs.',
+    link: '#',
+  },
+  {
+    icon: 'mg-icon mg-icon-chart-bar',
+    title: 'Explore the data',
+    summaryText:
+      'Global, regional and country progress against the seven global targets.',
+    link: '#',
+  },
+  {
+    // No summary: shows how the row behaves when the title is all there is.
+    icon: 'mg-icon mg-icon-file-alt',
+    title: 'Report on the Sendai Framework',
+    link: '#',
+  },
+];
+
+export const Horizontal = {
+  args: { orientation: 'horizontal', data: horizontalRoutes },
+};
+
+export const HorizontalGrid = {
+  name: 'Horizontal in a grid',
+  render: () => (
+    <div className="mg-grid mg-grid__col-3">
+      {horizontalRoutes.map(route => (
+        <IconCard key={route.title} orientation="horizontal" data={[route]} />
+      ))}
+    </div>
+  ),
 };

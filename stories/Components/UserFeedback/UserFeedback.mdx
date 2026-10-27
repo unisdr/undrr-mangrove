@@ -1,0 +1,184 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as UserFeedbackStories from './UserFeedback.stories';
+
+<Meta of={UserFeedbackStories} />
+
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
+
+# User feedback
+
+A compact page-level prompt for quick usefulness feedback plus an optional
+issue-report link. It is distilled from the
+[UNDRR microsites pattern](https://gitlab.com/undrr/drupal-microsites/-/commit/d74d9ab342fec6cbbaeeebf026f116e4da3bbecf)
+and aligned with Mangrove theme, translation, and hydration contracts.
+
+## When to use
+
+- Place it near the end of a content page, typically immediately before `Footer`.
+- Use the binary response for low-friction analytics, not as a substitute for user research.
+- Keep the issue link available when a product has a team or workflow that can act on reports.
+
+UserFeedback and Footer remain separate components. Stack them as adjacent
+siblings; do not nest one inside the other.
+
+<Canvas of={UserFeedbackStories.Default} meta={UserFeedbackStories} />
+
+The locale toolbar selects the same built-in translations used by production
+consumers. The long-label story is a layout stress case.
+
+<Canvas of={UserFeedbackStories.LongLabels} meta={UserFeedbackStories} />
+
+## React
+
+```jsx
+import UserFeedback from '@undrr/undrr-mangrove/components/UserFeedback.js';
+import SiteFooter from './SiteFooter';
+
+const recordResponse = response => {
+  analytics.track('page_feedback', { response });
+};
+
+export default function PageEnd() {
+  return (
+    <>
+      <UserFeedback
+        lang="fr"
+        feedbackUrl="/contact/website-feedback"
+        onResponse={recordResponse}
+      />
+      <SiteFooter />
+    </>
+  );
+}
+```
+
+`onResponse` receives `"yes"` or `"no"`. Mangrove does not store responses; the
+consuming product owns analytics, consent, and retention.
+
+## Languages and label overrides
+
+Pass `lang` to select the existing English (`en`), Arabic (`ar`), Spanish (`es`),
+French (`fr`), Japanese (`ja`), Russian (`ru`) or Chinese (`zh`) copy. Language
+matching is case-insensitive and accepts regional tags such as `fr-CA`, `ar-EG`
+and `zh-Hans`; underscore-separated tags are also accepted. Unsupported or empty
+languages fall back to English.
+
+Explicit `labels` override the selected translation field by field. Remaining
+fields use the translation, then English defaults. Existing integrations that
+only pass `labels` continue to work.
+
+```jsx
+<UserFeedback lang="fr-CA" labels={{ yes: 'Tout à fait' }} />
+```
+
+The supplied `lang` remains the HTML language tag, including when custom labels
+use a language outside the built-in catalogue. Catalogue fallback only selects
+the default copy; it does not rewrite that language metadata. Supported languages
+set their text direction automatically. Other languages inherit direction from
+their container; an explicit `dir` prop can override either behaviour. Without
+`lang`, React renders the existing English defaults and leaves HTML language and
+direction inherited. React does not inspect `document` or `window`, so pass the
+same language during server and client rendering.
+
+For server-rendered fallback content or other consumers that need the strings,
+the published component also exports the same resolver:
+
+```js
+import { getUserFeedbackLabels } from '@undrr/undrr-mangrove/components/UserFeedback.js';
+
+const labels = getUserFeedbackLabels('fr', { yes: 'Tout à fait' });
+```
+
+<Canvas
+  of={UserFeedbackStories.ArabicConfirmation}
+  meta={UserFeedbackStories}
+/>
+
+## Hydration
+
+Render a container with component data. `fromElement` selects the language from
+`data-lang`, then the nearest `lang` attribute on the container or its ancestors
+(including `<html>`). If neither supplies a language, English is used. An empty
+language explicitly falls back to English rather than inheriting an ancestor.
+All label attributes remain optional overrides of the selected translation.
+`data-labels` can supply a JSON object of overrides; individual label attributes
+take precedence. A valid `dir` on the container overrides inferred direction.
+
+```html
+<div
+  data-mg-user-feedback
+  data-lang="ar"
+  data-feedback-url="/contact/website-feedback"
+></div>
+```
+
+```js
+import createHydrator from '@undrr/undrr-mangrove/components/hydrate.js';
+import UserFeedback, {
+  fromElement,
+} from '@undrr/undrr-mangrove/components/UserFeedback.js';
+
+createHydrator({
+  selector: '[data-mg-user-feedback]',
+  component: UserFeedback,
+  fromElement,
+});
+```
+
+## Static HTML
+
+When JavaScript is unavailable, render the initial prompt as useful static HTML and submit responses through product-owned URLs or a small progressive-enhancement script. Do not render inert Yes/No buttons.
+
+```html
+<section
+  class="mg-user-feedback mg-container mg-grid mg-grid__col-2"
+  aria-label="Is this page useful?"
+  data-vf-google-analytics-region="undrr-feedback-container"
+>
+  <div class="mg-user-feedback__prompt">
+    <h2 class="mg-user-feedback__question">Is this page useful?</h2>
+    <div class="mg-user-feedback__actions">
+      <a class="mg-button mg-button-secondary" href="/feedback?response=yes">
+        Yes
+      </a>
+      <a class="mg-button mg-button-secondary" href="/feedback?response=no">
+        No
+      </a>
+    </div>
+  </div>
+  <a
+    class="mg-user-feedback__issue"
+    data-mg-user-feedback-form
+    data-mg-user-feedback-type="report-issue"
+    href="/contact/website-feedback"
+  >
+    Report an issue on this page
+  </a>
+</section>
+```
+
+## Behavior and accessibility
+
+- Yes and No are native buttons and work with Enter and Space.
+- Selecting a response replaces the prompt with a polite confirmation and moves focus to it, so keyboard and screen-reader users do not lose their place.
+- The detailed-feedback link in the initial prompt stays in the current tab. The optional follow-up link opens a new tab and uses `noopener noreferrer`.
+- The section has a stable accessible name after the visible question is replaced.
+- Logical alignment supports RTL, labels wrap at narrow widths, and existing button tokens provide focus, forced-colour and reduced-motion behavior.
+- Existing `data-vf-google-analytics-region` and `data-mg-user-feedback-*` hooks preserve the source pattern's analytics integration points.
+
+## Shared UI translation contract
+
+UserFeedback now uses the same resolver mechanics as the other component
+catalogues. See [UI translations](?path=/docs/contributing-ui-translations--docs)
+for language matching, explicit overrides, HTML metadata, hydration and
+translation maintenance. Its existing `getUserFeedbackLabels` export remains
+compatible.
+
+## Changelog
+
+- **1.2**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance.
+
+- **1.1**, 2026-10-26 ([unisdr/undrr-mangrove#1427](https://github.com/unisdr/undrr-mangrove/issues/1427)): Exposes the existing translations through `lang` and the published `getUserFeedbackLabels` resolver. Hydration supports `data-lang` and inherited HTML language, with English fallback, existing label overrides and custom-language metadata preserved. Storybook uses the same runtime translations.
+- **1.0.2**, 2026-09-19 ([#1252](https://github.com/unisdr/undrr-mangrove/issues/1252)): The React example imports `@undrr/undrr-mangrove/components/UserFeedback.js` instead of the package root. The root has never resolved on any published version (the tarball ships no `dist/` and no `src/`, and its `main` named a file it does not contain), and 2.0.0 stops advertising it, so the subpath is the only form that works. The binding also changes: the published bundle exports this component as its **default**, with no named `UserFeedback`, so `import UserFeedback from …` is correct and the braced form would give `undefined`. Documentation only; the component is unchanged.
+- **1.0.1**, 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to the feedback question whose own language is not Arabic.
+- **1.0**, 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Introduced the standalone pre-footer page-feedback component with progressive static HTML guidance, Drupal-friendly hydration, product-owned response callbacks, seven locales, RTL support, long-label handling, and accessible confirmation focus.

@@ -1,0 +1,67 @@
+#!/bin/sh
+#
+# commit-msg hook — enforces Conventional Commits and blocks AI/bot attribution.
+#
+# Activated for everyone via `core.hooksPath` (set by the package.json "prepare"
+# script on `yarn install`). To run it manually: git config core.hooksPath githooks
+#
+# Two checks:
+#   1. The subject line must follow Conventional Commits.
+#   2. The message must not contain AI-assistant marketing lines or bot/AI
+#      Co-authored-by trailers. Human co-authors are allowed.
+#
+# Bypass in a genuine emergency with `git commit --no-verify` (records nothing).
+
+msg_file="$1"
+
+# The authored message only: drop git's comment lines (`#`) and everything below
+# a `# ---- >8 ----` scissors line, neither of which ends up in the final commit.
+authored=$(sed -e '/^#\{1,\} \{0,\}-\{1,\} \{0,\}>8 \{0,\}-\{1,\}/,$d' -e '/^#/d' "$msg_file")
+
+# First non-empty line is the subject.
+subject=$(printf '%s\n' "$authored" | sed -e '/^[[:space:]]*$/d' | sed -n '1p')
+
+fail() {
+  printf '\n\033[31mcommit-msg rejected:\033[0m %s\n\n' "$1" >&2
+}
+
+# --- Exemptions: git-generated subjects that are not authored feature commits ---
+case "$subject" in
+  "Merge "*|"Revert \""*|"fixup! "*|"squash! "*|"amend! "*)
+    exit 0
+    ;;
+esac
+
+# --- Check 1: Conventional Commits subject ---
+# type(optional-scope)!: description   (description must be non-empty)
+conventional='^(feat|fix|docs|chore|test|refactor|style|perf|build|ci|revert)(\([a-z0-9._/-]+\))?(!)?: .+'
+if ! printf '%s' "$subject" | grep -Eq "$conventional"; then
+  fail "subject line is not a Conventional Commit."
+  printf '  Got:      %s\n' "$subject" >&2
+  printf '  Expected: type(optional-scope): description\n' >&2
+  printf '  Types:    feat fix docs chore test refactor style perf build ci revert\n' >&2
+  printf '  Example:  fix(theming): resolve broken IRP button hover token\n\n' >&2
+  exit 1
+fi
+
+# --- Check 2a: AI-assistant marketing / attribution junk (anywhere in message) ---
+ai_junk='(🤖|claude[- ]session:|co-authored-by:[[:space:]]*claude|generated (with|by)[[:space:]].*(claude|copilot|chatgpt|openai|gpt|cursor|codeium|windsurf|gemini)|noreply@anthropic)'
+if printf '%s' "$authored" | grep -iEq "$ai_junk"; then
+  offending=$(printf '%s\n' "$authored" | grep -iE "$ai_junk" | sed -n '1p')
+  fail "AI-assistant attribution is not allowed in commit messages."
+  printf '  Offending line: %s\n' "$offending" >&2
+  printf '  Remove the generated-with / robot-emoji / assistant-session line.\n\n' >&2
+  exit 1
+fi
+
+# --- Check 2b: bot/AI Co-authored-by trailers (human co-authors are fine) ---
+bot_coauthor='^co-authored-by:.*(\[bot\]|bot@|renovate|dependabot|copilot|claude|anthropic|chatgpt|openai|gpt-[0-9]|cursor|codeium|windsurf|gemini|github-actions)'
+if printf '%s\n' "$authored" | grep -iEq "$bot_coauthor"; then
+  offending=$(printf '%s\n' "$authored" | grep -iE "$bot_coauthor" | sed -n '1p')
+  fail "bot/AI Co-authored-by trailers are not allowed."
+  printf '  Offending line: %s\n' "$offending" >&2
+  printf '  Keep Co-authored-by only for human collaborators.\n\n' >&2
+  exit 1
+fi
+
+exit 0

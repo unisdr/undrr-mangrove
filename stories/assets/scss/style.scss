@@ -1,7 +1,10 @@
-@import "./variables";
-@import "./fonts";
-@import "./breakpoints";
-@import "./mixins";
-@import "./utility";
-@import "./foundational";
-@import "./components";
+@forward "font-paths";
+@forward "variables";
+@use "variables" as *;
+@forward "fonts";
+@use "fonts" as *;
+@forward "breakpoints";
+@forward "mixins";
+@use "utility" as *;
+@use "foundational" as *;
+@use "components" as *;

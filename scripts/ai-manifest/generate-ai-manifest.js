@@ -11,15 +11,21 @@
  *
  *        llms.txt                       — plain-text discovery file for AI agents
  *        llms.json                      — structured version of llms.txt
+ *        llms-editorial-manual.txt      — sub-manifest: writing/style rules, from docs/EDITORIAL-MANUAL.md
+ *        llms-page-building.txt         — sub-manifest: Drupal Gutenberg page building, from docs/LANDING-PAGE-GUIDE.md and docs/DRUPAL-GUTENBERG.md
+ *        llms-search-widget.txt         — sub-manifest: search widget editor configuration, from docs/SEARCH-WIDGET-EDITOR-GUIDE.md
  *        ai-components/index.json       — lightweight component index
  *        ai-components/{id}.json        — full details per component
  *        ai-components/utilities.json   — CSS utility class inventory
  *
  * Usage:
- *   node scripts/ai-manifest/generate-ai-manifest.js [--build-dir=docs-build-temp] [--validate]
+ *   node scripts/ai-manifest/generate-ai-manifest.js [--build-dir=docs-build-temp] [--docs-base=https://mangrove.undrr.org/] [--validate]
  *
  * Flags:
  *   --validate   Check curated data keys and a11y lint. Exits non-zero on failure.
+ *   --metadata-file  Read a compatible metadata file instead of the build manifest.
+ *   --docs-base  Public Storybook/docs base URL used in generated links.
+ *                Can also be set with MANGROVE_DOCS_BASE_URL.
  *
  * To remove this pipeline:
  *   1. Delete scripts/ai-manifest/
@@ -36,8 +42,41 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+
+import { createRequire } from 'module';
 import htmlExamples, { REQUIRES_REACT } from './component-data.js';
 import cssUtilities from './css-utilities.js';
+import { readComponentMetadata } from './component-metadata.js';
+import {
+  buildContentPatterns,
+  validateContentReferences,
+} from './content-patterns.js';
+import {
+  selectPublishedComponents,
+  propTypesCoverage,
+} from './catalog-components.js';
+import { buildEditorialManualTxt } from './editorial-manual.js';
+import { buildDocsSubmanifest, DOCS_SUBMANIFESTS } from './docs-submanifest.js';
+import {
+  PUBLIC_ISSUES_URL,
+  PUBLIC_REPO_BLOB_MAIN,
+  PUBLIC_REPO_RAW_MAIN,
+  PUBLIC_REPO_URL,
+  REPO_URL,
+  findPrivateLinks,
+} from './repo.js';
+import {
+  collectCustomProperties,
+  MIN_PROPERTIES,
+  NOT_PUBLIC,
+} from './custom-properties.js';
+import {
+  buildReleasesManifest,
+  parseComponentChangelog,
+} from './parse-changelog.js';
+
+const require = createRequire(import.meta.url);
+const { buildTokensDictionary } = require('../build-tokens.cjs');
 
 // ---------------------------------------------------------------------------
 // Content schemas — map component names to their canonical schema
@@ -55,17 +94,23 @@ function loadContentSchemas() {
 
   if (!fs.existsSync(SCHEMAS_DIR)) return componentToSchema;
 
-  const files = fs.readdirSync(SCHEMAS_DIR).filter(f => f.endsWith('.schema.json'));
+  const files = fs
+    .readdirSync(SCHEMAS_DIR)
+    .filter(f => f.endsWith('.schema.json'));
 
   for (const file of files) {
     try {
-      const schema = JSON.parse(fs.readFileSync(path.join(SCHEMAS_DIR, file), 'utf-8'));
+      const schema = JSON.parse(
+        fs.readFileSync(path.join(SCHEMAS_DIR, file), 'utf-8')
+      );
       const implementors = schema['x-mangrove']?.implementors || [];
       for (const name of implementors) {
         componentToSchema.set(name, schema);
       }
     } catch (err) {
-      console.warn(`[ai-manifest] Skipping malformed schema file: ${file} — ${err.message}`);
+      console.warn(
+        `[ai-manifest] Skipping malformed schema file: ${file} — ${err.message}`
+      );
     }
   }
 
@@ -78,15 +123,27 @@ const contentSchemas = loadContentSchemas();
 // Constants
 // ---------------------------------------------------------------------------
 
-const CDN_BASE = 'https://assets.undrr.org/static/mangrove/{{version}}';
+const CDN_BASE = 'https://assets.undrr.org/mangrove/{{version}}';
 const ASSETS_BASE = 'https://assets.undrr.org';
-const DOCS_BASE = 'https://unisdr.github.io/undrr-mangrove/';
+const DEFAULT_DOCS_BASE = 'https://mangrove.undrr.org/';
 
+// Longest a component's `summary` may be before component-data.js has to
+// supply a short one of its own. Roughly one full sentence.
+const SUMMARY_MAX_LENGTH = 200;
+
+// One bundle per theme, plus the combined bundle.
+//
+// Each single-theme bundle carries its own token block and nothing else, so
+// style.css has no .mg-theme-* rules at all: adding class="mg-theme-irp" to a
+// page that loaded style.css changes nothing. Use that theme's own bundle, or
+// style-all.css if the page has to switch themes at runtime.
 const THEME_CSS = {
   undrr: `${CDN_BASE}/css/style.css`,
   preventionweb: `${CDN_BASE}/css/style-preventionweb.css`,
   mcr2030: `${CDN_BASE}/css/style-mcr.css`,
   irp: `${CDN_BASE}/css/style-irp.css`,
+  delta: `${CDN_BASE}/css/style-delta.css`,
+  all: `${CDN_BASE}/css/style-all.css`,
 };
 
 const REQUIRED_SCRIPTS = [
@@ -141,6 +198,107 @@ const LOGOS = {
   squareBlue: `${ASSETS_BASE}/static/logos/undrr/undrr-logo-square-blue.svg`,
 };
 
+const VANILLA_SCRIPTS = [
+  {
+    name: 'Tabs',
+    file: 'js/tabs.js',
+    url: `${CDN_BASE}/js/tabs.js`,
+    selector: '[data-mg-js-tabs]',
+    initFunction: 'mgTabs(scope, activateDeepLinkOnLoad)',
+    description:
+      'Initializes accessible horizontal tabs and stacked disclosure accordions. In SPAs or dynamically loaded DOM, call mgTabs(containerElement) to re-initialize.',
+  },
+  {
+    name: 'Show More',
+    file: 'js/show-more.js',
+    url: `${CDN_BASE}/js/show-more.js`,
+    selector: '[data-mg-show-more]',
+    initFunction: 'mgShowMore(scope)',
+    description:
+      'Initializes progressive content truncation toggle buttons. Call mgShowMore(containerElement) for dynamic content.',
+  },
+  {
+    name: 'Table of Contents',
+    file: 'js/table-of-contents.js',
+    url: `${CDN_BASE}/js/table-of-contents.js`,
+    selector: '[data-mg-table-of-contents]',
+    initFunction: 'mgTableOfContents(scope)',
+    description:
+      'Generates an in-page table of contents and scrollspy highlighting from headings in the article.',
+  },
+  {
+    name: 'On This Page Nav',
+    file: 'js/on-this-page-nav.js',
+    url: `${CDN_BASE}/js/on-this-page-nav.js`,
+    selector: '[data-mg-on-this-page-nav]',
+    initFunction: 'mgOnThisPageNav(scope)',
+    description:
+      'In-page jump navigation bar with horizontal scroll controls and active section indicator.',
+  },
+  {
+    name: 'Switch pending',
+    file: 'js/switch-pending.js',
+    url: `${CDN_BASE}/js/switch-pending.js`,
+    selector: '[data-mg-switch-pending]',
+    initFunction:
+      'mgSwitchPendingInit(scope, { save, labels, timeout, signal })',
+    description:
+      'Pending state for .mg-switch while a change saves: announces progress, ignores presses, times out and reverts on failure. Load as type="module". Call mgSwitchPending(input, { save }) per switch, or mark switches with data-mg-switch-pending (auto-initialised on load) and answer the cancelable mg-switch:save event with event.detail.respondWith(promise). Call mgSwitchPendingDestroy(scope) or abort { signal } before removing switches.',
+  },
+  {
+    name: 'Drawer',
+    file: 'js/drawer.js',
+    url: `${CDN_BASE}/js/drawer.js`,
+    selector: '[data-mg-js-drawer]',
+    initFunction: 'mgDrawer(scope)',
+    description:
+      'Open and close, Escape, focus management and a modal focus trap for a drawer or floating panel you rendered yourself. It never builds markup, so the close label, title and body stay in your HTML. Triggers are [data-mg-drawer-trigger="<container id>"]; scripts can dispatch mg-drawer:open, mg-drawer:close and mg-drawer:toggle on the container and listen for mg-drawer:opened and mg-drawer:closed. A floating panel (the mg-floating-panel class) is non-modal: no backdrop and no Tab trap. Call mgDrawer(scope) again for drawers added later, and mgDrawerDestroy(scope) before removing them.',
+  },
+  {
+    name: 'Hub header',
+    file: 'js/hub-header.js',
+    url: `${CDN_BASE}/js/hub-header.js`,
+    selector: '[data-mg-js-hub-header]',
+    initFunction: 'mgHubHeader(scope)',
+    description:
+      'Keeps the marked section of a static HubHeader in view and drives its edge fades. With data-mg-hub-header-detect-current it marks the current section from the URL, so the same markup can be copied to every page of a hub. Call mgHubHeader(scope) for headers added later; the returned function undoes the call.',
+  },
+  {
+    name: 'Cite this',
+    file: 'js/cite-this.js',
+    url: `${CDN_BASE}/js/cite-this.js`,
+    selector: '[data-mg-cite-this]',
+    initFunction: 'mgCiteThis(scope)',
+    description:
+      'Enhances a server-rendered citation disclosure into a button and native dialog with metadata resolution, copy feedback and analytics events.',
+  },
+  {
+    name: 'Copy button',
+    file: 'js/copy-button.js',
+    url: `${CDN_BASE}/js/copy-button.js`,
+    selector: '[data-mg-copy-button]',
+    initFunction: 'mgCopyButton(scope)',
+    description:
+      'Zero-dependency copy-to-clipboard button with a transient tooltip and an aria-live announcement. Call mgCopyButton(scope) for buttons added later.',
+  },
+  {
+    name: 'Preview Access',
+    file: 'js/preview-access.js',
+    url: `${CDN_BASE}/js/preview-access.js`,
+    selector: '[data-mg-preview-access]',
+    initFunction: 'mgPreviewAccess(scope)',
+    description:
+      'Page-level editorial PIN gate with session or optional local persistence, max-age in days and a bubbling mg-preview-access:unlock event. Not access control.',
+  },
+  {
+    name: 'UNDRR shared constants',
+    file: 'js/undrr.js',
+    url: `${CDN_BASE}/js/undrr.js`,
+    description:
+      'Shared constants (key codes, breakpoints) on the window.UNDRR namespace. It does not include the other modules.',
+  },
+];
+
 // ---------------------------------------------------------------------------
 // Component rendering: ID mapping and sample props
 // ---------------------------------------------------------------------------
@@ -160,13 +318,14 @@ const LOGOS = {
 const COMPONENT_IDS = {
   CtaButton: 'components-buttons-buttons',
   VerticalCard: 'components-cards-vertical-card',
+  ContentCard: 'patterns-content-card',
+  ContentTeaser: 'patterns-content-teaser',
   HorizontalCard: 'components-cards-horizontal-card',
   BookCard: 'components-cards-book-card',
   HorizontalBookCard: 'components-cards-horizontal-book-card',
   IconCard: 'components-cards-icon-card',
   StatsCard: 'components-cards-stats-card',
   Breadcrumbs: 'components-navigation-breadcrumbs',
-  Pagination: 'components-navigation-pagination',
   Tab: 'components-tabs',
   Hero: 'components-hero-hero',
   PageHeader: 'components-pageheader',
@@ -176,28 +335,59 @@ const COMPONENT_IDS = {
   EmbedContainer: 'components-embedcontainer',
   FullWidth: 'components-fullwidth',
   Loader: 'components-loader',
+  ProgressBar: 'components-progress-bar',
   ShowMore: 'components-showmore',
   Chips: 'components-buttons-chips',
   TextInput: 'components-forms-text-input',
   Select: 'components-forms-select',
   Checkbox: 'components-forms-checkbox',
   Radio: 'components-forms-radio',
+  SegmentedControl: 'components-forms-segmented-control',
   Textarea: 'components-forms-textarea',
   FormGroup: 'components-forms-formgroup',
+  FormAction: 'components-forms-form-action',
   FormErrorSummary: 'components-forms-formerrorsummary',
-  MegaMenu: 'components-megamenu',
+  MegaMenu: 'components-navigation-megamenu',
   SyndicationSearchWidget: 'components-syndicated-search',
   ScrollContainer: 'components-scrollcontainer',
   Gallery: 'components-gallery',
-  Pager: 'components-pager',
-  MapComponent: 'components-maps-mapcomponent',
-  BarChart: 'components-charts-barchart',
-  Fetcher: 'components-fetcher',
+  Pager: 'components-navigation-pager',
   ShareButtons: 'components-buttons-sharebuttons',
+  UserFeedback: 'components-user-feedback',
+  CopyButton: 'components-buttons-copybutton',
+  Drawer: 'components-navigation-drawer',
+  Tree: 'components-navigation-tree',
+  ServiceNotice: 'components-notice-service-notice',
+  Notice: 'components-notice-notice',
+  Range: 'components-forms-range',
+  Legend: 'components-dataviz-legend',
 };
 
 function buildSampleProps(React) {
   return {
+    ContentCard: {
+      layout: 'book',
+      content: {
+        type: 'publication',
+        profile: 'default',
+        title: 'Understanding disaster risk',
+        link: '/publications/disaster-risk',
+        typeLabel: 'Report',
+        image: { src: '/images/teaser-publication-cover.svg', alt: '' },
+      },
+    },
+    ContentTeaser: {
+      content: {
+        type: 'article',
+        profile: 'news',
+        title: 'Communities strengthen resilience',
+        link: '/news/community-resilience',
+        typeLabel: 'News',
+        summary:
+          'Local knowledge and shared planning help communities prepare for changing risks.',
+      },
+    },
+
     Chips: { label: 'Flood' },
     CtaButton: { label: 'Take action' },
     TextInput: {
@@ -217,6 +407,16 @@ function buildSampleProps(React) {
     },
     Checkbox: { label: 'I agree to the terms and conditions', name: 'terms' },
     Radio: { label: 'Government', name: 'role', value: 'government' },
+    SegmentedControl: {
+      legend: 'Map layer',
+      name: 'layer',
+      defaultValue: 'depth',
+      options: [
+        { label: 'Depth', value: 'depth' },
+        { label: 'Frequency', value: 'frequency' },
+        { label: 'Exposure', value: 'exposure' },
+      ],
+    },
     Textarea: {
       label: 'Message',
       name: 'message',
@@ -253,12 +453,72 @@ function buildSampleProps(React) {
         )
       ),
     },
+    FormAction: {
+      label: 'Email address',
+      control: React.createElement('input', {
+        className: 'mg-form-input',
+        name: 'email',
+        type: 'email',
+      }),
+      action: React.createElement(
+        'button',
+        { className: 'mg-button mg-button-primary', type: 'submit' },
+        'Subscribe'
+      ),
+    },
     FormErrorSummary: {
       title: 'There is a problem',
       errors: [
         { id: 'email', message: 'Enter a valid email address' },
         { id: 'org', message: 'Organization name is required' },
       ],
+    },
+    Drawer: {
+      isOpen: true,
+      onClose: () => {},
+      title: 'Drawer title',
+      position: 'start',
+      children: React.createElement('p', null, 'Drawer content'),
+    },
+    Tree: {
+      children: React.createElement(
+        'li',
+        { className: 'mg-tree__item', role: 'treeitem' },
+        React.createElement(
+          'div',
+          { className: 'mg-tree__label-container' },
+          React.createElement('span', { className: 'mg-tree__label' }, 'Item 1')
+        )
+      ),
+    },
+    Range: {
+      id: 'sample-range',
+      min: 0,
+      max: 100,
+      defaultValue: 50,
+    },
+    Legend: {
+      type: 'continuous',
+      ticks: [
+        { position: '0%', label: 'Low' },
+        { position: '50%', label: 'Medium' },
+        { position: '100%', label: 'High' },
+      ],
+      title: 'Hazard level',
+    },
+    ServiceNotice: {
+      status: 'degraded',
+      title: 'Real-time hazard feeds unavailable',
+      description:
+        'Showing cached data from 10 minutes ago. Live updates will resume automatically.',
+      onRetry: () => {},
+      statusUrl: 'https://status.example.org',
+    },
+    Notice: {
+      variant: 'warning',
+      title: 'Scheduled maintenance advisory',
+      description:
+        'Platform services will undergo brief routine updates tonight.',
     },
     VerticalCard: {
       data: [
@@ -333,7 +593,10 @@ function buildSampleProps(React) {
         { text: 'Global Assessment Report 2024' },
       ],
     },
-    Pagination: { text: 'Page', text2: 'of' },
+    CopyButton: {
+      textToCopy: 'https://preventionweb.net',
+      ariaLabel: 'Copy URL to clipboard',
+    },
     Tab: {
       tabdata: [
         {
@@ -363,8 +626,7 @@ function buildSampleProps(React) {
     },
     PageHeader: {
       variant: 'default',
-      logoUrl:
-        'https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg',
+      logoUrl: 'https://assets.undrr.org/logos/undrr/undrr-logo-horizontal.svg',
       homeUrl: '/',
       languages: [
         { value: 'en', label: 'English', selected: true },
@@ -408,7 +670,16 @@ function buildSampleProps(React) {
         'This section spans the full viewport width.'
       ),
     },
-    Loader: { label: 'Loading content' },
+    // Decorative: the announced form renders its status region empty and
+    // adds the label after mount, so a static render would publish an empty
+    // region. The announced markup is a supplemental example instead.
+    Loader: { decorative: true },
+    ProgressBar: {
+      label: 'Uploading report.pdf',
+      value: 45,
+      showValue: true,
+      helpText: 'About a minute left.',
+    },
     ShowMore: {
       data: [
         {
@@ -484,6 +755,7 @@ function buildSampleProps(React) {
         ),
       ],
     },
+    UserFeedback: {},
     Gallery: {
       media: [
         {
@@ -507,10 +779,21 @@ const args = process.argv.slice(2);
 const buildDirArg = (args.find(a => a.startsWith('--build-dir=')) || '').split(
   '='
 )[1];
+const docsBaseArg = (args.find(a => a.startsWith('--docs-base=')) || '').split(
+  '='
+)[1];
 const buildDir = path.resolve(process.cwd(), buildDirArg || 'docs-build-temp');
 const validateOnly = args.includes('--validate');
+const docsBaseInput =
+  docsBaseArg || process.env.MANGROVE_DOCS_BASE_URL || DEFAULT_DOCS_BASE;
+const DOCS_BASE = normalizeDocsBase(docsBaseInput);
 
-const manifestPath = path.join(buildDir, 'manifests', 'components.json');
+const metadataFileArg = args
+  .find(a => a.startsWith('--metadata-file='))
+  ?.slice('--metadata-file='.length);
+const manifestPath = metadataFileArg
+  ? path.resolve(process.cwd(), metadataFileArg)
+  : path.join(buildDir, 'manifests', 'components.json');
 const outputDir = path.join(buildDir, 'ai-components');
 const llmsTxtPath = path.join(buildDir, 'llms.txt');
 const distDir = path.resolve(process.cwd(), 'dist/components');
@@ -524,7 +807,17 @@ if (!fs.existsSync(manifestPath)) {
 const pkg = JSON.parse(
   fs.readFileSync(path.resolve(process.cwd(), 'package.json'), 'utf8')
 );
-const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+const manifest = readComponentMetadata(manifestPath);
+// Filter once, before curated validation, PropTypes coverage and catalog output.
+// The raw Storybook manifest is left intact for its QA routes and test runner.
+manifest.components = selectPublishedComponents(manifest.components);
+const iconInventoryPath = path.resolve(
+  process.cwd(),
+  'stories/Atom/Icons/Icons.json'
+);
+const iconInventory = fs.existsSync(iconInventoryPath)
+  ? JSON.parse(fs.readFileSync(iconInventoryPath, 'utf8'))
+  : null;
 
 // Replace {{version}} tokens with actual version from package.json
 const replaceVersion = obj =>
@@ -535,59 +828,119 @@ const themeCss = replaceVersion(THEME_CSS);
 const requiredScripts = replaceVersion(REQUIRED_SCRIPTS);
 const requiredStylesheets = replaceVersion(REQUIRED_STYLESHEETS);
 const logos = replaceVersion(LOGOS);
+const vanillaScripts = replaceVersion(VANILLA_SCRIPTS);
+const cdnBase = CDN_BASE.replace('{{version}}', pkg.version);
 const generatedAt = new Date().toISOString();
 
+/**
+ * Normalize docs base URL to an absolute origin+path with one trailing slash.
+ * Throws on invalid input so broken links fail fast during generation.
+ */
+function normalizeDocsBase(url) {
+  const parsed = new URL(url);
+  parsed.pathname = parsed.pathname.endsWith('/')
+    ? parsed.pathname
+    : `${parsed.pathname}/`;
+  return parsed.toString();
+}
+
 // ---------------------------------------------------------------------------
-// Parse actual npm exports from src/index.js
+// Parse the importable surface from the built component bundles
 // ---------------------------------------------------------------------------
 
 /**
- * Reads src/index.js and returns a Set of export names that consumers can
- * actually import from the npm package. This prevents the manifest from
- * advertising imports that don't exist.
+ * Reads dist/components/*.js and returns, per bundle, the export names it
+ * provides. These bundles are what the npm package publishes under
+ * `components/`, so this is the surface a consumer can actually import.
+ *
+ * This used to read src/index.js instead and advertise
+ * `import { X } from "@undrr/undrr-mangrove"`. That import resolves for
+ * nothing: the published tarball ships neither `src/` nor `dist/`, and its
+ * `main` names a file it does not contain, so every agent that followed the
+ * manifest wrote an import that throws ERR_MODULE_NOT_FOUND. See
+ * unisdr/undrr-mangrove#1252.
  */
-function parseNpmExports() {
-  const indexPath = path.resolve(process.cwd(), 'src/index.js');
-  if (!fs.existsSync(indexPath)) {
-    console.warn('src/index.js not found — cannot validate npm exports');
-    return new Set();
+function parseBundleExports() {
+  const byBundle = new Map();
+  if (!fs.existsSync(distDir)) {
+    // Fatal, not a warning. Continuing would publish a manifest in which
+    // every component has silently lost its `import` line — the same class of
+    // wrong-but-plausible output this function exists to stop, and
+    // indistinguishable from "no component is importable".
+    console.error(`Component bundles not found at ${distDir}.`);
+    console.error('Run "yarn build" (or "webpack") before generating.');
+    process.exit(1);
   }
-  const source = fs.readFileSync(indexPath, 'utf8');
-  const names = new Set();
-
-  // Match: export { default as Foo } and export { Foo }
-  const re = /export\s*\{[^}]*?\bas\s+(\w+)|export\s*\{\s*(\w+)\s*\}/g;
-  let match;
-  while ((match = re.exec(source)) !== null) {
-    names.add(match[1] || match[2]);
+  for (const file of fs.readdirSync(distDir)) {
+    if (!file.endsWith('.js')) continue;
+    const source = fs.readFileSync(path.join(distDir, file), 'utf8');
+    const names = new Set();
+    // Webpack's ESM output ends with one `export { a as Name, b as default };`
+    // per entry. Take the exported name, which is what follows `as`, or the
+    // whole specifier when the binding is exported under its own name.
+    for (const match of source.matchAll(/export\s*\{([^}]*)\}/g)) {
+      for (const specifier of match[1].split(',')) {
+        const name = specifier
+          .trim()
+          .split(/\s+as\s+/)
+          .pop();
+        if (/^[A-Za-z_$][\w$]*$/.test(name)) names.add(name);
+      }
+    }
+    byBundle.set(file.replace(/\.js$/, ''), names);
   }
-  return names;
+  return byBundle;
 }
 
-const npmExports = parseNpmExports();
+const bundleExports = parseBundleExports();
 
-// Reverse lookup: Storybook ID → webpack entry name (which matches the npm
-// export name). Derived from COMPONENT_IDS so it self-heals when new
-// components are added. Used as a fallback when Storybook's internal function
-// name (e.g. BarChartProcessor) differs from the npm export (e.g. BarChart).
+if (bundleExports.size === 0) {
+  console.error(`No component bundles in ${distDir}.`);
+  console.error('Run "yarn build" (or "webpack") before generating.');
+  process.exit(1);
+}
+
+// A dist/ built before a component was added or renamed is worse than no
+// dist/ at all: it produces a manifest that looks complete and quietly omits
+// whatever moved. Every COMPONENT_IDS key is a webpack entry, so each must
+// have a bundle; one that does not means the tree is stale.
+const staleBundles = Object.keys(COMPONENT_IDS).filter(
+  name => !bundleExports.has(name)
+);
+if (staleBundles.length > 0) {
+  console.error(
+    `dist/components/ is stale: ${staleBundles.length} webpack entr${
+      staleBundles.length === 1 ? 'y has' : 'ies have'
+    } no bundle.`
+  );
+  for (const name of staleBundles) console.error(`  - ${name}.js`);
+  console.error('Rebuild with "yarn build" before generating.');
+  process.exit(1);
+}
+
+// Reverse lookup: Storybook ID → webpack entry name (which is the published
+// file name under components/). Derived from COMPONENT_IDS so it self-heals
+// when new components are added. Used as a fallback when Storybook's internal
+// function name differs from the entry name.
 const storybookIdToWebpackName = Object.fromEntries(
   Object.entries(COMPONENT_IDS).map(([name, id]) => [id, name])
 );
 
-// Manual overrides for npm-only components (no webpack entry in COMPONENT_IDS)
-// whose Storybook function name differs from the npm export name.
+// Manual overrides for components whose Storybook function name differs from
+// the name of the bundle they ship in.
 const NPM_NAME_OVERRIDES = {
-  ShowOffSnackbar: 'Snackbar', // Storybook demo wrapper name vs npm export
+  ShowOffSnackbar: 'Snackbar', // Storybook demo wrapper name vs component name
 };
 
 /**
- * Build a valid import statement for a component, or return empty string if
- * the component is not exported from the npm package. Tries the Storybook
+ * Build an import statement that resolves from the published package, or an
+ * empty string when the component ships in no bundle. Tries the Storybook
  * name first, then the COMPONENT_IDS reverse lookup, then NPM_NAME_OVERRIDES.
  *
- * Supported src/index.js export shapes:
- *   export { default as Foo } from '...';
- *   export { Foo } from '...';
+ * The specifier is the subpath, `@undrr/undrr-mangrove/components/Name.js`,
+ * because the package root does not resolve (unisdr/undrr-mangrove#1252). The
+ * binding is whatever the bundle exports: named where there is a matching
+ * named export, default where there is only a default.
  */
 function buildImportStatement(componentName, componentId) {
   const candidates = [
@@ -595,11 +948,49 @@ function buildImportStatement(componentName, componentId) {
     storybookIdToWebpackName[componentId],
     NPM_NAME_OVERRIDES[componentName],
   ].filter(Boolean);
-  const exportName = candidates.find(n => npmExports.has(n));
-  if (exportName) {
-    return `import { ${exportName} } from "${pkg.name}";`;
+  const bundle = candidates.find(n => bundleExports.has(n));
+  if (!bundle) return '';
+
+  const exportNames = bundleExports.get(bundle);
+  const specifier = `${pkg.name}/components/${bundle}.js`;
+  const named = candidates.find(n => exportNames.has(n));
+  if (named) return `import { ${named} } from "${specifier}";`;
+  if (exportNames.has('default')) {
+    return `import ${bundle} from "${specifier}";`;
   }
   return '';
+}
+
+/** The bundle name an emitted import statement points at. */
+function importedBundle(statement) {
+  const match = statement.match(/\/components\/([\w$.-]+)\.js"/);
+  return match ? match[1] : '';
+}
+
+/**
+ * Import every bundle once and record the ones that throw.
+ *
+ * A component whose module scope reaches for `document` — ShowMore and Tab
+ * both import a vanilla module that self-initialises on load — imports
+ * cleanly in a browser or through a bundler and throws `document is not
+ * defined` in Node and in server-side rendering. Its import line is correct
+ * and is published, but the constraint is published with it: an agent that
+ * evaluates the line in Node gets a crash it can neither predict from the
+ * manifest nor blame on itself.
+ *
+ * Probing is the only honest way to know this. Static analysis of a minified
+ * bundle cannot tell a module-scope DOM read from one inside a function.
+ */
+async function probeBundleImports() {
+  const failures = new Map();
+  for (const bundle of bundleExports.keys()) {
+    try {
+      await import(path.join(distDir, `${bundle}.js`));
+    } catch (e) {
+      failures.set(bundle, e.message.split('\n')[0]);
+    }
+  }
+  return failures;
 }
 
 // ---------------------------------------------------------------------------
@@ -662,21 +1053,73 @@ function parseJsDocParams(jsDocTags) {
   return params;
 }
 
-/** Get the best description for a component, with curated fallback. */
-function getDescription(component, data) {
-  if (component.description) return component.description;
+/** First line of a component's react-docgen docblock, tags stripped. */
+function docgenLine(component) {
+  if (!component.reactDocgen?.description) return '';
+  const desc = component.reactDocgen.description
+    .replace(/@param\s+\{[^}]*\}\s+\S+\s*/g, '')
+    .replace(/@returns?\s+.*/g, '')
+    .trim();
+  return desc ? desc.split('\n')[0] : '';
+}
 
-  if (component.reactDocgen?.description) {
-    const desc = component.reactDocgen.description
-      .replace(/@param\s+\{[^}]*\}\s+\S+\s*/g, '')
-      .replace(/@returns?\s+.*/g, '')
-      .trim();
-    if (desc) return desc.split('\n')[0];
-  }
-
+/**
+ * Get the best description for a component.
+ *
+ * The curated component-data.js description wins over the source docblock.
+ * Both are written by hand, but they are written for different readers: the
+ * docblock describes the export to someone already looking at the source,
+ * while the curated entry is the manifest's own editorial surface, written
+ * for an agent that only ever sees index.json. When a maintainer writes a
+ * usage contract into component-data.js, that is the text meant to reach the
+ * manifest — see undrr-mangrove#1231, where #1225's icon-button contract
+ * never reached index.json because CtaButton.jsx's docblock outranked it.
+ *
+ * This replaces a narrower `patterns-*` exception added for
+ * undrr-mangrove#1129, which was the same failure on the pattern stories.
+ * One rule, applied everywhere, rather than a list of ids that need it.
+ *
+ * A curated description may be long — a full contract paragraph, not a
+ * sentence. That is what `summary` is for: see getSummary().
+ */
+function getDescription(id, component, data) {
   if (data?.description) return data.description;
 
+  if (component.description) return component.description;
+
+  const docgen = docgenLine(component);
+  if (docgen) return docgen;
+
+  if (REQUIRES_REACT[id]) return REQUIRES_REACT[id];
+
   return '';
+}
+
+/**
+ * Get the one-line summary shown in index.json beside the full description.
+ *
+ * `summary` and `description` used to hold the same string. They no longer
+ * do: a curated description carries the whole contract, which is what an
+ * agent grepping the index needs to find, but it does not read as a label in
+ * a list of 85 components. A curated entry whose description runs past
+ * SUMMARY_MAX_LENGTH therefore carries its own short `summary`, and
+ * `yarn validate-manifest` fails when it does not.
+ */
+function getSummary(id, component, data, description) {
+  if (data?.summary) return data.summary;
+
+  if (description.length <= SUMMARY_MAX_LENGTH) return description;
+
+  // Safety net for a long description nobody has summarised yet (validation
+  // catches the curated case): prefer the docblock line, else the first
+  // sentence.
+  const docgen = docgenLine(component);
+  if (docgen && docgen.length <= SUMMARY_MAX_LENGTH) return docgen;
+
+  const firstSentence = description.match(/^.*?[.!?](?=\s|$)/)?.[0];
+  return firstSentence && firstSentence.length <= SUMMARY_MAX_LENGTH
+    ? firstSentence
+    : description;
 }
 
 /** Build the Storybook docs URL for a component. */
@@ -754,8 +1197,13 @@ async function renderComponents() {
       } catch {
         formatted = html;
       }
-      const desc = curatedData[componentId]?.description || fileName;
-      results.set(componentId, [{ name: desc, html: formatted }]);
+      // Name the example, not the component. This used to be the curated
+      // description, which reads as a label only while a description is one
+      // sentence long — see undrr-mangrove#1231. The description is published
+      // in the same file, on the component.
+      results.set(componentId, [
+        { name: `${fileName} — default render`, html: formatted },
+      ]);
       rendered++;
     } catch (e) {
       console.warn(`  skip ${fileName}: ${e.message.split('\n')[0]}`);
@@ -791,6 +1239,365 @@ if (uncoveredIds.length > 0) {
     `Note: ${uncoveredIds.length} component(s) have no entry in component-data:`
   );
   for (const id of uncoveredIds) console.warn(`  - ${id}`);
+}
+
+// ---------------------------------------------------------------------------
+// Check that a long curated description carries a short summary
+//
+// The curated description reaches `description` in index.json and in every
+// detail file, which is the point: an agent greps the index and finds the
+// contract. `summary` is the other half of that entry — the line a human or
+// an agent reads when scanning 85 components — so a description written as a
+// paragraph needs a sentence written for that slot instead.
+// ---------------------------------------------------------------------------
+const missingSummaries = [];
+for (const [componentId, data] of Object.entries(curatedData)) {
+  if (typeof data?.description !== 'string') continue;
+  if (data.summary) {
+    if (data.summary.length > SUMMARY_MAX_LENGTH) {
+      missingSummaries.push(
+        `${componentId}: summary is ${data.summary.length} characters ` +
+          `(max ${SUMMARY_MAX_LENGTH})`
+      );
+    }
+    continue;
+  }
+  if (data.description.length > SUMMARY_MAX_LENGTH) {
+    missingSummaries.push(
+      `${componentId}: description is ${data.description.length} characters ` +
+        `and there is no summary (max ${SUMMARY_MAX_LENGTH})`
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Check curated example shape
+//
+// `examples` must be [{ name, html }]. A bare array of HTML strings still
+// reaches the output — it is just assigned to renderedHtml — so it looks like
+// it worked, but the a11y lint below skips it (`if (!example.html) continue`),
+// the drift check reads no classes from it, and consumers that read
+// `renderedHtml[n].html` get undefined for that component alone. StatusLabel
+// and EmptyState shipped in exactly that state: present in the manifest, but
+// in a shape nothing else in the file uses and no check could see.
+// ---------------------------------------------------------------------------
+const malformedExamples = [];
+for (const [componentId, data] of Object.entries(curatedData)) {
+  for (const field of ['examples', 'supplementalExamples']) {
+    if (!data?.[field]) continue;
+    if (!Array.isArray(data[field])) {
+      malformedExamples.push(`${componentId}: ${field} is not an array`);
+      continue;
+    }
+    data[field].forEach((example, index) => {
+      if (typeof example !== 'object' || example === null) {
+        malformedExamples.push(
+          `${componentId}: ${field}[${index}] is a ${typeof example}, expected ` +
+            '{ name, html }'
+        );
+      } else if (
+        typeof example.html !== 'string' ||
+        example.html.length === 0
+      ) {
+        malformedExamples.push(
+          `${componentId}: ${field}[${index}] has no html string`
+        );
+      } else if (
+        typeof example.name !== 'string' ||
+        example.name.length === 0
+      ) {
+        malformedExamples.push(
+          `${componentId}: ${field}[${index}] has no name`
+        );
+      }
+    });
+  }
+}
+
+if (malformedExamples.length > 0) {
+  console.warn(
+    'Curated examples in the wrong shape (expected { name, html }):'
+  );
+  for (const problem of malformedExamples) console.warn(`  ${problem}`);
+}
+
+// ---------------------------------------------------------------------------
+// Check curated hydration and vanilla module contract shape
+//
+// Agents that find a `hydration` (React hydrate.js) or `vanillaModule` (plain
+// ES module, no React) field act on it directly, so a contract without a
+// selector, module URLs or a runnable example is worse than none.
+// ---------------------------------------------------------------------------
+const CONTRACT_FIELDS = ['hydration', 'vanillaModule'];
+const malformedHydration = [];
+for (const [componentId, data] of Object.entries(curatedData)) {
+  for (const field of CONTRACT_FIELDS) {
+    if (data?.[field] === undefined) continue;
+    const contract = data[field];
+    if (typeof contract !== 'object' || contract === null) {
+      malformedHydration.push(`${componentId}: ${field} is not an object`);
+      continue;
+    }
+    if (typeof contract.selector !== 'string' || !contract.selector) {
+      malformedHydration.push(`${componentId}: ${field} has no selector`);
+    }
+    if (
+      typeof contract.modules !== 'object' ||
+      contract.modules === null ||
+      Object.keys(contract.modules).length === 0
+    ) {
+      malformedHydration.push(`${componentId}: ${field} has no modules`);
+    }
+    if (typeof contract.example !== 'string' || !contract.example) {
+      malformedHydration.push(`${componentId}: ${field} has no example`);
+    }
+  }
+}
+
+if (malformedHydration.length > 0) {
+  console.warn(
+    'Curated hydration or vanillaModule contracts missing required fields (selector, modules, example):'
+  );
+  for (const problem of malformedHydration) console.warn(`  ${problem}`);
+}
+
+// ---------------------------------------------------------------------------
+// Check that a claimed lifecycle module is a file that exists
+//
+// The manifest now states the lifecycle outright — `vanillaModule: true` or
+// `false` on every component, with `vanillaScripts` naming the files — so a
+// consumer no longer probes /js/ for a 404 to find out (#1197). That is only
+// worth trusting if the claim is checked: a contract naming a module that was
+// never written, or that was renamed out from under it, has to fail the build
+// rather than publish a URL that 404s.
+//
+// Checked against the source tree, which is always present, so this runs the
+// same whether or not a build has happened. Built-only artifacts under
+// components/ are left to checkCuratedDrift(), which needs dist/.
+// ---------------------------------------------------------------------------
+const VANILLA_JS_SOURCE_DIR = path.resolve(process.cwd(), 'stories/assets/js');
+
+/**
+ * A contract's module URLs as the package-relative paths npm and the CDN
+ * publish them at ('js/drawer.js'), so a claim can be resolved to a file.
+ *
+ * @param {object} contract A `hydration` or `vanillaModule` contract.
+ * @returns {string[]}
+ */
+function modulePaths(contract) {
+  return Object.values(contract?.modules || {}).map(moduleUrl => {
+    const match = /\/mangrove\/[^/]+\/(.+)$/.exec(String(moduleUrl));
+    return match ? match[1] : String(moduleUrl);
+  });
+}
+
+const missingModuleFiles = [];
+for (const [componentId, data] of Object.entries(curatedData)) {
+  for (const field of CONTRACT_FIELDS) {
+    const contract = data?.[field];
+    if (!contract || typeof contract !== 'object') continue;
+    for (const publishedPath of modulePaths(contract)) {
+      if (!publishedPath.startsWith('js/')) continue;
+      const source = path.resolve(
+        VANILLA_JS_SOURCE_DIR,
+        publishedPath.slice('js/'.length)
+      );
+      if (!fs.existsSync(source)) {
+        missingModuleFiles.push(
+          `${componentId}: ${field} names ${publishedPath}, but stories/assets/${publishedPath} does not exist`
+        );
+      }
+    }
+  }
+  // A note explaining why there is no module contradicts a module.
+  if (data?.vanillaModuleNote && data?.vanillaModule) {
+    missingModuleFiles.push(
+      `${componentId}: has both a vanillaModule contract and a vanillaModuleNote explaining that it has none`
+    );
+  }
+}
+
+// The library-level list consumers read from index.json's `library` block, in
+// both directions: every entry names a real file, and every module that ships
+// is listed. The second half is what caught js/copy-button.js, which shipped
+// and was named by a component contract but was missing from this list.
+const vanillaScriptFiles = new Set(VANILLA_SCRIPTS.map(script => script.file));
+for (const script of VANILLA_SCRIPTS) {
+  if (!script.file.startsWith('js/')) continue;
+  const source = path.resolve(
+    VANILLA_JS_SOURCE_DIR,
+    script.file.slice('js/'.length)
+  );
+  if (!fs.existsSync(source)) {
+    missingModuleFiles.push(
+      `VANILLA_SCRIPTS: ${script.name} names ${script.file}, but stories/assets/${script.file} does not exist`
+    );
+  }
+}
+if (fs.existsSync(VANILLA_JS_SOURCE_DIR)) {
+  for (const file of fs.readdirSync(VANILLA_JS_SOURCE_DIR)) {
+    if (!file.endsWith('.js')) continue;
+    if (vanillaScriptFiles.has(`js/${file}`)) continue;
+    missingModuleFiles.push(
+      `VANILLA_SCRIPTS: stories/assets/js/${file} ships but is not listed, so nothing documents it`
+    );
+  }
+}
+
+if (missingModuleFiles.length > 0) {
+  console.warn(
+    'Vanilla lifecycle modules that do not match the files on disk:'
+  );
+  for (const problem of missingModuleFiles) console.warn(`  ${problem}`);
+}
+
+// ---------------------------------------------------------------------------
+// Check that every documented CSS class actually exists
+//
+// A class list in component-data.js is hand-maintained, so it drifts when a
+// component is renamed and it is wrong from the start when a class is
+// mistyped. Nothing checked this before, so the manifest could advertise a
+// class that had never existed and no build would notice.
+//
+// "Exists" cannot mean "has a rule in the compiled CSS". Several real classes
+// deliberately carry no styles: mg-card__meta and mg-card__label--active are
+// structural hooks the card components render, mg-hero--split-2-3 is the
+// default split that needs no override, mg-on-this-page-nav--exclude is a
+// marker the nav's JS reads, and the scroll-button modifiers are injected at
+// runtime. So a class passes if it is styled OR if it appears in the story
+// sources — and fails only when it exists nowhere in the library, which is
+// the typo-and-rename case this is actually for.
+// ---------------------------------------------------------------------------
+const compiledCssPath = path.resolve(
+  process.cwd(),
+  'stories/assets/css/style.css'
+);
+const storiesDir = path.resolve(process.cwd(), 'stories');
+const missingCssClasses = [];
+const unstyledCssClasses = [];
+let cssCheckSkipped = null;
+
+/** Every .jsx/.js/.mdx/.scss file under stories/, concatenated. */
+function readStorySources(dir) {
+  const chunks = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      if (entry.name === 'node_modules') continue;
+      chunks.push(readStorySources(full));
+    } else if (/\.(jsx?|mdx|scss)$/.test(entry.name)) {
+      chunks.push(fs.readFileSync(full, 'utf8'));
+    }
+  }
+  return chunks.join('\n');
+}
+
+if (!fs.existsSync(compiledCssPath)) {
+  cssCheckSkipped =
+    `${path.relative(process.cwd(), compiledCssPath)} not found — run ` +
+    '"yarn scss" first. Skipping the CSS class existence check.';
+} else {
+  const compiledCss = fs.readFileSync(compiledCssPath, 'utf8');
+  const storySources = readStorySources(storiesDir);
+
+  const escape = value => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  // A class selector, i.e. ".name" not followed by another identifier
+  // character, so ".mg-card" does not match ".mg-card__title".
+  const isStyled = className =>
+    new RegExp(`\\.${escape(className)}(?![\\w-])`).test(compiledCss);
+  // The class named anywhere in the story sources — a className string, a JS
+  // string literal, an MDX table row, or an SCSS selector.
+  const isRendered = className =>
+    new RegExp(`(?<![\\w-])${escape(className)}(?![\\w-])`).test(storySources);
+
+  for (const [componentId, data] of Object.entries(curatedData)) {
+    for (const className of data?.cssClasses || []) {
+      if (isStyled(className)) continue;
+      if (isRendered(className)) {
+        unstyledCssClasses.push(`${componentId}: .${className}`);
+      } else {
+        missingCssClasses.push(`${componentId}: .${className}`);
+      }
+    }
+  }
+}
+
+if (cssCheckSkipped) console.warn(`Note: ${cssCheckSkipped}`);
+if (unstyledCssClasses.length > 0) {
+  console.log(
+    `Note: ${unstyledCssClasses.length} documented class(es) are rendered by a ` +
+      'component but carry no CSS rule (structural or JS marker classes):'
+  );
+  for (const item of unstyledCssClasses) console.log(`  ${item}`);
+}
+if (missingCssClasses.length > 0) {
+  console.warn('Documented CSS classes that exist nowhere in the library:');
+  for (const problem of missingCssClasses) console.warn(`  ${problem}`);
+}
+
+// ---------------------------------------------------------------------------
+// Collect each component's CSS custom properties
+//
+// Names, kinds and defaults come out of the compiled bundles; the prose comes
+// from scripts/ai-manifest/custom-properties.js. See that file's header for
+// why the list is produced that way. Checked in both directions below: a
+// described property the CSS does not have, and a property the CSS exposes
+// that nothing describes, both fail validation.
+// ---------------------------------------------------------------------------
+const customProperties = collectCustomProperties(
+  path.resolve(process.cwd(), 'stories/assets/css'),
+  buildTokensDictionary().tokens.map(token => token.name)
+);
+const customPropertyCount = Object.values(customProperties.byComponent).reduce(
+  (total, list) => total + list.length,
+  0
+);
+
+// The --mg-* properties that are in neither tokens.json nor a component's
+// customProperties: global like a theme token, but declared straight in SCSS
+// rather than generated from tokens/*.yaml, so the dictionary never saw them.
+// Written out from the data rather than by hand, because naming only the
+// data-viz palette left 29 properties unsaid — including the five typography
+// roles that #1210 had just established as the public font API.
+const globalGroupsWithMembers = customProperties.globals.filter(
+  group => group.count > 0
+);
+const globalGroupsSentence = globalGroupsWithMembers
+  .map(
+    group =>
+      `${group.label} (${group.prefix}*), ${group.count} of them, ${group.where}`
+  )
+  .join('; ');
+// Counted rather than written out. The sentence above is generated from
+// GLOBAL_PREFIXES, so a hand-typed "Four groups" in front of it goes stale the
+// moment a group is added or removed — which is exactly what happened while
+// unisdr/undrr-mangrove#1203 briefly carried a fifth group, leaving llms.txt
+// claiming four and then listing five.
+const GROUP_COUNT_WORDS = [
+  'No',
+  'One',
+  'Two',
+  'Three',
+  'Four',
+  'Five',
+  'Six',
+  'Seven',
+  'Eight',
+  'Nine',
+];
+const globalGroupsCountPhrase = `${
+  GROUP_COUNT_WORDS[globalGroupsWithMembers.length] ??
+  String(globalGroupsWithMembers.length)
+} group${globalGroupsWithMembers.length === 1 ? '' : 's'}`;
+const globalGroupsTotal = customProperties.globals.reduce(
+  (total, group) => total + group.count,
+  0
+);
+
+if (customProperties.skipped) {
+  console.warn(
+    `Note: ${customProperties.skipped} Skipping the custom property inventory.`
+  );
 }
 
 // Check COMPONENT_IDS entries that won't render due to missing data
@@ -905,8 +1712,14 @@ const a11yRules = [
 const a11yViolations = [];
 
 for (const [componentId, data] of Object.entries(curatedData)) {
-  if (!data?.examples) continue;
-  for (const example of data.examples) {
+  const curatedExamples = [
+    ...(Array.isArray(data?.examples) ? data.examples : []),
+    ...(Array.isArray(data?.supplementalExamples)
+      ? data.supplementalExamples
+      : []),
+  ];
+  if (curatedExamples.length === 0) continue;
+  for (const example of curatedExamples) {
     if (!example.html) continue;
     for (const rule of a11yRules) {
       if (rule.test(example.html)) {
@@ -932,12 +1745,11 @@ if (a11yViolations.length > 0) {
 // Check 2: PropTypes coverage warning
 // ---------------------------------------------------------------------------
 
-const totalComponents = Object.keys(manifest.components).length;
-const withProps = Object.values(manifest.components).filter(
-  c => c.reactDocgen?.props && Object.keys(c.reactDocgen.props).length > 0
-).length;
-const coverage =
-  totalComponents > 0 ? Math.round((withProps / totalComponents) * 100) : 0;
+const {
+  total: totalComponents,
+  documented: withProps,
+  percent: coverage,
+} = propTypesCoverage(manifest.components);
 
 console.log(
   `PropTypes coverage: ${withProps} of ${totalComponents} components have props documented (${coverage}%)`
@@ -1037,10 +1849,30 @@ async function checkCuratedDrift() {
         warnings.push(`  ${componentId}: ${parts.join(' | ')}`);
       }
     } catch {
-      // Component can't render in Node — skip silently
+      // The component cannot render in plain Node — a component that calls
+      // DOMPurify is the usual reason, since DOMPurify needs a DOM. That is
+      // also why it has curated HTML in the first place, so this is the
+      // expected path for every sanitising component. Say so rather than
+      // skipping in silence: the curated markup for these entries has no
+      // automated check behind it at all, and a reader who knows this function
+      // exists would otherwise assume it covered them.
+      warnings.push(
+        `  ${componentId}: could not verify — the component does not render in plain Node, so its curated HTML is unchecked and maintained by hand`
+      );
     }
   }
   return warnings;
+}
+
+function findDevelopmentJsxBundles() {
+  if (!fs.existsSync(distDir)) return [];
+
+  return fs.readdirSync(distDir).filter(fileName => {
+    if (!fileName.endsWith('.js')) return false;
+    return fs
+      .readFileSync(path.join(distDir, fileName), 'utf8')
+      .includes('jsxDEV');
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -1075,15 +1907,170 @@ if (validateOnly) {
     failed = true;
   }
 
+  if (missingSummaries.length > 0) {
+    console.error(
+      `Validation failed: ${missingSummaries.length} curated description(s) ` +
+        'run past the summary length with no short `summary` of their own. ' +
+        'The description is published in full; add a one-sentence `summary` ' +
+        'beside it in component-data.js for the index listing:'
+    );
+    for (const problem of missingSummaries) console.error(`  - ${problem}`);
+    failed = true;
+  }
+
+  if (malformedExamples.length > 0) {
+    console.error(
+      `Validation failed: ${malformedExamples.length} curated example(s) are ` +
+        'not in the { name, html } shape. Such an example is skipped by the ' +
+        'a11y lint and by drift detection, and reaches consumers as a bare ' +
+        'string where every other component gives an object.'
+    );
+    failed = true;
+  }
+
+  if (malformedHydration.length > 0) {
+    console.error(
+      `Validation failed: ${malformedHydration.length} hydration or ` +
+        'vanillaModule contract problem(s). Each curated contract needs selector, modules and ' +
+        'example.'
+    );
+    failed = true;
+  }
+
+  if (missingModuleFiles.length > 0) {
+    console.error(
+      `Validation failed: ${missingModuleFiles.length} vanilla lifecycle ` +
+        'module claim(s) do not match the files on disk. A component that ' +
+        'claims a module, or a VANILLA_SCRIPTS entry that names one, must ' +
+        'point at a real file under stories/assets/js/, and every module that ' +
+        'ships must be listed in VANILLA_SCRIPTS.'
+    );
+    for (const problem of missingModuleFiles) console.error(`  - ${problem}`);
+    failed = true;
+  }
+
+  if (missingCssClasses.length > 0) {
+    console.error(
+      `Validation failed: ${missingCssClasses.length} documented CSS class(es) ` +
+        'appear neither in the compiled CSS nor in any story source. Either ' +
+        'the class was renamed, or component-data.js names one that never ' +
+        'existed:'
+    );
+    for (const problem of missingCssClasses) console.error(`  - ${problem}`);
+    failed = true;
+  }
+
+  // Custom properties, checked in both directions. The first mirrors the
+  // documented-class check above. The second is the one this field exists
+  // for: a property a component exposes that nobody wrote down is exactly the
+  // gap that sent a consuming team grepping the compiled CSS.
+  if (customProperties.absent.length > 0) {
+    console.error(
+      `Validation failed: ${customProperties.absent.length} documented custom ` +
+        'property(ies) are defined by no stylesheet and read by none. Either ' +
+        'the property was renamed or removed, or PROPERTY_DOCS in ' +
+        'custom-properties.js names one that never existed:'
+    );
+    for (const name of customProperties.absent) console.error(`  - ${name}`);
+    failed = true;
+  }
+
+  if (customProperties.undocumented.length > 0) {
+    console.error(
+      `Validation failed: ${customProperties.undocumented.length} custom ` +
+        'property(ies) are exposed by the compiled CSS but have no ' +
+        'description. Add each to PROPERTY_DOCS in custom-properties.js, or ' +
+        'to NOT_PUBLIC with the reason it is not part of the theming API:'
+    );
+    for (const item of customProperties.undocumented) {
+      console.error(`  - ${item}`);
+    }
+    failed = true;
+  }
+
+  if (customProperties.unattributed.length > 0) {
+    console.error(
+      `Validation failed: ${customProperties.unattributed.length} custom ` +
+        'property(ies) belong to no component. Claim each in OWNERS in ' +
+        'custom-properties.js, or — if it is a theme token — add it to a ' +
+        'tokens/*.yaml source so tokens.json documents it:'
+    );
+    for (const name of customProperties.unattributed) {
+      console.error(`  - ${name}`);
+    }
+    failed = true;
+  }
+
+  // Losing a property is a removal from a public API, so it fails until
+  // MIN_PROPERTIES comes down with it. NOT_PUBLIC is the one way to make a
+  // property disappear from the manifest, and it used to do so in silence:
+  // moving one there printed "Validation passed" and shrank a JSON file
+  // nobody diffs. It is now printed on every run and counted here.
+  if (!customProperties.skipped) {
+    const shrunk = Object.entries(MIN_PROPERTIES)
+      .map(([id, floor]) => ({
+        id,
+        floor,
+        actual: customProperties.byComponent[id]?.length ?? 0,
+      }))
+      .filter(({ floor, actual }) => actual < floor);
+    if (shrunk.length > 0) {
+      console.error(
+        `Validation failed: ${shrunk.length} component(s) publish fewer ` +
+          'custom properties than MIN_PROPERTIES in custom-properties.js ' +
+          'records. A property left the public API. If that is intended, ' +
+          'lower the number in the same commit and say so in the CHANGELOG:'
+      );
+      for (const { id, floor, actual } of shrunk) {
+        console.error(`  - ${id}: ${actual}, was ${floor}`);
+      }
+      failed = true;
+    }
+
+    const floorless = Object.keys(customProperties.byComponent)
+      .filter(id => !(id in MIN_PROPERTIES))
+      .sort();
+    if (floorless.length > 0) {
+      console.error(
+        `Validation failed: ${floorless.length} component(s) publish custom ` +
+          'properties with no entry in MIN_PROPERTIES, so losing one later ' +
+          'would go unnoticed. Add each with its current count:'
+      );
+      for (const id of floorless) {
+        console.error(`  - ${id}: ${customProperties.byComponent[id].length}`);
+      }
+      failed = true;
+    }
+  }
+
+  const notPublic = Object.entries(NOT_PUBLIC);
+  console.log(
+    `Custom properties held back from the API (NOT_PUBLIC): ${notPublic.length}`
+  );
+  for (const [name, reason] of notPublic) {
+    console.log(`  - ${name}: ${reason}`);
+  }
+
+  const developmentJsxBundles = findDevelopmentJsxBundles();
+  if (developmentJsxBundles.length > 0) {
+    console.error(
+      'Validation failed: production component bundles contain development JSX runtime calls.'
+    );
+    for (const fileName of developmentJsxBundles) {
+      console.error(`  - ${fileName}`);
+    }
+    failed = true;
+  }
+
   // Run drift check (warnings only — does not fail the build)
   const driftWarnings = await checkCuratedDrift();
   if (driftWarnings.length > 0) {
     console.warn(
-      'Curated HTML drift detected (BEM classes differ from auto-rendered output):'
+      'Curated HTML check (BEM classes compared against auto-rendered output):'
     );
     for (const w of driftWarnings) console.warn(w);
     console.warn(
-      'Review component-data.js entries above — curated HTML may be stale.'
+      'Review the component-data.js entries above — curated HTML may be stale, and an entry reported as unverifiable has nothing checking it at all.'
     );
   }
 
@@ -1110,34 +2097,58 @@ async function main() {
     renderedHtml = new Map();
   }
 
+  // Which published bundles cannot be imported outside a browser.
+  const domOnlyBundles = await probeBundleImports();
+  if (domOnlyBundles.size > 0) {
+    console.log(
+      `  ${domOnlyBundles.size} bundle(s) need a DOM at import (flagged importRequiresDom):`
+    );
+    for (const [bundle, reason] of domOnlyBundles) {
+      console.log(`    ${bundle}.js — ${reason}`);
+    }
+  }
+
   // -------------------------------------------------------------------------
   // Transform each component
   // -------------------------------------------------------------------------
 
   const indexEntries = [];
   const componentFiles = [];
+  const componentChangelogs = {};
   let droppedImportCount = 0;
 
   for (const [, component] of Object.entries(manifest.components)) {
     const id = component.id;
-    const name = component.name || id;
+    // Storybook derives `name` from meta.component, and falls back to a
+    // squashed filename when a story file has none — which every CSS-only
+    // component does, giving "Statuslabel" for StatusLabel. A curated `name`
+    // overrides that so the index reads as the component is actually called.
+    const name = curatedData[id]?.name || component.name || id;
     const jsDocParams = parseJsDocParams(component.jsDocTags);
     const data = curatedData[id];
     const isReact = REQUIRES_REACT[id];
     const isVanilla = !isReact;
-    const description = getDescription(component, data);
+    const description = getDescription(id, component, data);
 
     // --- Validated import statement ---
-    // Storybook's react-docgen auto-generates import statements for every
-    // component, but only components exported from src/index.js are actually
-    // importable from the npm package. Use buildImportStatement() which
-    // checks against real exports instead of trusting Storybook's guess.
+    // Storybook's react-docgen auto-generates an import statement for every
+    // component, pointing at the package root, which resolves for nobody.
+    // buildImportStatement() emits the subpath the tarball actually ships and
+    // a binding the bundle actually exports, or nothing at all.
     const validImport = buildImportStatement(name, id);
     if (component.import && !validImport) droppedImportCount++;
+    const needsDom =
+      Boolean(validImport) && domOnlyBundles.has(importedBundle(validImport));
 
     // --- Index entry (lightweight) ---
-    const indexEntry = { id, name, description };
+    const summary = getSummary(id, component, data, description);
+    const indexEntry = { id, name, summary, description };
     if (validImport) indexEntry.import = validImport;
+    // The import line is correct and resolves; evaluating it outside a
+    // browser does not. Flagged rather than withheld: the component is
+    // published and usable, and an agent needs to know which of the two it
+    // is facing (unisdr/undrr-mangrove#1252).
+    if (needsDom) indexEntry.importRequiresDom = true;
     indexEntry.docsUrl = docsUrl(id);
     indexEntry.detailsUrl = `${DOCS_BASE}ai-components/${id}.json`;
 
@@ -1146,12 +2157,37 @@ async function main() {
     } else {
       indexEntry.vanillaHtml = true;
     }
+    if (data?.hydration) indexEntry.hydration = true;
+
+    // The lifecycle is stated, not implied. `vanillaModule` used to be present
+    // only when there was one, so "vanillaHtml with no lifecycle module" and
+    // "vanillaHtml plus a module" were indistinguishable without probing /js/
+    // for a 404 (#1197). It is now always emitted, and `vanillaScripts` names
+    // the files to load so nothing has to be guessed from the component id.
+    indexEntry.vanillaModule = Boolean(data?.vanillaModule);
+    if (data?.vanillaModule) {
+      indexEntry.vanillaScripts = modulePaths(data.vanillaModule);
+    }
+
+    const componentCustomProperties = customProperties.byComponent[id];
+    if (componentCustomProperties?.length) {
+      indexEntry.customProperties = componentCustomProperties.length;
+    }
 
     indexEntries.push(indexEntry);
 
     // --- Full component file ---
-    const detail = { name, description };
+    const detail = { name, summary, description };
     if (validImport) detail.import = validImport;
+    if (needsDom) {
+      detail.importRequiresDom = true;
+      detail.importNote =
+        'This bundle reads `document` while it loads, so the import above ' +
+        'throws "document is not defined" in Node and during server-side ' +
+        'rendering. It is correct in a browser and through a bundler. On a ' +
+        'server-rendered page, load it from a dynamic import after mount, or ' +
+        'use the vanilla module and hydration contract instead.';
+    }
     detail.docsUrl = docsUrl(id);
 
     if (isVanilla) {
@@ -1193,12 +2229,22 @@ async function main() {
       });
     }
 
-    // Rendered HTML: prefer auto-rendered from dist/, fall back to curated
+    // Rendered HTML: prefer auto-rendered from dist/, fall back to curated.
+    // `supplementalExamples` are appended to either source: they show markup the
+    // component's default render never produces, such as the icon-only buttons
+    // beside a labelled CTA, so they add to the published HTML rather than
+    // standing in for it and are not compared against the render for drift.
     if (renderedHtml.has(id)) {
       detail.renderedHtml = renderedHtml.get(id);
       detail.renderedHtmlSource = 'auto';
     } else if (data?.examples) {
       detail.renderedHtml = data.examples;
+    }
+    if (data?.supplementalExamples?.length) {
+      detail.renderedHtml = [
+        ...(detail.renderedHtml || []),
+        ...data.supplementalExamples,
+      ];
     }
 
     // CSS classes used by this component
@@ -1219,14 +2265,77 @@ async function main() {
       };
     }
 
+    // CSS custom properties this component exposes — its theming API. Set
+    // these instead of writing rules against the classes above: a class rule
+    // of equal specificity replaces what the component draws, while a
+    // property is the override point the component was built around.
+    if (componentCustomProperties?.length) {
+      detail.customProperties = {
+        _ai:
+          'Restyle the component by setting these, usually on the component ' +
+          'or an ancestor — but check `default` first: a property the ' +
+          'component itself declares beats an ancestor, so it has to be set ' +
+          'on that element instead. type "default" means a plain rule ' +
+          'already gives it the value in `default`, and yours replaces it. ' +
+          'type "hook" means no unconditional rule defines it: `default` is ' +
+          'the fallback it resolves to until a wrapper, an inline style or a ' +
+          'prop sets it, and a hook with no `default` has no value at all ' +
+          'until you give it one. A value a modifier or a media query ' +
+          'declares is never published as `default`, because it is not what ' +
+          'the component resolves to at rest. `wrapInRgb: true` means the ' +
+          'value is sRGB channels ' +
+          '("255 255 255"), not a colour — a hex or a keyword there makes ' +
+          'the declaration invalid and it drops silently. These are NOT in ' +
+          `${DOCS_BASE}tokens.json, which covers theme tokens only.`,
+        properties: componentCustomProperties,
+      };
+    }
+
     // Vanilla HTML embed instructions (for syndication components)
     if (data?.vanillaHtmlEmbed) {
       detail.vanillaHtmlEmbed = data.vanillaHtmlEmbed;
     }
 
+    // Vanilla hydration contract (data attributes, events, CDN modules).
+    // {{version}} is already resolved: curatedData went through replaceVersion.
+    if (data?.hydration) detail.hydration = data.hydration;
+    // Plain ES module contract (no React, no hydrate.js), same shape — or
+    // `false` when the component has no vanilla lifecycle, so a reader of the
+    // detail file alone gets the same answer the index gives (#1197).
+    detail.vanillaModule = data?.vanillaModule || false;
+    if (data?.vanillaModule) {
+      detail.vanillaScripts = modulePaths(data.vanillaModule);
+    } else if (data?.vanillaModuleNote) {
+      // Why there is none, for a component where the absence is a decision
+      // rather than a gap.
+      detail.vanillaModuleNote = data.vanillaModuleNote;
+    }
+
     // Do-not-modify flag for branding-critical components
     if (data?.doNotModify) {
       detail.doNotModify = data.doNotModify;
+    }
+
+    if (id === 'components-icons' && iconInventory?.icons?.length) {
+      detail.availableIcons = iconInventory.icons;
+    }
+
+    // Component changelog parsed from Storybook MDX documentation
+    let compChangelog = [];
+    if (component.docs) {
+      for (const doc of Object.values(component.docs)) {
+        if (doc.content && doc.content.includes('## Changelog')) {
+          compChangelog = parseComponentChangelog(doc.content);
+          if (compChangelog.length > 0) break;
+        }
+      }
+    }
+    if (compChangelog.length > 0) {
+      detail.changelog = compChangelog;
+      componentChangelogs[id] = {
+        name,
+        entries: compChangelog,
+      };
     }
 
     componentFiles.push({ id, content: detail });
@@ -1246,17 +2355,31 @@ async function main() {
       'Component index for the UNDRR Mangrove library. ' +
       'Most components work as vanilla HTML with CSS classes (vanillaHtml: true). ' +
       'Some require React (requiresReact: true). ' +
+      'Every entry states its lifecycle outright, so you never have to probe /js/ for a 404: ' +
+      "vanillaModule is true when a plain ES module under /js/ drives the behaviour — the entry's " +
+      'vanillaScripts then lists the files to load, each one the `file` of an entry in ' +
+      'library.vanillaScripts, and the detail file carries the full contract — and false when ' +
+      'there is none, either because the component is static presentation (the detail file says why ' +
+      'in vanillaModuleNote) or because its behaviour needs React (hydration: true). ' +
+      'An `import` line, where present, is the exact line to use and names the package subpath ' +
+      `(${pkg.name}/components/Name.js); the package root is not an entry point and resolves on no ` +
+      'published version. No `import` line means the component ships in no bundle. ' +
+      'importRequiresDom: true means that line reads `document` as it loads: correct in a browser ' +
+      'or through a bundler, and it throws in Node and in server-side rendering — the detail file ' +
+      'says what to do instead. ' +
       'Each entry has a detailsUrl with full props, rendered HTML examples, and code snippets.',
     library: {
       name: pkg.name,
       version: pkg.version,
       description: pkg.description,
       documentation: DOCS_BASE,
-      repository: 'https://github.com/unisdr/undrr-mangrove',
+      repository: REPO_URL,
+      publicRepository: PUBLIC_REPO_URL,
       npm: `https://www.npmjs.com/package/${pkg.name}`,
       cssPrefix: 'mg-',
-      namingConvention: 'BEM (e.g., mg-card__title, mg-button--primary)',
-      themes: ['undrr', 'preventionweb', 'irp', 'mcr2030'],
+      namingConvention:
+        'BEM (e.g., mg-card__title, mg-card__icon--bordered). Buttons are the exception: mg-button-primary, mg-button-secondary and mg-button-outline are single-dash, not BEM modifiers.',
+      themes: ['undrr', 'preventionweb', 'irp', 'mcr2030', 'delta'],
       locales: ['en', 'ar', 'my', 'ja'],
       rtlSupport: true,
       semanticHtml: true,
@@ -1267,6 +2390,20 @@ async function main() {
         wide: '1440px',
       },
       utilitiesUrl: `${DOCS_BASE}ai-components/utilities.json`,
+      iconsUrl: `${DOCS_BASE}ai-components/components-icons.json`,
+      tokensUrl: `${DOCS_BASE}tokens.json`,
+      customProperties: {
+        _note:
+          `${customPropertyCount} component-scoped CSS custom properties ` +
+          `across ${Object.keys(customProperties.byComponent).length} ` +
+          "components. They are a component's theming API and are NOT in " +
+          'tokens.json, which documents theme tokens only. Each component ' +
+          'that has them lists a count here and the full set, with defaults ' +
+          'and descriptions, in its detail JSON.',
+        field: 'customProperties',
+      },
+      releasesUrl: `${DOCS_BASE}releases.json`,
+      changelogUrl: `${PUBLIC_REPO_BLOB_MAIN}CHANGELOG.md`,
       quickstart: {
         css: `<link rel="stylesheet" href="${themeCss.undrr}" />`,
         cssThemes: themeCss,
@@ -1278,6 +2415,7 @@ async function main() {
         scripts: requiredScripts,
         logos,
       },
+      vanillaScripts,
     },
     components: indexEntries,
     generatedAt,
@@ -1318,6 +2456,52 @@ async function main() {
   );
 
   // -------------------------------------------------------------------------
+  // Write tokens.json
+  // -------------------------------------------------------------------------
+
+  // The count of SCSS-declared global properties is derived from the bundles
+  // here and handed to the dictionary, so its `scope.excludes` and the same
+  // figure in llms.txt cannot drift apart.
+  // null, not 0, when the bundles were not there to count: `globals` is empty
+  // on the skipped path, and 0 is an assertion rather than a silence.
+  const tokensDict = buildTokensDictionary({
+    globalPropertyCount: customProperties.skipped ? null : globalGroupsTotal,
+  });
+  tokensDict.version = pkg.version;
+  tokensDict.generatedAt = generatedAt;
+  const tokensJson = JSON.stringify(tokensDict, null, 2);
+  fs.writeFileSync(path.join(buildDir, 'tokens.json'), tokensJson);
+  fs.writeFileSync(path.join(outputDir, 'tokens.json'), tokensJson);
+
+  // -------------------------------------------------------------------------
+  // Write releases.json
+  // -------------------------------------------------------------------------
+
+  const changelogPath = path.resolve(process.cwd(), 'CHANGELOG.md');
+  const releasesData = buildReleasesManifest({
+    changelogPath,
+    pkg,
+    generatedAt,
+    docsBase: DOCS_BASE,
+    componentChangelogs,
+  });
+  const releasesJson = JSON.stringify(releasesData, null, 2);
+  fs.writeFileSync(path.join(buildDir, 'releases.json'), releasesJson);
+  validateContentReferences(
+    JSON.parse(fs.readFileSync(path.join(buildDir, 'index.json'), 'utf8'))
+      .entries
+  );
+  fs.writeFileSync(
+    path.join(buildDir, 'content-patterns.json'),
+    JSON.stringify(
+      buildContentPatterns({ docsBase: DOCS_BASE, packageName: pkg.name }),
+      null,
+      2
+    )
+  );
+  fs.writeFileSync(path.join(outputDir, 'releases.json'), releasesJson);
+
+  // -------------------------------------------------------------------------
   // Write llms.txt
   // -------------------------------------------------------------------------
 
@@ -1331,9 +2515,24 @@ async function main() {
 
 ## Links
 
+Content families organize full-page, teaser and card presentations. Read content-patterns.json before choosing a presentation: experimental teaser and card presentations are implemented, references are examples, and stubs are not designed or implemented. Card field selection is separate from teaser selection; vertical and book are card layouts. Never invent a callable component or import for a stub. Teaser inputs are projections, not canonical content schemas.
+
 - Storybook: ${DOCS_BASE}
-- Repository: https://github.com/unisdr/undrr-mangrove
+- Repository (public mirror of ${REPO_URL.replace('https://github.com/', '')}, which is not publicly readable): ${PUBLIC_REPO_URL}
+- Report a problem with a component or a guide: ${PUBLIC_ISSUES_URL}
 - npm: https://www.npmjs.com/package/${pkg.name}
+- Content families and presentation status (machine-readable): ${DOCS_BASE}content-patterns.json
+- Content pattern overview: ${DOCS_BASE}?path=/docs/patterns-content-overview--docs
+- Release changelog (machine-readable): ${DOCS_BASE}releases.json
+- Project changelog (markdown): ${PUBLIC_REPO_BLOB_MAIN}CHANGELOG.md
+- v2.0 Release notes: ${DOCS_BASE}?path=/docs/getting-started-release-notes-v2-0--docs
+- Icons inventory: ${DOCS_BASE}ai-components/components-icons.json
+- Theme token dictionary: ${DOCS_BASE}tokens.json (theme tokens only; component custom properties are documented per component)
+- Editorial manual for UNDRR web content (news, publications, blogs, events) as well as UI copy and component docs: capitalization, punctuation, numbers, abbreviations, italics, spelling, UNDRR terminology, disability inclusive and gender-inclusive language, each rule credited to its United Nations system or UNDRR source in the doc itself: ${DOCS_BASE}llms-editorial-manual.txt
+- UNDRR editorial guides for writing news, events, publications and blogs: https://assets.undrr.org/docs/editorial-guides/README.md
+- Instructions for AI agents writing UNDRR content: https://assets.undrr.org/docs/editorial-guides/ai-agent-instructions.md
+- Page building guide for UNDRR websites built with Drupal Gutenberg (landing page structure, layout patterns, component choice, UNDRR block reference with current pasteable markup): ${DOCS_BASE}llms-page-building.txt
+- Search widget editor configuration (block settings, search syntax, field:value filters, taxonomy term IDs): ${DOCS_BASE}llms-search-widget.txt
 
 ## For AI agents
 
@@ -1342,8 +2541,22 @@ The Storybook site is a single-page app, so fetching pages directly won't give y
 Component index (all ${indexEntries.length} components):
 ${DOCS_BASE}ai-components/index.json
 
+Release changelog & version history (~${releasesData.releases.length} releases, machine-readable):
+${DOCS_BASE}releases.json
+
 CSS utility class reference (~${utilityClassCount} classes):
 ${DOCS_BASE}ai-components/utilities.json
+
+Theme token dictionary (~${tokensDict.totalTokens} tokens with type, format & wrapping metadata):
+${DOCS_BASE}tokens.json
+
+This dictionary covers theme tokens only — the --mg-* properties the theme stylesheets define from the tokens/*.yaml sources. Component-scoped custom properties are public API but are not in it. They are in each component's own entry instead: ${customPropertyCount} properties across ${Object.keys(customProperties.byComponent).length} components, under \`customProperties\` in ai-components/{id}.json, each with its type, its resting value and what it does. The index says which components have them and how many. ${globalGroupsTotal} --mg-* properties are in neither list: they are global like a theme token, but declared straight in SCSS rather than generated from tokens/*.yaml, so the dictionary never saw them. ${globalGroupsCountPhrase} — ${globalGroupsSentence}. The dictionary's own \`scope\` field says the same thing.
+
+Icons gallery:
+${DOCS_BASE}?path=/docs/components-icons--docs
+
+Static icon inventory (machine-readable):
+${DOCS_BASE}ai-components/components-icons.json
 
 ### Vanilla HTML quick start
 
@@ -1354,31 +2567,131 @@ ${vanillaCount} of the ${indexEntries.length} components work as plain HTML with
    - PreventionWeb: ${themeCss.preventionweb}
    - MCR2030: ${themeCss.mcr2030}
    - IRP: ${themeCss.irp}
+   - DELTA: ${themeCss.delta}
+   - All themes in one bundle: ${themeCss.all}
+
+   Each single-theme bundle carries only its own tokens. style.css contains no
+   .mg-theme-* rules, so putting class="mg-theme-irp" on a page that loaded
+   style.css does nothing — load that theme's bundle, or style-all.css if the
+   page has to switch themes at runtime.
 
 2. Fetch the component index and find what you need
 3. Fetch the component's detailsUrl and use the renderedHtml examples
 
 ### React quick start
 
-${reactCount} components require React (requiresReact: true in the index). These use D3, Leaflet, or complex state management. Import via npm: import { ComponentName } from "@undrr/undrr-mangrove".
+${reactCount} components require React (requiresReact: true in the index). These use D3, Leaflet, or complex state management. Import them from the package subpath, which is what the tarball ships: import { ComponentName } from "@undrr/undrr-mangrove/components/ComponentName.js". The package root is not an entry point — "@undrr/undrr-mangrove" on its own does not resolve on any published version. Each component's index and detail entry carries the exact \`import\` line to use; where one is absent, the component ships in no bundle and there is nothing to import. A component flagged \`importRequiresDom: true\` reads \`document\` as it loads: that import line is correct in a browser and through a bundler, and throws "document is not defined" if it is evaluated in Node or during server-side rendering — its detail file says what to do instead.
 
-Several React components support hydration on vanilla HTML pages via the createHydrator pattern. Check the component's reactNote field for details.
+Several React components support hydration on vanilla HTML pages via the createHydrator pattern. Check the component's \`hydration\` field (or \`reactNote\`) for details; components with a \`hydration\` field are flagged \`hydration: true\` in the index. A \`vanillaModule\` field (flagged \`vanillaModule: true\`) has the same shape but describes a plain ES module from \`/js/\`: it needs neither React nor \`hydrate.js\`.
+
+### Vanilla JavaScript modules and dynamic DOM re-initialization
+
+Mangrove provides standalone vanilla JavaScript utilities under \`/js/\` (\`${cdnBase}/js/*.js\`, loaded with \`type="module"\`) that auto-initialize on \`DOMContentLoaded\`. When working with Single Page Applications (SPAs) or dynamically rendering content into the DOM (e.g. after AJAX fetches, client routing, modal dialogs), invoke the exported initialization functions manually:
+
+- **Tabs** (\`js/tabs.js\`): Call \`mgTabs(scope)\` to initialize or re-initialize \`[data-mg-js-tabs]\` tab containers within a container element. Call \`mgTabsDestroy(scope)\` on unmount.
+- **Show More** (\`js/show-more.js\`): Call \`mgShowMore(scope)\` to initialize \`[data-mg-show-more]\` content truncation toggles.
+- **Table of Contents** (\`js/table-of-contents.js\`): Call \`mgTableOfContents(scope)\` to generate an article TOC with scrollspy tracking.
+- **On This Page Nav** (\`js/on-this-page-nav.js\`): Call \`mgOnThisPageNav(scope)\` for in-page jump nav with horizontal scrolling.
+- **Switch pending** (\`js/switch-pending.js\`): Call \`mgSwitchPendingInit(scope)\` for new \`[data-mg-switch-pending]\` switches, or \`mgSwitchPending(input, { save })\` for one switch. Call \`mgSwitchPendingDestroy(scope)\` before removing them.
+- **Preview Access** (\`js/preview-access.js\`): Call \`mgPreviewAccess(scope)\` to initialize the PIN preview gate. Add \`data-mg-preview-persist="local"\` (optionally \`data-mg-preview-max-age\` in days) to remember an unlock across tabs and visits, and listen for the bubbling \`mg-preview-access:unlock\` event rather than polling the \`mg-preview-access--unlocked\` class.
+- **Shared constants** (\`js/undrr.js\`): Key codes and breakpoints on \`window.UNDRR\`. It does not bundle the other modules.
 
 ### CSS utilities
 
-The utilities.json file lists ~${utilityClassCount} utility classes grouped by category: layout containers, grid, responsive display, text utilities, accessibility, background colors, text colors, font sizes, animations, embed containers, and show-more patterns. All use the mg- prefix.
+The utilities.json file lists ~${utilityClassCount} utility classes grouped by category: layout containers, grid, responsive display, text utilities, accessibility, background colors, text colors, font sizes, animations, embed containers, interactive controls (switches and icon-only buttons), and show-more patterns. All use the mg- prefix.
+
+### Releases and changelog
+
+To inspect changes between versions, tags, and pre-releases without parsing raw git commits:
+
+- **Machine-readable releases endpoint**: ${DOCS_BASE}releases.json
+  Contains structured changelog objects for every release (version, release date, tag, PR references, categorization: Features, Bug fixes, Tooling, Security) plus component-level changelogs. Pull requests, issues and tags are on \`${REPO_URL.replace('https://github.com/', '')}\`, which is not publicly readable, so they appear as plain-text references (such as \`unisdr/undrr-mangrove#1234\`) with no URL; do not look them up on the public fork, whose numbers refer to different items.
+- **Repository changelog**: ${PUBLIC_REPO_BLOB_MAIN}CHANGELOG.md
+  Cross-cutting library release notes.
+- **v2.0 migration notes & breaking changes**: ${DOCS_BASE}?path=/docs/getting-started-release-notes-v2-0--docs
+  Full breaking change catalogue, architectural shifts, and token migration recipes.
+- **Component-level changelogs**: Each component's detail file (${DOCS_BASE}ai-components/{id}.json) contains a \`changelog\` array with granular version updates, dates, descriptions, and PR references.
 
 ### Z-index layers
 
-Use $mg-z-index-* tokens from _variables.scss for global stacking contexts (fixed, sticky, portaled, or deliberately negative elements). One token per UI concept; derive backdrops with arithmetic (e.g. z-index: $mg-z-index-drawer - 1). For local stacking within a component's own isolated stacking context (e.g. inside position: relative), use a raw value with a comment instead of a token. The navigation zone tokens ($mg-z-index-nav through $mg-z-index-header, values 10-22) are frozen; do not change their numeric values. See the "Design decisions/Z-index layers" Storybook page for the full layer table and philosophy.
+Use the --mg-z-index-* custom properties for global stacking contexts (fixed, sticky, portaled, or deliberately negative elements). One token per UI concept: --mg-z-index-behind, -nav, -sticky, -nav-toggle, -header, -drawer, -dropdown, -modal, -toast. Derive backdrops with calc(), e.g. z-index: calc(var(--mg-z-index-drawer) - 1). For local stacking within a component's own isolated stacking context (e.g. inside position: relative), use a raw value with a comment instead of a token. The navigation zone tokens (-nav through -header, values 10-22) are frozen; do not change their numeric values. These were $mg-z-index-* Sass variables before 2.0 and no longer exist in that form. See the "Design decisions/Z-index layers" Storybook page for the full layer table and philosophy.
+
+### Rich editorial content
+
+For trusted rendered editorial HTML, use \`mg-content\` on the actual body field and follow ${DOCS_BASE}?path=/docs/patterns-rich-content--docs. It supplies scoped semantic defaults, not sanitisation or a layout/font reset. Keep navigation, controls, cards and embeds outside the prose boundary where practical; classed component islands own their presentation. Existing paragraph links retain their cue through CMS classes. Preserve native table headers/captions and provide named keyboard-accessible local overflow only when content is genuinely wide. \`mg-body\` remains supported without deprecation.
+
+### Visual decisions and card composition
+
+Read ${DOCS_BASE}?path=/docs/design-decisions-experience-principles--docs before visual refinements. Shared components own semantics, geometry and interactions; themes own surface expression. Verify all five themes, optional content and supported CMS markup. Design review is not user research.
+
+- Photo cards have edge images and inset content; text-only cards retain their enclosure. Without labels, the title uses one content inset rather than stacked metadata spacing.
+- Publication teasers preserve complete natural-ratio covers with a square hairline and default to an unboxed caption/listing. Theme their surface with the five \`--mg-card-publication-*\` tokens in \`tokens.json\`; do not assume general card surface overrides also style publications. Gutenberg's book shape is \`mg-card mg-card__book\`, without \`mg-card__vc\`.
+- Choose \`imageScale: 'small'\` for navigation glyphs, reserving proportional sizes for illustrations and logos. \`iconSize\` supplies image attributes, not CSS glyph sizing. For horizontal visual sizing, set \`--mg-card-icon-size\` in CSS.
+- Compact stats reduce both padding and internal spacing. Do not reintroduce child margins that duplicate their gap.
+
+### Motion and animation
+
+Before adding or changing component motion, read ${DOCS_BASE}llms-motion.txt (rendered: ${DOCS_BASE}?path=/docs/design-decisions-motion--docs). Use interaction timing tokens, gate optional CSS motion with prefers-reduced-motion: no-preference, and check the preference before JavaScript-driven motion. Reuse Loader or ProgressBar so loading remains understandable under reduced motion and forced colours; directional travel follows RTL reading direction. The guide documents loop-cycle exceptions and browser review requirements.
+
+### Design tokens
+
+Colour, spacing, radii and component tokens are CSS custom properties, so they are themeable at runtime from a \`:root\` block or a \`.mg-theme-*\` block. No rebuild of Mangrove is needed.
+
+Where they come from:
+
+- Compiled theme token dictionary: ${DOCS_BASE}tokens.json — theme tokens only; see its \`scope\` field
+- \`tokens/mangrove.yaml\` — the brand-neutral base: ${PUBLIC_REPO_RAW_MAIN}tokens/mangrove.yaml
+- \`tokens/undrr.yaml\`, \`preventionweb.yaml\`, \`irp.yaml\`, \`mcr.yaml\`, \`delta.yaml\` — brand layers merged over the base, same directory.
+- \`stories/assets/scss/_tokens-data-viz.scss\` — the chart and map palette: ${PUBLIC_REPO_RAW_MAIN}stories/assets/scss/_tokens-data-viz.scss
+
+Those YAML files carry a \`$description\` on the tokens that need one, which is the reasoning behind the value. For automated and tooling integrations, fetch the machine-readable \`${DOCS_BASE}tokens.json\` dictionary which includes token types, formats, descriptions, and rgb() wrapping requirements.
+
+\`tokens.json\` is a THEME token dictionary. It lists the \`--mg-*\` properties the theme stylesheets define from the YAML sources, and nothing else. A component's own properties live in its manifest entry instead, under \`customProperties\` in \`ai-components/{id}.json\` — ${customPropertyCount} of them across ${Object.keys(customProperties.byComponent).length} components, each with what it does and the value it holds at rest. They come in two kinds: \`type: "default"\`, which a plain, unconditional rule already gives a value (\`--mg-empty-state-*\`, \`--mg-notice-*\`, \`--mg-status-label-*\`, \`--mg-tab-*\`), and \`type: "hook"\`, which nothing unconditional defines — either no rule at all, or only a modifier or a media query — so it holds its fallback until a wrapper, an inline style or a React prop sets it (\`--mg-switch-track-*\`, \`--mg-switch-size\`, \`--mg-card-border\`, \`--mg-icon-fg\`, \`--mg-cta-bg\`, \`--mg-legend-tick-pos\`, \`--mg-on-this-page-nav-offset\`, \`--mg-tree-guide-offset\`). A record with \`wrapInRgb: true\` takes sRGB channels (\`255 255 255\`) rather than a colour, the same way tokens.json marks \`format: "srgb-channels"\`; a hex or a keyword there makes the declaration invalid and it drops with no warning. Restyle a component by setting these, not by writing rules against its classes: a class rule of equal specificity replaces what the component draws, and several components build their geometry on a property whose value your rule would then be fighting.
+
+What you actually write against is the compiled result: the \`--mg-*\` custom properties in the theme stylesheets above.
+
+Four things the sources do not make obvious:
+
+**1. The rgb() wrapping rule.** Most colour tokens are sRGB channel triples, not colours:
+
+\`\`\`css
+--mg-color-blue-900: 0 79 145;              /* channels, not a colour */
+color: rgb(var(--mg-color-interactive));    /* correct */
+color: var(--mg-color-interactive);         /* INVALID — silently dropped */
+background: rgb(var(--mg-color-interactive) / 0.1);   /* alpha for free */
+\`\`\`
+
+Getting it wrong produces a declaration the browser discards with no console error, so it fails by looking almost right. Full colour tokens must NOT be wrapped in \`rgb()\`, because they already evaluate to complete color expressions or keyword colours (e.g. \`transparent\`).
+Check \`${DOCS_BASE}tokens.json\` for the authoritative, machine-readable list. As of ${pkg.version}, the tokens that must NOT be wrapped in \`rgb()\` are:
+${tokensDict.wrappingRules.exceptions.length ? tokensDict.wrappingRules.exceptions.map(e => `- \`${e}\``).join('\n') : '- (None as of this version)'}
+
+**2. Focus rings.** \`--mg-color-focus-ring\` is the ring colour (deliberately not a brand colour: a brand-coloured ring vanishes against the brand's own filled surfaces). \`--mg-color-focus-ring-inverse\` is for a ring painted on an already-dark surface — a button on a filled hero banner, the dark Card variants. Geometry is \`--mg-focus-ring-width\`, \`-offset\` and \`-radius\`. Components should \`@include mg-focus-ring;\` or \`@include mg-focus-ring-inset;\` (\`stories/assets/scss/_mixins.scss\`) rather than hand-rolling an outline: the mixin draws two bands so the indicator is legible on any surface, and keeps the ring as an \`outline\` so it survives forced-colors mode.
+
+**3. Sendai Framework colours.** \`--mg-sendai-target-a\` through \`-g\` are the seven Sendai targets, with matching \`--mg-sendai-on-target-*\` label colours (Target C is the one that takes a dark label). \`--mg-dataviz-*\` carries the chart palette: \`categorical\` for unordered series, \`sequential\` for ordered magnitude, \`sendai-*\` for the ten-stop target ramps, plus chart chrome. Do not mix those three jobs.
+
+**4. Deprecated: \`--sendai-red|orange|purple|turquoise\`** and their \`.mg-u-background-color--sendai-*\` / \`.mg-u-color--sendai-*\` utility classes. Named by colour rather than by Sendai meaning, three of the seven targets have no counterpart, and they are scheduled for removal in 2.1. Do not emit them in new code — use \`--mg-sendai-target-*\` for target semantics or the \`--mg-color-*\` palette for a plain accent.
+
+Breakpoints (\`$mg-breakpoint-*\`) and \`$mg-tabs-border-bottom\` remain SCSS-only build-time variables and are not available as CSS custom properties: \`@media\` and \`@if\` both need a compile-time value. The font *faces* (\`$mg-font-face-*\`) are Sass for a different reason — they are the compile-time source the role custom properties are built from, and overriding one before the import is the only way to introduce a typeface Mangrove does not ship; see "Overrides" under Typography below. Font *families* are not on that list — they are the five \`--mg-font-family-*\` role custom properties described under "Brand guide → Typography" below. Never hard-code a typeface; name a role.
 
 ### Conventions
 
 - CSS prefix: mg-
 - Naming: BEM (e.g., mg-card__title, mg-button--primary)
-- Themes: undrr, preventionweb, irp, mcr2030
+- Themes: undrr, preventionweb, irp, mcr2030, delta
 - Locales: en, ar, my, ja (RTL supported)
 - Semantic HTML, WCAG accessible
+
+### List semantics: do not add role="list"
+
+Do NOT put \`role="list"\` on a \`<ul>\` or \`<ol>\` you give a Mangrove class to. Mangrove's own rendered HTML does not, and the components do not need it.
+
+Every Mangrove class that hides list markers does it with \`list-style: none\` followed by \`list-style-type: ""\`. Safari drops the implicit \`list\` role from a list whose marker is \`none\`, which is the bug \`role="list"\` is usually added to work around; an empty string is still a marker, so the role survives, renders nothing and reserves no space. The \`none\` before it is the fallback for browsers too old to parse a string marker. Fixing it in the stylesheet is what reaches consumers who hand-write the markup, which is most of them.
+
+This covers \`.mg-breadcrumb\`, \`.mg-pager__list\`, \`.mg-on-this-page-nav__list\`, \`.mg-status-label-group\`, \`.mg-legend__list\`, \`.mg-hub-header__nav\`, the MegaMenu nav and sidebar lists, and the search widget's active-filter list.
+
+Some lists carry a different ARIA role on purpose — \`.mg-tree\` is \`role="tree"\`, its groups are \`role="group"\`, the mega-menu panels are \`role="menu"\`, the select dropdown is \`role="listbox"\`, and \`.mg-tabs__list\` becomes \`role="tablist"\` once \`js/tabs.js\` initialises it. That role replaces list semantics. Keep it, and do not add \`role="list"\` alongside it.
+
+If you are writing a list of your own with \`list-style: none\` and no Mangrove class, the Safari bug is yours to handle: either add \`list-style-type: ""\` after it, or add \`role="list"\`.
 
 ### How to use
 
@@ -1393,6 +2706,13 @@ Use $mg-z-index-* tokens from _variables.scss for global stacking contexts (fixe
 Canonical JSON Schema definitions for component data contracts. Components with schemas include a contentSchema field in their detail JSON with field definitions, required fields, and deviation notes (where current prop names differ from canonical names).
 
 Schema source: https://github.com/unisdr/undrr-mangrove/tree/main/schemas
+
+The component index is not the whole library. Three things live elsewhere, and searching only the index will tell you they do not exist:
+
+- **CSS utility classes are in \`utilities.json\`, not the index.** Some patterns ship as utility classes with no component entry at all — the accordion (\`.mg-accordion\`) is one, and the data-table modifiers (\`.mg-table--data\` and the \`.mg-table__th--sortable\` / \`--sticky\` / \`.mg-table__td--numeric\` family) are documented there rather than on the Table entry. Fetch \`utilities.json\` before concluding Mangrove has no accordion or no sortable table.
+- **There is no IconButton component, and there are two icon-only button classes.** \`.mg-button--icon\` is a shape modifier of \`.mg-button\`: use \`.mg-button.mg-button-{variant}.mg-button--icon\` whenever the button should carry a brand colour, because the foreground, typography and focus ring come from \`.mg-button\`. \`.mg-icon-button\` is a separate standalone ghost primitive for dismiss, close and copy controls on an existing surface; it carries no variant colours and takes no \`.mg-button-*\` class. Both are in \`utilities.json\` and on the Buttons entry.
+- **Component custom properties are not in \`tokens.json\`.** It is a theme token dictionary. A component's own properties are in its \`ai-components/{id}.json\` entry, under \`customProperties\`; see the "Design tokens" section above.
+
 ### Brand guide
 
 The Storybook includes a Brand section for non-technical users (content editors, brand managers, external partners). Five pages:
@@ -1401,7 +2721,7 @@ The Storybook includes a Brand section for non-technical users (content editors,
 - **Brand identity** (${DOCS_BASE}?path=/story/brand-brand-identity--docs): Theme-aware page showing colors, typography, logos, buttons, and icons. Switch themes via toolbar or append \`&globals=theme:<Theme Name>\` to the URL. Colors are probed live from compiled CSS via \`getComputedStyle\`, so they stay in sync with SCSS.
 - **Brand guidelines** (${DOCS_BASE}?path=/docs/brand-brand-guidelines--docs): Editorial guidance — brand positioning, communication rules, logo usage, photography standards, web elements. Migrated from UNDRR SharePoint.
 - **Common patterns** (${DOCS_BASE}?path=/docs/brand-common-patterns--docs): Plain-language reference for foundations shared across all themes — breakpoints, grid classes (\`mg-grid__col-{N}\`), accessibility standards, language support (\`lang="ar"\` mechanism), icon sources, z-index.
-- **Component gallery** (${DOCS_BASE}?path=/docs/brand-component-gallery--docs): Curated catalog of ~40 components in 8 categories (page structure, hero, content cards, interactive, data viz, typography, layout helpers, platform features). Each row links to the full component docs. Useful first stop when navigating what exists.
+- **Component gallery** (${DOCS_BASE}?path=/docs/brand-component-gallery--docs): Curated catalog of ~40 components in 9 categories (page structure, hero, content cards, interactive, data viz, typography, layout helpers, loading and progress, platform features). Each row links to the full component docs. Useful first stop when navigating what exists.
 
 Theme key facts:
 - Five themed properties with resolved primary colors: UNDRR (blue #004f91), PreventionWeb (teal #0a6969), MCR2030 (purple #591a61), IRP (bright blue #0f78bf), DELTA Resilience (navy #132e48).
@@ -1409,21 +2729,25 @@ Theme key facts:
 
 Brand characteristics (UNDRR voice): Knowledgeable, Approachable, Collaborative.
 
-Editorial rules:
-- Avoid UN jargon. Lead with people, not issues. Use inverted pyramid. Positive framing for prevention content.
+Editorial rules: follow the editorial manual (${DOCS_BASE}llms-editorial-manual.txt) and, for news, events, publications and blogs, the UNDRR editorial guides linked above.
 
 Typography:
-- Body and narrative headings (h1-h6): Roboto (\`$mg-font-family\`). H1-h6 inherit the body font — Roboto Condensed at heading size feels too tight for sustained reading.
-- Component titles, labels, tags, and UI chrome: Roboto Condensed via \`$mg-font-family-headings\` (\`!default\`-flagged alias for \`$mg-font-family-condensed\`). Applied to: \`.mg-hero__title\`, \`.mg-hero__label\`, \`.mg-card__title\`, \`.mg-card__label\`, \`.mg-stats-card-item__value\`, \`.mg-stats-card-item__label\`, \`.mg-stats-card-item__bottom-label\`, \`.mg-gallery__title\`, \`.mg-mega-content__banner header\`, \`.mg-tabs__link\`, \`.mg-on-this-page-nav__link\`, \`.mg-on-this-page-nav__cta\`, \`.mg-mega-topbar__item-link\`, \`.mg-button\`, \`.mg-footer--about-footer--links\`, \`.mg-tag\` and variants. New components that render titles, labels, tags, or UI chrome should use this token rather than \`$mg-font-family-condensed\` directly.
-- Arabic: Noto Kufi Arabic (\`$mg-font-family-arabic-headings\`) for headings and UI chrome, Dubai (\`$mg-font-family-arabic-body\`) for body. Applied automatically via \`:lang(ar)\` selectors when \`lang="ar"\` is set on a container. Heading/label/UI-chrome components must include a matching \`:lang(ar)\` block since Roboto Condensed has no Arabic glyph coverage.
+- Font families are CSS custom properties called ROLES, not Sass variables. A component stylesheet names a role and never a typeface: \`var(--mg-font-family-text)\`, \`-heading\`, \`-display\`, \`-ui\`, \`-code\`. Roles are defined on \`:root\` in \`_variables.scss\` and re-pointed for Arabic in \`_fonts.scss\`, which is the single font entry point every build path imports — entry points, the shared Drupal import list, and the per-component recipe alike.
+- Role to face, Latin then Arabic: text = Roboto / Noto Sans Arabic; heading = Roboto / Noto Kufi Arabic; display = Roboto Condensed / Noto Kufi Arabic; ui = Roboto Condensed / Noto Sans Arabic; code = the monospace stack in both scripts. Latin rendering is identical to the pre-role token set.
+- Which role: \`ui\` for scanned chrome — \`.mg-hero__label\`, \`.mg-card__title\`, \`.mg-card__label\`, \`.mg-stats-card-item__value\`, \`.mg-stats-card-item__label\`, \`.mg-stats-card-item__bottom-label\`, \`.mg-gallery__title\`, \`.mg-mega-content__banner header\`, \`.mg-tabs__link\`, \`.mg-on-this-page-nav__link\`, \`.mg-on-this-page-nav__cta\`, \`.mg-mega-topbar__item-link\`, \`.mg-footer--about-footer--links\`, \`.mg-tag\` and variants. \`display\` for \`.mg-hero__title\` only. \`text\` for every button (including \`.mg-preview-access__submit\`), form fields, chips, status labels, table cells and running text. Do not declare a family on h1-h6, \`p\`, \`th\`, \`td\` or a bare \`header\`: they inherit \`text\` from \`body\`, and h1-h3 additionally get \`heading\` from \`_foundational.scss\` under \`:lang(ar)\` only.
+- DO NOT write a \`:lang(ar)\` font-family rule in a component stylesheet. Script routing lives only in \`_fonts.scss\`; 19 component-level \`:lang(ar)\` blocks were deleted when the roles landed. A component-level override takes the component out of the script map.
+- The \`heading\` rule in \`_foundational.scss\` is \`h1:lang(ar), h2:lang(ar), h3:lang(ar)\` and is deliberately NOT unconditional. In Latin \`heading\` and \`text\` are the same face, so an unconditional rule would change nothing visually and would override a consuming theme's own \`h1\` face on source order. A consequence: a \`ui\` or \`display\` container does NOT need to claim its subtree, and the \`:is(h1, h2, h3, a)\` claims earlier alphas added to \`card.scss\` and \`hero.scss\` were removed.
+- Overrides: re-point a role at runtime in a \`.mg-theme-* { --mg-font-family-ui: ...; }\` block, which can only select a face Mangrove already loads. To introduce a new typeface, override a \`$mg-font-face-*\` Sass variable (\`$mg-font-face-sans\`, \`-sans-condensed\`, \`-mono\`, \`-arabic-display\`, \`-arabic-sans\`, all \`!default\`) before the import and load the font yourself; that applies to every brand in \`style-all.css\`. Quote any family name that is not a plain CSS identifier — \`"Frutiger 55 Roman", sans-serif\`, not bare — or the emitted custom property is invalid and the page falls back to the browser's default serif.
+- Removed in 2.0 and warned about at import time: \`$mg-font-family\`, \`$mg-font-family-condensed\`, \`$mg-font-family-headings\`, \`$mg-font-family-icons\`, \`$mg-font-family-arabic-headings\`, \`$mg-font-family-arabic-body\`.
+- Arabic weights: only Regular and Bold are published in the UNDRR asset library for either family, so Arabic has a 400/700 ladder where Latin has four steps. The ladder is asymmetric: \`font-weight: 600\` resolves up to Bold, \`500\` resolves down to Regular.
 
 Photo sizes (credit/source required on every image):
 - Hero 1440x540 (16:6), News 1164x665 (16:9), Publication 176x235 (3:4), Thumbnail 176x176 (1:1).
 
 Logos (hosted on CDN for hotlinking or download):
-- UNDRR: https://assets.undrr.org/static/logos/undrr/undrr-logo-blue.svg (blue, white, square variants)
-- PreventionWeb: https://assets.undrr.org/static/logos/pw/pw-logo.svg
-- IRP: https://assets.undrr.org/static/logos/irp/irp-logo.svg
+- UNDRR: https://assets.undrr.org/logos/undrr/undrr-logo-blue.svg (blue, white, square variants)
+- PreventionWeb: https://assets.undrr.org/logos/pw/pw-logo.svg
+- IRP: https://assets.undrr.org/logos/irp/irp-logo.svg
 - MCR2030 and DELTA: not yet on CDN
 - Safety zone equals the width of the "U" in UNDRR. Do not place on busy backgrounds. Use inverse (white) variant on dark backgrounds.
 
@@ -1437,10 +2761,58 @@ Icons:
 - stories/Molecules/     SectionHeader, FooterNavigation, BodyColumn
 - stories/Components/    MegaMenu, Cards, Charts, Map, Gallery
 - stories/Utilities/     CSS utilities, loaders, show/more
+- stories/Patterns/      Full-page compositions (ArticleStory, ContentHub, LandingPages) — demonstrate assembling components into a page. ContentTeaser and ContentCard are explicit reusable-export exceptions. See "Composing a page pattern" below.
 - stories/assets/scss/   Theme stylesheets and design tokens
+
+### Composing a page pattern
+
+Full-page examples under stories/Patterns/* (ArticleStory, ContentHub, LandingPages) are compositions rather than published components. ContentTeaser and ContentCard are explicit exceptions: their reusable renderers are published as components/ContentTeaser.js and components/ContentCard.js. Drupal bindings are data in components/DrupalContentPatterns.js; canonical models and full-page stubs are not callable exports. Each one demonstrates how existing components and layout primitives assemble into a full page. Before laying out a new pattern, pick the right layout system for the shape you need — reusing the wrong one is the most expensive mistake to unwind:
+
+- **mg-grid** (\`stories/Atom/Layout/Grid/grid.scss\`, classes \`mg-grid mg-grid__col-{2..6}\`): equal-fraction repeating columns — every numbered track is \`1fr\`. Use it for repeating card grids. \`mg-grid--article\` (below) is a different, asymmetric variant on the same base class — the numbered/span classes are still equal-fraction only.
+- **mg-grid's \`--article\` variant** (\`mg-grid mg-grid--article\`, defined in \`stories/Atom/Layout/Grid/grid.scss\`): the asymmetric rail/article split — a flexible \`minmax(0, 1fr)\` column plus a fixed 16rem rail. This is what \`mg-reading--with-contents\` (\`stories/Utilities/PagePatterns/page-patterns.scss\`) pairs with for a long-form reading column with a sticky table-of-contents rail from 48rem up, stacking above the article below that; \`page-patterns.scss\` itself only supplies the item-placement rules (which child is the sidebar vs. the article), not the column shape. Reach for \`mg-grid--article\` directly if you need the same asymmetric shape outside that pattern.
+- **Plain CSS grid**, written locally in a component's own stylesheet: for a one-off asymmetric shape that belongs to a single component and isn't meant to be reused elsewhere — e.g. Hero's \`.mg-hero__split-grid\` (\`2fr 1fr\` split for \`layout="split"\`) or Card's horizontal-card grid with explicit \`grid-column\`/\`grid-row\` placement. Use this when the shape is specific to one component, not a page-level layout primitive; don't promote it to a shared class unless a second consumer actually needs it.
 `;
 
   fs.writeFileSync(llmsTxtPath, llmsTxt);
+
+  // -------------------------------------------------------------------------
+  // Write llms-editorial-manual.txt (see editorial-manual.js)
+  // -------------------------------------------------------------------------
+
+  const llmsEditorialManualTxt = buildEditorialManualTxt(
+    fs.readFileSync(
+      path.resolve(process.cwd(), 'docs/EDITORIAL-MANUAL.md'),
+      'utf8'
+    ),
+    DOCS_BASE
+  );
+
+  fs.writeFileSync(
+    path.join(buildDir, 'llms-editorial-manual.txt'),
+    llmsEditorialManualTxt
+  );
+
+  // -------------------------------------------------------------------------
+  // Write topic-scoped llms-*.txt guides
+  // (see docs-submanifest.js)
+  // -------------------------------------------------------------------------
+
+  for (const submanifest of DOCS_SUBMANIFESTS) {
+    const txt = buildDocsSubmanifest({
+      title: submanifest.title,
+      summary: submanifest.summary,
+      sources: submanifest.sources.map(source => ({
+        ...source,
+        markdown: fs.readFileSync(
+          path.resolve(process.cwd(), 'docs', source.file),
+          'utf8'
+        ),
+      })),
+      docsBase: DOCS_BASE,
+      extraLinks: submanifest.extraLinks(DOCS_BASE),
+    });
+    fs.writeFileSync(path.join(buildDir, submanifest.filename), txt);
+  }
 
   // -------------------------------------------------------------------------
   // Write llms.json
@@ -1455,12 +2827,27 @@ Icons:
       license: pkg.license || 'See LICENSE file',
       urls: {
         storybook: DOCS_BASE,
-        repository: 'https://github.com/unisdr/undrr-mangrove',
+        repository: REPO_URL,
+        publicRepository: PUBLIC_REPO_URL,
+        issues: PUBLIC_ISSUES_URL,
         npm: `https://www.npmjs.com/package/${pkg.name}`,
+        releases: `${DOCS_BASE}releases.json`,
+        changelog: `${PUBLIC_REPO_BLOB_MAIN}CHANGELOG.md`,
+        releaseNotesV2: `${DOCS_BASE}?path=/docs/getting-started-release-notes-v2-0--docs`,
         componentIndex: `${DOCS_BASE}ai-components/index.json`,
+        contentPatterns: `${DOCS_BASE}content-patterns.json`,
         utilities: `${DOCS_BASE}ai-components/utilities.json`,
+        tokens: `${DOCS_BASE}tokens.json`,
+        editorialManual: `${DOCS_BASE}llms-editorial-manual.txt`,
+        ...Object.fromEntries(
+          DOCS_SUBMANIFESTS.map(submanifest => [
+            submanifest.urlKey,
+            `${DOCS_BASE}${submanifest.filename}`,
+          ])
+        ),
         css: themeCss,
       },
+      latestRelease: releasesData.latest,
       requiredAssets: {
         _note:
           'Every UNDRR-branded page should include these. The page header and footer structures are non-negotiable branding elements — use them exactly as documented.',
@@ -1471,10 +2858,24 @@ Icons:
         })),
         logos,
       },
+      vanillaScripts,
+      customProperties: {
+        _note:
+          'A component is restyled by setting its CSS custom properties, not ' +
+          'by overriding its class rules. Every component that exposes any ' +
+          'lists them under `customProperties` in its detail JSON, each with ' +
+          'its type ("default" or "hook"), its resting value and what it ' +
+          'does. These are component-scoped and are NOT in tokens.json, ' +
+          'which covers theme tokens only — see its `scope` field.',
+        total: customPropertyCount,
+        components: Object.keys(customProperties.byComponent).length,
+        componentIndex: `${DOCS_BASE}ai-components/index.json`,
+        contentPatterns: `${DOCS_BASE}content-patterns.json`,
+      },
       conventions: {
         cssPrefix: 'mg-',
         naming: 'BEM',
-        themes: ['undrr', 'preventionweb', 'irp', 'mcr2030'],
+        themes: ['undrr', 'preventionweb', 'irp', 'mcr2030', 'delta'],
         locales: ['en', 'ar', 'my', 'ja'],
         breakpoints: {
           mobile: '480px',
@@ -1492,6 +2893,38 @@ Icons:
   fs.writeFileSync(path.join(buildDir, 'llms.json'), llmsJson);
 
   // -------------------------------------------------------------------------
+  // No links into the unisdr organization
+  // -------------------------------------------------------------------------
+
+  // Anonymous readers and AI tools get a 404 from github.com/unisdr. A link
+  // there in any manifest this build publishes is a regression: fix its source
+  // or route it through toPublicMarkdown() in parse-changelog.js.
+  const publishedManifests = [
+    ...fs
+      .readdirSync(buildDir)
+      .filter(name => /^(llms.*\.(txt|json)|releases\.json)$/.test(name))
+      .map(name => path.join(buildDir, name)),
+    ...fs
+      .readdirSync(outputDir)
+      .filter(name => name.endsWith('.json'))
+      .map(name => path.join(outputDir, name)),
+  ];
+  const privateLinks = publishedManifests.flatMap(file =>
+    findPrivateLinks(fs.readFileSync(file, 'utf8')).map(
+      url => `${path.relative(process.cwd(), file)}: ${url}`
+    )
+  );
+  if (privateLinks.length > 0) {
+    console.error(
+      `Error: ${privateLinks.length} link(s) to github.com/unisdr in the generated manifests, which anonymous readers cannot open:`
+    );
+    for (const link of [...new Set(privateLinks)].slice(0, 20)) {
+      console.error(`  - ${link}`);
+    }
+    process.exit(1);
+  }
+
+  // -------------------------------------------------------------------------
   // Summary
   // -------------------------------------------------------------------------
 
@@ -1505,6 +2938,17 @@ Icons:
 
   console.log('AI manifest generated:');
   console.log(`  ${llmsTxtPath} (llms.txt + llms.json)`);
+  console.log(
+    `  ${path.join(buildDir, 'llms-editorial-manual.txt')} (editorial manual sub-manifest)`
+  );
+  for (const submanifest of DOCS_SUBMANIFESTS) {
+    console.log(
+      `  ${path.join(buildDir, submanifest.filename)} (${submanifest.title})`
+    );
+  }
+  console.log(
+    `  ${path.join(buildDir, 'releases.json')} (${releasesData.releases.length} releases parsed)`
+  );
   console.log(
     `  ${outputDir}/index.json (${indexEntries.length} components, ${indexSizeKB} KB)`
   );
@@ -1520,7 +2964,7 @@ Icons:
   );
   if (droppedImportCount > 0) {
     console.log(
-      `  ${droppedImportCount} Storybook-generated import(s) removed (not exported from src/index.js)`
+      `  ${droppedImportCount} Storybook-generated import(s) removed (no published bundle exports them)`
     );
   }
 }

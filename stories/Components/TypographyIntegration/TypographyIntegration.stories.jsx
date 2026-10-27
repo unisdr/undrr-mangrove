@@ -2,7 +2,7 @@ import React from 'react';
 
 const TypographyIntegrationExample = () => {
   return (
-    <section className="sb-unstyled mg-container">
+    <section className="sb-unstyled mg-container mg-content">
       <h1>Typography integration</h1>
 
       <p>
@@ -117,9 +117,9 @@ const count = text.length;
 
       <figure>
         <figcaption>
-          As the UN Office for Disaster Risk Reduction, UNDRR convenes partners
-          and coordinates activities to create safer, more resilient
-          communities.
+          As the United Nations Office for Disaster Risk Reduction, UNDRR
+          convenes partners and coordinates activities to create safer, more
+          resilient communities.
         </figcaption>
       </figure>
 
@@ -268,7 +268,6 @@ const count = text.length;
 export default {
   title: 'Components/Typography/Typography integration example',
   component: TypographyIntegrationExample,
-  tags: ['hidden'],
 };
 
 export const Default = {

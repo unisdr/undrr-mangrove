@@ -1,27 +1,198 @@
-import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
-import { FullWidth } from './FullWidth';
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
 import * as FullWidthStories from './FullWidth.stories';
 
 <Meta of={FullWidthStories} />
 
-> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
 
 # Full-width utility
 
-This takes a container element and attempts to stretch it to the full width of the browser, inheriting the background colour.
+`mg-container-full-width` paints an element's background edge to edge across the viewport while the element itself stays inside its container. Use it for tinted bands, coloured section breaks, and navigation bars that need a full-bleed background but container-aligned content.
+
+Because the element's box does not move, the content inside it stays aligned with the rest of the page. You do not need an inner wrapper to re-align it.
+
+> **Note:** The bleed is hidden if any ancestor between this element and the page background has its own opaque background. See [when the bleed does not appear](#when-the-bleed-does-not-appear).
 
 <Canvas of={FullWidthStories.DefaultFullWidth} meta={FullWidthStories} />
 
-### Usage
+## Usage
 
-To use this component, follow these steps:
+Put the class on the element that carries the background. Set the background on that same element — the bleed inherits it.
 
-- Include the CSS
+### HTML
 
-#### Interactions
+```html
+<div class="mg-container">
+  <section class="mg-container-full-width mg-u-background-color--neutral-50">
+    <h2>Section heading</h2>
+    <p>
+      This text stays aligned with the container. The tint runs edge to edge.
+    </p>
+  </section>
+</div>
+```
 
-- No interactions are needed with the loader
+### React
+
+The class is the API. Apply it to whichever element carries the background.
+
+```jsx
+<div className="mg-container">
+  <section className="mg-container-full-width mg-u-background-color--neutral-50">
+    <h2>Section heading</h2>
+  </section>
+</div>
+```
+
+This directory also holds a small `FullWidth` wrapper component that renders a `<section>` with the class applied. It has its own webpack entry, so the npm package publishes it and a React consumer can import it:
+
+```jsx
+import { FullWidth } from '@undrr/undrr-mangrove/components/FullWidth.js';
+```
+
+There is no package root to import it from — every component is its own subpath (unisdr/undrr-mangrove#1252). In markup you are writing by hand, use the class directly; the component only saves you typing it.
+
+## When the bleed does not appear
+
+The utility fails silently. There is no console warning and no layout shift — the background simply stops at the container edge, which looks like the class did nothing.
+
+**Symptom:** the background is the width of `mg-container` instead of the width of the browser window.
+
+**Cause:** an ancestor between the utility and the page background has its own opaque `background`. The bleed is painted by a pseudo-element sitting behind the element, and a background on any ancestor paints on top of it.
+
+```html
+<!-- Broken: the wrapper's white background covers the bleed -->
+<div style="background: #fff">
+  <div class="mg-container">
+    <div class="mg-container-full-width" style="background: #eee">
+      No bleed.
+    </div>
+  </div>
+</div>
+```
+
+**How to check:** in browser dev tools, select the element and walk up the ancestor chain looking at `background-color`. The first ancestor with a value other than `rgba(0, 0, 0, 0)` is the one covering the bleed. An ancestor with `overflow: hidden` clips the bleed the same way.
+
+<Canvas
+  of={FullWidthStories.BlockedByAncestorBackground}
+  meta={FullWidthStories}
+/>
+
+> **Note:** Storybook's docs canvas is itself an opaque, clipped box, so no story on this page can show a true edge-to-edge bleed. The example above shows the width difference, not the real result. Open a story in its own tab to see the bleed against the browser window.
+
+### What to do instead
+
+Pick the first of these that fits.
+
+**1. Remove the background from the ancestor.** Move it onto the full-width element, or onto `<body>`. This keeps every advantage of the utility and is usually the right answer for a page shell that only sets a background because it needs one somewhere.
+
+**2. Add `isolation: isolate` to the full-width element.** This makes the element a stacking context of its own, so the bleed is painted with the element rather than behind the ancestor. Nothing moves and no markup changes.
+
+```css
+.my-band {
+  isolation: isolate;
+}
+```
+
+Do not do this if the element contains something that has to escape it — a dropdown, a sticky bar, a menu panel. A stacking context traps those at the element's own layer.
+
+**3. Switch to a self-contained breakout.** The element moves to the full viewport width itself, which no ancestor can defeat, and the content needs an inner `mg-container` to line back up.
+
+```css
+.my-band {
+  margin-inline-start: calc(50% - 50vw);
+  inline-size: 100vw;
+}
+```
+
+```html
+<div class="my-band">
+  <div class="mg-container">Content, re-aligned.</div>
+</div>
+```
+
+This is what `mg-hub-header` does, because its pattern wrappers set their own backgrounds.
+
+### Two other symptoms
+
+These look like the same fault but have different causes.
+
+**The bleed appears but is offset to one side, and the page scrolls sideways.** `text-align: center` is set on the full-width element itself. Centring moves the pseudo-element's starting point to the middle of the line box, so the bleed shifts by half the element's width. Set the alignment on a child instead.
+
+**A small horizontal scrollbar appears on a page that scrolls vertically.** `100vw` counts the width of the vertical scrollbar, so the bleed is a scrollbar-width wider than the visible page. The library cannot fix this from inside a component; the page root has to absorb it. See [page-level setup](#page-level-setup) below.
+
+## Page-level setup
+
+Every full-bleed escape in Mangrove — this utility, `mg-hero`, `mg-hub-header`, `mg-on-this-page-nav` — sizes itself with `100vw`. `vw` counts the classic vertical scrollbar; the containing block does not. So on any page that scrolls vertically, each escape overhangs by half a scrollbar on both sides and the page picks up a small horizontal scroll — about 8px at any viewport width with a classic 15px scrollbar, the same in both directions, on every variant.
+
+Nothing inside a component can measure the scrollbar, so the page root has to absorb it. Mangrove deliberately does not ship this rule, because it clips content the library cannot see. Add it to your own site stylesheet:
+
+```css
+html,
+body {
+  overflow-x: clip;
+}
+```
+
+### What it costs
+
+`clip` does not merely stop the page scrolling sideways. **It makes anything wider than the page permanently unreachable.** There is no scrollbar, and `scrollIntoView()` cannot pan to it either — a cell at `left: 1267` in a 1265px viewport stays off-screen and `scrollX` does not move. Whatever is past the edge is simply gone.
+
+So before you add the rule, find the content on your site that is wider than the page and give it its own scroll container:
+
+```css
+.my-wide-thing {
+  overflow-x: auto;
+}
+```
+
+**Check your Drupal Views tables first.** Drupal's `views-view-table.html.twig` wraps table output in `<div class="table-responsive">`, and no UNDRR theme styles that class. Wide Views tables are read today by scrolling the page sideways; add the page-root clip without styling the wrapper and that content is cut off with no way to reach it. `.table-responsive { overflow-x: auto; }` in your theme is the fix, and it should land before or with the clip, not after.
+
+Mangrove's own `Table` and `ScrollContainer` already scroll themselves, so components from the library are safe. Content your site renders around them may not be.
+
+### Both `html` and `body` are needed
+
+Neither declaration is redundant and neither is tidiness. Measured in Chrome, `html` alone and `body` alone each leave 784px of overflow in place — the page still scrolls sideways by the full amount. Only the pair clips.
+
+The reason is overflow propagation to the viewport: the user agent takes the viewport's overflow from `html`, or from `body` when `html` is `visible`, and whichever element it was taken from then renders as `visible` itself. A lone declaration is therefore always the one that gets neutralised. Do not "simplify" this to a single selector.
+
+### Use `clip`, never `hidden`
+
+`overflow-x: hidden` alongside an `overflow-y` of `visible` computes that `visible` to `auto`, which makes the element a scroll container and detaches every `position: sticky` descendant — in testing, a sticky header jumped to `top: -800px`. `clip` creates no scroll container, so sticky and fixed positioning keep working.
+
+### Browser support
+
+Safari below 16 does not support `overflow: clip`. It drops the declaration and those users keep today's behaviour: the small horizontal scroll stays, and nothing is clipped or unreachable. There is no separate fallback to write.
+
+## Right-to-left
+
+The bleed flips automatically under `[dir="rtl"]`. No extra class is needed.
+
+Under `[dir="rtl"]` the pseudo-element is anchored explicitly, with `left: 50%` and `margin-left: -50vw`, instead of hanging off its static position. Static position is what a right-to-left flex or grid container resolves from its inline-end edge, and that put the bleed about 13px off centre on `mg-mega-topbar` — which is itself the flex container — leaving an unpainted strip at one edge.
+
+The explicit anchor gives the same box in both directions **as long as the full-width element has no inline padding**. `left: 50%` is measured from the element's padding box, while the left-to-right rule's static position starts at its content box, so an element with `padding-inline-start` set gets a right-to-left bleed centred on the element and a left-to-right bleed pushed sideways by the padding. Where the two differ it is the right-to-left one that is correct; the left-to-right offset is a pre-existing quirk of the static-position anchor. Keep `padding-inline-start` off the element carrying `mg-container-full-width` and put it on a child instead.
+
+`left: 50%` is deliberate and is not a physical property left un-mirrored. The mirrored form (`right: 50%` with `margin-right: -50vw`) was measured and is wrong: it reintroduces the offset the anchor exists to remove. Do not tidy it.
+
+## Theme behaviour
+
+The utility has no colour of its own — it inherits `background-color` and `background-image` from the element it is on. It behaves the same across the UNDRR, PreventionWeb, IRP, and MCR2030 themes.
+
+<details>
+<summary>Why it works this way (for contributors)</summary>
+
+The bleed comes from a `::before` pseudo-element at `z-index: var(--mg-z-index-behind)` (`-1`), sized to `100vw` and pulled left by `calc(50% - 50vw)`.
+
+Negative-`z-index` descendants are painted early — after the backgrounds of the stacking context they belong to, but before the block backgrounds of the in-flow ancestors between them and that stacking context. So an ancestor background always wins. This is CSS painting order, not a bug in the rule, and it applies to every `--mg-z-index-behind` use. See [Z-index layers](?path=/docs/design-decisions-z-index-layers--docs).
+
+The alternative — moving the box with `margin-inline-start: calc(50% - 50vw)` — is immune to ancestors but relocates the element, so every consumer would need an inner `mg-container` to restore content alignment. The current mechanism was kept because that would be a breaking change for `mg-mega-topbar`, `mg-mega-content`, and every Drupal site using the class today.
+
+</details>
 
 ## Changelog
 
-- **1.0** — 2023-03-16: Released component
+- **1.3.1**, 2026-09-19 ([#1252](https://github.com/unisdr/undrr-mangrove/issues/1252)): Corrected the note on the `FullWidth` wrapper component, which said it "is not exported from `@undrr/undrr-mangrove`, so it is only available inside this repository". It has had a webpack entry since [#847](https://github.com/unisdr/undrr-mangrove/pull/847), so the npm package has been publishing `components/FullWidth.js` all along and the page was telling React consumers a usable component did not exist. The note now gives the working import line. Documentation only; neither the component nor the CSS changed.
+- **1.3**, 2026-09-18 ([#1203](https://github.com/unisdr/undrr-mangrove/issues/1203)): Fixed the right-to-left bleed landing about 13px off centre inside a flex parent such as `mg-mega-topbar`, which left an unpainted strip at one edge and 13px of page scroll at 1280. The `[dir="rtl"]` rule now anchors the pseudo-element with `left: 50%` and `margin-left: -50vw` rather than relying on its static position. Left-to-right rendering is untouched: the rule is scoped to `[dir="rtl"]`. Added [page-level setup](#page-level-setup), which documents the half-scrollbar overhang every `100vw` escape leaves on a vertically scrolling page, the `overflow-x: clip` a consuming site adds to fix it, and what that clip costs. No CSS change for the overhang: the library does not ship the page-root rule.
+- **1.2**, 2026-09-18 ([#1193](https://github.com/unisdr/undrr-mangrove/pull/1193)): Breaking: deleted the deprecated `FullWidth.scss` alias, which only forwarded to `full-width.scss` and emitted a deprecation `@warn`. The npm package no longer ships `scss/Utilities/FullWidth/FullWidth.scss`; import `scss/Utilities/FullWidth/full-width` instead. No CSS behaviour change.
+- **1.1**, 2026-09-10 ([#1118](https://github.com/unisdr/undrr-mangrove/issues/1118)): Documented the ancestor-background constraint, how to diagnose it, the three ways to work around it, and two symptoms that look like it but are not. No CSS behaviour change.
+- **1.0**, 2023-03-16: Released component

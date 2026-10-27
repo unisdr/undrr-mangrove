@@ -15,7 +15,7 @@ export function FooterConditions2({
   variant = 'default',
   ...args
 }) {
-  let screen_variant = variant_options[variant];
+  const screen_variant = variant_options[variant];
   return (
     <ul className={cls('footer-lists', `${screen_variant}`)}>
       {footerdata2.map((item, index) => (

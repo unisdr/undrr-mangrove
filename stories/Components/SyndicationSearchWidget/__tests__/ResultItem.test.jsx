@@ -5,12 +5,21 @@
 
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { ResultItem, swapCardVariant } from '../components/ResultItem';
+import {
+  ResultItem,
+  swapCardVariant,
+  stripHiddenTeaserFields,
+} from '../components/ResultItem';
 
 // Sample teaser HTML mimicking Elasticsearch output
 const TEASER_HC = [
   '<div class="mg-card mg-card__hc mg-card-book__hc">',
+  '<div class="mg-card__visual"><a href="/node/1"><img src="/image.jpg" alt="Cover" /></a></div>',
+  '<div class="mg-card__content">',
   '<div class="field field--name-node-title"><a href="/node/1">Title</a></div>',
+  '<div class="mg-card__date">15 Jun 2024</div>',
+  '<div class="mg-card__description">Description summary text</div>',
+  '</div>',
   '</div>',
 ].join('');
 
@@ -74,22 +83,69 @@ describe('swapCardVariant', () => {
     expect(result).toContain('mg-card');
   });
 
-  it('rewrites Drupal image style to portrait for card-book mode', () => {
-    const html = '<img src="https://www.undrr.org/sites/default/files/styles/landscape_16_9/public/2023-06/photo.jpg?itok=abc">';
+  it('preserves supplied artwork URLs for card-book mode', () => {
+    const html =
+      '<img src="https://www.undrr.org/sites/default/files/styles/landscape_16_9/public/2023-06/photo.jpg?itok=abc">';
     const result = swapCardVariant(html, 'card-book');
-    expect(result).toContain('/styles/por/public/');
-    expect(result).not.toContain('landscape_16_9');
+    expect(result).toContain(
+      '/styles/landscape_16_9/public/2023-06/photo.jpg?itok=abc'
+    );
+    expect(result).not.toContain('/styles/por/public/');
   });
 
   it('rewrites Drupal image style to landscape for card mode', () => {
-    const html = '<img src="https://www.undrr.org/sites/default/files/styles/por/public/2023-06/photo.jpg?itok=abc">';
+    const html =
+      '<img src="https://www.undrr.org/sites/default/files/styles/por/public/2023-06/photo.jpg?itok=abc">';
     const result = swapCardVariant(html, 'card');
     expect(result).toContain('/styles/landscape_16_9/public/');
     expect(result).not.toContain('/styles/por/');
   });
 });
 
+describe('stripHiddenTeaserFields', () => {
+  it('returns html unchanged when visibleTeaserFields is null or empty', () => {
+    expect(stripHiddenTeaserFields(TEASER_HC, null)).toBe(TEASER_HC);
+    expect(stripHiddenTeaserFields(TEASER_HC, {})).toBe(TEASER_HC);
+  });
+
+  it('removes elements matching hidden field selectors', () => {
+    const result = stripHiddenTeaserFields(TEASER_HC, {
+      image: false,
+      summary: false,
+    });
+    expect(result).not.toContain('mg-card__visual');
+    expect(result).not.toContain('mg-card__description');
+    expect(result).toContain('mg-card__date');
+  });
+});
+
 describe('ResultItem', () => {
+  it.each(['list', 'card', 'card-book'])(
+    'renders the card directly inside the article in %s mode',
+    displayMode => {
+      render(<ResultItem hit={createHit()} displayMode={displayMode} />);
+
+      const article = screen.getByRole('article');
+      expect(article).toHaveAttribute('data-result-type', 'publication');
+      expect(article.children).toHaveLength(1);
+      expect(article.firstElementChild).toHaveClass('mg-card');
+    }
+  );
+
+  it('preserves the scoring panel alongside teaser HTML when metrics are enabled', () => {
+    render(<ResultItem hit={createHit()} showMetrics />);
+
+    const article = screen.getByRole('article');
+    expect(
+      article.querySelector('.mg-search__result-metrics')
+    ).toBeInTheDocument();
+    expect(article.querySelector('.mg-card')).toBeInTheDocument();
+    expect(screen.getByText('Title')).toHaveAttribute(
+      'href',
+      'https://www.undrr.org/node/1'
+    );
+  });
+
   it('renders teaser HTML with card class swap for card mode', () => {
     render(<ResultItem hit={createHit()} displayMode="card" />);
 
@@ -134,9 +190,128 @@ describe('ResultItem', () => {
     expect(screen.getByText('www.undrr.org')).toBeInTheDocument();
   });
 
+  it('strips hidden fields programmatically from teaser HTML when visibleTeaserFields is passed', () => {
+    render(
+      <ResultItem
+        hit={createHit()}
+        visibleTeaserFields={{ image: false, summary: false, date: false }}
+      />
+    );
+
+    const wrapper = screen.getByRole('article');
+    expect(wrapper.querySelector('.mg-card__visual')).toBeNull();
+    expect(wrapper.querySelector('.mg-card__description')).toBeNull();
+    expect(wrapper.querySelector('.mg-card__date')).toBeNull();
+  });
+
+  it('renders fallback mode respecting visibleTeaserFields', () => {
+    const hitWithoutTeaser = createHit({
+      teaser: null,
+      published_at: '2024-06-15T10:00:00Z',
+    });
+
+    render(
+      <ResultItem
+        hit={hitWithoutTeaser}
+        visibleTeaserFields={{ date: false, siteName: false }}
+      />
+    );
+
+    expect(screen.queryByText('15 Jun 2024')).toBeNull();
+    expect(screen.queryByText('UNDRR.org')).toBeNull();
+  });
+
+  describe('fallback date', () => {
+    // 2025-11-12T12:00:00Z and 2025-11-14T12:00:00Z: Search API indexes
+    // date-only values at 12:00 UTC, as Unix seconds wrapped in an array.
+    const NOV_12 = 1762948800;
+    const NOV_14 = 1763121600;
+
+    const renderFallback = overrides => {
+      const { container } = render(
+        <ResultItem hit={createHit({ teaser: null, ...overrides })} />
+      );
+      return container.querySelector('time.mg-search__result-date');
+    };
+
+    it('reads published_at as Unix seconds in an array', () => {
+      const time = renderFallback({ published_at: [1718445600] });
+      expect(time).toHaveTextContent('Jun 15, 2024');
+      expect(time).toHaveAttribute('dateTime', '2024-06-15T10:00:00.000Z');
+    });
+
+    it('shows the event start date for a one-day event', () => {
+      const time = renderFallback({
+        type: ['event'],
+        published_at: [1718445600],
+        event_start: [NOV_12],
+        event_end: [NOV_12],
+      });
+      expect(time).toHaveTextContent('Nov 12, 2025');
+      expect(time).toHaveAttribute('dateTime', '2025-11-12');
+    });
+
+    it('shows a start to end range when the event spans several days', () => {
+      const time = renderFallback({
+        type: 'conference_event',
+        published_at: [1718445600],
+        event_start: [NOV_12],
+        event_end: [NOV_14],
+      });
+      expect(time.textContent).toMatch(/Nov 12\s*–\s*14, 2025/);
+      expect(time).toHaveAttribute('dateTime', '2025-11-12');
+    });
+
+    it('falls back to published_at for an event without event_start', () => {
+      const time = renderFallback({
+        type: 'event',
+        published_at: [1718445600],
+      });
+      expect(time).toHaveTextContent('Jun 15, 2024');
+    });
+
+    it('ignores event dates on other content types', () => {
+      const time = renderFallback({
+        type: 'news',
+        published_at: [1718445600],
+        event_start: [NOV_12],
+      });
+      expect(time).toHaveTextContent('Jun 15, 2024');
+    });
+
+    it('omits the date when published_at is unusable', () => {
+      expect(renderFallback({ published_at: ['not a date'] })).toBeNull();
+    });
+  });
+
   it('renders error state when domain is missing', () => {
     render(<ResultItem hit={createHit({ field_domain_access: undefined })} />);
 
-    expect(screen.getByText(/has no assigned domain/)).toBeInTheDocument();
+    expect(screen.getByText(/currently unavailable/)).toBeInTheDocument();
+  });
+
+  it('routes organization results through PreventionWeb regardless of field_domain_access', () => {
+    // Organizations are indexed against every domain; field_domain_access[0]
+    // is arbitrary (often alphabetically first, e.g. AFRP). Organizations are
+    // served authoritatively only through PreventionWeb. See undrr/web-backlog#2906.
+    const orgTeaser = [
+      '<div class="mg-card mg-card__hc">',
+      '<div class="field field--name-node-title"><a href="/node/456">Org</a></div>',
+      '</div>',
+    ].join('');
+    render(
+      <ResultItem
+        hit={createHit({
+          type: 'organization',
+          field_domain_access: ['afrp_undrr_org'],
+          teaser: orgTeaser,
+        })}
+      />
+    );
+
+    const link = screen.getByRole('link', { name: 'Org' });
+    expect(link.getAttribute('href')).toBe(
+      'https://www.preventionweb.net/node/456'
+    );
   });
 });

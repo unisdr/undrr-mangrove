@@ -20,60 +20,78 @@ export const getCaptionForLocale = locale => {
 
 <Meta of={ChipsStories} />
 
-> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
 
 # Chips
 
-Small interactive tags used to show active filters, selections, or categories. Chips can include a dismiss icon to let users remove them.
+Compact pill-shaped controls used for category navigation and active filters. The pill shape is intentional: it distinguishes a chip from conventional actions and form controls.
 
 ## When to use
 
-- Showing which filters or search terms are currently active
-- Letting users remove individual selections without clearing everything
-- Labelling active categories or tags in a content listing
+- Show active filters or search terms
+- Let users remove individual selections
+- Link to related content categories/tags
 
 ## States
 
-**Default (with dismiss icon)** — The chip shows a label and a close icon. Clicking the icon removes the filter or selection.
+**Category link** — Navigates to related content; use the default variant with a meaningful `href`.
 
-**Hover (with dismiss icon)** — The chip changes visual appearance when the user hovers over it, signalling it is interactive.
+**Dismissible filter** — Single button with visible × that removes the filter.
 
-**Default (no dismiss icon)** — The chip shows a label only. It communicates a current selection or category but does not allow removal.
-
-**Hover (no dismiss icon)** — Same visual change as the hover state above; no dismiss action is available.
+**Hover, focus, pressed** — Surface changes on hover; keyboard focus uses shared token-driven focus ring; reduced-motion-aware subtle press feedback.
 
 <Canvas of={ChipsStories.DefaultChips} meta={ChipsStories} />
 
+<Canvas of={ChipsStories.Dismissible} meta={ChipsStories} />
+
+### Text expansion and RTL
+
+Labels can grow without clipping the dismissal mark. Logical spacing keeps the mark on the correct trailing edge in both directions.
+
+<Canvas of={ChipsStories.LongLabels} meta={ChipsStories} />
+
 ## Usage
 
-### Chip with dismiss
+### Category link
 
 ```html
-<span class="mg-chip">
-  Label
-  <button class="mg-chip__cross" aria-label="Remove Label filter">×</button>
-</span>
+<a class="mg-chip" href="/topics/climate-risk">Climate risk</a>
 ```
 
-### Chip without dismiss
+### Dismissible filter
 
 ```html
-<span class="mg-chip">Label</span>
+<button
+  class="mg-chip mg-chip__cross"
+  type="button"
+  aria-label="Remove filter: Earthquake"
+>
+  Earthquake
+</button>
 ```
 
 Copy from the HTML tab in the canvas above for the full rendered output with any additional wrapper classes.
 
 ## Interactions
 
-- The hover state applies to the entire chip.
+- Category chips follow their link when activated.
+- The entire dismissible chip is one button and removes its filter when activated.
+- Consumers handle removal through `onDismiss`; Mangrove does not mutate the surrounding filter collection.
 
 ## Accessibility
 
-- The dismiss button is icon-only. Provide an accessible name via `aria-label` that includes the filter value: `aria-label="Remove [label text]"` — for example, `aria-label="Remove Sendai Framework"`.
-- Keyboard users activate the dismiss button with **Enter** or **Space**.
-- After a chip is dismissed, move focus to the next chip or the related search input — do not drop focus.
+- The dismissal mark is decorative; provide a localized action name with `removeLabel` (e.g., "Remove filter: Sendai Framework")
+- Keyboard users activate dismiss with **Enter** or **Space**
+- Move focus to the next chip or related input after dismissal
+- Interactive chips provide 40px targets and preserve explicit boundaries in forced-colors mode
 
 ## Changelog
 
-- **1.1** — 2026-03-21: Renamed CSS classes to `mg-` prefix (`chip` → `mg-chip`, `chip__cross` → `mg-chip__cross`).
-- **1.0** — 2022-12-12: Released component
+- **1.2.1**, 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a chip whose own language is not Arabic.
+- **1.2**, 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)):
+  - Completed the React contract with link destinations, dismissal callbacks, localisable removal labels and composable classes while preserving the existing public class names.
+  - Added a visible dismissal mark, 40px targets, shared focus and surface tokens, reduced-motion-aware press feedback, logical RTL spacing, Arabic typography and safe long-label behaviour.
+  - Replaced the mismatched nested-control documentation with semantic link and single-button examples, and added dismissible, translated and RTL stories.
+
+- **1.1**, 2026-03-21: Renamed CSS classes to `mg-` prefix (`chip` → `mg-chip`, `chip__cross` → `mg-chip__cross`).
+- **1.0**, 2022-12-12: Released component

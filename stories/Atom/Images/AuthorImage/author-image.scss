@@ -1,57 +1,233 @@
+/**
+ * Author Image
+ *
+ * Circular avatar and author profile photo styling with standardized sizing and object-fit.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Atom/Images/AuthorImage/AuthorImages.mdx
+ */
 /* author image */
 
 .mg-author-image {
-  border-radius: $author-image-radius;
-  height: 80px;
-  min-width: 80px;
-  overflow: hidden;
+  --mg-author-image-accent: rgb(var(--mg-color-interactive));
+  --mg-author-image-avatar-size: 80px;
+  --mg-author-image-hover-tint: rgb(var(--mg-color-interactive) / 0.5);
+
+  align-items: center;
+  background: transparent;
+  border: 0;
+  display: grid;
+  gap: var(--mg-spacing-100);
+  max-width: 32rem;
   position: relative;
-  width: 80px;
-
-  &::before {
-    @extend %absolute__content;
-    @include transition(all 0.6s);
-
-    border-radius: $author-image-radius;
-    opacity: 0;
-    overflow: hidden;
-  }
-
-  &:hover {
-    $colors: (
-      "yellow": $mg-color-yellow,
-      "red": $mg-color-red-900,
-      "green": $mg-color-green,
-      "blue": $mg-color-azure,
-    );
-
-    &::before {
-      @include background-image(45deg, $mg-color-yellow, transparent 53%);
-
-      opacity: 0.75;
-    }
-
-    @each $name, $color in $colors {
-      &.mg-author-image--#{$name}::before {
-        @include background-image(45deg, $mg-color-yellow, transparent 53%);
-      }
-    }
-  }
-
-  img {
-    @extend %img-cover;
-  }
-
-  &.mg-author-image--large {
-    height: 180px;
-    width: 180px;
-  }
 }
 
-[dir="rtl"] {
-  .mg-author-image {
-    &::before {
-      @include transform(scaleX(-1));
-    }
+.mg-author-image__avatar {
+  background: rgb(var(--mg-color-neutral-0));
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 2px rgb(var(--mg-color-neutral-0)),
+    0 0 0 4px var(--mg-author-image-accent);
+  height: var(--mg-author-image-avatar-size);
+  position: relative;
+  overflow: hidden;
+  width: var(--mg-author-image-avatar-size);
+}
+
+.mg-author-image__avatar::before {
+  background: linear-gradient(
+    135deg,
+    var(--mg-author-image-hover-tint) 0%,
+    rgb(var(--mg-color-neutral-0) / 0.12) 58%,
+    rgb(var(--mg-color-neutral-0) / 0) 100%
+  );
+  content: "";
+  inset: 0;
+  opacity: 0;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  position: absolute;
+  z-index: 1;
+  transition:
+    opacity var(--mg-motion-duration-fast) var(--mg-motion-easing-standard),
+    transform var(--mg-motion-duration-fast) var(--mg-motion-easing-standard);
+  transform: translateY(2px);
+}
+
+.mg-author-image:hover .mg-author-image__avatar::before,
+.mg-author-image__link:hover .mg-author-image__avatar::before,
+.mg-author-image__link:focus-visible .mg-author-image__avatar::before {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.mg-author-image__avatar img {
+  display: block;
+  object-position: center center;
+  object-fit: cover;
+  position: relative;
+  transform: scale(1.02);
+  transform-origin: center center;
+  width: 100%;
+}
+
+.mg-author-image__body,
+.mg-author-image__link {
+  color: inherit;
+  display: grid;
+  gap: inherit;
+  width: 100%;
+  text-decoration: none;
+}
+
+.mg-author-image__link:focus-visible {
+  outline: 2px solid var(--mg-author-image-accent);
+  outline-offset: 4px;
+}
+
+.mg-author-image__content {
+  display: grid;
+  gap: var(--mg-spacing-25);
+  min-width: 0;
+}
+
+.mg-author-image__name {
+  color: rgb(var(--mg-color-neutral-900));
+  font-size: var(--mg-font-size-300);
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.mg-author-image__meta {
+  color: rgb(var(--mg-color-neutral-700));
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--mg-spacing-50);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.mg-author-image__title {
+  color: var(--mg-author-image-accent);
+  font-weight: 700;
+}
+
+.mg-author-image__org {
+  font-weight: 500;
+}
+
+.mg-author-image__separator {
+  color: rgb(var(--mg-color-neutral-500));
+}
+
+.mg-author-image--inverse .mg-author-image__name,
+.mg-author-image--inverse .mg-author-image__meta {
+  color: rgb(var(--mg-color-neutral-0));
+}
+
+.mg-author-image--inverse {
+  --mg-author-image-hover-tint: rgb(var(--mg-color-neutral-0) / 0.5);
+}
+
+.mg-author-image--inverse .mg-author-image__title {
+  color: rgb(var(--mg-color-neutral-100));
+}
+
+.mg-author-image--inverse .mg-author-image__org,
+.mg-author-image--inverse .mg-author-image__separator {
+  color: rgb(var(--mg-color-neutral-200));
+}
+
+.mg-author-image--inverse .mg-author-image__link:focus-visible {
+  outline-color: rgb(var(--mg-color-focus-ring-inverse));
+}
+
+.mg-author-image--primary {
+  --mg-author-image-accent: rgb(var(--mg-color-interactive));
+}
+
+// The accent drives three things: the avatar ring, the focus outline and the
+// title. The Sendai orange is fine as the ring — a band of colour with no copy
+// over it — but it is 2.65 as ink on white, under the 4.5 the title needs, and
+// 2.95 as an outline against white, under the 3.0 a focus indicator needs. So
+// this variant keeps the orange ring and hands those two back to the tokens
+// that are sized for them.
+// See docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text
+.mg-author-image--secondary {
+  --mg-author-image-accent: rgb(var(--mg-color-secondary));
+  --mg-author-image-hover-tint: rgb(var(--mg-color-secondary) / 0.5);
+}
+
+.mg-author-image--secondary .mg-author-image__title {
+  color: rgb(var(--mg-color-text));
+}
+
+.mg-author-image--secondary .mg-author-image__link:focus-visible {
+  outline-color: rgb(var(--mg-color-focus-ring));
+}
+
+.mg-author-image--tertiary {
+  --mg-author-image-accent: rgb(var(--mg-color-tertiary));
+  --mg-author-image-hover-tint: rgb(var(--mg-color-tertiary) / 0.5);
+}
+
+.mg-author-image--small {
+  --mg-author-image-avatar-size: 64px;
+}
+
+.mg-author-image--large {
+  --mg-author-image-avatar-size: 104px;
+
+  gap: var(--mg-spacing-150);
+}
+
+.mg-author-image--vertical {
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+}
+
+.mg-author-image--vertical .mg-author-image__body,
+.mg-author-image--vertical .mg-author-image__link {
+  justify-items: center;
+}
+
+.mg-author-image--vertical .mg-author-image__content {
+  justify-items: center;
+  text-align: center;
+}
+
+.mg-author-image--horizontal {
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
+.mg-author-image--horizontal .mg-author-image__content {
+  align-content: center;
+  text-align: start;
+}
+
+.mg-author-image--vertical .mg-author-image__meta {
+  justify-content: center;
+}
+
+.mg-author-image--no-image {
+  --mg-author-image-avatar-size: 0px;
+}
+
+.mg-author-image--no-image .mg-author-image__body,
+.mg-author-image--no-image .mg-author-image__link {
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+}
+
+.mg-author-image--no-image .mg-author-image__content {
+  justify-items: center;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mg-author-image__avatar::before {
+    transition: none;
+    transform: none;
   }
 }

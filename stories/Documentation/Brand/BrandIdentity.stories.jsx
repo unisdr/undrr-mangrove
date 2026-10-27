@@ -250,6 +250,23 @@ function BrandIdentityPage({ themeName }) {
       </div>
 
       <h3>Accent colors</h3>
+      <p style={{ fontSize: '0.875rem', marginBottom: '1rem' }}>
+        In UNDRR and every sub-brand the accent is the Sendai orange, and{' '}
+        <strong>the orange accent carries no text</strong>. Use it for borders,
+        rules, icon fills and blocks with no copy over them: no text colour
+        meets WCAG AA on it at any size — white is 2.95 against a 4.5 minimum,
+        and black passes WCAG but misses Mangrove&rsquo;s perceptual body-text
+        floor. The library follows this rule: no component sets copy on the
+        orange or uses it as ink. An orange rule is emphasis, not identification
+        — <code>orange-900</code> is 2.95 on white and 2.66 on{' '}
+        <code>orange-50</code>, both under the 3:1 of SC 1.4.11, so a fill, a
+        label or a position always carries the meaning alongside it. The values
+        themselves are unchanged. See{' '}
+        <a href="https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text">
+          the colour contrast methodology
+        </a>{' '}
+        for the measurements.
+      </p>
       <div style={grid4}>
         {colorProbes.accent.map((c, i) => (
           <ColorSwatch
@@ -410,7 +427,7 @@ function BrandIdentityPage({ themeName }) {
         ))}
       </div>
       <p style={{ fontSize: '0.875rem', color: '#666' }}>
-        Showing 21 of 80+ icons, including OCHA humanitarian icons. See the full
+        Showing 21 of 90+ icons, including OCHA humanitarian icons. See the full
         set in the{' '}
         <LinkTo kind="components-icons" story="docs">
           Icons documentation

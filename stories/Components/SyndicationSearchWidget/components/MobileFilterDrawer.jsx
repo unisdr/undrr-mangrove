@@ -1,9 +1,10 @@
 /**
  * @file MobileFilterDrawer.jsx
- * @description Mobile-friendly left-side slide-in drawer for filter facets.
+ * @description Mobile-friendly slide-in drawer for filter facets, anchored to
+ * the inline start (left in English, right in Arabic).
  *
  * Implements a slide-in drawer pattern (Amazon-style) with:
- * - Left-side slide-in animation
+ * - Inline-start slide-in animation that mirrors in RTL
  * - Backdrop overlay with click-to-close
  * - Focus trapping for accessibility
  * - Scroll lock on body when open
@@ -13,7 +14,7 @@
  * @see https://www.pencilandpaper.io/articles/ux-pattern-analysis-mobile-filters
  *
  * Key UX decisions:
- * - Sidebar overlay: Maintains left-side visibility for context, feels safer
+ * - Sidebar overlay: Maintains inline-start visibility for context, feels safer
  * - Batch filtering: Users refine filters then apply once (vs live filtering)
  * - Sticky Apply button: Always visible, no scrolling required
  * - Progressive disclosure: Collapsible sections avoid overwhelm
@@ -23,12 +24,17 @@
  */
 
 import React, { useEffect, useRef, useCallback } from 'react';
-import { useSearchState } from '../context/SearchContext';
+import {
+  useSearchState,
+  useSearchLabels,
+  interpolateLabel,
+} from '../context/SearchContext';
+import { getOwnerDocument } from '../utils/ownerDocument';
 import FacetsSidebar from './FacetsSidebar';
 
 /**
  * MobileFilterDrawer component.
- * A left-side slide-in drawer containing filter facets for mobile devices.
+ * An inline-start slide-in drawer containing filter facets for mobile devices.
  *
  * @param {Object} props - Component props
  * @param {boolean} props.isOpen - Whether the drawer is open
@@ -39,26 +45,33 @@ export function MobileFilterDrawer({ isOpen, onClose, widgetId = 'search' }) {
   const drawerRef = useRef(null);
   const closeButtonRef = useRef(null);
   const state = useSearchState();
+  const labels = useSearchLabels();
 
   // Count active filters for the header
   const activeFilterCount = countActiveFilters(state);
 
-  // Lock body scroll when drawer is open
+  // Lock body scroll when drawer is open. The body and window are those of
+  // the document the drawer is mounted in, which differs from the global
+  // ones inside an iframe.
   useEffect(() => {
     if (isOpen) {
-      const originalOverflow = document.body.style.overflow;
-      const originalPaddingRight = document.body.style.paddingRight;
+      const doc = getOwnerDocument(drawerRef.current);
+      if (!doc) return;
+      const { body } = doc;
+      const view = doc.defaultView || window;
+      const originalOverflow = body.style.overflow;
+      const originalPaddingRight = body.style.paddingRight;
 
       // Prevent layout shift from scrollbar removal
-      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-      document.body.style.overflow = 'hidden';
+      const scrollbarWidth = view.innerWidth - doc.documentElement.clientWidth;
+      body.style.overflow = 'hidden';
       if (scrollbarWidth > 0) {
-        document.body.style.paddingRight = `${scrollbarWidth}px`;
+        body.style.paddingRight = `${scrollbarWidth}px`;
       }
 
       return () => {
-        document.body.style.overflow = originalOverflow;
-        document.body.style.paddingRight = originalPaddingRight;
+        body.style.overflow = originalOverflow;
+        body.style.paddingRight = originalPaddingRight;
       };
     }
   }, [isOpen]);
@@ -66,10 +79,8 @@ export function MobileFilterDrawer({ isOpen, onClose, widgetId = 'search' }) {
   // Focus management - focus close button when opened
   useEffect(() => {
     if (isOpen && closeButtonRef.current) {
-      // Small delay to ensure animation has started
-      requestAnimationFrame(() => {
-        closeButtonRef.current?.focus();
-      });
+      // Focus does not wait for the optional visual entry animation.
+      closeButtonRef.current.focus();
     }
   }, [isOpen]);
 
@@ -77,18 +88,20 @@ export function MobileFilterDrawer({ isOpen, onClose, widgetId = 'search' }) {
   useEffect(() => {
     if (!isOpen) return;
 
-    const handleKeyDown = (e) => {
+    const handleKeyDown = e => {
       if (e.key === 'Escape') {
         onClose();
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    const doc = getOwnerDocument(drawerRef.current);
+    if (!doc) return;
+    doc.addEventListener('keydown', handleKeyDown);
+    return () => doc.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
 
   // Focus trap - keep focus within drawer
-  const handleKeyDown = useCallback((e) => {
+  const handleKeyDown = useCallback(e => {
     if (e.key !== 'Tab' || !drawerRef.current) return;
 
     const focusableElements = drawerRef.current.querySelectorAll(
@@ -96,23 +109,27 @@ export function MobileFilterDrawer({ isOpen, onClose, widgetId = 'search' }) {
     );
     const firstElement = focusableElements[0];
     const lastElement = focusableElements[focusableElements.length - 1];
+    const { activeElement } = getOwnerDocument(drawerRef.current);
 
-    if (e.shiftKey && document.activeElement === firstElement) {
+    if (e.shiftKey && activeElement === firstElement) {
       e.preventDefault();
       lastElement?.focus();
-    } else if (!e.shiftKey && document.activeElement === lastElement) {
+    } else if (!e.shiftKey && activeElement === lastElement) {
       e.preventDefault();
       firstElement?.focus();
     }
   }, []);
 
   // Handle backdrop click - closes drawer
-  const handleBackdropClick = useCallback((e) => {
-    // Only close if clicking the backdrop itself, not the drawer
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  }, [onClose]);
+  const handleBackdropClick = useCallback(
+    e => {
+      // Only close if clicking the backdrop itself, not the drawer
+      if (e.target === e.currentTarget) {
+        onClose();
+      }
+    },
+    [onClose]
+  );
 
   if (!isOpen) {
     return null;
@@ -134,8 +151,11 @@ export function MobileFilterDrawer({ isOpen, onClose, widgetId = 'search' }) {
       >
         {/* Drawer header - sticky */}
         <header className="mg-search__drawer-header">
-          <h2 id={`${widgetId}-drawer-title`} className="mg-search__drawer-title">
-            Filters
+          <h2
+            id={`${widgetId}-drawer-title`}
+            className="mg-search__drawer-title"
+          >
+            {labels.drawerTitle}
             {activeFilterCount > 0 && (
               <span className="mg-search__drawer-count">
                 {activeFilterCount}
@@ -147,7 +167,7 @@ export function MobileFilterDrawer({ isOpen, onClose, widgetId = 'search' }) {
             type="button"
             className="mg-search__drawer-close"
             onClick={onClose}
-            aria-label="Close filters"
+            aria-label={labels.closeFilters}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -179,10 +199,15 @@ export function MobileFilterDrawer({ isOpen, onClose, widgetId = 'search' }) {
             className="mg-search__drawer-apply"
             onClick={onClose}
           >
-            View results
+            {labels.viewResults}
             {activeFilterCount > 0 && (
               <span className="mg-search__drawer-apply-count">
-                ({activeFilterCount} filter{activeFilterCount !== 1 ? 's' : ''} applied)
+                {interpolateLabel(
+                  activeFilterCount !== 1
+                    ? labels.filtersAppliedPlural
+                    : labels.filtersApplied,
+                  { count: activeFilterCount }
+                )}
               </span>
             )}
           </button>

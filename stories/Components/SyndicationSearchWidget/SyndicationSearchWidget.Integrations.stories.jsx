@@ -81,7 +81,7 @@ This is useful for:
 ### Drupal data attribute
 
 \`\`\`html
-<div data-undrr-search-widget
+<div data-mg-search-widget
      data-search-endpoint="https://staging.undrr.org/search-endpoint">
 </div>
 \`\`\`

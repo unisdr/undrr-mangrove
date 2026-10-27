@@ -1,0 +1,213 @@
+import LinkTo from '@storybook/addon-links/react';
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+import * as Stories from './ContentHub.stories';
+
+<Meta of={Stories} />
+
+# Content hub composition
+
+The **hub home is a Landing page variant**: it introduces a subject and routes readers onward. <LinkTo kind="Patterns/Content/Landing page" story="docs">Landing page patterns</LinkTo> owns this full-page reference. Persistent hub identity and section navigation also carry through to detail pages; those pages retain their own editorial content meaning. This composition does not define a separate CMS content type or turn every detail page into a landing page.
+
+> **Note:** Tracked on [#1112](https://github.com/unisdr/undrr-mangrove/issues/1112). Review against the [component checklist](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/REVIEW-CHECKLIST.md).
+
+A content hub is a named set of related pages people move between repeatedly
+(for example, Sendai Framework Monitor sections). Every page keeps the same hub
+identity and section links so readers can move laterally without returning to a
+landing page.
+
+Use this pattern for repeated cross-section navigation. If users mostly arrive,
+read, and leave, a [landing page](?path=/docs/patterns-landing-pages--docs) is enough.
+
+|                | Landing page                       | Content hub                            | Microsite                                |
+| -------------- | ---------------------------------- | -------------------------------------- | ---------------------------------------- |
+| **Job**        | Introduce a subject, point onward  | Support repeated movement across pages | A distinct experience or sub-brand       |
+| **Navigation** | Parent site's, plus grouped routes | Hub name and sections on every page    | Its own, with a route back to the parent |
+
+## Hub home
+
+<Canvas of={Stories.HubHome} />
+
+Most expressive page type: banner, title/lede/CTA, then route cards and a
+supporting band. The identity row stays consistent with other pages so the
+layout can be expressive without losing orientation.
+
+## A detail page with a hero
+
+<Canvas of={Stories.HubDetailWithHero} />
+
+The same identity row, byte for byte, with an entirely different page below it.
+
+## Hub detail
+
+<Canvas of={Stories.HubDetail} />
+
+<Controls of={Stories.HubDetail} />
+
+Move from Reporting to How to report, then to another section: Reporting stays
+marked for descendants while heading/breadcrumb identify the exact page. These
+are page links, not tab controls.
+
+Use locale/theme toolbars and resize for mobile: the section strip scrolls,
+keeps standard keyboard link behavior, and bleeds to screen edges when wrapped.
+
+## A deeper page
+
+<Canvas of={Stories.DeeperPage} />
+
+Two levels down, Reporting remains the marked section. That persistence confirms
+this is navigation (not tabs). Dense reference sections may eventually need a
+sibling rail; avoid combining that with a full in-page rail without a clear need.
+
+## Variations
+
+### A detached header
+
+<Canvas of={Stories.HubDetailDetachedHeader} />
+
+By default, the nav bar shares the banner color so the header reads as one block.
+`headerSurface: "detached"` moves the bar back to page background. Both remain
+separate containers so nav contrast is predictable.
+
+`heroSource` controls where hero media lives: `header` treats the hub banner as
+chrome; `page` keeps the header compact and renders a `Hero` in page content.
+`Hero` supports video/custom HTML; header-owned banner supports image only.
+
+## Building one
+
+`HubHeader` carries the identity row and section links, and ships in the
+stylesheet:
+
+```jsx
+<HubHeader
+  name="Sendai Framework Monitor"
+  nameHref="/monitor"
+  navLabel="Sendai Framework Monitor sections"
+  variant="expressive"
+  title="Tracking progress towards a more resilient world"
+  summary="Understand disaster risk and find guidance for reporting."
+  media={{ src: '/hero.jpg', alt: '' }}
+  actions={[
+    { label: 'Open the Monitor', url: 'https://sendaimonitor.undrr.org/' },
+  ]}
+  sections={[
+    { label: 'About', href: '/monitor/about' },
+    { label: 'Reporting', href: '/monitor/reporting', ancestor: true },
+    { label: 'Data', href: '/monitor/data' },
+  ]}
+/>
+```
+
+| Prop                   | Notes                                                                                                                                    |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `variant`              | `expressive` adds the banner; `compact` is identity and links only                                                                       |
+| `surface`              | `primary` (default), `secondary`, `tertiary`, or `detached`. `secondary` keeps the theme hero colour and adds an orange rule — see below |
+| `media`, `actions`     | Both optional — a banner works as text alone                                                                                             |
+| `current` / `ancestor` | The exact page, or a section containing it                                                                                               |
+
+**Contrast:** `surface="secondary"` no longer paints the header in the orange accent. Every link and heading on it was white at 2.65 against WCAG's 4.5, and the bar tint darkened the navigation strip nowhere near enough. The orange carries no text at any size, so the bar and banner now keep the theme's own hero colour, which the white ink is already sized for, and the accent becomes a 4px rule under the bar — a line with no copy over it. That rule is 2.95 against white, under the 3:1 of SC 1.4.11, so it is emphasis rather than the only thing marking the surface. See [the colour contrast methodology](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text) for the measurements.
+
+Pass `current` for the exact page and `ancestor` for containing section. Both
+render similarly, but only `current` announces `aria-current="page"`. Keep
+section count modest: ~5 is comfortable, ~7 is practical upper bound before
+desktop scrolling (especially with translated labels).
+
+These pages compose shipped components/utilities (`Hero`, `IconCard`,
+`VerticalCard`, `TableOfContents`, `TextCta`, `CtaButton`, `mg-grid`,
+`mg-container-full-width`, `mg-reading`). Remaining pieces are demo scaffolding:
+story-only `mg-demo-` classes, hash routing, and Monitor sample copy.
+
+## Without React
+
+A CMS that saves static HTML can render the same markup `HubHeader` does and load `js/hub-header.js`. It scrolls the marked section into view on narrow screens (on load and once web fonts arrive, never on a later resize) and drives the edge fades, which CSS cannot do on its own because it cannot detect overflow.
+
+Add `data-mg-hub-header-detect-current` and the script also works out the current section from the URL, so one block of markup can be copied to every page of the hub:
+
+- A section whose link is the current page gets `aria-current="page"`.
+- Otherwise the longest section whose path contains the current page is marked as its ancestor: styled the same, not announced.
+- A section that links to the hub home, or to `/`, only ever matches exactly. As an ancestor it would be marked on every page.
+- On the hub home, the hub name gets `aria-current="page"` when no section links to the home itself.
+- Markup that already marks a section is left alone, so a server that knows better than the URL wins. Only marks on the section links count: a hub name that already carries `aria-current` does not stop detection on the sections.
+
+Paths are compared without the query, fragment, trailing slash or `index.html`, and only for links on the same origin, so use root-relative links (`/monitor/about`) if the same markup serves more than one host. Links that do not point at a page (an empty `href`, `#section`, `?query`) are never marked. Ancestry follows the URL, so it works when a hub's pages sit under its home in the path (`/monitor`, `/monitor/reporting`, `/monitor/reporting/how-to`).
+
+```html
+<div
+  class="mg-hub-header mg-hub-header--compact mg-hub-header--surface-primary"
+  data-mg-js-hub-header
+  data-mg-hub-header-detect-current
+>
+  <div class="mg-hub-header__bar">
+    <div class="mg-hub-header__identity mg-container">
+      <a class="mg-hub-header__name" href="/monitor">
+        Sendai Framework Monitor
+      </a>
+      <nav
+        class="mg-hub-header__nav"
+        aria-label="Sendai Framework Monitor sections"
+      >
+        <ul>
+          <li><a href="/monitor/about">About</a></li>
+          <li><a href="/monitor/reporting">Reporting</a></li>
+          <li><a href="/monitor/data">Data</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+<script
+  type="module"
+  src="https://assets.undrr.org/mangrove/2.3.0/js/hub-header.js"
+></script>
+```
+
+The script enhances every `[data-mg-js-hub-header]` on load, skipping any that carry `data-mg-hub-header-skip-auto-init`. For markup inserted later, import `mgHubHeader` and call it with the new headers; initialized headers are skipped, and the function it returns undoes what it added, including the marks, so calling it again after a client-side navigation marks the new page. Without JavaScript the links still work; nothing is marked and nothing fades.
+
+## Design decisions
+
+**The section strip is not styled as tabs.** A 3px bottom border is how `Tab`,
+the MegaMenu topbar and `OnThisPageNav` all mark their active item, so it says
+nothing about what kind of navigation this is. Here the current item stops
+looking like a link instead: near-black, bold, and underlined against the word
+rather than under the item's padding box.
+
+**Identity is chrome, not a title.** The hub name is a fixed size and its row is
+the same height on every page. Something that never moves stops being read as a
+heading, so it does not compete with the page's `h1`. It is never merged into the
+hero — `mg-hero` forces white text over an editor's photograph and is absent from
+most pages, so identity would move around — and never suppressed, or a reader
+arriving from search would get neither identity nor navigation.
+
+**Breadcrumbs appear only where they add something.** On three of the four pages
+here the trail just repeats the hub name, the marked section or the heading. They
+show on a page deep enough to have an intermediate parent the strip cannot.
+
+**The parent chrome is untouched.** A compact brand header is out of scope: the
+masthead comes from Drupal templating that has to hold for PreventionWeb and the
+other sub-brands too.
+
+> **Implementation note (for contributors):** the rejected alternatives, and how
+> Germany's Dachmarke and France's DSFR handle the same layering, are on
+> [#1112](https://github.com/unisdr/undrr-mangrove/issues/1112).
+
+## Still to test
+
+- Can someone landing on a detail page identify the hub and reach a sibling section?
+- With the UNDRR header and mega menu above it, does the hub still read as its own place?
+- When does a section need a sibling rail rather than a scrolling strip?
+- Can shared content belong to several hubs without duplicating its canonical page?
+
+## Changelog
+
+- **1.2.2**, 2026-10-16 ([#1383](https://github.com/unisdr/undrr-mangrove/pull/1383)): Group hub-home and navigation-composition examples under Landing page; distinguish the home variant from detail-page content and retain existing URLs.
+
+- **1.2.1**, 2026-10-15 ([#1277](https://github.com/unisdr/undrr-mangrove/issues/1277)): The how-to reporting reading column opts into the documented `mg-content` editorial pattern; hub navigation, cards and resource lists keep their own presentation.
+- **1.2.0**, 2026-09-24: `js/hub-header.js` enhances static hub header markup without React: it scrolls the marked section into view on load and once web fonts arrive (a later resize only updates the fades, so a reader's own scrolling is kept), drives the edge fades and, with `data-mg-hub-header-detect-current`, marks the current section from the URL. `HubHeader` runs the same script, so the scrolling and fade logic that lived in the ContentHub story now ships with the component.
+- **1.1.1**, 2026-09-23: The hero video title reads "This is how timely early warnings save lives, UNDRR" instead of setting "UNDRR" off with an em dash, following the dash rules in the [Editorial manual](https://mangrove.undrr.org/?path=/docs/contributing-editorial-manual--docs#punctuation).
+- **1.1.0**, 2026-09-18 ([#1249](https://github.com/unisdr/undrr-mangrove/pull/1249)): Fixes [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196). `HubHeader`'s `surface="secondary"` no longer retargets the bar and banner to the orange accent, which put every link and heading on it at 2.65. Both keep the theme's hero colour, and the accent is now a 4px full-bleed rule under the bar. `--mg-color-hero--secondary` is unchanged and drives that rule. This is a visible change wherever the surface is used, in all five themes.
+- **1.0.1**, 2026-09-18 ([#1198](https://github.com/unisdr/undrr-mangrove/pull/1198)): Documented `HubHeader`'s `secondary` surface as a recorded contrast exception: white header text on the orange accent is 2.65, and no text colour clears AA on that hue. No colour changed; removal is tracked in [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196).
+- **1.0**, 2026-09-10: Content hub pattern: hub home, detail and deeper pages in English and Arabic, under the standard UNDRR header and global navigation. ([#1112](https://github.com/unisdr/undrr-mangrove/issues/1112))
+  - `HubHeader` owns hub identity and section navigation, with compact and expressive variants and four surface options, and ships in the stylesheet.
+  - Adds `mg-reading` as a distributed layout utility.
+  - Section links are marked as links rather than tabs, and only the exact current page is announced.
+  - Breadcrumbs appear only where they add ancestry the strip cannot show.
+  - Variations for a detached header and vertical route cards.

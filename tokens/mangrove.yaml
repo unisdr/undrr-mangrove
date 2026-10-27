@@ -1,0 +1,651 @@
+# Mangrove — the brand-neutral base layer.
+#
+# System defaults only: spacing, radii, the type scale, the neutral ramp,
+# motion, focus geometry, z-index and the semantic defaults every brand
+# either inherits or overrides. There is deliberately NO UNDRR identity in
+# this file. UNDRR is a sub-brand like PreventionWeb, IRP, MCR2030 and
+# DELTA, and lives in tokens/undrr.yaml, so that "adopt Mangrove without
+# adopting UNDRR branding" is a position the source can express.
+#
+# FORMAT
+#   Borrows W3C DTCG's vocabulary (https://tr.designtokens.org/format/) --
+#   $value, $type, $description and {path} aliases -- but is NOT conformant and
+#   nothing emits DTCG JSON. Six vendor keys ($format, $alpha, $private, $sass,
+#   $brand, $name) sit at token level rather than inside $extensions, which is
+#   used nowhere, and dimensions are bare numbers rather than the spec's
+#   {value, unit} object. Emitting real DTCG would be a re-typing project, not
+#   a serialiser. $type, $format, $private and $sass are inherited by
+#   descendants and overridable per token.
+#
+#   $value      the value. `{path}` links to another token and emits a live
+#               var() chain; `{=path}` resolves it at build time; a cast
+#               `{rgb(path / 0.24)}` states the shape at the point of use.
+#   $format     the SHAPE this token is emitted in — the answer to the bug
+#               class that has bitten three times here. A colour is written
+#               once as hex; `srgb-channels` emits `0 79 145`,
+#               `srgb-rgb-function` emits `rgb(0 79 145)`. A channel triplet
+#               in a colour position is invalid CSS and is discarded
+#               silently, so the shape is never guessed.
+#   $private    not emitted as a custom property; referenced with {=path} or
+#               exported as a Sass variable.
+#   $sass       emit a Sass variable. `true` uses the naming convention
+#               ($mg- + the token path); a name or list of names overrides it.
+#   $name       an explicit custom-property name, for the few tokens whose
+#               name predates the convention.
+#
+# NAMING
+#   Token path `color.interactive` -> `--mg-color-interactive`. Only declare
+#   $name where that does not hold.
+#
+# Regenerate with `yarn build:tokens`.
+
+$brand:
+  id: mangrove
+  base: true
+  title: Mangrove
+  selector: ':root'
+
+color:
+  $type: color
+
+  # Neutral ramp. The only colour ramp that carries no brand identity, so it
+  # is what a brand-free Mangrove falls back to for text, interaction and
+  # surfaces.
+  #
+  # THE SURFACE HALF IS COOL-TINTED; THE TEXT HALF IS NOT.
+  # Steps 25-400 carry a small cool chroma in Oklch at an unchanged Oklch
+  # lightness. Steps 0 and 500-900 are untouched achromatic greys.
+  #
+  # Why at all: an institutional survey of GOV.UK, USWDS, NHS, EU ECL, OCHA
+  # Common Design, Primer, Carbon and Atlassian found that every peer tints
+  # its neutrals toward cool or toward brand, and that Mangrove's pure greys
+  # were the single largest reason the system read as a generic admin kit
+  # rather than an institution. The header, the hover fill, the menu focus
+  # fill, the tag fill, the empty-state panel and the form field all resolve
+  # to neutral-25, so one flat grey was doing most of the visual work.
+  #
+  # Why only 25-400: the "generic" reading lives on surfaces. The dark half
+  # is body text (neutral-800), muted text (neutral-500), rules and shadows,
+  # where a hue shift buys nothing and every text contrast ratio in the
+  # system would have to be re-argued. GOV.UK draws the same line - tinted
+  # background, near-black text.
+  #
+  # Why neutral-0 stays pure white: the page itself is the floor every
+  # translucent token composites onto, and tinting it is a much larger claim
+  # than tinting the raised and sunken surfaces above it. Primer's
+  # canvas-default and GOV.UK's page background are both plain white.
+  #
+  # Why one shared cool hue rather than five brand-derived ones: no brand
+  # overrides this ramp, and this file's whole premise is that the ramp
+  # carries no brand identity. PreventionWeb's teal and MCR2030's purple
+  # would also pull their greys somewhere muddy. A brand that wants its own
+  # tint can still override these six steps in its own token file without
+  # any restructuring - the mechanism is unchanged, only the default moved.
+  #
+  # How much: Oklch hue 247.9 degrees at chroma 0.0039-0.0056, one hue for
+  # the whole tinted run. 247.9 is the hue of Primer's bgColor-muted, and
+  # the chroma sits inside the band the peers occupy (Atlassian 0.0029,
+  # Primer 0.0034, NHS 0.0045, OCHA 0.0093) - below the level at which a
+  # tint reads as a colour rather than as a refinement.
+  #
+  # Contrast cost, and why the lightness moves at all: the project's Oklab
+  # measure is lightness-only, so hue alone would leave it untouched, but
+  # WCAG 2's luminance does move with hue, and it moved DOWNWARD on a
+  # muted-text pair that had 0.25 of headroom. So each step is nudged in
+  # whichever lightness direction its ROLE needs: the four surface steps
+  # (25-200), which are always the lighter half of a pair, go up by at most
+  # 0.0017 in Oklch L; the two mark steps (300, 400), which are borders and
+  # rules and are always the darker half, go down by at most 0.0016. The
+  # result is that no graded pair in any of the five themes loses contrast
+  # on either measure - every pair that moves, moves upward.
+  neutral-0: { $value: '#ffffff' }
+  neutral-25: { $value: '#f0f3f6' }
+  neutral-50: { $value: '#e4e7ea' }
+  neutral-100: { $value: '#cacdd0' }
+  neutral-200: { $value: '#b1b4b7' }
+  neutral-300: { $value: '#96999c' }
+  neutral-400: { $value: '#7e8082' }
+  neutral-500: { $value: '#666666' }
+  neutral-600: { $value: '#4d4d4d' }
+  neutral-700: { $value: '#333333' }
+  neutral-800: { $value: '#1a1a1a' }
+  neutral-900: { $value: '#000000' }
+
+  # Danger ramp. Kept in the base rather than in a brand layer because the
+  # base has to be able to express "invalid" on its own: a brand-free build
+  # with no error colour is not a usable design system. UNDRR's Sendai red
+  # happens to be the same value.
+  red-50: { $value: '#f9e6e9' }
+  red-100: { $value: '#f3ced2' }
+  red-200: { $value: '#ecb5bc' }
+  red-300: { $value: '#e69da6' }
+  red-400: { $value: '#e08490' }
+  red-500: { $value: '#da6b79' }
+  red-600: { $value: '#d45363' }
+  red-700: { $value: '#cd3a4d' }
+  red-800: { $value: '#c72236' }
+  red-900: { $value: '#c10920' }
+
+  # Focus ramp. One entry, and deliberately not a brand hue: the focus ring
+  # is the only colour in Mangrove that must never be mistaken for anything
+  # else, in any theme. Derived from accent-500 (#fec124), the amber this
+  # system already ships, held at its Oklch hue (84 deg) and taken down to
+  # L 52% at the sRGB gamut edge — the lightest value that still clears the
+  # contract on the tinted field surface. See color.focus-ring below.
+  gold-800: { $value: '#866200' }
+
+  # Record-workflow status swatches, from the DELTA design system board
+  # "Status Labels for Records and Events". Not brand identity — a
+  # functional palette the status-label component reads.
+  accent-100: { $value: '#f4e496' }
+  accent-200: { $value: '#d3cea9' }
+  accent-300: { $value: '#fdf6d9' }
+  accent-400: { $value: '#0a6969' }
+  accent-500: { $value: '#fec124' }
+  accent-600: { $value: '#bcae67' }
+
+  # --- Semantic defaults -------------------------------------------------
+  # Brand-free values. Every sub-brand overrides `interactive`, and because
+  # resolution happens after the brand is merged over this file, one
+  # override moves tag, button, form-check, focus and hero with it.
+  interactive:
+    $value: '{color.neutral-800}'
+    $description: >-
+      The one colour a brand must state. Links, buttons, tabs, focus rings,
+      tags and form checks all derive from it.
+  interactive-active: { $value: '{color.neutral-700}' }
+
+  text: { $value: '{color.neutral-800}' }
+  black: { $value: '{color.neutral-800}' }
+  white: { $value: '{color.neutral-0}' }
+
+  # Brand hierarchy
+  secondary: { $value: '{color.neutral-700}' }
+  tertiary: { $value: '{color.neutral-900}' }
+  quaternary: { $value: '{color.red-800}' }
+
+  # Tags
+  tag: { $value: '{color.interactive}' }
+  tag--hover: { $value: '{color.interactive-active}' }
+  tag-secondary: { $value: '{color.neutral-500}' }
+  tag-secondary--hover: { $value: '{color.neutral-600}' }
+  tag-accent: { $value: '{color.neutral-700}' }
+  tag-accent--hover: { $value: '{color.neutral-800}' }
+
+  # Buttons
+  button: { $value: '{color.neutral-0}' }
+  button--hover: { $value: '{color.neutral-0}' }
+  button-background:
+    $value: '{color.interactive}'
+    $format: srgb-rgb-function
+    $description: >-
+      Colour-valued, not a channel triplet: DELTA needs `transparent` here
+      and a triplet cannot express it. Consumers must not wrap this in rgb().
+  button-background--hover:
+    $value: '{color.interactive-active}'
+    $format: srgb-rgb-function
+  button-secondary-background: { $value: '{color.neutral-700}' }
+  button-secondary-background--hover: { $value: '{color.neutral-600}' }
+  button-outline-primary: { $value: '{color.interactive}' }
+  button-outline-primary--hover: { $value: '{color.interactive-active}' }
+  button-outline-secondary: { $value: '{color.button-secondary-background}' }
+  button-outline-secondary--hover:
+    $value: '{color.button-secondary-background--hover}'
+  text-button: { $value: '{color.neutral-0}' }
+
+  # Form
+  form-check: { $value: '{color.interactive}' }
+  form-check--hover: { $value: '{color.interactive-active}' }
+  form-check--checked: { $value: '{color.interactive}' }
+  form-focus: { $value: '{color.interactive}' }
+
+  # Focus ring — its own seam in 2.0 so a theme can retint it independently
+  # of the interactive colour, and from 2.0.0-alpha.3 the seam is finally
+  # used. It is NOT the interactive colour, in any theme.
+  #
+  # WHY NOT THE BRAND COLOUR
+  #   Aliased to `interactive`, focus and selection were the same signal:
+  #   a selected surface is the interactive colour at low alpha and the ring
+  #   was the same hue at full strength, so a focused row in a selected
+  #   state said one thing twice. A deliberately non-brand focus
+  #   colour is near-universal in public-sector systems — GOV.UK #ffdd00,
+  #   NHS #ffeb3b, USWDS a blue-40v distinct from its link blue.
+  #
+  # WHY NOT A LOUD YELLOW
+  #   Because a single-colour ring has to carry its own 3:1 boundary here,
+  #   and GOV.UK's yellow does not: #ffdd00 is 1.35:1 on --mg-surface-raised
+  #   and 1.20:1 on the field surface, scoring 5.3 and -6.6 on the Oklab
+  #   measure against a floor of 50. GOV.UK and NHS get away with it because
+  #   their indicator is two bands — a yellow fill with a 4px near-black bar
+  #   underneath — and the dark band, not the yellow, carries the contrast.
+  #   The two-band treatment is a follow-up; this is the shippable
+  #   single-colour step.
+  #
+  # WHY THIS VALUE
+  #   gold-800 keeps the yellow register users already read as "the keyboard
+  #   is here" and takes it down the ramp until it measures: 5.58:1 / 68.7 on
+  #   the raised surface and 4.99:1 / 62.2 on the tinted field surface, in
+  #   every theme (both backgrounds are theme-invariant today). Its Oklch hue
+  #   is 111-169 degrees from every brand's interactive colour — UNDRR and
+  #   DELTA blue 252, IRP blue 246, PreventionWeb teal 195, MCR2030 purple
+  #   323 — and 58 degrees from red-900, so an invalid field that is also
+  #   focused shows two separable colours.
+  #
+  #   Shared across all five brands on purpose. A ring that changes with the
+  #   brand is a ring people have to relearn per property, and the value that
+  #   is far from five accents at once is far from each of them individually.
+  #   A theme may still override this token; it then owns both pairs the
+  #   contract grades.
+  focus-ring: { $value: '{color.gold-800}' }
+
+  # THE INVERSE RING
+  #   Seven component rules draw the ring on a surface that is already dark:
+  #   the Hero and TextCta buttons over a filled brand banner, the Snackbar
+  #   action inside its coloured bar, and the dark Card and StatsCard variants.
+  #   focus-ring measures 1.49:1 on the hero banner, so the ring above cannot
+  #   serve them; each had hardcoded its own white instead. This is that white,
+  #   named once.
+  #
+  #   The test is where the ring is actually painted, not what it surrounds.
+  #   A dark control with a positive outline-offset -- the Gallery arrows, for
+  #   instance -- draws its ring clear of itself on the light surface behind,
+  #   and belongs on focus-ring, not here.
+  #
+  #   Same value as neutral-0 today, so nothing renders differently. The point
+  #   is that "the ring on a dark surface" is now one themeable decision rather
+  #   than seven literals: a brand whose banner is light, or whose scrim is
+  #   tinted, retunes both rings together and keeps the pair legible.
+  focus-ring-inverse: { $value: '{color.neutral-0}' }
+
+  # Hero
+  hero: { $value: '{color.interactive}' }
+  # In UNDRR and every sub-brand this resolves to the orange accent, which
+  # carries no text: white fails WCAG at 2.65 and black misses the perceptual
+  # body-text floor. So, unlike its tertiary and quaternary siblings, this is
+  # NOT a surface to set copy on. Its three consumers — Hero --secondary,
+  # TextCta --secondary and HubHeader --surface-secondary — read it as the
+  # accent rule on a surface that carries the copy, not as the surface.
+  # The value is unchanged by unisdr/undrr-mangrove#1196; only the role is.
+  # See docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text
+  hero--secondary: { $value: '{color.secondary}' }
+  hero--tertiary: { $value: '{color.tertiary}' }
+  hero--quaternary: { $value: '{color.quaternary}' }
+  hero-title: { $value: '{color.neutral-0}' }
+  hero-button-secondary-background:
+    $value: '{color.neutral-0}'
+    $format: srgb-rgb-function
+    $alpha: 0.9
+  hero-button-secondary-color: { $value: '{color.hero}' }
+
+  # Mega menu
+  mega-content-bg: { $value: '{color.button}' }
+
+  # Modal
+  modal-scrim:
+    $value: '{color.neutral-900}'
+    $format: srgb-rgb-function
+    $alpha: 0.85
+
+  # Tabs
+  tabbar-background:
+    $value: '{color.neutral-50}'
+    $format: srgb-rgb-function
+  tab-background:
+    $value: '{color.neutral-100}'
+    $format: srgb-rgb-function
+  tab-background--inactive:
+    $value: '{color.neutral-50}'
+    $format: srgb-rgb-function
+  tab-background--hover:
+    $value: '{color.neutral-700}'
+    $format: srgb-rgb-function
+  tab-border:
+    $value: '{color.neutral-700}'
+    $format: srgb-rgb-function
+  tab-border--hover:
+    $value: '{color.neutral-900}'
+    $format: srgb-rgb-function
+  tab-border--active:
+    $value: '{color.neutral-800}'
+    $format: srgb-rgb-function
+  text-tab:
+    $value: '{color.neutral-700}'
+    $format: srgb-rgb-function
+  text-tab--hover:
+    $value: '{color.neutral-0}'
+    $format: srgb-rgb-function
+  text-tab-active:
+    $value: '{color.neutral-700}'
+    $format: srgb-rgb-function
+  text-tab-no-results:
+    $value: '{color.neutral-500}'
+    $format: srgb-rgb-function
+  tab-section-background:
+    $value: '{color.neutral-0}'
+    $format: srgb-rgb-function
+
+border-color:
+  $type: color
+  button:
+    $value: '{color.text-button}'
+    $format: srgb-rgb-function
+    $description: >-
+      Must be a colour, not a channel triplet: it is consumed inside a
+      `border:` shorthand, and a bare triplet makes the whole declaration
+      invalid, which silently drops border-style to none. .mg-button-outline
+      rendered as bare text for the entire time this was a triplet.
+  button-primary:
+    $value: transparent
+    $format: literal
+    $description: >-
+      Stroke on filled primary buttons. The fill is painted under the border,
+      so `transparent` makes the stroke match the fill and keeps filled and
+      outline buttons the same size. A theme can set a colour here (for
+      example a darker shade of the fill) to give filled buttons a visible
+      edge.
+  button-secondary:
+    $value: transparent
+    $format: literal
+    $description: >-
+      Stroke on filled secondary buttons. See border-color.button-primary.
+  hero-button-secondary: { $value: '{color.neutral-0}' }
+
+# Spacing scale. The px numbers are converted to rem against a 16px document
+# root at build time; the legacy 10px root was removed in 2.0.
+spacing:
+  $type: dimension
+  $format: rem
+  '0': { $value: '0', $format: literal }
+  '25': { $value: 2.5 }
+  '50': { $value: 5 }
+  '75': { $value: 7.5 }
+  '100': { $value: 10 }
+  '150': { $value: 15 }
+  '175': { $value: 18 }
+  '200': { $value: 20 }
+  '250': { $value: 24 }
+  '300': { $value: 30 }
+  '350': { $value: 35 }
+  '400': { $value: 50 }
+  '500': { $value: 60 }
+  '600': { $value: 80 }
+  '800': { $value: 100 }
+  '1000': { $value: 400 }
+  hero-overlay: { $value: '0', $format: literal }
+
+width:
+  $type: dimension
+  $format: rem
+  '150': { $value: 150 }
+  '300': { $value: 300 }
+  '400': { $value: 400 }
+  '600': { $value: 600 }
+
+# Type scale. Public: emitted as --mg-font-size-* custom properties, which
+# components read with var(), so a theme can re-value a step at runtime.
+# Also emitted as deprecated $mg-font-size-* Sass variables for Sass
+# consumers; they will be removed in 3.0. Component font-size tokens below
+# still resolve against the scale at build time. See unisdr/undrr-mangrove#1167.
+font-size:
+  $type: dimension
+  $format: rem
+  $sass: true
+  '100': { $value: 10 }
+  '150': { $value: 11.25 }
+  '200': { $value: 12.5 }
+  '250': { $value: 14 }
+  '300': { $value: 16, $description: 'Regular body text.' }
+  '400': { $value: 18 }
+  '500': { $value: 23 }
+  '600': { $value: 32 }
+  '800': { $value: 36 }
+  '900': { $value: 40 }
+  '1000': { $value: 48 }
+  '1100': { $value: 64 }
+  button:
+    $value: '{=font-size.250}'
+    $format: literal
+    $private: false
+    $sass: false
+  tab:
+    $value: '{=font-size.400}'
+    $format: literal
+    $private: false
+    $sass: false
+  form-input:
+    $value: '{=font-size.300}'
+    $format: literal
+    $private: false
+    $sass: false
+
+# Line heights. Public: emitted as --mg-font-line-height-* custom properties,
+# which components read with var(), so a theme can re-value a step at runtime.
+# The em unit is resolved where var() is substituted, so each use still
+# computes against its own element's font size, exactly as the Sass value did.
+# Also emitted as deprecated $mg-font-line-height-* Sass variables for Sass
+# consumers; they will be removed in 3.0. See unisdr/undrr-mangrove#1085.
+font-line-height:
+  $type: dimension
+  $format: literal
+  $sass: true
+  '500':
+    $value: '1.25em'
+    $description: >-
+      Tight line height. An em value, so it resolves against the font size
+      of the element where the property is used.
+  '700':
+    $value: '1.5em'
+    $description: >-
+      Body line height. An em value, so it resolves against the font size
+      of the element where the property is used.
+
+radius:
+  $type: dimension
+  tag: { $value: '{spacing.50}' }
+  button: { $value: '{spacing.50}' }
+  form-input: { $value: '{spacing.50}' }
+  tab: { $value: '0' }
+  tab-section: { $value: '0' }
+
+padding:
+  $type: dimension
+  button: { $value: '{spacing.100} {spacing.150}' }
+  tab: { $value: '{spacing.75} {spacing.150}' }
+  tab-section: { $value: '{spacing.100} {spacing.0}' }
+
+border-width:
+  $type: dimension
+  button: { $value: '1px' }
+
+box-shadow:
+  $type: shadow
+  tab-section: { $value: 'none' }
+
+container:
+  $type: dimension
+  spacer: { $value: '{spacing.150}' }
+
+cta:
+  $type: dimension
+  padding: { $value: '{spacing.400}' }
+
+author-image:
+  $type: dimension
+  radius: { $value: '50%' }
+
+opacity:
+  $type: number
+  hero: { $value: '0.85' }
+
+# v2 horizontal tab: an underline indicator rather than a filled pill.
+# One definition, so a theme restyles every tab surface from one place.
+tab:
+  $type: dimension
+  padding: { $value: '{spacing.150} {spacing.200}' }
+  min-block-size: { $value: 44, $format: rem }
+  indicator-size: { $value: '3px' }
+
+# Form control surface. One definition of what a field looks like, read by
+# every control that has to sit alongside an input.
+form-input:
+  background:
+    $type: color
+    $value: '{color.neutral-25}'
+    $format: srgb-rgb-function
+  background--focus:
+    $type: color
+    $value: '{color.neutral-0}'
+    $format: srgb-rgb-function
+  border-color:
+    $type: color
+    $value: '{color.neutral-400}'
+    $format: srgb-rgb-function
+    $description: >-
+      The border was rgb(neutral-600 / 0.22), which is 1.43:1 against the
+      page and 1.39:1 against the field's own fill, so every input, textarea
+      and select in the system failed WCAG 1.4.11. neutral-400 is 3.96:1.
+  border-width: { $type: dimension, $value: '1px' }
+  block-size: { $type: dimension, $value: '46px' }
+  padding: { $type: dimension, $value: 6.25, $format: rem }
+
+focus-ring:
+  $type: dimension
+  width: { $value: '2px' }
+  offset: { $value: '2px' }
+  radius: { $value: '2px' }
+
+surface:
+  raised:
+    $type: color
+    $value: '{color.neutral-0}'
+    $format: srgb-rgb-function
+
+shadow:
+  $type: shadow
+  raised: { $value: 'inset 0 0 0 1px {rgb(color.neutral-600 / 0.24)}' }
+  raised-hover: { $value: 'inset 0 0 0 2px {rgb(color.interactive)}' }
+
+motion:
+  duration-fast: { $type: duration, $value: '160ms' }
+  duration-medium: { $type: duration, $value: '300ms' }
+  easing-standard: { $type: cubicBezier, $value: 'cubic-bezier(0.2, 0, 0, 1)' }
+
+card:
+  background: { $type: color, $value: '{surface.raised}', $format: literal }
+  padding: { $type: dimension, $value: '{spacing.150}' }
+  border-radius: { $type: dimension, $value: '{spacing.50}' }
+  shadow: { $type: shadow, $value: '{shadow.raised}' }
+  shadow-hover: { $type: shadow, $value: '{shadow.raised-hover}' }
+  icon-badge-radius: { $type: dimension, $value: '20%' }
+  # Publications default to an unboxed cover and caption. Surface expression
+  # remains theme-owned, independently of the enclosed photo-card defaults.
+  publication:
+    background:
+      $type: color
+      $value: transparent
+      $format: literal
+      $description: Background of book and horizontal book publication teasers.
+    padding:
+      $type: dimension
+      $value: '0px'
+      $description: Outer publication teaser inset; cover-to-caption gaps are separate.
+    border-radius:
+      $type: dimension
+      $value: '0px'
+      $description: Outer publication surface radius; complete cover artwork remains square.
+    shadow:
+      $type: shadow
+      $value: none
+      $description: Publication surface elevation at rest.
+    shadow-hover:
+      $type: shadow
+      $value: none
+      $description: Linked publication surface elevation on hover.
+
+content-meta:
+  font-size:
+    $type: dimension
+    $value: '{font-size.250}'
+    $format: literal
+    $description: Dates, attribution and supporting metadata in content teasers and cards; summaries retain body size.
+
+content-teaser:
+  background: { $type: color, $value: '{card.background}', $format: literal, $description: 'Content teaser surface, defaulting to the standard card background independently of publication surfaces.' }
+  padding: { $type: dimension, $value: '{card.padding}', $description: 'Content inset and complete-cover/logo inset inside the enclosed horizontal teaser; photographs meet the outer edge.' }
+  border-radius: { $type: dimension, $value: '{card.border-radius}', $description: 'Content teaser enclosure radius, defaulting to the standard card radius.' }
+  shadow: { $type: shadow, $value: '{card.shadow}', $description: 'Content teaser soft enclosure, defaulting to the standard card surface at rest.' }
+  shadow-hover: { $type: shadow, $value: '{card.shadow-hover}', $description: 'Content teaser soft enclosure on hover, defaulting to the standard card hover surface.' }
+
+content-card:
+  title-font-size: { $type: dimension, $value: '{font-size.500}', $format: literal, $description: 'Title size in vertical content card layouts.' }
+  book-title-font-size: { $type: dimension, $value: '{font-size.300}', $format: literal, $description: 'Title size in book card layouts.' }
+  book:
+    background: { $type: color, $value: 'transparent', $format: literal, $description: 'Independent content-card surface; publication surfaces do not determine this value.' }
+    padding: { $type: dimension, $value: '0px', $description: 'Independent content-card surface; publication surfaces do not determine this value.' }
+    border-radius: { $type: dimension, $value: '0px', $description: 'Independent content-card surface; publication surfaces do not determine this value.' }
+    shadow: { $type: shadow, $value: 'none', $description: 'Independent content-card surface; publication surfaces do not determine this value.' }
+    shadow-hover: { $type: shadow, $value: 'none', $description: 'Independent content-card surface; publication surfaces do not determine this value.' }
+
+# Shared publication stages in search grids align captions without cropping.
+search:
+  book-cover-height:
+    $type: dimension
+    $value: 320
+    $format: rem
+    $description: Desktop search book-grid media stage; missing media reserves this space only in multi-column layouts.
+
+# Notice actions sit on the notice's tinted surface, not the page, so a brand
+# whose outline secondary colour only clears 4.5:1 on white can darken it here
+# without changing outline buttons anywhere else. It is a var() chain onto a
+# theme-owned colour, so every sub-brand restates it in its own block.
+notice:
+  action-secondary:
+    $type: color
+    $value: '{color.button-outline-secondary}'
+    $format: srgb-rgb-function
+
+hero-overlay:
+  max-width: { $type: dimension, $value: 600, $format: rem }
+  padding: { $type: dimension, $value: '{spacing.300}' }
+  radius: { $type: dimension, $value: '{spacing.50}' }
+  shadow:
+    $type: shadow
+    $value: '0 18px 55px {rgb(color.neutral-900 / 0.22)}'
+
+hero-gradient:
+  $type: number
+  start-opacity: { $value: '0.98' }
+  middle-opacity: { $value: '0.82' }
+  end-opacity: { $value: '0.08' }
+
+# The scrim that sits over the brand tint where the hero's copy is, so body
+# text clears SC 1.4.3 against a photograph the component never sees. The
+# tint alone cannot carry that: at its own middle opacity it still lets
+# ~18% of the photo through, and a bright sky behind the copy takes IRP's
+# hero blue from its 4.71 flat-fill figure down to 3.9. Raising the tint
+# does not rescue it either -- 4.71 is what IRP measures at FULL opacity, so
+# there is no headroom in the colour to spend. Only a neutral darkening
+# layer over the whole composite gives a floor that holds for any photo.
+# See docs/COLOUR-CONTRAST-METHODOLOGY.md#the-hero-scrim.
+hero-scrim:
+  $type: number
+  opacity: { $value: '0.16' }
+  # How far past the copy's trailing edge the scrim takes to clear, so the
+  # photograph is never cut by a visible edge.
+  fade: { $type: dimension, $value: 160, $format: rem }
+
+# Named stacking contexts. One token per UI concept; a component's own
+# sub-layers use `$token - 1` / `$token + 1` arithmetic in its Sass rather
+# than a token each. Kept here rather than in Sass so a brand can repoint a
+# stacking context at runtime like any other token.
+z-index:
+  $type: number
+  behind: { $value: '-1' }
+  nav: { $value: '10' }
+  sticky: { $value: '11' }
+  nav-toggle: { $value: '14' }
+  header: { $value: '22' }
+  drawer: { $value: '2000' }
+  dropdown: { $value: '2500' }
+  modal: { $value: '5000' }
+  toast: { $value: '5500' }

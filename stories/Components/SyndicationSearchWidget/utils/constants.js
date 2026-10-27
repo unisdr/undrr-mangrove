@@ -14,21 +14,73 @@
  */
 export const DOMAINS = [
   { id: 'www_undrr_org', name: 'UNDRR.org', url: 'https://www.undrr.org' },
-  { id: 'www_preventionweb_net', name: 'PreventionWeb', url: 'https://www.preventionweb.net' },
-  { id: 'recovery_preventionweb_net', name: 'International Recovery Platform', url: 'https://recovery.preventionweb.net' },
-  { id: 'gp_preventionweb_net', name: 'Global Platform', url: 'https://globalplatform.undrr.org' },
-  { id: 'mcr2030_undrr_org', name: 'MCR2030', url: 'https://mcr2030.undrr.org' },
+  {
+    id: 'www_preventionweb_net',
+    name: 'PreventionWeb',
+    url: 'https://www.preventionweb.net',
+  },
+  {
+    id: 'recovery_preventionweb_net',
+    name: 'International Recovery Platform',
+    url: 'https://recovery.preventionweb.net',
+  },
+  {
+    id: 'gp_preventionweb_net',
+    name: 'Global Platform',
+    url: 'https://globalplatform.undrr.org',
+  },
+  {
+    id: 'mcr2030_undrr_org',
+    name: 'MCR2030',
+    url: 'https://mcr2030.undrr.org',
+  },
   { id: 'iddrr_undrr_org', name: 'IDDRR', url: 'https://iddrr.undrr.org' },
-  { id: 'rp_americas_undrr_org', name: 'RP Americas', url: 'https://rp-americas.undrr.org' },
-  { id: 'sendaiframework_mtr_undrr_org', name: 'MTR SF', url: 'https://sendaiframework-mtr.undrr.org' },
-  { id: 'tsunamiday_undrr_org', name: 'World Tsunami Awareness Day', url: 'https://tsunamiday.undrr.org' },
-  { id: 'rp_arabstates_undrr_org', name: 'RP Arab States', url: 'https://rp-arabstates.undrr.org' },
-  { id: 'g20drrwg_preventionweb_net', name: 'G20 DRRWG', url: 'https://g20drrwg.preventionweb.net' },
-  { id: 'afrp_undrr_org', name: 'Africa Regional Platform', url: 'https://afrp.undrr.org' },
+  {
+    id: 'rp_americas_undrr_org',
+    name: 'RP Americas',
+    url: 'https://rp-americas.undrr.org',
+  },
+  {
+    id: 'sendaiframework_mtr_undrr_org',
+    name: 'MTR SF',
+    url: 'https://sendaiframework-mtr.undrr.org',
+  },
+  {
+    id: 'tsunamiday_undrr_org',
+    name: 'World Tsunami Awareness Day',
+    url: 'https://tsunamiday.undrr.org',
+  },
+  {
+    id: 'rp_arabstates_undrr_org',
+    name: 'RP Arab States',
+    url: 'https://rp-arabstates.undrr.org',
+  },
+  {
+    id: 'g20drrwg_preventionweb_net',
+    name: 'G20 DRRWG',
+    url: 'https://g20drrwg.preventionweb.net',
+  },
+  {
+    id: 'afrp_undrr_org',
+    name: 'Africa Regional Platform',
+    url: 'https://afrp.undrr.org',
+  },
   { id: 'efdrr_undrr_org', name: 'EFDRR', url: 'https://efdrr.undrr.org' },
-  { id: 'apmcdrr_undrr_org', name: 'APMCDRR', url: 'https://apmcdrr.undrr.org' },
-  { id: 'coecdr_preventionweb_net', name: 'Centre of Excellence', url: 'https://coecdr.preventionweb.net' },
-  { id: 'ariseglobalnetwork_org', name: 'ARISE', url: 'https://arise.undrr.org' },
+  {
+    id: 'apmcdrr_undrr_org',
+    name: 'APMCDRR',
+    url: 'https://apmcdrr.undrr.org',
+  },
+  {
+    id: 'coecdr_preventionweb_net',
+    name: 'Centre of Excellence',
+    url: 'https://coecdr.preventionweb.net',
+  },
+  {
+    id: 'ariseglobalnetwork_org',
+    name: 'ARISE',
+    url: 'https://arise.undrr.org',
+  },
 ];
 
 /**
@@ -64,7 +116,11 @@ export const CONTENT_TYPES = [
  * @type {Array<{id: string, name: string, domain: string}>}
  */
 export const TAXONOMY_VOCABULARIES = [
-  { id: 'prevention_web_regions', name: 'Country', domain: 'www_preventionweb_net' },
+  {
+    id: 'prevention_web_regions',
+    name: 'Country',
+    domain: 'www_preventionweb_net',
+  },
   { id: 'hazard', name: 'Hazard', domain: 'www_preventionweb_net' },
   { id: 'theme', name: 'Theme', domain: 'www_preventionweb_net' },
 ];
@@ -91,7 +147,7 @@ export const CONTENT_SUBTYPES = {
       { id: '1', name: 'Statements and messages' },
       { id: '754', name: 'Feature' },
       { id: '755', name: 'Research briefs' },
-      { id: '797', name: 'Community announcement' },
+      { id: '797', name: 'Opportunities' },
       { id: '756', name: 'Op Ed' },
     ],
   },
@@ -125,11 +181,17 @@ export const CONTENT_SUBTYPES = {
     {
       field: 'field_publication_type',
       options: [
-        { id: 'Documents and publications', name: 'Documents and publications' },
+        {
+          id: 'Documents and publications',
+          name: 'Documents and publications',
+        },
         { id: 'Policies and plans', name: 'Policies and plans' },
         { id: 'Educational materials', name: 'Educational materials' },
         { id: 'Statements', name: 'Statements' },
-        { id: 'UN resolutions and reports', name: 'UN resolutions and reports' },
+        {
+          id: 'UN resolutions and reports',
+          name: 'UN resolutions and reports',
+        },
       ],
     },
     {
@@ -172,13 +234,22 @@ export const CONTENT_SUBTYPES = {
     options: [
       { id: 'academicscientific', name: 'Academic & scientific' },
       { id: 'governments', name: 'Governments' },
-      { id: 'nongovernmentalorganizations', name: 'Non-governmental organizations' },
+      {
+        id: 'nongovernmentalorganizations',
+        name: 'Non-governmental organizations',
+      },
       { id: 'newsandmedia', name: 'News & media' },
       { id: 'privatesector', name: 'Private sector' },
       { id: 'networksandothers', name: 'Networks & others' },
       { id: 'arise_member', name: 'ARISE member' },
-      { id: 'uninternationalorganizations', name: 'UN & international organizations' },
-      { id: 'regionalintergovernmentalorganizations', name: 'Regional intergovernmental organizations' },
+      {
+        id: 'uninternationalorganizations',
+        name: 'UN & international organizations',
+      },
+      {
+        id: 'regionalintergovernmentalorganizations',
+        name: 'Regional intergovernmental organizations',
+      },
       { id: 'arise_network', name: 'ARISE network' },
     ],
   },
@@ -257,37 +328,112 @@ export const FACET_SEARCH_THRESHOLD = 8;
 
 /**
  * Facet field definitions.
- * @type {Array<{key: string, label: string, vocabulary?: string, type: string}>}
+ *
+ * `labelSource: 'taxonomy'` marks the facets labelled from the taxonomy
+ * endpoint (`taxonomyEndpoint`). Once that endpoint has loaded, values on
+ * these facets with no matching term (unpublished or deleted terms still
+ * referenced by content) are hidden unless selected. Do not infer this from
+ * `vocabulary: 'terms'`, which subtype fields labelled from CONTENT_SUBTYPES
+ * also use. Consumers who override `facetFields` must keep
+ * `labelSource: 'taxonomy'` on these entries to keep the hiding.
+ *
+ * @type {Array<{key: string, label: string, vocabulary?: string, type: string, labelSource?: 'taxonomy'}>}
  */
 export const FACET_FIELDS = [
-  { key: 'field_domain_access', label: 'Website', vocabulary: 'field_domain_access', type: 'select-single' },
+  {
+    key: 'field_domain_access',
+    label: 'Website',
+    vocabulary: 'field_domain_access',
+    type: 'select-single',
+  },
   { key: 'type', label: 'Type', vocabulary: 'type', type: 'select-multiple' },
   // Subtype fields - merged into the type dropdown but need aggregations
   // These are indexed in ES (field names differ from Drupal field names)
-  { key: 'field_news_type', label: 'News type', vocabulary: 'terms', type: 'select-multiple' },
-  { key: 'field_blog_type', label: 'Blog type', vocabulary: 'terms', type: 'select-multiple' },
-  { key: 'field_undrr_publication_types', label: 'UNDRR publication types', vocabulary: 'terms', type: 'select-multiple' },
-  { key: 'field_publication_type', label: 'Publication type (PW)', vocabulary: 'list', type: 'select-multiple' },
-  { key: 'field_irp_publication_subtype', label: 'IRP publication subtype', vocabulary: 'terms', type: 'select-multiple' },
-  { key: 'field_resource_type', label: 'Resource type', vocabulary: 'terms', type: 'select-multiple' },
-  { key: 'field_organization_type', label: 'Organization type', vocabulary: 'list', type: 'select-multiple' },
+  {
+    key: 'field_news_type',
+    label: 'News type',
+    vocabulary: 'terms',
+    type: 'select-multiple',
+  },
+  {
+    key: 'field_blog_type',
+    label: 'Blog type',
+    vocabulary: 'terms',
+    type: 'select-multiple',
+  },
+  {
+    key: 'field_undrr_publication_types',
+    label: 'UNDRR publication types',
+    vocabulary: 'terms',
+    type: 'select-multiple',
+  },
+  {
+    key: 'field_publication_type',
+    label: 'Publication type (PW)',
+    vocabulary: 'list',
+    type: 'select-multiple',
+  },
+  {
+    key: 'field_irp_publication_subtype',
+    label: 'IRP publication subtype',
+    vocabulary: 'terms',
+    type: 'select-multiple',
+  },
+  {
+    key: 'field_resource_type',
+    label: 'Resource type',
+    vocabulary: 'terms',
+    type: 'select-multiple',
+  },
+  {
+    key: 'field_organization_type',
+    label: 'Organization type',
+    vocabulary: 'list',
+    type: 'select-multiple',
+  },
   // field_policy_type is indexed but not used as subtypes currently (see CONTENT_SUBTYPES)
   // { key: 'field_policy_type', label: 'Policy type', vocabulary: 'terms', type: 'select-multiple' },
   // Not indexed yet - needs to be added to search_api.index.multidomain.yml:
   // { key: 'field_event_type_term', label: 'Event type', vocabulary: 'terms', type: 'select-multiple' },
   { key: 'year', label: 'Year', type: 'select-multiple' },
-  { key: 'field_country_region', label: 'Country and region', vocabulary: 'terms', type: 'select-multiple' },
-  { key: 'field_hazard', label: 'Hazard', vocabulary: 'terms', type: 'select-multiple' },
-  { key: 'field_theme', label: 'Theme', vocabulary: 'terms', type: 'select-multiple' },
-  { key: '_language', label: 'Language', vocabulary: 'languages', type: 'select-single' },
+  {
+    key: 'field_country_region',
+    label: 'Country and region',
+    vocabulary: 'terms',
+    type: 'select-multiple',
+    labelSource: 'taxonomy',
+  },
+  {
+    key: 'field_hazard',
+    label: 'Hazard',
+    vocabulary: 'terms',
+    type: 'select-multiple',
+    labelSource: 'taxonomy',
+  },
+  {
+    key: 'field_theme',
+    label: 'Theme',
+    vocabulary: 'terms',
+    type: 'select-multiple',
+    labelSource: 'taxonomy',
+  },
+  {
+    key: '_language',
+    label: 'Language',
+    vocabulary: 'languages',
+    type: 'select-single',
+  },
 ];
 
 /**
- * Default taxonomy API endpoint.
- * Always points to PreventionWeb as the canonical source for taxonomy terms.
+ * Default taxonomy API endpoint (`DEFAULT_CONFIG.taxonomyEndpoint`).
+ * Points to PreventionWeb as the canonical source for the term labels of
+ * the taxonomy-backed facets (`labelSource: 'taxonomy'` in FACET_FIELDS).
+ * News types are not requested: they are labelled from the static NEWS_TYPES.
  * @type {string}
  */
-export const TAXONOMY_API_URL = 'https://www.preventionweb.net/api/v1/taxonomy?vid=news_type,prevention_web_regions,hazard,theme&items_per_page=1000&langcode=en';
+export const TAXONOMY_API_URL =
+  'https://www.preventionweb.net/api/v1/taxonomy?vid=prevention_web_regions,hazard,theme&items_per_page=1000&langcode=en';
 
 /**
  * Search scoring configuration.
@@ -324,11 +470,47 @@ export const SCORING_CONFIG = {
   // These common words are stripped to improve exact phrase matching
   // e.g., "Draft Articles on the Protection" → "Draft Articles Protection"
   stopWords: [
-    'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for',
-    'of', 'with', 'by', 'from', 'as', 'is', 'was', 'are', 'been', 'be',
-    'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'should',
-    'could', 'may', 'might', 'must', 'can', 'this', 'that', 'these',
-    'those', 'it', 'its',
+    'the',
+    'a',
+    'an',
+    'and',
+    'or',
+    'but',
+    'in',
+    'on',
+    'at',
+    'to',
+    'for',
+    'of',
+    'with',
+    'by',
+    'from',
+    'as',
+    'is',
+    'was',
+    'are',
+    'been',
+    'be',
+    'have',
+    'has',
+    'had',
+    'do',
+    'does',
+    'did',
+    'will',
+    'would',
+    'should',
+    'could',
+    'may',
+    'might',
+    'must',
+    'can',
+    'this',
+    'that',
+    'these',
+    'those',
+    'it',
+    'its',
   ],
   // Interestingness thresholds (field_interestingness)
   interestingness: {
@@ -363,12 +545,64 @@ export const HIGHLIGHT_CONFIG = {
 };
 
 /**
+ * Valid sort orders (the values offered by SortOptions).
+ * @type {string[]}
+ */
+export const SORT_VALUES = [
+  'relevance',
+  'newest',
+  'oldest',
+  'eventDateAsc',
+  'eventDateDesc',
+];
+
+/**
+ * Event date sorts. SortOptions offers them when `defaultSort` or a sort
+ * seen during the widget session is one of them, so ordinary listings
+ * do not show sorts that would put every non-event last.
+ * @type {string[]}
+ */
+export const EVENT_SORT_VALUES = ['eventDateAsc', 'eventDateDesc'];
+
+/**
+ * `_source` fields the widget reads from a hit: the teaser HTML, the fields
+ * the no-teaser fallback renders (title, url, nid, type, vid, domain, dates),
+ * and the debug metrics. Everything else in the index (`body`,
+ * `aggregated_field`, ...) is large and unused, so it is not requested.
+ * Override with `config.sourceFields` for an endpoint whose hits need more.
+ * @type {string[]}
+ */
+export const SOURCE_FIELDS = [
+  'teaser',
+  'title',
+  'url',
+  'nid',
+  'type',
+  'vid',
+  'field_domain_access',
+  'published_at',
+  'event_start',
+  'event_end',
+  'field_meta_interestingness',
+  'field_meta_longevity',
+];
+
+/**
+ * Elasticsearch's default `index.max_result_window`: `from + size` cannot
+ * exceed it, so pages beyond it would only return an error.
+ * @type {number}
+ */
+export const MAX_RESULT_WINDOW = 10000;
+
+/**
  * Default configuration values.
  * @type {Object}
  */
 export const DEFAULT_CONFIG = {
   // API Configuration
   searchEndpoint: 'https://www.undrr.org/search-endpoint',
+  // Taxonomy terms for facet labels (countries, hazards, themes)
+  taxonomyEndpoint: TAXONOMY_API_URL,
   resultsPerPage: 5,
   facetCountToShow: 500,
   debounceDelay: 500, // Balances responsiveness (<1s perceived) with fewer wasted API calls
@@ -376,6 +610,9 @@ export const DEFAULT_CONFIG = {
 
   // URL Hash Sync
   enableHashSync: 'auto',
+
+  // Analytics: regions are `${analyticsRegionPrefix}-form|results|facets`
+  analyticsRegionPrefix: 'undrr-search',
 
   // Default search query and sort
   defaultQuery: '',
@@ -419,8 +656,26 @@ export const DEFAULT_CONFIG = {
   // e.g., interestingnessTiers: ['promoted', 'announced'] only returns high-priority content
   interestingnessTiers: [],
   longevityTiers: [],
-
 };
+
+/**
+ * Whether the widget holds off searching until the reader types more: a
+ * non-empty query shorter than `minSearchLength` with no filters set. An
+ * empty query searches everything, and filters make a short query useful.
+ *
+ * @param {Object} state - `{ query, facets, customFacets }`
+ * @param {number} minSearchLength
+ * @returns {boolean}
+ */
+export function isQueryTooShortToSearch(
+  { query, facets, customFacets },
+  minSearchLength
+) {
+  const hasFilters =
+    Object.values(facets || {}).some(v => v?.length > 0) ||
+    Object.values(customFacets || {}).some(v => v?.length > 0);
+  return Boolean(query) && query.length < minSearchLength && !hasFilters;
+}
 
 /**
  * Resolve the facets layout from a (merged or partial) config object.
@@ -440,9 +695,9 @@ export const DEFAULT_CONFIG = {
  */
 export function resolveFacetsLayout(config) {
   if (
-    config.facets === false
-    || config.facets === 'sidebar'
-    || config.facets === 'horizontal'
+    config.facets === false ||
+    config.facets === 'sidebar' ||
+    config.facets === 'horizontal'
   ) {
     return config.facets;
   }
@@ -459,7 +714,9 @@ export const DOMAIN_MAP = new Map(DOMAINS.map(d => [d.id, d]));
 export const CONTENT_TYPE_MAP = new Map(CONTENT_TYPES.map(t => [t.id, t]));
 export const NEWS_TYPE_MAP = new Map(NEWS_TYPES.map(t => [t.id, t]));
 export const LANGUAGE_MAP = new Map(LANGUAGES.map(l => [l.id, l]));
-export const TAXONOMY_VOCABULARY_MAP = new Map(TAXONOMY_VOCABULARIES.map(v => [v.id, v]));
+export const TAXONOMY_VOCABULARY_MAP = new Map(
+  TAXONOMY_VOCABULARIES.map(v => [v.id, v])
+);
 
 /**
  * Build a map of all subtype options across all parent types.
@@ -569,13 +826,16 @@ export function isFilterVisible(key, visibleFilters) {
  * @type {Object.<string, {label: string, selector: string}>}
  */
 export const TEASER_FIELDS = {
-  image:           { label: 'Image',            selector: '.mg-card__visual' },
-  contentType:     { label: 'Content type',     selector: '.mg-card__label' },
-  publicationType: { label: 'Publication type', selector: '.mg-card__publication-type' },
-  date:            { label: 'Date',             selector: '.mg-card__date' },
-  summary:         { label: 'Summary',          selector: '.mg-card__description' },
-  siteName:        { label: 'Site name',        selector: '.mg-search__result-site-name' },
-  organization:    { label: 'Organization',     selector: '.mg-card__organization' },
+  image: { label: 'Image', selector: '.mg-card__visual' },
+  contentType: { label: 'Content type', selector: '.mg-card__label' },
+  publicationType: {
+    label: 'Publication type',
+    selector: '.mg-card__publication-type',
+  },
+  date: { label: 'Date', selector: '.mg-card__date' },
+  summary: { label: 'Summary', selector: '.mg-card__description' },
+  siteName: { label: 'Site name', selector: '.mg-search__result-site-name' },
+  organization: { label: 'Organization', selector: '.mg-card__organization' },
 };
 
 /**
@@ -754,9 +1014,31 @@ export function buildTierFilter(field, tierNames, tierRanges) {
 
   const rangeFilters = tierNames
     .filter(name => tierRanges[name])
-    .map(name => ({ range: { [field]: { gte: tierRanges[name].min, lte: tierRanges[name].max } } }));
+    .map(name => ({
+      range: {
+        [field]: { gte: tierRanges[name].min, lte: tierRanges[name].max },
+      },
+    }));
 
   if (rangeFilters.length === 0) return null;
   if (rangeFilters.length === 1) return rangeFilters[0];
   return { bool: { should: rangeFilters, minimum_should_match: 1 } };
+}
+
+/**
+ * The `data-vf-google-analytics-region` value for one part of the widget.
+ * The shared analytics script reports a click's innermost region, so a page
+ * with two widgets gives each its own prefix to tell their clicks apart.
+ *
+ * @param {Object} config - Widget config
+ * @param {'form'|'results'|'facets'} part - Part of the widget
+ * @returns {string} For example `undrr-search-results`
+ */
+export function analyticsRegion(config, part) {
+  const prefix =
+    typeof config?.analyticsRegionPrefix === 'string' &&
+    config.analyticsRegionPrefix.trim()
+      ? config.analyticsRegionPrefix.trim()
+      : 'undrr-search';
+  return `${prefix}-${part}`;
 }
