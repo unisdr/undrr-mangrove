@@ -253,6 +253,7 @@ test('generates the slimmed package.json', () => {
       'error-pages/**/*',
       'fonts/**/*',
       'docs/**/*',
+      'schemas/*.schema.json',
       '!**/__tests__/**',
       '!**/__snapshots__/**',
       '!**/__mocks__/**',
@@ -425,5 +426,34 @@ test.each([[['--root']], [['--root=']], [['--root', '--foo']]])(
     });
     expect(result.status).toBe(1);
     expect(result.stderr).toMatch(/--root needs a directory path/);
+  }
+);
+
+test('ships compiled schema proposals without hiding existing package subpaths', () => {
+  write(root, 'schemas/card.schema.js', 'export default {};');
+  write(root, 'schemas/dist/card.schema.json', '{"type":"object"}');
+  const result = run('--root', root);
+  expect(result.status).toBe(0);
+  expect(
+    fs.readFileSync(path.join(out, 'schemas/card.schema.json'), 'utf8')
+  ).toBe('{"type":"object"}');
+  expect(fs.existsSync(path.join(out, 'components/MegaMenu.js'))).toBe(true);
+  const pkg = JSON.parse(
+    fs.readFileSync(path.join(out, 'package.json'), 'utf8')
+  );
+  expect(pkg.files).toContain('schemas/*.schema.json');
+  expect(pkg.exports).toBeUndefined();
+  expect(pkg.main).toBeUndefined();
+});
+
+test.each([false, true])(
+  'refuses unbuilt schema proposals (empty dist: %s)',
+  emptyDist => {
+    write(root, 'schemas/card.schema.js', 'export default {};');
+    if (emptyDist)
+      fs.mkdirSync(path.join(root, 'schemas/dist'), { recursive: true });
+    const result = run('--root', root);
+    expect(result.status).not.toBe(0);
+    expect(result.stderr).toMatch(/schemas\/dist\//);
   }
 );

@@ -61,6 +61,7 @@ export const PACKAGE_FILES = [
   'error-pages/**/*',
   'fonts/**/*',
   'docs/**/*',
+  'schemas/*.schema.json',
   // Second line of defence: even if a development-only file reaches the
   // assembled directory, npm leaves it out of the tarball.
   '!**/__tests__/**',
@@ -293,6 +294,32 @@ export function assemble({
   for (const [src, dest] of DIST_COPIES) {
     const srcDir = path.join(rootDir, src);
     if (isDir(srcDir)) copyContents(srcDir, path.join(out, dest));
+  }
+
+  // Schema proposals publish their compiled JSON alongside existing subpaths.
+  // Preserve main's package layout: do not reintroduce the removed root entry
+  // or an exports map that hides components, stylesheets and vanilla modules.
+  const schemaSource = path.join(rootDir, 'schemas');
+  if (isDir(schemaSource)) {
+    const schemaDist = path.join(schemaSource, 'dist');
+    if (!isDir(schemaDist)) {
+      throw new Error(
+        'schemas/dist/ is missing. Run `yarn build:schemas` first.'
+      );
+    }
+    const schemaFiles = fs
+      .readdirSync(schemaDist)
+      .filter(file => file.endsWith('.schema.json'));
+    if (!schemaFiles.length) {
+      throw new Error('schemas/dist/ has no compiled JSON schemas.');
+    }
+    fs.mkdirSync(path.join(out, 'schemas'), { recursive: true });
+    for (const file of schemaFiles) {
+      fs.copyFileSync(
+        path.join(schemaDist, file),
+        path.join(out, 'schemas', file)
+      );
+    }
   }
 
   const storiesDir = path.join(rootDir, 'stories');

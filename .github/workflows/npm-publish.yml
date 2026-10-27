@@ -62,7 +62,7 @@ jobs:
         run: yarn install --immutable
 
       - name: Build
-        run: yarn build
+        run: yarn build && yarn build:schemas --validate-only
 
       # Assemble the curated npm-package/ directory (dist/ subpaths, SCSS
       # sources, slimmed package.json). The same script backs the local

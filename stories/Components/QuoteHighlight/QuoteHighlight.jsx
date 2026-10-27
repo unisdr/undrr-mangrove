@@ -8,6 +8,7 @@ import DOMPurify from 'dompurify';
  * A component that displays a highlighted quote with an optional image, attribution, and title.
  * Multiple variants are available: with a separator line or with an image, and with different alignments.
  *
+ * @see schemas/quote.schema.js — canonical field names and documented deviations.
  * `quote`, `attribution` and `attributionTitle` are rendered as HTML so that the
  * inline markup authored copy carries — a `<cite>`, an `<em>`, a `<br>`, a link
  * on a name — survives rather than printing as tags. All three run through

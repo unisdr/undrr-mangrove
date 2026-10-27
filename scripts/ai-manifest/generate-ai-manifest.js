@@ -41,6 +41,8 @@
 
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
 import { createRequire } from 'module';
 import htmlExamples, { REQUIRES_REACT } from './component-data.js';
 import cssUtilities from './css-utilities.js';
@@ -75,6 +77,47 @@ import {
 
 const require = createRequire(import.meta.url);
 const { buildTokensDictionary } = require('../build-tokens.cjs');
+
+// ---------------------------------------------------------------------------
+// Content schemas — map component names to their canonical schema
+// ---------------------------------------------------------------------------
+
+const __aiManifestDir = path.dirname(fileURLToPath(import.meta.url));
+const SCHEMAS_DIR = path.join(__aiManifestDir, '../../schemas/dist');
+
+/**
+ * Load content schemas and build a lookup from component name to schema.
+ * Returns an empty map if schemas aren't built yet (non-fatal).
+ */
+function loadContentSchemas() {
+  const componentToSchema = new Map();
+
+  if (!fs.existsSync(SCHEMAS_DIR)) return componentToSchema;
+
+  const files = fs
+    .readdirSync(SCHEMAS_DIR)
+    .filter(f => f.endsWith('.schema.json'));
+
+  for (const file of files) {
+    try {
+      const schema = JSON.parse(
+        fs.readFileSync(path.join(SCHEMAS_DIR, file), 'utf-8')
+      );
+      const implementors = schema['x-mangrove']?.implementors || [];
+      for (const name of implementors) {
+        componentToSchema.set(name, { schema, file });
+      }
+    } catch (err) {
+      console.warn(
+        `[ai-manifest] Skipping malformed schema file: ${file} — ${err.message}`
+      );
+    }
+  }
+
+  return componentToSchema;
+}
+
+const contentSchemas = loadContentSchemas();
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -2209,6 +2252,20 @@ async function main() {
       detail.cssClasses = data.cssClasses;
     }
 
+    // Content schema — canonical field definitions from schemas/dist/
+    if (contentSchemas.has(name)) {
+      const { schema, file } = contentSchemas.get(name);
+      detail.contentSchema = {
+        $id: schema.$id,
+        sourceUrl: `${PUBLIC_REPO_BLOB_MAIN}schemas/dist/${encodeURIComponent(file)}`,
+        title: schema.title,
+        description: schema.description,
+        fields: schema.properties,
+        required: schema.required,
+        deviations: schema['x-mangrove']?.deviations,
+      };
+    }
+
     // CSS custom properties this component exposes — its theming API. Set
     // these instead of writing rules against the classes above: a class rule
     // of equal specificity replaces what the component draws, while a
@@ -2645,6 +2702,12 @@ If you are writing a list of your own with \`list-style: none\` and no Mangrove 
 4. Fetch its detailsUrl for rendered HTML, props, and code examples
 5. For CSS utilities, fetch ${DOCS_BASE}ai-components/utilities.json
 
+### Content schemas
+
+Canonical JSON Schema definitions for component data contracts. Components with schemas include a contentSchema field in their detail JSON with field definitions, required fields, and deviation notes (where current prop names differ from canonical names).
+
+Schema source: ${PUBLIC_REPO_URL}/tree/main/schemas
+
 The component index is not the whole library. Three things live elsewhere, and searching only the index will tell you they do not exist:
 
 - **CSS utility classes are in \`utilities.json\`, not the index.** Some patterns ship as utility classes with no component entry at all — the accordion (\`.mg-accordion\`) is one, and the data-table modifiers (\`.mg-table--data\` and the \`.mg-table__th--sortable\` / \`--sticky\` / \`.mg-table__td--numeric\` family) are documented there rather than on the Table entry. Fetch \`utilities.json\` before concluding Mangrove has no accordion or no sortable table.
@@ -2694,6 +2757,7 @@ Icons:
 
 ### Source layout
 
+- schemas/                Content schema definitions (JSON Schema 2020-12)
 - stories/Atom/          Typography, images, layout, navigation
 - stories/Molecules/     SectionHeader, FooterNavigation, BodyColumn
 - stories/Components/    MegaMenu, Cards, Charts, Map, Gallery

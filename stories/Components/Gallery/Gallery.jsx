@@ -11,6 +11,7 @@ export { DEFAULT_GALLERY_LABELS } from './_labels';
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
+// Content contract: see schemas/gallery.schema.js for canonical field names and documented deviations.
 // Everything a browser can put in the focus order inside an injected preview.
 const THUMBNAIL_PREVIEW_FOCUSABLE_SELECTOR = [
   'a[href]',

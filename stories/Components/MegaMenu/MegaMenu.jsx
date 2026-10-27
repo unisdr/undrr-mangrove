@@ -31,6 +31,8 @@ import { getMegaMenuLabels } from './_labels';
  * @param {number} [logoWidth] - Optional explicit width for CLS prevention
  * @param {number} [logoHeight] - Optional explicit height for CLS prevention
  * @returns {JSX.Element} Rendered MegaMenu component
+ *
+ * @see schemas/navigation.schema.js — canonical field names and documented deviations.
  */
 import React, { useState, useEffect, useRef, useId } from 'react';
 import PropTypes from 'prop-types';

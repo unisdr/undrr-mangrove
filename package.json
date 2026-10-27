@@ -25,7 +25,7 @@
     "build:tokens": "node scripts/build-tokens.cjs",
     "build:icons": "node scripts/icon-build.cjs",
     "build:css-version": "node scripts/sync-css-version.js",
-    "build": "NODE_ENV=production yarn run scss && storybook build -o docs-build-temp --stats-json && webpack --progress && node scripts/ai-manifest/generate-ai-manifest.js && node scripts/copy-docs-to-dist.mjs",
+    "build": "NODE_ENV=production yarn run scss && storybook build -o docs-build-temp --stats-json && webpack --progress && node schemas/build.js && node scripts/ai-manifest/generate-ai-manifest.js && node scripts/copy-docs-to-dist.mjs",
     "generate-ai-manifest": "node scripts/ai-manifest/generate-ai-manifest.js",
     "validate-manifest": "node scripts/ai-manifest/generate-ai-manifest.js --validate",
     "check:dependencies": "yarn dedupe react react-dom --check && node scripts/check-dependency-versions.mjs",
@@ -83,7 +83,9 @@
     "test:storybook-html": "node scripts/test-storybook-html.mjs",
     "test:storybook-themes": "node scripts/test-storybook-themes.mjs",
     "extract:source-metadata": "node scripts/ai-manifest/extract-source-metadata.mjs",
-    "generate-ai-manifest:source": "yarn extract:source-metadata && node scripts/ai-manifest/generate-ai-manifest.js --build-dir=.cache/manifest-source"
+    "generate-ai-manifest:source": "yarn extract:source-metadata && node scripts/ai-manifest/generate-ai-manifest.js --build-dir=.cache/manifest-source",
+    "build:schemas": "node schemas/build.js",
+    "validate:schemas": "node schemas/build.js --validate-only"
   },
   "keywords": [],
   "author": "",
@@ -121,6 +123,8 @@
     "@typescript-eslint/parser": "^8.71.1",
     "@vitest/browser": "4.1.12",
     "@vitest/browser-playwright": "4.1.12",
+    "ajv": "^8.18.0",
+    "ajv-formats": "^3.0.1",
     "autoprefixer": "10.6.1",
     "axe-core": "4.14.0",
     "babel-jest": "30.5.2",
