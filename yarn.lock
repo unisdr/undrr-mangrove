@@ -4841,7 +4841,6 @@ __metadata:
     sass: "npm:^1.105.1"
     sass-loader: "npm:17.0.1"
     storybook: "npm:^10.6.3"
-    storybook-addon-rtl: "npm:3.0.2"
     style-loader: "npm:4.0.0"
     stylelint: "npm:~17.16.0"
     stylelint-config-recommended-scss: "npm:17.0.1"
@@ -14004,15 +14003,6 @@ __metadata:
     es-errors: "npm:^1.3.0"
     internal-slot: "npm:^1.1.0"
   checksum: 10/ff36c4db171ee76c936ccfe9541946b77017f12703d4c446652017356816862d3aa029a64e7d4c4ceb484e00ed4a81789333896390d808458638f3a216aa1f41
-  languageName: node
-  linkType: hard
-
-"storybook-addon-rtl@npm:3.0.2":
-  version: 3.0.2
-  resolution: "storybook-addon-rtl@npm:3.0.2"
-  peerDependencies:
-    storybook: ^10.0.0
-  checksum: 10/d902dc2dc2a91bd790fdbb60ffa53225651023c6e921f5c56bfba494945baf12fdc3f60ffe3bc896aa35846e12a86382d6ef2d1f8798f12cfb725eb44b82effe
   languageName: node
   linkType: hard
 

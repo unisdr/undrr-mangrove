@@ -23,6 +23,7 @@
  *
  * Flags:
  *   --validate   Check curated data keys and a11y lint. Exits non-zero on failure.
+ *   --metadata-file  Read a compatible metadata file instead of the build manifest.
  *   --docs-base  Public Storybook/docs base URL used in generated links.
  *                Can also be set with MANGROVE_DOCS_BASE_URL.
  *
@@ -43,6 +44,7 @@ import path from 'path';
 import { createRequire } from 'module';
 import htmlExamples, { REQUIRES_REACT } from './component-data.js';
 import cssUtilities from './css-utilities.js';
+import { readComponentMetadata } from './component-metadata.js';
 import {
   buildContentPatterns,
   validateContentReferences,
@@ -743,7 +745,12 @@ const docsBaseInput =
   docsBaseArg || process.env.MANGROVE_DOCS_BASE_URL || DEFAULT_DOCS_BASE;
 const DOCS_BASE = normalizeDocsBase(docsBaseInput);
 
-const manifestPath = path.join(buildDir, 'manifests', 'components.json');
+const metadataFileArg = args
+  .find(a => a.startsWith('--metadata-file='))
+  ?.slice('--metadata-file='.length);
+const manifestPath = metadataFileArg
+  ? path.resolve(process.cwd(), metadataFileArg)
+  : path.join(buildDir, 'manifests', 'components.json');
 const outputDir = path.join(buildDir, 'ai-components');
 const llmsTxtPath = path.join(buildDir, 'llms.txt');
 const distDir = path.resolve(process.cwd(), 'dist/components');
@@ -757,7 +764,7 @@ if (!fs.existsSync(manifestPath)) {
 const pkg = JSON.parse(
   fs.readFileSync(path.resolve(process.cwd(), 'package.json'), 'utf8')
 );
-const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+const manifest = readComponentMetadata(manifestPath);
 // Filter once, before curated validation, PropTypes coverage and catalog output.
 // The raw Storybook manifest is left intact for its QA routes and test runner.
 manifest.components = selectPublishedComponents(manifest.components);

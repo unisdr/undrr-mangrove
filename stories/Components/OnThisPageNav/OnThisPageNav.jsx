@@ -1,3 +1,5 @@
+import { getLanguageProps } from '../../../src/i18n';
+import { getOnThisPageNavLabels } from './_labels';
 import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -5,9 +7,8 @@ import {
   mgOnThisPageNavDestroy,
 } from '../../assets/js/on-this-page-nav';
 
-export const DEFAULT_ON_THIS_PAGE_LABELS = {
-  label: 'On this page',
-};
+export { getOnThisPageNavLabels } from './_labels';
+export { DEFAULT_ON_THIS_PAGE_LABELS } from './_labels';
 
 /**
  * Storybook wrapper for the OnThisPageNav vanilla JS component.
@@ -25,12 +26,14 @@ export const DEFAULT_ON_THIS_PAGE_LABELS = {
 export default function OnThisPageNav({
   depth = '2',
   contentSelector = null,
-  labels = {},
+  lang,
+  dir,
+  labels,
   items = null,
   ctaHref = null,
   ctaText = null,
 }) {
-  const { label } = { ...DEFAULT_ON_THIS_PAGE_LABELS, ...labels };
+  const { label } = getOnThisPageNavLabels(lang, labels);
   const navRef = useRef(null);
 
   useEffect(() => {
@@ -46,6 +49,7 @@ export default function OnThisPageNav({
 
   return (
     <nav
+      {...getLanguageProps(lang, dir)}
       ref={navRef}
       data-mg-on-this-page-nav
       data-mg-on-this-page-nav-depth={depth}
@@ -53,6 +57,7 @@ export default function OnThisPageNav({
         'data-mg-on-this-page-nav-content': contentSelector,
       })}
       data-mg-on-this-page-nav-label={label}
+      aria-label={label}
       className="mg-on-this-page-nav"
     >
       {items && (
@@ -80,7 +85,11 @@ OnThisPageNav.propTypes = {
   depth: PropTypes.string,
   /** CSS selector to scope heading scan (defaults to document.body) */
   contentSelector: PropTypes.string,
-  /** UI label overrides */
+  /** UI language tag; selects the built-in catalogue, with English fallback. */
+  lang: PropTypes.string,
+  /** Explicit text direction; otherwise known catalogue languages select their direction. */
+  dir: PropTypes.oneOf(['ltr', 'rtl', 'auto']),
+  /** Explicit UI label overrides; omitted keys use the selected catalogue, then English. */
   labels: PropTypes.shape({
     label: PropTypes.string,
   }),

@@ -1,28 +1,7 @@
+import { withLanguage } from '../../../.storybook/withLanguage';
 // stories\Components\Tab\Tab.stories.jsx
 import { Tab } from './Tab';
-import {
-  LABELS_AR,
-  LABELS_ES,
-  LABELS_FR,
-  LABELS_JA,
-  LABELS_RU,
-  LABELS_ZH,
-} from './_labels';
-
-const LOCALE_LABELS = {
-  spanish: LABELS_ES,
-  french: LABELS_FR,
-  japanese: LABELS_JA,
-  chinese: LABELS_ZH,
-  arabic: LABELS_AR,
-  russian: LABELS_RU,
-};
-
-const withLocaleLabels = (Story, context) => {
-  const labels = LOCALE_LABELS[context.globals?.locale];
-  if (!labels) return <Story />;
-  return <Story {...context} args={{ ...context.args, labels }} />;
-};
+import { expect, within } from 'storybook/test';
 
 // Tab content (tabdata) per locale — separate from UI labels.
 const getCaptionForLocale = locale => {
@@ -91,42 +70,35 @@ const getCaptionForLocale = locale => {
 export default {
   title: 'Components/Tabs',
   component: Tab,
-  decorators: [withLocaleLabels],
+  decorators: [withLanguage],
 };
 
 export const Tabs = {
   render: (args, { globals: { locale } }) => {
     let caption = getCaptionForLocale(locale);
     caption = caption.map(tab => ({ ...tab, is_default: 'false' }));
-    return <Tab tabdata={caption} labels={args.labels} />;
+    return <Tab {...args} tabdata={caption} />;
   },
 };
 
 export const TabsWithDefault = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
-    return <Tab tabdata={caption} labels={args.labels} />;
+    return <Tab {...args} tabdata={caption} />;
   },
 };
 
 export const StackedTabs = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
-    return <Tab tabdata={caption} variant="stacked" labels={args.labels} />;
+    return <Tab {...args} tabdata={caption} variant="stacked" />;
   },
 };
 
 export const StackedWithDefaultOpen = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
-    return (
-      <Tab
-        tabdata={caption}
-        variant="stacked"
-        defaultOpen
-        labels={args.labels}
-      />
-    );
+    return <Tab {...args} tabdata={caption} variant="stacked" defaultOpen />;
   },
   name: 'Stacked with default open',
 };
@@ -148,7 +120,7 @@ export const StackedWithDeepLink = {
             <a href="#mg-tabs__section-tab-3">Open section 3</a>
           </li>
         </ul>
-        <Tab tabdata={caption} variant="stacked" labels={args.labels} />
+        <Tab {...args} tabdata={caption} variant="stacked" />
       </>
     );
   },
@@ -181,6 +153,7 @@ const faqData = [
 export const StackedAsFaq = {
   render: args => (
     <Tab
+      {...args}
       tabdata={faqData}
       variant="stacked"
       defaultOpen={false}
@@ -192,8 +165,14 @@ export const StackedAsFaq = {
 };
 
 export const StackedSingleOpen = {
-  render: () => (
-    <Tab tabdata={faqData} variant="stacked" defaultOpen={false} singleOpen />
+  render: args => (
+    <Tab
+      {...args}
+      tabdata={faqData}
+      variant="stacked"
+      defaultOpen={false}
+      singleOpen
+    />
   ),
   name: 'Stacked single-open',
 };
@@ -201,6 +180,7 @@ export const StackedSingleOpen = {
 export const StackedFaqAccordion = {
   render: args => (
     <Tab
+      {...args}
       tabdata={faqData}
       variant="stacked"
       defaultOpen={false}
@@ -311,7 +291,7 @@ export const HorizontalDeepLink = {
       <p>
         <a href="#mg-tabs__section-rail-6">Open resources</a>
       </p>
-      <Tab tabdata={sectionData} labels={args.labels} />
+      <Tab {...args} tabdata={sectionData} />
     </>
   ),
 };
@@ -320,14 +300,16 @@ export const IndependentGroups = {
   render: args => (
     <>
       <Tab
+        {...args}
         tabdata={sectionData}
-        labels={{ ...args.labels, tabListLabel: 'Programme sections' }}
+        labels={{ tabListLabel: 'Programme sections', ...args.labels }}
       />
       <Tab
+        {...args}
         tabdata={sectionData
           .slice(0, 3)
           .map(tab => ({ ...tab, text_id: `second-${tab.text_id}` }))}
-        labels={{ ...args.labels, tabListLabel: 'Related sections' }}
+        labels={{ tabListLabel: 'Related sections', ...args.labels }}
       />
     </>
   ),
@@ -335,12 +317,41 @@ export const IndependentGroups = {
 
 export const RightToLeft = {
   globals: { locale: 'arabic' },
+  args: { labels: { tabListLabel: 'أقسام البرنامج' } },
   render: args => (
     <div dir="rtl" lang="ar">
+      <Tab {...args} tabdata={getCaptionForLocale('arabic')} />
       <Tab
-        tabdata={getCaptionForLocale('arabic')}
-        labels={{ ...args.labels, tabListLabel: 'الأقسام' }}
+        {...args}
+        variant="stacked"
+        filterable
+        tabdata={getCaptionForLocale('arabic').map(tab => ({
+          ...tab,
+          text_id: `stacked-${tab.text_id}`,
+        }))}
       />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(
+      canvas.getByRole('tablist', { name: 'أقسام البرنامج' })
+    ).toBeInTheDocument();
+    await expect(
+      await canvas.findByPlaceholderText('تصفية الأقسام…')
+    ).toBeInTheDocument();
+    const groups = canvasElement.querySelectorAll('.mg-tabs');
+    await expect(groups).toHaveLength(2);
+    await Promise.all(
+      Array.from(groups, async group => {
+        await expect(group).toHaveAttribute('lang', 'ar');
+        await expect(group).toHaveAttribute('dir', 'rtl');
+        await expect(group).toHaveAttribute(
+          'data-mg-js-tabs-label',
+          'أقسام البرنامج'
+        );
+        await expect(getComputedStyle(group).direction).toBe('rtl');
+      })
+    );
+  },
 };
