@@ -11,6 +11,9 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 ## Unreleased
 
+- **Brand documentation expansion** ([#983](https://github.com/unisdr/undrr-mangrove/pull/983)) — added nine new Storybook MDX pages under `Brand/`: Where to start (canonical reading order), Layered identity (core UNDRR → sub-brand → campaign), Visual voice, Written voice and tone, Audience mapping, Sub-brand rationale (working hypothesis pending UNDRR Communications review), Anti-patterns, AI imagery policy, and AI imagery prompts. Reconciled the Arabic typography note in `BrandGuidelines.mdx` with the live Mangrove guidance (Noto Kufi Arabic + Noto Sans Arabic). The AI imagery page is explicit that it is derivative of UNDRR's in-development institutional AI guidance, not a one-to-one match. Also updated the `llms.txt` template in `scripts/ai-manifest/generate-ai-manifest.js` to surface the new pages to external AI agents.
+- **AI imagery hard-bans** ([#983](https://github.com/unisdr/undrr-mangrove/pull/983)) — explicit standing rules: no photorealistic AI of human beings (stylised illustration only); no AI imagery for named people or specific real events; no AI-generated images of children; no rendered text or standalone icons in AI outputs (text comes out as gibberish; icons drift from OCHA + Mangrove); named country required (no regional pastiche); within-country diversity must be named explicitly when single-country contexts would otherwise collapse into a single ethnic phenotype; disability inclusion required in every people-inclusive prompt; decolonial framing required; specific hex codes required when prompts mention colour.
+
 ## 2.3.0, 2026-10-27
 
 See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.3.0) for full details.

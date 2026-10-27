@@ -21,6 +21,10 @@ const themes = {
     load: () => import('../stories/assets/scss/style-delta.scss?inline'),
     className: 'mg-theme-delta',
   },
+  'ARISE Theme': {
+    load: () => import('../stories/assets/scss/style-arise.scss?inline'),
+    className: 'mg-theme-arise',
+  },
 };
 
 export const themeNames = Object.keys(themes);
