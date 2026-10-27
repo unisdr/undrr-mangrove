@@ -1,10 +1,12 @@
+import { getLanguageProps } from '../../../../src/i18n';
+import { getDrawerLabels } from './_labels';
 import React, { useEffect, useId, useRef } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import DOMPurify from 'dompurify';
-import { DEFAULT_DRAWER_LABELS } from './_labels';
 
-export { DEFAULT_DRAWER_LABELS };
+export { getDrawerLabels } from './_labels';
+export { DEFAULT_DRAWER_LABELS } from './_labels';
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -20,13 +22,15 @@ export const Drawer = ({
   footer,
   bodyHtml,
   footerHtml,
-  labels = {},
+  lang,
+  dir,
+  labels,
   className,
   backdrop = true,
   isFloatingPanel = false,
   ...props
 }) => {
-  const { closeLabel } = { ...DEFAULT_DRAWER_LABELS, ...labels };
+  const { closeLabel } = getDrawerLabels(lang, labels);
   const drawerRef = useRef(null);
   const closeButtonRef = useRef(null);
   const returnFocusRef = useRef(null);
@@ -63,10 +67,11 @@ export const Drawer = ({
   useEffect(() => {
     const drawer = drawerRef.current;
     if (!drawer) return;
+    const ownerDocument = drawer.ownerDocument;
     drawer.inert = !isOpen;
 
     if (isOpen) {
-      returnFocusRef.current = document.activeElement;
+      returnFocusRef.current = ownerDocument.activeElement;
       (closeButtonRef.current || drawer).focus();
       return;
     }
@@ -75,9 +80,9 @@ export const Drawer = ({
     returnFocusRef.current = null;
     if (target && target.isConnected && typeof target.focus === 'function') {
       if (
-        drawer.contains(document.activeElement) ||
-        !document.activeElement ||
-        document.activeElement === document.body
+        drawer.contains(ownerDocument.activeElement) ||
+        !ownerDocument.activeElement ||
+        ownerDocument.activeElement === ownerDocument.body
       ) {
         target.focus();
       }
@@ -131,6 +136,7 @@ export const Drawer = ({
         />
       )}
       <div
+        {...getLanguageProps(lang, dir)}
         ref={drawerRef}
         className={classes}
         aria-hidden={isOpen ? undefined : 'true'}
@@ -183,7 +189,11 @@ Drawer.propTypes = {
   bodyHtml: PropTypes.string,
   /** Server-rendered footer markup (sanitised). Used by hydration. */
   footerHtml: PropTypes.string,
-  /** Translated UI strings */
+  /** UI language tag; selects the built-in catalogue, with English fallback. */
+  lang: PropTypes.string,
+  /** Explicit text direction; otherwise known catalogue languages select their direction. */
+  dir: PropTypes.oneOf(['ltr', 'rtl', 'auto']),
+  /** Explicit UI label overrides; omitted keys use the selected catalogue, then English. */
   labels: PropTypes.shape({ closeLabel: PropTypes.string }),
   /** Additional CSS class names */
   className: PropTypes.string,

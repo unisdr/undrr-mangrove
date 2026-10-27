@@ -4,8 +4,10 @@
  * Composed image figure layout with integrated caption and photographer credit text.
  *
  * Full documentation:
- * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Atom/Images/ImageCaptionCredit/ImageCaptionCredit.mdx
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Atom/Images/ImageCaptionCredit/ImageCaptionCredit.mdx
  */
+@use "../../assets/scss/breakpoints" as *;
+
 /* image caption start */
 .mg-image-caption {
   border-bottom: 2px solid rgb(var(--mg-color-black));
@@ -16,7 +18,12 @@
     padding-bottom: var(--mg-spacing-150);
   }
 
-  p {
+  // .mg-image-caption__text wraps caption content that is not a single <p>
+  // (several paragraphs, or bare text). :where() keeps it one element below
+  // the matching p selector, so every rule that overrides the p caption also
+  // overrides the wrapper.
+  p,
+  :where(.mg-image-caption__text) {
     color: rgb(var(--mg-color-neutral-600));
     font-size: var(--mg-font-size-200);
     margin-bottom: var(--mg-spacing-50);
@@ -47,6 +54,14 @@
     }
   }
 
+  .mg-image-caption__text p {
+    margin: 0 0 var(--mg-spacing-50);
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
   .mg-credits {
     display: flex;
     margin-bottom: var(--mg-spacing-50);
@@ -70,7 +85,8 @@
 
 [dir="rtl"] {
   .mg-image-caption {
-    p {
+    p,
+    :where(.mg-image-caption__text) {
       @include devicebreak(medium) {
         padding-right: 0;
       }

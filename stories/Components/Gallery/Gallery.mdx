@@ -233,7 +233,7 @@ function MyGallery() {
 
 ## Server-rendered / CDN usage
 
-Gallery supports [layered hydration](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md). Use data attributes on a container element:
+Gallery supports [layered hydration](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md). Use data attributes on a container element:
 
 ```html
 <div
@@ -263,11 +263,11 @@ Gallery supports [layered hydration](https://github.com/unisdr/undrr-mangrove/bl
 | `data-loop`               | `'false'`   | Enable infinite loop navigation                                                                                                                                                                                                       |
 
 ```js
-import createHydrator from 'https://assets.undrr.org/mangrove/2.0.0/components/hydrate.js';
+import createHydrator from 'https://assets.undrr.org/mangrove/2.3.0/components/hydrate.js';
 import {
   Gallery,
   fromElement,
-} from 'https://assets.undrr.org/mangrove/2.0.0/components/Gallery.js';
+} from 'https://assets.undrr.org/mangrove/2.3.0/components/Gallery.js';
 createHydrator({
   selector: '[data-mg-gallery]',
   component: Gallery,
@@ -275,9 +275,23 @@ createHydrator({
 });
 ```
 
-See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
+See the [hydration guide](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
+
+## Runtime UI translations
+
+Use `lang` for built-in copy and `labels` for individual overrides. The
+[shared translation guide](?path=/docs/contributing-ui-translations--docs)
+explains language matching, fallback, direction and hydration precedence.
+
+`components/Gallery.js` exports `getGalleryLabels(lang, labels)`
+for consumers needing the same strings outside React.
 
 ## Changelog
+
+- **1.5**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance.
+
+- **1.4.6**, 2026-10-15 ([#1368](https://github.com/unisdr/undrr-mangrove/issues/1368)): The shared pending-media Loader now shows a static dashed marker with the translated loading label under reduced motion, including forced colours. Its noninteractive loading overlay uses body-size text on a stable surface, stays within the stage for translated labels, and reserves space for navigation arrows and their focus rings.
+- **1.4.5**, 2026-10-15 ([#1357](https://github.com/unisdr/undrr-mangrove/issues/1357)): Uses the shared inline Loader for pending media, including slow reduced-motion rotation and forced-colour visibility. Thumbnail navigation scrolls instantly when reduced motion is requested. Hover transitions use shared motion tokens; the private gallery spinner class and keyframes have been removed.
 
 - **1.4.4**, 2026-09-18 ([#1247](https://github.com/unisdr/undrr-mangrove/pull/1247), [#1235](https://github.com/unisdr/undrr-mangrove/issues/1235)): The thumbnail ref callback is a statement body instead of a parenthesised assignment, so it no longer returns the element it assigns. React 19.3 does not reject that return value (it stores it as the ref cleanup, finds it is not a function and still calls `ref(null)` on detach), so this was correct as written; the hazard React 19 introduced is a ref callback returning a _function_, which silently replaces the detach call. Found by widening ESLint coverage to component `.jsx`, which had never been linted. No visual or behavioural change.
 - **1.4.3**, 2026-09-17 ([#1190](https://github.com/unisdr/undrr-mangrove/pull/1190)): A `type: 'html'` thumbnail preview is now `inert`, and any focusable element inside it is given `tabindex="-1"`. The injected author markup sits inside `<button role="tab">` under `aria-hidden="true"`, so links and buttons in it were focusable children of an aria-hidden node and interactive descendants of a button (axe `aria-hidden-focus` and `nested-interactive`, both serious). The tab itself is unchanged and stays keyboard operable.

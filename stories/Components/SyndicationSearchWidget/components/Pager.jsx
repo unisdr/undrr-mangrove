@@ -14,6 +14,8 @@ import {
   useSearchLabels,
   actions,
 } from '../context/SearchContext';
+import { useWidgetRootRef } from '../context/WidgetRootContext';
+import { getOwnerDocument } from '../utils/ownerDocument';
 
 /**
  * SearchPager: search-context-aware pagination.
@@ -26,6 +28,7 @@ export function SearchPager({ widgetId = '' }) {
   const dispatch = useSearchDispatch();
   const { resultsPerPage } = useSearchConfig();
   const labels = useSearchLabels();
+  const rootRef = useWidgetRootRef();
 
   const totalPages = useMemo(() => {
     if (!totalResults || totalResults === 0) return 0;
@@ -49,14 +52,36 @@ export function SearchPager({ widgetId = '' }) {
       // renders the pager on its own, not as a supported entry point.
       // Only the id-less case falls back: if an id was given it is
       // authoritative, so a missed lookup must not scroll a different widget.
+      // Look in the document the widget is mounted in, which differs from
+      // the global one inside an iframe.
+      const doc = getOwnerDocument(rootRef.current);
+      if (!doc) return;
       const widget = widgetId
-        ? document.getElementById(widgetId)
-        : document.querySelector('[data-mg-search-widget]');
+        ? doc.getElementById(widgetId)
+        : doc.querySelector('[data-mg-search-widget]');
       if (widget) {
-        widget.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const reduce = doc.defaultView?.matchMedia?.(
+          '(prefers-reduced-motion: reduce)'
+        ).matches;
+        // scrollIntoView honours scroll-padding-top, so a sticky bar above
+        // the list (On this page) does not cover the top of it.
+        widget.scrollIntoView({
+          behavior: reduce ? 'instant' : 'smooth',
+          block: 'start',
+        });
+        // The pager button the reader pressed is about to be replaced, which
+        // would drop focus to the body. Move it to the results count, which
+        // announces the new range, or to the results area.
+        const target =
+          widget.querySelector('.mg-search__results-count') ||
+          widget.querySelector('.mg-search__main');
+        if (target) {
+          if (!target.hasAttribute('tabindex')) target.tabIndex = -1;
+          target.focus({ preventScroll: true });
+        }
       }
     },
-    [dispatch, widgetId]
+    [dispatch, widgetId, rootRef]
   );
 
   if (totalPages <= 1) return null;

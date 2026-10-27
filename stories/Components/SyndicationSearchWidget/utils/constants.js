@@ -147,7 +147,7 @@ export const CONTENT_SUBTYPES = {
       { id: '1', name: 'Statements and messages' },
       { id: '754', name: 'Feature' },
       { id: '755', name: 'Research briefs' },
-      { id: '797', name: 'Community announcement' },
+      { id: '797', name: 'Opportunities' },
       { id: '756', name: 'Op Ed' },
     ],
   },
@@ -328,7 +328,16 @@ export const FACET_SEARCH_THRESHOLD = 8;
 
 /**
  * Facet field definitions.
- * @type {Array<{key: string, label: string, vocabulary?: string, type: string}>}
+ *
+ * `labelSource: 'taxonomy'` marks the facets labelled from the taxonomy
+ * endpoint (`taxonomyEndpoint`). Once that endpoint has loaded, values on
+ * these facets with no matching term (unpublished or deleted terms still
+ * referenced by content) are hidden unless selected. Do not infer this from
+ * `vocabulary: 'terms'`, which subtype fields labelled from CONTENT_SUBTYPES
+ * also use. Consumers who override `facetFields` must keep
+ * `labelSource: 'taxonomy'` on these entries to keep the hiding.
+ *
+ * @type {Array<{key: string, label: string, vocabulary?: string, type: string, labelSource?: 'taxonomy'}>}
  */
 export const FACET_FIELDS = [
   {
@@ -392,18 +401,21 @@ export const FACET_FIELDS = [
     label: 'Country and region',
     vocabulary: 'terms',
     type: 'select-multiple',
+    labelSource: 'taxonomy',
   },
   {
     key: 'field_hazard',
     label: 'Hazard',
     vocabulary: 'terms',
     type: 'select-multiple',
+    labelSource: 'taxonomy',
   },
   {
     key: 'field_theme',
     label: 'Theme',
     vocabulary: 'terms',
     type: 'select-multiple',
+    labelSource: 'taxonomy',
   },
   {
     key: '_language',
@@ -414,12 +426,14 @@ export const FACET_FIELDS = [
 ];
 
 /**
- * Default taxonomy API endpoint.
- * Always points to PreventionWeb as the canonical source for taxonomy terms.
+ * Default taxonomy API endpoint (`DEFAULT_CONFIG.taxonomyEndpoint`).
+ * Points to PreventionWeb as the canonical source for the term labels of
+ * the taxonomy-backed facets (`labelSource: 'taxonomy'` in FACET_FIELDS).
+ * News types are not requested: they are labelled from the static NEWS_TYPES.
  * @type {string}
  */
 export const TAXONOMY_API_URL =
-  'https://www.preventionweb.net/api/v1/taxonomy?vid=news_type,prevention_web_regions,hazard,theme&items_per_page=1000&langcode=en';
+  'https://www.preventionweb.net/api/v1/taxonomy?vid=prevention_web_regions,hazard,theme&items_per_page=1000&langcode=en';
 
 /**
  * Search scoring configuration.
@@ -531,12 +545,64 @@ export const HIGHLIGHT_CONFIG = {
 };
 
 /**
+ * Valid sort orders (the values offered by SortOptions).
+ * @type {string[]}
+ */
+export const SORT_VALUES = [
+  'relevance',
+  'newest',
+  'oldest',
+  'eventDateAsc',
+  'eventDateDesc',
+];
+
+/**
+ * Event date sorts. SortOptions offers them when `defaultSort` or a sort
+ * seen during the widget session is one of them, so ordinary listings
+ * do not show sorts that would put every non-event last.
+ * @type {string[]}
+ */
+export const EVENT_SORT_VALUES = ['eventDateAsc', 'eventDateDesc'];
+
+/**
+ * `_source` fields the widget reads from a hit: the teaser HTML, the fields
+ * the no-teaser fallback renders (title, url, nid, type, vid, domain, dates),
+ * and the debug metrics. Everything else in the index (`body`,
+ * `aggregated_field`, ...) is large and unused, so it is not requested.
+ * Override with `config.sourceFields` for an endpoint whose hits need more.
+ * @type {string[]}
+ */
+export const SOURCE_FIELDS = [
+  'teaser',
+  'title',
+  'url',
+  'nid',
+  'type',
+  'vid',
+  'field_domain_access',
+  'published_at',
+  'event_start',
+  'event_end',
+  'field_meta_interestingness',
+  'field_meta_longevity',
+];
+
+/**
+ * Elasticsearch's default `index.max_result_window`: `from + size` cannot
+ * exceed it, so pages beyond it would only return an error.
+ * @type {number}
+ */
+export const MAX_RESULT_WINDOW = 10000;
+
+/**
  * Default configuration values.
  * @type {Object}
  */
 export const DEFAULT_CONFIG = {
   // API Configuration
   searchEndpoint: 'https://www.undrr.org/search-endpoint',
+  // Taxonomy terms for facet labels (countries, hazards, themes)
+  taxonomyEndpoint: TAXONOMY_API_URL,
   resultsPerPage: 5,
   facetCountToShow: 500,
   debounceDelay: 500, // Balances responsiveness (<1s perceived) with fewer wasted API calls
@@ -544,6 +610,9 @@ export const DEFAULT_CONFIG = {
 
   // URL Hash Sync
   enableHashSync: 'auto',
+
+  // Analytics: regions are `${analyticsRegionPrefix}-form|results|facets`
+  analyticsRegionPrefix: 'undrr-search',
 
   // Default search query and sort
   defaultQuery: '',
@@ -588,6 +657,25 @@ export const DEFAULT_CONFIG = {
   interestingnessTiers: [],
   longevityTiers: [],
 };
+
+/**
+ * Whether the widget holds off searching until the reader types more: a
+ * non-empty query shorter than `minSearchLength` with no filters set. An
+ * empty query searches everything, and filters make a short query useful.
+ *
+ * @param {Object} state - `{ query, facets, customFacets }`
+ * @param {number} minSearchLength
+ * @returns {boolean}
+ */
+export function isQueryTooShortToSearch(
+  { query, facets, customFacets },
+  minSearchLength
+) {
+  const hasFilters =
+    Object.values(facets || {}).some(v => v?.length > 0) ||
+    Object.values(customFacets || {}).some(v => v?.length > 0);
+  return Boolean(query) && query.length < minSearchLength && !hasFilters;
+}
 
 /**
  * Resolve the facets layout from a (merged or partial) config object.
@@ -935,4 +1023,22 @@ export function buildTierFilter(field, tierNames, tierRanges) {
   if (rangeFilters.length === 0) return null;
   if (rangeFilters.length === 1) return rangeFilters[0];
   return { bool: { should: rangeFilters, minimum_should_match: 1 } };
+}
+
+/**
+ * The `data-vf-google-analytics-region` value for one part of the widget.
+ * The shared analytics script reports a click's innermost region, so a page
+ * with two widgets gives each its own prefix to tell their clicks apart.
+ *
+ * @param {Object} config - Widget config
+ * @param {'form'|'results'|'facets'} part - Part of the widget
+ * @returns {string} For example `undrr-search-results`
+ */
+export function analyticsRegion(config, part) {
+  const prefix =
+    typeof config?.analyticsRegionPrefix === 'string' &&
+    config.analyticsRegionPrefix.trim()
+      ? config.analyticsRegionPrefix.trim()
+      : 'undrr-search';
+  return `${prefix}-${part}`;
 }

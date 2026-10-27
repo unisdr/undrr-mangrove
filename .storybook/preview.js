@@ -4,77 +4,27 @@ import { I18nProvider } from 'react-aria-components';
 
 import { transformSource } from './docsSource';
 
-// Import theme SCSS files as lazy-loaded modules (via lazyStyleTag in main.js)
-// These provide .use() and .unuse() methods to toggle styles on/off
-import themeUNDRR from '../stories/assets/scss/style.scss';
-import themePreventionWeb from '../stories/assets/scss/style-preventionweb.scss';
-import themeIRP from '../stories/assets/scss/style-irp.scss';
-import themeMCR from '../stories/assets/scss/style-mcr.scss';
-import themeDelta from '../stories/assets/scss/style-delta.scss';
+import { addons } from 'storybook/preview-api';
+import { GLOBALS_UPDATED } from 'storybook/internal/core-events';
+import { applyTheme, themeNames } from './themeStyles';
 
-// RTL languages
-const rtlLanguages = ['arabic'];
+import { applyLanguage, resolveLanguage } from './language';
 
-// Language code mapping
-const langArr = {
-  english: 'en',
-  arabic: 'ar',
-  french: 'fr',
-  japanese: 'ja',
-  russian: 'ru',
-  spanish: 'es',
-  chinese: 'zh',
-};
-
-// Decorator to set language and text direction based on locale global
 const getLangCode = (Story, context) => {
-  const activeLang = context.globals.locale || 'english';
+  React.useLayoutEffect(() => {
+    // Embedded docs canvases can finish rendering an older globals snapshot
+    // after the docs globals listener has applied a newer toolbar selection.
+    // They own only their canvas; the listener owns the docs document/runtime.
+    applyLanguage(context.globals, context.canvasElement, {
+      previewDocument: context.viewMode !== 'docs',
+    });
+  });
 
   React.useEffect(() => {
-    const langCode = langArr[activeLang] || 'en';
-    const direction =
-      rtlLanguages.includes(activeLang) || context.globals.addonRtl === 'rtl'
-        ? 'rtl'
-        : 'ltr';
-
-    // Set lang on html element
-    const htmlElem = document.documentElement;
-    htmlElem.setAttribute('lang', langCode);
-
-    // Set dir on both html and #storybook-root (where RTL addon sets it)
-    htmlElem.setAttribute('dir', direction);
-    const storybookRoot = document.getElementById('storybook-root');
-    if (storybookRoot) {
-      storybookRoot.setAttribute('dir', direction);
-    }
-
-    window.UNDRR = window.UNDRR || {};
-    window.UNDRR.langCode = activeLang;
-    window.UNDRR.dir = direction;
-
-    // Dispatch load event for components that listen for it
-    const loadEventTimer = setTimeout(() => {
-      window.dispatchEvent(new Event('load'));
-    }, 10);
-
-    return () => clearTimeout(loadEventTimer);
-  }, [activeLang, context.globals.addonRtl]);
-
-  // The RTL addon writes canvas.dir during every render, including theme/args
-  // changes. Apply locale attributes after each render so it cannot reset an
-  // Arabic canvas to LTR. Keep the manual RTL toggle for other languages.
-  React.useLayoutEffect(() => {
-    const canvas = context.canvasElement;
-    if (canvas) {
-      canvas.setAttribute('lang', langArr[activeLang] || 'en');
-      canvas.setAttribute(
-        'dir',
-        rtlLanguages.includes(activeLang) || context.globals.addonRtl === 'rtl'
-          ? 'rtl'
-          : 'ltr'
-      );
-    }
-  });
+    // Preserve the existing initialization signal for vanilla components.
+    const timer = setTimeout(() => window.dispatchEvent(new Event('load')), 10);
+    return () => clearTimeout(timer);
+  }, [context.globals.locale, context.globals.addonRtl]);
 
   // React Aria derives its own locale and reading direction from useLocale(),
   // which falls back to navigator.language and never inspects the dir we set
@@ -83,7 +33,7 @@ const getLangCode = (Story, context) => {
   // direction-dependent arrow-key mapping in Tabs, Slider, DateField and Table
   // run backwards against the layout.
   return (
-    <I18nProvider locale={langArr[activeLang] || 'en'}>
+    <I18nProvider locale={resolveLanguage(context.globals).lang}>
       <Story {...context} />
     </I18nProvider>
   );
@@ -107,69 +57,37 @@ const sbFrameReset = (Story, context) => {
   return <Story {...context} />;
 };
 
-// Legacy RTL addon support - allows manual RTL toggle to override locale
-const setDirection = (Story, context) => {
-  React.useEffect(() => {
-    const input = parent.document.querySelector('[aria-controls="rtl-status"]');
-    if (input?.checked) {
-      document.documentElement.setAttribute('dir', 'rtl');
-      window.UNDRR = window.UNDRR || {};
-      window.UNDRR.dir = 'rtl';
-    }
-  }, []);
-
-  return <Story {...context} />;
+// Docs-only pages do not run story decorators/loaders. Listen to the public
+// globals channel as well so toolbar changes update theme, language and direction.
+const channel = addons.getChannel();
+const updatePreviewGlobals = ({ globals }) => {
+  applyLanguage(globals);
+  applyTheme(globals.theme).catch(error =>
+    console.error('Theme loading failed', error)
+  );
 };
-
-const themeStyles = {
-  'Global UNDRR Theme': themeUNDRR,
-  'PreventionWeb Theme': themePreventionWeb,
-  'IRP Theme': themeIRP,
-  'MCR2030 Theme': themeMCR,
-  'DELTA Resilience Theme': themeDelta,
-};
-
-// Maps toolbar theme names to the CSS class applied to <body> so that
-// .mg-theme-* CSS custom property overrides take effect at runtime.
-const themeClasses = {
-  'PreventionWeb Theme': 'mg-theme-preventionweb',
-  'IRP Theme': 'mg-theme-irp',
-  'MCR2030 Theme': 'mg-theme-mcr',
-  'DELTA Resilience Theme': 'mg-theme-delta',
-};
-
-const allThemeClasses = Object.values(themeClasses);
-
-// Load the default theme at module init so MDX docs-only pages render with
-// component CSS even before any story-bound decorator has run.
-let activeThemeStyle = themeStyles['Global UNDRR Theme'];
-activeThemeStyle.use();
-
-const themeDecorator = (Story, context) => {
-  const selectedTheme = context.globals.theme;
-
-  React.useEffect(() => {
-    const newThemeStyle = themeStyles[selectedTheme];
-    if (newThemeStyle && newThemeStyle !== activeThemeStyle) {
-      activeThemeStyle.unuse();
-      newThemeStyle.use();
-      activeThemeStyle = newThemeStyle;
-    }
-
-    // Apply the sub-brand class so .mg-theme-* CSS custom property overrides
-    // take effect. Remove all theme classes first, then add the new one.
-    document.body.classList.remove(...allThemeClasses);
-    const themeClass = themeClasses[selectedTheme];
-    if (themeClass) {
-      document.body.classList.add(themeClass);
-    }
-  }, [selectedTheme]);
-
-  return <Story {...context} />;
-};
+channel.on(GLOBALS_UPDATED, updatePreviewGlobals);
+const initialThemeReady = applyTheme();
+if (import.meta.hot) {
+  import.meta.hot.dispose(() =>
+    channel.off(GLOBALS_UPDATED, updatePreviewGlobals)
+  );
+}
 
 /** @type { import('storybook').Preview } */
 const preview = {
+  beforeAll: async () => {
+    await initialThemeReady;
+  },
+  loaders: [
+    async ({ globals, canvasElement, viewMode }) => {
+      applyLanguage(globals, canvasElement, {
+        previewDocument: viewMode !== 'docs',
+      });
+      await applyTheme(globals.theme);
+      return {};
+    },
+  ],
   parameters: {
     // `@storybook/addon-a11y` is registered in main.js with no configuration,
     // so it ran axe's default rule set. That set includes `best-practice`
@@ -181,12 +99,13 @@ const preview = {
     // sort. Scoping to the WCAG tags makes it mean what people already assume
     // it means. See unisdr/undrr-mangrove#1273.
     //
-    // `test` is deliberately left unset, which defaults to `'todo'`: the
+    // `test: 'todo'` preserves the existing advisory policy: the
     // addon reports in the panel and beside the test runner's output but does
     // not fail a build. Turning it to `'error'` is a decision for #1273,
     // after the existing findings have been triaged — not a side effect of
     // switching the test runner on.
     a11y: {
+      test: 'todo',
       // `runOnly` is an axe *run* option, so it belongs under `options` —
       // putting it in `config` is accepted silently and changes nothing.
       options: {
@@ -213,16 +132,7 @@ const preview = {
       disable: true,
     },
     html: {
-      prettier: {
-        tabWidth: 2,
-        useTabs: false,
-        removeComments: true,
-        htmlWhitespaceSensitivity: 'css',
-        printWidth: 80,
-        semi: true,
-        singleQuote: true,
-        trailingComma: 'es5',
-      },
+      removeComments: true,
     },
     docs: {
       source: {
@@ -259,6 +169,7 @@ const preview = {
               'Theming guide',
               'CDN reference',
               'Hydration guide',
+              'Drupal Gutenberg',
             ],
             'Best practices',
             'Accessibility',
@@ -285,6 +196,7 @@ const preview = {
           'Design decisions',
           'Components',
           'Patterns',
+          ['Content', ['Overview', '*'], '*'],
           'Utilities',
         ],
         includeName: true,
@@ -292,7 +204,23 @@ const preview = {
     },
   },
 
+  initialGlobals: {
+    addonRtl: 'ltr',
+  },
+
   globalTypes: {
+    addonRtl: {
+      name: 'Direction',
+      description: 'Text direction',
+      toolbar: {
+        icon: 'transfer',
+        items: [
+          { value: 'ltr', title: 'Locale direction' },
+          { value: 'rtl', title: 'Force right-to-left' },
+        ],
+        dynamicTitle: true,
+      },
+    },
     locale: {
       name: 'Locale',
       description: 'locale',
@@ -316,7 +244,7 @@ const preview = {
       defaultValue: 'Global UNDRR Theme',
       toolbar: {
         icon: 'paintbrush',
-        items: Object.keys(themeStyles).map(name => ({
+        items: themeNames.map(name => ({
           value: name,
           title: name,
         })),
@@ -326,7 +254,7 @@ const preview = {
     },
   },
 
-  decorators: [getLangCode, sbFrameReset, setDirection, themeDecorator],
+  decorators: [getLangCode, sbFrameReset],
 
   tags: ['autodocs'],
 };

@@ -4,8 +4,10 @@
  * Accessible skip-to-main-content navigation link that reveals on keyboard focus.
  *
  * Full documentation:
- * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Utilities/SkipLink/SkipLink.mdx
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Utilities/SkipLink/SkipLink.mdx
  */
+@use "../../assets/scss/mixins" as *;
+
 // Skip link.
 
 // Visually hidden until focused. Deliberately not .mg-u-sr-only: that utility

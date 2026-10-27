@@ -344,3 +344,139 @@ describe('Hero — accessibility', () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 });
+
+describe('Hero — neutral variant, linked eyebrow and facts, tags', () => {
+  const neutralItem = {
+    ...splitItem,
+    label: (
+      <>
+        <a href="/collections">Collection</a> · Topic guide
+      </>
+    ),
+    detail: (
+      <>
+        <a href="#items">36 items</a> · Last updated 10 July 2026
+      </>
+    ),
+    tags: [
+      { label: 'Wildfire', href: '/taxonomy/term/357' },
+      { label: 'Climate change' },
+    ],
+  };
+
+  it('adds the neutral modifier', () => {
+    const { container } = render(
+      <Hero data={[neutralItem]} layout="split" variant="neutral" />
+    );
+    expect(container.querySelector('.mg-hero')).toHaveClass(
+      'mg-hero--split',
+      'mg-hero--neutral'
+    );
+  });
+
+  it('renders links in the eyebrow and the facts line', () => {
+    render(<Hero data={[neutralItem]} layout="split" variant="neutral" />);
+    expect(screen.getByRole('link', { name: 'Collection' })).toHaveAttribute(
+      'href',
+      '/collections'
+    );
+    const count = screen.getByRole('link', { name: '36 items' });
+    expect(count.closest('.mg-hero__label.detail')).toBeInTheDocument();
+  });
+
+  it('renders tags as a list named Topics, after the facts line', () => {
+    const { container } = render(
+      <Hero data={[neutralItem]} layout="split" variant="neutral" />
+    );
+    const list = screen.getByRole('list', { name: 'Topics' });
+    expect(list).toHaveClass('mg-hero__tags');
+    expect(list.previousElementSibling).toHaveClass('meta-detail');
+    expect(list.nextElementSibling).toHaveClass('mg-hero__buttons');
+    expect(screen.getAllByRole('listitem')).toHaveLength(2);
+    const link = screen.getByRole('link', { name: 'Wildfire' });
+    expect(link).toHaveClass('mg-tag');
+    expect(link).toHaveAttribute('href', '/taxonomy/term/357');
+    expect(
+      container.querySelector('.mg-hero__tags span.mg-tag')
+    ).toHaveTextContent('Climate change');
+  });
+
+  it('names the tag list with tagsLabel', () => {
+    render(
+      <Hero
+        data={[{ ...neutralItem, tagsLabel: 'Sujets' }]}
+        layout="split"
+        variant="neutral"
+      />
+    );
+    expect(screen.getByRole('list', { name: 'Sujets' })).toBeInTheDocument();
+  });
+
+  it('omits the summary when there is none', () => {
+    const { container } = render(
+      <Hero
+        data={[{ ...neutralItem, summaryText: undefined }]}
+        layout="split"
+        variant="neutral"
+      />
+    );
+    expect(container.querySelector('.mg-hero__summaryText')).toBeNull();
+  });
+
+  it('gives a button a fixed analytics label', () => {
+    render(
+      <Hero
+        data={[
+          {
+            ...neutralItem,
+            primary_button: undefined,
+            buttons: [
+              {
+                label: 'Browse 36 items',
+                url: '#items',
+                type: 'Secondary',
+                analyticsLabel: 'Collection: browse items',
+              },
+            ],
+          },
+        ]}
+        layout="split"
+        variant="neutral"
+      />
+    );
+    expect(
+      screen.getByRole('link', { name: 'Browse 36 items' })
+    ).toHaveAttribute('data-vf-analytics-label', 'Collection: browse items');
+  });
+
+  it('renders no tag container without tags', () => {
+    const { container } = render(<Hero data={[splitItem]} layout="split" />);
+    expect(container.querySelector('.mg-hero__tags')).toBeNull();
+  });
+
+  it('keeps string labels and details exactly as before', () => {
+    const { container } = render(
+      <Hero data={[{ ...splitItem, detail: 'Plain detail' }]} layout="split" />
+    );
+    expect(container.querySelector('.mg-hero__label').outerHTML).toBe(
+      '<span class="mg-hero__label">Test Label</span>'
+    );
+    expect(container.querySelector('.mg-hero__label.detail').outerHTML).toBe(
+      '<span class="mg-hero__label detail">Plain detail</span>'
+    );
+  });
+
+  it('drops the photograph in the background layout', () => {
+    const { container } = render(<Hero data={[baseItem]} variant="neutral" />);
+    const section = container.querySelector('.mg-hero');
+    expect(section).toHaveClass('mg-hero--no-image', 'mg-hero--neutral');
+    expect(section.getAttribute('style')).toBeNull();
+  });
+
+  it('has no detectable accessibility violations', async () => {
+    const { container } = render(
+      <Hero data={[neutralItem]} layout="split" variant="neutral" />
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+});

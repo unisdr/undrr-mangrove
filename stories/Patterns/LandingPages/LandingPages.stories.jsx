@@ -3,7 +3,8 @@ import { LandingPage } from './LandingPages';
 import '../_shared/pattern-demo.scss';
 
 export default {
-  title: 'Patterns/Landing pages',
+  id: 'patterns-landing-pages',
+  title: 'Patterns/Content/Landing page/Full page/Topic or initiative',
   component: LandingPage,
   parameters: { layout: 'fullscreen' },
   argTypes: {
@@ -24,12 +25,4 @@ export default {
 export const TopicLanding = {
   name: 'Topic or initiative',
   args: { archetype: 'topic' },
-};
-export const ReportLanding = {
-  name: 'Report or publication',
-  args: { archetype: 'report' },
-};
-export const IndexLanding = {
-  name: 'Collection index',
-  args: { archetype: 'index' },
 };

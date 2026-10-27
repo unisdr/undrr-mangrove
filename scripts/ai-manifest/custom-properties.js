@@ -92,6 +92,8 @@ export const GLOBAL_PREFIXES = {
 // in the validate log, and in the count — rather than only shrinking a JSON
 // file nobody diffs.
 export const NOT_PUBLIC = {
+  '--mg-list-item-indent-rtl':
+    'Internal hook between the RTL list rules in _foundational.scss and the mg-list-unmarked mixin: a list with no bullets sets it to 0 so its items lose the RTL bullet indent. Use the mixin rather than setting it.',
   '--mg-gutenberg-spacer':
     'Declared on .mg-footer and read by nothing. A leftover of the Gutenberg spacing work that --mg-container-spacer replaced; see the note in stories/Atom/Layout/Container/container.scss.',
 };
@@ -106,7 +108,7 @@ export const NOT_PUBLIC = {
 // this file exists to prevent, reached through the file itself.
 export const MIN_PROPERTIES = {
   'components-buttons-buttons': 1,
-  'components-syndicated-search': 2,
+  'components-syndicated-search': 3,
   'components-cards-icon-card': 4,
   'components-cta': 2,
   'components-dataviz-legend': 1,
@@ -116,11 +118,13 @@ export const MIN_PROPERTIES = {
   'components-hero-hero': 7,
   'components-icons': 1,
   'components-images-author-image': 3,
+  'components-loader': 1,
   'components-navigation-drawer': 2,
   'components-navigation-megamenu': 2,
   'components-navigation-on-this-page-nav': 1,
   'components-navigation-tree': 5,
   'components-notice-notice': 4,
+  'components-progress-bar': 3,
   'components-reading-column': 1,
   'components-showmore': 1,
   'components-status-label': 15,
@@ -136,7 +140,10 @@ export const MIN_PROPERTIES = {
 // anything else claims that exact name.
 export const OWNERS = {
   'components-images-author-image': ['--mg-author-image-'],
-  'components-syndicated-search': ['--mg-search-drawer-'],
+  'components-syndicated-search': [
+    '--mg-search-drawer-',
+    '--mg-search-spinner-',
+  ],
   'components-buttons-buttons': ['--mg-cta-arrow-shift'],
   'components-cards-icon-card': [
     '--mg-card-border',
@@ -151,11 +158,13 @@ export const OWNERS = {
   'components-forms-segmented-control': ['--mg-segmented-control-'],
   'components-hero-hero': ['--mg-hero-'],
   'components-icons': ['--mg-icon-svg'],
+  'components-loader': ['--mg-loader-'],
   'components-navigation-drawer': ['--mg-drawer-'],
   'components-navigation-megamenu': ['--mg-mega-'],
   'components-navigation-on-this-page-nav': ['--mg-on-this-page-nav-'],
   'components-navigation-tree': ['--mg-tree-'],
   'components-notice-notice': ['--mg-notice-'],
+  'components-progress-bar': ['--mg-progress-bar-'],
   'components-reading-column': ['--mg-reading-with-contents-width'],
   'components-showmore': ['--mg-show-more-'],
   'components-status-label': ['--mg-status-label-'],
@@ -182,7 +191,7 @@ export const PROPERTY_DOCS = {
   '--mg-card-border':
     'Colour of the 2px border on .mg-card__icon--bordered. The borderColor prop sets it as an inline style.',
   '--mg-card-icon-size':
-    'Size of the card visual on the variants that own it, such as the horizontal card. The iconSize prop sets it as an inline style.',
+    'Size of the card visual on the variants that own it, such as the horizontal card. Set it in CSS on the card or an ancestor; iconSize supplies image attributes and does not set this property.',
   '--mg-icon-bg':
     'Background colour of .mg-card__icon-wrap--colored. The iconColor prop sets it as an inline style; unset, the badge paints no fill.',
   '--mg-icon-fg':
@@ -247,6 +256,8 @@ export const PROPERTY_DOCS = {
   // Hero
   '--mg-hero-banner-block-size':
     "How deep the photograph is below the tablet breakpoint, where the background layout is a banner with the copy on a solid panel underneath rather than copy over the frame. The copy's offset and the panel's upper edge both read it, so a theme changes the banner's depth with this one property and the panel follows. A hero with no background image collapses it to zero through `mg-hero--no-image`, so the copy keeps the panel without a band reserved for an image that never arrives.",
+  '--mg-hero-tag-color':
+    'Ink of the outline tags in a hero (border and label): white on the coloured variants, the interactive colour on the neutral variant. Tags with a Tag modifier ignore it.',
   '--mg-hero-cta-color':
     'Colour of the hero CTA button. Each colour variant re-points it.',
   '--mg-hero-gradient-color':
@@ -272,6 +283,8 @@ export const PROPERTY_DOCS = {
     'Width of a start or end drawer, height of a bottom drawer.',
   '--mg-drawer-offset':
     'Translation that holds the drawer off-screen while it is closed. The component flips it per edge and per text direction, so set the size instead unless you are replacing that behaviour deliberately.',
+  '--mg-search-spinner-duration':
+    'One revolution of the retained legacy search spinner (1s by default; three times longer under reduced motion). New widget code uses shared Loader instead.',
   '--mg-search-drawer-offset':
     'Translation that holds the mobile filter drawer off-screen before it slides in. The component flips it per text direction, so the drawer enters from the inline start in both; set it only if you are replacing that behaviour.',
   '--mg-search-drawer-shadow-offset':
@@ -285,7 +298,15 @@ export const PROPERTY_DOCS = {
 
   // OnThisPageNav
   '--mg-on-this-page-nav-offset':
-    'Docking offset for a fixed header above the nav. Accepts any CSS length, and the scroll position calculations use it too. Nothing declares it, so set it in your theme CSS to dock below a sticky header.',
+    "Docking offset for a fixed header above the nav. Accepts any CSS length, and the scroll position calculations use it too. Nothing declares it, so set it in your theme CSS to dock below a sticky header; set it on :root so the page's scroll-padding-top counts it as well. In Drupal, var(--drupal-displace-offset-top, 0px) allows for the admin toolbar.",
+  '--mg-on-this-page-nav-block-size':
+    "The bar's height, set on the root by on-this-page-nav.js while the bar is sticky (0px when it is not) and read by the root's scroll padding. Do not set it yourself.",
+  '--mg-on-this-page-nav-container':
+    'Width of the mg-container the links line up with under .mg-on-this-page-nav--align-container. Declared per breakpoint to match mg-container; override it when the content column is narrower.',
+  '--mg-on-this-page-nav-scroll-padding-base':
+    "A site's own scroll padding, set on :root, that the page's scroll padding starts from before adding the On this page bar's offset and height. Nothing declares it; use it instead of html { scroll-padding-top } to keep the site's value and add the bar.",
+  '--mg-on-this-page-nav-scroll-padding':
+    "Declared on the root while an On this page bar is on the page: --mg-on-this-page-nav-scroll-padding-base plus the docking offset plus the bar's published height (--mg-on-this-page-nav-block-size, set by the script while the bar is sticky). It is the page's scroll-padding-top, so focus, anchors and scrollIntoView land below the bar. The rule has zero specificity, so a site's own html { scroll-padding-top } wins; to keep the site's padding and add the bar to it, set --mg-on-this-page-nav-scroll-padding-base on :root instead.",
 
   // Tree
   '--mg-tree-item-background--hover': 'Row tint on hover.',
@@ -297,6 +318,10 @@ export const PROPERTY_DOCS = {
   '--mg-tree-guide-offset':
     "Distance from the parent row to the dashed guide line on .mg-tree--guides. The group padding gives the same amount back, so child rows keep their position. Only .mg-tree--guides .mg-tree__group declares it, so it has no value at rest and no `default` here; set it on that element, because the component's own declaration beats an inherited one.",
 
+  // Loader
+  '--mg-loader-duration':
+    'Time for one turn of the spinner when motion is permitted. Under reduced motion the Loader is a static dashed marker with a visible status label, so this property has no effect.',
+
   // Notice
   '--mg-notice-bg':
     'Panel fill. Each status modifier (--warning, --negative, --positive) re-points it, so set it on .mg-notice or an ancestor rather than per modifier.',
@@ -304,6 +329,14 @@ export const PROPERTY_DOCS = {
   '--mg-notice-border-width':
     'Width of the leading edge that carries the status. --prominent widens it, --overlay narrows it.',
   '--mg-notice-icon-color': 'Colour of the status icon.',
+
+  // Progress bar
+  '--mg-progress-bar-block-size':
+    'Thickness of the track. The flush variant sets 0.25rem on its own wrapper.',
+  '--mg-progress-bar-indicator':
+    'Colour of the determinate fill and the indeterminate scanner. Keep it at 3:1 or more against the page and the track.',
+  '--mg-progress-bar-track':
+    'Colour of the empty track. Forced colours mode replaces it with Canvas.',
 
   // Reading column
   '--mg-reading-with-contents-width':

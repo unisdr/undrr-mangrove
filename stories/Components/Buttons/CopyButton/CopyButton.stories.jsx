@@ -1,33 +1,10 @@
+import { withLanguage } from '../../../../.storybook/withLanguage';
 import { CopyButton } from './CopyButton';
-import {
-  DEFAULT_COPY_BUTTON_LABELS,
-  LABELS_ES,
-  LABELS_FR,
-  LABELS_JA,
-  LABELS_ZH,
-  LABELS_AR,
-  LABELS_RU,
-} from './_labels';
-
-const LOCALE_LABELS = {
-  spanish: LABELS_ES,
-  french: LABELS_FR,
-  japanese: LABELS_JA,
-  chinese: LABELS_ZH,
-  arabic: LABELS_AR,
-  russian: LABELS_RU,
-};
-
-const withLocaleLabels = (Story, context) => {
-  const labels =
-    LOCALE_LABELS[context.globals?.locale] || DEFAULT_COPY_BUTTON_LABELS;
-  return <Story {...context} args={{ ...context.args, labels }} />;
-};
 
 const meta = {
   title: 'Components/Buttons/CopyButton',
   component: CopyButton,
-  decorators: [withLocaleLabels],
+  decorators: [withLanguage],
   tags: ['autodocs'],
   argTypes: {
     textToCopy: { control: 'text' },

@@ -1,11 +1,14 @@
+import LinkTo from '@storybook/addon-links/react';
 import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
 import * as Stories from './ContentHub.stories';
 
 <Meta of={Stories} />
 
-# Content hubs
+# Content hub composition
 
-> **Note:** Tracked on [#1112](https://github.com/unisdr/undrr-mangrove/issues/1112). Review against the [component checklist](https://github.com/unisdr/undrr-mangrove/blob/main/docs/REVIEW-CHECKLIST.md).
+The **hub home is a Landing page variant**: it introduces a subject and routes readers onward. <LinkTo kind="Patterns/Content/Landing page" story="docs">Landing page patterns</LinkTo> owns this full-page reference. Persistent hub identity and section navigation also carry through to detail pages; those pages retain their own editorial content meaning. This composition does not define a separate CMS content type or turn every detail page into a landing page.
+
+> **Note:** Tracked on [#1112](https://github.com/unisdr/undrr-mangrove/issues/1112). Review against the [component checklist](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/REVIEW-CHECKLIST.md).
 
 A content hub is a named set of related pages people move between repeatedly
 (for example, Sendai Framework Monitor sections). Every page keeps the same hub
@@ -101,7 +104,7 @@ stylesheet:
 | `media`, `actions`     | Both optional — a banner works as text alone                                                                                             |
 | `current` / `ancestor` | The exact page, or a section containing it                                                                                               |
 
-**Contrast:** `surface="secondary"` no longer paints the header in the orange accent. Every link and heading on it was white at 2.65 against WCAG's 4.5, and the bar tint darkened the navigation strip nowhere near enough. The orange carries no text at any size, so the bar and banner now keep the theme's own hero colour, which the white ink is already sized for, and the accent becomes a 4px rule under the bar — a line with no copy over it. That rule is 2.95 against white, under the 3:1 of SC 1.4.11, so it is emphasis rather than the only thing marking the surface. See [the colour contrast methodology](https://github.com/unisdr/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text) for the measurements.
+**Contrast:** `surface="secondary"` no longer paints the header in the orange accent. Every link and heading on it was white at 2.65 against WCAG's 4.5, and the bar tint darkened the navigation strip nowhere near enough. The orange carries no text at any size, so the bar and banner now keep the theme's own hero colour, which the white ink is already sized for, and the accent becomes a 4px rule under the bar — a line with no copy over it. That rule is 2.95 against white, under the 3:1 of SC 1.4.11, so it is emphasis rather than the only thing marking the surface. See [the colour contrast methodology](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text) for the measurements.
 
 Pass `current` for the exact page and `ancestor` for containing section. Both
 render similarly, but only `current` announces `aria-current="page"`. Keep
@@ -153,7 +156,7 @@ Paths are compared without the query, fragment, trailing slash or `index.html`, 
 </div>
 <script
   type="module"
-  src="https://assets.undrr.org/mangrove/2.0.0/js/hub-header.js"
+  src="https://assets.undrr.org/mangrove/2.3.0/js/hub-header.js"
 ></script>
 ```
 
@@ -195,6 +198,9 @@ other sub-brands too.
 
 ## Changelog
 
+- **1.2.2**, 2026-10-16 ([#1383](https://github.com/unisdr/undrr-mangrove/pull/1383)): Group hub-home and navigation-composition examples under Landing page; distinguish the home variant from detail-page content and retain existing URLs.
+
+- **1.2.1**, 2026-10-15 ([#1277](https://github.com/unisdr/undrr-mangrove/issues/1277)): The how-to reporting reading column opts into the documented `mg-content` editorial pattern; hub navigation, cards and resource lists keep their own presentation.
 - **1.2.0**, 2026-09-24: `js/hub-header.js` enhances static hub header markup without React: it scrolls the marked section into view on load and once web fonts arrive (a later resize only updates the fades, so a reader's own scrolling is kept), drives the edge fades and, with `data-mg-hub-header-detect-current`, marks the current section from the URL. `HubHeader` runs the same script, so the scrolling and fade logic that lived in the ContentHub story now ships with the component.
 - **1.1.1**, 2026-09-23: The hero video title reads "This is how timely early warnings save lives, UNDRR" instead of setting "UNDRR" off with an em dash, following the dash rules in the [Editorial manual](https://mangrove.undrr.org/?path=/docs/contributing-editorial-manual--docs#punctuation).
 - **1.1.0**, 2026-09-18 ([#1249](https://github.com/unisdr/undrr-mangrove/pull/1249)): Fixes [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196). `HubHeader`'s `surface="secondary"` no longer retargets the bar and banner to the orange accent, which put every link and heading on it at 2.65. Both keep the theme's hero colour, and the accent is now a 4px full-bleed rule under the bar. `--mg-color-hero--secondary` is unchanged and drives that rule. This is a visible change wherever the surface is used, in all five themes.

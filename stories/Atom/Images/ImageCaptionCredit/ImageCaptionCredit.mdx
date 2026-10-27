@@ -110,8 +110,45 @@ It consists of three states: Wide, Medium, and Portrait.
 - Choose the size controls as either wide, medium or portrait from the Canvas. Caption and Credit controls as true or false from the control tab of canvas.
 - Copy the HTML from the HTML tab.
 
+### Caption markup
+
+The `figcaption.mg-image-caption` holds the caption followed by the credit (`.mg-credits`). Either can be left out. On wide screens the two sit side by side with a divider between them; on small screens the credit sits under the caption with a rule above it.
+
+A caption that is a single paragraph uses a `<p>`:
+
+<Source
+  language="html"
+  dark
+  code={`<figcaption class="mg-image-caption">
+  <p>Volunteers practise an evacuation drill in Accra.</p>
+  <div class="mg-credits">UNDRR/Ghana<br /><strong>Alex Mensah Tenkorang</strong></div>
+</figcaption>`}
+/>
+
+When the caption is anything else, such as several paragraphs or text with no `<p>` (common when it comes from a rich-text field), wrap all of it in one `.mg-image-caption__text` element. The wrapper takes the caption typography and the divider before the credit, and keeps the caption as one block beside the credit; paragraphs inside it stack, with no margin after the last one. Without it, each paragraph becomes a separate column on wide screens and the divider is lost.
+
+<Source
+  language="html"
+  dark
+  code={`<figcaption class="mg-image-caption">
+  <div class="mg-image-caption__text">
+    <p>Volunteers practise an evacuation drill in Accra.</p>
+    <p>The drill is part of a national early warning programme.</p>
+  </div>
+  <div class="mg-credits">UNDRR/Ghana<br /><strong>Alex Mensah Tenkorang</strong></div>
+</figcaption>`}
+/>
+
+In React, `Imagecaption` (and `Images`) renders a string `paragraph` as a `<p>`, and wraps element or array content (for example several `<p>` elements) in `.mg-image-caption__text`.
+
+<Canvas
+  of={ImageCaptionCreditStories.MultiParagraphCaption}
+  meta={ImageCaptionCreditStories}
+/>
+
 ## Changelog
 
+- **1.3**, 2026-10-09 ([web-backlog#3130](https://gitlab.com/undrr/web-backlog/-/issues/3130)): Added `.mg-image-caption__text`, a wrapper for captions that are not a single `<p>` (several paragraphs or bare text), so they lay out as one caption block with the divider before the credit. `Imagecaption` uses it when `paragraph` is element or array content. Existing markup is unchanged.
 - **1.2**, 2026-03-21: Removed viewport scroll animations (`data-viewport`, `mg-scale-up`, `mg-opacity-only`). Components now render immediately.
 - **1.1**, 2026-03-21: Renamed CSS classes to `mg-` prefix (`image-figcaption` → `mg-image-figcaption`, `image__caption` → `mg-image-caption`, `credits` → `mg-credits`). Added BEM modifiers for size variants (`mg-image-figcaption--medium`, `mg-image-figcaption--portrait`). Replaced `defaultProps` with destructured defaults.
 - **1.0**, 2022-12-12: Released component

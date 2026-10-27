@@ -1,6 +1,6 @@
 # CDN reference
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/CDN-REFERENCE.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/getting-started-integration-cdn-reference--docs).
+> Edits to this file show up on both [GitHub](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/CDN-REFERENCE.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/getting-started-integration-cdn-reference--docs).
 
 Authoritative path reference for UNDRR CDN assets. Browse the full index at [assets.undrr.org](https://assets.undrr.org/sitemap.html).
 
@@ -30,10 +30,10 @@ Base URL: `https://assets.undrr.org/mangrove/{version}/`
 | MCR2030 | `/css/style-mcr-legacy.css` |
 | IRP | `/css/style-irp-legacy.css` |
 
-The DELTA Resilience theme never had a legacy variant. See the [v1.4 release notes](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASE-1.4.md#migration-root-font-size-change) for what they did and the [v2.0 release notes](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASE-2.0.md) for the migration off them.
+The DELTA Resilience theme never had a legacy variant. See the [v1.4 release notes](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/RELEASE-1.4.md#migration-root-font-size-change) for what they did and the [v2.0 release notes](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/RELEASE-2.0.md) for the migration off them.
 
 ```html
-<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0/css/style.css" />
+<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.3.0/css/style.css" />
 ```
 
 ### Optional ComboBox styles (unreleased)
@@ -70,7 +70,7 @@ That table is the complete list. **There is no `/js/main.js` and no combined bun
 
 ```html
 <script type="module">
-  import { mgTabs } from 'https://assets.undrr.org/mangrove/2.0.0/js/tabs.js';
+  import { mgTabs } from 'https://assets.undrr.org/mangrove/2.3.0/js/tabs.js';
   mgTabs();
 </script>
 ```
@@ -121,7 +121,7 @@ React 19 removed UMD builds. Use import maps with esm.sh:
   import { createRoot } from 'react-dom/client';
 
   const MegaMenuModule = await import(
-    'https://assets.undrr.org/mangrove/2.0.0/components/MegaMenu.js'
+    'https://assets.undrr.org/mangrove/2.3.0/components/MegaMenu.js'
   );
 
   let MegaMenu = MegaMenuModule?.default ?? MegaMenuModule;
@@ -132,6 +132,23 @@ React 19 removed UMD builds. Use import maps with esm.sh:
 ```
 
 Bundled components export `fromElement`; pair with `/components/hydrate.js` to avoid manual `createRoot` lifecycle code. See [Hydration guide](https://mangrove.undrr.org/?path=/docs/getting-started-integration-hydration-guide--docs).
+
+### Documentation
+
+Plain-text copies of guidance, for people and AI tools that need a stable, versioned URL rather than the Storybook site. First shipped in the release after 2.0.0, so no `2.0.0/` or earlier folder has them.
+
+| Document | Path | Contents |
+|----------|------|----------|
+| Editorial manual | `/docs/EDITORIAL-MANUAL.md` | Copy of `docs/EDITORIAL-MANUAL.md`, with links to other guides pointing at Storybook |
+| Editorial manual sub-manifest | `/docs/llms-editorial-manual.txt` | The same rules in the `llms.txt` format |
+| Page building sub-manifest | `/docs/llms-page-building.txt` | Building landing pages and the Drupal Gutenberg integration guide, in the `llms.txt` format |
+| Search widget sub-manifest | `/docs/llms-search-widget.txt` | Search widget editor configuration, in the `llms.txt` format |
+
+Every other `llms-*.txt` sub-manifest the build generates is published beside them under `/docs/`. The top-level `llms.txt` and `llms.json` are not: they index the Storybook site and stay at <https://mangrove.undrr.org/llms.txt>.
+
+```
+https://assets.undrr.org/mangrove/{version}/docs/llms-editorial-manual.txt
+```
 
 ## Analytics
 
@@ -180,7 +197,7 @@ Base URL: `https://assets.undrr.org/logos/`
 Pin exact versions:
 
 ```
-https://assets.undrr.org/mangrove/2.0.0/css/style.css
+https://assets.undrr.org/mangrove/2.3.0/css/style.css
 ```
 
 ### Latest (testing only)

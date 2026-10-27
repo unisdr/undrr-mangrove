@@ -299,19 +299,15 @@ function collect() {
 
       // 3. CDN URLs at the version in `package.json`, and at no other.
       //
-      // `latest` is skipped, and the reason is worth writing down because the
-      // opposite was asserted here and survived review. `latest` is a moving
-      // pointer — the dist-tag for the newest *stable* release — and it does
-      // not track this branch. Whenever a prerelease line is open it addresses
-      // a different major than the sources here, so resolving `latest/` URLs
-      // against this model is wrong in both directions at once: it blesses
-      // paths that exist only on this branch, and it rejects files the older
-      // tree genuinely serves.
+      // CDN `latest/` is the last deployed shared-web-assets build's snapshot
+      // of the PreventionWeb fork's dist branch, with npm fallback if its clone
+      // fails. It is not npm's latest dist-tag and need not match this branch
+      // or a stable release. Resolving it against these sources can therefore
+      // bless unpublished paths or reject files the deployed tree still serves.
       //
-      // Deliberately not fixed by looking the tag up. Hard-coding the version
-      // it points at today would quietly change meaning the moment a release
-      // is cut, and asking the registry at test time would make the suite
-      // network-dependent and non-reproducible — both worse than the bug. A
+      // Looking up the current CDN or registry would make this deterministic
+      // source guard network-dependent, and hard-coding a deployed version
+      // would go stale at the next external deployment. A
       // wrong answer in a guard is worse than no answer, so a `latest/` URL is
       // a manual check. Docs should pin a version; the `latest/` URLs that
       // remain are listed as a step in the release procedure
@@ -332,7 +328,7 @@ function collect() {
     if (relative === 'docs/CDN-REFERENCE.md') {
       lines.forEach((text, index) => {
         for (const match of text.matchAll(
-          /`(\/(?:css|js|components|fonts|error-pages)\/[^`]+)`/g
+          /`(\/(?:css|js|components|fonts|error-pages|docs)\/[^`]+)`/g
         )) {
           found.push({
             file: relative,

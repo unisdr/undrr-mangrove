@@ -35,6 +35,10 @@ const BUNDLES = [
 ];
 
 const INPUT_HOOKS = {
+  '--mg-on-this-page-nav-scroll-padding-base':
+    "A site's own scroll padding, set on :root, that the On this page bar adds itself to",
+  '--mg-on-this-page-nav-block-size':
+    'On this page bar height, set on the root by on-this-page-nav.js while the bar is sticky',
   '--mg-card-border':
     'IconCard borderColor prop, set inline; .mg-card__icon--bordered falls back to rgb(var(--mg-color-interactive)) so the public class is never an invisible border',
   '--mg-card-icon-size': 'IconCard icon size override, set inline',

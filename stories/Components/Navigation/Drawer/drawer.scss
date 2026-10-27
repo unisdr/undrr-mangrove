@@ -5,8 +5,9 @@
  * The close control reuses .mg-icon-button and its shared focus ring.
  *
  * Full documentation:
- * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/Navigation/Drawer/Drawer.mdx
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Navigation/Drawer/Drawer.mdx
  */
+@use "../../../assets/scss/config" as *;
 
 .mg-drawer,
 .mg-floating-panel {
@@ -147,5 +148,15 @@
 
   &__body {
     max-block-size: mg-rem(400);
+  }
+}
+
+// The global reduced-motion reset gives every element a tiny transition
+// duration. With the initial `all` transition property, descendants briefly
+// animate inherited visibility and cannot receive opening focus. Disable the
+// properties themselves so an open drawer and its controls appear together.
+@media (prefers-reduced-motion: reduce) {
+  .mg-drawer * {
+    transition-property: none !important;
   }
 }

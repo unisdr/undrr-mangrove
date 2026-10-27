@@ -1,6 +1,6 @@
 # AI coding agent guidelines
 
-> This file is GitHub-only: no MDX imports it, so it does not appear in Storybook. (`docs/AI-MCP-INTEGRATION.md` is the one `docs/*.md` file that is wrapped into a Storybook page.)
+> This file is GitHub-only: no MDX imports it, so it does not appear in Storybook. Several other `docs/*.md` guides, including `AI-MCP-INTEGRATION.md` and `FIGMA-INTEGRATION.md`, have Storybook wrappers.
 
 Practical guidance for AI coding agents (Claude Code, Cursor, Copilot, etc.)
 working on Mangrove. It focuses on workflow gaps that commonly cause drift in
@@ -9,6 +9,61 @@ agent-generated changes.
 ## Before modifying any component
 
 When you touch a component's JSX, SCSS, stories, or tests, read the [review checklist](REVIEW-CHECKLIST.md) **before committing**. The checklist is referenced in every component's MDX file, but agents typically don't read MDX until late in the process — by then the commit is already made.
+
+For visual refinements, first read [Experience principles](../stories/Documentation/ExperiencePrinciples.mdx)
+([published](https://mangrove.undrr.org/?path=/docs/design-decisions-experience-principles--docs)).
+Use its decision order: semantics, accessibility and content comprehension precede
+visual polish. Shared components own behaviour and geometry; themes own surface
+expression. Keep new visual defaults themeable, document changed token routing,
+and verify an override as well as the default across all five themes.
+
+### Apply the editorial spelling policy
+
+For UI copy, examples, documentation and changelogs, follow the [Editorial manual](EDITORIAL-MANUAL.md#spelling): Oxford `-ize`/`-ization` forms such as organization, organize, normalize and localize, alongside British forms such as colour, behaviour, centre and programme. Keep source field names, API identifiers and proper names intact. Check linked Storybook labels when correcting spelling.
+
+### Resolve interface translations at runtime
+
+Before adding or changing built-in UI labels, read [UI translations](UI-TRANSLATIONS.md).
+Use the shared pure helpers in `src/i18n.js` with component-owned catalogues.
+React selects labels from explicit `lang`; hydration selects `data-lang` before
+the nearest HTML `lang`. Preserve consumer overrides, regional and unsupported
+language metadata, explicit direction, and function-valued search labels. Do
+not add browser-global language reads to render, let story decorators replace
+runtime translation, or describe separate vanilla modules as automatically
+translated. Check dialogs and portals as well as the main root, and update
+published hydration metadata with the component documentation.
+
+### Separate archetypes, profiles, presentations and consumer mappings
+
+Organize content patterns around reader needs, not a list of CMS bundles. Reuse Article for news/commentary, Event for general events/programme sessions, Reference entry for definitions/hazard profiles, and Opportunity for jobs. Profiles own editorial differences; presentations select page/teaser/card content; layout supplies geometry. Group existing full-page examples beneath their owning content archetype in Storybook: Article, Publication, Collection or Landing page. Pin existing CSF IDs when changing titles so shared story/docs URLs survive. Hub home is a Landing page variant; persistent hub navigation also composes with detail pages and does not redefine their content types. Do not expose old page-pattern names as competing top-level content families.
+
+Keep Drupal bindings in Mangrove's `stories/Integrations/Drupal/contentPatterns.js`: Drupal is a major consumer. Change those provisional bindings when consumer needs change, without importing Drupal knowledge into the renderer or creating an archetype for every bundle. Preserve audited metadata and omission rules when consolidating profiles. Do not treat a teaser projection as a canonical schema, or a full-page/card stub as an implemented component. Update `content-patterns.json` generation and documentation alongside registry changes.
+
+### Reconcile contracts at the correct boundary
+
+The earlier schema proposals (#881, #885 and #891) describe component contracts; the Article, Event and other content families describe editorial archetypes. Keep content models, presentation projections, component interfaces and consumer adapters distinct. Follow the [provisional contract alignment](../stories/Patterns/Content/Overview.mdx#provisional-contract-alignment) before adopting schemas. Formalize implemented projections with shared field definitions and profile-specific constraints, then validate real adapter fixtures and rendered output. Do not treat illustrative fixtures as a committed production consumer, the discovery catalogue as a validator or a full-page stub as an approved canonical model. Reconcile plain-text summaries, linked labels, safe root-relative links and distinct date roles explicitly; do not force current patterns into stale generic card assumptions. Keep broad legacy prop migrations separate from incremental contract adoption.
+
+### Ground CMS content patterns in source configuration
+
+Use CMS node type descriptions and field definitions as evidence for archetype narratives and reader needs, alongside existing Mangrove patterns. Record the interpretation and provenance in the source audit. These needs are provisional design requirements, not a mandatory schema or proof of implemented functionality. Available fields are not automatically public; preserve publication and privacy decisions. Keep source meaning separate from presentation selection: a hidden teaser field can still matter on a full page, and a reader need may extend beyond the current CMS implementation.
+
+Before implementing a CMS content pattern, inspect its entity view display, layout template, field formatters, conditional visibility and theme overrides in the source repository. Record the source revision, visible field order, hidden fields and deliberate departures in the pattern documentation. A generic card example does not establish parity with a Drupal teaser. The [content teaser audit](CONTENT-TEASER-DRUPAL-AUDIT.md) is the baseline for all 15 indexed node bundles. Keep publication dates, collection freshness, occurrence ranges and vacancy deadlines distinct. Preserve source/author list structure and optional taxonomy links; source adapters own field extraction, domain visibility and URL resolution.
+
+### Content families and presentation stubs
+
+Organize editorial patterns under `stories/Patterns/Content/{Family}/`. Each family's `patterns.js` records its provisional domain meaning and separate full-page, teaser and card presentations. The shared ContentTeaser and ContentCard entry points consume separate family/profile projections; do not expand that input into a universal domain model. Reconcile canonical contracts with schema work before adoption. Status `reference` links an existing example; `experimental` identifies implemented provisional work; `stub` reserves a presentation that is not designed or implemented. Never publish a stub as a callable component or fabricate an import. Card layouts (vertical/book) share card field selection; do not reuse a full teaser hierarchy in cards or promote hidden source fields without a documented design decision. Event and job cards deliberately add decision dates, supplied status and optional publication dates beyond the Drupal selection. Preserve the documented departure and require localized labels for all card date roles; never substitute publication dates for missing decision dates or infer status from the rendering clock. `fields` describes information selection, not geometry. Source bindings publish separately as `components/DrupalContentPatterns.js`; renderers must not re-export them. Update the family registry and generated `content-patterns.json` discovery metadata together when a presentation graduates. Keep existing story routes compatible while connecting them to their content family. In family guides, explain editorial profiles before presentations and keep each presentation's status, references and live examples together; do not append a second teaser section after the card stub.
+
+### Review the component family, not just the first screenshot
+
+- Check optional content: labels present/absent, media absent, long titles, summaries and actions. A first title should not inherit spacing intended to separate metadata.
+- Distinguish photographs, complete publication covers, navigation glyphs and illustrations. Shared card classes do not require identical framing or cropping. Standalone photo cards use an enclosed edge image; publication teasers default to a complete square-edged cover with an unboxed caption. Themes can change publication surfaces through `--mg-card-publication-*`. Horizontal editorial teasers preserve audited field selection but deliberately use the standard card enclosure through independent `--mg-content-teaser-*` surface tokens. Inset text and complete covers/logos; photographs meet the edge. Content-card logo stages also reserve clear space with the shared card padding in both layouts; apply this by media role rather than CMS bundle. Do not add images merely because the entity has an image field.
+- Compact variants should reduce padding and internal spacing together; check child margins so they do not duplicate the gap.
+- Use `imageScale: 'small'` for ordinary navigation icon examples. Medium/large/full are explicit illustration scales; changing a demo does not change the React prop default. `iconSize` supplies image dimensions, not CSS glyph sizing.
+- Verify supported plain HTML/CMS shapes as well as React. Gutenberg book cards use `mg-card mg-card__book` without `mg-card__vc`; do not accidentally require an extra class for their layout.
+- Keep copyable examples, curated AI descriptions, public token descriptions and the page-building guide consistent with the chosen defaults. Update source files, not generated manifests.
+- Record the problem, before/after evidence, themes, relevant accessibility conditions and migration impact in the PR. Label design review as design review; it is not user research.
+
+Before adding or changing motion, read [Motion and animation](MOTION.md). It is the shared policy for interaction tokens, looping indicators, reduced motion in CSS and JavaScript, forced colours and RTL. The published equivalent is [llms-motion.txt](https://mangrove.undrr.org/llms-motion.txt).
 
 Common misses:
 
@@ -83,6 +138,8 @@ Renaming CSS classes is a common task that creates subtle breakage because CSS f
 6. **Watch for SCSS nesting** — `.parent { &-child { } }` compiles to `.parent-child`; renaming the parent class requires flattening or adjusting the nesting
 
 ## Bare element selectors
+
+For trusted rendered editorial HTML, use the [Rich content pattern](https://mangrove.undrr.org/?path=/docs/patterns-rich-content--docs). Put `mg-content` on the actual body field, keep composed controls outside it, and preserve classed component islands. Its new semantic defaults pass through classless wrappers; existing paragraph-link cues still reach through CMS classes. Wide authored tables/code need local keyboard-accessible overflow, not hidden content or a page-width reset. `.mg-body` remains supported without deprecation.
 
 Mangrove's BaseTypography SCSS files (`stories/Atom/BaseTypography/`) historically used bare HTML element selectors (`blockquote`, `cite`, `mark`, etc.) that style every instance globally. New additions or modifications to these files should scope styles to `.mg-body` to prevent leaking into non-Mangrove areas:
 

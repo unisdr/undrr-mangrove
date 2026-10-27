@@ -8,7 +8,45 @@
  */
 
 import fs from 'fs';
-import { REPO_BLOB_MAIN, REPO_URL } from './repo.js';
+import {
+  PUBLIC_REPO_BLOB_MAIN,
+  PUBLIC_REPO_URL,
+  REPO_URL,
+  githubHeadingAnchor,
+  privateGithubRef,
+  qualifyBareRefs,
+  toPublicMarkdown,
+} from './repo.js';
+
+const REPO_SLUG = REPO_URL.replace('https://github.com/', '');
+
+/**
+ * Changelog prose as published: no link into the unisdr organization, and no
+ * bare `#1234` that a reader of the public fork would look up there.
+ */
+const publicText = text => qualifyBareRefs(toPublicMarkdown(text));
+
+/**
+ * Resolve a change's pull request reference. A link on the unisdr organization,
+ * or a bare `(#1234)`, names a pull request merged on unisdr/undrr-mangrove:
+ * it becomes the plain-text `prRef` with no `prUrl`, since the only URL for it
+ * is not publicly readable. Any other GitHub link is kept as `prUrl`.
+ */
+function pullRequestFields(text) {
+  const prMatch =
+    text.match(/\[#(\d+)\]\((https:\/\/github\.com\/[^)]+)\)/) ||
+    text.match(/\(#(\d+)\)/);
+  if (!prMatch) return { pr: null, prRef: null, prUrl: null };
+
+  const pr = parseInt(prMatch[1], 10);
+  const url = prMatch[2] || null;
+  const privateRef = url ? privateGithubRef(url) : `${REPO_SLUG}#${pr}`;
+  return {
+    pr,
+    prRef: privateRef,
+    prUrl: privateRef ? null : url,
+  };
+}
 
 /**
  * Parse project CHANGELOG.md into structured release objects.
@@ -55,7 +93,12 @@ export function parseChangelog(markdown) {
         date: rawDate,
         isPrerelease: /-(alpha|beta|rc)/i.test(rawVersion),
         tag: `v${rawVersion}`,
-        tagUrl: `${REPO_URL}/releases/tag/v${rawVersion}`,
+        // Tags are pushed to unisdr/undrr-mangrove, which is not publicly
+        // readable, and are not all synced to the fork: no public tag URL.
+        tagUrl: null,
+        changelogUrl: `${PUBLIC_REPO_BLOB_MAIN}CHANGELOG.md#${githubHeadingAnchor(
+          line.replace(/^##\s+/, '')
+        )}`,
         summary: '',
         changes: [],
       };
@@ -76,7 +119,7 @@ export function parseChangelog(markdown) {
     // Check for bullet point: - ... or * ...
     const bulletMatch = line.match(/^[-*]\s+(.+)$/);
     if (bulletMatch) {
-      const text = bulletMatch[1].trim();
+      const text = publicText(bulletMatch[1].trim());
 
       // Extract title: **Title**
       const titleMatch = text.match(/^\*\*([^*]+)\*\*:?\s*(.*)$/);
@@ -87,22 +130,16 @@ export function parseChangelog(markdown) {
         description = titleMatch[2].trim();
       }
 
-      // Extract PR number & URL if present: ([#1150](https://github.com/.../pull/1150)) or (#1150)
-      let pr = null;
-      let prUrl = null;
-      const prMatch =
-        text.match(/\[#(\d+)\]\((https:\/\/github\.com\/[^)]+)\)/) ||
-        text.match(/\(#(\d+)\)/);
-      if (prMatch) {
-        pr = parseInt(prMatch[1], 10);
-        prUrl = prMatch[2] || `${REPO_URL}/pull/${pr}`;
-      }
+      // PR reference, read from the source line before its link is rewritten:
+      // ([#1150](https://github.com/.../pull/1150)) or (#1150)
+      const { pr, prRef, prUrl } = pullRequestFields(bulletMatch[1]);
 
       currentRelease.changes.push({
         category: currentCategory,
         title: title || null,
         description,
         pr,
+        prRef,
         prUrl,
         raw: text,
       });
@@ -113,7 +150,9 @@ export function parseChangelog(markdown) {
     const ghReleaseMatch = line.match(
       /\[GitHub Release\]\((https:\/\/github\.com\/[^)]+)\)/
     );
-    if (ghReleaseMatch) {
+    // A GitHub Release on unisdr/undrr-mangrove is not publicly readable, so
+    // only a release published somewhere readable is linked.
+    if (ghReleaseMatch && !ghReleaseMatch[1].includes('github.com/unisdr/')) {
       currentRelease.releaseUrl = ghReleaseMatch[1];
     }
 
@@ -124,9 +163,10 @@ export function parseChangelog(markdown) {
       currentRelease.changes.length === 0
     ) {
       if (!line.includes('[GitHub Release]')) {
+        const prose = publicText(line.trim());
         currentRelease.summary = currentRelease.summary
-          ? `${currentRelease.summary} ${line.trim()}`
-          : line.trim();
+          ? `${currentRelease.summary} ${prose}`
+          : prose;
       }
     }
   }
@@ -163,32 +203,26 @@ export function parseComponentChangelog(mdxContent) {
       const version = match[1];
       const date = match[2] || null;
       const notes = match[3] || '';
-
-      let pr = null;
-      let prUrl = null;
-      const prMatch =
-        notes.match(/\[#(\d+)\]\((https:\/\/github\.com\/[^)]+)\)/) ||
-        notes.match(/\(#(\d+)\)/);
-      if (prMatch) {
-        pr = parseInt(prMatch[1], 10);
-        prUrl = prMatch[2] || `${REPO_URL}/pull/${pr}`;
-      }
+      const { pr, prRef, prUrl } = pullRequestFields(notes);
 
       currentEntry = {
         version,
         date,
-        notes: notes.trim(),
+        notes: publicText(notes.trim()),
         pr,
+        prRef,
         prUrl,
       };
       entries.push(currentEntry);
     } else if (currentEntry && line.trim().startsWith('-')) {
       // Sub-bullet
       if (!currentEntry.details) currentEntry.details = [];
-      currentEntry.details.push(line.trim().replace(/^[-*]\s+/, ''));
+      currentEntry.details.push(
+        publicText(line.trim().replace(/^[-*]\s+/, ''))
+      );
     } else if (currentEntry && line.trim() && !line.startsWith('#')) {
       // Continuation of notes
-      currentEntry.notes += ' ' + line.trim();
+      currentEntry.notes += ' ' + publicText(line.trim());
     }
   }
 
@@ -221,11 +255,13 @@ export function buildReleasesManifest({
       'Machine-readable release history, tag diffs, and component changelogs for UNDRR Mangrove.',
     _note:
       '100% automated by the build. Generated from CHANGELOG.md and component MDX documentation stories. Do not edit manually.',
+    _links: `Pull requests, issues, tags and GitHub Releases are on ${REPO_SLUG}, where changes are merged; it is not publicly readable, so they are given as plain-text references (prRef, such as ${REPO_SLUG}#1234, and tag) with no URL, in the text fields as well. Do not look these numbers up on the public fork, whose numbering is separate. Each release's changelogUrl points at its section of CHANGELOG.md on the public fork, ${PUBLIC_REPO_URL}.`,
     generatedAt: generatedAt || new Date().toISOString(),
     urls: {
       releases: `${docsBase}releases.json`,
-      changelog: `${REPO_BLOB_MAIN}CHANGELOG.md`,
+      changelog: `${PUBLIC_REPO_BLOB_MAIN}CHANGELOG.md`,
       repository: REPO_URL,
+      publicRepository: PUBLIC_REPO_URL,
       releaseNotesV2: `${docsBase}?path=/docs/getting-started-release-notes-v2-0--docs`,
     },
     latest: latestRelease
@@ -235,7 +271,8 @@ export function buildReleasesManifest({
           isPrerelease: latestRelease.isPrerelease,
           tag: latestRelease.tag,
           tagUrl: latestRelease.tagUrl,
-          releaseUrl: latestRelease.releaseUrl || latestRelease.tagUrl,
+          changelogUrl: latestRelease.changelogUrl,
+          releaseUrl: latestRelease.releaseUrl || latestRelease.changelogUrl,
           summary: latestRelease.summary,
           changesCount: latestRelease.changes.length,
           changes: latestRelease.changes,

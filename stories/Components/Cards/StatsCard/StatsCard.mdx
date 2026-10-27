@@ -38,7 +38,10 @@ Icons use CSS classes (Font Awesome, custom icon fonts, etc). Add visual interes
 
 <Canvas of={StatsCardStories.Compact} />
 
-Use the compact variant when space is limited.
+Use the compact variant when space is limited. It uses 15px padding (10px on
+small screens) and a 5px gap at the default root font size. Child margins do not
+add extra space around values, labels, icons or summaries. Spacing scales with
+the shared spacing tokens.
 
 ### Highlighted
 
@@ -127,7 +130,7 @@ Add a `link` prop to make entire stat cards clickable. Cursor changes to pointer
 
 ## Server-rendered / CDN usage
 
-StatsCard supports [layered hydration](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md). Use data attributes on a container element:
+StatsCard supports [layered hydration](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md). Use data attributes on a container element:
 
 ```html
 <div
@@ -146,10 +149,10 @@ StatsCard supports [layered hydration](https://github.com/unisdr/undrr-mangrove/
 | `data-class-name` | `''`        | Additional CSS class names                                 |
 
 ```js
-import createHydrator from 'https://assets.undrr.org/mangrove/2.0.0/components/hydrate.js';
+import createHydrator from 'https://assets.undrr.org/mangrove/2.3.0/components/hydrate.js';
 import StatsCard, {
   fromElement,
-} from 'https://assets.undrr.org/mangrove/2.0.0/components/StatsCard.js';
+} from 'https://assets.undrr.org/mangrove/2.3.0/components/StatsCard.js';
 createHydrator({
   selector: '[data-mg-stats-card]',
   component: StatsCard,
@@ -157,9 +160,13 @@ createHydrator({
 });
 ```
 
-See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
+See the [hydration guide](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
 
 ## Changelog
+
+- **1.4.8**, 2026-10-16: Reduce compact card padding and internal gaps; remove stacked value, icon, label and summary margins so compact statistics use a denser rhythm.
+
+- **1.4.7**, 2026-10-15 ([#1357](https://github.com/unisdr/undrr-mangrove/issues/1357)): Inline-link hover feedback uses shared motion tokens and changes instantly under reduced motion.
 
 - **1.4.6**, 2026-09-18 ([#1190](https://github.com/unisdr/undrr-mangrove/pull/1190)): Links inside a card summary (`.mg-card__text-link`, and any anchor in `.mg-card__summary`) are underlined at rest instead of only on `:hover`. At 2.09:1 against the body colour, the interactive blue could not distinguish them on its own (WCAG 1.4.1 Use of Colour), and `link-in-text-block` was the most frequent axe violation in the 2.0 pre-release sweep. The underline thickens on hover. Button-styled links are excluded. Card titles are untouched: a linked title has always been underlined, and the `--plain-title` and empty-`href` opt-outs that remove that underline still do.
 - **1.4.5**, 2026-09-17 ([#1192](https://github.com/unisdr/undrr-mangrove/pull/1192)): The highlighted variant's accent uses `border-inline-start`, so it mirrors on its own; the `[dir="rtl"]` override that re-drew it with physical borders is gone.

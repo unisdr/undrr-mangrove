@@ -4,8 +4,10 @@
  * Site-wide mega footer with branding, navigation columns, copyright, and social links.
  *
  * Full documentation:
- * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/Footer/Footer.mdx
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Footer/Footer.mdx
  */
+@use "../../assets/scss/config" as *;
+
 .mg-footer {
   --mg-gutenberg-spacer: 0;
 }

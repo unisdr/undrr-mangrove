@@ -37,6 +37,7 @@ import React, {
   useId,
 } from 'react';
 import { createPortal } from 'react-dom';
+import { getOwnerDocument } from '../utils/ownerDocument';
 
 const EMPTY_OPTIONS = [];
 const EMPTY_VALUE = [];
@@ -273,7 +274,11 @@ export function SelectDropdown({
       </button>
 
       {/* Invisible backdrop to capture clicks outside (prevents click-through) */}
-      {/* Rendered via portal to escape sidebar stacking context */}
+      {/* Desktop selects escape the sidebar stacking context. In the mobile
+          drawer, keep the backdrop inside its stacking context: a body-level
+          modal backdrop would sit above the drawer and intercept option taps.
+          Both targets belong to the mounted select's document (including
+          iframe consumers). */}
       {isOpen &&
         createPortal(
           <div
@@ -282,7 +287,8 @@ export function SelectDropdown({
             onMouseDown={handleBackdropClick}
             aria-hidden="true"
           />,
-          document.body
+          containerRef.current.closest('.mg-search__drawer') ||
+            getOwnerDocument(containerRef.current).body
         )}
 
       {/* Dropdown panel */}
@@ -312,6 +318,12 @@ export function SelectDropdown({
             role="listbox"
             aria-label={label}
             aria-multiselectable={multiple}
+            // Hover is CSS. When the pointer moves over the list, drop the
+            // keyboard highlight so two options don't both look current;
+            // after that, pointer movement costs no renders.
+            onPointerMove={() => {
+              if (highlightedIndex !== -1) setHighlightedIndex(-1);
+            }}
           >
             {filteredOptions.length === 0 ? (
               <li className="mg-select__empty">{noOptionsText}</li>
@@ -332,7 +344,6 @@ export function SelectDropdown({
                   role="option"
                   aria-selected={isSelected(option.value)}
                   onClick={() => handleOptionClick(option.value)}
-                  onMouseEnter={() => setHighlightedIndex(index)}
                 >
                   {/* Checkbox/Radio indicator */}
                   <span

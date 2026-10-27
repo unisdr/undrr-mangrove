@@ -1,5 +1,11 @@
+import { getLanguageProps } from '../../../src/i18n';
+import { getGalleryLabels } from './_labels';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import { Loader } from '../../Utilities/Loader/Loader';
+
+export { getGalleryLabels } from './_labels';
+export { DEFAULT_GALLERY_LABELS } from './_labels';
 // Styles imported via stories/assets/scss/_components.scss to maintain Sass cascade
 
 const cls = (...classes) =>
@@ -23,13 +29,6 @@ const THUMBNAIL_PREVIEW_FOCUSABLE_SELECTOR = [
   '[tabindex]',
 ].join(',');
 
-export const DEFAULT_GALLERY_LABELS = {
-  galleryAriaLabel: 'Gallery',
-  prevLabel: 'Previous item',
-  nextLabel: 'Next item',
-  loadingLabel: 'Loading media',
-};
-
 function GalleryComponent({
   media,
   initialIndex = 0,
@@ -41,12 +40,12 @@ function GalleryComponent({
   enableKeyboard = true,
   loop = false,
   onMediaChange,
-  labels = {},
+  lang,
+  dir,
+  labels,
 }) {
-  const { galleryAriaLabel, prevLabel, nextLabel, loadingLabel } = {
-    ...DEFAULT_GALLERY_LABELS,
-    ...labels,
-  };
+  const { galleryAriaLabel, prevLabel, nextLabel, loadingLabel } =
+    getGalleryLabels(lang, labels);
   const [activeIndex, setActiveIndex] = useState(initialIndex);
   const [isLoading, setIsLoading] = useState(false);
   const galleryRef = useRef(null);
@@ -93,10 +92,15 @@ function GalleryComponent({
         onMediaChange(index, media[index]);
       }
 
-      // Scroll thumbnail into view
-      if (thumbnailRefs.current[index]) {
-        thumbnailRefs.current[index].scrollIntoView({
-          behavior: 'smooth',
+      // Read the preference at navigation time, from the thumbnail's window.
+      const thumbnail = thumbnailRefs.current[index];
+      if (thumbnail) {
+        const reducedMotion = thumbnail.ownerDocument.defaultView.matchMedia(
+          '(prefers-reduced-motion: reduce)'
+        ).matches;
+        thumbnail.scrollIntoView({
+          // `auto` can inherit a consumer's smooth-scroll CSS.
+          behavior: reducedMotion ? 'instant' : 'smooth',
           block: 'nearest',
           inline: 'center',
         });
@@ -195,6 +199,7 @@ function GalleryComponent({
 
   return (
     <div
+      {...getLanguageProps(lang, dir)}
       ref={galleryRef}
       className={galleryClasses}
       role="region"
@@ -270,12 +275,8 @@ function GalleryComponent({
             />
           )}
           {isLoading && (
-            <div
-              className="mg-gallery__loading"
-              aria-live="polite"
-              aria-label={loadingLabel}
-            >
-              <div className="mg-gallery__spinner"></div>
+            <div className="mg-gallery__loading">
+              <Loader size="inline" label={loadingLabel} />
             </div>
           )}
         </div>
@@ -442,7 +443,11 @@ GalleryComponent.propTypes = {
   loop: PropTypes.bool,
   /** Callback when media item changes: (index, item) => {} */
   onMediaChange: PropTypes.func,
-  /** Translated UI label strings */
+  /** UI language tag; selects the built-in catalogue, with English fallback. */
+  lang: PropTypes.string,
+  /** Explicit text direction; otherwise known catalogue languages select their direction. */
+  dir: PropTypes.oneOf(['ltr', 'rtl', 'auto']),
+  /** Explicit UI label overrides; omitted keys use the selected catalogue, then English. */
   labels: PropTypes.shape({
     galleryAriaLabel: PropTypes.string,
     prevLabel: PropTypes.string,

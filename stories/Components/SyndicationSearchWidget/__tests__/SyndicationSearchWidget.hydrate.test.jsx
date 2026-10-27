@@ -10,6 +10,7 @@ import { act } from '@testing-library/react';
 import createHydrator from '../../../../src/hydrate';
 import SyndicationSearchWidget from '../SyndicationSearchWidget';
 import fromElement from '../SyndicationSearchWidget.fromElement';
+import { clearTaxonomyCache } from '../hooks/useTaxonomies';
 
 const originalError = console.error;
 const originalFetch = global.fetch;
@@ -34,6 +35,7 @@ afterAll(() => {
 
 beforeEach(() => {
   document.body.innerHTML = '';
+  clearTaxonomyCache();
   global.fetch = jest.fn(() =>
     Promise.resolve({
       ok: true,

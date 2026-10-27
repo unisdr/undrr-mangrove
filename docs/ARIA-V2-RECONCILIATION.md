@@ -21,3 +21,7 @@ The [ComboBox Storybook page](../stories/Components/Forms/ComboBox/ComboBox.mdx)
 The build resolves the CSS custom properties against all five theme files, the focused component tests cover input, disabled state and resting accessibility, and the packaged example checks keyboard selection, runtime MCR2030 theme values, RTL and a narrow viewport. This remains a consumer simulation against the assembled package; a product application has not yet imported a published release. Forced-colours and 200% zoom still need product browser checks.
 
 Keep #1088 in draft until a consuming product tries this slice with its own Tailwind and legacy CSS, translates it, tests scoped portals, and checks the five themes, zoom and forced-colours mode. Further React Aria controls should be proposed under the ownership rule, with one Mangrove API per user need.
+
+## Research motion compatibility
+
+The unpublished stock-class research skin retains its one-second indeterminate progress cycle through `--mg-aria-progress-duration`. One cycle moves its stripes by one complete gradient period; reduced motion keeps the existing stationary stripes. This research property is not part of the ComboBox or published token contract.

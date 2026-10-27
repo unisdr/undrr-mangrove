@@ -55,6 +55,10 @@ describe('MegaMenu panel overflow', () => {
   it('updates the right pane when a left-nav group is hovered', () => {
     render(<MegaMenu sections={sections} />);
 
+    fireEvent.keyDown(screen.getByRole('button', { name: 'Overflow Test' }), {
+      key: 'ArrowDown',
+    });
+
     // Hover group 5 (not the default first group) via the section-list link.
     // setItemIndex is a direct state update — no timer needed here.
     const groupFiveItem = screen

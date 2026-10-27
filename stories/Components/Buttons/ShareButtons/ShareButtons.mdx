@@ -71,6 +71,8 @@ The component uses shortlinks when a `<link rel="shortlink" href="{url here}" />
 
 Drop in and configure custom message if needed.
 
+On pages that also offer a citation, see the [Page actions pattern](?path=/docs/patterns-page-actions--docs) for placing ShareButtons beside [Cite this](?path=/docs/components-cite-this--docs).
+
 ## Interactions
 
 - Hover state applies to each button
@@ -103,11 +105,26 @@ createHydrator({
 });
 ```
 
-`fromElement` extracts labels and sharing config from data attributes, with sensible English defaults for any missing attributes.
+`fromElement` extracts language, label overrides and sharing config from data attributes. Missing UI labels use the selected catalogue; without a language, the existing English hydration defaults remain.
 
-See the [Hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
+See the [Hydration guide](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
+
+## Runtime UI translations
+
+Use `lang` for built-in copy and `labels` for individual overrides. The
+[shared translation guide](?path=/docs/contributing-ui-translations--docs)
+explains language matching, fallback, direction and hydration precedence.
+
+`components/ShareButtons.js` exports `getShareButtonsLabels(lang, labels)`
+for consumers needing the same strings outside React.
+
+Hydration without a language retains its prior `Share this` / `Link copied`
+fallback labels. Supplying a language uses that runtime catalogue. The QR dialog
+receives the share row's language and direction.
 
 ## Changelog
+
+- **1.11**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance.
 
 - **1.10**, 2026-09-25: Replaced the custom QR overlay with a native dialog. It now has an accessible name and description, browser-managed modal focus and Escape handling, and focus restoration to the QR trigger. Moved dialog styling to themeable tokens and reused the shared close icon button while retaining translated labels, QR copy and download actions, and backdrop dismissal.
 

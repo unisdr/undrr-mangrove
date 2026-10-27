@@ -1,3 +1,5 @@
+import { DEFAULT_LABELS, getSyndicationSearchWidgetLabels } from '../_labels';
+export { DEFAULT_LABELS } from '../_labels';
 /**
  * @file SearchContext.jsx
  * @description React Context and reducer for SearchWidget state management.
@@ -9,127 +11,6 @@
  */
 
 import React, { createContext, use, useReducer, useMemo } from 'react';
-
-/**
- * Default English UI labels for the search widget.
- * Pass a partial object via the `labels` prop to SyndicationSearchWidget to
- * override any subset of keys. Unspecified keys fall back to these defaults.
- *
- * String keys may contain `{token}` placeholders; pass `vars` to
- * `interpolateLabel(key, vars)` to substitute values at render time.
- *
- * Function keys receive a `vars` object and return a string. Use this form for
- * languages with plural rules requiring more than two forms (Russian, Arabic).
- * NOTE: function-valued keys cannot be serialized to JSON and are therefore
- * not usable via the `data-labels` HTML attribute — they must be provided as
- * a React prop or bundled JS module.
- *
- * @type {Object<string, string|function(Object): string>}
- */
-export const DEFAULT_LABELS = {
-  // SearchForm
-  searchFormLabel: 'Search content',
-  searchLabel: 'Search',
-  searchPlaceholder: 'Search...',
-  searchHint: 'Enter search terms',
-  searchHintMin: 'Enter at least {min} characters to search',
-  clearSearch: 'Clear search',
-  submitSearch: 'Submit search',
-  submitSearchText: 'Search',
-
-  // SearchResults — status messages
-  initializing: 'Loading search…',
-  searchError: 'Search could not be completed.',
-  searchErrorRetry: 'Please try again or use different search terms.',
-  enterSearchTerm: 'Enter a search term to begin searching.',
-  minimumCharacters: 'Minimum {min} characters required.',
-  noResults: 'No results found for “{query}”.',
-  noResultsHint: 'Try different search terms or adjust your filters.',
-
-  // SearchResults — visible count
-  showingResults: 'Showing {start}–{end} of {total} results',
-  // Used when Elasticsearch caps the total (relation === 'gte'); {total} is the cap value
-  showingResultsApprox: 'Showing {start}–{end} of more than {total} results',
-  forQuery: 'for “{query}”',
-
-  // SearchResults — screen-reader live region announcements
-  // srSearching fires while a search is in progress (between submit and results)
-  srSearching: 'Searching…',
-  srNoResults: 'No results found',
-  srNoResultsForQuery: 'No results found for {query}',
-  // count === 1 uses srResultsFound; count !== 1 uses srResultsFoundPlural
-  srResultsFound: '{count} result found',
-  srResultsFoundPlural: '{count} results found',
-  // count === 1 uses srResultsFoundForQuery; count !== 1 uses srResultsFoundPluralForQuery
-  srResultsFoundForQuery: '{count} result found for {query}',
-  srResultsFoundPluralForQuery: '{count} results found for {query}',
-  // Used when Elasticsearch caps the total (relation === 'gte')
-  srResultsFoundApprox: 'More than {count} results found',
-  srResultsFoundApproxForQuery: 'More than {count} results found for {query}',
-
-  // SearchResults — mobile filter button
-  filtersButton: 'Filters',
-  // filtersButtonActive always receives {count}; no separate singular key (count is inline)
-  filtersButtonActive: 'Filters, {count} active',
-  searchResultsLabel: 'Search results',
-  searchResultsPaginationLabel: 'Search results pagination',
-
-  // ActiveFilters
-  filteredBy: 'Filtered by:',
-  activeFiltersRegion: 'Active filters',
-  andConnector: 'and',
-  removeFilter: 'Remove filter: {field} is {value}',
-  clearAllFilters: 'Clear all filters',
-  clearAllFiltersLabel: 'Clear all {count} active filters',
-  // count === 1 uses activeFiltersCount; count !== 1 uses activeFiltersCountPlural
-  activeFiltersCount: '{count} active filter',
-  activeFiltersCountPlural: '{count} active filters',
-
-  // MobileFilterDrawer
-  drawerTitle: 'Filters',
-  closeFilters: 'Close filters',
-  viewResults: 'View results',
-  // count === 1 uses filtersApplied; count !== 1 uses filtersAppliedPlural
-  filtersApplied: '{count} filter applied',
-  filtersAppliedPlural: '{count} filters applied',
-
-  // FacetSelect — boolean operator (any/all) for multi-select filters
-  selectPlaceholder: 'Select {label}',
-  matchModeLabel: 'Search type for {label}',
-  matchModeGroupLabel: 'Search type:',
-  matchModeAny: 'Match any of these',
-  matchModeAll: 'Match all of these',
-
-  // SelectDropdown internals (passed as props)
-  dropdownSearchPlaceholder: 'Search...',
-  dropdownNoOptions: 'No matches found',
-
-  // SortOptions
-  sortLegend: 'Sort',
-  sortPlaceholder: 'Sort by',
-  sortRelevance: 'Relevance',
-  sortNewest: 'Newest',
-  sortOldest: 'Oldest',
-
-  // FacetsSidebar
-  loadingFilters: 'Loading filters…',
-
-  // Pager (prev/next/page labels passed to PagerList via SearchPager)
-  pagerPrevious: 'Previous',
-  pagerNext: 'Next',
-  pagerGoToPrevious: 'Go to previous page',
-  pagerGoToNext: 'Go to next page',
-  pagerPage: 'Page {page}',
-  pagerCurrentPage: 'Page {page}, current page',
-  // Used in the sr-only live region: 'Page {page} of {total}'
-  pagerPageOf: 'Page {page} of {total}',
-
-  // ResultItem — content unavailable (no domain assignment in CMS)
-  // This is an admin/configuration error state; end users see a friendly message.
-  // The {nid} token is available for debug builds but omit it in production labels.
-  domainAccessError: 'This content is currently unavailable.',
-  reportErrorLink: 'Report this issue',
-};
 
 /**
  * Resolve a label value and substitute `{key}` tokens.
@@ -165,7 +46,36 @@ export function interpolateLabel(template, vars = {}) {
     Object.prototype.hasOwnProperty.call(vars, key) ? vars[key] : `{${key}}`
   );
 }
-import { DEFAULT_CONFIG } from '../utils/constants';
+import { DEFAULT_CONFIG, EVENT_SORT_VALUES } from '../utils/constants';
+import { facetsFromDefaults } from '../utils/hashState';
+
+/**
+ * Normalise aggregations from Elasticsearch. The year facet comes from a
+ * `date_histogram` whose bucket keys are epoch milliseconds; the facet UI and
+ * the URL hash use the year itself, which the histogram's `yyyy` format puts
+ * in `key_as_string`.
+ *
+ * @param {Object|undefined} aggregations
+ * @returns {Object|null}
+ */
+export function normaliseAggregations(aggregations) {
+  if (!aggregations) return null;
+  const year = aggregations.year;
+  if (!year?.buckets?.some(bucket => bucket.key_as_string !== undefined)) {
+    return aggregations;
+  }
+  return {
+    ...aggregations,
+    year: {
+      ...year,
+      buckets: year.buckets.map(bucket =>
+        bucket.key_as_string !== undefined
+          ? { ...bucket, key: bucket.key_as_string }
+          : bucket
+      ),
+    },
+  };
+}
 
 /**
  * Initial state for the search widget.
@@ -174,6 +84,13 @@ import { DEFAULT_CONFIG } from '../utils/constants';
 const initialState = {
   // Search query
   query: '',
+
+  // Whether the last query change came from typing (and so is debounced)
+  queryIsTyped: false,
+
+  // defaultQuery applied by the last INITIALIZE. A query still equal to it
+  // hasn't been changed by the reader, so a new defaultQuery replaces it.
+  appliedDefaultQuery: '',
 
   // Active facet filters: { [key]: [values] }
   facets: {},
@@ -184,14 +101,21 @@ const initialState = {
   // Custom facet selections: { [facetId]: [selectedOptionIndices] }
   customFacets: {},
 
-  // Sort order: 'relevance', 'newest', 'oldest'
+  // Sort order: one of SORT_VALUES in utils/constants.js
   sortBy: 'relevance',
+
+  // Once offered, event sorts remain available for this widget session,
+  // including when the controls remount in another layout.
+  hasEventSorts: false,
 
   // Pagination (future use)
   page: 1,
 
   // Search results from Elasticsearch
   results: null,
+
+  // Incremented on each new result set
+  resultsVersion: 0,
 
   // Aggregations from Elasticsearch (for facet counts)
   aggregations: null,
@@ -231,6 +155,7 @@ export const ActionTypes = {
   SET_LOADING: 'SET_LOADING',
   SET_ERROR: 'SET_ERROR',
   INITIALIZE: 'INITIALIZE',
+  RESTORE_STATE: 'RESTORE_STATE',
   RESET: 'RESET',
 };
 
@@ -243,9 +168,15 @@ export const ActionTypes = {
 function searchReducer(state, action) {
   switch (action.type) {
     case ActionTypes.SET_QUERY:
+      // Same query: keep the page. The input re-syncing a query restored from
+      // the URL must not reset a restored page to 1.
+      if (action.payload === state.query) return state;
       return {
         ...state,
         query: action.payload,
+        // Typing is debounced; a submitted, cleared or URL-driven query is
+        // searched at once.
+        queryIsTyped: !action.immediate,
         page: 1, // Reset to first page on new query
       };
 
@@ -317,7 +248,7 @@ function searchReducer(state, action) {
     case ActionTypes.CLEAR_FACETS:
       return {
         ...state,
-        facets: {},
+        facets: facetsFromDefaults(action.payload?.defaultFilters),
         facetOperators: {},
         customFacets: {},
         page: 1,
@@ -365,6 +296,8 @@ function searchReducer(state, action) {
       return {
         ...state,
         sortBy: action.payload,
+        hasEventSorts:
+          state.hasEventSorts || EVENT_SORT_VALUES.includes(action.payload),
         page: 1,
       };
 
@@ -378,7 +311,11 @@ function searchReducer(state, action) {
       return {
         ...state,
         results: action.payload.hits?.hits || [],
-        aggregations: action.payload.aggregations || null,
+        // Bumped per result set, so the list can animate in a new set.
+        resultsVersion: state.resultsVersion + 1,
+        aggregations: action.keepAggregations
+          ? state.aggregations
+          : normaliseAggregations(action.payload.aggregations),
         totalResults: action.payload.hits?.total?.value || 0,
         totalResultsRelation: action.payload.hits?.total?.relation || 'eq',
         searchTime: action.payload.took || null,
@@ -404,33 +341,79 @@ function searchReducer(state, action) {
       const {
         defaultFilters = [],
         defaultQuery = '',
+        initialQuery = null,
         defaultSort = 'relevance',
+        // State read from the URL hash; takes precedence over the defaults.
+        // initialFacets replaces defaultFilters entirely when present.
+        initialFacets = null,
+        initialFacetOperators = null,
+        initialSort = null,
       } = action.payload;
 
-      // Convert defaultFilters array to facets object
-      const facets = {};
-      defaultFilters.forEach(filter => {
-        if (filter.key && filter.value) {
-          if (!facets[filter.key]) {
-            facets[filter.key] = [];
-          }
-          facets[filter.key].push(filter.value);
-        }
-      });
+      // Keep a query the reader typed or that came from the URL hash. A
+      // query that is still the previous defaultQuery was never changed, so
+      // a new defaultQuery (e.g. edited in a block editor preview) replaces
+      // it, including when the new default is empty.
+      const keepQuery =
+        state.query !== '' && state.query !== state.appliedDefaultQuery;
+
+      const nextDefaultQuery = defaultQuery || '';
+      const query =
+        !state.isInitialized && initialQuery !== null
+          ? initialQuery
+          : keepQuery
+            ? state.query
+            : nextDefaultQuery;
 
       return {
         ...state,
-        // Preserve query if already set (e.g., from URL params via useHashSync)
-        query: state.query || defaultQuery,
-        sortBy: defaultSort,
-        facets,
+        query,
+        appliedDefaultQuery: nextDefaultQuery,
+        // A re-initialise that swaps the query starts again from page 1. The
+        // first INITIALIZE keeps a page restored from the URL hash.
+        page: state.isInitialized && query !== state.query ? 1 : state.page,
+        sortBy: initialSort || defaultSort,
+        hasEventSorts:
+          state.hasEventSorts ||
+          EVENT_SORT_VALUES.includes(defaultSort) ||
+          EVENT_SORT_VALUES.includes(initialSort),
+        facets: initialFacets || facetsFromDefaults(defaultFilters),
+        facetOperators: initialFacets
+          ? initialFacetOperators || {}
+          : state.facetOperators,
+        queryIsTyped: false,
         isInitialized: true,
+      };
+    }
+
+    case ActionTypes.RESTORE_STATE: {
+      // Replace the URL-backed part of the state in one step (browser
+      // back/forward). Missing fields fall back to their initial values.
+      const {
+        query = '',
+        page = 1,
+        sortBy = 'relevance',
+        facets = {},
+        facetOperators = {},
+      } = action.payload;
+      return {
+        ...state,
+        query,
+        page,
+        sortBy,
+        hasEventSorts:
+          state.hasEventSorts || EVENT_SORT_VALUES.includes(sortBy),
+        facets,
+        facetOperators,
+        // Back/forward: search at once.
+        queryIsTyped: false,
       };
     }
 
     case ActionTypes.RESET:
       return {
         ...initialState,
+        hasEventSorts: state.hasEventSorts,
         isInitialized: true,
       };
 
@@ -445,7 +428,7 @@ function searchReducer(state, action) {
 const SearchConfigContext = createContext(null);
 
 /**
- * Context for UI labels (static, merged with DEFAULT_LABELS).
+ * Context for resolved UI labels (English defaults, selected catalogue, overrides).
  */
 const SearchLabelsContext = createContext(DEFAULT_LABELS);
 
@@ -470,6 +453,7 @@ const SearchDispatchContext = createContext(null);
 export function SearchProvider({
   config: userConfig,
   labels: userLabels,
+  lang,
   children,
 }) {
   // Merge user config with defaults
@@ -483,11 +467,8 @@ export function SearchProvider({
 
   // Merge user labels with defaults
   const labels = useMemo(
-    () => ({
-      ...DEFAULT_LABELS,
-      ...userLabels,
-    }),
-    [userLabels]
+    () => getSyndicationSearchWidgetLabels(lang, userLabels),
+    [lang, userLabels]
   );
 
   // Initialize reducer with config-based initial state
@@ -523,7 +504,17 @@ export function useSearchConfig() {
 }
 
 /**
- * Hook to access UI labels (merged with DEFAULT_LABELS).
+ * Hook to access search configuration when a SearchProvider may be absent.
+ * Returns null outside a provider instead of throwing, for hooks that are
+ * exported for standalone use (e.g. useTaxonomies).
+ * @returns {Object|null} Configuration object, or null
+ */
+export function useOptionalSearchConfig() {
+  return use(SearchConfigContext);
+}
+
+/**
+ * Hook to access resolved UI labels.
  * @returns {Object} Labels object
  */
 export function useSearchLabels() {
@@ -568,9 +559,16 @@ export function useSearch() {
  * Action creators for common operations.
  */
 export const actions = {
-  setQuery: query => ({
+  /**
+   * @param {string} query
+   * @param {Object} [options]
+   * @param {boolean} [options.immediate] - Search at once rather than after
+   *   the typing debounce (submit, clear, URL).
+   */
+  setQuery: (query, { immediate = false } = {}) => ({
     type: ActionTypes.SET_QUERY,
     payload: query,
+    immediate,
   }),
 
   setFacet: (key, value, replace = true) => ({
@@ -583,8 +581,9 @@ export const actions = {
     payload: { key, value },
   }),
 
-  clearFacets: () => ({
+  clearFacets: options => ({
     type: ActionTypes.CLEAR_FACETS,
+    ...(options ? { payload: options } : {}),
   }),
 
   setFacetOperator: (key, operator) => ({
@@ -612,9 +611,16 @@ export const actions = {
     payload: page,
   }),
 
-  setResults: results => ({
+  /**
+   * @param {Object} results - Elasticsearch response
+   * @param {Object} [options]
+   * @param {boolean} [options.keepAggregations] - Keep the current
+   *   aggregations: the request skipped them because only the page changed.
+   */
+  setResults: (results, { keepAggregations = false } = {}) => ({
     type: ActionTypes.SET_RESULTS,
     payload: results,
+    keepAggregations,
   }),
 
   setLoading: isLoading => ({
@@ -630,6 +636,11 @@ export const actions = {
   initialize: config => ({
     type: ActionTypes.INITIALIZE,
     payload: config,
+  }),
+
+  restoreState: urlState => ({
+    type: ActionTypes.RESTORE_STATE,
+    payload: urlState,
   }),
 
   reset: () => ({

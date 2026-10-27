@@ -7,6 +7,7 @@ import { buildQuery, getAggregationBuckets } from '../utils/queryBuilder';
 import {
   DEFAULT_CONFIG,
   SCORING_CONFIG,
+  SOURCE_FIELDS,
   buildTierRanges,
   buildTierFilter,
 } from '../utils/constants';
@@ -56,6 +57,26 @@ describe('queryBuilder', () => {
     });
   });
 
+  describe('_source fields', () => {
+    it('requests only the fields the widget renders', () => {
+      const result = buildQuery(defaultState, DEFAULT_CONFIG);
+      expect(result._source).toEqual({ includes: SOURCE_FIELDS });
+      expect(SOURCE_FIELDS).not.toContain('body');
+      expect(SOURCE_FIELDS).not.toContain('aggregated_field');
+      expect(SOURCE_FIELDS).toEqual(
+        expect.arrayContaining(['teaser', 'title', 'event_start', 'event_end'])
+      );
+    });
+
+    it('uses config.sourceFields when set', () => {
+      const result = buildQuery(defaultState, {
+        ...DEFAULT_CONFIG,
+        sourceFields: ['teaser', 'body'],
+      });
+      expect(result._source).toEqual({ includes: ['teaser', 'body'] });
+    });
+  });
+
   describe('sort configuration', () => {
     it('sorts by _score for relevance', () => {
       const result = buildQuery(
@@ -74,6 +95,39 @@ describe('queryBuilder', () => {
 
       expect(result.sort).toEqual([{ published_at: { order: 'desc' } }]);
     });
+
+    it.each([
+      ['eventDateAsc', 'asc'],
+      ['eventDateDesc', 'desc'],
+    ])('sorts %s by event_start %s, missing last', (sortBy, order) => {
+      const result = buildQuery({ ...defaultState, sortBy }, DEFAULT_CONFIG);
+
+      expect(result.sort[0]).toEqual({
+        event_start: {
+          order,
+          missing: '_last',
+          unmapped_type: 'date',
+        },
+      });
+    });
+
+    it.each(['eventDateAsc', 'eventDateDesc'])(
+      'breaks %s ties by publish date, then nid, for stable paging',
+      sortBy => {
+        const result = buildQuery({ ...defaultState, sortBy }, DEFAULT_CONFIG);
+
+        expect(result.sort.slice(1)).toEqual([
+          {
+            published_at: {
+              order: 'desc',
+              missing: '_last',
+              unmapped_type: 'date',
+            },
+          },
+          { nid: { order: 'desc', missing: '_last', unmapped_type: 'long' } },
+        ]);
+      }
+    );
 
     it('sorts by published_at asc for oldest', () => {
       const result = buildQuery(
@@ -291,17 +345,52 @@ describe('queryBuilder', () => {
       });
     });
 
-    it('uses script filter for year facet', () => {
+    const yearRange = year => ({
+      range: {
+        published_at: {
+          gte: `${year}-01-01T00:00:00Z`,
+          lt: `${year + 1}-01-01T00:00:00Z`,
+        },
+      },
+    });
+
+    it('filters a year with a plain range, no script', () => {
+      const result = buildQuery(
+        { ...defaultState, facets: { year: ['2024'] } },
+        DEFAULT_CONFIG
+      );
+
+      expect(result.post_filter).toEqual(yearRange(2024));
+      expect(JSON.stringify(result.post_filter)).not.toContain('script');
+    });
+
+    it('matches any of several years with OR', () => {
+      const result = buildQuery(
+        { ...defaultState, facets: { year: ['2019', '2024'] } },
+        DEFAULT_CONFIG
+      );
+
+      expect(result.post_filter).toEqual({
+        bool: {
+          should: [yearRange(2019), yearRange(2024)],
+          minimum_should_match: 1,
+        },
+      });
+    });
+
+    it('requires every year with AND (which matches nothing)', () => {
       const result = buildQuery(
         {
           ...defaultState,
-          facets: { year: ['2024'] },
+          facets: { year: ['2019', '2024'] },
+          facetOperators: { year: 'AND' },
         },
         DEFAULT_CONFIG
       );
 
-      expect(result.post_filter.script).toBeDefined();
-      expect(result.post_filter.script.script.params.years).toContain(2024);
+      expect(result.post_filter).toEqual({
+        bool: { must: [yearRange(2019), yearRange(2024)] },
+      });
     });
   });
 
@@ -406,6 +495,98 @@ describe('queryBuilder', () => {
       // With just queryAppend, it should be included in the query
       expect(must.query_string.query).toContain('type:landing');
     });
+
+    it('requires queryAppend even when the reader query uses OR', () => {
+      const config = {
+        ...DEFAULT_CONFIG,
+        scoring: SCORING_CONFIG,
+        queryAppend: 'field_theme:339',
+      };
+
+      const result = buildQuery(
+        { ...defaultState, query: 'earthquake OR tsunami' },
+        config
+      );
+
+      const must = result.query.function_score.query.bool.must;
+      expect(must.query_string.query).toBe(
+        '(earthquake~1 OR tsunami~1) AND (field_theme:339)'
+      );
+    });
+
+    it('uses queryAppend without parentheses when the query is empty', () => {
+      const config = {
+        ...DEFAULT_CONFIG,
+        scoring: SCORING_CONFIG,
+        queryAppend: 'type:news OR type:blog',
+      };
+
+      const result = buildQuery(defaultState, config);
+
+      const must = result.query.function_score.query.bool.must;
+      expect(must.query_string.query).toBe('type:news OR type:blog');
+    });
+  });
+
+  describe('Boolean operators in reader queries', () => {
+    const config = { ...DEFAULT_CONFIG, scoring: SCORING_CONFIG };
+    const queryFor = query => {
+      const result = buildQuery({ ...defaultState, query }, config);
+      return result.query.function_score.query.bool.must.query_string.query;
+    };
+
+    it('keeps OR as an operator', () => {
+      expect(queryFor('earthquake OR tsunami')).toBe(
+        'earthquake~1 OR tsunami~1'
+      );
+    });
+
+    it('keeps NOT as an operator without fuzziness', () => {
+      expect(queryFor('disaster NOT earthquake')).toBe(
+        'disaster~1 NOT earthquake~1'
+      );
+    });
+
+    it('keeps AND as an operator', () => {
+      expect(queryFor('flood AND drought')).toBe('flood~1 AND drought~1');
+    });
+
+    it('still removes lowercase "and" and "or" as stop words', () => {
+      expect(queryFor('flood and drought or storm')).toBe(
+        'flood~1 drought~1 storm~1'
+      );
+    });
+
+    it('keeps AND NOT together', () => {
+      expect(queryFor('flood AND NOT drought')).toBe(
+        'flood~1 AND NOT drought~1'
+      );
+    });
+
+    it('keeps a leading NOT so the term stays excluded', () => {
+      expect(queryFor('NOT earthquake')).toBe('NOT earthquake~1');
+      expect(queryFor('the NOT tsunami')).toBe('NOT tsunami~1');
+    });
+
+    it('drops operators left dangling by stop word removal', () => {
+      expect(queryFor('earthquake OR the')).toBe('earthquake~1');
+      expect(queryFor('the OR tsunami')).toBe('tsunami~1');
+      expect(queryFor('flood OR the OR drought')).toBe('flood~1 OR drought~1');
+    });
+
+    it('leaves operators out of phrase boosting', () => {
+      const result = buildQuery(
+        { ...defaultState, query: 'disaster NOT earthquake' },
+        config
+      );
+      const should = result.query.function_score.query.bool.should;
+      const boostedQueries = should.map(
+        clause => Object.values(Object.values(clause)[0])[0].query
+      );
+      boostedQueries.forEach(query => {
+        expect(query).toBe('disaster earthquake');
+      });
+    });
   });
 
   describe('aggregations', () => {
@@ -418,11 +599,17 @@ describe('queryBuilder', () => {
       expect(result.aggs.field_hazard).toBeDefined();
     });
 
-    it('uses script aggregation for year', () => {
+    it('aggregates years with a date_histogram, no script', () => {
       const result = buildQuery(defaultState, DEFAULT_CONFIG);
 
-      expect(result.aggs.year.terms.script).toBeDefined();
-      expect(result.aggs.year.terms.script.lang).toBe('painless');
+      expect(result.aggs.year).toEqual({
+        date_histogram: {
+          field: 'published_at',
+          calendar_interval: 'year',
+          format: 'yyyy',
+          min_doc_count: 1,
+        },
+      });
     });
 
     it('respects facetCountToShow config', () => {
@@ -456,6 +643,26 @@ describe('queryBuilder', () => {
       const hasImageFilter = filters.find(f => f.term?.has_image);
       expect(hasImageFilter).toBeUndefined();
     });
+  });
+
+  describe('event status recipe (customFilters)', () => {
+    // Drupal expands its upcoming/past event setting into these strings.
+    const UPCOMING = '(event_end:[now-1d/d TO *] OR (*:* -_exists_:event_end))';
+    const PAST = '(event_end:[* TO now-1d/d} OR (*:* -_exists_:event_end))';
+
+    it.each([UPCOMING, PAST])(
+      'passes %s to the main query as a query_string filter',
+      filter => {
+        const config = { ...DEFAULT_CONFIG, customFilters: [filter] };
+        const result = buildQuery(defaultState, config);
+        const filters = result.query.function_score.query.bool.filter;
+
+        expect(filters).toContainEqual({ query_string: { query: filter } });
+        expect(JSON.stringify(result.post_filter ?? {})).not.toContain(
+          'event_end'
+        );
+      }
+    );
   });
 
   describe('tier filters', () => {
@@ -632,6 +839,15 @@ describe('queryBuilder', () => {
       const result = buildQuery(defaultState, config);
 
       expect(result.highlight).toBeDefined();
+    });
+  });
+
+  describe('highlight option', () => {
+    it('omits highlight when options.highlight is false', () => {
+      const result = buildQuery(defaultState, DEFAULT_CONFIG, {
+        highlight: false,
+      });
+      expect(result.highlight).toBeUndefined();
     });
   });
 

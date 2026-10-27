@@ -5,16 +5,48 @@
  * @module SearchWidget/components/SearchResults
  */
 
-import React, { useMemo } from 'react';
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   useSearchState,
   useSearchConfig,
   useSearchLabels,
   interpolateLabel,
 } from '../context/SearchContext';
-import { buildHiddenFieldClasses } from '../utils/constants';
+import {
+  analyticsRegion,
+  buildHiddenFieldClasses,
+  isQueryTooShortToSearch,
+  resolveFacetsLayout,
+} from '../utils/constants';
+import { Loader } from '../../../Utilities/Loader/Loader';
+import { getOwnerDocument } from '../utils/ownerDocument';
+import { useWidgetRootRef } from '../context/WidgetRootContext';
 import ResultItem from './ResultItem';
 import Pager from './Pager';
+
+// useLayoutEffect warns when rendered on a server; the SSR handoff only
+// matters in a browser anyway.
+const useBrowserLayoutEffect =
+  typeof window === 'undefined' ? useEffect : useLayoutEffect;
+
+/**
+ * `config.ssrResults` when it is an element. Only an Element is accepted: a
+ * selector would have to be resolved before the widget knows its document
+ * (an iframe in block editors) and after React's first commit has emptied
+ * the mount container, so the caller captures the element instead.
+ *
+ * @param {*} ssrResults
+ * @returns {Element|null}
+ */
+function resolveSsrResults(ssrResults) {
+  return ssrResults && ssrResults.nodeType === 1 ? ssrResults : null;
+}
 
 /**
  * SearchResults component.
@@ -48,6 +80,7 @@ export function SearchResults({
     query,
     page,
     isInitialized,
+    resultsVersion,
   } = state;
 
   const {
@@ -66,19 +99,98 @@ export function SearchResults({
   const cardGridCols = isCardMode
     ? Math.min(Math.max(gridColumns ?? resultsPerPage, 2), 6)
     : undefined;
+  const bookMediaGrid =
+    displayMode === 'card-book' && visibleTeaserFields?.image !== false
+      ? ' mg-search__results-grid--book'
+      : '';
   const hiddenFieldClasses = useMemo(
     () => buildHiddenFieldClasses(visibleTeaserFields),
     [visibleTeaserFields]
   );
 
-  // Don't render anything until initialized
-  if (!isInitialized) {
+  // Server-rendered results stay on screen until the first client results
+  // (or an error) arrive: the element is moved into this region, then removed
+  // with it. See "Server-rendered results" in the MDX.
+  const [ssrNode] = useState(() => resolveSsrResults(config.ssrResults));
+  const ssrSlotRef = useRef(null);
+  const searched = Array.isArray(results);
+  // The same rule useSearch applies: a short query without filters isn't
+  // searched, so the widget asks for input instead of waiting for results.
+  const waitingForInput = isQueryTooShortToSearch(state, minSearchLength);
+  const handingOff =
+    ssrNode !== null && !searched && !error && !waitingForInput;
+  // Focus inside the server results when they go would drop to the page;
+  // it moves to the results count (or the results region) instead.
+  const ssrHadFocusRef = useRef(false);
+  const rootRef = useWidgetRootRef();
+  useBrowserLayoutEffect(() => {
+    if (handingOff && ssrSlotRef.current) {
+      if (ssrNode.parentNode !== ssrSlotRef.current) {
+        ssrSlotRef.current.appendChild(ssrNode);
+      }
+      return;
+    }
+    if (ssrNode?.isConnected) ssrNode.remove();
+    if (ssrHadFocusRef.current) {
+      ssrHadFocusRef.current = false;
+      const doc = getOwnerDocument(rootRef.current);
+      const active = doc?.activeElement;
+      if (!active || active === doc.body) {
+        const target =
+          rootRef.current?.querySelector('.mg-search__results-count') ||
+          rootRef.current?.querySelector('.mg-search__main');
+        if (target) {
+          if (!target.hasAttribute('tabindex')) target.tabIndex = -1;
+          target.focus({ preventScroll: true });
+        }
+      }
+    }
+  }, [handingOff, ssrNode]);
+
+  // The results surface can fade in on mount, except after server-rendered
+  // results. Refreshes retain the surface and stable hit nodes so keyboard
+  // focus is not discarded merely to replay an entrance animation.
+  const enter = !(ssrNode !== null && resultsVersion <= 1)
+    ? ' mg-search__enter'
+    : '';
+
+  if (handingOff) {
     return (
-      <div className="mg-search__results-placeholder">
-        <p>{labels.initializing}</p>
-      </div>
+      <div
+        ref={ssrSlotRef}
+        className="mg-search__ssr"
+        aria-busy="true"
+        data-mg-search-ssr-slot=""
+        onFocus={() => {
+          ssrHadFocusRef.current = true;
+        }}
+        onBlur={event => {
+          if (!event.currentTarget.contains(event.relatedTarget)) {
+            ssrHadFocusRef.current = false;
+          }
+        }}
+      />
     );
   }
+
+  const skeleton = (
+    <div
+      className="mg-search__results-loading"
+      aria-busy="true"
+      aria-live="polite"
+    >
+      <span className="mg-u-sr-only">{labels.initializing}</span>
+      <SearchSkeleton
+        count={resultsPerPage}
+        displayMode={displayMode}
+        gridColumns={cardGridCols}
+      />
+    </div>
+  );
+
+  // Until the first search, show the skeleton rather than an empty or
+  // "enter a search term" state: the widget searches on mount.
+  if (!isInitialized) return skeleton;
 
   // Error state
   if (error) {
@@ -96,27 +208,13 @@ export function SearchResults({
     );
   }
 
-  // Loading state (only show if no stale results)
-  if (isLoading && !results) {
-    return (
-      <div
-        className="mg-search__results-loading"
-        aria-busy="true"
-        aria-live="polite"
-      >
-        <SearchSkeleton
-          count={resultsPerPage}
-          displayMode={displayMode}
-          gridColumns={cardGridCols}
-        />
-      </div>
-    );
-  }
+  // Only a short query without filters (waitingForInput, above) is a
+  // genuine wait for input; anything else is about to search.
+  if (!searched && !waitingForInput) return skeleton;
 
-  // No query yet
-  if (!query && (!results || results.length === 0)) {
+  if (!searched) {
     return (
-      <div className="mg-search__results-empty">
+      <div className={`mg-search__results-empty${enter}`}>
         <p>{labels.enterSearchTerm}</p>
         {minSearchLength > 1 && (
           <p className="mg-search__results-hint">
@@ -129,11 +227,20 @@ export function SearchResults({
     );
   }
 
+  // An empty query searches everything, so nothing found is just that.
+  if (!query && results.length === 0) {
+    return (
+      <div className={`mg-search__results-empty${enter}`} role="status">
+        <p>{labels.srNoResults}</p>
+      </div>
+    );
+  }
+
   // No results
-  if (results && results.length === 0) {
+  if (results.length === 0) {
     return (
       <div
-        className="mg-search__results-empty"
+        className={`mg-search__results-empty${enter}`}
         role="status"
         aria-live="polite"
       >
@@ -143,12 +250,15 @@ export function SearchResults({
     );
   }
 
+  // A new search with results on screen: keep them, dimmed, with a small
+  // loader, rather than flashing the skeleton.
+  const refreshing = isLoading || isStale;
+
   // Results
   return (
     <div
-      className="mg-search__results"
-      data-vf-google-analytics-region="undrr-search-results"
-      style={{ opacity: isStale ? 0.7 : 1, transition: 'opacity 0.2s' }}
+      className={`mg-search__results${refreshing ? ' mg-search__results--refreshing' : ''}`}
+      data-vf-google-analytics-region={analyticsRegion(config, 'results')}
     >
       {/* Screen reader announcement for results updates */}
       <div
@@ -157,32 +267,38 @@ export function SearchResults({
         aria-atomic="true"
         className="mg-u-sr-only"
       >
-        {!isLoading && totalResults !== null && (
-          <>
-            {totalResults === 0
-              ? interpolateLabel(
-                  query ? labels.srNoResultsForQuery : labels.srNoResults,
-                  { query }
-                )
-              : totalResultsRelation === 'gte'
+        {/* A widget with nothing interactive (no search box, no facets) is a
+            fixed list of cards: nothing the reader does changes it, so its
+            total is noise to a screen reader. Every other widget announces. */}
+        {!isLoading &&
+          totalResults !== null &&
+          (config.showSearchBox !== false ||
+            resolveFacetsLayout(config) !== false) && (
+            <>
+              {totalResults === 0
                 ? interpolateLabel(
-                    query
-                      ? labels.srResultsFoundApproxForQuery
-                      : labels.srResultsFoundApprox,
-                    { count: totalResults.toLocaleString(), query }
+                    query ? labels.srNoResultsForQuery : labels.srNoResults,
+                    { query }
                   )
-                : interpolateLabel(
-                    totalResults !== 1
-                      ? query
-                        ? labels.srResultsFoundPluralForQuery
-                        : labels.srResultsFoundPlural
-                      : query
-                        ? labels.srResultsFoundForQuery
-                        : labels.srResultsFound,
-                    { count: totalResults.toLocaleString(), query }
-                  )}
-          </>
-        )}
+                : totalResultsRelation === 'gte'
+                  ? interpolateLabel(
+                      query
+                        ? labels.srResultsFoundApproxForQuery
+                        : labels.srResultsFoundApprox,
+                      { count: totalResults.toLocaleString(), query }
+                    )
+                  : interpolateLabel(
+                      totalResults !== 1
+                        ? query
+                          ? labels.srResultsFoundPluralForQuery
+                          : labels.srResultsFoundPlural
+                        : query
+                          ? labels.srResultsFoundForQuery
+                          : labels.srResultsFound,
+                      { count: totalResults.toLocaleString(), query }
+                    )}
+            </>
+          )}
       </div>
 
       {/* Results header */}
@@ -216,6 +332,15 @@ export function SearchResults({
           </p>
         )}
 
+        {/* Caller-owned visible text keeps the decorative loading shape
+            understandable when motion is reduced; the results region owns
+            announcements, so this adds no live region. */}
+        {refreshing && (
+          <span className="mg-search__results-loader">
+            <Loader size="inline" decorative />
+            <span>{labels.srSearching}</span>
+          </span>
+        )}
         {/* Mobile filter button - compact, inline */}
         {showMobileFilterButton && onOpenFilters && (
           <button
@@ -258,7 +383,7 @@ export function SearchResults({
       {/* Results list or grid */}
       {isCardMode ? (
         <div
-          className={`mg-search__results-grid mg-grid mg-grid__col-${cardGridCols} ${hiddenFieldClasses}`.trim()}
+          className={`mg-search__results-grid${bookMediaGrid} mg-grid mg-grid__col-${cardGridCols} ${hiddenFieldClasses}${enter}`.trim()}
           role="list"
           aria-label={labels.searchResultsLabel}
         >
@@ -275,7 +400,7 @@ export function SearchResults({
         </div>
       ) : (
         <div
-          className={`mg-search__results-list ${hiddenFieldClasses}`.trim()}
+          className={`mg-search__results-list ${hiddenFieldClasses}${enter}`.trim()}
           role="list"
           aria-label={labels.searchResultsLabel}
         >

@@ -1,8 +1,15 @@
 # Component guide
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/COMPONENT-GUIDE.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-step-by-step--docs).
+> Edits to this file show up on both [GitHub](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/COMPONENT-GUIDE.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-step-by-step--docs).
 
 A step-by-step tutorial for building a new component in Mangrove from scratch. For code standards (React patterns, BEM, PropTypes, JSDoc), see the [component standards](https://mangrove.undrr.org/?path=/docs/contributing-component-standards--docs) in Storybook.
+
+For component motion, follow [Motion and animation](MOTION.md): purpose, timing tokens, reduced motion, progress indicators, forced colours and RTL.
+
+For built-in interface copy, follow [UI translations](UI-TRANSLATIONS.md):
+runtime `lang` selection, component-owned catalogues, explicit label overrides,
+HTML language boundaries and hydration. Keep consumer content separate from
+translated control labels, and exercise the runtime contract in locale stories.
 
 ## Decision tree: what files do I need?
 
@@ -23,9 +30,9 @@ Does the component need React?
           + fromElement tests + AI manifest SAMPLE_PROPS (optional)
 ```
 
-A webpack entry is what publishes a component. The npm tarball ships
-`dist/components/`, not `src/`, so an export added to `src/index.js` alone
-reaches no consumer — see unisdr/undrr-mangrove#1252.
+A webpack entry is what publishes a component. The build writes `dist/components/`; the npm tarball publishes those bundles
+as `components/`, without `src/`. An export added to `src/index.js` alone
+reaches no npm consumer — see unisdr/undrr-mangrove#1252.
 
 ## Reference component: Pager
 
@@ -68,14 +75,14 @@ Every component stylesheet must begin with a docblock comment containing a conci
  * Brief 1-2 sentence description of the component purpose, layout, and behaviors.
  *
  * Full documentation:
- * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/{Category}/{ComponentName}/{ComponentName}.mdx
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/{Category}/{ComponentName}/{ComponentName}.mdx
  */
 ```
 
 **Then add the import to `stories/assets/scss/_components.scss`:**
 
 ```scss
-@import "../../Components/{Category}/{ComponentName}/component-name";
+@use "../../Components/{Category}/{ComponentName}/component-name";
 ```
 
 This is required — without it, your styles won't be included in any theme's compiled CSS.

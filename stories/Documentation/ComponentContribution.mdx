@@ -17,7 +17,7 @@ Standards and contribution conventions for Mangrove components. For a step-by-st
 
 Before contributing, review **<LinkTo kind="getting-started-about-mangrove" story="docs">About Mangrove</LinkTo>** for shared content-structure expectations across UNDRR properties.
 
-For setup and workflow details, see the [development section of the README](https://github.com/unisdr/undrr-mangrove/?tab=readme-ov-file#development).
+For setup and workflow details, see the [development section of the README](https://github.com/PreventionWeb/undrr-mangrove?tab=readme-ov-file#development).
 
 ### Related guides
 
@@ -28,8 +28,8 @@ For setup and workflow details, see the [development section of the README](http
 - **<LinkTo kind="contributing-architecture" story="docs">Architecture</LinkTo>**: build system, distribution channels, and Drupal integration
 - **<LinkTo kind="contributing-build-a-component-hydration" story="docs">Adding hydration support</LinkTo>**: `fromElement` prop extraction for server-rendered integration (Drupal, Astro)
 - **<LinkTo kind="contributing-release-process" story="docs">Release process</LinkTo>**: versioning, tagging, and publishing
-- [Development guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/DEVELOPMENT.md): environment setup, scripts, branching, and commit conventions
-- [Contributing guide](https://github.com/unisdr/undrr-mangrove/blob/main/CONTRIBUTING.md): how to propose changes and submit PRs
+- [Development guide](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/DEVELOPMENT.md): environment setup, scripts, branching, and commit conventions
+- [Contributing guide](https://github.com/PreventionWeb/undrr-mangrove/blob/main/CONTRIBUTING.md): how to propose changes and submit PRs
 
 ## Component development workflow
 
@@ -59,7 +59,7 @@ stories/Components/[ComponentCategory]/[ComponentName]/
     └── ComponentName.fromElement.test.js  # Tests for prop extraction (optional)
 ```
 
-The `fromElement` and `hydrate` files are needed when a component is used in server-rendered contexts (Drupal, Astro). See the [Hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for when and how to add these files.
+The `fromElement` and `hydrate` files are needed when a component is used in server-rendered contexts (Drupal, Astro). See the [Hydration guide](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md) for when and how to add these files.
 
 #### Component categories
 
@@ -250,7 +250,7 @@ All components must include comprehensive JSDoc comments to document their purpo
     * Primary, secondary, and tertiary call-to-action button styles with size variants and motion effects.
     *
     * Full documentation:
-    * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/Buttons/CtaButton/CtaButton.mdx
+    * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Buttons/CtaButton/CtaButton.mdx
     */
    ```
 
@@ -302,7 +302,7 @@ Mangrove supports TypeScript for component development. Using TypeScript provide
    When writing stories for TypeScript components, use CSF3 object syntax with Storybook's `Meta` and `StoryObj` types:
 
    ```tsx
-   import type { Meta, StoryObj } from '@storybook/react-webpack5';
+   import type { Meta, StoryObj } from '@storybook/react-vite';
    import TypedButton from './TypedButton';
 
    const meta: Meta<typeof TypedButton> = {
@@ -396,7 +396,7 @@ Mangrove supports TypeScript for component development. Using TypeScript provide
 
    ```tsx
    // TypeScriptExampleComponent.stories.tsx
-   import type { Meta, StoryObj } from '@storybook/react-webpack5';
+   import type { Meta, StoryObj } from '@storybook/react-vite';
    import TypeScriptExampleComponent from './TypeScriptExampleComponent';
 
    const meta: Meta<typeof TypeScriptExampleComponent> = {
@@ -537,13 +537,13 @@ UNDRR websites serve content in Arabic and other right-to-left (RTL) languages. 
 
 ### How RTL is triggered
 
-The Storybook locale toolbar (globe icon) controls text direction. Selecting **Arabic** sets `dir="rtl"` and `lang="ar"` on the document and on the `#storybook-root` element. The runtime globals `window.UNDRR.langCode` and `window.UNDRR.dir` are also updated. Selecting any other locale resets to `dir="ltr"`.
+The Storybook locale toolbar (globe icon) controls text direction. Selecting **Arabic** sets `dir="rtl"` and `lang="ar"` on the document and on the `#storybook-root` element. The runtime globals `window.UNDRR.langCode` and `window.UNDRR.dir` are also updated. Selecting any other locale uses `dir="ltr"` unless **Force right-to-left** is selected in the **Text direction** toolbar. **Locale direction** restores that locale’s direction; Arabic remains RTL.
 
-Use this toolbar as the canonical language switcher for component stories. Read `context.globals.locale` in the story or apply a shared locale-label decorator; do not add one exported story per language. A dedicated RTL or translation-stress story is appropriate only when it demonstrates a distinct layout or interaction condition, such as directional chart axes or deliberately constrained long labels.
+Use this toolbar as the canonical language switcher for component stories. For components with built-in catalogues, map `context.globals.locale` to the runtime `lang` prop while preserving explicit story args and label overrides. Follow the [UI translation contract](?path=/docs/contributing-ui-translations--docs); a decorator that replaces `labels` with an entire catalogue can conceal broken runtime selection. Keep translated content fixtures separate, and do not add one exported story per language. A dedicated RTL or translation-stress story is appropriate only when it demonstrates a distinct layout or interaction condition, such as directional chart axes or deliberately constrained long labels.
 
-> **Note:** `window.UNDRR.langCode` stores the English-language name of the locale (e.g., `'arabic'`, `'english'`, `'japanese'`), not an ISO 639-1 code. To get the ISO code (e.g., `'ar'`, `'en'`), use the `langArr` mapping in `.storybook/preview.js` or the `lang` attribute on the `<html>` element.
+> **Note:** `window.UNDRR.langCode` stores the English-language name of the locale (e.g., `'arabic'`, `'english'`, `'japanese'`), not an ISO 639-1 code. To get the ISO code (e.g., `'ar'`, `'en'`), use the `LANGUAGE_CODES` mapping in `.storybook/language.js` or the `lang` attribute on the `<html>` element.
 
-This logic lives in `.storybook/preview.js` in the `getLangCode` decorator. There is also a legacy manual RTL toggle (`setDirection` decorator) that can override the locale setting.
+This logic lives in `.storybook/language.js`, called from preview loaders, the `getLangCode` decorator and the globals listener for docs-only pages. The native toolbar retains the `addonRtl` global for existing links; no external RTL addon or manager-DOM lookup is required.
 
 ### SCSS patterns for RTL
 
@@ -1027,4 +1027,4 @@ When removing a deprecated component:
 
 ---
 
-Last updated: 19 March 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/ComponentContribution.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>
+Last updated: 19 March 2026 · <a href="https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Documentation/ComponentContribution.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>

@@ -1,10 +1,5 @@
-/**
- * @file _labels.js
- * @description Translated label sets for SyndicationSearchWidget.
- *
- * Imported by _storyHelpers.jsx for global locale-toolbar integration across
- * the widget stories. Never import from .stories files.
- */
+/** Runtime UI labels for SyndicationSearchWidget; shared by production and Storybook. */
+import { createLabelResolver } from '../../../src/i18n';
 
 export const LABELS_ES = {
   searchFormLabel: 'Buscar contenido',
@@ -66,6 +61,8 @@ export const LABELS_ES = {
   sortRelevance: 'Relevancia',
   sortNewest: 'Más reciente',
   sortOldest: 'Más antiguo',
+  sortEventDateAsc: 'Fecha del evento (más temprana primero)',
+  sortEventDateDesc: 'Fecha del evento (más tardía primero)',
   loadingFilters: 'Cargando filtros…',
   pagerPrevious: 'Anterior',
   pagerNext: 'Siguiente',
@@ -141,6 +138,8 @@ export const LABELS_FR = {
   sortRelevance: 'Pertinence',
   sortNewest: 'Le plus récent',
   sortOldest: 'Le plus ancien',
+  sortEventDateAsc: 'Date de l’événement (la plus tôt d’abord)',
+  sortEventDateDesc: 'Date de l’événement (la plus tard d’abord)',
   loadingFilters: 'Chargement des filtres…',
   pagerPrevious: 'Précédent',
   pagerNext: 'Suivant',
@@ -216,6 +215,8 @@ export const LABELS_JA = {
   sortRelevance: '関連度',
   sortNewest: '新しい順',
   sortOldest: '古い順',
+  sortEventDateAsc: '開催日（早い順）',
+  sortEventDateDesc: '開催日（遅い順）',
   loadingFilters: 'フィルターを読み込んでいます…',
   pagerPrevious: '前へ',
   pagerNext: '次へ',
@@ -288,6 +289,8 @@ export const LABELS_ZH = {
   sortRelevance: '相关性',
   sortNewest: '最新',
   sortOldest: '最早',
+  sortEventDateAsc: '活动日期（最早优先）',
+  sortEventDateDesc: '活动日期（最晚优先）',
   loadingFilters: '正在加载筛选条件…',
   pagerPrevious: '上一页',
   pagerNext: '下一页',
@@ -410,6 +413,8 @@ export const LABELS_AR = {
   sortRelevance: 'الصلة',
   sortNewest: 'الأحدث',
   sortOldest: 'الأقدم',
+  sortEventDateAsc: 'تاريخ الفعالية (الأبكر أولاً)',
+  sortEventDateDesc: 'تاريخ الفعالية (الأحدث أولاً)',
   loadingFilters: 'جارٍ تحميل عوامل التصفية…',
   pagerPrevious: 'السابق',
   pagerNext: 'التالي',
@@ -536,6 +541,8 @@ export const LABELS_RU = {
   sortRelevance: 'Релевантности',
   sortNewest: 'Сначала новые',
   sortOldest: 'Сначала старые',
+  sortEventDateAsc: 'Дата мероприятия (сначала ранние)',
+  sortEventDateDesc: 'Дата мероприятия (сначала поздние)',
   loadingFilters: 'Загрузка фильтров…',
   pagerPrevious: 'Предыдущая',
   pagerNext: 'Следующая',
@@ -547,3 +554,122 @@ export const LABELS_RU = {
   domainAccessError: 'Данный материал временно недоступен.',
   reportErrorLink: 'Сообщить об ошибке',
 };
+
+export const DEFAULT_LABELS = {
+  // SearchForm
+  searchFormLabel: 'Search content',
+  searchLabel: 'Search',
+  searchPlaceholder: 'Search...',
+  searchHint: 'Enter search terms',
+  searchHintMin: 'Enter at least {min} characters to search',
+  clearSearch: 'Clear search',
+  submitSearch: 'Submit search',
+  submitSearchText: 'Search',
+
+  // SearchResults — status messages
+  initializing: 'Loading search…',
+  searchError: 'Search could not be completed.',
+  searchErrorRetry: 'Please try again or use different search terms.',
+  enterSearchTerm: 'Enter a search term to begin searching.',
+  minimumCharacters: 'Minimum {min} characters required.',
+  noResults: 'No results found for “{query}”.',
+  noResultsHint: 'Try different search terms or adjust your filters.',
+
+  // SearchResults — visible count
+  showingResults: 'Showing {start}–{end} of {total} results',
+  // Used when Elasticsearch caps the total (relation === 'gte'); {total} is the cap value
+  showingResultsApprox: 'Showing {start}–{end} of more than {total} results',
+  forQuery: 'for “{query}”',
+
+  // SearchResults — screen-reader live region announcements
+  // srSearching fires while a search is in progress (between submit and results)
+  srSearching: 'Searching…',
+  srNoResults: 'No results found',
+  srNoResultsForQuery: 'No results found for {query}',
+  // count === 1 uses srResultsFound; count !== 1 uses srResultsFoundPlural
+  srResultsFound: '{count} result found',
+  srResultsFoundPlural: '{count} results found',
+  // count === 1 uses srResultsFoundForQuery; count !== 1 uses srResultsFoundPluralForQuery
+  srResultsFoundForQuery: '{count} result found for {query}',
+  srResultsFoundPluralForQuery: '{count} results found for {query}',
+  // Used when Elasticsearch caps the total (relation === 'gte')
+  srResultsFoundApprox: 'More than {count} results found',
+  srResultsFoundApproxForQuery: 'More than {count} results found for {query}',
+
+  // SearchResults — mobile filter button
+  filtersButton: 'Filters',
+  // filtersButtonActive always receives {count}; no separate singular key (count is inline)
+  filtersButtonActive: 'Filters, {count} active',
+  searchResultsLabel: 'Search results',
+  searchResultsPaginationLabel: 'Search results pagination',
+
+  // ActiveFilters
+  filteredBy: 'Filtered by:',
+  activeFiltersRegion: 'Active filters',
+  andConnector: 'and',
+  removeFilter: 'Remove filter: {field} is {value}',
+  clearAllFilters: 'Clear all filters',
+  clearAllFiltersLabel: 'Clear all {count} active filters',
+  // count === 1 uses activeFiltersCount; count !== 1 uses activeFiltersCountPlural
+  activeFiltersCount: '{count} active filter',
+  activeFiltersCountPlural: '{count} active filters',
+
+  // MobileFilterDrawer
+  drawerTitle: 'Filters',
+  closeFilters: 'Close filters',
+  viewResults: 'View results',
+  // count === 1 uses filtersApplied; count !== 1 uses filtersAppliedPlural
+  filtersApplied: '{count} filter applied',
+  filtersAppliedPlural: '{count} filters applied',
+
+  // FacetSelect — boolean operator (any/all) for multi-select filters
+  selectPlaceholder: 'Select {label}',
+  matchModeLabel: 'Search type for {label}',
+  matchModeGroupLabel: 'Search type:',
+  matchModeAny: 'Match any of these',
+  matchModeAll: 'Match all of these',
+
+  // SelectDropdown internals (passed as props)
+  dropdownSearchPlaceholder: 'Search...',
+  dropdownNoOptions: 'No matches found',
+
+  // SortOptions
+  sortLegend: 'Sort',
+  sortPlaceholder: 'Sort by',
+  sortRelevance: 'Relevance',
+  sortNewest: 'Newest',
+  sortOldest: 'Oldest',
+  sortEventDateAsc: 'Event date (earliest first)',
+  sortEventDateDesc: 'Event date (latest first)',
+
+  // FacetsSidebar
+  loadingFilters: 'Loading filters…',
+
+  // Pager (prev/next/page labels passed to PagerList via SearchPager)
+  pagerPrevious: 'Previous',
+  pagerNext: 'Next',
+  pagerGoToPrevious: 'Go to previous page',
+  pagerGoToNext: 'Go to next page',
+  pagerPage: 'Page {page}',
+  pagerCurrentPage: 'Page {page}, current page',
+  // Used in the sr-only live region: 'Page {page} of {total}'
+  pagerPageOf: 'Page {page} of {total}',
+
+  // ResultItem — content unavailable (no domain assignment in CMS)
+  // This is an admin/configuration error state; end users see a friendly message.
+  // The {nid} token is available for debug builds but omit it in production labels.
+  domainAccessError: 'This content is currently unavailable.',
+  reportErrorLink: 'Report this issue',
+};
+
+export const getSyndicationSearchWidgetLabels = createLabelResolver(
+  DEFAULT_LABELS,
+  {
+    ar: LABELS_AR,
+    es: LABELS_ES,
+    fr: LABELS_FR,
+    ja: LABELS_JA,
+    ru: LABELS_RU,
+    zh: LABELS_ZH,
+  }
+);

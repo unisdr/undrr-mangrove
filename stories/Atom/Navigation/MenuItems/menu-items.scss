@@ -4,8 +4,10 @@
  * Accessible menu list, navigation item links, and hover/focus interaction states.
  *
  * Full documentation:
- * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Atom/Typography/Links/Links.mdx
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Atom/Typography/Links/Links.mdx
  */
+@use "../../../assets/scss/mixins" as *;
+
 // * menu item row start *//
 .menu li {
   a {

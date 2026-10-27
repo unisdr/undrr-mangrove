@@ -15,7 +15,7 @@ import { mgShowMore } from '../../assets/js/show-more';
 
 const EMPTY_DATA = [];
 
-function ShowMoreItem({ item, id, labelOpen, labelCollapsed }) {
+function ShowMoreItem({ item, id, labelOpen, labelCollapsed, minHiddenLines }) {
   const buttonRef = useRef(null);
 
   // Each new item owns its enhancement. Mounting or updating this component
@@ -44,6 +44,7 @@ function ShowMoreItem({ item, id, labelOpen, labelCollapsed }) {
         data-mg-show-more-target={`#${id}`}
         data-mg-show-more-label-open={labelOpen}
         data-mg-show-more-label-collapsed={labelCollapsed}
+        data-mg-show-more-min-hidden-lines={minHiddenLines}
       >
         {labelCollapsed}
       </button>
@@ -63,6 +64,7 @@ ShowMoreItem.propTypes = {
   id: PropTypes.string.isRequired,
   labelOpen: PropTypes.string.isRequired,
   labelCollapsed: PropTypes.string.isRequired,
+  minHiddenLines: PropTypes.number,
 };
 
 /**
@@ -78,11 +80,13 @@ ShowMoreItem.propTypes = {
  * @param {string} props.data[].collapsable_text              Text content to show/hide
  * @param {string} props.labelOpen                           Translated expanded-state label
  * @param {string} props.labelCollapsed                      Translated collapsed-state label
+ * @param {number} props.minHiddenLines                      Collapse only when at least this many lines would be hidden
  */
 export function ShowMore({
   data = EMPTY_DATA,
   labelOpen = 'Show less',
   labelCollapsed = 'Show more',
+  minHiddenLines,
 }) {
   // Each item gets its own id, and the toggle targets that id rather than
   // `collapsable_wrapper_class`. Two items sharing a wrapper class used to
@@ -103,6 +107,7 @@ export function ShowMore({
           id={`mg-show-more-${instanceId}-${index}`}
           labelOpen={labelOpen}
           labelCollapsed={labelCollapsed}
+          minHiddenLines={minHiddenLines}
         />
       ))}
     </React.Fragment>
@@ -116,6 +121,12 @@ ShowMore.propTypes = {
   labelOpen: PropTypes.string,
   /** Label while collapsed; supply the page's translated wording. */
   labelCollapsed: PropTypes.string,
+  /**
+   * Collapse only when the content runs at least this many lines past the
+   * collapsed height (`--mg-show-more-height`); otherwise leave it open and
+   * hide the toggle. Set it before the item is enhanced.
+   */
+  minHiddenLines: PropTypes.number,
 };
 
 export default ShowMore;

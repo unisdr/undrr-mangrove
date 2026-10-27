@@ -1,6 +1,6 @@
 # Review checklist
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/REVIEW-CHECKLIST.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs).
+> Edits to this file show up on both [GitHub](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/REVIEW-CHECKLIST.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs).
 
 Use this checklist when building or reviewing a component. Each item links to the relevant guide.
 
@@ -35,7 +35,10 @@ See [Component standards](https://mangrove.undrr.org/?path=/docs/contributing-co
 - [ ] Heading hierarchy is logical (no skipped levels)
 - [ ] Images and icons have appropriate alt text (empty `alt=""` for decorative images)
 - [ ] Touch/click targets meet minimum size (24x24px, 44x44px recommended)
-- [ ] Animations respect `prefers-reduced-motion`
+- [ ] Motion is justified; immediate feedback needs no animation. When motion is used, follow [motion guidance](MOTION.md): interaction duration/easing tokens, documented cycle exceptions, and a visible usable base state
+- [ ] Optional CSS motion is gated by `prefers-reduced-motion: no-preference`; JavaScript checks the preference at the action, and interrupted/reversed interactions and preference changes leave correct state and focus
+- [ ] Loading remains understandable under reduced motion; shared Loader/ProgressBar or a reviewed static alternative stays visible under forced colours, including when reduced motion is also active
+- [ ] Directional motion follows RTL reading direction; component MDX describes motion, reduced-motion behaviour and exceptions
 - [ ] Error states are announced to assistive technology (`aria-describedby`, `aria-live`)
 - [ ] Component works across all five themes without contrast failures
 
@@ -45,6 +48,7 @@ See [Accessibility](https://mangrove.undrr.org/?path=/docs/getting-started-acces
 ## Stories and documentation
 
 - [ ] Stories use CSF3 format (no `Template.bind({})`)
+- [ ] Docs examples that mount open modals/drawers or change document scrolling/focus render in an isolated iframe (`<Canvas story={{ inline: false, height: '600px' }} />`), with a suitable preview width; loading and interacting with the example must leave the surrounding docs scrollable
 - [ ] MDX docs follow the standard structure (overview, when to use, formatting, behaviors, CSS/JS references, changelog)
 - [ ] MDX includes the review checklist reference after `<Meta>` (see [component guide, step 5](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-step-by-step--docs))
 - [ ] One changelog version entry added to the component's MDX file for the PR (see [changelog format](https://mangrove.undrr.org/?path=/docs/contributing-component-standards--docs)). Extend that entry with nested bullets when the same PR adds more work; do not bump the component version more than once within one PR.
@@ -78,6 +82,11 @@ See [Testing](https://mangrove.undrr.org/?path=/docs/contributing-build-a-compon
 ## Internationalization
 
 - [ ] Text comes from props, not hardcoded
+- [ ] Built-in label catalogues use the shared [UI translation contract](UI-TRANSLATIONS.md): English defaults, selected `lang`, then consumer overrides; dedicated label props retain their precedence
+- [ ] React language selection is SSR-safe; hydration reads `data-lang` before the nearest HTML `lang`, including nested and empty boundaries
+- [ ] Regional and unsupported language metadata is preserved; explicit `dir` wins and unsupported languages do not force LTR
+- [ ] Locale stories exercise runtime `lang` and preserve explicit overrides; nested controls, dialogs and portal contents retain their language
+- [ ] Catalogue tests cover fallback, partial overrides, language changes, and function-valued labels where supported; consumer content remains separately translated
 - [ ] RTL layout works (check with the locale toolbar)
 - [ ] CSS uses logical properties where possible (`margin-inline-start` instead of `margin-left`)
 
@@ -86,7 +95,7 @@ See the RTL support section in [Component standards](https://mangrove.undrr.org/
 ## Drupal integration (if applicable)
 
 - [ ] `ComponentName.fromElement.js` exports a function that extracts props from `data-mg-*` attributes
-- [ ] `ComponentName.hydrate.js` barrel file uses `createHydrator`
+- [ ] `ComponentName.hydrate.js` barrel re-exports the component, `fromElement` and any public label resolver; the consuming integration calls `createHydrator`
 - [ ] `ComponentName.fromElement.test.js` verifies prop extraction
 - [ ] Webpack entry added in `webpack.config.js` — this is what publishes the component to npm and the CDN
 - [ ] Export added in `src/index.js` (the repository entry point; it publishes nothing on its own, see unisdr/undrr-mangrove#1252)

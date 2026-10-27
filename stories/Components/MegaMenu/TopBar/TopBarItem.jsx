@@ -2,7 +2,9 @@ import React from 'react';
 import Section from '../Section/Section.jsx';
 
 export function TopBarItem({
-  inert,
+  isMobile,
+  sidebarId,
+  onMobileClick,
   title,
   icon,
   onMouseEnter,
@@ -35,16 +37,25 @@ export function TopBarItem({
 
   return (
     <li
-      inert={inert ? true : undefined}
-      aria-hidden={inert ? true : undefined}
       className={`mg-mega-topbar__item ${isActive ? 'mg-mega-topbar__item--active' : ''}`}
       onMouseEnter={section || bannerDescription ? onMouseEnter : undefined}
-      onFocus={onMouseEnter}
+      onFocus={isMobile ? undefined : onMouseEnter}
       onKeyDown={handleOnKeyDown}
     >
       {/* Render link if no children and link URL exists, otherwise just show title */}
       {/* {!children && link && link.url ? <a href={link.url}>{title}</a> : title} */}
-      {link && link.url ? (
+      {isMobile ? (
+        <button
+          type="button"
+          className="mg-mega-topbar__item-link"
+          ref={ref}
+          onClick={onMobileClick}
+          aria-haspopup="dialog"
+          aria-controls={sidebarId}
+        >
+          {label}
+        </button>
+      ) : link && link.url ? (
         <a
           className="mg-mega-topbar__item-link"
           href={link.url}
@@ -65,6 +76,7 @@ export function TopBarItem({
 
       <Section
         section={section}
+        isActive={isActive}
         index={index}
         sectionListRef={sectionListRef}
         itemListRef={itemListRef}

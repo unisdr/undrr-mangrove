@@ -10,6 +10,7 @@ export const variantOptions = {
   secondary: 'secondary',
   tertiary: 'tertiary',
   quaternary: 'quaternary',
+  neutral: 'neutral',
 };
 
 const splitSuffixMap = {
@@ -69,6 +70,31 @@ function HeroMedia({ media }) {
   );
 }
 
+// The neutral surface carries dark copy, which no veil over a photograph can
+// protect, so in the background layout it drops the image.
+const showImage = (item, variant) => item.imgback && variant !== 'neutral';
+
+function HeroTags({ tags, label }) {
+  if (!tags?.length) return null;
+  // A list named for screen readers, so the tags are announced as one group
+  // with a count; sighted readers get the grouping from the tags' look.
+  return (
+    <ul className="mg-hero__tags" aria-label={label}>
+      {tags.map(tag => (
+        <li key={`${tag.label}-${tag.href || ''}`}>
+          {tag.href ? (
+            <a className="mg-tag" href={tag.href}>
+              {tag.label}
+            </a>
+          ) : (
+            <span className="mg-tag">{tag.label}</span>
+          )}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 function HeroContent({ item, HeadingTag }) {
   const buttons =
     item.buttons ||
@@ -96,14 +122,17 @@ function HeroContent({ item, HeadingTag }) {
         {item.label && <span className="mg-hero__label">{item.label}</span>}
       </div>
       <HeroTitle item={item} HeadingTag={HeadingTag} />
-      <div className="mg-hero__summaryText">
-        <span dangerouslySetInnerHTML={{ __html: item.summaryText }} />
-      </div>
+      {item.summaryText && (
+        <div className="mg-hero__summaryText">
+          <span dangerouslySetInnerHTML={{ __html: item.summaryText }} />
+        </div>
+      )}
       <div className="mg-hero__meta meta-detail">
         {item.detail && (
           <span className="mg-hero__label detail">{item.detail}</span>
         )}
       </div>
+      <HeroTags tags={item.tags} label={item.tagsLabel || 'Topics'} />
       {buttons.length > 0 && (
         <div className="mg-hero__buttons">
           {buttons.map((button, index) => (
@@ -116,6 +145,7 @@ function HeroContent({ item, HeadingTag }) {
               onClick={button.onClick}
               target={button.target}
               rel={button.rel}
+              data-vf-analytics-label={button.analyticsLabel}
             />
           ))}
         </div>
@@ -183,11 +213,11 @@ export function Hero({
             'mg-hero',
             size === 'immersive' && 'mg-hero--immersive',
             contained && 'mg-hero--contained',
-            !item.imgback && 'mg-hero--no-image',
+            !showImage(item, variant) && 'mg-hero--no-image',
             variantActive && `mg-hero--${variantActive}`
           )}
           style={
-            item.imgback
+            showImage(item, variant)
               ? { backgroundImage: `url(${item.imgback})` }
               : undefined
           }
@@ -206,7 +236,12 @@ Hero.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
       imgback: PropTypes.string,
-      label: PropTypes.string,
+      /**
+       * Eyebrow above the title. A string renders as before; a node may hold
+       * links, e.g. a parent page link followed by a type ("Collection · Topic
+       * guide").
+       */
+      label: PropTypes.node,
       /**
        * Heading text. Rendered via `dangerouslySetInnerHTML` to allow inline
        * markup (e.g. `<em>`, `<br>`) from CMS-authored content. The consumer
@@ -220,7 +255,25 @@ Hero.propTypes = {
        * text-format pipeline) must sanitise.
        */
       summaryText: PropTypes.string,
-      detail: PropTypes.string,
+      /**
+       * Facts line below the summary. A string renders as before; a node may
+       * hold links, e.g. an item count that jumps to a list on the page.
+       */
+      detail: PropTypes.node,
+      /**
+       * Taxonomy tags below the summary and facts line, rendered as a list of
+       * outline tags (`ul.mg-hero__tags`, each a `.mg-tag`). Tags with `href`
+       * are links. Tag modifiers such as `mg-tag--secondary` still apply in
+       * hand-written markup.
+       */
+      tags: PropTypes.arrayOf(
+        PropTypes.shape({
+          label: PropTypes.string.isRequired,
+          href: PropTypes.string,
+        })
+      ),
+      /** Accessible name of the tag list. Defaults to "Topics". */
+      tagsLabel: PropTypes.string,
       primary_button: PropTypes.string,
       secondary_button: PropTypes.string,
       /** Optional brand mark displayed above the label and title. */
@@ -237,6 +290,12 @@ Hero.propTypes = {
           onClick: PropTypes.func,
           target: PropTypes.string,
           rel: PropTypes.string,
+          /**
+           * Fixed label for the UNDRR click tracker
+           * (`data-vf-analytics-label`), so reports do not split by language
+           * or by a number in the button text.
+           */
+          analyticsLabel: PropTypes.string,
         })
       ),
       /**
@@ -254,8 +313,20 @@ Hero.propTypes = {
       }),
     })
   ).isRequired,
-  /** Color variant: primary (default blue), secondary, tertiary, or quaternary. */
-  variant: PropTypes.oneOf(['primary', 'secondary', 'tertiary', 'quaternary']),
+  /**
+   * Colour variant: primary (default blue), secondary, tertiary, quaternary,
+   * or neutral: the page's white surface with dark text and interactive-colour
+   * links, for page headers that should not read as a coloured band. Neutral
+   * is meant for `layout="split"`; in the background layout it drops the
+   * photograph.
+   */
+  variant: PropTypes.oneOf([
+    'primary',
+    'secondary',
+    'tertiary',
+    'quaternary',
+    'neutral',
+  ]),
   /** Layout mode. `background` uses a full-bleed image; `split` uses a solid background with a media column. */
   layout: PropTypes.oneOf(['background', 'split']),
   /** Heading element level for the title. Defaults to `h1`; use `h2` or `h3` for mid-page placement. */

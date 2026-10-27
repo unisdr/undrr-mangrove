@@ -62,6 +62,58 @@ function resolveTarget(toggle, selector) {
 }
 
 /**
+ * The height the content collapses to, read from CSS: the computed
+ * max-height of the collapsed state, so `--mg-show-more-height` may be set in
+ * any unit, including `lh`. Applying and removing the class in one task
+ * forces a style recalculation but never paints.
+ *
+ * @param {HTMLElement} target - The collapsible content.
+ * @returns {number} Pixels, or NaN when CSS gives no length.
+ */
+function collapsedHeight(target) {
+  const collapsed = target.classList.contains('mg-show-more--collapsed');
+  if (!collapsed) target.classList.add('mg-show-more--collapsed');
+  const height = parseFloat(getComputedStyle(target).maxHeight);
+  if (!collapsed) target.classList.remove('mg-show-more--collapsed');
+  return height;
+}
+
+/**
+ * @param {HTMLElement} target - The collapsible content.
+ * @returns {number} Its line height in pixels.
+ */
+function lineHeight(target) {
+  const style = getComputedStyle(target);
+  const line = parseFloat(style.lineHeight);
+  return Number.isFinite(line) ? line : parseFloat(style.fontSize) * 1.2;
+}
+
+/**
+ * After a reader collapses content, bring the start of it back into view if
+ * the toggle has left the viewport. Scrolls the heading just before the
+ * content when there is one, honours scroll-padding (so a sticky bar such as
+ * On this page is allowed for) and reduced motion.
+ *
+ * @param {HTMLElement} toggle - The toggle that was used.
+ * @param {HTMLElement} target - The content it collapsed.
+ */
+function returnToContent(toggle, target) {
+  const box = toggle.getBoundingClientRect();
+  if (box.bottom > 0 && box.top < window.innerHeight) return;
+  const previous = target.previousElementSibling;
+  const anchor = previous?.matches('h1, h2, h3, h4, h5, h6')
+    ? previous
+    : target;
+  const reduce =
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  anchor.scrollIntoView?.({
+    block: 'start',
+    behavior: reduce ? 'auto' : 'smooth',
+  });
+}
+
+/**
  * Initializes "show more" toggle buttons.
  *
  * The toggle carries `aria-controls` pointing at the content it collapses.
@@ -102,7 +154,6 @@ export function mgShowMore(scope) {
       'mg-show-more--collapsed'
     );
     const wasOpen = item.classList.contains('mg-show-more--button--open');
-    const initialText = item.textContent;
     const initialControls = item.getAttribute('aria-controls');
     const initialRole = item.getAttribute('role');
     const onKeydown = event => {
@@ -112,8 +163,27 @@ export function mgShowMore(scope) {
       }
     };
 
-    item.dataset.dataVfGoogleAnalyticsLabel =
-      'Show more: ' + (item.dataset.mgShowMoreLabelCollapsed || 'Show more');
+    // The click tracker reads data-vf-analytics-label. Report the action the
+    // toggle is about to perform, in fixed English so reports do not split by
+    // language. A label the author set by hand is kept as it is, unless
+    // per-state labels are given.
+    const COLLAPSED = 'mg-show-more--collapsed';
+    const authorLabel = item.getAttribute('data-vf-analytics-label');
+    const { mgShowMoreAnalyticsCollapsed, mgShowMoreAnalyticsOpen } =
+      item.dataset;
+    const stateLabels =
+      mgShowMoreAnalyticsCollapsed || mgShowMoreAnalyticsOpen || !authorLabel
+        ? {
+            collapsed: mgShowMoreAnalyticsCollapsed || 'Show more',
+            open: mgShowMoreAnalyticsOpen || 'Show less',
+          }
+        : null;
+
+    // Visible text lives in a [data-mg-show-more-label] child when there is
+    // one, so visually hidden context beside it survives each toggle.
+    const labelNode = item.querySelector('[data-mg-show-more-label]') || item;
+    const initialText = labelNode.textContent;
+    const initialHidden = item.hidden;
 
     // Relate the toggle to the content it acts on. A <button> already
     // announces as a button; an anchor copied from an earlier version of the
@@ -131,23 +201,34 @@ export function mgShowMore(scope) {
       item.addEventListener('keydown', onKeydown);
     }
 
+    // Initialisation and re-measures change state here rather than through
+    // item.click(), so they reach no click listener (analytics reporting, the
+    // Drupal wrapper). Focus entering, or a click on, collapsed content still
+    // clicks the toggle below: those stand for a reader's action.
+    const setCollapsed = collapsed => {
+      mgShowMoreTarget.classList.toggle(COLLAPSED, collapsed);
+      labelNode.textContent = collapsed
+        ? item.dataset.mgShowMoreLabelCollapsed || 'Show more'
+        : item.dataset.mgShowMoreLabelOpen || 'Show less';
+      item.classList.toggle('mg-show-more--button--open', !collapsed);
+      if (stateLabels) {
+        item.setAttribute(
+          'data-vf-analytics-label',
+          collapsed ? stateLabels.collapsed : stateLabels.open
+        );
+      }
+    };
+
+    let readerToggled = false;
     const onClick = event => {
       // Also neutralises the dead `href="#"` on a legacy anchor toggle.
       event.preventDefault();
-      mgShowMoreTarget.classList.toggle('mg-show-more--collapsed');
-
-      // Which label to show?
-      item.textContent = mgShowMoreTarget.classList.contains(
-        'mg-show-more--collapsed'
-      )
-        ? item.dataset.mgShowMoreLabelCollapsed || 'Show more'
-        : item.dataset.mgShowMoreLabelOpen || 'Show less';
-
-      if (mgShowMoreTarget.classList.contains('mg-show-more--collapsed')) {
-        item.classList.remove('mg-show-more--button--open');
-      } else {
-        item.classList.add('mg-show-more--button--open');
-      }
+      readerToggled = true;
+      const collapsing = !mgShowMoreTarget.classList.contains(COLLAPSED);
+      setCollapsed(collapsing);
+      // Collapsing a long block pulls the toggle up the page, often out of
+      // view. Bring the reader back to the start of what they collapsed.
+      if (collapsing) returnToContent(item, mgShowMoreTarget);
     };
     item.addEventListener('click', onClick);
 
@@ -158,7 +239,7 @@ export function mgShowMore(scope) {
     // entry keeps the focused control visible.
     const onFocusin = event => {
       if (item === event.target || item.contains(event.target)) return;
-      if (mgShowMoreTarget.classList.contains('mg-show-more--collapsed')) {
+      if (mgShowMoreTarget.classList.contains(COLLAPSED)) {
         item.click();
       }
     };
@@ -167,14 +248,61 @@ export function mgShowMore(scope) {
     // Allow items to be shown by clicking anywhere on the collapsed item
     // https://gitlab.com/undrr/web-backlog/-/issues/1612
     const onTargetClick = () => {
-      if (mgShowMoreTarget.classList.contains('mg-show-more--collapsed')) {
+      if (mgShowMoreTarget.classList.contains(COLLAPSED)) {
         item.click();
       }
     };
     mgShowMoreTarget.addEventListener('click', onTargetClick);
 
-    item.click();
+    // A template may ship the toggle `hidden` so it never shows without
+    // JavaScript; the content is then simply open.
+    item.hidden = false;
+    setCollapsed(!wasCollapsed);
+
+    // Opt-in: collapse only when enough would be hidden. Short content stays
+    // open and the toggle is hidden, so a template can wrap every body field
+    // in ShowMore. The value is a number of lines (empty means 1): collapse
+    // when the content runs at least that many lines past the collapsed
+    // height. The collapsed height is read from CSS (--mg-show-more-height),
+    // so the decision does not depend on the current state and cannot flip
+    // back and forth. Measured again when the content resizes, until the
+    // reader uses the toggle. Content with no layout yet (inside a closed
+    // tab, say) waits until it has one.
+    let observer = null;
+    let frame = 0;
+    if (item.hasAttribute('data-mg-show-more-min-hidden-lines')) {
+      const lines =
+        parseFloat(item.dataset.mgShowMoreMinHiddenLines) > 0
+          ? parseFloat(item.dataset.mgShowMoreMinHiddenLines)
+          : 1;
+      const measure = () => {
+        frame = 0;
+        if (readerToggled || mgShowMoreTarget.scrollHeight === 0) return;
+        const limit = collapsedHeight(mgShowMoreTarget);
+        const line = lineHeight(mgShowMoreTarget);
+        if (!Number.isFinite(limit) || !Number.isFinite(line)) return;
+        const collapse = mgShowMoreTarget.scrollHeight - limit >= lines * line;
+        setCollapsed(collapse);
+        item.hidden = !collapse;
+      };
+      measure();
+      if (typeof ResizeObserver === 'function') {
+        // Deferred to the next frame: changing the observed box inside the
+        // callback is what raises "ResizeObserver loop" errors.
+        observer = new ResizeObserver(() => {
+          if (frame) cancelAnimationFrame(frame);
+          frame = requestAnimationFrame(measure);
+        });
+        observer.observe(mgShowMoreTarget);
+      }
+    }
+
     cleanups.push(() => {
+      observer?.disconnect();
+      if (frame) cancelAnimationFrame(frame);
+      item.hidden = initialHidden;
+      if (authorLabel === null) item.removeAttribute('data-vf-analytics-label');
+      else item.setAttribute('data-vf-analytics-label', authorLabel);
       item.removeEventListener('click', onClick);
       item.removeEventListener('keydown', onKeydown);
       mgShowMoreTarget.removeEventListener('focusin', onFocusin);
@@ -184,7 +312,7 @@ export function mgShowMore(scope) {
         wasCollapsed
       );
       item.classList.toggle('mg-show-more--button--open', wasOpen);
-      item.textContent = initialText;
+      labelNode.textContent = initialText;
       for (const [attribute, value] of [
         ['aria-controls', initialControls],
         ['role', initialRole],

@@ -34,9 +34,12 @@ const ruleFor = (entry, selector) => {
 
 describe.each(entries)('foundational prose links in %s', entry => {
   test('remain underlined before hover or focus', () => {
-    expect(ruleFor(entry, '.mg-content p a')).toMatch(
-      /text-decoration:\s*underline/
-    );
+    expect(
+      ruleFor(
+        entry,
+        ':where(.mg-content p) a:not(:where(.mg-button, .mg-icon-button, [role=button]))'
+      )
+    ).toMatch(/text-decoration:\s*underline/);
   });
 
   test('do not impose an underline on navigation or button links', () => {

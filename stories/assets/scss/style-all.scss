@@ -6,14 +6,17 @@
 // rebuild needed to switch brands. Prefer a per-brand entry
 // (style-preventionweb.scss, etc.) for single-brand sites; use this bundle for
 // multi-brand or runtime-switching pages. See docs/RELEASE-2.0.md.
-@import "./variables";
-@import "./theme-preventionweb";
-@import "./theme-irp";
-@import "./theme-mcr";
-@import "./theme-delta";
-@import "./fonts";
-@import "./breakpoints";
-@import "./mixins";
-@import "./utility";
-@import "./foundational";
-@import "./components";
+@forward "font-paths";
+@forward "variables";
+@use "variables" as *;
+@use "theme-preventionweb" as *;
+@use "theme-irp" as *;
+@use "theme-mcr" as *;
+@use "theme-delta" as *;
+@forward "fonts";
+@use "fonts" as *;
+@forward "breakpoints";
+@forward "mixins";
+@use "utility" as *;
+@use "foundational" as *;
+@use "components" as *;

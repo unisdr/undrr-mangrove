@@ -276,6 +276,26 @@ export const WithIcons = {
 
 // Compact variant
 export const Compact = {
+  play: async ({ canvasElement }) => {
+    await canvasElement.ownerDocument.fonts.ready;
+    const card = canvasElement.querySelector('.mg-stats-card-item');
+    const view = canvasElement.ownerDocument.defaultView;
+    const style = view.getComputedStyle(card);
+    const mobile = view.matchMedia('(max-width: 47.9375em)').matches;
+    const rootSize = parseFloat(
+      view.getComputedStyle(canvasElement.ownerDocument.documentElement)
+        .fontSize
+    );
+    expect(parseFloat(style.paddingTop)).toBe(
+      (mobile ? 0.625 : 0.9375) * rootSize
+    );
+    expect(parseFloat(style.rowGap)).toBe(0.3125 * rootSize);
+    for (const child of card.children) {
+      const childStyle = view.getComputedStyle(child);
+      expect(childStyle.marginTop).toBe('0px');
+      expect(childStyle.marginBottom).toBe('0px');
+    }
+  },
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
     return (

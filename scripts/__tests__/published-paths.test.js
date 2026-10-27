@@ -24,6 +24,7 @@ const path = require('path');
 const {
   ROOT,
   componentEntryNames,
+  docsFileNames,
   publishedPaths,
 } = require('../published-paths.cjs');
 
@@ -44,6 +45,7 @@ describe('the published-path model', () => {
       'scss',
       'error-pages',
       'fonts',
+      'docs',
     ]) {
       expect([...paths].some(entry => entry.startsWith(`${dir}/`))).toBe(true);
     }
@@ -57,9 +59,11 @@ describe('the published-path model', () => {
       "['dist/assets/error-pages', 'error-pages']",
       "['dist/fonts', 'fonts']",
       "['dist/components', 'components']",
+      "['dist/docs', 'docs']",
     ]) {
       expect(assembleSource).toContain(line);
     }
+    expect(assembleSource).toContain("'docs/**/*'");
     // The scss copy is flattened from stories/, which is why the published
     // entry point is scss/assets/scss/style.scss.
     expect(assembleSource).toContain(
@@ -91,6 +95,16 @@ describe('the published-path model', () => {
     }
   });
 
+  test('names the editorial manual and its sub-manifest under docs/', () => {
+    // undrr/web-backlog#3109: public copies on the asset library, which
+    // mirrors dist/ as mangrove/latest/ and the package as mangrove/{version}/.
+    expect(paths.has('docs/EDITORIAL-MANUAL.md')).toBe(true);
+    expect(paths.has('docs/llms-editorial-manual.txt')).toBe(true);
+    // llms.txt indexes the Storybook site and is not copied.
+    expect(paths.has('docs/llms.txt')).toBe(false);
+    expect(docsFileNames().every(name => /\.(md|txt)$/.test(name))).toBe(true);
+  });
+
   test('derives one component bundle per webpack entry', () => {
     const names = componentEntryNames();
     expect(names.length).toBeGreaterThan(30);
@@ -113,6 +127,7 @@ describe('the published-path model', () => {
         ['fonts', 'fonts'],
         ['aria', 'aria'],
         ['components', 'components'],
+        ['docs', 'docs'],
       ]) {
         if (entry === from || entry.startsWith(`${from}/`)) {
           return `${to}${entry.slice(from.length)}`;

@@ -4,10 +4,10 @@
  * Shared layout and scaffolding styles for Storybook page pattern demonstrations.
  *
  * Full documentation:
- * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Patterns/LandingPages/LandingPages.mdx
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Patterns/LandingPages/LandingPages.mdx
  */
 // Demo-only story scaffolding (`mg-demo-*`), imported directly by pattern stories.
-@import "../../assets/scss/variables";
+@use "../../assets/scss/config" as *;
 
 .mg-demo-lede,
 .mg-demo-intro {
@@ -52,4 +52,9 @@
 // Align split-hero grid width with the reading layout width token.
 .mg-demo-article-header .mg-hero__split-grid {
   max-inline-size: var(--mg-reading-with-contents-width);
+}
+
+// CollectionPage: space between the page's sections.
+.mg-demo-collection-section {
+  margin-block-end: var(--mg-spacing-400);
 }

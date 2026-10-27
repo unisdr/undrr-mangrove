@@ -294,6 +294,138 @@ describe('OnThisPageNav', () => {
       const firstLink = nav.querySelector('[href="#sec-1"]');
       expect(firstLink.hasAttribute('aria-current')).toBe(false);
     });
+
+    describe('at the foot of the page', () => {
+      const scrollTo = (scrollY, scrollHeight) => {
+        Object.defineProperty(document.documentElement, 'scrollHeight', {
+          configurable: true,
+          get: () => scrollHeight,
+        });
+        Object.defineProperty(window, 'scrollY', {
+          configurable: true,
+          get: () => scrollY,
+        });
+        window.dispatchEvent(new Event('scroll'));
+      };
+
+      afterEach(() => {
+        delete document.documentElement.scrollHeight;
+        delete window.scrollY;
+      });
+
+      it('marks the last section, which can never reach the observed band', () => {
+        const nav = setupAutoDetect();
+        scrollTo(3000 - window.innerHeight, 3000);
+        expect(nav.querySelector('[aria-current="true"]')).toHaveAttribute(
+          'href',
+          '#sec-3'
+        );
+      });
+
+      it('checks on load, for a page restored at its foot', () => {
+        Object.defineProperty(document.documentElement, 'scrollHeight', {
+          configurable: true,
+          get: () => 3000,
+        });
+        Object.defineProperty(window, 'scrollY', {
+          configurable: true,
+          get: () => 3000 - window.innerHeight,
+        });
+        const nav = setupAutoDetect();
+        expect(nav.querySelector('[aria-current="true"]')).toHaveAttribute(
+          'href',
+          '#sec-3'
+        );
+      });
+
+      it('keeps the last section when the observer reports after the scroll', () => {
+        const nav = setupAutoDetect();
+        scrollTo(3000 - window.innerHeight, 3000);
+        const cb = observerCallbacks[observerCallbacks.length - 1];
+        cb([
+          {
+            target: document.getElementById('sec-2'),
+            isIntersecting: true,
+          },
+        ]);
+        expect(nav.querySelector('[aria-current="true"]')).toHaveAttribute(
+          'href',
+          '#sec-3'
+        );
+      });
+
+      it('does not apply on a page that barely scrolls', () => {
+        const nav = setupAutoDetect();
+        scrollTo(50, window.innerHeight + 50);
+        expect(nav.querySelector('[aria-current="true"]')).toHaveAttribute(
+          'href',
+          '#sec-1'
+        );
+      });
+
+      it('leaves the mark alone above the bottom and after destroy', () => {
+        const nav = setupAutoDetect();
+        scrollTo(100, 3000);
+        expect(nav.querySelector('[aria-current="true"]')).toHaveAttribute(
+          'href',
+          '#sec-1'
+        );
+        mgOnThisPageNavDestroy(nav);
+        scrollTo(3000 - window.innerHeight, 3000);
+        expect(nav.querySelector('[href="#sec-3"]')).not.toHaveAttribute(
+          'aria-current'
+        );
+      });
+    });
+  });
+
+  describe('published block size', () => {
+    let styleSpy;
+    afterEach(() => styleSpy?.mockRestore());
+
+    const stickyWith = position => {
+      const real = window.getComputedStyle;
+      styleSpy = jest
+        .spyOn(window, 'getComputedStyle')
+        .mockImplementation(element =>
+          element.matches?.('.mg-on-this-page-nav')
+            ? { ...real(element), position, getPropertyValue: () => '' }
+            : real(element)
+        );
+    };
+
+    it('publishes the bar height on the root while it is sticky', () => {
+      stickyWith('sticky');
+      document.body.innerHTML = `
+        <nav data-mg-on-this-page-nav class="mg-on-this-page-nav">
+          <ul class="mg-on-this-page-nav__list"><li class="mg-on-this-page-nav__item"><a class="mg-on-this-page-nav__link" href="#a">A</a></li></ul>
+        </nav><h2 id="a">A</h2>`;
+      const nav = document.querySelector('nav');
+      Object.defineProperty(nav, 'offsetHeight', { get: () => 48 });
+      mgOnThisPageNav([nav]);
+      expect(
+        document.documentElement.style.getPropertyValue(
+          '--mg-on-this-page-nav-block-size'
+        )
+      ).toBe('48px');
+      mgOnThisPageNavDestroy(nav);
+      expect(
+        document.documentElement.style.getPropertyValue(
+          '--mg-on-this-page-nav-block-size'
+        )
+      ).toBe('');
+    });
+
+    it('publishes 0px when the bar is not sticky', () => {
+      stickyWith('static');
+      const nav = setupExplicit([{ id: 'a', text: 'A' }]);
+      expect(
+        document.documentElement.style.getPropertyValue(
+          '--mg-on-this-page-nav-block-size'
+        )
+      ).toBe('0px');
+      mgOnThisPageNavDestroy(nav);
+    });
   });
 
   describe('click handling', () => {
@@ -705,6 +837,36 @@ describe('OnThisPageNav', () => {
         expect(
           nav.classList.contains('mg-on-this-page-nav--has-left-overflow')
         ).toBe(true);
+      });
+
+      it('has-right-overflow tracks content hidden on the right in RTL', () => {
+        const nav = setupAutoDetect();
+        const list = nav.querySelector('.mg-on-this-page-nav__list');
+        Object.defineProperty(list, 'scrollWidth', {
+          value: 500,
+          configurable: true,
+        });
+        Object.defineProperty(list, 'clientWidth', {
+          value: 200,
+          configurable: true,
+        });
+        const at = scrollLeft => {
+          Object.defineProperty(list, 'scrollLeft', {
+            value: scrollLeft,
+            configurable: true,
+          });
+          list.dispatchEvent(new Event('scroll'));
+          return ['left', 'right'].filter(side =>
+            nav.classList.contains(`mg-on-this-page-nav--has-${side}-overflow`)
+          );
+        };
+        expect(at(0)).toEqual(['left']); // start: more to the left
+        expect(at(-150)).toEqual(['left', 'right']); // mid-scroll
+        expect(at(-300)).toEqual(['right']); // end: earlier links to the right
+        mgOnThisPageNavDestroy(nav);
+        expect(
+          nav.classList.contains('mg-on-this-page-nav--has-right-overflow')
+        ).toBe(false);
       });
     });
 

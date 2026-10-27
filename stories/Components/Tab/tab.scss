@@ -4,8 +4,12 @@
  * Accessible tabbed interface panels with keyboard tab switching and scrollable tab strips.
  *
  * Full documentation:
- * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/Tab/Tab.mdx
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Tab/Tab.mdx
  */
+@use "../../assets/scss/breakpoints" as *;
+@use "../../assets/scss/mixins" as *;
+@use "../../assets/scss/config" as *;
+
 .mg-tabs__list {
   background: var(--mg-color-tabbar-background);
   width: 100%;
@@ -107,7 +111,8 @@
       transform: rotate(-45deg);
       vertical-align: top;
       width: 0.45em;
-      transition: transform 0.3s ease;
+      transition: transform var(--mg-motion-duration-medium)
+        var(--mg-motion-easing-standard);
 
       @media (prefers-reduced-motion: reduce) {
         transition: none;

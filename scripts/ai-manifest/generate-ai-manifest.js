@@ -12,6 +12,8 @@
  *        llms.txt                       — plain-text discovery file for AI agents
  *        llms.json                      — structured version of llms.txt
  *        llms-editorial-manual.txt      — sub-manifest: writing/style rules, from docs/EDITORIAL-MANUAL.md
+ *        llms-page-building.txt         — sub-manifest: Drupal Gutenberg page building, from docs/LANDING-PAGE-GUIDE.md and docs/DRUPAL-GUTENBERG.md
+ *        llms-search-widget.txt         — sub-manifest: search widget editor configuration, from docs/SEARCH-WIDGET-EDITOR-GUIDE.md
  *        ai-components/index.json       — lightweight component index
  *        ai-components/{id}.json        — full details per component
  *        ai-components/utilities.json   — CSS utility class inventory
@@ -21,6 +23,7 @@
  *
  * Flags:
  *   --validate   Check curated data keys and a11y lint. Exits non-zero on failure.
+ *   --metadata-file  Read a compatible metadata file instead of the build manifest.
  *   --docs-base  Public Storybook/docs base URL used in generated links.
  *                Can also be set with MANGROVE_DOCS_BASE_URL.
  *
@@ -41,8 +44,25 @@ import path from 'path';
 import { createRequire } from 'module';
 import htmlExamples, { REQUIRES_REACT } from './component-data.js';
 import cssUtilities from './css-utilities.js';
+import { readComponentMetadata } from './component-metadata.js';
+import {
+  buildContentPatterns,
+  validateContentReferences,
+} from './content-patterns.js';
+import {
+  selectPublishedComponents,
+  propTypesCoverage,
+} from './catalog-components.js';
 import { buildEditorialManualTxt } from './editorial-manual.js';
-import { REPO_BLOB_MAIN, REPO_URL } from './repo.js';
+import { buildDocsSubmanifest, DOCS_SUBMANIFESTS } from './docs-submanifest.js';
+import {
+  PUBLIC_ISSUES_URL,
+  PUBLIC_REPO_BLOB_MAIN,
+  PUBLIC_REPO_RAW_MAIN,
+  PUBLIC_REPO_URL,
+  REPO_URL,
+  findPrivateLinks,
+} from './repo.js';
 import {
   collectCustomProperties,
   MIN_PROPERTIES,
@@ -225,7 +245,7 @@ const VANILLA_SCRIPTS = [
     selector: '[data-mg-preview-access]',
     initFunction: 'mgPreviewAccess(scope)',
     description:
-      'Password gate and preview notice bar for staging and pre-publication review.',
+      'Page-level editorial PIN gate with session or optional local persistence, max-age in days and a bubbling mg-preview-access:unlock event. Not access control.',
   },
   {
     name: 'UNDRR shared constants',
@@ -255,6 +275,8 @@ const VANILLA_SCRIPTS = [
 const COMPONENT_IDS = {
   CtaButton: 'components-buttons-buttons',
   VerticalCard: 'components-cards-vertical-card',
+  ContentCard: 'patterns-content-card',
+  ContentTeaser: 'patterns-content-teaser',
   HorizontalCard: 'components-cards-horizontal-card',
   BookCard: 'components-cards-book-card',
   HorizontalBookCard: 'components-cards-horizontal-book-card',
@@ -270,6 +292,7 @@ const COMPONENT_IDS = {
   EmbedContainer: 'components-embedcontainer',
   FullWidth: 'components-fullwidth',
   Loader: 'components-loader',
+  ProgressBar: 'components-progress-bar',
   ShowMore: 'components-showmore',
   Chips: 'components-buttons-chips',
   TextInput: 'components-forms-text-input',
@@ -299,6 +322,29 @@ const COMPONENT_IDS = {
 
 function buildSampleProps(React) {
   return {
+    ContentCard: {
+      layout: 'book',
+      content: {
+        type: 'publication',
+        profile: 'default',
+        title: 'Understanding disaster risk',
+        link: '/publications/disaster-risk',
+        typeLabel: 'Report',
+        image: { src: '/images/teaser-publication-cover.svg', alt: '' },
+      },
+    },
+    ContentTeaser: {
+      content: {
+        type: 'article',
+        profile: 'news',
+        title: 'Communities strengthen resilience',
+        link: '/news/community-resilience',
+        typeLabel: 'News',
+        summary:
+          'Local knowledge and shared planning help communities prepare for changing risks.',
+      },
+    },
+
     Chips: { label: 'Flood' },
     CtaButton: { label: 'Take action' },
     TextInput: {
@@ -581,7 +627,16 @@ function buildSampleProps(React) {
         'This section spans the full viewport width.'
       ),
     },
-    Loader: { label: 'Loading content' },
+    // Decorative: the announced form renders its status region empty and
+    // adds the label after mount, so a static render would publish an empty
+    // region. The announced markup is a supplemental example instead.
+    Loader: { decorative: true },
+    ProgressBar: {
+      label: 'Uploading report.pdf',
+      value: 45,
+      showValue: true,
+      helpText: 'About a minute left.',
+    },
     ShowMore: {
       data: [
         {
@@ -690,7 +745,12 @@ const docsBaseInput =
   docsBaseArg || process.env.MANGROVE_DOCS_BASE_URL || DEFAULT_DOCS_BASE;
 const DOCS_BASE = normalizeDocsBase(docsBaseInput);
 
-const manifestPath = path.join(buildDir, 'manifests', 'components.json');
+const metadataFileArg = args
+  .find(a => a.startsWith('--metadata-file='))
+  ?.slice('--metadata-file='.length);
+const manifestPath = metadataFileArg
+  ? path.resolve(process.cwd(), metadataFileArg)
+  : path.join(buildDir, 'manifests', 'components.json');
 const outputDir = path.join(buildDir, 'ai-components');
 const llmsTxtPath = path.join(buildDir, 'llms.txt');
 const distDir = path.resolve(process.cwd(), 'dist/components');
@@ -704,7 +764,10 @@ if (!fs.existsSync(manifestPath)) {
 const pkg = JSON.parse(
   fs.readFileSync(path.resolve(process.cwd(), 'package.json'), 'utf8')
 );
-const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+const manifest = readComponentMetadata(manifestPath);
+// Filter once, before curated validation, PropTypes coverage and catalog output.
+// The raw Storybook manifest is left intact for its QA routes and test runner.
+manifest.components = selectPublishedComponents(manifest.components);
 const iconInventoryPath = path.resolve(
   process.cwd(),
   'stories/Atom/Icons/Icons.json'
@@ -995,7 +1058,7 @@ function getDescription(id, component, data) {
  * `summary` and `description` used to hold the same string. They no longer
  * do: a curated description carries the whole contract, which is what an
  * agent grepping the index needs to find, but it does not read as a label in
- * a list of 82 components. A curated entry whose description runs past
+ * a list of 85 components. A curated entry whose description runs past
  * SUMMARY_MAX_LENGTH therefore carries its own short `summary`, and
  * `yarn validate-manifest` fails when it does not.
  */
@@ -1141,7 +1204,7 @@ if (uncoveredIds.length > 0) {
 // The curated description reaches `description` in index.json and in every
 // detail file, which is the point: an agent greps the index and finds the
 // contract. `summary` is the other half of that entry — the line a human or
-// an agent reads when scanning 82 components — so a description written as a
+// an agent reads when scanning 85 components — so a description written as a
 // paragraph needs a sentence written for that slot instead.
 // ---------------------------------------------------------------------------
 const missingSummaries = [];
@@ -1645,12 +1708,11 @@ if (a11yViolations.length > 0) {
 // Check 2: PropTypes coverage warning
 // ---------------------------------------------------------------------------
 
-const totalComponents = Object.keys(manifest.components).length;
-const withProps = Object.values(manifest.components).filter(
-  c => c.reactDocgen?.props && Object.keys(c.reactDocgen.props).length > 0
-).length;
-const coverage =
-  totalComponents > 0 ? Math.round((withProps / totalComponents) * 100) : 0;
+const {
+  total: totalComponents,
+  documented: withProps,
+  percent: coverage,
+} = propTypesCoverage(manifest.components);
 
 console.log(
   `PropTypes coverage: ${withProps} of ${totalComponents} components have props documented (${coverage}%)`
@@ -2262,6 +2324,7 @@ async function main() {
       description: pkg.description,
       documentation: DOCS_BASE,
       repository: REPO_URL,
+      publicRepository: PUBLIC_REPO_URL,
       npm: `https://www.npmjs.com/package/${pkg.name}`,
       cssPrefix: 'mg-',
       namingConvention:
@@ -2290,7 +2353,7 @@ async function main() {
         field: 'customProperties',
       },
       releasesUrl: `${DOCS_BASE}releases.json`,
-      changelogUrl: `${REPO_BLOB_MAIN}CHANGELOG.md`,
+      changelogUrl: `${PUBLIC_REPO_BLOB_MAIN}CHANGELOG.md`,
       quickstart: {
         css: `<link rel="stylesheet" href="${themeCss.undrr}" />`,
         cssThemes: themeCss,
@@ -2374,6 +2437,18 @@ async function main() {
   });
   const releasesJson = JSON.stringify(releasesData, null, 2);
   fs.writeFileSync(path.join(buildDir, 'releases.json'), releasesJson);
+  validateContentReferences(
+    JSON.parse(fs.readFileSync(path.join(buildDir, 'index.json'), 'utf8'))
+      .entries
+  );
+  fs.writeFileSync(
+    path.join(buildDir, 'content-patterns.json'),
+    JSON.stringify(
+      buildContentPatterns({ docsBase: DOCS_BASE, packageName: pkg.name }),
+      null,
+      2
+    )
+  );
   fs.writeFileSync(path.join(outputDir, 'releases.json'), releasesJson);
 
   // -------------------------------------------------------------------------
@@ -2390,15 +2465,24 @@ async function main() {
 
 ## Links
 
+Content families organize full-page, teaser and card presentations. Read content-patterns.json before choosing a presentation: experimental teaser and card presentations are implemented, references are examples, and stubs are not designed or implemented. Card field selection is separate from teaser selection; vertical and book are card layouts. Never invent a callable component or import for a stub. Teaser inputs are projections, not canonical content schemas.
+
 - Storybook: ${DOCS_BASE}
-- Repository: ${REPO_URL}
+- Repository (public mirror of ${REPO_URL.replace('https://github.com/', '')}, which is not publicly readable): ${PUBLIC_REPO_URL}
+- Report a problem with a component or a guide: ${PUBLIC_ISSUES_URL}
 - npm: https://www.npmjs.com/package/${pkg.name}
+- Content families and presentation status (machine-readable): ${DOCS_BASE}content-patterns.json
+- Content pattern overview: ${DOCS_BASE}?path=/docs/patterns-content-overview--docs
 - Release changelog (machine-readable): ${DOCS_BASE}releases.json
-- Project changelog (markdown): ${REPO_BLOB_MAIN}CHANGELOG.md
+- Project changelog (markdown): ${PUBLIC_REPO_BLOB_MAIN}CHANGELOG.md
 - v2.0 Release notes: ${DOCS_BASE}?path=/docs/getting-started-release-notes-v2-0--docs
 - Icons inventory: ${DOCS_BASE}ai-components/components-icons.json
 - Theme token dictionary: ${DOCS_BASE}tokens.json (theme tokens only; component custom properties are documented per component)
-- Editorial manual (capitalization, punctuation, numbers, abbreviations, italics, spelling, UNDRR terminology, disability inclusive and gender-inclusive language; each rule credited to its United Nations system or UNDRR source in the doc itself): ${DOCS_BASE}llms-editorial-manual.txt
+- Editorial manual for UNDRR web content (news, publications, blogs, events) as well as UI copy and component docs: capitalization, punctuation, numbers, abbreviations, italics, spelling, UNDRR terminology, disability inclusive and gender-inclusive language, each rule credited to its United Nations system or UNDRR source in the doc itself: ${DOCS_BASE}llms-editorial-manual.txt
+- UNDRR editorial guides for writing news, events, publications and blogs: https://assets.undrr.org/docs/editorial-guides/README.md
+- Instructions for AI agents writing UNDRR content: https://assets.undrr.org/docs/editorial-guides/ai-agent-instructions.md
+- Page building guide for UNDRR websites built with Drupal Gutenberg (landing page structure, layout patterns, component choice, UNDRR block reference with current pasteable markup): ${DOCS_BASE}llms-page-building.txt
+- Search widget editor configuration (block settings, search syntax, field:value filters, taxonomy term IDs): ${DOCS_BASE}llms-search-widget.txt
 
 ## For AI agents
 
@@ -2459,7 +2543,7 @@ Mangrove provides standalone vanilla JavaScript utilities under \`/js/\` (\`${cd
 - **Table of Contents** (\`js/table-of-contents.js\`): Call \`mgTableOfContents(scope)\` to generate an article TOC with scrollspy tracking.
 - **On This Page Nav** (\`js/on-this-page-nav.js\`): Call \`mgOnThisPageNav(scope)\` for in-page jump nav with horizontal scrolling.
 - **Switch pending** (\`js/switch-pending.js\`): Call \`mgSwitchPendingInit(scope)\` for new \`[data-mg-switch-pending]\` switches, or \`mgSwitchPending(input, { save })\` for one switch. Call \`mgSwitchPendingDestroy(scope)\` before removing them.
-- **Preview Access** (\`js/preview-access.js\`): Call \`mgPreviewAccess(scope)\` to initialize password gating for staging environments.
+- **Preview Access** (\`js/preview-access.js\`): Call \`mgPreviewAccess(scope)\` to initialize the PIN preview gate. Add \`data-mg-preview-persist="local"\` (optionally \`data-mg-preview-max-age\` in days) to remember an unlock across tabs and visits, and listen for the bubbling \`mg-preview-access:unlock\` event rather than polling the \`mg-preview-access--unlocked\` class.
 - **Shared constants** (\`js/undrr.js\`): Key codes and breakpoints on \`window.UNDRR\`. It does not bundle the other modules.
 
 ### CSS utilities
@@ -2471,16 +2555,33 @@ The utilities.json file lists ~${utilityClassCount} utility classes grouped by c
 To inspect changes between versions, tags, and pre-releases without parsing raw git commits:
 
 - **Machine-readable releases endpoint**: ${DOCS_BASE}releases.json
-  Contains structured changelog objects for every release (version, release date, tag, PR references, categorization: Features, Bug fixes, Tooling, Security) plus component-level changelogs.
-- **Repository changelog**: ${REPO_BLOB_MAIN}CHANGELOG.md
+  Contains structured changelog objects for every release (version, release date, tag, PR references, categorization: Features, Bug fixes, Tooling, Security) plus component-level changelogs. Pull requests, issues and tags are on \`${REPO_URL.replace('https://github.com/', '')}\`, which is not publicly readable, so they appear as plain-text references (such as \`unisdr/undrr-mangrove#1234\`) with no URL; do not look them up on the public fork, whose numbers refer to different items.
+- **Repository changelog**: ${PUBLIC_REPO_BLOB_MAIN}CHANGELOG.md
   Cross-cutting library release notes.
 - **v2.0 migration notes & breaking changes**: ${DOCS_BASE}?path=/docs/getting-started-release-notes-v2-0--docs
   Full breaking change catalogue, architectural shifts, and token migration recipes.
-- **Component-level changelogs**: Each component's detail file (${DOCS_BASE}ai-components/{id}.json) contains a \`changelog\` array with granular version updates, dates, descriptions, and PR links.
+- **Component-level changelogs**: Each component's detail file (${DOCS_BASE}ai-components/{id}.json) contains a \`changelog\` array with granular version updates, dates, descriptions, and PR references.
 
 ### Z-index layers
 
 Use the --mg-z-index-* custom properties for global stacking contexts (fixed, sticky, portaled, or deliberately negative elements). One token per UI concept: --mg-z-index-behind, -nav, -sticky, -nav-toggle, -header, -drawer, -dropdown, -modal, -toast. Derive backdrops with calc(), e.g. z-index: calc(var(--mg-z-index-drawer) - 1). For local stacking within a component's own isolated stacking context (e.g. inside position: relative), use a raw value with a comment instead of a token. The navigation zone tokens (-nav through -header, values 10-22) are frozen; do not change their numeric values. These were $mg-z-index-* Sass variables before 2.0 and no longer exist in that form. See the "Design decisions/Z-index layers" Storybook page for the full layer table and philosophy.
+
+### Rich editorial content
+
+For trusted rendered editorial HTML, use \`mg-content\` on the actual body field and follow ${DOCS_BASE}?path=/docs/patterns-rich-content--docs. It supplies scoped semantic defaults, not sanitisation or a layout/font reset. Keep navigation, controls, cards and embeds outside the prose boundary where practical; classed component islands own their presentation. Existing paragraph links retain their cue through CMS classes. Preserve native table headers/captions and provide named keyboard-accessible local overflow only when content is genuinely wide. \`mg-body\` remains supported without deprecation.
+
+### Visual decisions and card composition
+
+Read ${DOCS_BASE}?path=/docs/design-decisions-experience-principles--docs before visual refinements. Shared components own semantics, geometry and interactions; themes own surface expression. Verify all five themes, optional content and supported CMS markup. Design review is not user research.
+
+- Photo cards have edge images and inset content; text-only cards retain their enclosure. Without labels, the title uses one content inset rather than stacked metadata spacing.
+- Publication teasers preserve complete natural-ratio covers with a square hairline and default to an unboxed caption/listing. Theme their surface with the five \`--mg-card-publication-*\` tokens in \`tokens.json\`; do not assume general card surface overrides also style publications. Gutenberg's book shape is \`mg-card mg-card__book\`, without \`mg-card__vc\`.
+- Choose \`imageScale: 'small'\` for navigation glyphs, reserving proportional sizes for illustrations and logos. \`iconSize\` supplies image attributes, not CSS glyph sizing. For horizontal visual sizing, set \`--mg-card-icon-size\` in CSS.
+- Compact stats reduce both padding and internal spacing. Do not reintroduce child margins that duplicate their gap.
+
+### Motion and animation
+
+Before adding or changing component motion, read ${DOCS_BASE}llms-motion.txt (rendered: ${DOCS_BASE}?path=/docs/design-decisions-motion--docs). Use interaction timing tokens, gate optional CSS motion with prefers-reduced-motion: no-preference, and check the preference before JavaScript-driven motion. Reuse Loader or ProgressBar so loading remains understandable under reduced motion and forced colours; directional travel follows RTL reading direction. The guide documents loop-cycle exceptions and browser review requirements.
 
 ### Design tokens
 
@@ -2489,9 +2590,9 @@ Colour, spacing, radii and component tokens are CSS custom properties, so they a
 Where they come from:
 
 - Compiled theme token dictionary: ${DOCS_BASE}tokens.json — theme tokens only; see its \`scope\` field
-- \`tokens/mangrove.yaml\` — the brand-neutral base: https://raw.githubusercontent.com/unisdr/undrr-mangrove/main/tokens/mangrove.yaml
+- \`tokens/mangrove.yaml\` — the brand-neutral base: ${PUBLIC_REPO_RAW_MAIN}tokens/mangrove.yaml
 - \`tokens/undrr.yaml\`, \`preventionweb.yaml\`, \`irp.yaml\`, \`mcr.yaml\`, \`delta.yaml\` — brand layers merged over the base, same directory.
-- \`stories/assets/scss/_tokens-data-viz.scss\` — the chart and map palette: https://raw.githubusercontent.com/unisdr/undrr-mangrove/main/stories/assets/scss/_tokens-data-viz.scss
+- \`stories/assets/scss/_tokens-data-viz.scss\` — the chart and map palette: ${PUBLIC_REPO_RAW_MAIN}stories/assets/scss/_tokens-data-viz.scss
 
 Those YAML files carry a \`$description\` on the tokens that need one, which is the reasoning behind the value. For automated and tooling integrations, fetch the machine-readable \`${DOCS_BASE}tokens.json\` dictionary which includes token types, formats, descriptions, and rgb() wrapping requirements.
 
@@ -2564,7 +2665,7 @@ The Storybook includes a Brand section for non-technical users (content editors,
 - **Brand identity** (${DOCS_BASE}?path=/story/brand-brand-identity--docs): Theme-aware page showing colors, typography, logos, buttons, and icons. Switch themes via toolbar or append \`&globals=theme:<Theme Name>\` to the URL. Colors are probed live from compiled CSS via \`getComputedStyle\`, so they stay in sync with SCSS.
 - **Brand guidelines** (${DOCS_BASE}?path=/docs/brand-brand-guidelines--docs): Editorial guidance — brand positioning, communication rules, logo usage, photography standards, web elements. Migrated from UNDRR SharePoint.
 - **Common patterns** (${DOCS_BASE}?path=/docs/brand-common-patterns--docs): Plain-language reference for foundations shared across all themes — breakpoints, grid classes (\`mg-grid__col-{N}\`), accessibility standards, language support (\`lang="ar"\` mechanism), icon sources, z-index.
-- **Component gallery** (${DOCS_BASE}?path=/docs/brand-component-gallery--docs): Curated catalog of ~40 components in 8 categories (page structure, hero, content cards, interactive, data viz, typography, layout helpers, platform features). Each row links to the full component docs. Useful first stop when navigating what exists.
+- **Component gallery** (${DOCS_BASE}?path=/docs/brand-component-gallery--docs): Curated catalog of ~40 components in 9 categories (page structure, hero, content cards, interactive, data viz, typography, layout helpers, loading and progress, platform features). Each row links to the full component docs. Useful first stop when navigating what exists.
 
 Theme key facts:
 - Five themed properties with resolved primary colors: UNDRR (blue #004f91), PreventionWeb (teal #0a6969), MCR2030 (purple #591a61), IRP (bright blue #0f78bf), DELTA Resilience (navy #132e48).
@@ -2572,8 +2673,7 @@ Theme key facts:
 
 Brand characteristics (UNDRR voice): Knowledgeable, Approachable, Collaborative.
 
-Editorial rules:
-- Avoid UN jargon. Lead with people, not issues. Use inverted pyramid. Positive framing for prevention content.
+Editorial rules: follow the editorial manual (${DOCS_BASE}llms-editorial-manual.txt) and, for news, events, publications and blogs, the UNDRR editorial guides linked above.
 
 Typography:
 - Font families are CSS custom properties called ROLES, not Sass variables. A component stylesheet names a role and never a typeface: \`var(--mg-font-family-text)\`, \`-heading\`, \`-display\`, \`-ui\`, \`-code\`. Roles are defined on \`:root\` in \`_variables.scss\` and re-pointed for Arabic in \`_fonts.scss\`, which is the single font entry point every build path imports — entry points, the shared Drupal import list, and the per-component recipe alike.
@@ -2604,12 +2704,12 @@ Icons:
 - stories/Molecules/     SectionHeader, FooterNavigation, BodyColumn
 - stories/Components/    MegaMenu, Cards, Charts, Map, Gallery
 - stories/Utilities/     CSS utilities, loaders, show/more
-- stories/Patterns/      Full-page compositions (ArticleStory, ContentHub, LandingPages) — demonstrate assembling components into a page, not reusable exports themselves. See "Composing a page pattern" below.
+- stories/Patterns/      Full-page compositions (ArticleStory, ContentHub, LandingPages) — demonstrate assembling components into a page. ContentTeaser and ContentCard are explicit reusable-export exceptions. See "Composing a page pattern" below.
 - stories/assets/scss/   Theme stylesheets and design tokens
 
 ### Composing a page pattern
 
-stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions) are not components: nothing there is exported from the npm package or hydrated. Each one demonstrates how existing components and layout primitives assemble into a full page. Before laying out a new pattern, pick the right layout system for the shape you need — reusing the wrong one is the most expensive mistake to unwind:
+Full-page examples under stories/Patterns/* (ArticleStory, ContentHub, LandingPages) are compositions rather than published components. ContentTeaser and ContentCard are explicit exceptions: their reusable renderers are published as components/ContentTeaser.js and components/ContentCard.js. Drupal bindings are data in components/DrupalContentPatterns.js; canonical models and full-page stubs are not callable exports. Each one demonstrates how existing components and layout primitives assemble into a full page. Before laying out a new pattern, pick the right layout system for the shape you need — reusing the wrong one is the most expensive mistake to unwind:
 
 - **mg-grid** (\`stories/Atom/Layout/Grid/grid.scss\`, classes \`mg-grid mg-grid__col-{2..6}\`): equal-fraction repeating columns — every numbered track is \`1fr\`. Use it for repeating card grids. \`mg-grid--article\` (below) is a different, asymmetric variant on the same base class — the numbered/span classes are still equal-fraction only.
 - **mg-grid's \`--article\` variant** (\`mg-grid mg-grid--article\`, defined in \`stories/Atom/Layout/Grid/grid.scss\`): the asymmetric rail/article split — a flexible \`minmax(0, 1fr)\` column plus a fixed 16rem rail. This is what \`mg-reading--with-contents\` (\`stories/Utilities/PagePatterns/page-patterns.scss\`) pairs with for a long-form reading column with a sticky table-of-contents rail from 48rem up, stacking above the article below that; \`page-patterns.scss\` itself only supplies the item-placement rules (which child is the sidebar vs. the article), not the column shape. Reach for \`mg-grid--article\` directly if you need the same asymmetric shape outside that pattern.
@@ -2636,6 +2736,28 @@ stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions
   );
 
   // -------------------------------------------------------------------------
+  // Write topic-scoped llms-*.txt guides
+  // (see docs-submanifest.js)
+  // -------------------------------------------------------------------------
+
+  for (const submanifest of DOCS_SUBMANIFESTS) {
+    const txt = buildDocsSubmanifest({
+      title: submanifest.title,
+      summary: submanifest.summary,
+      sources: submanifest.sources.map(source => ({
+        ...source,
+        markdown: fs.readFileSync(
+          path.resolve(process.cwd(), 'docs', source.file),
+          'utf8'
+        ),
+      })),
+      docsBase: DOCS_BASE,
+      extraLinks: submanifest.extraLinks(DOCS_BASE),
+    });
+    fs.writeFileSync(path.join(buildDir, submanifest.filename), txt);
+  }
+
+  // -------------------------------------------------------------------------
   // Write llms.json
   // -------------------------------------------------------------------------
 
@@ -2649,14 +2771,23 @@ stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions
       urls: {
         storybook: DOCS_BASE,
         repository: REPO_URL,
+        publicRepository: PUBLIC_REPO_URL,
+        issues: PUBLIC_ISSUES_URL,
         npm: `https://www.npmjs.com/package/${pkg.name}`,
         releases: `${DOCS_BASE}releases.json`,
-        changelog: `${REPO_BLOB_MAIN}CHANGELOG.md`,
+        changelog: `${PUBLIC_REPO_BLOB_MAIN}CHANGELOG.md`,
         releaseNotesV2: `${DOCS_BASE}?path=/docs/getting-started-release-notes-v2-0--docs`,
         componentIndex: `${DOCS_BASE}ai-components/index.json`,
+        contentPatterns: `${DOCS_BASE}content-patterns.json`,
         utilities: `${DOCS_BASE}ai-components/utilities.json`,
         tokens: `${DOCS_BASE}tokens.json`,
         editorialManual: `${DOCS_BASE}llms-editorial-manual.txt`,
+        ...Object.fromEntries(
+          DOCS_SUBMANIFESTS.map(submanifest => [
+            submanifest.urlKey,
+            `${DOCS_BASE}${submanifest.filename}`,
+          ])
+        ),
         css: themeCss,
       },
       latestRelease: releasesData.latest,
@@ -2682,6 +2813,7 @@ stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions
         total: customPropertyCount,
         components: Object.keys(customProperties.byComponent).length,
         componentIndex: `${DOCS_BASE}ai-components/index.json`,
+        contentPatterns: `${DOCS_BASE}content-patterns.json`,
       },
       conventions: {
         cssPrefix: 'mg-',
@@ -2704,6 +2836,38 @@ stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions
   fs.writeFileSync(path.join(buildDir, 'llms.json'), llmsJson);
 
   // -------------------------------------------------------------------------
+  // No links into the unisdr organization
+  // -------------------------------------------------------------------------
+
+  // Anonymous readers and AI tools get a 404 from github.com/unisdr. A link
+  // there in any manifest this build publishes is a regression: fix its source
+  // or route it through toPublicMarkdown() in parse-changelog.js.
+  const publishedManifests = [
+    ...fs
+      .readdirSync(buildDir)
+      .filter(name => /^(llms.*\.(txt|json)|releases\.json)$/.test(name))
+      .map(name => path.join(buildDir, name)),
+    ...fs
+      .readdirSync(outputDir)
+      .filter(name => name.endsWith('.json'))
+      .map(name => path.join(outputDir, name)),
+  ];
+  const privateLinks = publishedManifests.flatMap(file =>
+    findPrivateLinks(fs.readFileSync(file, 'utf8')).map(
+      url => `${path.relative(process.cwd(), file)}: ${url}`
+    )
+  );
+  if (privateLinks.length > 0) {
+    console.error(
+      `Error: ${privateLinks.length} link(s) to github.com/unisdr in the generated manifests, which anonymous readers cannot open:`
+    );
+    for (const link of [...new Set(privateLinks)].slice(0, 20)) {
+      console.error(`  - ${link}`);
+    }
+    process.exit(1);
+  }
+
+  // -------------------------------------------------------------------------
   // Summary
   // -------------------------------------------------------------------------
 
@@ -2720,6 +2884,11 @@ stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions
   console.log(
     `  ${path.join(buildDir, 'llms-editorial-manual.txt')} (editorial manual sub-manifest)`
   );
+  for (const submanifest of DOCS_SUBMANIFESTS) {
+    console.log(
+      `  ${path.join(buildDir, submanifest.filename)} (${submanifest.title})`
+    );
+  }
   console.log(
     `  ${path.join(buildDir, 'releases.json')} (${releasesData.releases.length} releases parsed)`
   );

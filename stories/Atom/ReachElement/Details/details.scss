@@ -4,8 +4,11 @@
  * Native HTML <details> and <summary> disclosure styling with custom toggle indicators.
  *
  * Full documentation:
- * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Atom/BaseTypography/BaseTypography.mdx
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Atom/BaseTypography/BaseTypography.mdx
  */
+@use "../../../assets/scss/mixins" as *;
+@use "../../../assets/scss/config" as *;
+
 /* details tag start */
 
 /* Baseline: usability essentials for all <details> elements */
@@ -24,7 +27,8 @@ details.mg-details {
   border: 1px solid rgb(var(--mg-color-neutral-400)); // #808080 — 3.95:1 on white (passes WCAG 1.4.11)
   border-radius: mg-rem(4);
   padding: mg-rem(10);
-  transition: box-shadow 0.2s ease-in-out;
+  transition: box-shadow var(--mg-motion-duration-fast)
+    var(--mg-motion-easing-standard);
 
   &:hover {
     box-shadow: 0 2px 4px rgb(0 0 0 / 0.1);
@@ -40,7 +44,8 @@ details.mg-details {
     padding-block: mg-rem(10);
     padding-inline: mg-rem(10) mg-rem(44);
     position: relative;
-    transition: background-color 0.2s ease-in-out;
+    transition: background-color var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
 
     &:hover {
       background-color: rgb(

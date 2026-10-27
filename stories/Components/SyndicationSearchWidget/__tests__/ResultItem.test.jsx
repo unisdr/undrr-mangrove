@@ -83,12 +83,14 @@ describe('swapCardVariant', () => {
     expect(result).toContain('mg-card');
   });
 
-  it('rewrites Drupal image style to portrait for card-book mode', () => {
+  it('preserves supplied artwork URLs for card-book mode', () => {
     const html =
       '<img src="https://www.undrr.org/sites/default/files/styles/landscape_16_9/public/2023-06/photo.jpg?itok=abc">';
     const result = swapCardVariant(html, 'card-book');
-    expect(result).toContain('/styles/por/public/');
-    expect(result).not.toContain('landscape_16_9');
+    expect(result).toContain(
+      '/styles/landscape_16_9/public/2023-06/photo.jpg?itok=abc'
+    );
+    expect(result).not.toContain('/styles/por/public/');
   });
 
   it('rewrites Drupal image style to landscape for card mode', () => {
@@ -118,6 +120,32 @@ describe('stripHiddenTeaserFields', () => {
 });
 
 describe('ResultItem', () => {
+  it.each(['list', 'card', 'card-book'])(
+    'renders the card directly inside the article in %s mode',
+    displayMode => {
+      render(<ResultItem hit={createHit()} displayMode={displayMode} />);
+
+      const article = screen.getByRole('article');
+      expect(article).toHaveAttribute('data-result-type', 'publication');
+      expect(article.children).toHaveLength(1);
+      expect(article.firstElementChild).toHaveClass('mg-card');
+    }
+  );
+
+  it('preserves the scoring panel alongside teaser HTML when metrics are enabled', () => {
+    render(<ResultItem hit={createHit()} showMetrics />);
+
+    const article = screen.getByRole('article');
+    expect(
+      article.querySelector('.mg-search__result-metrics')
+    ).toBeInTheDocument();
+    expect(article.querySelector('.mg-card')).toBeInTheDocument();
+    expect(screen.getByText('Title')).toHaveAttribute(
+      'href',
+      'https://www.undrr.org/node/1'
+    );
+  });
+
   it('renders teaser HTML with card class swap for card mode', () => {
     render(<ResultItem hit={createHit()} displayMode="card" />);
 
@@ -191,6 +219,69 @@ describe('ResultItem', () => {
 
     expect(screen.queryByText('15 Jun 2024')).toBeNull();
     expect(screen.queryByText('UNDRR.org')).toBeNull();
+  });
+
+  describe('fallback date', () => {
+    // 2025-11-12T12:00:00Z and 2025-11-14T12:00:00Z: Search API indexes
+    // date-only values at 12:00 UTC, as Unix seconds wrapped in an array.
+    const NOV_12 = 1762948800;
+    const NOV_14 = 1763121600;
+
+    const renderFallback = overrides => {
+      const { container } = render(
+        <ResultItem hit={createHit({ teaser: null, ...overrides })} />
+      );
+      return container.querySelector('time.mg-search__result-date');
+    };
+
+    it('reads published_at as Unix seconds in an array', () => {
+      const time = renderFallback({ published_at: [1718445600] });
+      expect(time).toHaveTextContent('Jun 15, 2024');
+      expect(time).toHaveAttribute('dateTime', '2024-06-15T10:00:00.000Z');
+    });
+
+    it('shows the event start date for a one-day event', () => {
+      const time = renderFallback({
+        type: ['event'],
+        published_at: [1718445600],
+        event_start: [NOV_12],
+        event_end: [NOV_12],
+      });
+      expect(time).toHaveTextContent('Nov 12, 2025');
+      expect(time).toHaveAttribute('dateTime', '2025-11-12');
+    });
+
+    it('shows a start to end range when the event spans several days', () => {
+      const time = renderFallback({
+        type: 'conference_event',
+        published_at: [1718445600],
+        event_start: [NOV_12],
+        event_end: [NOV_14],
+      });
+      expect(time.textContent).toMatch(/Nov 12\s*–\s*14, 2025/);
+      expect(time).toHaveAttribute('dateTime', '2025-11-12');
+    });
+
+    it('falls back to published_at for an event without event_start', () => {
+      const time = renderFallback({
+        type: 'event',
+        published_at: [1718445600],
+      });
+      expect(time).toHaveTextContent('Jun 15, 2024');
+    });
+
+    it('ignores event dates on other content types', () => {
+      const time = renderFallback({
+        type: 'news',
+        published_at: [1718445600],
+        event_start: [NOV_12],
+      });
+      expect(time).toHaveTextContent('Jun 15, 2024');
+    });
+
+    it('omits the date when published_at is unusable', () => {
+      expect(renderFallback({ published_at: ['not a date'] })).toBeNull();
+    });
   });
 
   it('renders error state when domain is missing', () => {

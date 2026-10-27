@@ -1,3 +1,9 @@
+import {
+  checkPublicationSurface,
+  checkPublicationOverride,
+  publicationSurfaceOverrides,
+  publicationCoverFixture,
+} from './cardGeometryChecks';
 import { BookCard } from './BookCard';
 
 const getCaptionForLocale = locale => {
@@ -158,4 +164,50 @@ export const MixedTitleLengths = {
       </div>
     );
   },
+};
+
+export const NaturalCoverRatio = {
+  name: 'Complete cover without outer frame',
+  render: (args, { globals: { locale } }) => {
+    const data = getCaptionForLocale(locale).contentdata.map(item => ({
+      ...item,
+      imgback: publicationCoverFixture,
+    }));
+    return <BookCard {...args} data={data} />;
+  },
+  play: checkPublicationSurface,
+};
+
+export const ThemedSurface = {
+  name: 'Theme-owned publication surface',
+  render: (args, { globals: { locale } }) => (
+    <div style={publicationSurfaceOverrides}>
+      <BookCard
+        {...args}
+        data={getCaptionForLocale(locale).contentdata.map(item => ({
+          ...item,
+          imgback: publicationCoverFixture,
+        }))}
+      />
+    </div>
+  ),
+  play: checkPublicationOverride,
+};
+
+// Gutenberg's supported book shape omits mg-card__vc.
+export const PlainHtmlBook = {
+  name: 'Publication with CMS classes',
+  render: () => (
+    <article className="mg-card mg-card__book">
+      <div className="mg-card__visual">
+        <img className="mg-card__image" src={publicationCoverFixture} alt="" />
+      </div>
+      <div className="mg-card__content">
+        <header className="mg-card__title">
+          <a href="#cms-publication">Publication title</a>
+        </header>
+      </div>
+    </article>
+  ),
+  play: checkPublicationSurface,
 };

@@ -4,8 +4,8 @@
  * Full documentation:
  * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/Forms/ComboBox/ComboBox.mdx
  */
-@import "../breakpoints";
-@import "../mixins";
+@use "../breakpoints" as *;
+@use "../mixins" as *;
 
 .mg-combobox {
   color: var(--mg-control-text);

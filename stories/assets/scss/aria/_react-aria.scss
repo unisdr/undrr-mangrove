@@ -1823,6 +1823,10 @@
 // survive as a solid Highlight in forced colours where background-image is
 // dropped.
 .react-aria-ProgressBar:not([aria-valuenow]) .fill {
+  // Research-only cycle: 1s moves the stripes by one complete gradient period.
+  // Under reduced motion the no-preference animation is absent; stripes stay still.
+  --mg-aria-progress-duration: 1s;
+
   background-image: repeating-linear-gradient(
     135deg,
     var(--mg-aria-color-accent) 0 var(--mg-aria-space-2),
@@ -1964,7 +1968,8 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .react-aria-ProgressBar:not([aria-valuenow]) .fill {
-    animation: mg-aria-indeterminate 1s linear infinite;
+    animation: mg-aria-indeterminate var(--mg-aria-progress-duration) linear
+      infinite;
   }
   .react-aria-Button {
     transition:

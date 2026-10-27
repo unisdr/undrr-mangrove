@@ -48,6 +48,8 @@ beforeEach(() => {
       scripts: { build: 'noop' },
       devDependencies: { jest: '1.0.0' },
       repository: { type: 'git', url: 'https://example.org/repo.git' },
+      homepage: 'https://example.org/',
+      bugs: { url: 'https://example.org/issues' },
       keywords: ['a'],
       author: 'UNDRR',
       license: 'Apache-2.0',
@@ -69,6 +71,8 @@ beforeEach(() => {
   write(root, 'dist/fonts/mangrove-icon-set.woff2');
   write(root, 'dist/components/MegaMenu.js');
   write(root, 'dist/components/nested/Thing.js');
+  write(root, 'dist/docs/EDITORIAL-MANUAL.md');
+  write(root, 'dist/docs/llms-editorial-manual.txt');
   write(root, 'stories/assets/scss/style.scss');
   write(root, 'stories/Components/Tabs/tabs.scss');
   write(root, 'stories/Components/Tabs/Tabs.jsx');
@@ -107,8 +111,12 @@ test('copies dist subpaths and SCSS sources into the CI layout', () => {
       'dist/assets/js/tabs.js',
       'dist/components/MegaMenu.js',
       'dist/components/nested/Thing.js',
+      'dist/docs/EDITORIAL-MANUAL.md',
+      'dist/docs/llms-editorial-manual.txt',
       'dist/fonts/mangrove-icon-set.woff2',
       'dist/index.js',
+      'docs/EDITORIAL-MANUAL.md',
+      'docs/llms-editorial-manual.txt',
       'error-pages/404.html',
       'fonts/mangrove-icon-set.woff2',
       'js/tabs.js',
@@ -191,6 +199,8 @@ test('the packed tarball ships the subpath directories', () => {
     // release did not only because the real build emits no such file. With no
     // `main` there is nothing outside `files` to force in, and the fixture and
     // a release now pack the same shape.
+    'docs/EDITORIAL-MANUAL.md',
+    'docs/llms-editorial-manual.txt',
     'error-pages/404.html',
     'fonts/mangrove-icon-set.woff2',
     'js/tabs.js',
@@ -255,6 +265,7 @@ test('generates the slimmed package.json', () => {
       '!scss/assets/scss/aria/_tokens-*.scss',
       'error-pages/**/*',
       'fonts/**/*',
+      'docs/**/*',
       '!**/__tests__/**',
       '!**/__snapshots__/**',
       '!**/__mocks__/**',
@@ -263,6 +274,8 @@ test('generates the slimmed package.json', () => {
       '!**/*.spec.*',
     ],
     repository: { type: 'git', url: 'https://example.org/repo.git' },
+    homepage: 'https://example.org/',
+    bugs: { url: 'https://example.org/issues' },
     keywords: ['a'],
     author: 'UNDRR',
     license: 'Apache-2.0',
@@ -277,6 +290,8 @@ test('generates the slimmed package.json', () => {
     'description',
     'files',
     'repository',
+    'homepage',
+    'bugs',
     'keywords',
     'author',
     'license',

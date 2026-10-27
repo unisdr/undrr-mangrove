@@ -4,8 +4,11 @@
  * Binary page satisfaction widget (Was this page helpful? Yes/No) with response confirmation.
  *
  * Full documentation:
- * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/UserFeedback/UserFeedback.mdx
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/UserFeedback/UserFeedback.mdx
  */
+@use "../../assets/scss/mixins" as *;
+@use "../../assets/scss/config" as *;
+
 .mg-user-feedback {
   align-items: center;
   box-sizing: border-box;

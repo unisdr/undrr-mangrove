@@ -236,6 +236,22 @@ describe('createHydrator', () => {
     expect(mockCreateRoot).toHaveBeenCalledTimes(1);
   });
 
+  it('leaves a data-mg-ssr container for React to replace at its first commit', () => {
+    document.body.innerHTML =
+      '<div class="target" data-mg-ssr><p class="ssr">server</p></div><div class="target"><p>plain</p></div>';
+
+    createHydrator({
+      selector: '.target',
+      component: DummyComponent,
+      fromElement: () => ({ text: 'test' }),
+    });
+
+    const [ssr, plain] = document.querySelectorAll('.target');
+    expect(ssr.querySelector('.ssr')).not.toBeNull();
+    expect(plain.innerHTML).toBe('');
+    expect(mockCreateRoot).toHaveBeenCalledTimes(2);
+  });
+
   it('passes identifierPrefix to createRoot for each container', () => {
     document.body.innerHTML = `
       <div class="target"></div>

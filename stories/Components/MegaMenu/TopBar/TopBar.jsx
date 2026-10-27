@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import { useRailDrag } from './useRailDrag';
 import { TopBarItem } from './TopBarItem';
 import { TopBarMobileIconButton } from './TopBarMobileIconButton.jsx';
 
 export function TopBar({
   isMobile,
+  openMobileSection,
   sidebarId,
   labels,
   handleItemHover,
@@ -11,6 +13,7 @@ export function TopBar({
   showSidebar,
   sections,
   activeItem,
+  activateItem,
   sectionListRef,
   itemListRef,
   logoSrc,
@@ -19,6 +22,15 @@ export function TopBar({
   logoWidth,
   logoHeight,
 }) {
+  const railDrag = useRailDrag(isMobile);
+  const pendingPanelFocusRef = useRef(null);
+  useEffect(() => {
+    if (pendingPanelFocusRef.current === activeItem) {
+      sectionListRef.current?.[activeItem]?.focus();
+      pendingPanelFocusRef.current = null;
+    }
+  }, [activeItem, sectionListRef]);
+
   const handleFocusByArrows = (e, index) => {
     // Prevent default browser scrolling for arrow keys
     if (['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
@@ -27,20 +39,29 @@ export function TopBar({
 
     const itemRef = itemListRef?.current;
 
-    if (e.key === 'ArrowLeft' && index >= 1) {
-      itemRef[index - 1].focus();
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      const rtl = window.getComputedStyle(e.currentTarget).direction === 'rtl';
+      const step = (e.key === 'ArrowRight' ? 1 : -1) * (rtl ? -1 : 1);
+      itemRef[index + step]?.focus();
     }
-    if (e.key === 'ArrowRight' && index < itemRef?.length - 1) {
-      itemRef[index + 1].focus();
-    }
-    if (e.key === 'ArrowDown') {
-      sectionListRef?.current?.[index].focus();
+    if (e.key === 'ArrowDown' && sectionListRef.current?.[index]) {
+      if (activeItem === index) sectionListRef.current[index].focus();
+      else {
+        pendingPanelFocusRef.current = index;
+        activateItem(index);
+      }
     }
   };
 
   const menuItems = sections.map((section, index) => (
     <TopBarItem
-      inert={isMobile}
+      isMobile={isMobile}
+      sidebarId={sidebarId}
+      onMobileClick={event => {
+        // Safari does not focus buttons on touch; save a reliable return target.
+        event.currentTarget.focus({ preventScroll: true });
+        openMobileSection(index);
+      }}
       key={index}
       index={index}
       ref={element => {
@@ -50,11 +71,19 @@ export function TopBar({
       icon={section.icon}
       bannerDescription={section.bannerDescription}
       link={section.bannerButton}
-      onMouseEnter={() => handleItemHover(index)}
+      onMouseEnter={() => {
+        if (!isMobile) handleItemHover(index);
+      }}
       activeItem={activeItem}
       section={section}
       handleOnKeyDown={e => {
-        handleFocusByArrows(e, index);
+        if (isMobile && e.key === 'ArrowDown') {
+          e.preventDefault();
+          e.currentTarget.querySelector('button')?.focus();
+          openMobileSection(index);
+        } else {
+          handleFocusByArrows(e, index);
+        }
       }}
       sectionListRef={sectionListRef}
       itemListRef={itemListRef}
@@ -89,29 +118,26 @@ export function TopBar({
           onClick={() => toggleShowSidebar()}
         />
 
-        <ul className="mg-mega-topbar__nav">
-          {/* Desktop menu items - hidden on mobile/tablet via CSS */}
+        <ul className="mg-mega-topbar__nav" {...railDrag}>
+          {/* Mobile labels open the corresponding section in the dialog. */}
           {menuItems}
         </ul>
       </div>
     );
   }
 
-  // Default variant: unchanged <ul> root
+  // Keep the trigger outside the scrolling list, as in the branded variant.
   return (
-    <ul className="mg-mega-topbar | mg-container-full-width">
-      {/* Mobile/Tablet hamburger button - hidden on desktop via CSS */}
-      <li className="mg-mega-topbar__mobile-trigger">
-        <TopBarMobileIconButton
-          sidebarId={sidebarId}
-          labels={labels}
-          isOpen={showSidebar}
-          onClick={() => toggleShowSidebar()}
-        />
-      </li>
-
-      {/* Desktop menu items - hidden on mobile/tablet via CSS */}
-      {menuItems}
-    </ul>
+    <div className="mg-mega-topbar | mg-container-full-width">
+      <TopBarMobileIconButton
+        sidebarId={sidebarId}
+        labels={labels}
+        isOpen={showSidebar}
+        onClick={() => toggleShowSidebar()}
+      />
+      <ul className="mg-mega-topbar__nav" {...railDrag}>
+        {menuItems}
+      </ul>
+    </div>
   );
 }

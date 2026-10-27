@@ -14,10 +14,18 @@ describe('syndicationSearchWidgetFromElement', () => {
     expect(config).toEqual({});
   });
 
+  it('reads the analytics region prefix', () => {
+    const { config } = syndicationSearchWidgetFromElement(
+      makeContainer({ 'analytics-region-prefix': 'collection-related' })
+    );
+    expect(config.analyticsRegionPrefix).toBe('collection-related');
+  });
+
   it('extracts simple string and number props', () => {
     const { config } = syndicationSearchWidgetFromElement(
       makeContainer({
         'search-endpoint': 'https://example.com/search',
+        'taxonomy-endpoint': 'https://example.com/taxonomy',
         'results-per-page': '10',
         'debounce-delay': '500',
         'min-search-length': '2',
@@ -29,6 +37,7 @@ describe('syndicationSearchWidgetFromElement', () => {
       })
     );
     expect(config.searchEndpoint).toBe('https://example.com/search');
+    expect(config.taxonomyEndpoint).toBe('https://example.com/taxonomy');
     expect(config.resultsPerPage).toBe(10);
     expect(config.debounceDelay).toBe(500);
     expect(config.minSearchLength).toBe(2);

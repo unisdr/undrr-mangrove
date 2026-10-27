@@ -1,6 +1,6 @@
 # Hydration guide
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/getting-started-integration-hydration-guide--docs).
+> Edits to this file show up on both [GitHub](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/getting-started-integration-hydration-guide--docs).
 
 Mangrove hydrates React components into server-rendered containers (`data-mg-*`). Use `createHydrator` to query DOM nodes, extract props with `fromElement`, manage roots, and recover original HTML on mount errors.
 
@@ -29,8 +29,8 @@ Related: [GitHub issue #803](https://github.com/unisdr/undrr-mangrove/issues/803
 <section data-mg-share-buttons data-main-label="Share this"></section>
 
 <script type="module">
-  import createHydrator from 'https://assets.undrr.org/mangrove/2.0.0/components/hydrate.js';
-  import ShareButtons, { fromElement } from 'https://assets.undrr.org/mangrove/2.0.0/components/ShareButtons.js';
+  import createHydrator from 'https://assets.undrr.org/mangrove/2.3.0/components/hydrate.js';
+  import ShareButtons, { fromElement } from 'https://assets.undrr.org/mangrove/2.3.0/components/ShareButtons.js';
   createHydrator({ selector: '[data-mg-share-buttons]', component: ShareButtons, fromElement });
 </script>
 ```
@@ -80,7 +80,7 @@ import createHydrator from '@undrr/undrr-mangrove/components/hydrate.js';
 | `selector` | `string` | Yes | CSS selector for containers |
 | `component` | `Function \| object` | Yes | React component or module with `.default` |
 | `fromElement` | `Function` | Yes | `(container: Element) => props` |
-| `options.clearContainer` | `boolean` | No | Clear `innerHTML` before render (default: `true`) |
+| `options.clearContainer` | `boolean` | No | Clear `innerHTML` before render (default: `true`). A container with a `data-mg-ssr` attribute is never cleared early: its server-rendered content stays until React's first commit replaces it, and a component may keep part of it longer (SyndicationSearchWidget keeps `[data-mg-search-ssr]` until its first results) |
 | `options.debugLabel` | `string` | No | Error label (default: `selector`) |
 | `options.onError` | `Function` | No | `(error, container) => void` callback |
 | `options.identifierPrefix` | `string` | No | `useId()` prefix override |

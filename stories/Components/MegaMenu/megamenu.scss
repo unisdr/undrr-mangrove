@@ -4,8 +4,8 @@
  * Legacy stylesheet forwarding to mega-menu.scss.
  *
  * Full documentation:
- * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/MegaMenu/MegaMenu.mdx
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/MegaMenu/MegaMenu.mdx
  */
 // megamenu.scss — DEPRECATED, use mega-menu.scss
-@import "./mega-menu";
+@forward "./mega-menu";
 @warn "megamenu.scss is deprecated. Import mega-menu.scss instead.";

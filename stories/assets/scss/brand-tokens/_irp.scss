@@ -1,8 +1,8 @@
 /* Standalone framework-neutral Mangrove token file for irp. */
-@import "../generated/tokens-mangrove";
-@import "../generated/tokens-irp";
-@import "../tokens-tabs";
-@import "../control-tokens";
+@use "../generated/tokens-mangrove" as *;
+@use "../generated/tokens-irp" as *;
+@use "../tokens-tabs" as *;
+@use "../control-tokens" as *;
 
 :where(:root) {
   @include mg-tokens-mangrove;

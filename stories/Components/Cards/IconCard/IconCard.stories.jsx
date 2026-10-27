@@ -128,6 +128,16 @@ export default {
 
 // Default - Left aligned with text link
 export const Default = {
+  play: async ({ canvasElement }) => {
+    await canvasElement.ownerDocument.fonts.ready;
+    const visual = canvasElement.querySelector('.mg-card__visual');
+    const glyph = visual.querySelector('.mg-icon');
+    const view = canvasElement.ownerDocument.defaultView;
+    expect(
+      parseFloat(view.getComputedStyle(glyph).fontSize)
+    ).toBeLessThanOrEqual(72);
+    expect(visual.getBoundingClientRect().height).toBeLessThanOrEqual(73);
+  },
   render: (args, { globals: { locale } }) => {
     const content = getContent(locale);
     return (
@@ -136,7 +146,7 @@ export const Default = {
         data={[
           {
             icon: componentIcon,
-            imageScale: 'medium',
+            imageScale: 'small',
             title: content.components.title,
             summaryText: content.components.summaryText,
             linkText: content.components.linkText,
@@ -187,7 +197,7 @@ export const WithLabel = {
         data={[
           {
             icon: componentIcon,
-            imageScale: 'medium',
+            imageScale: 'small',
             label: content.latestFeatures.label,
             title: content.latestFeatures.title,
             summaryText: content.latestFeatures.summaryText,
@@ -214,7 +224,7 @@ export const GridLayout = {
           data={[
             {
               icon: componentIcon,
-              imageScale: 'medium',
+              imageScale: 'small',
               title: content.components.title,
               summaryText: content.components.summaryText,
               linkText: content.components.linkText,
@@ -227,7 +237,7 @@ export const GridLayout = {
           data={[
             {
               icon: settingsIcon,
-              imageScale: 'medium',
+              imageScale: 'small',
               title: content.configuration.title,
               summaryText: content.configuration.summaryText,
               linkText: content.configuration.linkText,
@@ -240,7 +250,7 @@ export const GridLayout = {
           data={[
             {
               icon: bookIcon,
-              imageScale: 'medium',
+              imageScale: 'small',
               title: content.documentation.title,
               summaryText: content.documentation.summaryText,
               linkText: content.documentation.linkText,
@@ -278,7 +288,7 @@ export const MixedContent = {
           data={[
             {
               icon: componentIcon,
-              imageScale: 'medium',
+              imageScale: 'small',
               title: content.getStarted.title,
               summaryText: content.getStarted.summaryText,
               button: content.getStarted.button,
@@ -292,7 +302,7 @@ export const MixedContent = {
           data={[
             {
               icon: settingsIcon,
-              imageScale: 'medium',
+              imageScale: 'small',
               title: content.configuration.title,
               summaryText: content.configuration.summaryText,
               linkText: content.configuration.linkText,
@@ -305,7 +315,7 @@ export const MixedContent = {
           data={[
             {
               icon: bookIcon,
-              imageScale: 'medium',
+              imageScale: 'small',
               title: content.documentation.title,
               summaryText: content.documentation.summaryText,
             },
@@ -387,7 +397,7 @@ export const Negative = {
         data={[
           {
             icon: componentIcon,
-            imageScale: 'medium',
+            imageScale: 'small',
             title: content.components.title,
             summaryText: content.components.summaryText,
             linkText: content.components.linkText,

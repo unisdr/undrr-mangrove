@@ -5,6 +5,7 @@ import * as DisplayModesStories from './SyndicationSearchWidget.DisplayModes.sto
 import * as FiltersStories from './SyndicationSearchWidget.Filters.stories';
 import * as IntegrationsStories from './SyndicationSearchWidget.Integrations.stories';
 import * as TogglesStories from './SyndicationSearchWidget.Toggles.stories';
+import * as MotionStories from './SyndicationSearchWidget.Motion.stories';
 
 <Meta of={SyndicationSearchWidgetStories} />
 
@@ -18,6 +19,8 @@ filtering, and list/card/book-card display modes across UNDRR domains.
 > **Platform dependency:** This component requires access to the UNDRR search backend via `/search-endpoint`. It includes domain configurations, content type mappings, and taxonomy endpoints specific to the UNDRR platform. It is **not** a general-purpose search component.
 
 > **Future:** A standalone, configurable search component without platform dependencies may be developed separately for broader use cases.
+
+> **Integration note:** Editors placing the widget on UNDRR websites configure it through the UNDRR Search Widget block in Drupal Gutenberg. [Editor configuration](?path=/docs/components-syndicated-search-editor-configuration--docs) covers every block setting, practical configurations, what readers can type and the `field:value` filter syntax with taxonomy term IDs. AI tools can read it as plain text at https://mangrove.undrr.org/llms-search-widget.txt.
 
 ## Features
 
@@ -78,9 +81,13 @@ Renders search results as vertical cards in a responsive grid. `gridColumns` con
 
 ## Card book display
 
-Renders search results as vertical book cards in a grid. Uses `mg-card__vc mg-card__book` classes. Drupal image styles are automatically rewritten to `por` (3:4 portrait) to match the book card aspect ratio.
+Renders publication teasers in a grid using `mg-card__vc mg-card__book`. Book mode preserves supplied image URLs; the endpoint must provide complete, uncropped cover artwork. It does not infer artwork roles or turn general content into publications. Use an explicit publication filter and set `gridColumns` independently of page size: two columns suit a typical sidebar search, while wider catalogues can support more. Hide summaries and redundant content-type labels through `visibleTeaserFields` when browsing covers.
+
+Desktop covers retain their natural proportions within a shared media stage, bottom-aligned without an extra frame around the stage. The `--mg-search-book-cover-height` token defaults to 20rem and aligns captions even when artwork is missing. Missing media leaves empty space without a fabricated image; that space collapses on mobile. Explicitly hiding images, or receiving a result set with no artwork at all, disables the staging. This is specific to search grids; standalone book cards keep their natural cover height.
 
 <Canvas of={DisplayModesStories.CardBookDisplay} meta={DisplayModesStories} />
+
+<Canvas of={DisplayModesStories.BookGridEdgeCases} meta={DisplayModesStories} />
 
 ## Hidden teaser fields
 
@@ -225,7 +232,25 @@ allowedTypes: {
 
 **Available type IDs:** `news`, `event`, `publication`, `landing`, `vacancy`, `resource`, `collections`, `blog`, `terminology`, `organization`, `national_platform`
 
-**News subtype IDs:** `751` (Update), `752` (Press release), `1` (Statements), `754` (Feature), `797` (Community announcement), `756` (Op Ed)
+**News subtype IDs:** `751` (Update), `752` (Press release), `1` (Statements), `754` (Feature), `797` (Opportunities), `756` (Op Ed)
+
+## Event listings
+
+The UNDRR index holds `event_start` and `event_end` date fields for `event` and `conference_event` content (`event_end` falls back to the start date, so every event has both). Search API indexes date-only values at 12:00 UTC.
+
+- **Upcoming or past events** use `customFilters` with Elasticsearch date math, so Elasticsearch decides what "today" is and server-rendered results honour it without a baked-in timestamp. Both keep results without `event_end`, such as news in a mixed listing:
+  - Upcoming: `(event_end:[now-1d/d TO *] OR (*:* -_exists_:event_end))`
+  - Past: `(event_end:[* TO now-1d/d} OR (*:* -_exists_:event_end))`
+
+  The cutoff is `now-1d/d`, the start of yesterday, rather than `now/d`. Date math rounds in UTC, so with `now/d` an event ending today in the Americas would move to "past" in the afternoon there while it is still running; the extra day keeps it upcoming until the day after it ends. The Drupal block's event status setting writes these filters for editors.
+
+- **`defaultSort: 'eventDateAsc'`** (soonest first) or **`'eventDateDesc'`** (latest first) sorts by `event_start`. Results without an event date sort last in both directions, and ties (date-only events share 12:00 UTC) are broken by publish date, newest first, then `nid`, so paging is stable. The sort uses `unmapped_type: 'date'`, so it is safe on an index that doesn't have the field yet.
+
+The Sort dropdown offers the two event date sorts when `defaultSort` is one of them or the widget has encountered one during the current session (for example through a shared URL). Once available, both choices remain available after selecting a different sort or moving between layouts. Ordinary listings that have never used an event sort keep the standard choices, so they don't show sorts that would push every non-event to the end. To limit a listing to a date window, add a `customFilters` range such as `event_start:[2026-01-01 TO 2026-03-31]`.
+
+In list mode without teaser HTML, event results show their event date (a range when the event runs over several days) instead of the publish date.
+
+<Canvas of={FiltersStories.UpcomingEvents} meta={FiltersStories} />
 
 ## Taxonomy term results
 
@@ -265,6 +290,45 @@ markup is often not the same organisation as the index behind it.
 Nothing from the search box reaches the page as markup: highlights are built
 from indexed documents, not from the query, so the query text is not reflected
 back.
+
+### Taxonomy endpoint
+
+The country and region, hazard and theme facets get their labels from a
+taxonomy API, set by `taxonomyEndpoint` (or `data-taxonomy-endpoint`). The
+default is the PreventionWeb v1 taxonomy view:
+
+```
+https://www.preventionweb.net/api/v1/taxonomy?vid=prevention_web_regions,hazard,theme&items_per_page=1000&langcode=en
+```
+
+The endpoint must return JSON with a `results` array of `{ id, name }` terms,
+and it must return **every published term** of the three vocabularies
+(`prevention_web_regions`, `hazard`, `theme`). The widget treats a term missing
+from the list as unpublished or deleted, so an endpoint that drops terms hides
+real filter values. In particular, a `langcode` filter returns only terms
+translated into that language: with `langcode=ar` most countries are missing
+and would be hidden. If the response is paged (`pager.pages` above 1), the
+widget fetches the remaining pages with `page=N`, up to 20 pages; a response
+reporting more pages is treated as a failure.
+
+Names are HTML-entity decoded once on load (Drupal's views escape them, so
+`Côte d&#039;Ivoire` arrives encoded). One request per endpoint is shared by the
+sidebar, the mobile filter drawer and the active filter chips. A successful
+response is kept for the rest of the page load; a failed or empty one is
+retried the next time one of those components mounts.
+
+Once terms have loaded, values on these three facets that have no matching term
+(an unpublished or deleted term still referenced by content) are left out of
+the dropdown. A value that is already selected stays visible, labelled with its
+raw ID, so it can be removed. Nothing is hidden while terms are loading, if the
+request fails, or if it returns no terms (for example a Cloudflare challenge
+page instead of JSON). Within one facet, nothing is hidden unless at least one
+of its values has a label, so an endpoint that leaves out a whole vocabulary
+does not empty that facet.
+
+The hiding applies to facets marked `labelSource: 'taxonomy'` in
+`FACET_FIELDS`. If you pass your own `facetFields`, keep that marker on the
+country and region, hazard and theme entries.
 
 ## Syndicated cards
 
@@ -310,6 +374,8 @@ The search input uses Elasticsearch `query_string` syntax, forwarded directly to
 | `flood NOT tsunami`      | NOT operator   | Excludes tsunami results |
 | `-"Red Cross"`           | Exclude phrase | Excludes exact phrase    |
 | `(UNDRR AND "New York")` | Grouped        | Parentheses for grouping |
+
+Operators must be uppercase. Lowercase "and" and "or" are treated as ordinary words and removed as stop words, so `flood or drought` requires both terms. When the widget sets `queryAppend`, the reader's query and the appended query are combined as `(reader query) AND (queryAppend)`, so an OR typed by a reader can't widen the results beyond what `queryAppend` allows.
 
 ### Field-specific searches
 
@@ -458,36 +524,217 @@ The component is loaded automatically on pages containing a container with `data
 and carries the same responsibility: the widget renders that endpoint's HTML
 unsanitised. See [Endpoint trust contract](#endpoint-trust-contract).
 
+On the UNDRR Drupal platform, the `undrr/search-widget` Gutenberg block saves
+its own container, marked `data-undrr-search-widget`. That attribute belongs to
+the platform, not to this library: a wrapper script in the platform theme finds
+those containers, reads their `data-*` attributes and mounts this component
+itself. Mangrove never reads `data-undrr-search-widget` (see 1.4.12 below), so
+markup outside the platform should keep using `data-mg-search-widget`.
+The block's settings and the filter values editors use are documented in
+[Editor configuration](?path=/docs/components-syndicated-search-editor-configuration--docs).
+Backend notes (relevance scoring, synonyms, the configuration modifier
+pattern and library load order) are maintained with the Drupal module in the
+platform codebase.
+
+## URL hash
+
+With hash sync on (`enableHashSync`; see the props table), the widget keeps
+its state in the URL fragment, so a filtered view can be bookmarked or shared
+and the browser's back and forward buttons move between filter states.
+
+```
+#query=flood&page=2&sort=newest&f.field_hazard=12&f.field_hazard=34&op.field_hazard=AND&f.type=field_news_type:751
+```
+
+| Parameter  | Meaning                                                                                                        |
+| ---------- | -------------------------------------------------------------------------------------------------------------- |
+| `query`    | Search text                                                                                                    |
+| `page`     | Results page, written when above 1                                                                             |
+| `sort`     | `relevance`, `newest`, `oldest`, `eventDateAsc` or `eventDateDesc`, written when it differs from `defaultSort` |
+| `f.<key>`  | A selected value of the facet `<key>`; repeat the parameter for several values                                 |
+| `op.<key>` | `AND` or `OR` for a multi-value facet; written only for `AND`, since `OR` is the default                       |
+| `label`    | Replaces the page's `h1` text when the page loads. It is read once and not written back                        |
+
+Rules:
+
+- **Only known facets.** `f.*` and `op.*` keys must be keys of the active
+  facet fields (`facetFields`, or the default `FACET_FIELDS`). Anything else
+  is ignored, as are invalid `op` and `sort` values, and the URL is tidied to
+  the parameters actually applied. Facet keys become Elasticsearch field
+  names, so unknown keys never reach the query.
+- **The hash replaces the defaults.** If the hash has any valid `f.*`
+  parameter, its facets replace `defaultFilters` entirely, including filters a
+  host page adds (such as the Drupal block's current language and domain
+  detection). With no `f.*` parameters the defaults apply as usual.
+- **Defaults keep a clean URL.** Facets are written when their values or AND match mode differ from
+  `defaultFilters`; when they do, every selected facet is written, defaults
+  included, so the link reproduces the view exactly. A consequence: if a reader
+  removes every filter, including the defaults, the URL has no `f.*`
+  parameters and reloading brings the defaults back.
+- **Clear all returns to the configured baseline.** The reader-facing button restores every `defaultFilters` value, including hidden language/site defaults, clears custom facet selections and match operators, and resets page 1. It preserves the query and sort. Unchanged default groups do not appear as removable chips; a different AND constraint remains visible. Defaults are not access control: explicit `f.*` links still replace them. Use `customFilters` for a scope readers must not remove. Programmatic `actions.clearFacets()` without arguments still empties selections; its optional `{ defaultFilters }` argument requests a baseline reset.
+- **Other fragments preserve native navigation.** A skip link (`#main-content`) or table-of-contents anchor keeps its fragment and does not change the current search. Back/Forward restores that anchor entry's same-document search snapshot. The first search edit away from an anchor adds an entry, including typing; later typing replaces the search entry as usual. A same-document widget remount can recover the snapshot. Copying the anchor URL or loading a new document uses configured defaults, because filters are not encoded in an anchor URL. The snapshot is not a shareable search link.
+- **Host history state is preserved.** Private snapshots merge into null/plain-object `history.state` without removing unrelated keys. A host-owned primitive, array or other non-record value stays untouched; without a writable snapshot, returning to an anchor falls back to configured defaults. Browser back/forward cache retains same-document snapshots.
+- **Reserve search-like anchor names.** IDs exactly `query`, `page`, `sort` or `label`, or beginning with `f.` or `op.`, are interpreted as search parameters. Choose other IDs when hash sync is enabled.
+- **Page numbers are bounded.** A `page` beyond Elasticsearch's 10,000-result
+  window (for the configured `resultsPerPage`) is ignored, and page 1 is shown.
+- **History.** Choosing a filter, a match mode, a sort order or a page adds a
+  history entry. Typing a search query updates the current entry instead.
+- **Custom facets are not included.** Editor-defined facets (`customFacets`)
+  store selections by option position, so a link would select a different
+  option after an editor reorders, adds or removes options. They need stable
+  option IDs before they can be shared in the URL.
+
+Pages with more than one widget should leave hash sync on for at most one of
+them; the Drupal block's `auto` setting does this.
+
 ## Props
 
 ### Config object
 
-| Prop                   | Type           | Default                                 | Description                                                                                                                        |
-| ---------------------- | -------------- | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `searchEndpoint`       | string         | `https://www.undrr.org/search-endpoint` | API endpoint for Elasticsearch queries. Its HTML is rendered unsanitised — see [Endpoint trust contract](#endpoint-trust-contract) |
-| `resultsPerPage`       | number         | 50                                      | Number of results to display per page                                                                                              |
-| `debounceDelay`        | number         | 500                                     | Milliseconds to wait before executing search                                                                                       |
-| `minSearchLength`      | number         | 3                                       | Minimum characters required to trigger search                                                                                      |
-| `defaultQuery`         | string         | `''`                                    | Initial search query                                                                                                               |
-| `defaultSort`          | string         | `'relevance'`                           | Initial sort order (`relevance`, `newest`, `oldest`)                                                                               |
-| `defaultFilters`       | array          | `[]`                                    | Default facet filters (array of `{key, value}`)                                                                                    |
-| `showSearchBox`        | boolean        | `true`                                  | Show the search input                                                                                                              |
-| `showResultsCount`     | boolean        | `true`                                  | Show "Showing X of Y results"                                                                                                      |
-| `showSearchTimer`      | boolean        | `true`                                  | Show search execution time                                                                                                         |
-| `showFacets`           | boolean        | `true`                                  | Show the facets sidebar                                                                                                            |
-| `showActiveFilters`    | boolean        | `true`                                  | Show active filter chips                                                                                                           |
-| `showSearchMetrics`    | boolean        | `false`                                 | Show debug metrics (score, etc.)                                                                                                   |
-| `enableHashSync`       | string/boolean | `'auto'`                                | Sync search state to URL hash                                                                                                      |
-| `visibleFilters`       | object         | `null`                                  | Control which filters are visible                                                                                                  |
-| `allowedTypes`         | object         | `null`                                  | Restrict content types shown                                                                                                       |
-| `customFilters`        | array          | `[]`                                    | Additional Elasticsearch filters                                                                                                   |
-| `customFacets`         | array          | `[]`                                    | Custom facet definitions                                                                                                           |
-| `displayMode`          | string         | `'list'`                                | Result rendering style: `'list'`, `'card'`, or `'card-book'`                                                                       |
-| `gridColumns`          | number         | `null`                                  | Grid columns for card modes (2-6). `null` = use `resultsPerPage`                                                                   |
-| `visibleTeaserFields`  | object         | `null`                                  | Toggle teaser field visibility (`{image: false, ...}`). `null` = all visible                                                       |
-| `requireImage`         | boolean        | `false`                                 | Only return results that have an image (`has_image:true` ES filter)                                                                |
-| `interestingnessTiers` | array          | `[]`                                    | Restrict by editorial weight tiers (e.g., `['promoted', 'announced']`)                                                             |
-| `longevityTiers`       | array          | `[]`                                    | Restrict by content freshness tiers (e.g., `['year', 'longtime', 'always']`)                                                       |
+| Prop                    | Type           | Default                                 | Description                                                                                                                                                                      |
+| ----------------------- | -------------- | --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `searchEndpoint`        | string         | `https://www.undrr.org/search-endpoint` | API endpoint for Elasticsearch queries. Its HTML is rendered unsanitised — see [Endpoint trust contract](#endpoint-trust-contract)                                               |
+| `taxonomyEndpoint`      | string         | PreventionWeb v1 taxonomy URL           | Taxonomy API for country, hazard and theme facet labels. See [Taxonomy endpoint](#taxonomy-endpoint)                                                                             |
+| `resultsPerPage`        | number         | 50                                      | Number of results to display per page                                                                                                                                            |
+| `debounceDelay`         | number         | 500                                     | Milliseconds to wait after typing before searching. Only typing is debounced: the first search, Enter, Clear, back/forward and filter, sort, page and config changes run at once |
+| `minSearchLength`       | number         | 3                                       | Minimum characters required to trigger search                                                                                                                                    |
+| `defaultQuery`          | string         | `''`                                    | Initial search query                                                                                                                                                             |
+| `defaultSort`           | string         | `'relevance'`                           | Initial sort order: `relevance`, `newest`, `oldest`, `eventDateAsc` or `eventDateDesc`. See [Event listings](#event-listings)                                                    |
+| `defaultFilters`        | array          | `[]`                                    | Default facet filters (array of `{key, value}`)                                                                                                                                  |
+| `showSearchBox`         | boolean        | `true`                                  | Show the search input                                                                                                                                                            |
+| `showResultsCount`      | boolean        | `true`                                  | Show "Showing X of Y results"                                                                                                                                                    |
+| `showSearchTimer`       | boolean        | `true`                                  | Show search execution time                                                                                                                                                       |
+| `showFacets`            | boolean        | `true`                                  | Show the facets sidebar                                                                                                                                                          |
+| `showActiveFilters`     | boolean        | `true`                                  | Show active filter chips                                                                                                                                                         |
+| `showSearchMetrics`     | boolean        | `false`                                 | Show debug metrics (score, etc.)                                                                                                                                                 |
+| `enableHashSync`        | string/boolean | `'auto'`                                | Sync search state to URL hash (see [URL hash](#url-hash))                                                                                                                        |
+| `visibleFilters`        | object         | `null`                                  | Control which filters are visible                                                                                                                                                |
+| `allowedTypes`          | object         | `null`                                  | Restrict content types shown                                                                                                                                                     |
+| `customFilters`         | array          | `[]`                                    | Additional Elasticsearch filters                                                                                                                                                 |
+| `customFacets`          | array          | `[]`                                    | Custom facet definitions                                                                                                                                                         |
+| `displayMode`           | string         | `'list'`                                | Result rendering style: `'list'`, `'card'`, or `'card-book'`                                                                                                                     |
+| `gridColumns`           | number         | `null`                                  | Grid columns for card modes (2-6). `null` = use `resultsPerPage`                                                                                                                 |
+| `visibleTeaserFields`   | object         | `null`                                  | Toggle teaser field visibility (`{image: false, ...}`). `null` = all visible                                                                                                     |
+| `requireImage`          | boolean        | `false`                                 | Only return results that have an image (`has_image:true` ES filter)                                                                                                              |
+| `interestingnessTiers`  | array          | `[]`                                    | Restrict by editorial weight tiers (e.g., `['promoted', 'announced']`)                                                                                                           |
+| `longevityTiers`        | array          | `[]`                                    | Restrict by content freshness tiers (e.g., `['year', 'longtime', 'always']`)                                                                                                     |
+| `analyticsRegionPrefix` | string         | `'undrr-search'`                        | Stem for the analytics regions (`<prefix>-form`, `-results`, `-facets`). See [Analytics regions](#analytics-regions)                                                             |
+| `onResults`             | function       | —                                       | Called after each completed search with `{ total, query, page }`. See [Results notification](#results-notification)                                                              |
+| `sourceFields`          | array          | `SOURCE_FIELDS`                         | `_source` fields requested per hit; the default is what the widget renders. Set only for an endpoint whose hits need other fields                                                |
+| `ssrResults`            | Element        | —                                       | Server-rendered results to keep on screen until the first client results. See [Server-rendered results](#server-rendered-results)                                                |
+| `facetsTarget`          | string         | `null`                                  | CSS selector for an element outside the widget to render the facets into (Drupal: `data-facets-target`)                                                                          |
+| `searchTarget`          | string         | `null`                                  | CSS selector for an element outside the widget to render the search input into (Drupal: `data-search-target`)                                                                    |
+
+`facetsTarget` and `searchTarget` are matched in the document the widget is mounted in, not the global `document`. On a normal page these are the same document. They differ when the widget renders inside an iframe while its script runs in the parent window, as in a block editor canvas (Drupal's Gutenberg 4 editor, for example): the targets are found in the iframe, next to the widget. The same applies to the widget's other document lookups: the pager's scroll back to the results, the dropdown backdrop, and the mobile filter drawer's scroll lock and Escape key handling. A target that exists only in another document is not found, and the widget falls back to its in-widget layout with a console warning.
+
+## Analytics regions
+
+The widget marks its search form, results and facets with `data-vf-google-analytics-region`: `undrr-search-form`, `undrr-search-results` and `undrr-search-facets`. The shared UNDRR analytics script reports each click with the innermost region around it, so a region set on a section around the widget is never reported for clicks inside it.
+
+When a page has more than one widget, give each its own `analyticsRegionPrefix` (data attribute `data-analytics-region-prefix`). The prefix replaces `undrr-search` in all three names:
+
+```js
+const config = { analyticsRegionPrefix: 'collection-related' };
+// Regions: collection-related-form, collection-related-results and
+// collection-related-facets
+```
+
+```html
+<div
+  data-mg-search-widget
+  data-analytics-region-prefix="collection-related"
+></div>
+```
+
+Without it, nothing changes. A Drupal block wrapper that builds the config itself needs to pass the setting through.
+
+## Results notification
+
+After each completed search the widget calls `onResults({ total, query, page })` and dispatches an `mg-search-widget:results` event with the same `detail`, bubbling from its root. A host uses it to hide a section around a widget that found nothing, or to show the total somewhere else; the event works without React:
+
+```js
+document.addEventListener('mg-search-widget:results', event => {
+  const section = event.target.closest('section');
+  if (section) section.hidden = event.detail.total === 0;
+});
+```
+
+Until its first results arrive the widget shows its loading skeleton (or the server-rendered results, see [Server-rendered results](#server-rendered-results)); it asks for a search term only when the query is shorter than `minSearchLength` and no filters are set, the one case where it won't search. After that, an empty query that finds nothing says "No results found". When a new search runs with results on screen, the results stay, dimmed, with a small loader in the results header, and retained result links keep their DOM identity and keyboard focus when the response arrives; the skeleton is only for the first load. The results region uses the shared flush indeterminate ProgressBar, with its existing status text and `aria-busy` owning announcements. Skeletons keep stable geometry without shimmer; retained results, the strip and the inline Loader provide refresh feedback without an additional pulsing overlay. Under reduced motion, result fades stop and the shared strip becomes a still dashed pattern; the decorative inline Loader becomes a still complete shape beside visible translated pending text, without adding another live announcement. Forced colours keeps the strip and skeleton outlines visible. Enter, the search button, Clear, and back/forward search at once; only typing waits for `debounceDelay`. A widget with nothing interactive (no search box and no facets, a fixed list of cards) does not announce its total in the live region; every other widget does.
+
+### Motion and loading states
+
+Follow [Motion and animation](?path=/docs/design-decisions-motion--docs). Interaction transitions and the initial results-surface opacity fade use `--mg-motion-duration-fast` and `--mg-motion-easing-standard`, only under `prefers-reduced-motion: no-preference`. The filter drawer uses `--mg-motion-duration-medium`, mirrors inline-start travel in RTL, and appears immediately under reduced motion. Focus moves on opening without waiting for animation; closing unmounts immediately. Legacy pending/visible result classes are retained for consumers, with their hidden start state gated alongside the transition. Typing debounce and other behavioural delays are unchanged. The public legacy `.mg-search__spinner` is a separate compatibility exception, rather than the shared Loader policy, and remains compatible for existing hand-written markup: `--mg-search-spinner-duration` is one revolution (`1s`, three times longer under reduced motion), with system-colour border segments in forced colours. New implementations use shared Loader instead.
+
+Migration: `.mg-search__progress-bar` and `mg-search-progress` are removed. The `.mg-search__progress` positioning wrapper now contains shared ProgressBar markup; consumers overriding the old segment should use ProgressBar properties instead.
+
+These deterministic states use the same results, progress and drawer components without a live search endpoint. Complete, refresh or fail a search to inspect the state changes. Check reduced motion, forced colours and their combination, all themes, and RTL; use a narrow viewport for the filter drawer.
+
+<Canvas of={MotionStories.InitialLoading} meta={MotionStories} />
+<Canvas of={MotionStories.RefreshingResults} meta={MotionStories} />
+<Canvas of={MotionStories.ResultsEntry} meta={MotionStories} />
+<div style={{ maxWidth: '375px' }}>
+  <Canvas
+    of={MotionStories.FilterDrawer}
+    meta={MotionStories}
+    story={{ inline: false, height: '600px' }}
+  />
+</div>
+
+After paging, the widget scrolls back to its results (instantly under `prefers-reduced-motion`) and moves focus to the results count, or to the results area when the count is hidden, instead of leaving it on a pager button that has been replaced.
+
+## Server-rendered results
+
+A page can render the first results on the server so they show before the widget's JavaScript runs. Without a handoff, mounting empties the container and the page collapses until the client results arrive. To keep the server markup on screen until then:
+
+1. Mark the container with `data-mg-ssr`. The hydration runtime then leaves its content in place instead of clearing it before mounting; React replaces it at its first commit, in the frame that paints the widget.
+2. Put the server-rendered results in a child element marked `data-mg-search-ssr`. `fromElement` captures it as `config.ssrResults` before React's first commit.
+3. The widget moves that element into its results region (an `aria-busy` slot) before the first paint, so the server results sit where the client results will go, with the search box and facets around them. When the first client results, or an error, commit, the slot and the server markup are removed.
+
+```html
+<div data-mg-search-widget data-mg-ssr data-results-per-page="10">
+  <div data-mg-search-ssr>
+    <!-- the first page of results, rendered by the server -->
+  </div>
+</div>
+```
+
+### Server results markup
+
+Render the server results with the same structure and classes as the widget's own results, so they get the same layout, spacing, borders, containment and block images, and the swap doesn't move anything. In list mode:
+
+```html
+<div data-mg-search-ssr>
+  <div class="mg-search__results">
+    <div class="mg-search__results-header">
+      <p class="mg-search__results-count">Showing 1–10 of 245 results</p>
+    </div>
+    <div
+      class="mg-search__results-list"
+      role="list"
+      aria-label="Search results"
+    >
+      <div role="listitem">
+        <article class="mg-search__result" data-result-type="news">
+          <!-- the item's teaser HTML -->
+        </article>
+      </div>
+      <!-- one listitem per result, resultsPerPage of them -->
+    </div>
+  </div>
+</div>
+```
+
+- Add the widget's hidden-field classes to the list when teaser fields are hidden (`mg-search--hide-image`, `mg-search--hide-date` and so on, from `buildHiddenFieldClasses(visibleTeaserFields)`).
+- In card modes, use `<div class="mg-search__results-grid mg-grid mg-grid__col-N" role="list">` with the card variant classes the widget applies (`mg-card__vc`, plus `mg-card__book` for book cards).
+- Render as many results as `resultsPerPage`. Leave out the results header only if `showResultsCount` is off.
+- Server results don't fade in, and neither does the first client result set that replaces them.
+- `[data-mg-search-ssr]` is itself positioned and isolated, so markup that doesn't use these classes still can't cover the page.
+
+### Custom wrappers
+
+A wrapper that builds the config and calls `createRoot` itself passes the element as `ssrResults`, captured before mounting (React's first commit empties the mount target). Only an `Element` is accepted, not a selector. Each widget needs its own server results element; two widgets must not share one.
+
+If the widget won't search (a query shorter than `minSearchLength` with no filters, from the URL for instance), the server results are removed and the widget asks for input. If keyboard focus was inside the server results when they go, it moves to the results count, or to the results region.
 
 ## Accessibility
 
@@ -498,7 +745,7 @@ unsanitised. See [Endpoint trust contract](#endpoint-trust-contract).
 
 ## Server-rendered / CDN usage
 
-SyndicationSearchWidget supports [layered hydration](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md). Use data attributes on a container element to configure the widget from server-rendered HTML (all attributes are optional):
+SyndicationSearchWidget supports [layered hydration](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md). Use data attributes on a container element to configure the widget from server-rendered HTML (all attributes are optional):
 
 ```html
 <div
@@ -518,42 +765,46 @@ SyndicationSearchWidget supports [layered hydration](https://github.com/unisdr/u
 ></div>
 ```
 
-| Attribute                    | Default | Description                                                       |
-| ---------------------------- | ------- | ----------------------------------------------------------------- |
-| `data-search-endpoint`       |         | Elasticsearch proxy URL                                           |
-| `data-results-per-page`      |         | Number of results per page                                        |
-| `data-debounce-delay`        |         | Milliseconds before executing search                              |
-| `data-min-search-length`     |         | Minimum characters to trigger search                              |
-| `data-default-query`         |         | Initial search query                                              |
-| `data-default-sort`          |         | Initial sort order                                                |
-| `data-display-mode`          |         | `'list'`, `'card'`, or `'card-book'`                              |
-| `data-grid-columns`          |         | Grid columns for card modes (2-6)                                 |
-| `data-query-append`          |         | Query string to append to all searches                            |
-| `data-show-search-box`       |         | Show search input                                                 |
-| `data-show-results-count`    |         | Show result count                                                 |
-| `data-show-facets`           |         | Show facets sidebar                                               |
-| `data-show-active-filters`   |         | Show active filter chips                                          |
-| `data-show-pager`            |         | Show pagination                                                   |
-| `data-show-search-metrics`   |         | Show debug metrics                                                |
-| `data-show-search-timer`     |         | Show search execution time                                        |
-| `data-enable-hash-sync`      |         | Sync search state to URL hash                                     |
-| `data-default-filters`       |         | JSON array of `{key, value}` filter objects                       |
-| `data-allowed-types`         |         | JSON object restricting content type options                      |
-| `data-require-image`         |         | Only return results with images (`true`/`false`)                  |
-| `data-interestingness-tiers` |         | JSON array of tier names (e.g., `'["promoted","announced"]'`)     |
-| `data-longevity-tiers`       |         | JSON array of tier names (e.g., `'["year","longtime","always"]'`) |
-| `data-custom-filters`        |         | JSON array of custom filter strings (e.g., `'["type:news"]'`)     |
-| `data-custom-facets`         |         | JSON array of custom facet objects                                |
-| `data-visible-teaser-fields` |         | JSON array of teaser field names to show                          |
-| `data-labels`                |         | JSON object of UI label overrides (see [UI labels](#ui-labels))   |
+| Attribute                      | Default | Description                                                                                                                         |
+| ------------------------------ | ------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `data-search-endpoint`         |         | Elasticsearch proxy URL                                                                                                             |
+| `data-taxonomy-endpoint`       |         | Taxonomy API URL for facet labels                                                                                                   |
+| `data-results-per-page`        |         | Number of results per page                                                                                                          |
+| `data-debounce-delay`          |         | Milliseconds before executing search                                                                                                |
+| `data-min-search-length`       |         | Minimum characters to trigger search                                                                                                |
+| `data-default-query`           |         | Initial search query                                                                                                                |
+| `data-default-sort`            |         | Initial sort order                                                                                                                  |
+| `data-display-mode`            |         | `'list'`, `'card'`, or `'card-book'`                                                                                                |
+| `data-grid-columns`            |         | Grid columns for card modes (2-6)                                                                                                   |
+| `data-query-append`            |         | Query every result must also match (a filter, not a bias)                                                                           |
+| `data-show-search-box`         |         | Show search input                                                                                                                   |
+| `data-show-results-count`      |         | Show result count                                                                                                                   |
+| `data-show-facets`             |         | Show facets sidebar                                                                                                                 |
+| `data-show-active-filters`     |         | Show active filter chips                                                                                                            |
+| `data-show-pager`              |         | Show pagination                                                                                                                     |
+| `data-show-search-metrics`     |         | Show debug metrics                                                                                                                  |
+| `data-show-search-timer`       |         | Show search execution time                                                                                                          |
+| `data-enable-hash-sync`        |         | Sync search state to URL hash                                                                                                       |
+| `data-default-filters`         |         | JSON array of `{key, value}` filter objects                                                                                         |
+| `data-allowed-types`           |         | JSON object restricting content type options                                                                                        |
+| `data-require-image`           |         | Only return results with images (`true`/`false`)                                                                                    |
+| `data-interestingness-tiers`   |         | JSON array of tier names (e.g., `'["promoted","announced"]'`)                                                                       |
+| `data-longevity-tiers`         |         | JSON array of tier names (e.g., `'["year","longtime","always"]'`)                                                                   |
+| `data-custom-filters`          |         | JSON array of custom filter strings (e.g., `'["type:news"]'`)                                                                       |
+| `data-custom-facets`           |         | JSON array of custom facet objects                                                                                                  |
+| `data-visible-teaser-fields`   |         | JSON array of teaser field names to show                                                                                            |
+| `data-labels`                  |         | JSON object of UI label overrides (see [UI labels](#ui-labels))                                                                     |
+| `data-analytics-region-prefix` |         | Stem for the analytics regions; see [Analytics regions](#analytics-regions)                                                         |
+| `data-mg-ssr`                  |         | On the container: keep its server-rendered content until the widget mounts; see [Server-rendered results](#server-rendered-results) |
+| `data-mg-search-ssr`           |         | On a child: server-rendered results kept until the first client results                                                             |
 
 All attributes are optional. Only attributes present on the container are included in the config; the component uses its own defaults for anything missing.
 
 ```js
-import createHydrator from 'https://assets.undrr.org/mangrove/2.0.0/components/hydrate.js';
+import createHydrator from 'https://assets.undrr.org/mangrove/2.3.0/components/hydrate.js';
 import SyndicationSearchWidget, {
   fromElement,
-} from 'https://assets.undrr.org/mangrove/2.0.0/components/SyndicationSearchWidget.js';
+} from 'https://assets.undrr.org/mangrove/2.3.0/components/SyndicationSearchWidget.js';
 createHydrator({
   selector: '[data-mg-search-widget]',
   component: SyndicationSearchWidget,
@@ -561,7 +812,7 @@ createHydrator({
 });
 ```
 
-See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
+See the [hydration guide](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details, and [Server-rendered results](#server-rendered-results) for keeping server markup on screen until the widget's first results.
 
 > **Integration note:** This is a complex-tier component. `fromElement` extracts
 > only container attributes; Drupal/consumer wrappers can merge additional
@@ -570,12 +821,12 @@ See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/doc
 
 ## UI labels
 
-Every user-visible string can be overridden via `labels`. Unspecified keys fall
-back to `DEFAULT_LABELS`.
+Select built-in interface copy with `lang`, then override individual strings via `labels`. Unspecified keys use the selected catalogue, then English `DEFAULT_LABELS`.
 
 ```jsx
 <SyndicationSearchWidget
   config={config}
+  lang="fr"
   labels={{
     searchPlaceholder: 'Rechercher…',
     submitSearchText: 'Rechercher',
@@ -587,29 +838,30 @@ back to `DEFAULT_LABELS`.
 />
 ```
 
-The full list of keys and their English defaults is in `DEFAULT_LABELS` (exported from `SearchContext.jsx`). See the **Translations** stories for complete label sets in Spanish, French, Japanese, Simplified Chinese, Arabic, and Russian.
+The full list of keys and their English defaults is in `DEFAULT_LABELS` (exported from `SearchContext.jsx`). The same runtime catalogue supplies Spanish, French, Japanese, Simplified Chinese, Arabic and Russian through `lang`; consumers can also call the published `getSyndicationSearchWidgetLabels` resolver.
 
 ### Drupal / server-rendered usage
 
-In a Drupal Twig template, supply translated labels via the `data-labels` JSON attribute:
+In a Drupal Twig template, select built-in copy with `data-lang` or inherited HTML language, and supply optional overrides through `data-labels`:
 
 ```html
 <div
   data-mg-search-widget
   data-search-endpoint="/search-endpoint"
+  data-lang="fr"
   data-labels='{"searchPlaceholder":"Rechercher…","submitSearchText":"Rechercher","noResults":"Aucun résultat trouvé pour \"{query}\"."}'
 ></div>
 ```
 
-`fromElement` parses the JSON and passes it through as the `labels` prop. Unspecified keys fall back to English.
+`fromElement` returns language metadata and optional JSON label overrides alongside `config`. Forward all extracted props to retain language selection. Unspecified label keys use the selected catalogue, then English.
 
-> **Important:** Function-valued labels (needed for Arabic/Russian plural forms)
-> cannot be expressed in JSON. Use a custom JS labels object, or accept fallback
-> plural strings and handle pluralization server-side.
+> Built-in Arabic and Russian plural functions are bundled and work when `lang`
+> selects their catalogue, including through hydration. Custom function-valued
+> overrides cannot be expressed in JSON; supply them through JavaScript.
 
 > **Drupal Twig note:** Use single quotes for the `data-labels` attribute value so that the JSON's double quotes remain unescaped. If any translated string itself contains an apostrophe (common in French), encode it as `’` (the Unicode right single quotation mark) in the JSON, or escape it as `&#39;` in the HTML attribute.
 
-> **RTL layout:** Supplying Arabic labels via `data-labels` or the `labels` prop translates the text content only. The widget's CSS currently uses physical properties and does not flip for right-to-left scripts. RTL layout support is tracked as a separate issue.
+> **RTL layout:** `lang="ar"` sets Arabic UI copy and RTL direction. Passing custom `labels` alone does not select a language or direction. An explicit `dir` overrides automatic direction. This translation contract does not change the widget's existing layout behaviour.
 
 ### `labels` prop vs `config` prop
 
@@ -630,7 +882,7 @@ SyndicationSearchWidget
 │   ├── SearchResults (with Suspense)
 │   │   └── ResultItem (×n)
 │   ├── FacetsSidebar (desktop)
-│   │   ├── SortOptions (relevance/newest/oldest)
+│   │   ├── SortOptions (relevance/newest/oldest, event date sorts on event listings)
 │   │   ├── FacetSelect (×n, from Elasticsearch aggregations)
 │   │   │   └── SelectDropdown (custom Chosen-like component)
 │   │   └── CustomFacetSelect (×n, editor-defined)
@@ -664,8 +916,89 @@ On screens ≤800px, the sidebar is replaced with a drawer that slides in from t
 
 UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pencilandpaper.io/articles/ux-pattern-analysis-mobile-filters).
 
+## Runtime UI translations
+
+Use `lang` for built-in copy and `labels` for individual overrides. The
+[shared translation guide](?path=/docs/contributing-ui-translations--docs)
+explains language matching, fallback, direction and hydration precedence.
+
+`components/SyndicationSearchWidget.js` exports `getSyndicationSearchWidgetLabels(lang, labels)`
+for consumers needing the same strings outside React.
+
+Built-in Arabic and Russian plural functions work through hydration; custom
+function overrides need JavaScript. Interface language remains separate from
+content-language filters and date formatting. For unsupported custom languages,
+pass `dir` explicitly when external search or facet portals cross direction
+boundaries: a DOM portal cannot inherit direction from the widget's ancestors.
+
 ## Changelog
 
+- **1.6**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance.
+
+- **1.5.0**, 2026-10-16: Book display preserves supplied artwork URLs instead of forcing portrait crops. Publication examples use an explicit content filter, independent column count and concise metadata. Search-only cover stages align desktop captions and collapse missing-artwork space on mobile; no-image configurations remain unstaged.
+
+- **1.4.32**, 2026-10-16: Isolate the open filter-drawer documentation example in a narrow iframe so its body scroll lock and focus management cannot affect the surrounding docs page. Search-grid book cards now fill their row height while retaining intrinsic cover proportions.
+- **1.4.31**, 2026-10-16: Keep dropdown dismissal backdrops inside the mobile filter drawer so taps reach filter and sort options. Desktop dropdowns retain their document-body backdrop, including in iframe consumers.
+
+- **1.4.30**, 2026-10-15 ([#1329](https://github.com/unisdr/undrr-mangrove/issues/1329)): Clear all restores configured defaults, including hidden scopes, while preserving the no-argument programmatic clear contract. Compare complete default groups and preserve meaningful AND constraints in chips and shared URLs. Restore per-anchor same-document history snapshots without losing host state or overwriting the first typed-away anchor entry; document reload and host-state fallbacks and reserved names. Cover non-default page sizes and isolate widget test URLs.
+
+- **1.4.29**, 2026-10-15: Pair the decorative refresh Loader with visible translated pending text, including when reduced motion replaces rotation with a static shape. Keep the status header at full contrast while dimming retained hits, preserve announcement ownership in the results region and clear the text when the request settles. The separate legacy `.mg-search__spinner` compatibility exception remains pending a consumer migration audit.
+
+- **1.4.28**, 2026-10-15: Re-evaluate search eligibility when a live React configuration changes the minimum query length, cancelling requests that become ineligible without searching again for threshold changes that leave eligibility unchanged. Keep event-date sort choices available for the widget session after opening a shared link or selecting another sort, including when sort controls remount.
+
+- **1.4.27**, 2026-10-15: Preserve retained result links and keyboard focus when a pending search completes in list, card and book-card layouts. Refreshes no longer remount the whole results surface to replay its entrance animation.
+
+- **1.4.26**, 2026-10-15: Reuse the shared flush ProgressBar inside the results region. Keep stable skeletons, retain inline Loader refresh feedback and remove the competing pulse overlay. Gate interaction motion and legacy hidden states by `no-preference`, use motion timing tokens, preserve forced-colour outlines and RTL drawer travel, and move drawer focus without waiting for entry. Paging checks the owning window and uses instant scrolling under reduced motion. Add deterministic loading, refresh, result-entry and drawer stories.
+
+- **1.4.25**, 2026-10-15 ([#1357](https://github.com/unisdr/undrr-mangrove/issues/1357)): Retains the legacy public search spinner class for server-rendered Drupal compatibility pending a deployment migration audit. React loading indicators already use Loader.
+
+- **1.4.24**, 2026-10-14 ([undrr/web-backlog#3175](https://gitlab.com/undrr/web-backlog/-/work_items/3175)): Performance, loading states and layout. Measured against the local PreventionWeb index (empty query, 10 results): the initial response is 946KB / 99KB gzip before and 130KB / 8.6KB after.
+  - Requests carry `_source.includes` (`SOURCE_FIELDS`, overridable with `sourceFields`), so hits no longer bring `body` and `aggregated_field`.
+  - Title and body highlights are requested only once a hit without teaser HTML has appeared, since only the fallback rendering shows them. They start with the next search the reader causes; the results on screen are not fetched again.
+  - Typing no longer drops keystrokes: the input ignores the state echoing the query it sent.
+  - Only typing is debounced; the first search, Enter, the search button, Clear, back/forward and filter, sort, page and config changes run at once (`setQuery(query, { immediate })`, a new `onSubmit` on `SearchForm`, and `flushSearch()` from `useSearch` for a query already waiting). Searches run when the request would change, not when the config object's identity does, so cosmetic options don't cost a request. Superseded and unmounted searches are aborted, and their responses ignored; results are only dimmed while a request is actually in flight.
+  - Aggregations are reused across page, sort and facet changes (they depend only on the main query). The Year facet uses a `date_histogram` and plain calendar-year ranges instead of painless scripts; counts and hits are unchanged.
+  - Results, facet dropdowns and the sort dropdown are memoised, teaser processing is memoised, and dropdown hover is CSS (moving the pointer over a list clears the keyboard highlight), so typing no longer re-renders them.
+  - Until its first results the widget shows the skeleton instead of "Enter a search term", which now appears only for a query too short to search without filters. A new search keeps the results on screen, dimmed, with a small loader, and new results fade in. Under `prefers-reduced-motion` decorative motion stops and loading states are static; spinners rotate slowly.
+  - New `ssrResults` config, `data-mg-search-ssr` child and `data-mg-ssr` container attribute keep server-rendered results on screen until the first client results, or until the widget asks for input. `ssrResults` takes an Element only. Focus inside the server results moves to the results when they go. Server results markup reuses the client classes and gets the same containment. `createHydrator` doesn't clear a `data-mg-ssr` container before mounting. See [Server-rendered results](#server-rendered-results).
+  - With the facets sidebar, the search box and filter chips sit in the results column (`.mg-search__column`); the in-widget search box is capped at 48rem in every layout.
+  - Images in result visuals are block-level, removing the gap under them.
+- **1.4.23**, 2026-10-14 ([undrr/web-backlog#3175](https://gitlab.com/undrr/web-backlog/-/work_items/3175)): Event listings and editor preview fixes. See [Event listings](#event-listings).
+  - Upcoming and past event listings are a `customFilters` recipe on `event_end` with `now-1d/d` date math, documented under [Event listings](#event-listings); no new config option.
+  - New sort values `eventDateAsc` and `eventDateDesc` sort by `event_start`, missing values last, guarded with `unmapped_type: 'date'`, with `published_at` (desc) and `nid` (desc) as tie-breakers for stable paging. They are accepted as `defaultSort` and in the URL hash, and the Sort dropdown offers them only when `defaultSort` or the current sort is one of them. New labels `sortEventDateAsc` and `sortEventDateDesc`, translated in the shipped label sets.
+  - In list mode without teaser HTML, `event` and `conference_event` results show their event date, or a start to end range, instead of the publish date. Index dates sent as Unix seconds in an array (`[1762955302]`) are read correctly; the publish date used to render as "Invalid Date" for them. New `utils/dateUtils.js`.
+  - `facetsTarget` and `searchTarget` re-resolve when the target appears, is replaced or is removed after mount, watching the widget's own document (the iframe in a block editor canvas). Elements inside the widget never match, so a selector that also matches the widget's own markup can't loop, and the hook stops re-resolving if targets keep being removed in a burst. The fallback warning is logged once per selector rather than on every DOM change. New `hooks/useExternalTarget.js`.
+  - A changed `defaultQuery` replaces the query on re-initialise when the reader hasn't typed a different one, and clearing it clears the query. Before, only the first default applied.
+  - The `mg-search-widget:results` event is dispatched from the widget root rather than looked up by id in the global document, so it also fires inside an iframe.
+  - Each result (`.mg-search__result`) is positioned and isolated, so absolutely positioned or `z-index`ed pieces of a malformed teaser stay inside their own result instead of covering the page ([undrr/web-backlog#3145](https://gitlab.com/undrr/web-backlog/-/work_items/3145)).
+- **1.4.22**, 2026-10-14 ([undrr/web-backlog#3157](https://gitlab.com/undrr/web-backlog/-/work_items/3157)): `facetsTarget` and `searchTarget` are matched in the document the widget is mounted in rather than the global `document`, so a widget rendered inside an iframe while its script runs in the parent window (the Drupal Gutenberg 4 editor canvas) finds its target regions in that iframe. The pager's scroll back to the results, the dropdown backdrop portal, and the mobile filter drawer's scroll lock and Escape listener resolve the same way. On a normal page the widget's document is the global one, so nothing changes there. Both props are now listed in the config table.
+- **1.4.21**, 2026-10-14 ([undrr/web-backlog#2728](https://gitlab.com/undrr/web-backlog/-/work_items/2728)): New `onResults` config and `mg-search-widget:results` event after each completed search. Paging scrolls without smooth motion under `prefers-reduced-motion` and moves focus to the results count (or results area) instead of dropping it to the page. A widget without a search box shows its skeleton until its first results arrive and then, if it found nothing, says "No results found" rather than "Enter a search term". A widget with no search box and no facets no longer announces its total. See [Results notification](#results-notification).
+- **1.4.20**, 2026-10-14 ([undrr/web-backlog#2728](https://gitlab.com/undrr/web-backlog/-/work_items/2728)): New `analyticsRegionPrefix` config (data attribute `data-analytics-region-prefix`) sets the stem of the widget's analytics regions, so two widgets on one page report their clicks separately. The default, `undrr-search`, keeps today's region names. See [Analytics regions](#analytics-regions).
+- **1.4.19**, 2026-10-14 ([undrr/web-backlog#2728](https://gitlab.com/undrr/web-backlog/-/work_items/2728)): The results area (`mg-search__main`) is a `div` rather than a `main` element. The widget always sits inside the page's own `main`, so every embedded widget added a second, nested main landmark (axe `landmark-no-duplicate-main` and `landmark-main-is-top-level`). The class and styling are unchanged.
+- **1.4.18**, 2026-10-09 ([mangrove#1324](https://github.com/unisdr/undrr-mangrove/issues/1324)): Selected facets and the sort order are kept in the URL hash, so filtered views can be shared and back/forward moves between them. See [URL hash](#url-hash).
+  - New hash parameters: `sort`, `f.<facet key>` (repeated for several values) and `op.<facet key>`. Keys are checked against the active facet fields and values are validated, so unknown keys never reach the query; the URL is tidied in place to what was applied.
+  - Facets and sort read from the hash are passed to `INITIALIZE` (`initialFacets`, `initialFacetOperators`, `initialSort`), so the defaults no longer overwrite them. Any valid `f.*` parameter replaces `defaultFilters` entirely.
+  - Filter, match mode, sort and page changes add a history entry (`pushState`); typing a query still replaces the current one. A `popstate` listener joins `hashchange`, and back/forward restores the whole state through a new `RESTORE_STATE` action, falling back to the defaults for an entry with no `f.*` parameters. Restoring never adds an entry.
+  - A query or label containing a literal `%` no longer throws: hash values were decoded a second time after `URLSearchParams` had already decoded them.
+  - `SET_QUERY` with the current query no longer resets the page, so a page restored from the URL survives the search box re-syncing.
+  - New `utils/hashState.js` (`parseHashState`, `buildHashString`) and `SORT_VALUES` in `utils/constants.js`. `useHashSync` also returns `initialHashState`.
+  - Fragments that carry no search parameters (skip links, table of contents anchors) are ignored rather than read as an empty search, and an anchor the page loads on is kept.
+  - The hash state applies to the first `INITIALIZE` only; re-initialising after a config change uses the defaults.
+  - A `page` beyond the Elasticsearch result window is ignored.
+  - Custom facets are not written to the URL; they need stable option IDs first.
+- **1.4.17**, 2026-10-09 ([mangrove#1324](https://github.com/unisdr/undrr-mangrove/issues/1324)): Facet label hardening and a configurable taxonomy source.
+  - Country and region, Hazard and Theme (now marked `labelSource: 'taxonomy'` in `FACET_FIELDS`) hide values with no matching term once the taxonomy has loaded, instead of showing raw term IDs such as `1177`. Selected values and active filter chips keep the raw ID so they can still be removed, and nothing is hidden while loading, after a failed request or when the response has no terms.
+  - Taxonomy term names are HTML-entity decoded, so `Côte d&#039;Ivoire` renders as `Côte d'Ivoire` in facet options, chips and dropdown search. New `utils/decodeEntities.js`.
+  - The Year facet lists newest first (selected years still float to the top), instead of by result count.
+  - New `taxonomyEndpoint` config option and `data-taxonomy-endpoint` attribute. The default is the existing PreventionWeb v1 URL without `news_type`, which was never used: news subtypes are labelled from the static list.
+  - The sidebar, the mobile filter drawer and the active filter chips share one taxonomy request per endpoint, through a module-level store, instead of making one each. A successful response is kept for the page load; a failed or empty one is retried when a consumer next mounts, and every consumer sees the result of a retry or `refresh()`. Paged responses are fetched in full (up to 20 pages); anything incomplete counts as a failure.
+  - Hiding needs a complete term list and, within a facet, at least one value that has a label, so a `langcode` filter or an endpoint missing a vocabulary does not empty a facet.
+  - `useTaxonomies` accepts an optional endpoint and still works outside a `SearchProvider`. It now also returns `taxonomiesReady` (which stays true during a refresh after a good load), `getLabel` takes an optional `{ fallback }`, and `refresh()` returns a promise. An empty `results` array now sets `error`.
+  - News subtype `797` is labelled "Opportunities", matching Drupal, instead of "Community announcement".
+- **1.4.16**, 2026-10-08: Render teaser cards directly inside the result article when search metrics are disabled, removing the extra div that interfered with card layout. The metrics-enabled view retains its scoring panel and teaser container.
+- **1.4.15**, 2026-09-29 ([undrr/web-backlog#3109](https://gitlab.com/undrr/web-backlog/-/work_items/3109)): Added the [Editor configuration](?path=/docs/components-syndicated-search-editor-configuration--docs) sub-page, which moves the editor-facing search guidance for the Drupal Gutenberg block (block settings, practical examples, search syntax, `field:value` filters and taxonomy term IDs) into Mangrove, and links it from this page. Documentation only; the component is unchanged.
+- **1.4.14**, 2026-09-29 ([mangrove#1312](https://github.com/unisdr/undrr-mangrove/issues/1312)): OR and NOT typed by a reader work as documented. "or" was on the stop word list and removal compared words in lowercase, so `earthquake OR tsunami` was sent as `earthquake tsunami` and required both terms; "not" was not a stop word, so `disaster NOT earthquake` was fuzzed into `disaster~1 NOT~1 earthquake~1` and the search failed. Uppercase `AND`, `OR` and `NOT` are now kept as operators, never removed or fuzzed, and an operator left dangling by stop word removal (`earthquake OR the`) is dropped rather than sent as invalid syntax. Lowercase "and" and "or" are still removed as stop words. Operators are also left out of phrase boosting, which scores the words, not the syntax.
+  - `queryAppend` is a requirement: every result must match it. The reader's query and `queryAppend` were joined with a space, so a reader's OR could group with the appended terms (`a OR b field_theme:339`). They are now combined as `(reader query) AND (queryAppend)`. Each side is also processed on its own, so a `field:value` in `queryAppend` no longer switches off stop word removal and fuzziness for what the reader typed. A widget with no reader query sends `queryAppend` exactly as before.
 - **1.4.13**, 2026-09-19 ([mangrove#1252](https://github.com/unisdr/undrr-mangrove/issues/1252)): The usage example imports `@undrr/undrr-mangrove/components/SyndicationSearchWidget.js` instead of the package root. The root has never resolved on any published version (the tarball ships no `dist/` and no `src/`, and its `main` named a file it does not contain), and 2.0.0 stops advertising it, so the subpath is the only form that works. Documentation only; the component is unchanged.
 - **1.4.12**, 2026-09-19 ([mangrove#1255](https://github.com/unisdr/undrr-mangrove/issues/1255)): The Drupal integration snippet names the attribute the component actually hydrates on. It said `data-undrr-search-widget` in both the sentence and the copy-pasteable markup, so a consumer who followed it got a container nothing ever mounted into; the hydration selector is `[data-mg-search-widget]`, which this file already used correctly in every later example. Nothing in the library ever read `data-undrr-search-widget`, so it was never a legacy alias and no fallback is needed. The same wrong spelling in the `CustomEndpoint` story's Drupal example is corrected too; that story renders React directly from `args` and never hydrated, so it was not broken, only modelling markup that would not work. Documentation only; no behaviour change.
 - **1.4.11**, 2026-09-18 ([mangrove#1254](https://github.com/unisdr/undrr-mangrove/pull/1254)): Documented the endpoint trust contract. `ResultItem` renders three pieces of the search response as HTML (the pre-rendered teaser, and the Elasticsearch `highlight` fields for the title and the snippet) and does not sanitise any of them, because the `<em>` wrappers highlighting puts around matched terms are the feature and escaping the response would print them as text. That was true before this change and stays true after it; no rendering behaviour changed. What was missing was anyone saying so: `searchEndpoint` is set by the consumer, through the config prop or `data-search-endpoint`, and a consumer who repoints it at their own service inherits whatever that service returns, on a page that, this being a syndication widget, is frequently not UNDRR's. The three render sites now carry the reasoning, the MDX has an "Endpoint trust contract" section beside the endpoint documentation, and the AI manifest entry carries it too. The search query is not part of this: highlights come from indexed documents, not from the query string, so nothing typed in the search box is reflected back as markup. Also corrects the documented default for `searchEndpoint`, which the props table gave as `/search-endpoint` where the code has always used `https://www.undrr.org/search-endpoint`.

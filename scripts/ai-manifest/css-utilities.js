@@ -66,6 +66,25 @@ export default {
     'CSS utility classes provided by UNDRR Mangrove. Include the Mangrove CSS bundle to use these. All classes use the mg- prefix and follow BEM conventions.',
   cdnBaseUrl: `${CDN_BASE}/css/`,
   categories: [
+    {
+      name: 'Rich content',
+      description:
+        'Opt-in trusted editorial HTML, documented in Patterns/Rich content. No sanitisation or layout reset.',
+      classes: [
+        {
+          class: 'mg-content',
+          description:
+            'Semantic prose defaults within the actual body field; classed islands keep their presentation. Existing paragraph links remain underlined through CMS classes. Keep navigation/cards/controls outside where practical; mg-body remains supported.',
+          usage:
+            '<article class="mg-content"><p>Read the <a href="/report">report</a>.</p></article>',
+        },
+        {
+          class: 'mg-content__scroll',
+          description:
+            'Local horizontal overflow wrapper inside mg-content. For genuinely wide content, author tabindex="0", role="region" and a meaningful accessible name; preserve native table/caption/header semantics. Short tables need no added focus stop.',
+        },
+      ],
+    },
     // ---------------------------------------------------------------
     // 1. Layout
     // ---------------------------------------------------------------
@@ -714,7 +733,7 @@ export default {
     {
       name: 'Show more',
       description:
-        'Collapse long content behind a fade. Requires the mg-show-more vanilla JS utility for toggle behavior. Customizable height via the --mg-show-more-height CSS variable (default: 200px).',
+        'Collapse long content behind a fade. Requires the mg-show-more vanilla JS utility for toggle behavior. Customizable height via the --mg-show-more-height CSS variable (default: 200px). Add data-mg-show-more-min-hidden-lines to the toggle to collapse only when enough lines would be hidden.',
       classes: [
         {
           class: 'mg-show-more--collapsed',

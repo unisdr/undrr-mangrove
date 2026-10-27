@@ -216,7 +216,8 @@ Run `yarn build:tokens` to emit `stories/assets/scss/generated/_tokens-myorg.scs
 `stories/assets/scss/_theme-myorg.scss` wraps the generated mixin in the brand selector:
 
 ```scss
-@import './generated/tokens-myorg';
+@use './tokens-tabs' as *;
+@use './generated/tokens-myorg' as *;
 
 .mg-theme-myorg {
   @include mg-tokens-tabs;
@@ -227,14 +228,14 @@ Run `yarn build:tokens` to emit `stories/assets/scss/generated/_tokens-myorg.scs
 `stories/assets/scss/style-myorg.scss` is the entry point:
 
 ```scss
-@import './variables';
-@import './theme-myorg';
-@import './fonts';
-@import './breakpoints';
-@import './mixins';
-@import './utility';
-@import './foundational';
-@import './components';
+@use './variables' as *;
+@use './theme-myorg' as *;
+@use './fonts' as *;
+@use './breakpoints' as *;
+@use './mixins' as *;
+@use './utility' as *;
+@use './foundational' as *;
+@use './components' as *;
 ```
 
 Run `yarn scss`, then apply `class="mg-theme-myorg"` to `<body>` or any wrapping element. The class can sit on any ancestor, and different subtrees can carry different theme classes.
@@ -279,15 +280,19 @@ RTL layout is activated by the `dir="rtl"` attribute on the `<html>` element. In
 
 ### Locale toolbar in Storybook
 
-The locale toolbar provides three options:
+The locale toolbar provides these options:
 
-| Locale   | Language code | Direction |
-| -------- | ------------- | --------- |
-| English  | `en`          | LTR       |
-| Arabic   | `ar`          | RTL       |
-| Japanese | `ja`          | LTR       |
+| Locale             | Language code | Direction |
+| ------------------ | ------------- | --------- |
+| English            | `en`          | LTR       |
+| Arabic             | `ar`          | RTL       |
+| Japanese           | `ja`          | LTR       |
+| French             | `fr`          | LTR       |
+| Russian            | `ru`          | LTR       |
+| Spanish            | `es`          | LTR       |
+| Simplified Chinese | `zh`          | LTR       |
 
-Arabic is the only locale that triggers RTL. The decorator in `preview.js` sets `lang` and `dir` attributes on `<html>` and `#storybook-root`, and updates `window.UNDRR.langCode` and `window.UNDRR.dir`.
+Arabic is the only locale that triggers RTL automatically. The **Text direction** toolbar offers **Locale direction** or **Force right-to-left** for testing other languages in RTL. Locale direction keeps Arabic RTL; it is not a forced-LTR option. The shared `.storybook/language.js` helper sets `lang` and `dir` on the preview document and story canvas, and updates `window.UNDRR.langCode` and `window.UNDRR.dir`. The same helper handles docs-only toolbar changes. Existing `addonRtl:ltr` and `addonRtl:rtl` URL globals retain these semantics.
 
 ### RTL in themes
 
@@ -318,4 +323,4 @@ Burmese-specific font-size overrides (`:lang(my)`) were removed in v1.4 as they 
 
 ---
 
-Last updated: 3 September 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/ThemingGuide.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>
+Last updated: 3 September 2026 · <a href="https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Documentation/ThemingGuide.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>

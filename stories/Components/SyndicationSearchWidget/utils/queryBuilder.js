@@ -11,6 +11,7 @@
 import {
   SCORING_CONFIG,
   HIGHLIGHT_CONFIG,
+  SOURCE_FIELDS,
   FACET_FIELDS,
   parseTypeValue,
   TAXONOMY_VOCABULARY_MAP,
@@ -18,6 +19,12 @@ import {
   buildTierFilter,
   resolveFacetsLayout,
 } from './constants';
+
+/**
+ * Query_string Boolean operators. Elasticsearch only treats them as
+ * operators when uppercase.
+ */
+const BOOLEAN_OPERATORS = ['AND', 'OR', 'NOT'];
 
 /**
  * Build a complete Elasticsearch query from state and config.
@@ -32,14 +39,20 @@ import {
  * @param {Object} params.facets - Active facet filters { [key]: [values] }
  * @param {Object} params.facetOperators - Operator per facet { [key]: 'OR' | 'AND' }
  * @param {Object} params.customFacets - Custom facet selections { [facetId]: [indices] }
- * @param {string} params.sortBy - Sort order: 'newest', 'oldest', 'relevance'
+ * @param {string} params.sortBy - Sort order: 'relevance', 'newest', 'oldest',
+ *   'eventDateAsc' or 'eventDateDesc'
  * @param {number} params.page - Current page number (1-based)
  * @param {Object} config - Widget configuration
+ * @param {Object} [options]
+ * @param {boolean} [options.highlight=true] - Request title and body
+ *   highlights. They are only displayed by the no-teaser fallback, so the
+ *   widget turns them on only once it has seen a hit without a teaser.
  * @returns {Object} Elasticsearch query body
  */
 export function buildQuery(
   { query, facets, facetOperators, customFacets, sortBy, page = 1 },
-  config
+  config,
+  { highlight: wantHighlight = true } = {}
 ) {
   const scoring = config.scoring || SCORING_CONFIG;
   const highlight = config.highlight || HIGHLIGHT_CONFIG;
@@ -79,12 +92,14 @@ export function buildQuery(
     size: resultsPerPage,
     sort: buildSort(sortBy),
     query: mainQuery,
+    // Only the fields the widget renders; `body` alone is most of a hit.
+    _source: { includes: config.sourceFields || SOURCE_FIELDS },
   };
 
   // Skip highlights in card mode when summary is hidden: card teasers use
   // pre-rendered HTML and don't show body text, so highlight fragments are
   // wasted response payload.
-  if (!(isCardMode && summaryHidden)) {
+  if (wantHighlight && !(isCardMode && summaryHidden)) {
     result.highlight = buildHighlight(highlight);
   }
 
@@ -107,12 +122,37 @@ export function buildQuery(
  * @param {string} sortBy - Sort order
  * @returns {Array} Elasticsearch sort array
  */
-function buildSort(sortBy) {
+export function buildSort(sortBy) {
   switch (sortBy) {
     case 'newest':
       return [{ published_at: { order: 'desc' } }];
     case 'oldest':
       return [{ published_at: { order: 'asc' } }];
+    case 'eventDateAsc':
+    case 'eventDateDesc':
+      // Results without an event date (non-events in a mixed listing) sort
+      // last in both directions. unmapped_type keeps the sort valid on an
+      // index that doesn't have event_start yet, before a reindex.
+      // Date-only events share a start time (12:00 UTC) and non-events all
+      // tie as missing, so publish date and then nid break ties: from/size
+      // paging needs a total order, or pages repeat and skip results.
+      return [
+        {
+          event_start: {
+            order: sortBy === 'eventDateAsc' ? 'asc' : 'desc',
+            missing: '_last',
+            unmapped_type: 'date',
+          },
+        },
+        {
+          published_at: {
+            order: 'desc',
+            missing: '_last',
+            unmapped_type: 'date',
+          },
+        },
+        { nid: { order: 'desc', missing: '_last', unmapped_type: 'long' } },
+      ];
     case 'relevance':
     default:
       return [{ _score: { order: 'desc' } }];
@@ -214,6 +254,23 @@ function buildBaseFilters(config) {
 }
 
 /**
+ * Range clause matching one calendar year (UTC) of published_at.
+ * @param {number} year
+ * @returns {Object}
+ * @private
+ */
+function buildYearRange(year) {
+  return {
+    range: {
+      published_at: {
+        gte: `${String(year).padStart(4, '0')}-01-01T00:00:00Z`,
+        lt: `${String(year + 1).padStart(4, '0')}-01-01T00:00:00Z`,
+      },
+    },
+  };
+}
+
+/**
  * Build post_filter containing all facet filters.
  * Applied after aggregations for disjunctive faceting.
  * @private
@@ -236,49 +293,23 @@ function buildPostFilter(facets, facetOperators, customFacets, config) {
 
     const operator = facetOperators[key] || 'OR';
 
-    // Year uses script filter because published_at is a date
+    // Year: a calendar-year range on published_at per selected year (UTC,
+    // as the index stores it). Plain ranges, so server rendering accepts
+    // them, and much cheaper than the painless script they replace.
     if (key === 'year') {
-      const years = values.map(y => parseInt(y, 10));
-      if (operator === 'AND' && years.length > 1) {
-        // AND for year is semantically impossible (one doc can't have multiple years)
-        // but we include it for completeness - will return no results
-        filters.push({
-          bool: {
-            must: years.map(y => ({
-              script: {
-                script: {
-                  source: `
-                    if (doc.containsKey('published_at') && doc['published_at'].size() != 0) {
-                      return doc['published_at'].value.getYear() == params.year;
-                    }
-                    return false;
-                  `,
-                  lang: 'painless',
-                  params: { year: y },
-                },
-              },
-            })),
-          },
-        });
+      const ranges = values
+        .map(y => parseInt(y, 10))
+        .filter(Number.isFinite)
+        .map(buildYearRange);
+      if (ranges.length === 0) continue;
+      if (ranges.length === 1) {
+        filters.push(ranges[0]);
+      } else if (operator === 'AND') {
+        // AND across years can't match (a document has one publication
+        // year); kept for completeness, it returns no results.
+        filters.push({ bool: { must: ranges } });
       } else {
-        // OR: match any of the selected years
-        filters.push({
-          script: {
-            script: {
-              source: `
-                if (doc.containsKey('published_at') && doc['published_at'].size() != 0) {
-                  int docYear = doc['published_at'].value.getYear();
-                  for (int y : params.years) {
-                    if (docYear == y) return true;
-                  }
-                }
-                return false;
-              `,
-              lang: 'painless',
-              params: { years },
-            },
-          },
-        });
+        filters.push({ bool: { should: ranges, minimum_should_match: 1 } });
       }
       continue;
     }
@@ -360,30 +391,23 @@ function buildPostFilter(facets, facetOperators, customFacets, config) {
 
 /**
  * Build the must clause for the query.
- * Includes queryAppend (hidden terms added to all searches).
+ * Includes queryAppend (hidden terms added to all searches). queryAppend is a
+ * requirement, not a bias: every result must match it.
  * Removes stop words from the query for more consistent results.
  * @private
  */
 function buildMustClause(searchQuery, scoring, config) {
-  const queryAppend = config.queryAppend || '';
+  const queryAppend = (config.queryAppend || '').trim();
   const stopWords = scoring.stopWords || [];
 
   // Sanitize query to prevent Elasticsearch errors (unclosed quotes, trailing operators)
   const sanitizedQuery = sanitizeQuery(searchQuery || '');
 
-  // Combine user query with appended terms
-  let combinedQuery = sanitizedQuery;
-  if (queryAppend) {
-    combinedQuery = combinedQuery
-      ? `${combinedQuery} ${queryAppend}`
-      : queryAppend;
-  }
-
   const fieldWeights = scoring.fieldWeights;
 
   // For empty queries, use wildcard "*" to match all documents
   // Note: match_all doesn't work with the UNDRR search endpoint proxy
-  if (!combinedQuery || combinedQuery.length === 0) {
+  if (!sanitizedQuery && !queryAppend) {
     return {
       query_string: {
         query: '*',
@@ -394,12 +418,23 @@ function buildMustClause(searchQuery, scoring, config) {
 
   // Remove stop words for more consistent matching
   // e.g., "The Draft Articles on the Protection" and "Draft Articles on Protection"
-  // will both search for the same core terms
-  const cleanedQuery = removeStopWords(combinedQuery, stopWords);
+  // will both search for the same core terms.
+  // The reader query and queryAppend are processed separately so that syntax
+  // in one (field:value, quotes) doesn't switch off processing for the other.
+  const prepare = query => addFuzziness(removeStopWords(query, stopWords));
+  const readerPart = sanitizedQuery ? prepare(sanitizedQuery) : '';
+  const appendPart = queryAppend ? prepare(queryAppend) : '';
+
+  // Group both sides so an OR in the reader's query can't loosen the
+  // queryAppend requirement, e.g. "a OR b field_theme:339".
+  const combinedQuery =
+    readerPart && appendPart
+      ? `(${readerPart}) AND (${appendPart})`
+      : readerPart || appendPart;
 
   return {
     query_string: {
-      query: addFuzziness(cleanedQuery),
+      query: combinedQuery,
       fields: Object.entries(fieldWeights).map(
         ([field, weight]) => `${field}^${weight}`
       ),
@@ -433,8 +468,10 @@ function sanitizeQuery(query) {
   // Remove trailing boolean operators (AND, OR, NOT) that would cause errors
   sanitized = sanitized.replace(/\s+(AND|OR|NOT)\s*$/i, '');
 
-  // Remove leading boolean operators
-  sanitized = sanitized.replace(/^\s*(AND|OR|NOT)\s+/i, '');
+  // Remove leading AND/OR, which are invalid at the start. Keep an uppercase
+  // leading NOT: "NOT earthquake" is a valid exclusion.
+  sanitized = sanitized.replace(/^\s*(AND|OR)\s+/i, '');
+  sanitized = sanitized.replace(/^\s*(?!NOT\s)not\s+/i, '');
 
   // Remove standalone boolean operators
   if (/^(AND|OR|NOT)$/i.test(sanitized.trim())) {
@@ -476,16 +513,56 @@ function removeStopWords(query, stopWords = []) {
     return query;
   }
 
+  // Uppercase AND/OR/NOT are query_string operators; lowercase "and"/"or"
+  // are ordinary words and can still be dropped as stop words.
   const words = query.split(/\s+/);
-  const filtered = words.filter(
-    word => !stopWords.includes(word.toLowerCase())
+  const filtered = tidyOperators(
+    words.filter(
+      word =>
+        BOOLEAN_OPERATORS.includes(word) ||
+        !stopWords.includes(word.toLowerCase())
+    )
   );
   // Return original if all words were stop words
   return filtered.length > 0 ? filtered.join(' ') : query;
 }
 
 /**
+ * Drop operators left dangling after stop word removal, so that
+ * "earthquake OR the" doesn't become the invalid "earthquake OR".
+ * Keeps "AND NOT" / "OR NOT" and a leading "NOT", which are valid.
+ *
+ * @param {Array<string>} tokens - Query tokens
+ * @returns {Array<string>} Tokens without dangling operators
+ */
+function tidyOperators(tokens) {
+  const result = [];
+  tokens.forEach(token => {
+    if (!BOOLEAN_OPERATORS.includes(token)) {
+      result.push(token);
+      return;
+    }
+    const previous = result[result.length - 1];
+    // A leading NOT is valid ("NOT earthquake" excludes earthquake); a
+    // leading AND or OR is not.
+    if (previous === undefined) {
+      if (token === 'NOT') result.push(token);
+      return;
+    }
+    if (BOOLEAN_OPERATORS.includes(previous)) {
+      if (token !== 'NOT' || previous === 'NOT') return;
+    }
+    result.push(token);
+  });
+  while (BOOLEAN_OPERATORS.includes(result[result.length - 1])) {
+    result.pop();
+  }
+  return result;
+}
+
+/**
  * Add fuzziness to search query for typo tolerance.
+ * Boolean operators (AND, OR, NOT) are left as they are.
  * @param {string} query - Search query
  * @param {number} fuzzinessLevel - Fuzziness level (default: 1)
  * @returns {string} Query with fuzziness
@@ -503,7 +580,11 @@ function addFuzziness(query, fuzzinessLevel = 1) {
   }
 
   const terms = query.split(/\s+/);
-  return terms.map(term => `${term}~${fuzzinessLevel}`).join(' ');
+  return terms
+    .map(term =>
+      BOOLEAN_OPERATORS.includes(term) ? term : `${term}~${fuzzinessLevel}`
+    )
+    .join(' ');
 }
 
 /**
@@ -533,7 +614,12 @@ function buildPhraseBoosting(searchQuery, scoring) {
   // Sanitize, strip quotes, then remove stop words
   const sanitizedQuery = sanitizeQuery(searchQuery);
   const unquotedQuery = stripQuotes(sanitizedQuery);
-  const cleanedQuery = removeStopWords(unquotedQuery, stopWords);
+  // Operators aren't content: boosting "disaster NOT earthquake" as a phrase
+  // would reward the excluded word.
+  const cleanedQuery = removeStopWords(unquotedQuery, stopWords)
+    .split(/\s+/)
+    .filter(word => !BOOLEAN_OPERATORS.includes(word))
+    .join(' ');
 
   // Skip if query is empty after sanitization
   if (!cleanedQuery || cleanedQuery.trim().length === 0) {
@@ -840,18 +926,15 @@ function buildAggregations(facetFields, facetCount) {
     };
   }
 
-  // Year aggregation uses script to extract year from date
+  // Year aggregation: one bucket per calendar year (UTC) of published_at.
+  // `yyyy` puts the year in key_as_string; normaliseAggregations in
+  // SearchContext makes it the bucket key.
   aggs.year = {
-    terms: {
-      script: {
-        source: `
-          if (doc.containsKey('published_at') && doc['published_at'].size() != 0) {
-            return doc['published_at'].value.getYear();
-          }
-        `,
-        lang: 'painless',
-      },
-      size: facetCount,
+    date_histogram: {
+      field: 'published_at',
+      calendar_interval: 'year',
+      format: 'yyyy',
+      min_doc_count: 1,
     },
   };
 

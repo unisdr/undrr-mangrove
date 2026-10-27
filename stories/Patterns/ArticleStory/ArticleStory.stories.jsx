@@ -3,7 +3,8 @@ import { ArticleStory } from './ArticleStory';
 import '../_shared/pattern-demo.scss';
 
 export default {
-  title: 'Patterns/Article story',
+  id: 'patterns-article-story',
+  title: 'Patterns/Content/Article/Full page',
   component: ArticleStory,
   parameters: { layout: 'fullscreen' },
   args: { imageProminence: 'large', heroImage: 'main' },

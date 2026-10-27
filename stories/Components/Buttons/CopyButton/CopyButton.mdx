@@ -26,7 +26,7 @@ Mangrove offers three integration paths depending on your project setup:
 
 ### Option 1: Standalone Vanilla JS (Zero React Dependency)
 
-For Drupal Twig templates, static HTML pages or server-rendered layouts where React is not used, load the standalone script from the CDN (`https://assets.undrr.org/mangrove/2.0.0/js/copy-button.js`) or from npm (`@undrr/undrr-mangrove/js/copy-button.js`). It automatically initializes all `[data-mg-copy-button]` elements on the page.
+For Drupal Twig templates, static HTML pages or server-rendered layouts where React is not used, load the standalone script from the CDN (`https://assets.undrr.org/mangrove/2.3.0/js/copy-button.js`) or from npm (`@undrr/undrr-mangrove/js/copy-button.js`). It automatically initializes all `[data-mg-copy-button]` elements on the page.
 
 The script file uses ES module `export` statements, so you **must** load it with `type="module"`. A plain `<script src>` throws `SyntaxError: Unexpected token 'export'`.
 
@@ -49,7 +49,7 @@ The script file uses ES module `export` statements, so you **must** load it with
 <!-- JS: type="module" is required -->
 <script
   type="module"
-  src="https://assets.undrr.org/mangrove/2.0.0/js/copy-button.js"
+  src="https://assets.undrr.org/mangrove/2.3.0/js/copy-button.js"
 ></script>
 ```
 
@@ -114,17 +114,32 @@ The button is icon-only, so it needs an accessible name of its own (WCAG 4.1.2 N
 
 `data-aria-label` is the older spelling and stays supported, so markup already in the wild keeps its name: the vanilla script copies it onto `aria-label` when the button has none, and `fromElement` falls back to it. Do not use it in new markup, and never rely on it alone — a button that carries only `data-aria-label` announces as "button" for as long as the script takes to load, and as "button" forever if it fails to.
 
-An `aria-label` or `aria-labelledby` you set yourself is never overridden.
+The vanilla enhancer preserves authored `aria-label` and `aria-labelledby` attributes. React and React hydration preserve non-empty naming overrides; empty naming inputs use the selected catalogue fallback.
 
 ## Props
 
 <Controls />
 
+## Runtime UI translations
+
+Use `lang` for built-in copy and `labels` for individual overrides. The
+[shared translation guide](?path=/docs/contributing-ui-translations--docs)
+explains language matching, fallback, direction and hydration precedence.
+
+`components/CopyButton.js` exports `getCopyButtonLabels(lang, labels)`
+for consumers needing the same strings outside React.
+
+Dedicated `ariaLabel`, `copiedLabel` and `tooltipLabel` props take precedence.
+An empty accessible name falls back to the selected catalogue; optional
+confirmation and tooltip text can be empty.
+
 ## Changelog
+
+- **1.1**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance. Empty action names retain translated fallbacks; optional feedback can still be empty.
 
 - **1.0.3**, 2026-09-19 ([#1252](https://github.com/unisdr/undrr-mangrove/issues/1252)): The React example imports `@undrr/undrr-mangrove/components/CopyButton.js` instead of the package root. The root has never resolved on any published version (the tarball ships no `dist/` and no `src/`, and its `main` named a file it does not contain), and 2.0.0 stops advertising it, so the subpath is the only form that works. Documentation only; the component is unchanged.
 - **1.0.2**, 2026-09-18 ([#1191](https://github.com/unisdr/undrr-mangrove/pull/1191)): Fixed the standalone vanilla integration snippet. It pointed at `dist/js/copy-button.min.js`, which the CDN does not serve, and loaded the ES module without `type="module"`, so copying it threw `SyntaxError: Unexpected token 'export'`.
-- **1.0.1**, 2026-09-17 ([#1190](https://github.com/unisdr/undrr-mangrove/pull/1190)): `mgCopyButton()` copies `data-aria-label` onto `aria-label` when the button has no accessible name of its own, and the vanilla integration example in these docs uses a real `aria-label`. The example was icon-only and carried `data-aria-label`, which only the hydration path reads, so anyone copying it shipped a button that announced as "button" with no context (WCAG 4.1.2). An `aria-label` or `aria-labelledby` you set yourself is never overridden.
+- **1.0.1**, 2026-09-17 ([#1190](https://github.com/unisdr/undrr-mangrove/pull/1190)): `mgCopyButton()` copies `data-aria-label` onto `aria-label` when the button has no accessible name of its own, and the vanilla integration example in these docs uses a real `aria-label`. The example was icon-only and carried `data-aria-label`, which only the hydration path reads, so anyone copying it shipped a button that announced as "button" with no context (WCAG 4.1.2). The vanilla enhancer preserves authored `aria-label` and `aria-labelledby` attributes. React and React hydration preserve non-empty naming overrides; empty naming inputs use the selected catalogue fallback.
   - `fromElement` now reads a plain `aria-label` off the container before the `data-*` spellings, so markup written against these docs keeps its name on the Layer 2 hydration path too. The data attributes reference no longer lists `data-aria-label` as the way to name the button; see "Naming the button" above.
 - **1.0.0**, 2026-09-16 ([#1160](https://github.com/unisdr/undrr-mangrove/pull/1160)): Initial implementation with copy functionality, visual feedback tooltip, and aria-live announcements.
   - Standalone zero-dependency vanilla script (`stories/assets/js/copy-button.js`) and Layer 2 React hydration (`CopyButton.fromElement.js`, `CopyButton.hydrate.js`) ([#1163](https://github.com/unisdr/undrr-mangrove/pull/1163)).

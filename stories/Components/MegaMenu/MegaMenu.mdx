@@ -155,7 +155,7 @@ Two related details worth knowing:
 - The bounded mobile menu uses `role="dialog"` and `aria-modal="true"`, labelled by the current level heading.
 - Links and drill-in buttons use native navigation semantics. Tab and Shift+Tab stay within the open dialog, including controls in banner content; arrow keys retain native browser behaviour.
 - Entering a level focuses its heading. Back restores the previous row and scroll position. Close and Escape restore the opener; resizing to desktop moves focus to a desktop navigation item.
-- The closed dialog is hidden. Decorative desktop strip items become inert on mobile after hydration, keeping the full-strip opening target available.
+- The closed dialog is hidden. The topbar scrolls horizontally on mobile. Tapping a label opens that section; the hamburger opens all sections. The logo remains a separate home link.
 
 ### Branded variant
 
@@ -167,7 +167,7 @@ Two related details worth knowing:
 
 ## Server-rendered / CDN usage
 
-MegaMenu supports [layered hydration](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md). This is a complex-tier component: in most integrations the `sections` prop comes from an API or server-side builder, not from static HTML. The `fromElement` function extracts timing props and an optional inline JSON sections attribute. Consumer wrappers typically override `sections`.
+MegaMenu supports [layered hydration](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md). This is a complex-tier component: in most integrations the `sections` prop comes from an API or server-side builder, not from static HTML. The `fromElement` function extracts timing props and an optional inline JSON sections attribute. Consumer wrappers typically override `sections`.
 
 ```html
 <div
@@ -192,10 +192,10 @@ MegaMenu supports [layered hydration](https://github.com/unisdr/undrr-mangrove/b
 > **Drupal note:** The Drupal wrapper reads prefixed attribute names (`data-mg-mega-menu-logo-src`, etc.) and falls back to a `SITE_LOGOS` body-class map when no logo attributes are set. CDN / vanilla HTML consumers use the short `data-logo-*` names above.
 
 ```js
-import createHydrator from 'https://assets.undrr.org/mangrove/2.0.0/components/hydrate.js';
+import createHydrator from 'https://assets.undrr.org/mangrove/2.3.0/components/hydrate.js';
 import MegaMenu, {
   fromElement,
-} from 'https://assets.undrr.org/mangrove/2.0.0/components/MegaMenu.js';
+} from 'https://assets.undrr.org/mangrove/2.3.0/components/MegaMenu.js';
 createHydrator({
   selector: '[data-mg-mega-menu]',
   component: MegaMenu,
@@ -203,11 +203,12 @@ createHydrator({
 });
 ```
 
-See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
+See the [hydration guide](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
 
 ## Mobile progressive navigation
 
-Below 900px, the nav strip opens a bounded overlay. Groups drill into nested
+Below 900px, the nav strip scrolls horizontally with native touch swipes or mouse click-and-drag. Dragging does not open a section. Tap a label to open its
+section in the bounded overlay; the hamburger opens all sections. Groups drill into nested
 levels on the same surface with labeled Back/Close controls. Section headings
 link directly to landing pages; banner content appears inline under links.
 
@@ -219,12 +220,58 @@ motion/transparency, increased contrast, and forced colors.
 This is a drop-in update: existing `sections`, logo/timing props, Drupal
 attributes, and hydration entry points are unchanged. `labels` also accepts
 `backLabel`, `allSectionsLabel`, `closeLabel`, `overviewLabel`,
-`toggleMobileNavLabel`; omitted keys use English defaults. Legacy `menuLabel`
+`toggleMobileNavLabel`; omitted keys use the selected catalogue, then English defaults. Legacy `menuLabel`
 is still accepted but no longer displayed.
 
 <Canvas of={MegaMenuStories.ProgressiveMobile} />
 
+## Motion decisions
+
+Follow [Motion and animation](?path=/docs/design-decisions-motion--docs) when extending this navigation.
+
+Navigation destinations and active category borders, underlines and tints appear
+immediately. Pointer intent delays (`hoverDelay` and `delay`) remain behavioural
+settings, independent of visual motion tokens.
+
+| Previous animation          | Decision and purpose                                                                                                                                            |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `mg-mega-tab-pulse`         | Removed: active border, underline and tint already identify the category.                                                                                       |
+| `mg-mega-content-swap`      | Removed: category contents update immediately, without a directional slide. The public `mg-mega-content__right--sliding` class remains as a compatibility hook. |
+| `mg-mega-right-flash`       | Removed: flashing the panel adds no navigation information.                                                                                                     |
+| `mg-mega-item-slide-in`     | Removed: every destination is visible immediately, including menus with more than 25 links.                                                                     |
+| `mg-mega-progressive-enter` | Kept: a small logical 8px entry identifies a newly opened mobile level; uses the fast duration and standard easing.                                             |
+| `mg-mega-surface-enter`     | Replaced with an interruptible fast transition for the bounded mobile surface, using an 8px logical offset.                                                     |
+| `mg-mega-backdrop-enter`    | Replaced with an interruptible fast opacity transition, connecting the surface to the page beneath.                                                             |
+
+The mobile entry transitions use `@starting-style`; browsers that do not support
+it open immediately. Exit retention reads the computed CSS duration, including
+theme overrides and delays. Focus and scroll are released immediately on close;
+the retained surface is inert and hidden from assistive technology. Reopening
+cancels pending removal. The mobile offset follows RTL. Desktop panel reveal and
+legacy sidebar/chevron transitions use the medium token. Reduced motion and
+forced colours disable these effects without hiding destinations or active states.
+Inactive desktop panels also become inert and hidden from assistive technology immediately, so fading links cannot retain keyboard focus. Escape returns focus to the top-level trigger before closing. Existing classes, Drupal attributes and hydration entry points remain supported.
+
+<Canvas of={MegaMenuStories.MotionReview} />
+
+## Runtime UI translations
+
+Use `lang` for built-in copy and `labels` for individual overrides. The
+[shared translation guide](?path=/docs/contributing-ui-translations--docs)
+explains language matching, fallback, direction and hydration precedence.
+
+`components/MegaMenu.js` exports `getMegaMenuLabels(lang, labels)`
+for consumers needing the same strings outside React.
+
 ## Changelog
+
+- **1.5**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance.
+
+- **1.4.8**, 2026-10-26 ([#1402](https://github.com/unisdr/undrr-mangrove/pull/1402)): Anchored the mobile hamburger vertically and kept it visible beside a horizontally scrollable navigation strip. The bottom divider stays visible beneath the opaque hamburger and logo surfaces. Mouse users can click and drag the rail to scroll without opening a section; ordinary clicks and touch taps open the selected section. Both branded and unbranded labels now open their section directly, with Back returning to all sections and Close restoring focus to the opener.
+
+- **1.4.7**, 2026-10-16: The mobile motion story waits for visible content after category navigation, avoiding a race with the entry animation's zero-opacity frame in browser tests. Component behaviour and consumer APIs are unchanged.
+
+- **1.4.6**, 2026-10-15 ([#1359](https://github.com/unisdr/undrr-mangrove/issues/1359)): Removed decorative category pulses, panel flashes and delayed link entrances. Tokenised remaining navigation motion, made mobile transitions interruptible, aligned inert exit retention with computed CSS timing, and fixed desktop reduced-motion/forced-colours overrides. Public state classes and hydration contracts remain compatible.
 
 - **1.4.5**, 2026-09-18 ([#1247](https://github.com/unisdr/undrr-mangrove/pull/1247), [#1235](https://github.com/unisdr/undrr-mangrove/issues/1235)): The three section and top-bar ref callbacks are statement bodies instead of parenthesised assignments, so they no longer return the element they assign. React 19.3 does not reject that return value (it stores it as the ref cleanup, finds it is not a function and still calls `ref(null)` on detach), so these were correct as written; the hazard React 19 introduced is a ref callback returning a _function_, which silently replaces the detach call. Found by widening ESLint coverage to component `.jsx`, which had never been linted. No visual or behavioural change.
 

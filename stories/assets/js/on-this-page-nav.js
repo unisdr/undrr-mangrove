@@ -107,6 +107,7 @@ export function mgOnThisPageNav(scope) {
     container._mgOnThisPageNavAbort = ac;
 
     setupClickHandlers(container, ac.signal);
+    setupBlockSize(container, ac.signal);
     setupScrollSpy(container);
     setupFocusScrolling(container, ac.signal);
     setupScrollButtons(container, ac.signal);
@@ -132,11 +133,51 @@ export function mgOnThisPageNavDestroy(container) {
     container._mgOnThisPageNavResizeObserver.disconnect();
     delete container._mgOnThisPageNavResizeObserver;
   }
+  if (container._mgOnThisPageNavSizeObserver) {
+    container._mgOnThisPageNavSizeObserver.disconnect();
+    delete container._mgOnThisPageNavSizeObserver;
+    document.documentElement.style.removeProperty(BLOCK_SIZE);
+  }
   container
     .querySelectorAll('.mg-on-this-page-nav__scroll-btn')
     .forEach(btn => btn.remove());
-  container.classList.remove('mg-on-this-page-nav--has-left-overflow');
+  container.classList.remove(
+    'mg-on-this-page-nav--has-left-overflow',
+    'mg-on-this-page-nav--has-right-overflow'
+  );
   delete container.dataset.mgOnThisPageNavInitialized;
+}
+
+const BLOCK_SIZE = '--mg-on-this-page-nav-block-size';
+
+/**
+ * Publishes the bar's height on the root element while it is sticky, and 0px
+ * when it is not (it un-sticks on short viewports). The stylesheet adds it to
+ * `scroll-padding-top`, so anything the browser scrolls into view (focus,
+ * anchors, scrollIntoView from other components) lands below the bar rather
+ * than under it.
+ *
+ * @param {HTMLElement} container - The nav element
+ * @param {AbortSignal} signal - Removes the resize listener on destroy
+ */
+function setupBlockSize(container, signal) {
+  const root = document.documentElement;
+  const publish = () => {
+    const sticky = getComputedStyle(container).position === 'sticky';
+    root.style.setProperty(
+      BLOCK_SIZE,
+      `${sticky ? container.offsetHeight || 0 : 0}px`
+    );
+  };
+  publish();
+  window.addEventListener('resize', publish, { passive: true, signal });
+  if (typeof ResizeObserver === 'function') {
+    const observer = new ResizeObserver(publish);
+    observer.observe(container);
+    container._mgOnThisPageNavSizeObserver = observer;
+  } else {
+    container._mgOnThisPageNavSizeObserver = { disconnect() {} };
+  }
 }
 
 /**
@@ -399,6 +440,13 @@ function updateScrollButtons(container, list, prevBtn, nextBtn) {
     'mg-on-this-page-nav--has-left-overflow',
     rtl ? canScrollFurther : scrolledFromStart
   );
+  // has-right-overflow is its mirror. Only the RTL fades read it: in RTL the
+  // hidden content can sit on either physical side, and a fade belongs only
+  // on a side with something hidden behind it.
+  container.classList.toggle(
+    'mg-on-this-page-nav--has-right-overflow',
+    rtl ? scrolledFromStart : canScrollFurther
+  );
 }
 
 /**
@@ -543,6 +591,15 @@ function setupScrollSpy(container) {
   if (targets.length === 0) return;
 
   let activeId = null;
+
+  // At the foot of a page that scrolls a real distance. On a page that barely
+  // scrolls, the bottom is also the top, and the first section is right.
+  const atFoot = () => {
+    const doc = document.documentElement;
+    const scrollable = doc.scrollHeight - window.innerHeight;
+    const minimum = Math.max(120, window.innerHeight * 0.25);
+    return scrollable >= minimum && window.scrollY >= scrollable - 2;
+  };
   // Track which targets are currently intersecting (avoids DOM expando properties)
   const intersecting = new Set();
 
@@ -584,6 +641,13 @@ function setupScrollSpy(container) {
         }
       });
 
+      // At the foot of the page the last section wins (see onScroll). The
+      // observer reports after the scroll event, so without this check it
+      // would take the mark straight back.
+      if (atFoot()) {
+        setActive(targets[targets.length - 1].id);
+        return;
+      }
       // Pick the first intersecting target in DOM order
       const firstVisible = targets.find(t => intersecting.has(t));
       if (firstVisible) {
@@ -599,12 +663,27 @@ function setupScrollSpy(container) {
   targets.forEach(target => observer.observe(target));
   container._mgOnThisPageNavObserver = observer;
 
+  // A short last section can never scroll up into the observed band, so at
+  // the foot of the page the previous section stayed marked, even straight
+  // after following the last link. At the bottom, mark the last target. Only
+  // on pages that scroll a real distance: on one that barely scrolls, the
+  // bottom is also the top, and the first section is the right answer.
+  const onScroll = () => {
+    if (atFoot()) setActive(targets[targets.length - 1].id);
+  };
+  window.addEventListener('scroll', onScroll, {
+    passive: true,
+    signal: container._mgOnThisPageNavAbort?.signal,
+  });
+
   const hashId = window.location.hash ? window.location.hash.slice(1) : null;
   if (hashId && linkMap.has(hashId)) {
     setActive(hashId);
   } else if (targets.length > 0) {
     setActive(targets[0].id);
   }
+  // A page restored at its foot (reload, back button) is checked straight away.
+  onScroll();
 }
 
 // Auto-wrap so the browser Event object is not passed as scope

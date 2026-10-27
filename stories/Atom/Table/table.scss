@@ -4,8 +4,12 @@
  * Accessible tabular data styling with striped, bordered, and responsive scrolling variants.
  *
  * Full documentation:
- * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Atom/Table/Table.mdx
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Atom/Table/Table.mdx
  */
+@use "../../assets/scss/breakpoints" as *;
+@use "../../assets/scss/mixins" as *;
+@use "../../assets/scss/config" as *;
+
 /* table tag start */
 .mg-table {
   border-collapse: collapse;

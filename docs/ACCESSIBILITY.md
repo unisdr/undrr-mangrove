@@ -1,6 +1,6 @@
 # Accessibility
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/ACCESSIBILITY.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/getting-started-accessibility--docs).
+> Edits to this file show up on both [GitHub](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/ACCESSIBILITY.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/getting-started-accessibility--docs).
 
 Accessible design improves usability for everyone. Mangrove components target [WCAG 2.2](https://www.w3.org/TR/WCAG22/) AA, but product-level implementation still determines final accessibility.
 
@@ -64,11 +64,19 @@ For the full specification, see the [Web Content Accessibility Guidelines (WCAG)
 
 **Loading states**
 
+Announce loading through a live region that is already in the page, and put `aria-busy` on the region whose content is loading, not on the live region: `aria-busy` holds back announcements from the element it is on. A spinner next to that message is decorative.
+
 ```jsx
-<div aria-live="polite" aria-busy={isLoading}>
-  {isLoading ? 'Loading reports...' : `Found ${reports.length} reports`}
+<div role="status" className="mg-u-sr-only">
+  {isLoading ? 'Loading reports' : `Found ${reports.length} reports`}
 </div>
+<section aria-label="Reports" aria-busy={isLoading}>
+  {isLoading && <Loader decorative />}
+  <ReportList reports={reports} />
+</section>
 ```
+
+Screen readers often skip a live region that is inserted already filled, and they do not reliably announce a progress bar's value as it changes. See [Announcing a loader that is inserted by script](https://mangrove.undrr.org/?path=/docs/components-loader--docs#announcing-a-loader-that-is-inserted-by-script) for the two patterns that work, and the [progress bar](https://mangrove.undrr.org/?path=/docs/components-progress-bar--docs) for announcing the start, milestones and completion of a measurable task.
 
 ### 3. Keyboard navigation
 
@@ -177,13 +185,16 @@ function ModalTrigger() {
 
 ### 6. Reduced motion
 
-Respect `prefers-reduced-motion` so animations run only when users have not requested reduced motion.
+Follow the [motion and animation guidance](MOTION.md) for purpose, tokens, CSS and JavaScript patterns, and browser checks. Optional interaction motion runs only when users have not requested reduced motion; loading indicators use the explicit alternatives below.
+
+Loading indicators need a designed pending state rather than a spinner accidentally frozen by a reset. Under reduced motion the shared [loader](https://mangrove.undrr.org/?path=/docs/components-loader--docs) shows a static dashed ring with a visible loading label; decorative use requires visible pending text from the caller. The indeterminate [progress bar](https://mangrove.undrr.org/?path=/docs/components-progress-bar--docs) shows a still, dashed bar instead of a moving segment. Labels and application messages distinguish pending, completed and failed work; movement does not prove that a request is making progress.
 
 ```scss
 // Only animate when the user allows it
 .mg-card__title a::after {
   @media (prefers-reduced-motion: no-preference) {
-    transition: translate 200ms ease;
+    transition: translate var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
   }
 }
 ```

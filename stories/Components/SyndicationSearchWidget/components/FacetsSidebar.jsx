@@ -34,11 +34,18 @@ import CustomFacetSelect from './CustomFacetSelect';
  * @param {Object} props - Component props
  * @param {string} props.widgetId - Unique widget ID for accessibility
  */
+// Shared empty list, so memoised facets see an unchanged prop.
+const NO_VALUES = [];
+
 export function FacetsSidebar({ widgetId = 'search' }) {
   const config = useSearchConfig();
-  const { aggregations } = useSearchState();
+  const { aggregations, facets, facetOperators } = useSearchState();
   const labels = useSearchLabels();
-  const { getLabel, isLoading: taxonomiesLoading } = useTaxonomies();
+  const {
+    getLabel,
+    isLoading: taxonomiesLoading,
+    taxonomiesReady,
+  } = useTaxonomies();
 
   const {
     visibleFilters,
@@ -93,12 +100,15 @@ export function FacetsSidebar({ widgetId = 'search' }) {
               getLabel={getLabel}
               widgetId={widgetId}
               allowedTypes={allowedTypes}
+              taxonomiesReady={taxonomiesReady}
+              selectedValues={facets[field.key] || NO_VALUES}
+              operator={facetOperators[field.key] || 'OR'}
             />
           );
         }
 
         // Standard facet
-        const buckets = aggregations?.[field.key]?.buckets || [];
+        const buckets = aggregations?.[field.key]?.buckets || NO_VALUES;
         return (
           <FacetSelect
             key={field.key}
@@ -107,17 +117,23 @@ export function FacetsSidebar({ widgetId = 'search' }) {
             getLabel={getLabel}
             widgetId={widgetId}
             allowedTypes={allowedTypes}
+            taxonomiesReady={taxonomiesReady}
+            selectedValues={facets[field.key] || NO_VALUES}
+            operator={facetOperators[field.key] || 'OR'}
           />
         );
       });
   }, [
     fields,
     aggregations,
+    facets,
+    facetOperators,
     visibleFilters,
     allowedTypes,
     subtypeFields,
     mergedTypeBuckets,
     getLabel,
+    taxonomiesReady,
     widgetId,
   ]);
 

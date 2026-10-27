@@ -4,8 +4,11 @@
  * Social sharing action bar with platform icons (X/Twitter, LinkedIn, Facebook, Email, Copy Link).
  *
  * Full documentation:
- * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/Buttons/ShareButtons/ShareButtons.mdx
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Buttons/ShareButtons/ShareButtons.mdx
  */
+@use "../../../assets/scss/mixins" as *;
+@use "../../../assets/scss/config" as *;
+
 .mg-share {
   max-inline-size: mg-rem(400);
   min-inline-size: 0;

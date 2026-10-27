@@ -73,13 +73,13 @@ export const REQUIRES_REACT = {
   'spike-react-aria-integration':
     'Experimental Storybook-only React Aria integration fixture. Requires React and is not a supported Mangrove component export.',
   'components-syndicated-search':
-    'SyndicationSearchWidget is a complex search interface querying an Elasticsearch API. Requires React 19. Can be hydrated on a vanilla HTML page using the createHydrator pattern with data-mg-search-widget attributes. Supports full UI string translation via the labels prop (or data-labels JSON attribute in Drupal). Ships with label sets for ES, FR, JA, ZH (Simplified), AR, and RU. See the hydration documentation.',
+    'SyndicationSearchWidget is a complex search interface querying an Elasticsearch API. Requires React 19. After each completed search it calls config.onResults({ total, query, page }) and dispatches a bubbling mg-search-widget:results event with the same detail, so a host can hide an empty section. Can be hydrated on a vanilla HTML page using the createHydrator pattern with data-mg-search-widget attributes. Supports full UI string translation via the labels prop (or data-labels JSON attribute in Drupal). Ships with label sets for ES, FR, JA, ZH (Simplified), AR, and RU. See the hydration documentation.',
   'components-syndicated-search-translations':
     'SyndicationSearchWidget translation label sets for ES, FR, JA, ZH-Hans, AR, and RU. Pass via the labels prop (React) or data-labels JSON attribute (Drupal). String keys support {token} substitution; function keys handle Intl.PluralRules plural forms for Arabic (6-form) and Russian (3-form). Function keys cannot be serialized to JSON for data-labels.',
   'components-syndicated-search-display-modes':
     'SyndicationSearchWidget display-mode variants (list / card / card-book layouts and teaser-field visibility). Requires React 19. Same hydration pattern as the main widget.',
   'components-syndicated-search-filters':
-    'SyndicationSearchWidget filter and facet customisation variants (customFilters, customFacets, allowedTypes). Requires React 19. Same hydration pattern as the main widget.',
+    'SyndicationSearchWidget filter and facet customisation variants (customFilters, customFacets, allowedTypes) and an upcoming events listing (an event_end customFilters recipe and the eventDateAsc sort). Requires React 19. Same hydration pattern as the main widget.',
   'components-syndicated-search-integrations':
     'SyndicationSearchWidget integration / syndication examples (taxonomy term results, custom endpoints, syndicated card layouts as content blocks). Requires React 19. Same hydration pattern as the main widget.',
   'components-syndicated-search-layouts':
@@ -87,7 +87,7 @@ export const REQUIRES_REACT = {
   'components-syndicated-search-toggles':
     'SyndicationSearchWidget UI visibility toggles (showPager, showSearchMetrics). Requires React 19. Same hydration pattern as the main widget.',
   'components-navigation-megamenu':
-    'MegaMenu manages complex open/close state and keyboard navigation. Below 900px it provides bounded progressive navigation (minimum 400px where space permits, maximum min(700px, 90dvh)) with Back above the title, a separate Close control and outside-click dismissal, nested groups, section headings linked to their landing pages and immediately visible authored banner content. Existing sections and hydration attributes remain supported; additional optional labels are menuLabel, backLabel, allSectionsLabel, closeLabel, overviewLabel and toggleMobileNavLabel. Requires React. Can be hydrated via createHydrator. Adds mg-mega-wrapper--js-active on mount so pointer-events restrictions only apply when the sidebar is available; plain HTML nav markup and failed-hydration states remain fully clickable on mobile.',
+    'MegaMenu manages complex open/close state and keyboard navigation. Closing panels become inert and hidden from assistive technology immediately while visual exits finish; decorative category pulses, flashes and link staggering are not used. Below 900px it provides bounded progressive navigation (minimum 400px where space permits, maximum min(700px, 90dvh)) with Back above the title, a separate Close control and outside-click dismissal, nested groups, section headings linked to their landing pages and immediately visible authored banner content. Existing sections and hydration attributes remain supported; additional optional labels are menuLabel, backLabel, allSectionsLabel, closeLabel, overviewLabel and toggleMobileNavLabel. Requires React. Can be hydrated via createHydrator. The mobile topbar scrolls horizontally in both logo variants with native touch swipes and mouse click-and-drag (dragging does not activate a label); tapping a label opens its section directly and the hamburger opens all sections. Close restores the opener, and Back returns to all sections. Adds mg-mega-wrapper--js-active on mount; plain HTML nav markup and failed-hydration states remain clickable on mobile.',
   'components-gallery':
     'Gallery provides a lightbox image viewer. Requires React for modal state and keyboard navigation. Can be hydrated via createHydrator.',
   'components-navigation-pager':
@@ -414,6 +414,9 @@ export const COMPONENT_DATA = {
       selector: '[data-mg-copy-button]',
       modules: hydrationModules('CopyButton'),
       dataAttributes: {
+        dir: 'Explicit direction on the hydration container: ltr, rtl or auto. Overrides the direction inferred from a supported UI language.',
+        'data-lang':
+          'UI language tag: en, ar, es, fr, ja, ru or zh, including regional tags. Takes precedence over nearest HTML lang, then English. Preserves custom language metadata.',
         'data-mg-copy-button': 'Marks the container to hydrate (required).',
         'data-text-to-copy':
           'Text written to the clipboard. data-text and data-copy-text are accepted aliases.',
@@ -470,10 +473,15 @@ export const COMPONENT_DATA = {
       'mg-share__visually-hidden',
     ],
     hydration: {
-      note: 'The share row is rendered in renderedHtml but inert: no share opens, the QR modal never appears and the copy button does nothing. Render an empty data-mg-share-buttons container and hydrate it. Only these four strings can be set from the DOM — the other thirteen labels (the QR modal copy and every social button aria-label) stay English on the hydration path, because there is no data-labels attribute; use the React labels prop if you need them translated. Omitted attributes fall back to values fromElement supplies, not always to the component defaults: data-sharing-body defaults to an empty string, so the email body has no lead-in text unless you set it. The component reads the current page URL itself — a link[rel="shortlink"] in the head if there is one, otherwise window.location.href — so there is no URL attribute.',
+      note: 'The share row is rendered in renderedHtml but inert: no share opens, the QR modal never appears and the copy button does nothing. Render an empty data-mg-share-buttons container and hydrate it. data-lang or inherited HTML lang selects the built-in UI catalogue, including the QR dialog and social button names. data-labels provides partial overrides; individual label attributes win. Omitted attributes fall back to values fromElement supplies, not always to the component defaults: data-sharing-body defaults to an empty string, so the email body has no lead-in text unless you set it. The component reads the current page URL itself — a link[rel="shortlink"] in the head if there is one, otherwise window.location.href — so there is no URL attribute.',
       selector: '[data-mg-share-buttons]',
       modules: hydrationModules('ShareButtons'),
       dataAttributes: {
+        'data-labels':
+          'JSON object of UI label overrides. Missing keys use the selected catalogue, then English. Existing individual label attributes win.',
+        dir: 'Explicit direction on the hydration container: ltr, rtl or auto. Overrides the direction inferred from a supported UI language.',
+        'data-lang':
+          'UI language tag: en, ar, es, fr, ja, ru or zh, including regional tags. Takes precedence over nearest HTML lang, then English. Preserves custom language metadata.',
         'data-mg-share-buttons': 'Marks the container to hydrate (required).',
         'data-main-label':
           'Heading above the share row (default "Share this").',
@@ -499,7 +507,7 @@ export const COMPONENT_DATA = {
   // --- Cards ---
   'components-cards-vertical-card': {
     description:
-      'Card with stacked image, labels, title, summary, and optional CTA button. Four color variants.',
+      'Card with an edge-to-edge top photo, inset labels, title, summary, and optional CTA button. Four color variants. Text-only cards retain their inset.',
     cssClasses: [
       'mg-card',
       'mg-card__vc',
@@ -602,7 +610,7 @@ export const COMPONENT_DATA = {
 
   'components-cards-horizontal-card': {
     description:
-      'Side-by-side card with image left and content right. Labels, title, summary, and CTA button.',
+      'Responsive card with an edge-to-edge leading photo (mirrored in RTL; above content on mobile) and inset labels, title, summary, and CTA button.',
     cssClasses: [
       'mg-card',
       'mg-card__hc',
@@ -643,7 +651,7 @@ export const COMPONENT_DATA = {
     summary:
       'Card with icon or image, title, summary and optional CTA. Vertical or horizontal orientation, in default, centered or negative (dark) variants.',
     description:
-      'Card with icon or image, title, summary, and optional CTA. Variants: default, centered, negative (dark background). Orientation: vertical (icon above the content) or horizontal (icon beside it, for route rows); horizontal sizes the visual itself, so imageScale does not apply. Image scale options: small, medium, large, full. Supports custom icon background/foreground colors (iconColor, iconFgColor), border color, and label position (top or content area).',
+      'Card with icon or image, title, summary, and optional CTA. Variants: default, centered, negative (dark background). Orientation: vertical (icon above the content) or horizontal (icon beside it, for route rows); horizontal sizes the visual itself, so imageScale does not apply. Image scale options: small (recommended for navigation glyphs), medium, large, full. Small glyphs do not reserve an illustration frame. Supports custom icon background/foreground colors (iconColor, iconFgColor), border color, and label position (top or content area).',
     hydration: {
       note: "The whole card set comes from one JSON attribute, so renderedHtml is only a preview of the markup the component produces. Render an empty data-mg-icon-card container carrying data-items and hydrate it. Malformed JSON is swallowed and renders an empty set, so validate the attribute server-side. The orientation prop has no data attribute, so the horizontal layout is React-only. Each item's summaryText accepts inline HTML and is sanitised with DOMPurify.",
       selector: '[data-mg-icon-card]',
@@ -669,12 +677,13 @@ export const COMPONENT_DATA = {
     },
   },
   'components-cards-book-card': {
-    description: 'Minimal card for publications: cover image and title only.',
+    description:
+      'Publication teaser with a complete natural-ratio cover, one square border and a title below. Unboxed by default; publication surface tokens retain theme control. No cover zoom.',
   },
 
   'components-cards-horizontal-book-card': {
     description:
-      'Horizontal card for publications: cover image left, title and summary right.',
+      'Publication listing with complete natural-ratio covers and one square border. Beside text on desktop, stacked on mobile and mirrored in RTL. Unboxed by default; surface tokens retain theme control.',
     cssClasses: [
       'mg-card',
       'mg-card__hc',
@@ -710,8 +719,10 @@ export const COMPONENT_DATA = {
   },
 
   'components-cards-stats-card': {
+    summary:
+      'Grid of statistics with optional icons, labels, summaries and links. Compact, highlighted and negative variants support different densities and surfaces.',
     description:
-      'Grid of numeric statistics with optional icons, dual labels (label above the value, bottomLabel below it), descriptions, and call-to-action links. Variants: default, compact, highlighted, negative.',
+      'Grid of numeric statistics with optional icons, dual labels (label above the value, bottomLabel below it), descriptions, and call-to-action links. Variants: default, compact (reduced padding and gaps without stacked child margins), highlighted, negative.',
     hydration: {
       note: 'The figures come from one JSON attribute, so renderedHtml is a preview of the markup, not a template to fill in. Render an empty data-mg-stats-card container carrying data-stats and hydrate it. Malformed JSON is swallowed and renders an empty card, so validate the attribute server-side.',
       selector: '[data-mg-stats-card]',
@@ -970,7 +981,7 @@ export const COMPONENT_DATA = {
     summary:
       'Page-level gate that hides an unfinished page behind a PIN prompt until a reviewer enters the code. Editorial signalling, not a security mechanism.',
     description:
-      'Page-level gate that hides an unfinished page behind a PIN-prompt modal until a reviewer enters the right code. Drop <div data-mg-preview-access> into a page and load js/preview-access.js. Unlock persists in sessionStorage for the browser session. CSS-first anti-flash via :has(). Editorial signalling only — not a security mechanism, since the PIN sits in the DOM. The React export renders a static preview of the modal for docs; pass `live` to run the real body-level gate, which appends the overlay to document.body and restores the body siblings on unmount.',
+      'Page-level gate that hides an unfinished page behind a PIN-prompt modal until a reviewer enters the right code. Drop <div data-mg-preview-access> into a page and load js/preview-access.js. By default the unlock persists in sessionStorage for the tab; data-mg-preview-persist="local" keeps it in localStorage across tabs and visits, with optional data-mg-preview-max-age (days), and a PIN change invalidates the local entry. Existing session unlocks still count in both modes, including after local expiry or a PIN change; open pages are not relocked automatically. Dispatches a bubbling mg-preview-access:unlock CustomEvent (detail: id, persist, source "pin" or "storage") on the trigger, and moves focus to <main> after unlock. CSS-first anti-flash via :has(). Editorial signalling only — not a security mechanism, since the PIN sits in the DOM. The React export renders a static preview of the modal for docs; pass `live` to run the real body-level gate, which appends the overlay to document.body and restores the body siblings on unmount.',
     cssClasses: [
       'mg-preview-access--unlocked',
       'mg-preview-access__overlay',
@@ -1000,6 +1011,13 @@ export const COMPONENT_DATA = {
      data-mg-preview-title="This page is a preview"
      data-mg-preview-message="The DELTA Resilience country dashboard is in active development and is not yet ready for public review. Enter the preview PIN to continue, or contact UNDRR if you need access."></div>`,
       },
+      {
+        name: 'Remembered across tabs and visits for 30 days',
+        html: `<div data-mg-preview-access
+     data-mg-preview-id="gar-2026-preview"
+     data-mg-preview-persist="local"
+     data-mg-preview-max-age="30"></div>`,
+      },
     ],
   },
 
@@ -1013,6 +1031,8 @@ export const COMPONENT_DATA = {
       'mg-on-this-page-nav',
       'mg-on-this-page-nav--hidden',
       'mg-on-this-page-nav--has-left-overflow',
+      'mg-on-this-page-nav--has-right-overflow',
+      'mg-on-this-page-nav--align-container',
       'mg-on-this-page-nav__list',
       'mg-on-this-page-nav__item',
       'mg-on-this-page-nav__link',
@@ -1197,14 +1217,15 @@ npm run build</code></pre>
   // --- Hero ---
   'components-hero-hero': {
     summary:
-      'Full-width hero banner with title, summary and CTA buttons. Four color variants, and two layouts: a full-bleed background image or a split content-and-media band.',
+      'Full-width hero with title, summary and CTAs: four colour variants plus a neutral white surface, and a full-bleed background or split content-and-media layout.',
     description:
-      'Full-width hero banner with title, summary, and CTA buttons. Four color variants. Two layouts: `background` (full-bleed image with overlay, default) and `split` (solid theme-colour background with a content column plus a media column). Split layout supports 2/3, 1/2, and 1/3 content-to-media ratios, a configurable heading level (h1–h3), and three media types: `image` (default), `video` (iframe embed — provide the provider embed URL and a `title` for accessibility), or `html` (pre-sanitized HTML string for custom embeds; consumer must sanitize).',
+      'Full-width hero banner with title, summary, and CTA buttons. Four colour variants, plus `variant="neutral"`: the page\'s white surface with dark text (--mg-color-text) and links in --mg-color-interactive, for a page header that should not read as a coloured band; use it with `layout="split"` (in the background layout it drops the photograph). Optional, for any variant: `label` (eyebrow) and `detail` (facts line) accept a React node as well as a string, so either can hold links (for example a parent link and a type, or an item count linking to a list on the page); `tags` ([{label, href}]) renders a list of outline tags (ul.mg-hero__tags aria-label="Topics", li > a.mg-tag; `tagsLabel` renames it) below the facts line that read on every variant; `summaryText` is optional; buttons accept `analyticsLabel` (data-vf-analytics-label). Neutral underlines links in the label, detail and summary. Strings render exactly as before. Two layouts: `background` (full-bleed image with overlay, default) and `split` (solid theme-colour background with a content column plus a media column). Split layout supports 2/3, 1/2, and 1/3 content-to-media ratios, a configurable heading level (h1–h3), and three media types: `image` (default), `video` (iframe embed — provide the provider embed URL and a `title` for accessibility), or `html` (pre-sanitized HTML string for custom embeds; consumer must sanitize).',
     cssClasses: [
       'mg-hero',
       'mg-hero--secondary',
       'mg-hero--tertiary',
       'mg-hero--quaternary',
+      'mg-hero--neutral',
       'mg-hero--split',
       'mg-hero--split-2-3',
       'mg-hero--split-1-2',
@@ -1216,12 +1237,39 @@ npm run build</code></pre>
       'mg-hero__label',
       'mg-hero__title',
       'mg-hero__summaryText',
+      'mg-hero__tags',
       'mg-hero__buttons',
       'mg-hero__media',
       'mg-hero__media--video',
       'mg-hero__media--html',
       'mg-hero__media-img',
       'mg-hero__media-iframe',
+    ],
+    examples: [
+      {
+        name: 'Neutral split hero as a page header',
+        html: `<section class="mg-hero mg-hero--split mg-hero--split-2-3 mg-hero--neutral" aria-labelledby="hero-title">
+  <div class="mg-hero__split-grid mg-container">
+    <article class="mg-hero__content">
+      <div class="mg-hero__meta">
+        <span class="mg-hero__label"><a href="/collections">Collection</a><span aria-hidden="true"> · </span>Topic guide</span>
+      </div>
+      <h1 class="mg-hero__title" id="hero-title">Wildfire risk assessment</h1>
+      <div class="mg-hero__summaryText"><span>Research, assessments and technical resources on future wildfire trends.</span></div>
+      <div class="mg-hero__meta meta-detail">
+        <span class="mg-hero__label detail"><a href="#collection-items">36 items</a><span aria-hidden="true"> · </span>Last updated <time datetime="2026-07-10">10 July 2026</time></span>
+      </div>
+      <ul class="mg-hero__tags" aria-label="Topics">
+        <li><a class="mg-tag" href="/taxonomy/term/357">Wildfire and Bushfire</a></li>
+        <li><a class="mg-tag" href="/taxonomy/term/311">Climate change</a></li>
+      </ul>
+    </article>
+    <div class="mg-hero__media">
+      <img src="/sites/default/files/wildfire.jpg" alt="Aerial view of smoke rising from a fire line in a pine forest" class="mg-hero__media-img" />
+    </div>
+  </div>
+</section>`,
+      },
     ],
   },
 
@@ -1272,7 +1320,7 @@ npm run build</code></pre>
     summary:
       'Standalone page-usefulness prompt, generally placed as the sibling immediately before Footer. Response storage and consent remain product-owned.',
     description:
-      'Standalone page-usefulness prompt generally paired as the sibling immediately before Footer. Response storage and consent remain product-owned: keep the response callback separate from the report link, so a product can send the binary response to its own analytics service without Mangrove owning storage or consent decisions.',
+      'Standalone page-usefulness prompt generally paired as the sibling immediately before Footer. The lang prop selects built-in translations; explicit labels override them and unsupported languages fall back to English. Response storage and consent remain product-owned: keep the response callback separate from the report link, so a product can send the binary response to its own analytics service without Mangrove owning storage or consent decisions.',
     cssClasses: [
       'mg-user-feedback',
       'mg-user-feedback__prompt',
@@ -1286,7 +1334,12 @@ npm run build</code></pre>
       selector: '[data-mg-user-feedback]',
       modules: hydrationModules('UserFeedback'),
       dataAttributes: {
+        'data-labels':
+          'JSON object of UI label overrides; individual label attributes take precedence.',
+        dir: 'Explicit direction on the hydration container: ltr, rtl or auto. Overrides the direction inferred from a supported UI language.',
         'data-mg-user-feedback': 'Marks the container to hydrate (required).',
+        'data-lang':
+          'Language tag (en, ar, es, fr, ja, ru, zh), including regional variants. Defaults to the nearest HTML lang attribute, then English. Explicit label attributes override the selected translation.',
         'data-feedback-url':
           'Where the "report an issue" link points (default https://www.undrr.org/contact/website-feedback).',
         'data-question': 'The prompt, e.g. "Is this page useful?".',
@@ -1305,11 +1358,9 @@ npm run build</code></pre>
         name: 'UserFeedback',
         selector: '[data-mg-user-feedback]',
         markup: `<div data-mg-user-feedback
+  data-lang="fr"
   data-feedback-url="/contact/website-feedback"
-  data-question="Is this page useful?"
-  data-yes-label="Yes"
-  data-no-label="No"
-  data-report-issue-label="Report an issue on this page"></div>`,
+></div>`,
       }),
     },
   },
@@ -1344,6 +1395,9 @@ npm run build</code></pre>
           'https://assets.undrr.org/mangrove/{{version}}/components/ServiceNotice.js',
       },
       dataAttributes: {
+        dir: 'Explicit direction on the hydration container: ltr, rtl or auto. Overrides the direction inferred from a supported UI language.',
+        'data-lang':
+          'UI language tag: en, ar, es, fr, ja, ru or zh, including regional tags. Takes precedence over nearest HTML lang, then English. Preserves custom language metadata.',
         'data-mg-service-notice': 'Marks the container to hydrate (required).',
         'data-title':
           'Heading text (plain text). Falls back to the text of a child .mg-notice__title.',
@@ -1805,8 +1859,16 @@ npm run build</code></pre>
   },
 
   'components-images-image-with-credit-caption': {
-    description: 'Figure element with image, caption, and photo credit.',
-    cssClasses: ['mg-image-figcaption', 'mg-image-figcaption__cart'],
+    summary: 'Figure element with image, caption, and photo credit.',
+    description:
+      'Figure element with image, caption, and photo credit. A single-paragraph caption is a <p> inside figcaption.mg-image-caption; a caption with several paragraphs or bare text goes in one .mg-image-caption__text wrapper so it stays one block beside the credit.',
+    cssClasses: [
+      'mg-image-figcaption',
+      'mg-image-figcaption__cart',
+      'mg-image-caption',
+      'mg-image-caption__text',
+      'mg-credits',
+    ],
     examples: [
       {
         name: 'Image with caption and credit',
@@ -1814,9 +1876,24 @@ npm run build</code></pre>
   <div class="mg-image-figcaption__cart">
     <img src="https://picsum.photos/800/450" alt="Disaster preparedness training exercise" />
   </div>
-  <figcaption>
-    Disaster preparedness training in the Philippines.
-    <span class="mg-credits">Photo: UNDRR / John Smith</span>
+  <figcaption class="mg-image-caption">
+    <p>Disaster preparedness training in the Philippines.</p>
+    <div class="mg-credits">UNDRR/Philippines<br /><strong>John Smith</strong></div>
+  </figcaption>
+</figure>`,
+      },
+      {
+        name: 'Multi-paragraph caption',
+        html: `<figure class="mg-image-figcaption">
+  <div class="mg-image-figcaption__cart">
+    <img src="https://picsum.photos/800/450" alt="Disaster preparedness training exercise" />
+  </div>
+  <figcaption class="mg-image-caption">
+    <div class="mg-image-caption__text">
+      <p>Disaster preparedness training in the Philippines.</p>
+      <p>The training is part of a national early warning programme.</p>
+    </div>
+    <div class="mg-credits">UNDRR/Philippines<br /><strong>John Smith</strong></div>
   </figcaption>
 </figure>`,
       },
@@ -1869,16 +1946,77 @@ npm run build</code></pre>
   },
   'components-loader': {
     summary:
-      'Animated loading spinner, 40px on mobile and 96px on desktop, named for assistive technology by an aria-label.',
+      'Loading indicator: spinning normally and static with visible text under reduced motion; default 40px/96px or 1em inline size.',
     description:
-      'Animated loading spinner. 40px on mobile, 96px on desktop. The element is empty — there is no visible and no visually hidden label text. It carries role="status", aria-live="polite" and aria-busy="true", and the label prop becomes its accessible name through aria-label, so the wait is not silent for a screen reader.',
+      'Animated loading spinner in the theme interactive colour, 40px on mobile and 96px on desktop. The inline size (mg-loader--inline, React size="inline", rendered as a span) is a 1em inline-block in currentColor that sits in running text, follows the font size of its context, does not grow on desktop and fits inside an mg-button next to its label without changing the button height; next to a form field it serves as an autocomplete or Drupal AJAX throbber. The announced form carries role="status" (implicitly aria-live="polite") and contains the label in an mg-u-sr-only span, revealed under reduced motion. Decorative mode (aria-hidden="true" with no role and no label, React decorative) is for a spinner next to visible text such as "Saving…" in a button, with announcements owned by the surrounding application. A status region inserted already filled is often not announced, so a loader added by script should be decorative with the start and the outcome written to a live region already in the page; the React component instead inserts the region empty and adds the label 100ms after mount. Do not add aria-busy to the loader; put it on the region whose content is loading. Under reduced motion the indicator becomes a static full dashed marker: its existing translated status label is visible in normal flow below the default marker or beside the inline marker and wraps within available width. Decorative markers remain fixed-sized and require visible caller-owned loading context. Normal-motion presentation and the 100ms React status-label delay are unchanged. For measurable progress or a region updating in place, use components-progress-bar.',
+    cssClasses: ['mg-loader', 'mg-loader--inline'],
+    supplementalExamples: [
+      {
+        name: 'Announced loader already in the page',
+        html: `<div class="mg-loader" role="status">
+  <span class="mg-u-sr-only">Loading</span>
+</div>`,
+      },
+      {
+        name: 'Inline spinner inside a busy button',
+        html: `<button type="button" class="mg-button mg-button-primary" aria-disabled="true">
+  <span class="mg-loader mg-loader--inline" aria-hidden="true"></span>
+  Saving…
+</button>`,
+      },
+      {
+        name: 'Decorative loader announced through a persistent live region',
+        html: `<div id="status-message" role="status" class="mg-u-sr-only">Loading results</div>
+<div class="results" aria-busy="true">
+  <div class="mg-loader" aria-hidden="true"></div>
+  <p>Loading results</p>
+</div>`,
+      },
+    ],
+  },
+
+  'components-progress-bar': {
+    summary:
+      'Determinate and indeterminate progress bar on the native progress element, with an optional label, value and help text and a thin flush variant for the top of a region or the viewport.',
+    description:
+      'Progress bar built on the native <progress> element inside .mg-progress-bar > .mg-progress-bar__track. With value and max it is determinate; without a value attribute it is indeterminate and a scanner segment sweeps across the track (a still dashed bar under reduced motion, mirrored in RTL). The bar must have an accessible name: aria-labelledby pointing at .mg-progress-bar__label, aria-label, or aria-labelledby pointing elsewhere; text inside <progress> is not a name. Never add role, aria-valuenow, aria-valuemin, aria-valuemax, role="status" or aria-live to the bar; use aria-valuetext for text values. Value changes are not reliably announced, so announce the start, milestones and completion through a live region already in the page, and put aria-busy on the updating region. mg-progress-bar--flush is a 4px bar with no visible text, positioned by the page (absolute in a relative region, or fixed with a token z-index). The element order mirrors Drupal core progress-bar.html.twig, so the template can be overridden one to one. React props: value, max, label, hideLabel, helpText, showValue, valueText, variant ("default" or "flush") and className; other attributes go to the <progress> element. For short waits, a single busy control or a blocking operation, use components-loader.',
+    cssClasses: [
+      'mg-progress-bar',
+      'mg-progress-bar--flush',
+      'mg-progress-bar__label',
+      'mg-progress-bar__track',
+      'mg-progress-bar__native',
+      'mg-progress-bar__value',
+      'mg-progress-bar__help',
+    ],
+    supplementalExamples: [
+      {
+        name: 'Indeterminate bar named by aria-label',
+        html: `<div class="mg-progress-bar">
+  <div class="mg-progress-bar__track">
+    <progress class="mg-progress-bar__native" aria-label="Loading results"></progress>
+  </div>
+</div>`,
+      },
+      {
+        name: 'Flush bar pinned to the top of a region that is updating',
+        html: `<div id="results-status" role="status" class="mg-u-sr-only">Loading results</div>
+<section class="results" aria-label="Search results" aria-busy="true" style="position: relative">
+  <div class="mg-progress-bar mg-progress-bar--flush" style="position: absolute; inset-block-start: 0; inset-inline: 0">
+    <div class="mg-progress-bar__track">
+      <progress class="mg-progress-bar__native" aria-label="Loading results"></progress>
+    </div>
+  </div>
+</section>`,
+      },
+    ],
   },
 
   'components-showmore': {
     summary:
       'Collapse long content behind a gradient fade with a toggle button, driven by the mgShowMore vanilla JS utility. Height customizable via CSS variable.',
     description:
-      'Collapse long content behind a gradient fade with a toggle button. Height customizable via CSS variable. The mgShowMore vanilla JS utility reads data-mg-show-more attributes and returns optional lifecycle cleanup. The React wrapper enhances each item independently, supports items added after mount, and accepts translated labelOpen and labelCollapsed props.',
+      'Collapse long content behind a gradient fade with a toggle button. Height customizable via CSS variable. The mgShowMore vanilla JS utility reads data-mg-show-more attributes and returns optional lifecycle cleanup. Add data-mg-show-more-min-hidden-lines="N" (React: minHiddenLines) to collapse only when at least N lines would be hidden past the collapsed height (read from CSS; --mg-show-more-height may use lh); otherwise the content stays open and the toggle gets hidden. Ship the toggle with hidden in server markup; the script reveals it. Analytics: the toggle carries data-vf-analytics-label ("Show more"/"Show less", or data-mg-show-more-analytics-collapsed/-open). A [data-mg-show-more-label] child keeps visually hidden context in the toggle name. The React wrapper enhances each item independently, supports items added after mount, and accepts translated labelOpen and labelCollapsed props.',
     cssClasses: ['mg-show-more--collapsed', 'mg-show-more--button'],
     examples: [
       {
@@ -1988,7 +2126,7 @@ npm run build</code></pre>
 
   'components-cite-this': {
     description:
-      'Vanilla citation button and native dialog for detail pages. An empty data-mg-cite-this element uses the page title and URL; server-rendered disclosure markup preserves a no-JavaScript fallback. Prefer an approved citation, then configured metadata, a matching JSON-LD CreativeWork, or a page-title fallback. The script supplies copy feedback and bubbling analytics events; the host owns GA4 and consent.',
+      'Vanilla citation button and native dialog for detail pages. An empty data-mg-cite-this element uses the page title and URL; server-rendered disclosure markup preserves a no-JavaScript fallback. Prefer an approved citation, then configured metadata, a matching JSON-LD CreativeWork, or a page-title fallback. The script supplies copy feedback and bubbling analytics events; the host owns GA4 and consent. Event id is null for automatically URL-derived IDs containing a query: supply an approved data-mg-cite-this-id for per-work reporting without forwarding query values or merging distinct works.',
     summary:
       'Vanilla citation dialog with editorial, structured-data and page fallbacks, copy feedback, and analytics events.',
     cssClasses: [
@@ -2040,6 +2178,8 @@ npm run build</code></pre>
         'data-mg-cite-this-publisher': 'Override publisher.',
         'data-mg-cite-this-year': 'Override publication year.',
         'data-mg-cite-this-url': 'Override the citation locator.',
+        'data-mg-cite-this-id':
+          'Approved stable work identifier for analytics. Required for per-work reporting when an automatically URL-derived ID contains a query (otherwise event id is null).',
         'data-mg-cite-this-site': 'Override site name for page fallback.',
         'data-mg-cite-this-label': 'Translate the generated Cite this button.',
         'data-mg-cite-this-copy-label':
@@ -2063,7 +2203,7 @@ npm run build</code></pre>
     summary:
       'A named group of pages inside the parent site — a programme, a monitor, a guidance collection — carrying the same identity and section links on every page.',
     description:
-      'A named group of pages inside the parent site — a programme, a monitor, a guidance collection — carrying the same identity and section links on every page so readers move sideways without returning to a landing page. Composes HubHeader with shipped cards, hero and contents components.',
+      'Landing page hub-home variant, plus persistent identity and section navigation shared with detail pages. Detail pages retain their own editorial meaning. Composes HubHeader with shipped cards, hero and contents components.',
     vanillaModule: {
       note: 'For static HubHeader markup on pages without React. js/hub-header.js enhances every [data-mg-js-hub-header] on load: it keeps the marked section in view and sets data-overflow-start and data-overflow-end on the nav for the edge fades. With data-mg-hub-header-detect-current it also marks the current section from the URL, so identical markup can be copied to every page of the hub: an exact match gets aria-current="page", otherwise the longest section whose path contains the page gets mg-hub-header__nav-item--ancestor and no aria-current. A section linking to the hub home or to / only matches exactly. Markup that already marks a section is left alone. For headers inserted later, import { mgHubHeader } from ".../js/hub-header.js" and call mgHubHeader(scope); initialized headers are skipped and the returned function undoes the call. Without JavaScript the links work and nothing is marked.',
       selector: '[data-mg-js-hub-header]',
@@ -2101,18 +2241,123 @@ npm run build</code></pre>
     },
   },
 
+  'patterns-rich-content': {
+    summary:
+      'Opt-in semantic defaults for trusted rendered editorial HTML: prose, lists, quotations, figures, tables and code.',
+    description:
+      'Use mg-content on the actual sanitised editorial body, not navigation, cards, controls or arbitrary layout wrappers. CSS only; no React import or JavaScript is required. Classless structural wrappers pass through; classed descendants keep component/author-owned presentation, except the explicit mg-content__scroll wrapper. Existing paragraph-link cues reach through CMS classes with lower specificity so component links can own their styling; button-like anchors are excluded. Plain editorial quotations use body-size text and a leading neutral rule; cite is an inline work title. Logical rhythm, native list/table semantics, captions and contained code preserve reading and reflow. Keep native headers/captions and author a named keyboard-focusable mg-content__scroll region only for genuinely wide tables; pre overflow likewise needs authored keyboard access. No sanitisation, root width, colour or font-family reset. mg-body/global styles remain supported unchanged; adding mg-content deliberately opts plain editorial elements into the new defaults. See the Rich content docs for the adoption audit and compatibility details.',
+    cssClasses: ['mg-content', 'mg-content__scroll'],
+    examples: [
+      {
+        name: 'Trusted editorial body',
+        html: `<article class="mg-content">
+  <h2>Understand the risk</h2>
+  <p>Read the <a href="/report">assessment report</a>.</p>
+  <ul><li>Review local evidence.</li><li>Agree priorities.</li></ul>
+  <blockquote><p>Illustrative quotation.</p><footer>Source: <cite>Work title</cite>.</footer></blockquote>
+</article>`,
+      },
+    ],
+  },
+
+  'patterns-page-actions': {
+    summary:
+      'Share this and Cite this side by side as peer page actions, in two equal columns that stack on narrow screens.',
+    description:
+      'Places ShareButtons and Cite this as peers below a content page: each has a label, a copyable field and a quiet secondary action, so the pair reads as one structure without an umbrella heading. Use either alone when a page has nothing to cite or should not be shared. Composes mg-grid, ShareButtons and the vanilla Cite this module.',
+    examples: [
+      {
+        name: 'Share this and Cite this',
+        html: `<div class="mg-grid mg-grid__col-2">
+  <section data-mg-share-buttons data-main-label="Share this" aria-label="Share this"></section>
+  <div
+    class="mg-cite-this"
+    data-mg-cite-this
+    data-mg-cite-this-title="Hazard Information Profiles: 2025 version"
+    data-mg-cite-this-author="United Nations Office for Disaster Risk Reduction"
+    data-mg-cite-this-year="2025"
+    data-mg-cite-this-publisher="UNDRR"
+    data-mg-cite-this-type="report"
+    data-mg-cite-this-id="preventionweb:node/101"
+  ></div>
+</div>`,
+      },
+    ],
+  },
+
+  'patterns-collection-page': {
+    summary:
+      'A PreventionWeb collection page: neutral Hero header with a linked count and tags, a sticky On this page bar, a collapsible description, a scoped search index and related collections.',
+    description:
+      'A page for a curated collection of content on one topic. Header: a breadcrumb (PreventionWeb > Collections > title), then Hero layout="split" variant="neutral" with the collection type as label, the h1, the body summary as standfirst (omitted when empty; never fall back to the body), a detail line "N items · Latest item: <date>" whose count links to the list (data-vf-analytics-label "Collection: item count"; count and newest published_at computed on the server; "No items yet" as plain text at zero), and tags as ul.mg-hero__tags aria-label="Topics". A sticky OnThisPageNav (explicit mode, mg-on-this-page-nav--align-container, full section headings, always shown) follows; drop the Related link when that section is absent. About: body in ShowMore with --mg-show-more-height: 8lh, data-mg-show-more-min-hidden-lines="6" (only bodies over about 14 lines collapse), the toggle shipped hidden, mg-button-secondary, sr-only context. The browser-only example labels pending collection items in their own section until the count resolves, without another live region. List: SyndicationSearchWidget scoped with customFilters ["field_collections:<nid>", "_language:<lang>"], never defaultFilters; labels say items; data-enable-hash-sync="true". Related: up to 3 collections ranked on the server, hazard matches first (country boost), then theme matches other than Preparedness and Climate change, excluding the current nid; rendered by a second widget with every control off and hash sync "false". Analytics: regions collection-header, on-this-page-nav, collection-about, collection-content, collection-related; widgets set analyticsRegionPrefix to their section; fixed English data-vf-analytics-label values.',
+    examples: [
+      {
+        name: 'On this page bar, description and list',
+        html: `<nav class="mg-on-this-page-nav mg-on-this-page-nav--align-container" data-mg-on-this-page-nav aria-label="On this page" data-vf-google-analytics-region="on-this-page-nav">
+  <ul class="mg-on-this-page-nav__list">
+    <li class="mg-on-this-page-nav__item"><a class="mg-on-this-page-nav__link" href="#collection-about" data-vf-analytics-label="On this page: About this collection">About this collection</a></li>
+    <li class="mg-on-this-page-nav__item"><a class="mg-on-this-page-nav__link" href="#collection-items" data-vf-analytics-label="On this page: In this collection">In this collection</a></li>
+  </ul>
+</nav>
+<section id="collection-about" aria-labelledby="collection-about-title" data-vf-google-analytics-region="collection-about">
+  <h2 id="collection-about-title">About this collection</h2>
+  <div id="collection-body" class="mg-content" style="--mg-show-more-height: 8lh"><p>Understanding wildfire risk begins with understanding how and why wildfire hazards are changing.</p></div>
+  <button type="button" hidden class="mg-button mg-button-secondary mg-show-more--button" data-mg-show-more data-mg-show-more-target="#collection-body" data-mg-show-more-min-hidden-lines="6" data-mg-show-more-analytics-collapsed="Collection: show more" data-mg-show-more-analytics-open="Collection: show less"><span data-mg-show-more-label>Show more</span><span class="mg-u-sr-only"> about this collection</span></button>
+</section>
+<section id="collection-items" aria-labelledby="collection-items-title" data-vf-google-analytics-region="collection-content">
+  <h2 id="collection-items-title">In this collection</h2>
+  <div data-undrr-search-widget data-custom-filters='["field_collections:101264","_language:en"]' data-default-filters="[]" data-default-sort="newest" data-enable-hash-sync="true" data-analytics-region-prefix="collection-content"></div>
+</section>`,
+      },
+    ],
+  },
+
+  'patterns-content-card': {
+    summary:
+      'Compact content cards with separately selected metadata and vertical/book layouts across content archetypes.',
+    description:
+      'Experimental card presentation selected by archetype/profile, separate from teaser and full-page projections. Vertical and book are geometry choices over the same card field selection. Drupal card modes inform selection; event and job cards deliberately add labelled decision dates, supplied status and optional separately labelled publication dates. Missing dates have no fallback and status is never clock-derived. Profiles without a source card mode are explicit Mangrove proposals. Complete covers and logos are preserved. See content-patterns.json for profile references, layout inputs and status.',
+    cssClasses: [
+      'mg-content-card',
+      'mg-content-card--vertical',
+      'mg-content-card--book',
+      'mg-content-pattern--logo',
+      'mg-content-card-grid',
+      'mg-content-meta__before-title',
+      'mg-content-meta__group',
+      'mg-content-meta__metadata-link',
+    ],
+  },
+
+  'patterns-content-teaser': {
+    summary:
+      'Shared experimental teaser renderer; content families own separate page, teaser and card presentations.',
+    description:
+      'Shared experimental horizontal teaser renderer with an enclosed standard-card surface, inset text, edge-aligned photographs and complete inset covers/logos. Independent content-teaser surface tokens default to the standard card tokens. Content-family specifications select fields. Its input is a presentation projection, not a canonical domain model. Cards use the separate ContentCard renderer and field projection. See content-patterns.json for family-specific full-page, teaser and card status; stubs are not implemented.',
+    cssClasses: [
+      'mg-content-teaser',
+      'mg-content-meta__before-title',
+      'mg-content-meta__group',
+      'mg-content-meta__metadata',
+      'mg-content-meta__metadata-link',
+      'mg-content-meta__attribution',
+      'mg-content-pattern--logo',
+      'mg-content-teaser-list',
+    ],
+  },
+
   'patterns-article-story': {
     summary:
-      'A news or event article page: headline, header image, reading body and related content cards.',
+      'Article full-page reference within the Article archetype: headline, hero image, reading body and related content.',
     description:
-      'A news or event article page: headline, header image, reading body and related content cards. imageProminence controls the header treatment: bleeds full width (large), stays in the reading column (compact), or runs a two-column Hero split band (split). heroImage controls whether the header shows the same image used for teasers/social cards, a different one, or none. Composes VerticalCard, TableOfContents and mg-reading.',
+      'Article full-page reference within the Article archetype: headline, hero image, reading body and related content. imageProminence controls the header treatment: bleeds full width (large), stays in the reading column (compact), or runs a two-column Hero split band (split). heroImage controls whether the header shows the same image used for teasers/social cards, a different one, or none. Composes VerticalCard, TableOfContents and mg-reading.',
   },
 
   'patterns-landing-pages': {
     summary:
-      'Three UNDRR landing page shapes: topic or initiative, report or publication, and collection index.',
+      'Full-page references grouped by archetype: topic under Landing page, report under Publication, and collection index under Collection.',
     description:
-      'Three UNDRR landing page shapes: topic or initiative (hero, route cards, supporting band), report or publication (feature band and a reading column with contents), and collection index (grouped rows of covers).',
+      'Full-page composition references: topic or initiative under Landing page, report under Publication and collection index under Collection. These demonstrate composition, not a one-to-one mapping from Drupal bundles to domain models.',
   },
 
   'example-page-template-example': {
@@ -2459,13 +2704,20 @@ npm run build</code></pre>
 
   // --- Media and scrolling collections (hydration) ---
   'components-gallery': {
+    summary:
+      'Media gallery with thumbnails, navigation, captions and accessible pending-media indicators.',
     description:
-      'Media gallery with a main stage, optional thumbnail rail, navigation arrows, captions and keyboard support. Handles images, videos and embedded players.',
+      'Media gallery with a main stage, optional thumbnail rail, navigation arrows, captions and keyboard support. Handles images, videos and embedded players. Pending media uses the shared inline Loader; thumbnail navigation scrolls instantly under reduced motion.',
     hydration: {
       note: 'renderedHtml contains the arrows and the thumbnail rail, but they are inert markup: slide changing, thumbnail selection and keyboard navigation are all React behaviour. Render an empty data-mg-gallery container carrying data-media and hydrate it. Every media object whose type is "image" (or has no type) needs an alt value — WCAG 1.1.1. Validate data-media server-side: the JSON parse failure itself is swallowed, but the component has no empty-media guard, so an empty or malformed list throws during render and leaves the container blank. Security: an item of type "html" is injected unsanitised, so never build one from untrusted input.',
       selector: '[data-mg-gallery]',
       modules: hydrationModules('Gallery'),
       dataAttributes: {
+        'data-labels':
+          'JSON object of UI label overrides. Missing keys use the selected catalogue, then English. Existing individual label attributes win.',
+        dir: 'Explicit direction on the hydration container: ltr, rtl or auto. Overrides the direction inferred from a supported UI language.',
+        'data-lang':
+          'UI language tag: en, ar, es, fr, ja, ru or zh, including regional tags. Takes precedence over nearest HTML lang, then English. Preserves custom language metadata.',
         'data-mg-gallery': 'Marks the container to hydrate (required).',
         'data-media':
           'JSON array of media objects (required): { id, type, src, alt, title, description, thumbnail, poster, embedUrl, html }. The caption text comes from description; there is no caption key. type is "image" (default), "video", "embed" or "html". Invalid or empty JSON throws during render.',
@@ -2500,10 +2752,15 @@ npm run build</code></pre>
     description:
       'Horizontally scrolling rail for a row of cards or media, with optional arrow controls, drag scrolling, scroll snapping and equal-height items.',
     hydration: {
-      note: 'Unusually, this hydrator reads your server-rendered content rather than a JSON attribute: put the items inside a .mg-scroll__content wrapper in the container and each child becomes a slide. Without that wrapper the whole container innerHTML becomes a single item. The markup is re-rendered from HTML strings, so any event handlers bound to it before hydration are lost, and it is re-injected unsanitised — unlike Drawer, this component does not run DOMPurify, so only ever hand it markup you control. renderedHtml scrolls natively and snapping works from the stylesheet; the arrow markup is present but dead until hydration. The scrollLeftLabel and scrollRightLabel strings have no data attribute, so a hydrated container keeps the English arrow labels.',
+      note: 'Unusually, this hydrator reads your server-rendered content rather than a JSON attribute: put the items inside a .mg-scroll__content wrapper in the container and each child becomes a slide. Without that wrapper the whole container innerHTML becomes a single item. The markup is re-rendered from HTML strings, so any event handlers bound to it before hydration are lost, and it is re-injected unsanitised — unlike Drawer, this component does not run DOMPurify, so only ever hand it markup you control. renderedHtml scrolls natively and snapping works from the stylesheet; the arrow markup is present but dead until hydration. data-lang or inherited HTML lang selects translated arrow and navigation names. data-labels overrides ariaLabel, navigationLabel (with a {label} token), scrollLeftLabel and scrollRightLabel; data-aria-label supplies a content-specific region name.',
       selector: '[data-mg-scroll-container]',
       modules: hydrationModules('ScrollContainer'),
       dataAttributes: {
+        'data-labels':
+          'JSON object of UI label overrides. Missing keys use the selected catalogue, then English. Existing individual label attributes win. Keys: ariaLabel, navigationLabel (with {label}), scrollLeftLabel and scrollRightLabel.',
+        dir: 'Explicit direction on the hydration container: ltr, rtl or auto. Overrides the direction inferred from a supported UI language.',
+        'data-lang':
+          'UI language tag: en, ar, es, fr, ja, ru or zh, including regional tags. Takes precedence over nearest HTML lang, then English. Preserves custom language metadata.',
         'data-mg-scroll-container':
           'Marks the container to hydrate (required).',
         'data-height': 'Container height as a CSS value (default "auto").',
@@ -2542,14 +2799,17 @@ npm run build</code></pre>
   },
   'components-syndicated-search': {
     summary:
-      'Search interface over the UNDRR syndication API: query box, facets, active filters, result list or cards, pager and search metrics.',
+      'Search with facets, result lists, photo cards or publication catalogues. Book mode preserves artwork URLs; use publication filters and explicit grid columns.',
     description:
-      'Search interface over the UNDRR syndication API: query box, facets, active filters, result list or cards, pager and search metrics. UI strings are translatable through the labels prop; most of them can also be set from a data-labels JSON attribute, but function-valued plural forms cannot be serialized to JSON and need the prop. The widget renders the search response as unsanitised HTML so Elasticsearch highlight markup survives, which puts the configured searchEndpoint inside its trust boundary: point it only at a service trusted to return safe HTML.',
+      'Search interface over the UNDRR syndication API: query box, facets, active filters, result list or cards, pager and search metrics. Book grids preserve supplied artwork URLs and use a shared desktop media stage; choose publication filters, explicit columns and concise fields for a cover catalogue. Teaser HTML is inserted directly into the result article when metrics are disabled; the metrics-enabled view keeps a separate teaser container alongside the scoring panel. Loading uses the shared flush ProgressBar in the results region and inline Loader on refresh. Skeletons remain static; optional motion uses shared timing tokens, with a dashed progress strip under reduced motion and visible outlines in forced colours. lang selects the bundled UI catalogue, independently of content-language filters. labels and data-labels provide explicit overrides. Built-in plural functions are bundled and work through hydration; custom functions require a JavaScript labels prop. The widget renders the search response as unsanitised HTML so Elasticsearch highlight markup survives, which puts the configured searchEndpoint inside its trust boundary: point it only at a service trusted to return safe HTML.',
     hydration: {
-      note: 'The widget queries an Elasticsearch-backed API and owns all of its state, so renderedHtml is only the empty initial shell — no results, facets or pager are in it. Render an empty data-mg-search-widget container and hydrate it. fromElement returns { config }, plus a labels key only when a valid data-labels attribute is present, so destructure defensively. Only attributes you set are included in config, so every unset option keeps its default. Malformed JSON in any of the JSON attributes is ignored and that option falls back to its default.',
+      note: 'The widget queries an Elasticsearch-backed API and owns all of its state, so renderedHtml is only the empty initial shell — no results, facets or pager are in it. Render an empty data-mg-search-widget container and hydrate it. fromElement returns config plus optional lang, dir and labels, so forward the full extracted props to retain language selection. Only attributes you set are included in config, so every unset option keeps its default. Malformed JSON in any of the JSON attributes is ignored and that option falls back to its default.',
       selector: '[data-mg-search-widget]',
       modules: hydrationModules('SyndicationSearchWidget'),
       dataAttributes: {
+        dir: 'Explicit direction on the hydration container: ltr, rtl or auto. Overrides the direction inferred from a supported UI language.',
+        'data-lang':
+          'UI language tag: en, ar, es, fr, ja, ru or zh, including regional tags. Takes precedence over nearest HTML lang, then English. Preserves custom language metadata.',
         'data-mg-search-widget': 'Marks the container to hydrate (required).',
         'data-search-endpoint':
           "Search API URL. Trust boundary: the widget renders this endpoint's HTML unsanitised, because Elasticsearch highlight markup (<em> around matched terms) has to survive. Point it only at a service trusted to return safe HTML; if you point it at your own service, you own what it returns.",
@@ -2559,7 +2819,8 @@ npm run build</code></pre>
         'data-min-search-length': 'Minimum query length before a search runs.',
         'data-default-query': 'Query the widget starts with.',
         'data-default-sort': 'Initial sort key.',
-        'data-display-mode': 'Result layout: list, card or card-book.',
+        'data-display-mode':
+          'Result layout: list, card or card-book. Book mode preserves supplied artwork URLs; use publication filters and explicit columns for a cover catalogue.',
         'data-grid-columns': 'Columns in the card grid.',
         'data-query-append': 'Extra query string appended to every search.',
         'data-facets':
@@ -2568,6 +2829,8 @@ npm run build</code></pre>
           'CSS selector of an element to portal the facets into.',
         'data-search-target':
           'CSS selector of an element to portal the search box into.',
+        'data-analytics-region-prefix':
+          'Stem for the analytics regions (<prefix>-form, -results, -facets). Defaults to undrr-search. Give each widget on a page its own prefix, because the analytics script reports only the innermost region.',
         'data-show-search-box': '"false" to hide the search box.',
         'data-show-results-count': '"false" to hide the result count.',
         'data-show-facets': '"false" to hide the facets.',
@@ -2642,6 +2905,11 @@ npm run build</code></pre>
       selector: '[data-mg-mega-menu]',
       modules: hydrationModules('MegaMenu'),
       dataAttributes: {
+        'data-lang':
+          'UI language tag, selected before nearest HTML lang, then English. Supports en, ar, es, fr, ja, ru and zh with regional variants.',
+        dir: 'Explicit direction on the hydration container: ltr, rtl or auto. Overrides inferred direction.',
+        'data-labels':
+          'JSON object of UI label overrides; omitted keys use the selected catalogue, then English.',
         'data-mg-mega-menu': 'Marks the container to hydrate (required).',
         'data-sections':
           "JSON array of menu sections: [{ title, items: [{ title, url }] }]. Note the item keys are title and url, not label and href. Required unless a consumer wrapper passes the sections prop itself — sections has no default and is required, so hydrating with neither throws and leaves the container empty. Invalid JSON is swallowed and also leaves the container empty. Trust boundary: a section's bannerDescription is rendered as unsanitised HTML (unlike TextCta, Drawer and the cards, MegaMenu does not run DOMPurify), so sanitise that field where you build this array.",
@@ -2843,6 +3111,11 @@ npm run build</code></pre>
       selector: '[data-mg-drawer]',
       modules: hydrationModules('Drawer'),
       dataAttributes: {
+        'data-labels':
+          'JSON object of UI label overrides. Missing keys use the selected catalogue, then English. Existing individual label attributes win.',
+        dir: 'Explicit direction on the hydration container: ltr, rtl or auto. Overrides the direction inferred from a supported UI language.',
+        'data-lang':
+          'UI language tag: en, ar, es, fr, ja, ru or zh, including regional tags. Takes precedence over nearest HTML lang, then English. Preserves custom language metadata.',
         id: 'Required, so data-mg-drawer-trigger buttons can find the drawer.',
         'data-mg-drawer': 'Marks the container to hydrate (required).',
         'data-position':

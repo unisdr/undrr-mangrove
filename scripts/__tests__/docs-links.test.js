@@ -93,6 +93,10 @@ function collectTitles() {
     // fail a link that is in fact valid.
     const matches = source.matchAll(/^ {2}title:\s*(['"`])([^'"`]+)\1/gm);
     for (const match of matches) titles.add(match[2]);
+    // Explicit CSF ids preserve existing links when navigation titles move.
+    // Storybook generates attached MDX docs from this id too.
+    for (const match of source.matchAll(/^ {2}id:\s*(['"`])([^'"`]+)\1/gm))
+      titles.add(match[2]);
   }
 
   for (const file of walk(storiesDir, ['.mdx'])) {

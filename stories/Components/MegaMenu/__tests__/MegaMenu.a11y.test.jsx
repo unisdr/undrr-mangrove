@@ -6,7 +6,7 @@
  * shipped three axe failures (unisdr/undrr-mangrove#1114). These assertions
  * run against the whole container in its default, unopened state.
  */
-import { render, screen, fireEvent, within } from '@testing-library/react';
+import { render, screen, fireEvent, within, act } from '@testing-library/react';
 import { axe } from 'jest-axe';
 import MegaMenu from '../MegaMenu';
 
@@ -55,7 +55,7 @@ describe('MegaMenu desktop accessibility', () => {
   it('names every section landmark after its own section', () => {
     render(<MegaMenu sections={sections} />);
     const names = screen
-      .getAllByRole('navigation')
+      .getAllByRole('navigation', { hidden: true })
       .map(node => node.getAttribute('aria-label'));
     expect(names).toEqual(expect.arrayContaining(['About categories']));
     expect(new Set(names).size).toBe(names.length);
@@ -86,6 +86,7 @@ describe('MegaMenu desktop accessibility', () => {
 
     fireEvent.keyDown(first, { key: 'ArrowDown' });
     const panel = document.querySelectorAll('.mg-mega-content')[0];
+    expect(panel).not.toHaveAttribute('inert');
     expect(document.activeElement).toBe(panel);
   });
 
@@ -110,4 +111,27 @@ describe('MegaMenu desktop accessibility', () => {
       document.activeElement
     );
   });
+});
+
+it('makes closing desktop panels inert immediately and returns Escape focus before hiding', () => {
+  jest.useFakeTimers();
+  try {
+    render(<MegaMenu sections={sections} />);
+    const opener = screen.getByRole('link', { name: 'About' });
+    fireEvent.keyDown(opener, { key: 'ArrowDown' });
+    const panel = screen.getByRole('region', { name: 'About' });
+    fireEvent.keyDown(panel, { key: 'ArrowDown' });
+    expect(panel).toContainElement(document.activeElement);
+    fireEvent.keyDown(document.activeElement, { key: 'Escape' });
+    expect(opener).toHaveFocus();
+    expect(panel).toHaveAttribute('inert');
+    expect(panel).toHaveAttribute('aria-hidden', 'true');
+    expect(
+      screen.queryByRole('region', { name: 'About' })
+    ).not.toBeInTheDocument();
+    act(() => jest.advanceTimersByTime(1000));
+    expect(panel).toHaveAttribute('inert');
+  } finally {
+    jest.useRealTimers();
+  }
 });

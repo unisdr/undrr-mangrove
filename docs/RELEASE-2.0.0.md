@@ -1,6 +1,6 @@
 Mangrove 2.0 is the stable release of the shared component library behind undrr.org, PreventionWeb, MCR2030, the International Recovery Platform (IRP) and DELTA Resilience. It improves keyboard, screen-reader and right-to-left (Arabic) support across core components, lets one stylesheet serve every UNDRR brand, adds new components and page layouts and is now the npm `latest` release.
 
-Full detail and migration steps: [v2.0 release notes](https://mangrove.undrr.org/?path=/docs/getting-started-release-notes-v2-0--docs) (source: [`docs/RELEASE-2.0.md`](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASE-2.0.md)). Upgrading from 1.x? Start with the upgrade checklist in the [v2.0 release notes](https://mangrove.undrr.org/?path=/docs/getting-started-release-notes-v2-0--docs).
+Full detail and migration steps: [v2.0 release notes](https://mangrove.undrr.org/?path=/docs/getting-started-release-notes-v2-0--docs) (source: [`docs/RELEASE-2.0.md`](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/RELEASE-2.0.md)). Upgrading from 1.x? Start with the upgrade checklist in the [v2.0 release notes](https://mangrove.undrr.org/?path=/docs/getting-started-release-notes-v2-0--docs).
 
 ## Breaking and visible changes
 

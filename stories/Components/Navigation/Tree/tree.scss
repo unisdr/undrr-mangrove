@@ -4,8 +4,9 @@
  * Accessible tree and nested hierarchy view with expand/collapse and selection states.
  *
  * Full documentation:
- * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/Navigation/Tree/Tree.mdx
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Navigation/Tree/Tree.mdx
  */
+@use "../../../assets/scss/mixins" as *;
 
 .mg-tree {
   // The selected label uses the text colour, not the interactive colour: IRP's

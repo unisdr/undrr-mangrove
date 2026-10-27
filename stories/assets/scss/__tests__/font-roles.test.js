@@ -386,7 +386,9 @@ describe('the documented per-component Sass recipe', () => {
     const source = fs.readFileSync(MDX, 'utf8');
     for (const block of source.matchAll(/```scss\n([\s\S]*?)```/g)) {
       // Quote style is Prettier's to choose; match either.
-      const imports = block[1].match(/^@import\s+['"][^'"]+['"];/gm) || [];
+      const imports =
+        block[1].match(/^@(?:import|use)\s+['"][^'"]+['"](?:\s+as\s+\*)?;/gm) ||
+        [];
       if (
         imports.some(line => line.includes('scss/variables')) &&
         imports.some(line => line.includes('scss/foundational'))
@@ -711,11 +713,22 @@ describe('every component names the role it is meant to', () => {
     ['.mg-chip', 'text'],
     ['.mg-cite-this', 'text'],
     ['.mg-cite-this__trigger', 'text'],
+    ['.mg-cite-this .mg-cite-this__text', 'text'],
+    ['.mg-cite-this__header', 'text'],
+    ['.mg-cite-this__preview', 'text'],
     ['.mg-cite-this__title', 'ui'],
     ['.mg-cite-this__copy', 'text'],
     ['.mg-cite-this__summary', 'ui'],
     ['.mg-cite-this__summary::after', 'text'],
     ['.mg-code', 'code'],
+    ['.mg-content-card .mg-card__title', 'ui'],
+    ['.mg-content-card .mg-content-meta__attribution', 'ui'],
+    ['.mg-content-card .mg-content-meta__before-title', 'ui'],
+    ['.mg-content-card .mg-content-meta__metadata', 'ui'],
+    ['.mg-content-teaser .mg-card__title', 'ui'],
+    ['.mg-content-teaser .mg-content-meta__attribution', 'ui'],
+    ['.mg-content-teaser .mg-content-meta__before-title', 'ui'],
+    ['.mg-content-teaser .mg-content-meta__metadata', 'ui'],
     ['.mg-copy-button__feedback', 'ui'],
     ['.mg-drawer', 'text'],
     ['.mg-drawer__title', 'ui'],
@@ -772,6 +785,8 @@ describe('every component names the role it is meant to', () => {
     ['.mg-preview-access__label', 'ui'],
     ['.mg-preview-access__submit', 'text'],
     ['.mg-preview-access__title', 'ui'],
+    ['.mg-progress-bar__label', 'ui'],
+    ['.mg-progress-bar__value', 'ui'],
     ['.mg-search__input', 'text'],
     // A segment is a button wearing a label's class name: it takes the button
     // tokens, so it takes the button's role too, as every other button does.

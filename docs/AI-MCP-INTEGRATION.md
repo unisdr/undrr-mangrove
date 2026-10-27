@@ -1,8 +1,12 @@
 # AI and MCP integration
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/AI-MCP-INTEGRATION.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/getting-started-ai-and-mcp-integration--docs).
+> Edits to this file show up on both [GitHub](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/AI-MCP-INTEGRATION.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/getting-started-ai-and-mcp-integration--docs).
 
 Mangrove publishes structured component data so AI coding agents can look up components, props, rendered HTML, and usage examples. This page shows you how to point your agent at that data.
+
+## Content-pattern discovery
+
+`content-patterns.json` (version 2) on the Storybook site describes source-independent content archetypes, their editorial profiles, default selections, and explicit provisional Drupal bundle bindings in `integrations.drupal.bindings`. Drupal bindings remain owned by Mangrove and have a separate `components/DrupalContentPatterns.js` data entry; they select `{ type, profile }` without extracting fields or resolving URLs. Card profiles expose vertical/book layout inputs for ContentCard separately from ContentTeaser. It describes content families and their full-page, teaser and card presentations separately from the usable component catalogue. It distinguishes experimental implementations, existing references and stubs. A stub has no rendering implementation or import; agents must not present it as a completed page. The content family's model is provisional, and a teaser input is only one presentation projection. Start at [Content patterns](?path=/docs/patterns-content-overview--docs) when choosing a content presentation.
 
 ## Quick start: point your agent at Mangrove
 
@@ -25,7 +29,7 @@ Agents that can read files (Claude Code, Cursor, Copilot) can work directly from
 
 ```
 I'm working with the UNDRR Mangrove component library.
-Repository: https://github.com/unisdr/undrr-mangrove
+Repository: https://github.com/PreventionWeb/undrr-mangrove
 
 Help me create a page layout using the MegaMenu, Hero, and Footer components.
 ```
@@ -161,6 +165,15 @@ A structured [`llms.json`](https://mangrove.undrr.org/llms.json) provides the sa
 
 A separate, topic-scoped sub-manifest, [`llms-editorial-manual.txt`](https://mangrove.undrr.org/llms-editorial-manual.txt), carries only writing/style rules (capitalization, punctuation, numbers, abbreviations, italics, spelling, UNDRR terminology, disability inclusive and gender-inclusive language) for an agent generating UI copy or docs prose — fetch it instead of the full `llms.txt` when component data isn't needed.
 
+The [motion guidance](https://mangrove.undrr.org/llms-motion.txt) (`urls.motion` in `llms.json`) publishes [Motion and animation](MOTION.md) for agents implementing components: purpose, timing, reduced motion, loading, forced colours and RTL. It is also copied to `dist/docs/llms-motion.txt` and the versioned asset library by the existing sub-manifest pipeline.
+
+Two more sub-manifests serve editors building pages on UNDRR websites, and the AI tools they use:
+
+- [`llms-page-building.txt`](https://mangrove.undrr.org/llms-page-building.txt) combines [Building landing pages](https://mangrove.undrr.org/?path=/docs/patterns-building-landing-pages--docs) and [Drupal Gutenberg integration](https://mangrove.undrr.org/?path=/docs/getting-started-integration-drupal-gutenberg--docs): page shapes, layout patterns, component choice and the current markup of every UNDRR Gutenberg block. It replaces the Gutenberg content guide formerly published on assets.undrr.org. A prompt such as "Using the UNDRR page building guide at https://mangrove.undrr.org/llms-page-building.txt, draft a landing page about…" works in any tool that can fetch URLs.
+- [`llms-search-widget.txt`](https://mangrove.undrr.org/llms-search-widget.txt) carries [Search widget editor configuration](https://mangrove.undrr.org/?path=/docs/components-syndicated-search-editor-configuration--docs): block settings, search syntax and `field:value` filters with taxonomy term IDs.
+
+These topic guides are built from `docs/*.md` by `scripts/ai-manifest/docs-submanifest.js` and are listed in `llms.txt` and under `urls` in `llms.json` (`editorialManual`, `pageBuilding`, `searchWidget`).
+
 ### Component index (`ai-components/index.json`)
 
 The [component index](https://mangrove.undrr.org/ai-components/index.json) lists every component with:
@@ -194,7 +207,7 @@ Each component gets its own JSON file (roughly 0.3-21 KB) with some of:
 - **Story examples** with JSX code snippets (from Storybook)
 - **Rendered HTML** — copy-pasteable HTML showing the actual DOM structure. Some components are auto-rendered from the built React bundles using `renderToStaticMarkup`; others have curated HTML examples.
 - **CSS classes** — list of the classes the component uses. Only curated components carry this (about a third of the files); `renderedHtml` is on roughly three quarters. Check for the key rather than assuming it is there.
-- **CSS custom properties** — under `customProperties`, the properties the component exposes for theming. Present on the 20 components that have any; the index entry carries the count. See below.
+- **CSS custom properties** — under `customProperties`, the properties the component exposes for theming. Present on the 24 components that have any; the index entry carries the count. See below.
 - **Changelog** — structured version history with release dates, notes, and PR links (from the component's MDX docs)
 - **Branding flags** — `doNotModify` warnings on components like PageHeader and Footer where the markup is a UNDRR branding requirement
 
@@ -234,7 +247,17 @@ The [utilities reference](https://mangrove.undrr.org/ai-components/utilities.jso
 
 ### Release changelog (`releases.json`)
 
-The [releases endpoint](https://mangrove.undrr.org/releases.json) provides machine-readable version history across all library tags, pre-releases, and individual components. It summarizes what changed between releases, links PRs, categorizes changes (Features, Bug fixes, Tooling, Security), and includes granular component changelogs.
+The [releases endpoint](https://mangrove.undrr.org/releases.json) provides machine-readable version history across all library tags, pre-releases, and individual components. It summarizes what changed between releases, categorizes changes (Features, Bug fixes, Tooling, Security) and includes granular component changelogs. Pull requests and issues are merged on `unisdr/undrr-mangrove`, which is not publicly readable, so they appear as plain-text references (`prRef`, such as `unisdr/undrr-mangrove#1234`) with a null `prUrl`, and `tagUrl` is null. Do not look these numbers up on the public fork, whose numbering is separate. Each release has a `changelogUrl` to its section of `CHANGELOG.md` on the fork, and `latest.releaseUrl` falls back to it.
+
+### Versioned copies on assets.undrr.org (`docs/`)
+
+The editorial manual and every `llms-*.txt` sub-manifest are also copied into the build output, `dist/docs/`, and published in the npm package under `docs/`. The UNDRR asset library mirrors both, so the same files are served next to Mangrove's CSS and JavaScript:
+
+- Latest build: `https://assets.undrr.org/mangrove/latest/docs/EDITORIAL-MANUAL.md` and `https://assets.undrr.org/mangrove/latest/docs/llms-editorial-manual.txt`
+- Pinned to a release: `https://assets.undrr.org/mangrove/{version}/docs/EDITORIAL-MANUAL.md` and `https://assets.undrr.org/mangrove/{version}/docs/llms-editorial-manual.txt`, from the release after 2.0.0
+- The page building and search widget sub-manifests sit alongside: `docs/llms-page-building.txt` and `docs/llms-search-widget.txt` under the same latest or versioned folder
+
+Use a pinned URL where the guidance has to stay fixed, for example in a prompt that is reviewed and reused. The Markdown copy starts with a provenance line, and its links to other guides point at their Storybook pages. `llms.txt` and `llms.json` are not copied; they index the Storybook site. `scripts/copy-docs-to-dist.mjs` does the copy at the end of `yarn build`.
 
 ### Page templates
 
@@ -260,18 +283,20 @@ The [PageTemplateExample](https://mangrove.undrr.org/ai-components/example-page-
 
 ### How it's generated
 
-A single script runs after Storybook and webpack finish:
+A single script generates the manifest after Storybook and webpack finish, and a small one then copies the published guidance into `dist/`:
 
 ```
 storybook build → manifests/components.json (props, types, stories)
 webpack build   → dist/components/*.js (compiled React bundles)
         ↓
 generate-ai-manifest.js → llms.txt, llms.json, index.json, {id}.json, utilities.json, tokens.json, releases.json
+        ↓
+copy-docs-to-dist.mjs   → dist/docs/EDITORIAL-MANUAL.md, dist/docs/llms-*.txt
 ```
 
 `generate-ai-manifest.js` auto-renders React components from `dist/` using `renderToStaticMarkup`, then merges four data sources: the Storybook manifest (props, types), auto-rendered HTML, curated data from `component-data.js` (descriptions, CSS classes, flags, page templates), and release/changelog data from `CHANGELOG.md` via `parse-changelog.js`. Components that render cleanly in Node.js get auto-generated HTML. Components needing browser APIs fall back to curated HTML examples. When run with `--validate`, it checks for stale curated keys, accessibility anti-patterns, and PropTypes coverage.
 
-The pipeline is 5 files in `scripts/ai-manifest/`: `generate-ai-manifest.js`, `parse-changelog.js`, `component-data.js`, `css-utilities.js`, and `custom-properties.js`.
+The pipeline lives in `scripts/ai-manifest/`. Its Storybook input now passes through a preserving, validated adapter in `component-metadata.js`. See the [input contract and parity workflow](MANIFEST-INPUT-CONTRACT.md) before changing metadata extraction; `index.json` does not replace prop/docgen information or attached MDX changelogs. An [opt-in source-only extraction candidate](MANIFEST-SOURCE-SPIKE.md) can generate the same catalogue without building the site, while retaining the experimental Storybook preset dependency; the normal build remains the default.
 
 To regenerate by hand:
 
@@ -341,6 +366,6 @@ The Storybook team's research on agent workflows (closed Oct 2025). Key finding:
 - [Model Context Protocol](https://modelcontextprotocol.io/)
 - [Supercharge Your Design System with LLMs and Storybook MCP (Codrops)](https://tympanus.net/codrops/2025/12/09/supercharge-your-design-system-with-llms-and-storybook-mcp/)
 - [Dear LLM, here's how my design system works (UX Collective)](https://uxdesign.cc/dear-llm-heres-how-my-design-system-works-b59fb9a342b7)
-- [Claude Code agent prompts](https://github.com/unisdr/undrr-mangrove/blob/main/docs/AGENTS.md) — specialized agents for accessibility auditing, code review, and other contributor tasks
+- [Claude Code agent prompts](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/AGENTS.md) — specialized agents for accessibility auditing, code review, and other contributor tasks
 - [Getting started guide](https://mangrove.undrr.org/?path=/docs/getting-started-getting-started-guide--docs)
 - [React integration](https://mangrove.undrr.org/?path=/docs/getting-started-integration-react-integration--docs)

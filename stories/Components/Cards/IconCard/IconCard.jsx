@@ -22,7 +22,7 @@ const cls = (...classes) =>
  * @property {string} icon - Icon class name (e.g., "mg-icon mg-icon-globe") - see Atom/Icons
  * @property {string} imgback - Image URL (alternative to icon, matches VerticalCard)
  * @property {string} imgalt - Alt text for image (matches VerticalCard)
- * @property {number} iconSize - Width/height of icon in pixels (default: 72)
+ * @property {number} iconSize - Intrinsic image dimensions when imageScale is omitted (default: 72); does not size CSS glyphs
  * @property {string} imageScale - Scale for icons/images: 'small', 'medium', 'large', or 'full'
  * @property {string} label - Badge or category label text
  * @property {string} visualLabel - Text label rendered above the icon/image in the visual area
@@ -203,7 +203,7 @@ IconCard.propTypes = {
       imgback: PropTypes.string,
       /** Alt text for image (matches VerticalCard) */
       imgalt: PropTypes.string,
-      /** Width/height of icon in pixels (ignored when imageScale is set) */
+      /** Intrinsic image dimensions when imageScale is omitted; does not size CSS glyphs */
       iconSize: PropTypes.number,
       /** Image width scale: small (72px), medium (50%), large (75%), full (100%) */
       imageScale: PropTypes.oneOf(['small', 'medium', 'large', 'full']),

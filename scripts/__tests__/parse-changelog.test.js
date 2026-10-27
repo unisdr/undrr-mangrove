@@ -62,8 +62,14 @@ See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v
     expect(releases[0].date).toBe('2026-09-15');
     expect(releases[0].isPrerelease).toBe(true);
     expect(releases[0].tag).toBe('v2.0.0-beta.3');
-    expect(releases[0].releaseUrl).toBe(
-      'https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-beta.3'
+    // The release and tag are on unisdr, which anonymous readers cannot open.
+    expect(releases[0].releaseUrl).toBeUndefined();
+    expect(releases[0].tagUrl).toBeNull();
+    expect(releases[0].changelogUrl).toBe(
+      'https://github.com/PreventionWeb/undrr-mangrove/blob/main/CHANGELOG.md#200-beta3-2026-09-15'
+    );
+    expect(releases[1].changelogUrl).toBe(
+      'https://github.com/PreventionWeb/undrr-mangrove/blob/main/CHANGELOG.md#182--2026-08-27'
     );
     expect(releases[0].summary).toBe('This section is intentionally brief.');
     expect(releases[0].changes).toHaveLength(2);
@@ -71,12 +77,15 @@ See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v
       category: 'General',
       title: 'Sub-brand button tokens',
       description:
-        'defined secondary button background and hover tokens for PreventionWeb, MCR, and IRP themes. ([#1150](https://github.com/unisdr/undrr-mangrove/pull/1150))',
+        'defined secondary button background and hover tokens for PreventionWeb, MCR, and IRP themes. (unisdr/undrr-mangrove#1150)',
       pr: 1150,
-      prUrl: 'https://github.com/unisdr/undrr-mangrove/pull/1150',
-      raw: '**Sub-brand button tokens** defined secondary button background and hover tokens for PreventionWeb, MCR, and IRP themes. ([#1150](https://github.com/unisdr/undrr-mangrove/pull/1150))',
+      prRef: 'unisdr/undrr-mangrove#1150',
+      prUrl: null,
+      raw: '**Sub-brand button tokens** defined secondary button background and hover tokens for PreventionWeb, MCR, and IRP themes. (unisdr/undrr-mangrove#1150)',
     });
     expect(releases[0].changes[1].pr).toBe(1151);
+    expect(releases[0].changes[1].prRef).toBe('unisdr/undrr-mangrove#1151');
+    expect(releases[0].changes[1].prUrl).toBeNull();
 
     // Stable release
     expect(releases[1].version).toBe('1.8.2');
@@ -133,9 +142,10 @@ Some table docs...
       version: '2.4.0',
       date: '2026-09-16',
       notes:
-        '([#1157](https://github.com/unisdr/undrr-mangrove/pull/1157)): Added data table modifier and sticky cells.',
+        '(unisdr/undrr-mangrove#1157): Added data table modifier and sticky cells.',
       pr: 1157,
-      prUrl: 'https://github.com/unisdr/undrr-mangrove/pull/1157',
+      prRef: 'unisdr/undrr-mangrove#1157',
+      prUrl: null,
     });
 
     expect(entries[1].version).toBe('2.3.0');

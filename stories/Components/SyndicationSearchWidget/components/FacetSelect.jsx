@@ -11,9 +11,8 @@
  * @module SearchWidget/components/FacetSelect
  */
 
-import React, { useMemo, useCallback } from 'react';
+import React, { memo, useMemo, useCallback } from 'react';
 import {
-  useSearchState,
   useSearchDispatch,
   useSearchLabels,
   interpolateLabel,
@@ -49,28 +48,51 @@ const FIELD_TO_SUBTYPE_ALLOWLIST_KEY = {
  * @param {Function} props.getLabel - Function to get label for a value
  * @param {string} props.widgetId - Unique widget ID for accessibility
  * @param {Object} props.allowedTypes - Optional type restrictions
+ * @param {boolean} props.taxonomiesReady - Whether a complete taxonomy term
+ *   list loaded. On facets marked `labelSource: 'taxonomy'`, unselected
+ *   values with no label are hidden only once this is true and at least one
+ *   value in the facet has a label.
+ * @param {Array} props.selectedValues - Selected values of this facet
+ * @param {string} props.operator - 'OR' or 'AND' for this facet
  */
-export function FacetSelect({
+function FacetSelectComponent({
   field,
   buckets = EMPTY_BUCKETS,
   getLabel,
   widgetId = 'search',
   allowedTypes = null,
+  taxonomiesReady = false,
+  selectedValues = EMPTY_BUCKETS,
+  operator = 'OR',
 }) {
-  const { facets, facetOperators } = useSearchState();
   const dispatch = useSearchDispatch();
   const labels = useSearchLabels();
 
-  const { key, label, vocabulary, type } = field;
+  const { key, label, vocabulary, type, labelSource } = field;
+
+  // Hide values the taxonomy can't label (unpublished or deleted terms), but
+  // only once a complete term list has loaded, and only when at least one
+  // value in this facet resolves. While loading or after an error every value
+  // would look unlabelled, and an endpoint that omits this vocabulary (or a
+  // langcode filter that drops most of it) would otherwise empty the facet.
+  const hideUnlabelled = useMemo(
+    () =>
+      labelSource === 'taxonomy' &&
+      taxonomiesReady &&
+      buckets.some(
+        bucket =>
+          getLabel(key, bucket.key, vocabulary, { fallback: null }) !== null
+      ),
+    [labelSource, taxonomiesReady, buckets, getLabel, key, vocabulary]
+  );
   const isMultiple = type === 'select-multiple';
-  const selectedValues = facets[key] || [];
 
   // Determine if operator toggle should be shown
   // Only show for multi-select facets with 2+ values that aren't in ALWAYS_OR_FACETS
   const showOperatorToggle =
     isMultiple && selectedValues.length >= 2 && !ALWAYS_OR_FACETS.includes(key);
 
-  const currentOperator = facetOperators[key] || 'OR';
+  const currentOperator = operator;
 
   /**
    * Handle operator toggle change.
@@ -165,7 +187,13 @@ export function FacetSelect({
               optionLabel = `${parentInfo.name}: ${optionLabel}`;
             }
           }
+        } else if (hideUnlabelled && !isSelected) {
+          optionLabel = getLabel(key, bucket.key, vocabulary, {
+            fallback: null,
+          });
+          if (optionLabel === null) return null;
         } else {
+          // Selected values keep the raw-ID fallback so they can be deselected
           optionLabel = getLabel(key, bucket.key, vocabulary);
         }
 
@@ -236,13 +264,30 @@ export function FacetSelect({
       });
     }
 
+    // Year: selected first, then newest first
+    if (key === 'year') {
+      return allOptions.sort((a, b) => {
+        if (a.isSelected && !b.isSelected) return -1;
+        if (!a.isSelected && b.isSelected) return 1;
+        return Number(b.value) - Number(a.value);
+      });
+    }
+
     // For other facets, sort selected first, then by count
     return allOptions.sort((a, b) => {
       if (a.isSelected && !b.isSelected) return -1;
       if (!a.isSelected && b.isSelected) return 1;
       return b.count - a.count;
     });
-  }, [buckets, key, vocabulary, getLabel, allowedTypes, selectedValues]);
+  }, [
+    buckets,
+    key,
+    vocabulary,
+    getLabel,
+    allowedTypes,
+    selectedValues,
+    hideUnlabelled,
+  ]);
 
   /**
    * Handle selection change from SelectDropdown.
@@ -348,5 +393,12 @@ export function FacetSelect({
     </fieldset>
   );
 }
+
+/**
+ * Memoised: the selected values and operator arrive as props rather than
+ * from the search state, so typing a query or a new results page doesn't
+ * re-render every dropdown.
+ */
+export const FacetSelect = memo(FacetSelectComponent);
 
 export default FacetSelect;
