@@ -11,6 +11,46 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 ## Unreleased
 
+## 2.3.0, 2026-10-27
+
+See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.3.0) for full details.
+
+Mangrove 2.3 brings existing interface translations into production components, restores mobile MegaMenu navigation and applies security patches. React and hydration consumers can select built-in labels without copying catalogues from Storybook.
+
+### Breaking and visible changes
+
+- **Hydrated interface language:** components with runtime catalogues select built-in labels from `data-lang` or the nearest HTML `lang`; regional tags select their primary-language catalogue. Review non-English pages that previously displayed default English labels, and retain explicit label or direction overrides where required. React consumers pass `lang` explicitly. Existing English defaults and custom-label integrations remain supported; separate vanilla modules are not automatically translated. ([#1430](https://github.com/unisdr/undrr-mangrove/pull/1430), [#1429](https://github.com/unisdr/undrr-mangrove/pull/1429))
+- **Mobile MegaMenu:** section labels now scroll horizontally and open their section directly, while the hamburger stays stationary and opens the overview. The unbranded topbar gains the same list wrapper as the branded variant; review custom header selectors and alignment overrides around the 900px breakpoint. ([#1402](https://github.com/unisdr/undrr-mangrove/pull/1402))
+
+### New features
+
+- **Runtime UI translations:** twelve component families share English, Arabic, Spanish, French, Japanese, Russian and Simplified Chinese catalogue selection, with English fallback and consumer overrides. Published component entries expose their own label resolvers; hydration supports language, explicit direction and JSON label overrides. Search interface language remains separate from content filters and date formatting. This adopts existing catalogues, some still needing native-speaker review, rather than completing every string: Gallery thumbnail controls, Snackbar severity prefixes, ShareButtons failure alerts and separate vanilla controls remain outside the contract. Snackbar and OnThisPageNav gain no new published bundles. ([#1430](https://github.com/unisdr/undrr-mangrove/pull/1430), [#1429](https://github.com/unisdr/undrr-mangrove/pull/1429))
+
+### Bug fixes and hardening
+
+- **MegaMenu:** restore mobile control alignment and touch interaction with and without a logo, keep the divider visible, support mouse dragging without accidental activation, align CSS and JavaScript breakpoints, and preserve RTL arrow navigation and opener focus. ([#1402](https://github.com/unisdr/undrr-mangrove/pull/1402))
+- **Security:** apply patched DOMPurify, ip-address, serialize-javascript, fast-uri and Zod versions, alongside coordinated Storybook and Vitest security updates. ([#1409](https://github.com/unisdr/undrr-mangrove/pull/1409))
+
+### Documentation and discoverability
+
+- **Translation guidance:** document catalogue maintenance, language and override precedence, hydration, public exports and remaining untranslated strings. Locale stories exercise the production runtime contract, and generated hydration metadata includes language and direction inputs. ([#1430](https://github.com/unisdr/undrr-mangrove/pull/1430), [#1429](https://github.com/unisdr/undrr-mangrove/pull/1429))
+- **Storybook HTML and direction:** replace the external HTML addon with a local live-DOM panel and native Copy support, and replace the RTL addon with a native direction toolbar. Existing HTML panel IDs and `addonRtl` links remain supported; docs-only pages share locale/direction updates. ([#1417](https://github.com/unisdr/undrr-mangrove/pull/1417), [#1420](https://github.com/unisdr/undrr-mangrove/pull/1420))
+- **AI catalogue:** validate metadata inputs and compare complete generated output when evaluating extraction changes. An opt-in source-preset candidate can generate the catalogue without building the Storybook site, while retaining bundle preparation and experimental metadata dependencies; the normal production build remains unchanged. ([#1423](https://github.com/unisdr/undrr-mangrove/pull/1423), [#1424](https://github.com/unisdr/undrr-mangrove/pull/1424))
+
+### Dependencies
+
+- React and React DOM 19.3.1, Storybook 10.6.3, Vitest 4.1.12, Playwright 1.64.1, axe-core 4.14.0, Sass 1.105.2 and PostCSS 8.5.31, plus supporting lint and visual-test updates. React remains a consumer peer dependency. ([#1412](https://github.com/unisdr/undrr-mangrove/pull/1412), [#1409](https://github.com/unisdr/undrr-mangrove/pull/1409), [#1394](https://github.com/unisdr/undrr-mangrove/pull/1394), [#1393](https://github.com/unisdr/undrr-mangrove/pull/1393), [#1401](https://github.com/unisdr/undrr-mangrove/pull/1401), [#1400](https://github.com/unisdr/undrr-mangrove/pull/1400))
+
+### CDN
+
+The versioned paths become available after npm publication and the shared-web-assets production deployment. Verify the CSS version banner and module paths before upgrading consumers.
+
+```html
+<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.3.0/css/style.css">
+```
+
+### Repository maintenance
+
 - Add an opt-in source-preset extraction candidate for generating the AI catalogue without a Storybook site build, with complete output/validation parity checks; retain the existing production build and experimental metadata dependency.
 
 - Replace the Storybook RTL addon with a native direction toolbar, retain existing `addonRtl` links, and share locale/direction handling across stories and docs-only pages.
