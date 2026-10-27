@@ -1,5 +1,6 @@
 import React from 'react';
 import { INITIAL_VIEWPORTS } from 'storybook/viewport';
+import { I18nProvider } from 'react-aria-components';
 
 import { transformSource } from './docsSource';
 
@@ -7,7 +8,7 @@ import { addons } from 'storybook/preview-api';
 import { GLOBALS_UPDATED } from 'storybook/internal/core-events';
 import { applyTheme, themeNames } from './themeStyles';
 
-import { applyLanguage } from './language';
+import { applyLanguage, resolveLanguage } from './language';
 
 const getLangCode = (Story, context) => {
   React.useLayoutEffect(() => {
@@ -25,7 +26,17 @@ const getLangCode = (Story, context) => {
     return () => clearTimeout(timer);
   }, [context.globals.locale, context.globals.addonRtl]);
 
-  return <Story {...context} />;
+  // React Aria derives its own locale and reading direction from useLocale(),
+  // which falls back to navigator.language and never inspects the dir we set
+  // above. Without this provider the page is visually RTL while React Aria
+  // still believes it is LTR, so DateField segment order and the
+  // direction-dependent arrow-key mapping in Tabs, Slider, DateField and Table
+  // run backwards against the layout.
+  return (
+    <I18nProvider locale={resolveLanguage(context.globals).lang}>
+      <Story {...context} />
+    </I18nProvider>
+  );
 };
 
 const sbFrameReset = (Story, context) => {

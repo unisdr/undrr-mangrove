@@ -5,8 +5,10 @@
 // tokens/mangrove.yaml and tokens/undrr.yaml.
 @use "generated/tokens-mcr" as *;
 @use "tokens-tabs" as *;
+@use "control-tokens" as *;
 
 .mg-theme-mcr {
   @include mg-tokens-tabs;
   @include mg-tokens-mcr;
+  @include mg-control-tokens;
 }

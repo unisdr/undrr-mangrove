@@ -1,7 +1,8 @@
 # DELTA Resilience — sub-brand layer.
 #
 # Merged over tokens/mangrove.yaml + tokens/undrr.yaml and emitted as the
-# .mg-theme-delta block.
+# .mg-theme-delta block, plus the standalone aria/tokens/delta.css that
+# DELTA can consume without any Mangrove component CSS.
 #
 # Sourced from DELTA's production repository and its DLDTS design file, not
 # from a guess: the navy #132e48 this theme was originally built on appears

@@ -3,7 +3,12 @@ import remarkGfm from 'remark-gfm';
 
 export default {
   staticDirs: ['../stories/assets'],
-  stories: ['../stories/**/*.mdx', '../stories/**/*.stories.@(js|jsx|ts|tsx)'],
+  stories: [
+    '../stories/**/*.mdx',
+    process.env.MANGROVE_INCLUDE_ARIA_RESEARCH
+      ? '../stories/**/*.stories.@(js|jsx|ts|tsx)'
+      : '../stories/**/!(AriaCollectionGallery|AriaComponentGallery|AriaCrudSpike|AriaIntegrationSpike).stories.@(js|jsx|ts|tsx)',
+  ],
 
   addons: [
     // https://storybook.js.org/docs/writing-docs/mdx#markdown-tables-arent-rendering-correctly

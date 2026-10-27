@@ -198,6 +198,8 @@ The first update to Mangrove 2.0. Component changes (the new ProgressBar and Cit
 - **Writing guidelines, United Nations handbook:** `WRITING.md`, `WRITING-SHORT.md` and the editorial manual now link to [A Handbook for Writers of the United Nations](https://languages.un.org/sites/default/files/2024-01/writing_for_the_united_natons_a_handbook_of_guidelines_techniques_and_resources.pdf), the United Nations guidance on purpose, audience, clarity and diplomatic language.
 - **Editorial manual and AI sub-manifests on the asset library:** `docs/EDITORIAL-MANUAL.md` and every `llms-*.txt` sub-manifest now ship in `dist/docs/` and in the npm package under `docs/`, so the UNDRR asset library serves them at `https://assets.undrr.org/mangrove/latest/docs/` and, from the next release, at versioned URLs such as `https://assets.undrr.org/mangrove/{version}/docs/llms-editorial-manual.txt`. The Markdown copy starts with a provenance line, and its links to other guides point at Storybook. `llms.txt` and `llms.json` stay on the Storybook site only. The `dist` and Storybook workflows now also rebuild on a change under `docs/`. Tracked in [undrr/web-backlog#3109](https://gitlab.com/undrr/web-backlog/-/work_items/3109). With the page building guides above, that also includes `llms-page-building.txt` and `llms-search-widget.txt`.
 
+- Added an optional React Aria Components stylesheet and standalone tokens for all five Mangrove themes. Import `aria/react-aria.css` with `aria/tokens/{brand}.css`; the normal theme stylesheets do not include the React Aria rules. See [PR #1088](https://github.com/unisdr/undrr-mangrove/pull/1088).
+
 ## 2.0.0, 2026-09-24
 
 See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0) for full details.

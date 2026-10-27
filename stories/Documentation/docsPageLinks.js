@@ -31,6 +31,7 @@ export const DOC_PAGE_IDS = {
   'docs/ANALYTICS.md': 'platform-services-analytics-enhancements--docs',
   'docs/ARCHITECTURE.md': 'contributing-architecture--docs',
   'docs/BROWSER-SUPPORT.md': 'getting-started-browser-support--docs',
+  'docs/CASCADE-LAYERS.md': 'getting-started-integration-cascade-layers--docs',
   'docs/CDN-REFERENCE.md': 'getting-started-integration-cdn-reference--docs',
   'docs/COLOUR-CONTRAST-METHODOLOGY.md':
     'design-decisions-colour-contrast-methodology--docs',
