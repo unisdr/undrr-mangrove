@@ -14,7 +14,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 Design systems define how things look. Content management defines what gets stored.
 But neither defines the structural layer between them — what data a component
-*carries*, what fields it requires, and what constraints apply.
+_carries_, what fields it requires, and what constraints apply.
 
 That structural layer is **content architecture**: explicit, named contracts that
 survive visual redesigns and work across every property that consumes Mangrove
@@ -51,6 +51,7 @@ Mangrove uses strategic DDD only. Tactical DDD patterns (aggregates, repositorie
 ## Why lock in content architecture through schemas?
 
 Without explicit contracts:
+
 - Field names drift across implementations (`imgback` vs `image.src`)
 - CMS output silently mismatches component expectations
 - External consumers must reverse-engineer prop types from source code
@@ -63,15 +64,15 @@ Components can change how they look; the schema records what they carry.
 
 ## Schema inventory
 
-| Schema | Description | Implementing components |
-|--------|-------------|------------------------|
-| `card` | Content card with image, labels, title, summary, CTA | VerticalCard, HorizontalCard, BookCard, HorizontalBookCard, IconCard |
-| `statistic` | Key metrics display with icon, value, labels | StatsCard, StatsCardItem |
-| `quote` | Highlighted quote with attribution and image | QuoteHighlight |
-| `navigation` | Multi-level navigation with section banners | MegaMenu |
-| `share-action` | Social sharing buttons with localized labels | ShareButtons |
-| `gallery` | Media gallery (images, videos, embeds) | Gallery |
-| `text-cta` | Call-to-action banner with heading, text, buttons | TextCta |
+| Schema         | Description                                          | Implementing components                                              |
+| -------------- | ---------------------------------------------------- | -------------------------------------------------------------------- |
+| `card`         | Content card with image, labels, title, summary, CTA | VerticalCard, HorizontalCard, BookCard, HorizontalBookCard, IconCard |
+| `statistic`    | Key metrics display with icon, value, labels         | StatsCard, StatsCardItem                                             |
+| `quote`        | Highlighted quote with attribution and image         | QuoteHighlight                                                       |
+| `navigation`   | Multi-level navigation with section banners          | MegaMenu                                                             |
+| `share-action` | Social sharing buttons with localized labels         | ShareButtons                                                         |
+| `gallery`      | Media gallery (images, videos, embeds)               | Gallery                                                              |
+| `text-cta`     | Call-to-action banner with heading, text, buttons    | TextCta                                                              |
 
 ---
 
@@ -119,27 +120,57 @@ This is what a compiled schema file looks like. The full source is in
       "items": {
         "type": "object",
         "properties": {
-          "title":   { "type": "string", "description": "Card heading text" },
-          "summary": { "type": "string", "format": "html", "description": "Card body text (sanitized HTML supported)" },
-          "link":    { "type": "string", "format": "uri",  "description": "Primary URL for the card" },
+          "title": { "type": "string", "description": "Card heading text" },
+          "summary": {
+            "type": "string",
+            "format": "html",
+            "description": "Card body text (sanitized HTML supported)"
+          },
+          "link": {
+            "type": "string",
+            "format": "uri",
+            "description": "Primary URL for the card"
+          },
           "image": {
             "type": "object",
             "properties": {
-              "src": { "type": "string", "format": "uri", "description": "Image URL" },
-              "alt": { "type": "string", "description": "Alt text for the image. Use empty string for decorative images." }
+              "src": {
+                "type": "string",
+                "format": "uri",
+                "description": "Image URL"
+              },
+              "alt": {
+                "type": "string",
+                "description": "Alt text for the image. Use empty string for decorative images."
+              }
             },
             "required": ["src", "alt"]
           },
-          "labels":  { "type": "array", "items": { "type": "string" }, "maxItems": 2 },
-          "button":  { "type": "string", "description": "Button label text" },
-          "buttonType": { "type": "string", "enum": ["Primary", "Secondary"], "default": "Primary" }
+          "labels": {
+            "type": "array",
+            "items": { "type": "string" },
+            "maxItems": 2
+          },
+          "button": { "type": "string", "description": "Button label text" },
+          "buttonType": {
+            "type": "string",
+            "enum": ["Primary", "Secondary"],
+            "default": "Primary"
+          }
         },
         "required": ["title"]
       }
     },
     "variant": {
       "type": "string",
-      "enum": ["primary", "secondary", "tertiary", "quaternary", "default", "negative"],
+      "enum": [
+        "primary",
+        "secondary",
+        "tertiary",
+        "quaternary",
+        "default",
+        "negative"
+      ],
       "default": "primary"
     }
   },
@@ -147,7 +178,13 @@ This is what a compiled schema file looks like. The full source is in
   "x-mangrove": {
     "version": "1.0.0",
     "phase": 1,
-    "implementors": ["VerticalCard", "HorizontalCard", "BookCard", "HorizontalBookCard", "IconCard"],
+    "implementors": [
+      "VerticalCard",
+      "HorizontalCard",
+      "BookCard",
+      "HorizontalBookCard",
+      "IconCard"
+    ],
     "deviations": {
       "items": "Current components use `data` as the prop name for the items array.",
       "items[].image.src": "Maps to current `imgback` prop.",
@@ -167,18 +204,18 @@ Schemas define **canonical** field names — the target contract. Current compon
 props may differ. These deviations will be resolved in Phase 2 when components
 are updated to use canonical field names.
 
-| Canonical (schema) | Current (component) | Affected components |
-|---|---|---|
-| `items` | `data` | All cards |
-| `items[].image.src` | `imgback` | All cards |
-| `items[].image.alt` | `imgalt` | All cards |
-| `items[].labels[]` | `label1`, `label2` | VerticalCard, HorizontalCard, HorizontalBookCard |
-| `items[].summary` | `summaryText` | All cards |
-| `stats[].summary` | `summaryText` | StatsCard |
-| `image.src` / `image.alt` | `imageSrc` / `imageAlt` | QuoteHighlight |
-| `image.src` / `image.alt` | `image` / `imageAlt` | TextCta |
-| `sharingSubject` | `SharingSubject` | ShareButtons |
-| `sharingBody` | `SharingTextBody` | ShareButtons |
+| Canonical (schema)        | Current (component)     | Affected components                              |
+| ------------------------- | ----------------------- | ------------------------------------------------ |
+| `items`                   | `data`                  | All cards                                        |
+| `items[].image.src`       | `imgback`               | All cards                                        |
+| `items[].image.alt`       | `imgalt`                | All cards                                        |
+| `items[].labels[]`        | `label1`, `label2`      | VerticalCard, HorizontalCard, HorizontalBookCard |
+| `items[].summary`         | `summaryText`           | All cards                                        |
+| `stats[].summary`         | `summaryText`           | StatsCard                                        |
+| `image.src` / `image.alt` | `imageSrc` / `imageAlt` | QuoteHighlight                                   |
+| `image.src` / `image.alt` | `image` / `imageAlt`    | TextCta                                          |
+| `sharingSubject`          | `SharingSubject`        | ShareButtons                                     |
+| `sharingBody`             | `SharingTextBody`       | ShareButtons                                     |
 
 ---
 
@@ -267,4 +304,11 @@ automatically) and published to npm.
 
 ---
 
-<a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/ContentSchemas.mdx" target="_blank" rel="noopener noreferrer" aria-label="View source on GitHub (opens in new tab)">View source on GitHub</a>
+<a
+  href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/ContentSchemas.mdx"
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label="View source on GitHub (opens in new tab)"
+>
+  View source on GitHub
+</a>
