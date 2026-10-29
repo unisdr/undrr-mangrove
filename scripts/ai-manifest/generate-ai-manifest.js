@@ -157,6 +157,15 @@ const LOGOS = {
 
 const VANILLA_SCRIPTS = [
   {
+    name: 'Dialog',
+    file: 'js/dialog.js',
+    url: `${CDN_BASE}/js/dialog.js`,
+    selector: '[data-mg-dialog]',
+    initFunction: 'mgDialog(scope)',
+    description:
+      'Enhances authored disclosures into native modal dialogs. Call mgDialog(scope) for inserted content and mgDialogDestroy(scope) before removing it. Labels and content stay in the authored HTML; unsupported browsers keep the disclosure.',
+  },
+  {
     name: 'Tabs',
     file: 'js/tabs.js',
     url: `${CDN_BASE}/js/tabs.js`,

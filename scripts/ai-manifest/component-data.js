@@ -2092,6 +2092,63 @@ npm run build</code></pre>
     ],
   },
 
+  'components-dialog': {
+    description:
+      'Experimental native modal enhancement for authored disclosures. Short messages and long reading share focus return, Escape/backdrop dismissal, viewport scrolling and cleanup. Content stays available without JavaScript; server-rendered labels own translation. No shipped Gutenberg block or validated editor round trip.',
+    summary:
+      'Native dialog enhancement for optional messages and long reading, with a disclosure fallback and no React dependency.',
+    cssClasses: [
+      'mg-dialog',
+      'mg-dialog__header',
+      'mg-dialog__title',
+      'mg-dialog__body',
+      'mg-dialog__close',
+    ],
+    examples: [
+      {
+        name: 'Progressive disclosure',
+        html: `<div data-mg-dialog>
+  <button type="button" class="mg-button mg-button-primary" data-mg-dialog-trigger hidden>Read the case study</button>
+  <details data-mg-dialog-fallback><summary>Read the case study</summary>
+    <div data-mg-dialog-content>
+      <header class="mg-dialog__header">
+        <h2 id="case-study-title" class="mg-dialog__title" data-mg-dialog-title data-mg-dialog-initial-focus tabindex="-1">Community resilience</h2>
+        <button type="button" class="mg-button mg-button-secondary mg-dialog__close" data-mg-dialog-close hidden>Close</button>
+      </header>
+      <div class="mg-dialog__body mg-content"><p>The case study goes here.</p></div>
+    </div>
+  </details>
+</div>`,
+      },
+    ],
+    vanillaModule: {
+      note: 'Enhances authored markup; does not generate content or translate labels. Call mgDialog(scope) after inserting markup and mgDialogDestroy(scope) before replacing it. Uses native showModal; unsupported browsers retain the disclosure. Do not nest roots or combine overlay lifecycles.',
+      selector: '[data-mg-dialog]',
+      modules: vanillaModules('dialog'),
+      dataAttributes: {
+        'data-mg-dialog': 'Root; owns one authored disclosure and trigger.',
+        'data-mg-dialog-trigger': 'Initially hidden opening button.',
+        'data-mg-dialog-fallback':
+          'Authored details element available before enhancement.',
+        'data-mg-dialog-content':
+          'Content moved into the modal and restored on destroy.',
+        'data-mg-dialog-title': 'Required heading with an authored unique id.',
+        'data-mg-dialog-close':
+          'Initially hidden Close button, translated in the page.',
+        'data-mg-dialog-initial-focus':
+          'Optional focus target; a heading needs tabindex=-1. Otherwise Close receives focus.',
+      },
+      example: `<link rel="stylesheet" href="https://assets.undrr.org/mangrove/{{version}}/css/style.css">
+<div data-mg-dialog>
+  <button type="button" class="mg-button mg-button-primary" data-mg-dialog-trigger hidden>Read more</button>
+  <details data-mg-dialog-fallback><summary>Read more</summary><div data-mg-dialog-content>
+    <header class="mg-dialog__header"><h2 id="reading-title" class="mg-dialog__title" data-mg-dialog-title>Optional reading</h2><button type="button" class="mg-button mg-button-secondary mg-dialog__close" data-mg-dialog-close hidden>Close</button></header>
+    <div class="mg-dialog__body mg-content"><p>Supporting information.</p></div>
+  </div></details>
+</div>
+<script type="module" src="${vanillaModules('dialog').script}"></script>`,
+    },
+  },
   'components-cite-this': {
     description:
       'Vanilla citation button and native dialog for detail pages. An empty data-mg-cite-this element uses the page title and URL; server-rendered disclosure markup preserves a no-JavaScript fallback. Prefer an approved citation, then configured metadata, a matching JSON-LD CreativeWork, or a page-title fallback. The script supplies copy feedback and bubbling analytics events; the host owns GA4 and consent. Event id is null for automatically URL-derived IDs containing a query: supply an approved data-mg-cite-this-id for per-work reporting without forwarding query values or merging distinct works.',
