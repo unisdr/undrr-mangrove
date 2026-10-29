@@ -16,6 +16,42 @@ This is a presentation of the <LinkTo kind="Patterns/Content/Publication" story=
 
 For composition and Drupal Gutenberg guidance, see [Building landing pages](?path=/docs/patterns-building-landing-pages--docs). Shared reference implementation and comparison notes remain in the [topic-page guide](?path=/docs/patterns-landing-pages--docs).
 
+## Report branding within a site theme
+
+A publication can have its own visual identity while its host site keeps navigation, controls and reading conventions consistent. Start with the selected site theme and component props, then supported custom properties. Add a narrowly scoped consumer rule only for a requirement those controls do not cover.
+
+These paired examples use the same illustrative content, the native Hero with primary and secondary editorial CTAs on a dark surface, and `StatsCard variant="compact"`. The figures describe the example page; they are not research findings. These canvases isolate the report body. The existing full-page reference above supplies the surrounding site chrome; use the host site's approved header, navigation and footer in production.
+
+### 1. Start with theme defaults and native variants
+
+<Canvas of={Stories.PublicationThemeDefaults} />
+
+The `mg-content` boundary marks the consumer-authored reading sections so native prose links retain their underlining; composed controls stay outside it. No report override is needed to make statistics compact. The existing variant adjusts both padding and internal spacing. Hero owns its heading role, responsive layout and dark-surface CTA/focus treatment; its secondary CTA is the editorial arrow-link treatment, not a hand-restyled conventional button.
+
+### 2. Apply scoped publication expression
+
+<Canvas of={Stories.BrandedPublication} />
+
+| Before                                           | After                                                                                                                                                 |
+| ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Hero uses the selected theme's masthead surface. | The report wrapper sets existing `--mg-color-hero` to the theme's `--mg-color-neutral-900` channels. Other site colour roles keep their defaults.     |
+| Hero uses its default copy width.                | A rule scoped to this report sets documented `--mg-hero-overlay-max-width: 44rem` on `.mg-hero`, keeping copy and protective veil geometry connected. |
+| Consumer-authored overview prose has no accent.  | A report-scoped rule adds a logical start border and token-based padding to `.mg-publication-example__intro`. It does not target component internals. |
+
+The complete consumer stylesheet is `publication-example.scss` beside these stories. The property rule targets the actual Hero element because a value declared there can override an inherited wrapper value. Fetch a component's `customProperties` records and theme `tokens.json` for the supported scope, defaults and value formats. `--mg-color-hero` takes channels; use `rgb()` at a colour use site, not around the value assigned here. Avoid copying these rules globally or replacing the site's typography roles with font-family literals.
+
+### Keep shared behaviour with the component
+
+Do not replace Hero's grid, breakpoints, copy padding, title size, `max-width` or protective scrim independently: those rules work together across long titles and narrow screens. The shared width property above is the supported coordination point. A publication that requires a different content hierarchy should choose a different composition before overriding component geometry.
+
+Keep secondary CTA hover, visited and focus rules together. A generic report rule such as `.report a { color: … }`, or a rule removing outlines, can defeat the dark-surface treatment. Changing a surface or foreground requires checking their contrast together in every target theme and state. Do not use the orange non-text accent as a text background. Do not reduce statistics by overriding only the numeral size or child margins; use the compact variant.
+
+These examples add no component props, theme tokens, animation or Gutenberg block. The scoped stylesheet is consumer-owned CSS and needs explicit host integration. Gutenberg serialization and an editor round trip are not established by a Storybook canvas; map the composition to supported blocks using the page-building guide and verify the published result.
+
+For release review, compare both canvases across all five themes at narrow and wide widths, keyboard focus, hover, long copy, RTL and forced colours. A successful render or automated scan does not establish screen-reader usability, browser parity or a Gutenberg round trip. Keep the actual checked conditions and remaining limitations in the integration handoff.
+
 ## Changelog
+
+- **0.2.0**, 2026-10-29: Add paired theme-default and scoped report-branding examples with dark-surface secondary CTAs, compact statistics and integration boundaries.
 
 - **0.1.0**, 2026-10-17 ([#1383](https://github.com/unisdr/undrr-mangrove/pull/1383)): Place this existing full-page reference beneath its content archetype; preserve its story URL.
