@@ -47,10 +47,12 @@ Decide what the page is for before choosing blocks. Most UNDRR landing pages are
 | The page… | Shape | Start from |
 | --- | --- | --- |
 | Introduces a subject and points several ways into it | Topic or initiative | A split hero, an on-this-page bar, then routes and recent material |
-| Is one long document that people cite sections of | Report or publication | A coloured header with a contents sidebar, or a hero with an on-this-page bar; see [Publication landing page](#publication-landing-page) |
+| Curates report findings, web reading sections and document actions | Report landing page | A coloured header with a contents sidebar, or a hero with an on-this-page bar; see [Publication landing page](#publication-landing-page) |
 | Exists to reach many items | Collection index | A plain H1, a contents block and rows of book cards; see [Card grid rows](#card-grid-rows) |
 | Presents several charts about one place or theme | Data page | See [Data chart page](#data-chart-page) |
 | Is returned to repeatedly, with movement between sections | Content hub | See [Content hub](https://mangrove.undrr.org/?path=/docs/patterns-content-hub--docs) |
+
+An ordinary **publication record / catalogue entry** is a different full-page purpose within the Publication archetype: identify one work, read its description, inspect bibliographic details and find available files or citation information. It is not a landing-page shape and does not require a hero, statistics or a section tour. See the [provisional publication record specification](https://mangrove.undrr.org/?path=/docs/patterns-content-publication-record-specification--docs). That Mangrove presentation is unimplemented; this guide does not replace the existing Drupal publication template with a working record block or renderer.
 
 The inserter's **UNDRR pages** pattern category has starting points for a reading page, an initiative overview, a publication collection and a frequently asked questions section.
 
@@ -274,7 +276,7 @@ Book card markup is in [Drupal Gutenberg integration: Card](#card).
 
 ### Publication landing page
 
-For annual reports and other PDF-led publications, the web page is a guided tour that sends readers to the full document, not a copy of it:
+This is a curated report landing page, not the default treatment of every publication record. For flagship annual reports and other publications that warrant an editorial tour, it can guide readers to the full document:
 
 1. A hero with the cover image or a video.
 2. An on-this-page bar with a download call to action.
