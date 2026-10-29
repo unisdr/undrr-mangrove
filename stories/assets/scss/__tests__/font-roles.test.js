@@ -730,6 +730,8 @@ describe('every component names the role it is meant to', () => {
     ['.mg-content-teaser .mg-content-meta__before-title', 'ui'],
     ['.mg-content-teaser .mg-content-meta__metadata', 'ui'],
     ['.mg-copy-button__feedback', 'ui'],
+    ['.mg-dialog', 'text'],
+    ['.mg-dialog__title', 'ui'],
     ['.mg-drawer', 'text'],
     ['.mg-drawer__title', 'ui'],
     ['.mg-floating-panel', 'text'],

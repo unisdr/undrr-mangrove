@@ -22,7 +22,8 @@ afterEach(() => {
   mgDialogDestroy();
   HTMLDialogElement.prototype.showModal = show;
   HTMLDialogElement.prototype.close = close;
-  document.documentElement.style.removeProperty('overflow');
+  for (const name of ['overflow', 'overflow-x', 'overflow-y'])
+    document.documentElement.style.removeProperty(name);
 });
 const trigger = () => document.querySelector('[data-mg-dialog-trigger]');
 const dialog = () => document.querySelector('dialog');
@@ -126,16 +127,19 @@ test('authored dialog has no axe violations', async () => {
   expect(await axe(dialog())).toHaveNoViolations();
 });
 
-test.each(['[data-mg-dialog-close]', '[data-mg-dialog-title]'])(
-  'incomplete %s markup retains disclosure',
-  selector => {
-    document.querySelector(selector).remove();
-    mgDialog();
-    expect(dialog()).toBeNull();
-    expect(document.querySelector('details')).not.toHaveAttribute('hidden');
-    expect(trigger()).toHaveAttribute('hidden');
-  }
-);
+test.each([
+  '[data-mg-dialog-close]',
+  '[data-mg-dialog-title]',
+  '[data-mg-dialog-trigger]',
+  '[data-mg-dialog-content]',
+  'summary',
+])('incomplete %s markup retains disclosure', selector => {
+  document.querySelector(selector).remove();
+  mgDialog();
+  expect(dialog()).toBeNull();
+  expect(document.querySelector('details')).not.toHaveAttribute('hidden');
+  if (trigger()) expect(trigger()).toHaveAttribute('hidden');
+});
 
 test('missing title id retains disclosure and omitted initial focus chooses Close', () => {
   document.querySelector('h2').removeAttribute('id');
@@ -173,4 +177,68 @@ test('pointer activation returns to the trigger even when it did not take focus'
   trigger().click();
   dialog().close();
   expect(document.activeElement).toBe(trigger());
+});
+
+test('restores independent overflow axes and their priorities after the final close', () => {
+  const style = document.documentElement.style;
+  style.setProperty('overflow-x', 'scroll', 'important');
+  style.setProperty('overflow-y', 'auto');
+  mgDialog();
+  trigger().click();
+  style.setProperty('--host-change', 'retained');
+  document.querySelector('[data-mg-dialog-close]').click();
+  expect(style.getPropertyValue('--host-change')).toBe('retained');
+  style.removeProperty('--host-change');
+  expect(style.getPropertyValue('overflow-x')).toBe('scroll');
+  expect(style.getPropertyPriority('overflow-x')).toBe('important');
+  expect(style.getPropertyValue('overflow-y')).toBe('auto');
+  expect(style.getPropertyPriority('overflow-y')).toBe('');
+});
+
+test('nested roots retain their authored disclosures rather than borrowing content', () => {
+  document.body.innerHTML = `<div data-mg-dialog>${markup('nested')}</div>`;
+  mgDialog();
+  expect(dialog()).toBeNull();
+  expect(document.querySelector('details')).not.toHaveAttribute('hidden');
+  expect(trigger()).toHaveAttribute('hidden');
+});
+
+test('destroying an active enhancement returns focus to the restored disclosure', () => {
+  mgDialog();
+  trigger().click();
+  mgDialogDestroy();
+  expect(document.activeElement).toBe(document.querySelector('summary'));
+  expect(trigger()).toHaveAttribute('hidden');
+});
+
+test('destroying a closed enhancement does not steal unrelated focus', () => {
+  mgDialog();
+  const input = document.createElement('input');
+  document.body.prepend(input);
+  input.focus();
+  mgDialogDestroy();
+  expect(document.activeElement).toBe(input);
+});
+
+test('every authored close control dismisses and retains its hidden state on teardown', () => {
+  const footerClose = document.createElement('button');
+  footerClose.type = 'button';
+  footerClose.setAttribute('data-mg-dialog-close', '');
+  footerClose.textContent = 'Return to the page';
+  document.querySelector('[data-mg-dialog-content]').append(footerClose);
+  const headerClose = document.querySelector('[data-mg-dialog-close]');
+  mgDialog();
+  expect(footerClose.hidden).toBe(false);
+  trigger().click();
+  footerClose.click();
+  expect(dialog().open).toBe(false);
+  expect(document.documentElement.style.overflow).toBe('');
+  expect(document.activeElement).toBe(trigger());
+  mgDialogDestroy();
+  expect(headerClose.hidden).toBe(true);
+  expect(footerClose.hidden).toBe(false);
+  mgDialog();
+  trigger().click();
+  footerClose.click();
+  expect(document.documentElement.style.overflow).toBe('');
 });

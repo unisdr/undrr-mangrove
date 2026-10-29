@@ -14,16 +14,24 @@ function lock(doc) {
   const root = doc.documentElement;
   const state = (doc[LOCK] ||= {
     count: 0,
-    value: root.style.getPropertyValue('overflow'),
-    priority: root.style.getPropertyPriority('overflow'),
+    // A shorthand can serialize to an empty string when axes have different
+    // priorities. Save the actual declarations, without touching other styles.
+    properties: Array.from(root.style)
+      .filter(name => ['overflow', 'overflow-x', 'overflow-y'].includes(name))
+      .map(name => [
+        name,
+        root.style.getPropertyValue(name),
+        root.style.getPropertyPriority(name),
+      ]),
   });
   state.count += 1;
-  root.style.setProperty('overflow', 'hidden');
+  root.style.setProperty('overflow', 'hidden', 'important');
   return () => {
     if (--state.count) return;
-    if (state.value)
-      root.style.setProperty('overflow', state.value, state.priority);
-    else root.style.removeProperty('overflow');
+    for (const name of ['overflow', 'overflow-x', 'overflow-y'])
+      root.style.removeProperty(name);
+    for (const [name, value, priority] of state.properties)
+      root.style.setProperty(name, value, priority);
     delete doc[LOCK];
   };
 }
@@ -31,16 +39,28 @@ function lock(doc) {
 /** Enhance a document, element or Drupal behaviour scope. Idempotent. */
 export function mgDialog(scope = document) {
   for (const root of elements(scope)) {
-    if (root[KEY]) continue;
+    // Nesting is unsupported: leave every involved disclosure readable rather
+    // than moving a descendant root's content outside its language/context.
+    if (
+      root[KEY] ||
+      root.parentElement?.closest(SELECTOR) ||
+      root.querySelector(SELECTOR)
+    )
+      continue;
     const fallback = root.querySelector('[data-mg-dialog-fallback]');
+    const summary = fallback?.querySelector(':scope > summary');
     const content = fallback?.querySelector('[data-mg-dialog-content]');
     const trigger = root.querySelector('[data-mg-dialog-trigger]');
-    const close = content?.querySelector('[data-mg-dialog-close]');
+    const closeButtons = [
+      ...(content?.querySelectorAll('[data-mg-dialog-close]') || []),
+    ];
+    const close = closeButtons[0];
     const title = content?.querySelector('[data-mg-dialog-title]');
     const doc = root.ownerDocument;
     const dialog = doc.createElement('dialog');
     // Incomplete markup and unsupported browsers retain the disclosure.
     if (
+      !summary ||
       !content ||
       !trigger ||
       !close ||
@@ -53,12 +73,13 @@ export function mgDialog(scope = document) {
     dialog.setAttribute('aria-labelledby', title.id);
     const placeholder = doc.createComment('mg-dialog content');
     content.before(placeholder);
-    const original = [fallback.hidden, trigger.hidden, close.hidden];
+    const original = [fallback.hidden, trigger.hidden];
+    const originalClose = closeButtons.map(button => button.hidden);
     dialog.append(content);
     root.append(dialog);
     fallback.hidden = true;
     trigger.hidden = false;
-    close.hidden = false;
+    for (const button of closeButtons) button.hidden = false;
     const oldPopup = trigger.getAttribute('aria-haspopup');
     trigger.setAttribute('aria-haspopup', 'dialog');
     let release;
@@ -112,23 +133,39 @@ export function mgDialog(scope = document) {
       pointerOutside = false;
     };
     trigger.addEventListener('click', open);
-    close.addEventListener('click', dismiss);
+    for (const button of closeButtons)
+      button.addEventListener('click', dismiss);
     dialog.addEventListener('close', finish);
     dialog.addEventListener('pointerdown', pointerdown);
     dialog.addEventListener('click', click);
     root[KEY] = () => {
+      const restoreFocus =
+        dialog.contains(doc.activeElement) || doc.activeElement === trigger;
       dismiss();
       trigger.removeEventListener('click', open);
-      close.removeEventListener('click', dismiss);
+      for (const button of closeButtons)
+        button.removeEventListener('click', dismiss);
       dialog.removeEventListener('close', finish);
       dialog.removeEventListener('pointerdown', pointerdown);
       dialog.removeEventListener('click', click);
       placeholder.replaceWith(content);
       dialog.remove();
-      [fallback.hidden, trigger.hidden, close.hidden] = original;
+      [fallback.hidden, trigger.hidden] = original;
+      closeButtons.forEach((button, index) => {
+        button.hidden = originalClose[index];
+      });
       if (oldPopup === null) trigger.removeAttribute('aria-haspopup');
       else trigger.setAttribute('aria-haspopup', oldPopup);
       delete root[KEY];
+      // The enhanced opener is hidden again. Keep keyboard position in the
+      // restored disclosure instead of leaving focus on that hidden button.
+      if (
+        restoreFocus &&
+        root.isConnected &&
+        !fallback.hidden &&
+        trigger.hidden
+      )
+        summary.focus({ preventScroll: true });
     };
   }
 }

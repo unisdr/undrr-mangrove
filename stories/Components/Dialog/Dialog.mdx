@@ -26,7 +26,7 @@ Keep mandatory report content in the page. Do not hide the only route to essenti
 
 ## Formatting and integration
 
-Supply a root `data-mg-dialog`, a hidden button `data-mg-dialog-trigger`, a disclosure `data-mg-dialog-fallback`, and its `data-mg-dialog-content`. Inside the content, provide a heading with a unique `id` and `data-mg-dialog-title`, and a hidden button `data-mg-dialog-close`. All buttons need `type="button"`. The module only enhances complete markup. Translate the authored summary, trigger, title, content and Close button on the server; this module creates no interface copy. Language and direction inherit from the root because the dialog remains inside it.
+Supply a root `data-mg-dialog`, a hidden button `data-mg-dialog-trigger`, a disclosure `data-mg-dialog-fallback` with its direct summary, and its `data-mg-dialog-content`. Inside the content, provide a heading with a unique `id` and `data-mg-dialog-title`, and at least one hidden button `data-mg-dialog-close`. Every marked Close control in the content dismisses the same dialog; an optional footer control can accompany the sticky header control. All buttons need `type="button"`. The module only enhances complete markup. Translate the authored summary, trigger, title, content and Close button on the server; this module creates no interface copy. Language and direction inherit from the root because the dialog remains inside it.
 
 ```html
 <div data-mg-dialog>
@@ -74,7 +74,7 @@ Supply a root `data-mg-dialog`, a hidden button `data-mg-dialog-trigger`, a disc
 
 Replace `{release}` with the first release containing this component (it is not available in 2.3.0) and use matching theme CSS, or `dist/assets/js/dialog.js` when testing this source build. No CSS-only open state is provided.
 
-The static module is automatically copied by the existing asset build and initializes once on page load. For Drupal behaviours or client navigation, import `mgDialog(scope)` and call `mgDialogDestroy(scope)` before detaching/replacing the subtree. Both accept a document or element, including the root itself. Initialization is idempotent across repeated calls. Do not nest roots or initialize the same content with another overlay lifecycle.
+The static module is automatically copied by the existing asset build and initializes once on page load. For Drupal behaviours or client navigation, import `mgDialog(scope)` and call `mgDialogDestroy(scope)` before detaching/replacing the subtree. Both accept a document or element, including the root itself. Initialization is idempotent across repeated calls. Do not nest roots or initialize the same content with another overlay lifecycle. Nested roots are deliberately left as authored disclosures; the enhancer does not borrow a descendant root’s content.
 
 There is no shipped Dialog Gutenberg block or validated editor round trip. A host-owned block/template may render this markup and attach the module through a reviewed Drupal library/behaviour; sanitization and editor preservation of attributes require integration testing. HTML comments alone do not demonstrate support.
 
@@ -83,10 +83,10 @@ There is no shipped Dialog Gutenberg block or validated editor round trip. A hos
 - The native `showModal()` top layer provides inert background content and keyboard containment. Escape, Close or a pointer press and release on the backdrop dismisses it. Starting a drag inside the surface and releasing outside does not dismiss it.
 - The heading names the modal through `aria-labelledby`. Use a unique ID on each instance. Do not set `aria-describedby` to an entire long reading body.
 - Focus goes to `data-mg-dialog-initial-focus` when supplied, otherwise Close. A reading heading needs `tabindex="-1"`. Focus returns to the opening control when it remains connected. Removing that opener requires the host to select a sensible next focus target.
-- The document root is scroll-locked while any Dialog instance is open. The last close restores the authored inline overflow value and priority. This lock coordinates instances of this primitive; simultaneously opening unrelated overlay systems is outside its contract.
+- The document root is scroll-locked while any Dialog instance is open. The last close restores the authored inline overflow declarations, including independent axes and priorities; unrelated inline style changes remain intact. This lock coordinates instances of this primitive; simultaneously opening unrelated overlay systems is outside its contract.
 - Long content scrolls within a viewport-bounded surface; the header and Close remain visible. Logical properties follow RTL. The page must provide fitting content; very wide tables or fixed-width embedded media need their own accessible overflow treatment.
 - Opening and closing are immediate with no animation, so reduced motion needs no alternate transition. Borders remain explicit under forced colours. Native dialog support and top-layer focus require real-browser checks; jsdom tests cannot prove them.
-- Destroying restores the same content nodes and original hidden states rather than cloning controls or losing their state. A failure to show a modal restores and opens the disclosure.
+- Destroying restores the same content nodes and original hidden states rather than cloning controls or losing their state. If focus was in the enhancement and its opener becomes hidden, focus moves to the restored disclosure summary; unrelated focus is preserved. A failure to show a modal restores and opens the disclosure.
 
 ## CSS and JavaScript references
 
@@ -96,4 +96,4 @@ The module exports `mgDialog` and `mgDialogDestroy`. It does not refactor Drawer
 
 ## Changelog
 
-- **0.1.0**, 2026-10-29: Added an experimental native dialog enhancement with authored disclosure fallback, short-message and long-reading examples, cleanup and lifecycle tests.
+- **0.1.0**, 2026-10-29: Added an experimental native dialog enhancement with authored disclosure fallback, short-message and long-reading examples, cleanup and lifecycle tests. Red-team checks cover queued close/reopen, trigger focus return, independent overflow axes/priorities, restored disclosure focus, multiple Close controls and safe fallback for unsupported nested roots.

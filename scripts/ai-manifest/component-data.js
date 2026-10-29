@@ -2122,7 +2122,7 @@ npm run build</code></pre>
       },
     ],
     vanillaModule: {
-      note: 'Enhances authored markup; does not generate content or translate labels. Call mgDialog(scope) after inserting markup and mgDialogDestroy(scope) before replacing it. Uses native showModal; unsupported browsers retain the disclosure. Do not nest roots or combine overlay lifecycles.',
+      note: 'Enhances authored markup; does not generate content or translate labels. Call mgDialog(scope) after inserting markup and mgDialogDestroy(scope) before replacing it. Uses native showModal; unsupported browsers retain the disclosure. Nested roots retain their disclosures without enhancement. Do not combine overlay lifecycles.',
       selector: '[data-mg-dialog]',
       modules: vanillaModules('dialog'),
       dataAttributes: {
@@ -2134,7 +2134,7 @@ npm run build</code></pre>
           'Content moved into the modal and restored on destroy.',
         'data-mg-dialog-title': 'Required heading with an authored unique id.',
         'data-mg-dialog-close':
-          'Initially hidden Close button, translated in the page.',
+          'Initially hidden Close controls, translated in the page; every marked control dismisses the dialog.',
         'data-mg-dialog-initial-focus':
           'Optional focus target; a heading needs tabindex=-1. Otherwise Close receives focus.',
       },
