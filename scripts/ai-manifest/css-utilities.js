@@ -160,7 +160,7 @@ export default {
         {
           class: 'mg-table--data',
           description:
-            'High-density data table styling with compact padding, subtle dividers, and uppercase styled headers.',
+            'High-density data table styling with compact padding, subtle dividers, and headers that preserve authored case.',
           usage: '<table class="mg-table mg-table--data">…</table>',
         },
         {
@@ -210,7 +210,7 @@ export default {
         {
           class: 'mg-badge--code',
           description:
-            'Monospace uppercase badge pill ideal for file formats (e.g. PDF, JSON, SVG, CSV).',
+            'Monospace badge pill preserving authored case, ideal for file formats (e.g. PDF, JSON, SVG, CSV).',
           usage: '<span class="mg-badge mg-badge--code">JSON</span>',
         },
       ],

@@ -68,7 +68,6 @@ const Template = args => (
                     display: 'block',
                     fontSize: '0.75em',
                     marginTop: '0.15rem',
-                    textTransform: 'uppercase',
                     letterSpacing: '0.05em',
                   }}
                 >

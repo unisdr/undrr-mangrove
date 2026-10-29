@@ -108,7 +108,6 @@ export const AllVariants = {
                 fontSize: '12px',
                 fontWeight: 600,
                 color: '#666',
-                textTransform: 'uppercase',
                 letterSpacing: '0.04em',
               }}
             >
@@ -158,7 +157,6 @@ export const AllVariants = {
                 fontSize: '12px',
                 fontWeight: 600,
                 color: '#666',
-                textTransform: 'uppercase',
                 letterSpacing: '0.04em',
               }}
             >
@@ -205,7 +203,6 @@ export const AllVariants = {
                 fontSize: '12px',
                 fontWeight: 600,
                 color: '#666',
-                textTransform: 'uppercase',
                 letterSpacing: '0.04em',
               }}
             >
@@ -326,7 +323,6 @@ export const AllVariants = {
                 fontSize: '12px',
                 fontWeight: 600,
                 color: 'rgba(255,255,255,0.7)',
-                textTransform: 'uppercase',
                 letterSpacing: '0.04em',
               }}
             >
