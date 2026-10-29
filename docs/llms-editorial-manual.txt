@@ -91,7 +91,7 @@ The United Nations Editorial Manual's italics rules are written for print/PDF do
 - **Non-English organization names are never italicized.** ([United Nations Editorial Manual, Italics and bold print](https://www.un.org/dgacm/en/content/editorial-manual/italics))
 - **Bold** is reserved for references to official United Nations documents, labels/categories, subheadings and sparing highlighted text, not general emphasis. ([UN Geneva style guide, Formatting content](https://www.ungeneva.org/en/styleguide))
 - **Underline** is reserved for subheadings and introducing named entities, never for emphasizing running text (and on the web, avoid it outright outside of links, since an underline reads as a link affordance). ([UN Geneva style guide, Formatting content](https://www.ungeneva.org/en/styleguide))
-- **No ALL CAPS** for emphasis anywhere in content. Where a design system displays a label in caps (e.g. a `text-transform: uppercase` chip or eyebrow style), the *authored* copy is still written in sentence case; the transform is presentation, not content. ([UN Geneva style guide, Formatting content](https://www.ungeneva.org/en/styleguide))
+- **Use sentence case in ordinary authored copy and presentation**, including labels, chips and eyebrows. Publication titles and navigation labels follow their specific conventions in [Capitalization](#capitalization) above. Do not use ALL CAPS for emphasis or force uppercase with CSS. Preserve legitimate acronyms (such as UNDRR, PDF and JSON), official names and brand marks as written. Keep code identifiers and case-sensitive syntax unchanged, including search operators such as `AND`, `OR` and `NOT`. ([UN Geneva style guide, Formatting content](https://www.ungeneva.org/en/styleguide))
 
 ## Spelling
 
