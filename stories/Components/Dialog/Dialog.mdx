@@ -82,6 +82,7 @@ There is no shipped Dialog Gutenberg block or validated editor round trip. A hos
 
 - The native `showModal()` top layer provides inert background content and keyboard containment. Escape, Close or a pointer press and release on the backdrop dismisses it. Starting a drag inside the surface and releasing outside does not dismiss it.
 - The heading names the modal through `aria-labelledby`. Use a unique ID on each instance. Do not set `aria-describedby` to an entire long reading body.
+- The title’s dual-band focus ring sits outside its text box, within the header padding, so the coloured band does not overlap glyphs.
 - Focus goes to `data-mg-dialog-initial-focus` when supplied, otherwise Close. A reading heading needs `tabindex="-1"`. Focus returns to the opening control when it remains connected. Removing that opener requires the host to select a sensible next focus target.
 - The document root is scroll-locked while any Dialog instance is open. The last close restores the authored inline overflow declarations, including independent axes and priorities; unrelated inline style changes remain intact. This lock coordinates instances of this primitive; simultaneously opening unrelated overlay systems is outside its contract.
 - Long content scrolls within a viewport-bounded surface; the header and Close remain visible. Logical properties follow RTL. The page must provide fitting content; very wide tables or fixed-width embedded media need their own accessible overflow treatment.
@@ -96,4 +97,4 @@ The module exports `mgDialog` and `mgDialogDestroy`. It does not refactor Drawer
 
 ## Changelog
 
-- **0.1.0**, 2026-10-29: Added an experimental native dialog enhancement with authored disclosure fallback, short-message and long-reading examples, cleanup and lifecycle tests. Red-team checks cover queued close/reopen, trigger focus return, independent overflow axes/priorities, restored disclosure focus, multiple Close controls and safe fallback for unsupported nested roots.
+- **0.1.0**, 2026-10-29: Added an experimental native dialog enhancement with authored disclosure fallback, short-message and long-reading examples, cleanup and lifecycle tests. Red-team checks cover queued close/reopen, trigger focus return, independent overflow axes/priorities, restored disclosure focus, multiple Close controls and safe fallback for unsupported nested roots. The title uses an outward focus ring to preserve text contrast when focused.

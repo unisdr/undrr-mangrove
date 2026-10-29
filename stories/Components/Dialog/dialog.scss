@@ -44,7 +44,8 @@
     font-size: var(--mg-font-size-400);
 
     &:focus-visible {
-      @include mg-focus-ring-inset;
+      // Header padding leaves room for an outward ring without covering text.
+      @include mg-focus-ring;
     }
   }
 
