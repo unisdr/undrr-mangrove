@@ -16,10 +16,10 @@ export const publicationPatterns = {
     fullPage: {
       status: 'reference',
       intent:
-        'Existing report/publication page reference; it is not a complete bibliographic detail-page contract.',
+        'Existing curated report landing page reference. The ordinary bibliographic publication record is a separate unimplemented, provisional specification within this archetype; this reference does not implement that record.',
       reference: {
         kind: 'Patterns/Content/Publication/Full page',
-        story: 'Report or publication',
+        story: 'Report landing page',
         id: 'patterns-landing-pages--report-landing',
       },
     },
