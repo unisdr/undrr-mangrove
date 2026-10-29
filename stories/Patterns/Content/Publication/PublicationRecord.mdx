@@ -16,7 +16,7 @@ Read the [source-grounded record specification](?path=/docs/patterns-content-pub
 
 The masthead, plain-title introduction, lede, shared reading measure and two-column scaffolding deliberately follow the [news-entry reference](?path=/docs/patterns-article-story--docs). The record keeps its own bibliographic roles and early resources.
 
-The default is a **synthetic editorial fixture**, including its cover, names, opaque identifier and supplied citation. Checked-in HTML and plain-text resources are usable demonstration reading files, not report downloads. Their language and format are known; no size, page count, link freshness or availability status is invented. The separate external-only example links to the real UNDRR Sendai Framework catalogue entry without claiming it is a PDF. The backup fixture points to an identical checked-in English HTML copy; it does not establish a verified external/local edition relationship.
+The default is a **synthetic editorial fixture**, including its cover, names, opaque identifier and supplied citation. Checked-in HTML and plain-text resources are usable demonstration reading files, not report downloads. Their language and format are known; no size, page count, link freshness or availability status is invented. The backup fixture points to an identical checked-in English HTML copy; it does not establish a verified external/local edition relationship.
 
 Toolbar labels are authored in seven languages and need native-speaker review before adoption. Work title, citation and full prose retain explicit work/content language independently of the interface and resource languages. The synthetic English cover is decorative because the adjacent title/year already identify the work. A real adapter supplies approved meaningful alternative text when the cover conveys additional information; it must not repeat the whole title unnecessarily.
 
@@ -35,7 +35,6 @@ The story owns `publication-record.scss` in addition to the shared Mangrove styl
 
 ## Missing and constrained content
 
-<Canvas of={Stories.Minimal} story={{ inline: false, height: '700px' }} />
 <Canvas of={Stories.NoCover} story={{ inline: false, height: '700px' }} />
 <Canvas of={Stories.NoFile} story={{ inline: false, height: '700px' }} />
 
@@ -43,7 +42,6 @@ Absent optional data leaves no empty cover, metadata row, resource section or ci
 
 ## Access roles
 
-<Canvas of={Stories.ExternalOnly} story={{ inline: false, height: '700px' }} />
 <Canvas of={Stories.LocalBackup} story={{ inline: false, height: '700px' }} />
 
 Every resource has an explicit descriptive primary link. A backup is separately labelled and never silently promoted when the primary URL is invalid. Root-relative and HTTP(S) URLs follow the shared ContentPattern URL contract; unsafe/protocol-relative URLs are omitted. Language, format and size are supplied facts, not inferred from extensions or URL text. Identifiers are opaque text; the renderer does not turn them into guessed DOI links.
@@ -51,9 +49,8 @@ Every resource has an explicit descriptive primary link. A backup is separately 
 ## Reflow and language stress
 
 <Canvas of={Stories.LongCopy} story={{ inline: false, height: '700px' }} />
-<Canvas of={Stories.RtlStress} story={{ inline: false, height: '700px' }} />
 
-The RTL fixture is a distinct mixed-language geometry check, not another locale export. The toolbar remains the interface-language selector. Long text and unbroken identifiers wrap; metadata and resources stay in DOM reading order. There is no sticky panel, constrained-height reader or new motion.
+The toolbar provides the standard interface-language and direction controls. Long text and unbroken identifiers wrap; metadata and resources stay in DOM reading order. There is no sticky panel, constrained-height reader or new motion.
 
 ## Projection and remaining gates
 
@@ -63,4 +60,4 @@ Before promoting this composition, review actual adapter fixtures against the pi
 
 ## Changelog
 
-- **0.1.0**, 2026-10-29 ([#1437](https://github.com/unisdr/undrr-mangrove/pull/1437), [#1432](https://github.com/unisdr/undrr-mangrove/issues/1432)): Add an experimental ordinary publication-record story composition, separate from report landing references. Give complete covers a thin neutral border consistent with book cards. Production adapter and reusable API remain unimplemented.
+- **0.1.0**, 2026-10-29 ([#1437](https://github.com/unisdr/undrr-mangrove/pull/1437), [#1432](https://github.com/unisdr/undrr-mangrove/issues/1432)): Add an experimental ordinary publication-record story composition, separate from report landing references. Give complete covers a thin neutral border consistent with book cards. Remove the title-only minimal, external-only and dedicated RTL stories; retain missing-content and resource regression coverage. Production adapter and reusable API remain unimplemented.

@@ -27,9 +27,6 @@ export const Standard = {
   name: 'Experimental publication record',
   args: { record: exampleRecord, children: exampleBody },
 };
-export const Minimal = {
-  args: { record: { title: 'Understanding disaster risk', lang: 'en' } },
-};
 export const NoCover = {
   name: 'No cover',
   args: { ...Standard.args, record: { ...exampleRecord, cover: undefined } },
@@ -37,29 +34,6 @@ export const NoCover = {
 export const NoFile = {
   name: 'No public file',
   args: { ...Standard.args, record: { ...exampleRecord, resources: [] } },
-};
-export const ExternalOnly = {
-  name: 'External access only',
-  args: {
-    record: {
-      title: 'Sendai Framework for Disaster Risk Reduction 2015–2030',
-      lang: 'en',
-      publicationYear: 2015,
-      sources: [
-        { label: 'United Nations – Headquarters', href: 'https://www.un.org' },
-        {
-          label: 'United Nations Office for Disaster Risk Reduction',
-          href: 'https://www.undrr.org',
-        },
-      ],
-      resources: [
-        {
-          label: 'Access the Sendai Framework publication record',
-          href: 'https://www.undrr.org/publication/sendai-framework-disaster-risk-reduction-2015-2030',
-        },
-      ],
-    },
-  },
 };
 // Duplicate local copy demonstrates original/backup roles without implying real external provenance.
 export const LocalBackup = {
@@ -115,41 +89,5 @@ export const LongCopy = {
         ))}
       </>
     ),
-  },
-};
-export const RtlStress = {
-  name: 'RTL / mixed-language stress',
-  args: {
-    record: {
-      ...exampleRecord,
-      title: 'فهم مخاطر الكوارث',
-      summary:
-        'مقدمة لفهم مخاطر الكوارث وتفسير الأدلة واستخدام المعلومات في اتخاذ القرارات.',
-      edition: 'طبعة توضيحية',
-      identifiers: ['مثال / ٢٠٢٦ / ٠١'],
-      lang: 'ar',
-      cover: undefined,
-      authors: ['مجموعة العمل التحريرية'],
-      sources: [],
-      citation: undefined,
-      resources: [],
-    },
-    children: (
-      <p lang="ar" dir="rtl">
-        نموذج تحريري لاختبار قراءة النص العربي مع الحفاظ على معنى البيانات
-        الببليوغرافية وترتيبها.
-      </p>
-    ),
-  },
-  render: (args, context) => {
-    const language = resolveLanguage(context.globals);
-    return (
-      <PublicationRecord
-        {...args}
-        lang={language.lang}
-        dir="rtl"
-        labels={RECORD_LABELS[language.locale] || RECORD_LABELS.english}
-      />
-    );
   },
 };

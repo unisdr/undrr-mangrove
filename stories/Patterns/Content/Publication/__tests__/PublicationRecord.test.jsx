@@ -5,7 +5,7 @@ import { axe } from 'jest-axe';
 import { PublicationRecord } from '../PublicationRecord';
 import { projectRecord } from '../recordProjection';
 import { RECORD_LABELS, exampleRecord, exampleBody } from '../recordFixtures';
-import meta, { Minimal, LongCopy } from '../PublicationRecord.stories';
+import meta, { LongCopy } from '../PublicationRecord.stories';
 
 const labels = RECORD_LABELS.english;
 const show = record =>
@@ -46,7 +46,12 @@ test('identity roles and early access retain structure and known precision', () 
 });
 
 test('minimal record omits unknown metadata, media, access and citation without fake status', () => {
-  const { container } = render(meta.render(Minimal.args, { globals: {} }));
+  const { container } = render(
+    meta.render(
+      { record: { title: 'Understanding disaster risk', lang: 'en' } },
+      { globals: {} }
+    )
+  );
   expect(screen.queryByRole('region')).not.toBeInTheDocument();
   expect(container.querySelector('main img')).toBeNull();
   expect(container.querySelector('time')).toBeNull();
