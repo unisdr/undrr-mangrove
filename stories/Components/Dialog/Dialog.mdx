@@ -1,0 +1,114 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './Dialog.stories';
+
+<Meta of={Stories} />
+
+{/* Before contributing, read docs/REVIEW-CHECKLIST.md. */}
+
+# Dialog
+
+A native modal for a short message or optional, focused reading. The dependency-free module enhances authored HTML; it does not require React, an import map or a hydration adapter. Its content remains in a disclosure if JavaScript or native dialog support is unavailable.
+
+## When to use
+
+| Pattern | Reader need                                                                    |
+| ------- | ------------------------------------------------------------------------------ |
+| Details | Reveal information in the page flow while preserving surrounding context.      |
+| Drawer  | Open edge-attached navigation, filters or supporting controls.                 |
+| Dialog  | Temporarily focus on a message or optional reading, then return to the opener. |
+
+Keep mandatory report content in the page. Do not hide the only route to essential instructions in a dialog. This primitive is dismissible; it is unsuitable for forcing an acknowledgement or an irreversible decision.
+
+## Examples
+
+<Canvas of={Stories.ShortMessage} story={{ inline: false, height: '600px' }} />
+<Canvas of={Stories.LongReading} story={{ inline: false, height: '600px' }} />
+<Canvas
+  of={Stories.ExpandedCloseLabel}
+  story={{ inline: false, height: '600px' }}
+/>
+
+The locale toolbar selects authored fixtures, including Close and the disclosure fallback; it does not demonstrate automatic runtime translation by the vanilla module. These example translations are drafts requiring native-speaker review. The expanded-label example exercises a distinct reflow condition with the same toolbar.
+
+## Formatting and integration
+
+Supply a root `data-mg-dialog`, a hidden button `data-mg-dialog-trigger`, a disclosure `data-mg-dialog-fallback` with its direct summary, and its `data-mg-dialog-content`. Inside the content, provide a heading with a unique `id` and `data-mg-dialog-title`, and at least one hidden button `data-mg-dialog-close`. Every marked Close control in the content dismisses the same dialog; an optional footer control can accompany the sticky header control. All buttons need `type="button"`. The module only enhances complete markup. Translate the authored summary, trigger, title, content and Close button on the server; this module creates no interface copy. Language and direction inherit from the root because the dialog remains inside it.
+
+```html
+<div data-mg-dialog>
+  <button
+    type="button"
+    class="mg-button mg-button-primary"
+    data-mg-dialog-trigger
+    hidden
+  >
+    Read the case study
+  </button>
+  <details data-mg-dialog-fallback>
+    <summary>Read the case study</summary>
+    <div data-mg-dialog-content>
+      <header class="mg-dialog__header">
+        <h2
+          id="case-study-title"
+          class="mg-dialog__title"
+          data-mg-dialog-title
+          data-mg-dialog-initial-focus
+          tabindex="-1"
+        >
+          Community resilience
+        </h2>
+        <button
+          type="button"
+          class="mg-button mg-button-secondary mg-dialog__close"
+          data-mg-dialog-close
+          hidden
+        >
+          Close
+        </button>
+      </header>
+      <div class="mg-dialog__body mg-content">
+        <p>The case study goes here.</p>
+      </div>
+    </div>
+  </details>
+</div>
+<script
+  type="module"
+  src="https://assets.undrr.org/mangrove/{release}/js/dialog.js"
+></script>
+```
+
+This component is **unreleased/build-only** and is not available in the published 2.3.0 JavaScript or CSS. For this source build, run `yarn build`, serve `dist/assets` as the web root, and place the authored markup in a page served from that root with `css/style.css` and `js/dialog.js`. The machine-readable example uses those relative local-build paths. Replace `{release}` in the production example above only after the first release containing Dialog is published and its matching CSS/module CDN URLs are verified. No CSS-only open state is provided.
+
+For a local smoke test, first run `yarn build`. After the build completes, save the authored page as `dist/assets/dialog-example.html` and include the generated example’s relative CSS/module paths. Then serve the assembled assets:
+
+```sh
+node scripts/serve-storybook.mjs dist/assets 6157
+```
+
+Open `http://localhost:6157/dialog-example.html`. Both `css/style.css` and `js/dialog.js` are beneath this web root; serving the page from the Storybook site or another directory without those assets is a different integration.
+
+The static module is automatically copied by the existing asset build and initializes once on page load. For Drupal behaviours or client navigation, import `mgDialog(scope)` and call `mgDialogDestroy(scope)` before detaching/replacing the subtree. Both accept a document or element, including the root itself. Initialization is idempotent across repeated calls. Do not nest roots or initialize the same content with another overlay lifecycle. Nested roots are deliberately left as authored disclosures; the enhancer does not borrow a descendant root’s content.
+
+There is no shipped Dialog Gutenberg block or validated editor round trip. A host-owned block/template may render this markup and attach the module through a reviewed Drupal library/behaviour; sanitization and editor preservation of attributes require integration testing. HTML comments alone do not demonstrate support.
+
+## Behaviours and accessibility
+
+- The native `showModal()` top layer provides inert background content and keyboard containment. Escape, Close or a pointer press and release on the backdrop dismisses it. Starting a drag inside the surface and releasing outside does not dismiss it.
+- The heading names the modal through `aria-labelledby`. Use a unique ID on each instance. Do not set `aria-describedby` to an entire long reading body.
+- The title’s dual-band focus ring sits outside its text box, within the header padding, so the coloured band does not overlap glyphs.
+- Focus goes to `data-mg-dialog-initial-focus` when supplied, otherwise Close. A reading heading needs `tabindex="-1"`. Focus returns to the opening control when it remains connected. Removing that opener requires the host to select a sensible next focus target.
+- The document root is scroll-locked while any Dialog instance is open. The last close restores the authored inline overflow declarations, including independent axes and priorities; unrelated inline style changes remain intact. This lock coordinates instances of this primitive; simultaneously opening unrelated overlay systems is outside its contract.
+- Long content scrolls within one viewport-bounded surface. With `ResizeObserver` support, the header and Close stay sticky only while the measured header occupies at most half the dialog viewport. Constrained heights or enlarged text use a normal-flow header so it cannot cover the reading area; Close remains reachable by keyboard, and Escape still dismisses the modal. The same safe normal-flow fallback applies without `ResizeObserver`. Measurements respond to viewport, font and header-content changes without moving focus or resetting scroll. Logical properties follow RTL. The page must provide fitting content; very wide tables or fixed-width embedded media need their own accessible overflow treatment.
+- Opening and closing are immediate with no animation, so reduced motion needs no alternate transition. Borders remain explicit under forced colours. Native dialog support and top-layer focus require real-browser checks; jsdom tests cannot prove them.
+- Destroying restores the same content nodes and original hidden states rather than cloning controls or losing their state. If focus was in the enhancement and its opener becomes hidden, focus moves to the restored disclosure summary; unrelated focus is preserved. A failure to show a modal restores and opens the disclosure.
+
+## CSS and JavaScript references
+
+The shared geometry and theme colour roles come from `dialog.scss`. The header wraps its Close control when the title and translated label need more room; both remain readable without collapsing the title column. The automatically managed `mg-dialog--sticky-header` class is internal enhancement state, not an authored styling API. The backdrop reads the existing complete-colour `--mg-color-modal-scrim` token directly, matching the citation dialog surface contract. There are no new public component properties; ordinary theme tokens supply colour, spacing, radius and typography. Use a narrowly scoped wrapper for report expression and preserve the bounded scrolling, readable contrast and focus states.
+
+The module exports `mgDialog` and `mgDialogDestroy`. It does not refactor Drawer, ShareButtons or CiteThis, whose existing APIs remain independent.
+
+## Changelog
+
+- **0.1.0**, 2026-10-29 ([#1435](https://github.com/unisdr/undrr-mangrove/pull/1435)): Added an experimental native dialog enhancement with authored disclosure fallback, short-message and long-reading examples, cleanup and lifecycle tests. Red-team checks cover queued close/reopen, trigger focus return, independent overflow axes/priorities, restored disclosure focus, multiple Close controls and safe fallback for unsupported nested roots. The title uses an outward focus ring to preserve text contrast when focused. Contribution review adds responsive expanded-label header geometry, the shared modal scrim role, locale-driven authored fixtures, generated copyable HTML, and an explicit unreleased local-build metadata recipe. Follow-up is tracked in [#1432](https://github.com/unisdr/undrr-mangrove/issues/1432).

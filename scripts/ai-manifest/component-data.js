@@ -2092,6 +2092,64 @@ npm run build</code></pre>
     ],
   },
 
+  'components-dialog': {
+    description:
+      'Unreleased/build-only experimental native modal enhancement for authored disclosures. Not available in the published 2.3.0 JavaScript or CSS; use matching local build assets until a release containing Dialog is published and its CDN paths are verified. Short messages and long reading share focus return, Escape/backdrop dismissal, viewport scrolling and cleanup. Content stays available without JavaScript; server-rendered labels own translation. No shipped Gutenberg block or validated editor round trip.',
+    summary:
+      'Unreleased/build-only native dialog for optional messages and long reading, with a disclosure fallback and no React dependency.',
+    cssClasses: [
+      'mg-dialog',
+      'mg-dialog--sticky-header',
+      'mg-dialog__header',
+      'mg-dialog__title',
+      'mg-dialog__body',
+      'mg-dialog__close',
+    ],
+    examples: [
+      {
+        name: 'Progressive disclosure',
+        html: `<div data-mg-dialog>
+  <button type="button" class="mg-button mg-button-primary" data-mg-dialog-trigger hidden>Read the case study</button>
+  <details data-mg-dialog-fallback><summary>Read the case study</summary>
+    <div data-mg-dialog-content>
+      <header class="mg-dialog__header">
+        <h2 id="case-study-title" class="mg-dialog__title" data-mg-dialog-title data-mg-dialog-initial-focus tabindex="-1">Community resilience</h2>
+        <button type="button" class="mg-button mg-button-secondary mg-dialog__close" data-mg-dialog-close hidden>Close</button>
+      </header>
+      <div class="mg-dialog__body mg-content"><p>The case study goes here.</p></div>
+    </div>
+  </details>
+</div>`,
+      },
+    ],
+    vanillaModule: {
+      note: 'Unreleased/build-only: this module and its CSS are not in published 2.3.0. Run yarn build and serve dist/assets as the local web root; the relative css/style.css and js/dialog.js paths in this example refer to that assembled build, not to the Storybook site or a released CDN folder. Verify matching pinned assets after the first release before using a CDN URL. Enhances authored markup; does not generate content or translate labels. Call mgDialog(scope) after inserting markup and mgDialogDestroy(scope) before replacing it. Uses native showModal; unsupported browsers retain the disclosure. Nested roots retain their disclosures without enhancement. The enhancer alone owns mg-dialog--sticky-header: it makes the header sticky only when ResizeObserver measurements leave at least half the dialog viewport for reading; otherwise it stays in normal flow with keyboard/Escape dismissal. Do not author that state class or combine overlay lifecycles.',
+      selector: '[data-mg-dialog]',
+      modules: { script: 'js/dialog.js' },
+      dataAttributes: {
+        'data-mg-dialog': 'Root; owns one authored disclosure and trigger.',
+        'data-mg-dialog-trigger': 'Initially hidden opening button.',
+        'data-mg-dialog-fallback':
+          'Authored details element available before enhancement.',
+        'data-mg-dialog-content':
+          'Content moved into the modal and restored on destroy.',
+        'data-mg-dialog-title': 'Required heading with an authored unique id.',
+        'data-mg-dialog-close':
+          'Initially hidden Close controls, translated in the page; every marked control dismisses the dialog.',
+        'data-mg-dialog-initial-focus':
+          'Optional focus target; a heading needs tabindex=-1. Otherwise Close receives focus.',
+      },
+      example: `<link rel="stylesheet" href="css/style.css">
+<div data-mg-dialog>
+  <button type="button" class="mg-button mg-button-primary" data-mg-dialog-trigger hidden>Read more</button>
+  <details data-mg-dialog-fallback><summary>Read more</summary><div data-mg-dialog-content>
+    <header class="mg-dialog__header"><h2 id="reading-title" class="mg-dialog__title" data-mg-dialog-title>Optional reading</h2><button type="button" class="mg-button mg-button-secondary mg-dialog__close" data-mg-dialog-close hidden>Close</button></header>
+    <div class="mg-dialog__body mg-content"><p>Supporting information.</p></div>
+  </div></details>
+</div>
+<script type="module" src="js/dialog.js"></script>`,
+    },
+  },
   'components-cite-this': {
     description:
       'Vanilla citation button and native dialog for detail pages. An empty data-mg-cite-this element uses the page title and URL; server-rendered disclosure markup preserves a no-JavaScript fallback. Prefer an approved citation, then configured metadata, a matching JSON-LD CreativeWork, or a page-title fallback. The script supplies copy feedback and bubbling analytics events; the host owns GA4 and consent. Event id is null for automatically URL-derived IDs containing a query: supply an approved data-mg-cite-this-id for per-work reporting without forwarding query values or merging distinct works.',
