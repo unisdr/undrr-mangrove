@@ -573,7 +573,6 @@ $search-input-padding-x: mg-rem(44);
   padding: var(--mg-spacing-25) var(--mg-spacing-50);
   background: $search-chip-bg;
   border-radius: $search-radius;
-  text-transform: uppercase;
   letter-spacing: 0.025em;
 }
 
@@ -1713,7 +1712,6 @@ $search-input-padding-x: mg-rem(44);
   margin-inline-end: var(--mg-spacing-25);
   color: $search-text-muted;
   font-weight: 600;
-  text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
