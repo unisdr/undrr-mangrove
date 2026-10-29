@@ -1,6 +1,37 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import LinkTo from '@storybook/addon-links/react';
+import { linkTo } from '@storybook/addon-links';
+
+/** The registry ID owns navigation; display labels and CSF titles can change. */
+function StoryReferenceLink({ reference, children }) {
+  const separator = reference.id.indexOf('--');
+  const kind = reference.id.slice(0, separator);
+  const story = reference.id.slice(separator + 2);
+  const handleClick = event => {
+    if (
+      event.button !== 0 ||
+      event.altKey ||
+      event.ctrlKey ||
+      event.metaKey ||
+      event.shiftKey
+    )
+      return;
+    event.preventDefault();
+    linkTo(reference.id)();
+  };
+  // LinkTo derives the native/new-tab href from the stable ID parts. Its
+  // ordinary click uses the addon's explicit storyId path, preserving the shell.
+  return (
+    <LinkTo kind={kind} story={story} onClick={handleClick}>
+      {children}
+    </LinkTo>
+  );
+}
+StoryReferenceLink.propTypes = {
+  reference: PropTypes.shape({ id: PropTypes.string.isRequired }).isRequired,
+  children: PropTypes.node.isRequired,
+};
 
 function Presentation({ name, presentation, children }) {
   return (
@@ -18,19 +49,16 @@ function Presentation({ name, presentation, children }) {
       <p>{presentation.intent}</p>
       {presentation.reference && (
         <p>
-          <LinkTo
-            kind={presentation.reference.kind}
-            story={presentation.reference.story}
-          >
+          <StoryReferenceLink reference={presentation.reference}>
             Open {name.toLowerCase()} reference
-          </LinkTo>
+          </StoryReferenceLink>
         </p>
       )}
       {presentation.additionalReferences?.map(reference => (
         <p key={reference.id}>
-          <LinkTo kind={reference.kind} story={reference.story}>
+          <StoryReferenceLink reference={reference}>
             {reference.story}
-          </LinkTo>
+          </StoryReferenceLink>
           : {reference.intent}
         </p>
       ))}
@@ -107,21 +135,19 @@ export function ContentFamilyGuide({ family, children, cardExamples }) {
               <strong>{profile.name}</strong> ({id}
               {id === family.defaultProfile ? '; default' : ''}):{' '}
               {profile.intent}{' '}
-              <LinkTo
-                kind={profile.presentations.teaser.reference.kind}
-                story={profile.presentations.teaser.reference.story}
+              <StoryReferenceLink
+                reference={profile.presentations.teaser.reference}
               >
                 Open teaser
-              </LinkTo>
+              </StoryReferenceLink>
               {profile.presentations.card?.reference && (
                 <>
                   {' · '}
-                  <LinkTo
-                    kind={profile.presentations.card.reference.kind}
-                    story={profile.presentations.card.reference.story}
+                  <StoryReferenceLink
+                    reference={profile.presentations.card.reference}
                   >
                     Open card
-                  </LinkTo>
+                  </StoryReferenceLink>
                   {profile.presentations.card.basis ===
                     'proposed-card-selection' && ' (proposed card selection)'}
                 </>

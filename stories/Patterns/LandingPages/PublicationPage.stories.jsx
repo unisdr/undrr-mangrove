@@ -27,7 +27,7 @@ export default {
 };
 
 export const ReportLanding = {
-  name: 'Report or publication',
+  name: 'Report landing page',
   args: { archetype: 'report' },
 };
 
@@ -68,8 +68,8 @@ const renderPublication = (reportBrand, id) => {
       className={`mg-publication-example${reportBrand ? ' mg-publication-example--branded' : ''}`}
       aria-label={
         reportBrand
-          ? 'Publication example with scoped branding'
-          : 'Publication example with theme defaults'
+          ? 'Report landing example with scoped branding'
+          : 'Report landing example with theme defaults'
       }
     >
       <Hero data={publicationHero(overviewId)} />
@@ -89,8 +89,8 @@ const renderPublication = (reportBrand, id) => {
           <StatsCard
             aria-label={
               reportBrand
-                ? 'Branded example publication details'
-                : 'Theme-default example publication details'
+                ? 'Branded report landing details'
+                : 'Theme-default report landing details'
             }
             variant="compact"
             stats={publicationStats}
@@ -119,11 +119,11 @@ const renderPublication = (reportBrand, id) => {
 };
 
 export const PublicationThemeDefaults = {
-  name: 'Publication with theme defaults',
+  name: 'Report landing with theme defaults',
   render: (_args, context) => renderPublication(false, context.id),
 };
 
 export const BrandedPublication = {
-  name: 'Publication with scoped report branding',
+  name: 'Report landing with scoped branding',
   render: (_args, context) => renderPublication(true, context.id),
 };

@@ -33,10 +33,12 @@ between sections, graduate to a [Content hub](?path=/docs/patterns-content-hub--
 
 <Canvas of={Stories.TopicLanding} />
 
-## Report or publication
+## Report landing page
 
-One long document with stable sections. A coloured masthead carries title and
-lede, and a contents sidebar helps readers jump to specific sections.
+A curated experience around a report, with selected web reading sections or
+routes into the document. A coloured masthead carries title and lede, and a
+contents sidebar helps readers jump to specific sections. This is not an
+ordinary bibliographic record: see the [unimplemented publication record specification](?path=/docs/patterns-content-publication-record-specification--docs) for that simpler detail-page purpose.
 
 <Canvas of={PublicationStories.ReportLanding} />
 
@@ -54,7 +56,7 @@ that link onward; skip the hero because the listings are the content.
 | If the page…                                                      | Use                                                   | Because                                                            |
 | ----------------------------------------------------------------- | ----------------------------------------------------- | ------------------------------------------------------------------ |
 | Introduces a subject and points several ways into it              | Topic                                                 | The routes are the content; the hero sets the subject              |
-| Is one long document people cite sections of                      | Report                                                | Contents links and a stable reading column matter more than routes |
+| Curates report findings, reading sections and document actions    | Report landing page                                   | Contents links and a stable reading column matter more than routes |
 | Exists to reach many items                                        | Collection index                                      | Grouped rows scan faster than prose, and no hero is needed         |
 | Is returned to repeatedly, with lateral movement between sections | [Content hub](?path=/docs/patterns-content-hub--docs) | It needs persistent identity and section navigation                |
 
@@ -89,6 +91,8 @@ hydration APIs are introduced here.
 > keeps examples aligned with real editor output.
 
 ## Changelog
+
+- **1.0.5**, 2026-10-29 ([#1436](https://github.com/unisdr/undrr-mangrove/pull/1436)): Clarify that the report reference is a curated landing page, distinct from the unimplemented ordinary publication-record specification; preserve story and docs routes.
 
 - **1.0.4**, 2026-10-16 ([#1383](https://github.com/unisdr/undrr-mangrove/pull/1383)): Group topic, publication and collection-index examples under their owning content families; preserve existing story and docs IDs.
 

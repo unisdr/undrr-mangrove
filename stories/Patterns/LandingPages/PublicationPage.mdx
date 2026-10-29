@@ -4,11 +4,22 @@ import * as Stories from './PublicationPage.stories';
 
 <Meta title="Patterns/Content/Publication/Full page" />
 
-# Publication full-page reference
+# Report landing page references
 
-A long report or publication with a masthead, contents navigation and reading sections.
+Curated report experiences with a masthead, narrative or reading sections, and routes to the report. These examples are not the default detail page for an ordinary Drupal publication record.
 
 This is a presentation of the <LinkTo kind="Patterns/Content/Publication" story="docs">Publication archetype</LinkTo>, not another content type. Its domain contract remains provisional.
+
+## Choose the publication presentation
+
+| Reader task                                                                                                           | Presentation                                  | Current Mangrove status                                                                                                                                                            |
+| --------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Understand a flagship report through curated narrative, selected findings, web reading sections and report actions    | Report landing page                           | The references and branding examples on this page. They require editorial composition.                                                                                             |
+| Identify one work, assess its description and bibliographic details, and find available files or citation information | Ordinary publication record / catalogue entry | [Provisional record specification](?path=/docs/patterns-content-publication-record-specification--docs), unimplemented. No record renderer, import or Gutenberg block is supplied. |
+
+Both concern the Publication archetype. A report landing page can link to a record or directly to an approved reading resource; this does not make their field selection, canonical/citation URL or editorial purpose interchangeable. An ordinary record does not need a campaign hero, key-statistics band or bespoke section navigation merely because its document is a report.
+
+## Curated report reference
 
 <Canvas
   of={Stories.ReportLanding}
@@ -61,6 +72,6 @@ For release review, compare both canvases across all five themes at narrow and w
 
 ## Changelog
 
-- **0.2.0**, 2026-10-29: Add paired theme-default and scoped report-branding examples with dark-surface secondary CTAs, compact statistics and integration boundaries. Isolate full-page canvases, distinguish their landmark names and keep local anchors within their own document; link complete story source and its consumer-owned stylesheet for generated metadata readers.
+- **0.2.0**, 2026-10-29 ([#1436](https://github.com/unisdr/undrr-mangrove/pull/1436)): Add paired theme-default and scoped report-branding examples with dark-surface secondary CTAs, compact statistics and integration boundaries. Isolate full-page canvases, distinguish their landmark names and keep local anchors within their own document; link complete story source and its consumer-owned stylesheet for generated metadata readers. Distinguish these curated report landings from ordinary publication records and link the source-grounded, unimplemented record specification. Family-guide reference links use their existing stable registry IDs rather than display-name slugs. Tracked in [#1432](https://github.com/unisdr/undrr-mangrove/issues/1432).
 
 - **0.1.0**, 2026-10-17 ([#1383](https://github.com/unisdr/undrr-mangrove/pull/1383)): Place this existing full-page reference beneath its content archetype; preserve its story URL.
