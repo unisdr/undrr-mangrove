@@ -71,7 +71,7 @@ const Template = args => (
                     letterSpacing: '0.05em',
                   }}
                 >
-                  {item.status || 'new'}
+                  {!item.status || item.status === 'new' ? 'New' : item.status}
                 </span>
               </>
             ) : (
