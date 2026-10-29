@@ -2508,7 +2508,7 @@ ${DOCS_BASE}ai-components/components-icons.json
 - Gutenberg page: start with ${DOCS_BASE}llms-page-building.txt for page shapes, block support and Hero versus HubHeader, then selected component details.
 - Copy: start with ${DOCS_BASE}llms-editorial-manual.txt and the relevant content guide.
 - Search configuration: start with ${DOCS_BASE}llms-search-widget.txt. For structured metadata, use the dedicated manifest URL named in llms.json.
-- CSS-property validation: combine the theme dictionary, selected component \`customProperties.properties\`, and exact global declarations from the matching release sources. Keep source versions with the result. A missing record, failed fetch or mismatched version is unresolved, not proof of invalid CSS. Follow \`format\`/\`wrapInRgb\`, never a colour-name prefix; a default value is not a value grammar. Full recipe (fetchable Markdown): ${PUBLIC_REPO_RAW_MAIN}docs/AI-MCP-INTEGRATION.md#consumer-validation-recipe
+- CSS-property validation: combine the theme dictionary, selected component \`customProperties.properties\`, and exact global declarations from the matching release sources. Keep source versions with the result; index.json uses \`library.version\`, while component detail files carry no individual release version. Use the exact npm release archive or a verified immutable source commit for global declarations, not moving main or guessed tags. A missing record, failed fetch or mismatched version is unresolved, not proof of invalid CSS. Follow \`format\`/\`wrapInRgb\`, never a colour-name prefix; a default value is not a value grammar. Full recipe (fetchable Markdown): ${PUBLIC_REPO_RAW_MAIN}docs/AI-MCP-INTEGRATION.md#consumer-validation-recipe
 
 ### Vanilla HTML quick start
 
