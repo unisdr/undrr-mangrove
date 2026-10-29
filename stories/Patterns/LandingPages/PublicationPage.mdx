@@ -10,7 +10,10 @@ A long report or publication with a masthead, contents navigation and reading se
 
 This is a presentation of the <LinkTo kind="Patterns/Content/Publication" story="docs">Publication archetype</LinkTo>, not another content type. Its domain contract remains provisional.
 
-<Canvas of={Stories.ReportLanding} />
+<Canvas
+  of={Stories.ReportLanding}
+  story={{ inline: false, height: '1000px' }}
+/>
 
 <Controls of={Stories.ReportLanding} />
 
@@ -20,17 +23,23 @@ For composition and Drupal Gutenberg guidance, see [Building landing pages](?pat
 
 A publication can have its own visual identity while its host site keeps navigation, controls and reading conventions consistent. Start with the selected site theme and component props, then supported custom properties. Add a narrowly scoped consumer rule only for a requirement those controls do not cover.
 
-These paired examples use the same illustrative content, the native Hero with primary and secondary editorial CTAs on a dark surface, and `StatsCard variant="compact"`. The figures describe the example page; they are not research findings. These canvases isolate the report body. The existing full-page reference above supplies the surrounding site chrome; use the host site's approved header, navigation and footer in production.
+These paired examples use the same illustrative content, the native Hero with primary and secondary editorial CTAs on a dark surface, and `StatsCard variant="compact"`. The figures describe the example page; they are not research findings. These canvases isolate each report in its own iframe, so its main landmark, heading hierarchy and local section links belong to that example rather than the surrounding documentation. The paired examples show the report body. The local overview action explicitly uses the supported `button.target="_self"` field: Storybook sets a parent navigation target inside iframe canvases, and an in-page action must stay in its own document. The existing full-page reference above supplies the surrounding site chrome; use the host site's approved header, navigation and footer in production.
 
 ### 1. Start with theme defaults and native variants
 
-<Canvas of={Stories.PublicationThemeDefaults} />
+<Canvas
+  of={Stories.PublicationThemeDefaults}
+  story={{ inline: false, height: '1000px' }}
+/>
 
 The `mg-content` boundary marks the consumer-authored reading sections so native prose links retain their underlining; composed controls stay outside it. No report override is needed to make statistics compact. The existing variant adjusts both padding and internal spacing. Hero owns its heading role, responsive layout and dark-surface CTA/focus treatment; its secondary CTA is the editorial arrow-link treatment, not a hand-restyled conventional button.
 
 ### 2. Apply scoped publication expression
 
-<Canvas of={Stories.BrandedPublication} />
+<Canvas
+  of={Stories.BrandedPublication}
+  story={{ inline: false, height: '1000px' }}
+/>
 
 | Before                                           | After                                                                                                                                                 |
 | ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -38,7 +47,7 @@ The `mg-content` boundary marks the consumer-authored reading sections so native
 | Hero uses its default copy width.                | A rule scoped to this report sets documented `--mg-hero-overlay-max-width: 44rem` on `.mg-hero`, keeping copy and protective veil geometry connected. |
 | Consumer-authored overview prose has no accent.  | A report-scoped rule adds a logical start border and token-based padding to `.mg-publication-example__intro`. It does not target component internals. |
 
-The complete consumer stylesheet is `publication-example.scss` beside these stories. The property rule targets the actual Hero element because a value declared there can override an inherited wrapper value. Fetch a component's `customProperties` records and theme `tokens.json` for the supported scope, defaults and value formats. `--mg-color-hero` takes channels; use `rgb()` at a colour use site, not around the value assigned here. Avoid copying these rules globally or replacing the site's typography roles with font-family literals.
+The [complete example source](https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Patterns/LandingPages/PublicationPage.stories.jsx) includes the private story render helper, content and native component composition. The [consumer stylesheet](https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Patterns/LandingPages/publication-example.scss) is imported only by the stories; copy or adapt it explicitly in the host project. Generated story snippets that call `renderPublication` are references to this local helper, not standalone examples or a published component import. These source links follow the latest branch; match source and component contracts to the loaded library version when integrating. The property rule targets the actual Hero element because a value declared there can override an inherited wrapper value. Fetch a component's `customProperties` records and theme `tokens.json` for the supported scope, defaults and value formats. `--mg-color-hero` takes channels; use `rgb()` at a colour use site, not around the value assigned here. Avoid copying these rules globally or replacing the site's typography roles with font-family literals.
 
 ### Keep shared behaviour with the component
 
@@ -52,6 +61,6 @@ For release review, compare both canvases across all five themes at narrow and w
 
 ## Changelog
 
-- **0.2.0**, 2026-10-29: Add paired theme-default and scoped report-branding examples with dark-surface secondary CTAs, compact statistics and integration boundaries.
+- **0.2.0**, 2026-10-29: Add paired theme-default and scoped report-branding examples with dark-surface secondary CTAs, compact statistics and integration boundaries. Isolate full-page canvases, distinguish their landmark names and keep local anchors within their own document; link complete story source and its consumer-owned stylesheet for generated metadata readers.
 
 - **0.1.0**, 2026-10-17 ([#1383](https://github.com/unisdr/undrr-mangrove/pull/1383)): Place this existing full-page reference beneath its content archetype; preserve its story URL.

@@ -39,7 +39,12 @@ const publicationHero = overviewId => [
     summaryText:
       'An example report landing page: keep the evidence readable, the actions clear and the publication identity within the site theme.',
     buttons: [
-      { label: 'Read the overview', type: 'Primary', url: `#${overviewId}` },
+      {
+        label: 'Read the overview',
+        type: 'Primary',
+        url: `#${overviewId}`,
+        target: '_self',
+      },
       {
         label: 'Browse publications',
         type: 'Secondary',
@@ -61,6 +66,11 @@ const renderPublication = (reportBrand, id) => {
   return (
     <main
       className={`mg-publication-example${reportBrand ? ' mg-publication-example--branded' : ''}`}
+      aria-label={
+        reportBrand
+          ? 'Publication example with scoped branding'
+          : 'Publication example with theme defaults'
+      }
     >
       <Hero data={publicationHero(overviewId)} />
       <div className="mg-container mg-demo-shell">
@@ -74,10 +84,14 @@ const renderPublication = (reportBrand, id) => {
             </p>
           </div>
         </section>
-        <section className="mg-demo-band" aria-labelledby={statsHeadingId}>
+        <section className="mg-demo-band">
           <h2 id={statsHeadingId}>At a glance</h2>
           <StatsCard
-            aria-label="Example publication details"
+            aria-label={
+              reportBrand
+                ? 'Branded example publication details'
+                : 'Theme-default example publication details'
+            }
             variant="compact"
             stats={publicationStats}
           />

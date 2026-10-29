@@ -2325,7 +2325,7 @@ npm run build</code></pre>
     summary:
       'Full-page references grouped by archetype: topic under Landing page, report under Publication, and collection index under Collection.',
     description:
-      'Full-page composition references: topic or initiative under Landing page, report under Publication and collection index under Collection. These demonstrate composition, not a one-to-one mapping from Drupal bundles to domain models.',
+      'Full-page composition references: topic or initiative under Landing page, report under Publication and collection index under Collection. These demonstrate composition, not a one-to-one mapping from Drupal bundles to domain models. The publication branding examples are story-only compositions, not published component imports; their generated JSX snippets call a private renderPublication helper and are not standalone. Publication guide: https://mangrove.undrr.org/?path=/docs/patterns-content-publication-full-page--docs . Full example source: https://raw.githubusercontent.com/PreventionWeb/undrr-mangrove/main/stories/Patterns/LandingPages/PublicationPage.stories.jsx . Required consumer-owned stylesheet: https://raw.githubusercontent.com/PreventionWeb/undrr-mangrove/main/stories/Patterns/LandingPages/publication-example.scss . These moving-main source links are discovery aids; match the source and component contracts to the loaded library build before adapting them.',
   },
 
   'example-page-template-example': {
