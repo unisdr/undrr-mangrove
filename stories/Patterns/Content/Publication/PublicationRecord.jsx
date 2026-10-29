@@ -4,6 +4,19 @@ import { SkipLink } from '../../../Utilities/SkipLink/SkipLink';
 import { projectRecord } from './recordProjection';
 import { UndrrChrome } from '../../_shared/UndrrChrome';
 
+function RecordNames({ entries }) {
+  return (
+    <ul>
+      {entries.map((entry, index) => (
+        <li key={index}>{entry}</li>
+      ))}
+    </ul>
+  );
+}
+RecordNames.propTypes = {
+  entries: PropTypes.arrayOf(PropTypes.node).isRequired,
+};
+
 /** Experimental story-owned composition, not a published package renderer. */
 export function PublicationRecord({
   record,
@@ -21,13 +34,6 @@ export function PublicationRecord({
     value.details.length > 0;
   const hasAside = value.cover || hasDetails;
   const chromeLocale = lang === 'ar' ? 'arabic' : 'english';
-  const names = entries => (
-    <ul>
-      {entries.map((entry, index) => (
-        <li key={index}>{entry}</li>
-      ))}
-    </ul>
-  );
   return (
     <div lang={lang} dir={dir} className="mg-publication-record">
       <SkipLink targetId={`${prefix}-main`} label={labels.skip} />
@@ -71,7 +77,7 @@ export function PublicationRecord({
                   <div>
                     <dt>{labels.authors}</dt>
                     <dd lang={value.lang} dir="auto">
-                      {names(value.authors)}
+                      <RecordNames entries={value.authors} />
                     </dd>
                   </div>
                 )}
@@ -79,8 +85,8 @@ export function PublicationRecord({
                   <div>
                     <dt>{labels.sources}</dt>
                     <dd lang={value.lang} dir="auto">
-                      {names(
-                        value.sources.map((source, index) =>
+                      <RecordNames
+                        entries={value.sources.map((source, index) =>
                           source.href ? (
                             <a key={index} href={source.href}>
                               {source.label}
@@ -88,8 +94,8 @@ export function PublicationRecord({
                           ) : (
                             source.label
                           )
-                        )
-                      )}
+                        )}
+                      />
                     </dd>
                   </div>
                 )}
@@ -251,7 +257,7 @@ export function PublicationRecord({
                         <div>
                           <dt>{labels.identifiers}</dt>
                           <dd lang={value.lang} dir="auto">
-                            {names(value.identifiers)}
+                            <RecordNames entries={value.identifiers} />
                           </dd>
                         </div>
                       )}
