@@ -104,5 +104,7 @@
     display: block;
     inline-size: 100%;
     block-size: auto;
+    padding: 0;
+    border: 1px solid rgb(var(--mg-color-neutral-600) / 0.2);
   }
 }
