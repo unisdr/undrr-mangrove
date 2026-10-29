@@ -54,6 +54,8 @@
 // ---------------------------------------------------------------------------
 
 export const REQUIRES_REACT = {
+  'patterns-publication-record':
+    'Story-only React composition, not a published renderer/import. Its included PageHeader/MegaMenu shell retains React/hydration requirements; the record content and native resource links can be emitted as static HTML without JavaScript. Consumers supply an approved host shell.',
   'design-decisions-language-boundaries':
     'Storybook integration demo measuring rendered font families across nested Arabic and Latin language boundaries. Requires React and browser layout APIs for live measurements; this is a documentation specimen, not a reusable production component.',
 
@@ -2379,11 +2381,30 @@ npm run build</code></pre>
       'Article full-page reference within the Article archetype: headline, hero image, reading body and related content. imageProminence controls the header treatment: bleeds full width (large), stays in the reading column (compact), or runs a two-column Hero split band (split). heroImage controls whether the header shows the same image used for teasers/social cards, a different one, or none. Composes VerticalCard, TableOfContents and mg-reading.',
   },
 
+  'patterns-publication-record': {
+    summary:
+      'Experimental story-only bibliographic publication record with early access links, optional complete cover and distinct metadata roles.',
+    description:
+      'Experimental story-owned composition, not a published package component: no PublicationRecord import or production CMS adapter exists. The included PageHeader/MegaMenu shell retains its React/hydration contracts; whole-story HTML alone does not activate navigation controls. Record content and native access links remain usable as static HTML without JavaScript. Semantic HTML identifies one work with authors, issuing sources, publication year, early primary/backup resource links, optional complete cover, rich prose, opaque identifiers and supplied verbatim citation. Uses shared Mangrove CSS plus consumer-owned publication-record.scss; that stylesheet is not in css/style.css. Fixtures are illustrative, not a production adapter. The record specification documents pinned Drupal provenance and remaining consumer integration gates. Docs: https://mangrove.undrr.org/?path=/docs/patterns-publication-record--docs . Source: stories/Patterns/Content/Publication/PublicationRecord.jsx and publication-record.scss in the matching repository revision. Never infer citation, file status or work identity from the Storybook URL.',
+    cssClasses: [
+      'mg-publication-record',
+      'mg-publication-record__metadata',
+      'mg-publication-record__resources',
+      'mg-publication-record__reading',
+      'mg-publication-record__layout',
+      'mg-publication-record__header',
+      'mg-publication-record__identity',
+      'mg-publication-record__main',
+      'mg-publication-record__aside',
+      'mg-publication-record__cover',
+    ],
+  },
+
   'patterns-landing-pages': {
     summary:
       'Full-page references grouped by archetype: topic under Landing page, report under Publication, and collection index under Collection.',
     description:
-      'Full-page composition references: topic or initiative under Landing page, curated report landing under Publication and collection index under Collection. The report examples do not implement an ordinary bibliographic publication record. Its provisional, unimplemented specification is at https://mangrove.undrr.org/?path=/docs/patterns-content-publication-record-specification--docs ; fetchable source: https://raw.githubusercontent.com/PreventionWeb/undrr-mangrove/main/docs/PUBLICATION-RECORD-SPEC.md . These demonstrate composition, not a one-to-one mapping from Drupal bundles to domain models. The publication branding examples are story-only compositions, not published component imports; their generated JSX snippets call a private renderPublication helper and are not standalone. Publication guide: https://mangrove.undrr.org/?path=/docs/patterns-content-publication-full-page--docs . Full example source: https://raw.githubusercontent.com/PreventionWeb/undrr-mangrove/main/stories/Patterns/LandingPages/PublicationPage.stories.jsx . Required consumer-owned stylesheet: https://raw.githubusercontent.com/PreventionWeb/undrr-mangrove/main/stories/Patterns/LandingPages/publication-example.scss . These moving-main source links are discovery aids; match the source and component contracts to the loaded library build before adapting them.',
+      'Full-page composition references: topic or initiative under Landing page, curated report landing under Publication and collection index under Collection. The report examples do not implement an ordinary bibliographic publication record. An experimental story-only record composition is documented at https://mangrove.undrr.org/?path=/docs/patterns-publication-record--docs ; production integration and a published renderer remain unimplemented. Its provisional specification is at https://mangrove.undrr.org/?path=/docs/patterns-content-publication-record-specification--docs ; fetchable source: https://raw.githubusercontent.com/PreventionWeb/undrr-mangrove/main/docs/PUBLICATION-RECORD-SPEC.md . These demonstrate composition, not a one-to-one mapping from Drupal bundles to domain models. The publication branding examples are story-only compositions, not published component imports; their generated JSX snippets call a private renderPublication helper and are not standalone. Publication guide: https://mangrove.undrr.org/?path=/docs/patterns-content-publication-full-page--docs . Full example source: https://raw.githubusercontent.com/PreventionWeb/undrr-mangrove/main/stories/Patterns/LandingPages/PublicationPage.stories.jsx . Required consumer-owned stylesheet: https://raw.githubusercontent.com/PreventionWeb/undrr-mangrove/main/stories/Patterns/LandingPages/publication-example.scss . These moving-main source links are discovery aids; match the source and component contracts to the loaded library build before adapting them.',
   },
 
   'example-page-template-example': {

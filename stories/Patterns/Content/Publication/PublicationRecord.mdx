@@ -1,0 +1,66 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
+import * as Stories from './PublicationRecord.stories';
+
+<Meta of={Stories} />
+
+# Publication record prototype
+
+**Experimental, story-only composition.** This ordinary bibliographic record identifies a work and puts usable resources before its full description. It is distinct from the curated <LinkTo kind="patterns-landing-pages" story="report-landing">report landing page</LinkTo>. There is no published `PublicationRecord` package import, canonical record schema or production Drupal adapter. Consumer integration remains unimplemented.
+
+Read the [source-grounded record specification](?path=/docs/patterns-content-publication-record-specification--docs) for Drupal provenance, public-field selection and deliberate departures. This prototype implements the proposed reading hierarchy, not Drupal rendering parity. The adapter must select approved public content, resolve domain eligibility, sanitize CMS prose and validate resource provenance before producing the presentation.
+
+## Standard record
+
+<Canvas of={Stories.Standard} story={{ inline: false, height: '700px' }} />
+
+The masthead, plain-title introduction, lede, shared reading measure and two-column scaffolding deliberately follow the [news-entry reference](?path=/docs/patterns-article-story--docs). The record keeps its own bibliographic roles and early resources.
+
+The default is a **synthetic editorial fixture**, including its cover, names, opaque identifier and supplied citation. Checked-in HTML and plain-text resources are usable demonstration reading files, not report downloads. Their language and format are known; no size, page count, link freshness or availability status is invented. The separate external-only example links to the real UNDRR Sendai Framework catalogue entry without claiming it is a PDF. The backup fixture points to an identical checked-in English HTML copy; it does not establish a verified external/local edition relationship.
+
+Toolbar labels are authored in seven languages and need native-speaker review before adoption. Work title, citation and full prose retain explicit work/content language independently of the interface and resource languages. The synthetic English cover is decorative because the adjacent title/year already identify the work. A real adapter supplies approved meaningful alternative text when the cover conveys additional information; it must not repeat the whole title unnecessarily.
+
+## News-entry foundation and publication adaptations
+
+| News-entry foundation                                          | Record adaptation                                                                                                                                                                                                                                                                                                                                                       |
+| -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Skip link, one focusable main, plain H1 and container          | Same semantic entry and navigation; the host supplies its own approved site shell. The actual UndrrChrome masthead and navigation are reused. Its English/Arabic fixture coverage is explicit: other toolbar locales retain an English-labelled shell within `lang="en"`, while record labels use the selected locale. Consumers supply their approved localized shell. |
+| Shared reading measure and `mg-content` editorial boundary     | Full description uses the existing 46rem maximum reading measure; component-owned access and metadata remain outside prose.                                                                                                                                                                                                                                             |
+| News date and flat linked source byline                        | Distinct labelled author/source lists and a year-only `time`; no posting date or clock-derived fallback. Other supplied date roles remain explicitly labelled text.                                                                                                                                                                                                     |
+| Optional photo, Hero, sharing, contents rail and related cards | Optional complete uncropped cover and bibliography occupy the article layout’s modest rail; early resource rows and full prose remain in its reading column. Compact labelled attribution replaces the news byline. No news photograph, ToC or inferred Storybook sharing target.                                                                                       |
+
+An optional supplied standfirst follows the news-entry lede treatment. This is a proposed presentation capability, not permission to promote Drupal’s hidden `field_short_description` or trim its full body automatically. Omit it when no approved standfirst exists. The synthetic citation is supplied illustrative text whose authors/source agree with the displayed fixture; it is never generated from the source organization.
+
+The story owns `publication-record.scss` in addition to the shared Mangrove stylesheet and `pattern-demo.scss`. The record stylesheet is not shipped in `css/style.css`; consumers must review and own this composition when adapting it. Copyable Show code uses the rendered HTML, not a private JSX helper call. The record content and native access links work as static HTML without React hydration or JavaScript. The included PageHeader/MegaMenu demonstration shell retains its own React/hydration contracts: copying whole-story HTML does not activate its hamburger, language menu or navigation dropdowns. Supply an approved host shell and its required behavior separately. Native links use the current browsing context; approved host policy may choose otherwise with an accessible warning.
+
+## Missing and constrained content
+
+<Canvas of={Stories.Minimal} story={{ inline: false, height: '700px' }} />
+<Canvas of={Stories.NoCover} story={{ inline: false, height: '700px' }} />
+<Canvas of={Stories.NoFile} story={{ inline: false, height: '700px' }} />
+
+Absent optional data leaves no empty cover, metadata row, resource section or citation controls. No-file does not mean unavailable: the prototype omits unknown access information. An adapter may supply an editorially approved explanation rather than manufacture a download.
+
+## Access roles
+
+<Canvas of={Stories.ExternalOnly} story={{ inline: false, height: '700px' }} />
+<Canvas of={Stories.LocalBackup} story={{ inline: false, height: '700px' }} />
+
+Every resource has an explicit descriptive primary link. A backup is separately labelled and never silently promoted when the primary URL is invalid. Root-relative and HTTP(S) URLs follow the shared ContentPattern URL contract; unsafe/protocol-relative URLs are omitted. Language, format and size are supplied facts, not inferred from extensions or URL text. Identifiers are opaque text; the renderer does not turn them into guessed DOI links.
+
+## Reflow and language stress
+
+<Canvas of={Stories.LongCopy} story={{ inline: false, height: '700px' }} />
+<Canvas of={Stories.RtlStress} story={{ inline: false, height: '700px' }} />
+
+The RTL fixture is a distinct mixed-language geometry check, not another locale export. The toolbar remains the interface-language selector. Long text and unbroken identifiers wrap; metadata and resources stay in DOM reading order. There is no sticky panel, constrained-height reader or new motion.
+
+## Projection and remaining gates
+
+`recordProjection.js` is a small experimental presentation filter. It requires an approved title, preserves author/source list order, keeps publication year separate from caller-labelled date roles, and omits unsafe links and absent values. It is not a CMS access-control layer, date parser, bibliography validator, link checker or complete domain model. The story accepts trusted authored React prose; arbitrary CMS HTML must be sanitized upstream before it enters an `mg-content` boundary. The prototype neither creates citation text nor invokes ShareButtons against the Storybook URL.
+
+Before promoting this composition, review actual adapter fixtures against the pinned Drupal audit; verify public/domain selection, historical original-language titles, dates, external-primary/local-backup identity and real content-language metadata. Complete consumer integration and editorial/native-speaker/accessibility review remain gates. Synthetic fixtures and automated checks do not prove deployed Drupal parity, usability research or a complete accessibility audit.
+
+## Changelog
+
+- **0.1.0**, 2026-10-29 ([#1432](https://github.com/unisdr/undrr-mangrove/issues/1432)): Add an experimental ordinary publication-record story composition, separate from report landing references. Production adapter and reusable API remain unimplemented.
