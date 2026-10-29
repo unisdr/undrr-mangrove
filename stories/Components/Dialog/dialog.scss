@@ -19,15 +19,16 @@
   font-family: var(--mg-font-family-text);
 
   &::backdrop {
-    background: rgb(var(--mg-color-black) / 0.55);
+    background: var(--mg-color-modal-scrim);
   }
 
   &__header {
-    // Local stacking keeps the close control above reading content while scrolling.
-    position: sticky;
+    // Normal flow stays readable when a viewport or enlarged text leaves too
+    // little reading space. The enhancer enables sticky mode only when it fits.
     z-index: 1;
     inset-block-start: 0;
     display: flex;
+    flex-wrap: wrap;
     align-items: start;
     justify-content: space-between;
     gap: var(--mg-spacing-200);
@@ -36,7 +37,13 @@
     border-block-end: 1px solid rgb(var(--mg-color-neutral-300));
   }
 
+  &--sticky-header &__header {
+    // Local stacking keeps Close visible without covering the reading region.
+    position: sticky;
+  }
+
   &__title {
+    flex: 1 1 12rem;
     min-inline-size: 0;
     overflow-wrap: anywhere;
     margin: 0;
@@ -55,7 +62,10 @@
   }
 
   &__close {
-    flex-shrink: 0;
+    flex: 0 1 auto;
+    max-inline-size: 100%;
+    margin-inline-start: auto;
+    overflow-wrap: anywhere;
     min-block-size: 44px;
     min-inline-size: 44px;
   }

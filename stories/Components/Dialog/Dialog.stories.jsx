@@ -1,7 +1,17 @@
 import React, { useEffect, useId, useRef } from 'react';
 import { mgDialog, mgDialogDestroy } from '../../assets/js/dialog';
+import { resolveLanguage } from '../../../.storybook/language';
+import { DIALOG_STORY_CONTENT } from './Dialog.story-content';
 
-function DialogExample({ long = false, title }) {
+function DialogExample({
+  long = false,
+  title,
+  titleLang,
+  titleDir,
+  expandedClose = false,
+  language,
+}) {
+  const copy = DIALOG_STORY_CONTENT[language.lang];
   const ref = useRef(null);
   const id = useId();
   useEffect(() => {
@@ -10,32 +20,29 @@ function DialogExample({ long = false, title }) {
     return () => mgDialogDestroy(element);
   }, []);
   return (
-    <div ref={ref} data-mg-dialog="">
+    <div ref={ref} data-mg-dialog="" lang={language.lang} dir={language.dir}>
       <button
         type="button"
         className="mg-button mg-button-primary"
         data-mg-dialog-trigger=""
         hidden
       >
-        {long ? 'Read the case study' : 'Resource availability'}
+        {long ? copy.trigger : copy.shortTitle}
       </button>
       <details data-mg-dialog-fallback="">
-        <summary>
-          {long ? 'Read the case study' : 'Resource availability'}
-        </summary>
+        <summary>{long ? copy.trigger : copy.shortTitle}</summary>
         <div data-mg-dialog-content="">
           <header className="mg-dialog__header">
             <h2
               id={id}
+              lang={titleLang}
+              dir={titleDir}
               className="mg-dialog__title"
               data-mg-dialog-title=""
               data-mg-dialog-initial-focus=""
               tabIndex={-1}
             >
-              {title ||
-                (long
-                  ? 'Community resilience case study'
-                  : 'Resource availability')}
+              {title || (long ? copy.longTitle : copy.shortTitle)}
             </h2>
             <button
               type="button"
@@ -43,25 +50,18 @@ function DialogExample({ long = false, title }) {
               data-mg-dialog-close=""
               hidden
             >
-              Close
+              {expandedClose ? copy.expandedClose : copy.close}
             </button>
           </header>
           <div className="mg-dialog__body mg-content">
-            <p>
-              {long
-                ? 'Communities lead local risk reduction by combining local knowledge with accessible public services.'
-                : 'The report will be available after publication. Return to this page for the download.'}
-            </p>
+            <p>{long ? copy.longBody : copy.shortBody}</p>
             {long &&
               Array.from({ length: 12 }, (_, index) => (
                 <section key={index}>
-                  <h3>Local action {index + 1}</h3>
-                  <p>
-                    Residents and local authorities identify priorities
-                    together, protect livelihoods and evaluate progress.
-                    Inclusive planning gives people with disabilities and older
-                    people a voice in decisions.
-                  </p>
+                  <h3>
+                    {copy.section} {index + 1}
+                  </h3>
+                  <p>{copy.paragraph}</p>
                 </section>
               ))}
           </div>
@@ -71,15 +71,38 @@ function DialogExample({ long = false, title }) {
   );
 }
 
+const renderExample = (args, context) => {
+  const language = resolveLanguage(context.globals);
+  return (
+    <DialogExample
+      key={`${language.lang}-${language.dir}`}
+      {...args}
+      language={language}
+    />
+  );
+};
+
 export default {
   title: 'Components/Dialog',
-  parameters: { docs: { story: { inline: false, height: '600px' } } },
+  parameters: {
+    docs: { source: { html: true }, story: { inline: false, height: '600px' } },
+  },
+  render: renderExample,
 };
-export const ShortMessage = { render: () => <DialogExample /> };
-export const LongReading = { render: () => <DialogExample long /> };
+export const ShortMessage = { name: 'Short message' };
+export const LongReading = { name: 'Long reading', args: { long: true } };
 
 export const LongTitle = {
-  render: () => (
-    <DialogExample title="Katastrophenrisikomanagement und gemeinschaftliche Resilienz" />
-  ),
+  name: 'Long title',
+  args: {
+    title: 'Katastrophenrisikomanagement und gemeinschaftliche Resilienz',
+    titleLang: 'de',
+    titleDir: 'ltr',
+  },
+};
+
+// A distinct text-expansion stress condition, not a separate locale export.
+export const ExpandedCloseLabel = {
+  name: 'Expanded Close label',
+  args: { long: true, expandedClose: true },
 };

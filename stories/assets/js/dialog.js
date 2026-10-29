@@ -71,6 +71,25 @@ export function mgDialog(scope = document) {
       continue;
     dialog.className = 'mg-dialog';
     dialog.setAttribute('aria-labelledby', title.id);
+    // A sticky header must leave useful space for reading. Normal flow is the
+    // safe base when measurements cannot follow font/viewport/content changes.
+    const header = title.closest('.mg-dialog__header');
+    const ResizeObserver = doc.defaultView?.ResizeObserver;
+    const updateHeader = () => {
+      dialog.classList.toggle(
+        'mg-dialog--sticky-header',
+        Boolean(
+          ResizeObserver &&
+          dialog.open &&
+          header &&
+          header.getBoundingClientRect().height <= dialog.clientHeight / 2
+        )
+      );
+    };
+    const observer =
+      header && ResizeObserver ? new ResizeObserver(updateHeader) : null;
+    observer?.observe(dialog);
+    if (header) observer?.observe(header);
     const placeholder = doc.createComment('mg-dialog content');
     content.before(placeholder);
     const original = [fallback.hidden, trigger.hidden];
@@ -108,6 +127,7 @@ export function mgDialog(scope = document) {
       }
       release = lock(doc);
       dialog.scrollTop = 0;
+      updateHeader();
       const initial = dialog.querySelector('[data-mg-dialog-initial-focus]');
       (initial || close).focus({ preventScroll: true });
     };
@@ -141,6 +161,7 @@ export function mgDialog(scope = document) {
     root[KEY] = () => {
       const restoreFocus =
         dialog.contains(doc.activeElement) || doc.activeElement === trigger;
+      observer?.disconnect();
       dismiss();
       trigger.removeEventListener('click', open);
       for (const button of closeButtons)

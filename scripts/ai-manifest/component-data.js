@@ -2094,11 +2094,12 @@ npm run build</code></pre>
 
   'components-dialog': {
     description:
-      'Experimental native modal enhancement for authored disclosures. Short messages and long reading share focus return, Escape/backdrop dismissal, viewport scrolling and cleanup. Content stays available without JavaScript; server-rendered labels own translation. No shipped Gutenberg block or validated editor round trip.',
+      'Unreleased/build-only experimental native modal enhancement for authored disclosures. Not available in the published 2.3.0 JavaScript or CSS; use matching local build assets until a release containing Dialog is published and its CDN paths are verified. Short messages and long reading share focus return, Escape/backdrop dismissal, viewport scrolling and cleanup. Content stays available without JavaScript; server-rendered labels own translation. No shipped Gutenberg block or validated editor round trip.',
     summary:
-      'Native dialog enhancement for optional messages and long reading, with a disclosure fallback and no React dependency.',
+      'Unreleased/build-only native dialog for optional messages and long reading, with a disclosure fallback and no React dependency.',
     cssClasses: [
       'mg-dialog',
+      'mg-dialog--sticky-header',
       'mg-dialog__header',
       'mg-dialog__title',
       'mg-dialog__body',
@@ -2122,9 +2123,9 @@ npm run build</code></pre>
       },
     ],
     vanillaModule: {
-      note: 'Enhances authored markup; does not generate content or translate labels. Call mgDialog(scope) after inserting markup and mgDialogDestroy(scope) before replacing it. Uses native showModal; unsupported browsers retain the disclosure. Nested roots retain their disclosures without enhancement. Do not combine overlay lifecycles.',
+      note: 'Unreleased/build-only: this module and its CSS are not in published 2.3.0. Run yarn build and serve dist/assets as the local web root; the relative css/style.css and js/dialog.js paths in this example refer to that assembled build, not to the Storybook site or a released CDN folder. Verify matching pinned assets after the first release before using a CDN URL. Enhances authored markup; does not generate content or translate labels. Call mgDialog(scope) after inserting markup and mgDialogDestroy(scope) before replacing it. Uses native showModal; unsupported browsers retain the disclosure. Nested roots retain their disclosures without enhancement. The enhancer alone owns mg-dialog--sticky-header: it makes the header sticky only when ResizeObserver measurements leave at least half the dialog viewport for reading; otherwise it stays in normal flow with keyboard/Escape dismissal. Do not author that state class or combine overlay lifecycles.',
       selector: '[data-mg-dialog]',
-      modules: vanillaModules('dialog'),
+      modules: { script: 'js/dialog.js' },
       dataAttributes: {
         'data-mg-dialog': 'Root; owns one authored disclosure and trigger.',
         'data-mg-dialog-trigger': 'Initially hidden opening button.',
@@ -2138,7 +2139,7 @@ npm run build</code></pre>
         'data-mg-dialog-initial-focus':
           'Optional focus target; a heading needs tabindex=-1. Otherwise Close receives focus.',
       },
-      example: `<link rel="stylesheet" href="https://assets.undrr.org/mangrove/{{version}}/css/style.css">
+      example: `<link rel="stylesheet" href="css/style.css">
 <div data-mg-dialog>
   <button type="button" class="mg-button mg-button-primary" data-mg-dialog-trigger hidden>Read more</button>
   <details data-mg-dialog-fallback><summary>Read more</summary><div data-mg-dialog-content>
@@ -2146,7 +2147,7 @@ npm run build</code></pre>
     <div class="mg-dialog__body mg-content"><p>Supporting information.</p></div>
   </div></details>
 </div>
-<script type="module" src="${vanillaModules('dialog').script}"></script>`,
+<script type="module" src="js/dialog.js"></script>`,
     },
   },
   'components-cite-this': {

@@ -6,8 +6,10 @@ function markup(id = 'one') {
 }
 let show;
 let close;
+let resizeObserver;
 beforeEach(() => {
   document.body.innerHTML = markup();
+  resizeObserver = window.ResizeObserver;
   show = HTMLDialogElement.prototype.showModal;
   close = HTMLDialogElement.prototype.close;
   HTMLDialogElement.prototype.showModal = function () {
@@ -22,6 +24,7 @@ afterEach(() => {
   mgDialogDestroy();
   HTMLDialogElement.prototype.showModal = show;
   HTMLDialogElement.prototype.close = close;
+  window.ResizeObserver = resizeObserver;
   for (const name of ['overflow', 'overflow-x', 'overflow-y'])
     document.documentElement.style.removeProperty(name);
 });
@@ -240,5 +243,55 @@ test('every authored close control dismisses and retains its hidden state on tea
   mgDialog();
   trigger().click();
   footerClose.click();
+  expect(document.documentElement.style.overflow).toBe('');
+});
+
+test('measures after opening, adapts to header and viewport changes without moving focus/scroll, and disconnects on destroy', () => {
+  let notify;
+  const observe = jest.fn();
+  const disconnect = jest.fn();
+  window.ResizeObserver = class {
+    constructor(callback) {
+      notify = callback;
+    }
+    observe = observe;
+    disconnect = disconnect;
+  };
+  mgDialog();
+  const modal = dialog();
+  const header = modal.querySelector('.mg-dialog__header');
+  let available = 400;
+  let headerHeight = 100;
+  Object.defineProperty(modal, 'clientHeight', { get: () => available });
+  header.getBoundingClientRect = () => ({ height: headerHeight });
+  expect(modal).not.toHaveClass('mg-dialog--sticky-header');
+  expect(observe.mock.calls.map(([element]) => element)).toEqual([
+    modal,
+    header,
+  ]);
+  trigger().click();
+  expect(modal).toHaveClass('mg-dialog--sticky-header');
+  modal.scrollTop = 75;
+  const focused = document.activeElement;
+  headerHeight = 300;
+  notify();
+  expect(modal).not.toHaveClass('mg-dialog--sticky-header');
+  expect(modal.scrollTop).toBe(75);
+  expect(document.activeElement).toBe(focused);
+  available = 800;
+  notify();
+  expect(modal).toHaveClass('mg-dialog--sticky-header');
+  mgDialogDestroy();
+  expect(disconnect).toHaveBeenCalledTimes(1);
+  expect(document.documentElement.style.overflow).toBe('');
+});
+
+test('without ResizeObserver, normal-flow header remains the safe enhancement base', () => {
+  window.ResizeObserver = undefined;
+  mgDialog();
+  trigger().click();
+  expect(dialog().open).toBe(true);
+  expect(dialog()).not.toHaveClass('mg-dialog--sticky-header');
+  document.querySelector('[data-mg-dialog-close]').click();
   expect(document.documentElement.style.overflow).toBe('');
 });
