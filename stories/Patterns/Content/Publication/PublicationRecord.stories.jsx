@@ -31,12 +31,15 @@ export const Minimal = {
   args: { record: { title: 'Understanding disaster risk', lang: 'en' } },
 };
 export const NoCover = {
+  name: 'No cover',
   args: { ...Standard.args, record: { ...exampleRecord, cover: undefined } },
 };
 export const NoFile = {
+  name: 'No public file',
   args: { ...Standard.args, record: { ...exampleRecord, resources: [] } },
 };
 export const ExternalOnly = {
+  name: 'External access only',
   args: {
     record: {
       title: 'Sendai Framework for Disaster Risk Reduction 2015–2030',
@@ -60,6 +63,7 @@ export const ExternalOnly = {
 };
 // Duplicate local copy demonstrates original/backup roles without implying real external provenance.
 export const LocalBackup = {
+  name: 'Original / local backup',
   args: {
     record: {
       ...exampleRecord,
@@ -80,6 +84,7 @@ export const LocalBackup = {
   },
 };
 export const LongCopy = {
+  name: 'Long content',
   args: {
     record: {
       ...exampleRecord,
@@ -113,6 +118,7 @@ export const LongCopy = {
   },
 };
 export const RtlStress = {
+  name: 'RTL / mixed-language stress',
   args: {
     record: {
       ...exampleRecord,

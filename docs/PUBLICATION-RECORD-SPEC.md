@@ -2,7 +2,7 @@
 
 > **Provisional; experimental story composition only.** This specifies an ordinary bibliographic publication record within the existing Publication archetype. The [record prototype](https://mangrove.undrr.org/?path=/docs/patterns-publication-record--docs) now demonstrates the proposed hierarchy in story-owned source. It adds no published renderer, package import, canonical schema, Gutenberg block, production adapter or claim of production parity. The current [Publication full-page references](https://mangrove.undrr.org/?path=/docs/patterns-content-publication-full-page--docs) demonstrate curated report landing pages instead.
 
-Reviewed 29 October 2026 for [PR #1436](https://github.com/unisdr/undrr-mangrove/pull/1436), tracked in [#1432](https://github.com/unisdr/undrr-mangrove/issues/1432). Drupal was inspected read only; no Drupal configuration or content was changed.
+Reviewed 29 October 2026 for [PR #1436](https://github.com/unisdr/undrr-mangrove/pull/1436), tracked in [#1432](https://github.com/unisdr/undrr-mangrove/issues/1432). Experimental story composition added in [PR #1437](https://github.com/unisdr/undrr-mangrove/pull/1437), stacked on the specification work. Drupal was inspected read only; no Drupal configuration or content was changed.
 
 ## Purpose and presentation boundary
 
