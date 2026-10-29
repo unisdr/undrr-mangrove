@@ -2502,6 +2502,14 @@ ${DOCS_BASE}?path=/docs/components-icons--docs
 Static icon inventory (machine-readable):
 ${DOCS_BASE}ai-components/components-icons.json
 
+### Choose the shortest discovery path
+
+- UI prototype: fetch the index, make a small page-section-to-component map, then follow selected entries' \`detailsUrl\` for HTML and interaction requirements. Do not guess IDs from component display names.
+- Gutenberg page: start with ${DOCS_BASE}llms-page-building.txt for page shapes, block support and Hero versus HubHeader, then selected component details.
+- Copy: start with ${DOCS_BASE}llms-editorial-manual.txt and the relevant content guide.
+- Search configuration: start with ${DOCS_BASE}llms-search-widget.txt. For structured metadata, use the dedicated manifest URL named in llms.json.
+- CSS-property validation: combine the theme dictionary, selected component \`customProperties.properties\`, and exact global declarations from the matching release sources. Keep source versions with the result. A missing record, failed fetch or mismatched version is unresolved, not proof of invalid CSS. Follow \`format\`/\`wrapInRgb\`, never a colour-name prefix; a default value is not a value grammar. Full recipe (fetchable Markdown): ${PUBLIC_REPO_RAW_MAIN}docs/AI-MCP-INTEGRATION.md#consumer-validation-recipe
+
 ### Vanilla HTML quick start
 
 ${vanillaCount} of the ${indexEntries.length} components work as plain HTML with CSS classes, no React needed. In the index, these have vanillaHtml: true. Each component's detail JSON includes a renderedHtml array with copy-pasteable HTML snippets.
