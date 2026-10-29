@@ -229,7 +229,9 @@ export function PublicationRecord({
                   <ul>
                     {value.related.map((link, index) => (
                       <li key={index}>
-                        <a href={link.href}>{link.label}</a>
+                        <a href={link.href} lang={value.lang} dir="auto">
+                          {link.label}
+                        </a>
                       </li>
                     ))}
                   </ul>

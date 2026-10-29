@@ -188,6 +188,11 @@ test.each(Object.keys(RECORD_LABELS))(
       'dir',
       locale === 'arabic' ? 'rtl' : 'ltr'
     );
+    const related = screen.getByRole('link', {
+      name: 'Explore UNDRR publications',
+    });
+    expect(related).toHaveAttribute('lang', 'en');
+    expect(related).toHaveAttribute('dir', 'auto');
   }
 );
 
