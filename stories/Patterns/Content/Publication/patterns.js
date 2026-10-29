@@ -16,12 +16,21 @@ export const publicationPatterns = {
     fullPage: {
       status: 'reference',
       intent:
-        'Existing curated report landing page reference. The ordinary bibliographic publication record is a separate unimplemented, provisional specification within this archetype; this reference does not implement that record.',
+        'Existing curated report landing page reference. The ordinary bibliographic publication record is a separate experimental story-only composition within this archetype; production adapter, reusable renderer and canonical contract remain unimplemented. This reference describes the report landing only.',
       reference: {
         kind: 'Patterns/Content/Publication/Full page',
         story: 'Report landing page',
         id: 'patterns-landing-pages--report-landing',
       },
+      additionalReferences: [
+        {
+          kind: 'Patterns/Content/Publication/Record',
+          story: 'Experimental publication record',
+          id: 'patterns-publication-record--standard',
+          intent:
+            'Implemented experimental story-only bibliographic composition; no published import, production adapter or canonical record schema. See its documentation and source-grounded specification before adaptation.',
+        },
+      ],
     },
     teaser: {
       status: 'experimental',

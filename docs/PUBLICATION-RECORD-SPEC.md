@@ -1,8 +1,8 @@
 # Publication record specification
 
-> **Provisional and unimplemented.** This specifies an ordinary bibliographic publication record within the existing Publication archetype. It adds no renderer, component import, canonical schema, Gutenberg block or claim of production parity. The current [Publication full-page references](https://mangrove.undrr.org/?path=/docs/patterns-content-publication-full-page--docs) demonstrate curated report landing pages instead.
+> **Provisional; experimental story composition only.** This specifies an ordinary bibliographic publication record within the existing Publication archetype. The [record prototype](https://mangrove.undrr.org/?path=/docs/patterns-publication-record--docs) now demonstrates the proposed hierarchy in story-owned source. It adds no published renderer, package import, canonical schema, Gutenberg block, production adapter or claim of production parity. The current [Publication full-page references](https://mangrove.undrr.org/?path=/docs/patterns-content-publication-full-page--docs) demonstrate curated report landing pages instead.
 
-Reviewed 29 October 2026 for [PR #1436](https://github.com/unisdr/undrr-mangrove/pull/1436), tracked in [#1432](https://github.com/unisdr/undrr-mangrove/issues/1432). Drupal was inspected read only; no Drupal configuration or content was changed.
+Reviewed 29 October 2026 for [PR #1436](https://github.com/unisdr/undrr-mangrove/pull/1436), tracked in [#1432](https://github.com/unisdr/undrr-mangrove/issues/1432). Experimental story composition added in [PR #1437](https://github.com/unisdr/undrr-mangrove/pull/1437), stacked on the specification work. Drupal was inspected read only; no Drupal configuration or content was changed.
 
 ## Purpose and presentation boundary
 
@@ -11,7 +11,7 @@ Reviewed 29 October 2026 for [PR #1436](https://github.com/unisdr/undrr-mangrove
 | Identify one work, assess its relevance and provenance, and find a usable reading resource. | Explain a report through an editorially composed narrative, selected findings, web reading sections and report actions. |
 | Plain title, description, optional complete cover, bibliographic metadata, available resources and approved citation support. | Masthead/Hero, selected statistics, thematic sections, quotations and chapter/download routes where editorially justified. |
 | Consistent structure across records; omission of absent optional information. | Report-specific composition and branding within the host theme. |
-| This specification is unimplemented in Mangrove. Existing Drupal templates remain a consumer implementation. | Existing Storybook references demonstrate composition, not a canonical bibliographic record contract. |
+| An experimental story-only Mangrove record composition now demonstrates this hierarchy. Production integration remains unimplemented; existing Drupal templates remain a separate consumer implementation. | Existing Storybook references demonstrate composition, not a canonical bibliographic record contract. |
 
 These are full-page purposes within **Publication**, not new top-level archetypes or CMS bundle names. One work may have both experiences, linked according to the host's URL/editorial policy. A landing page's promotional title, selected figures or download action is not automatically the work's bibliographic title, citation or canonical URL. Do not require a landing page for every PDF, or infer the full-page presentation from a teaser/card input.
 
@@ -78,7 +78,7 @@ This is a **proposed simpler presentation**, not a reproduction of the source's 
 | 5 | Citation and sharing | Approved citation text or a clearly documented host-approved citation mechanism when available, plus approved stable-link sharing. Do not display the hidden Drupal citation field automatically. Without approved citation data/integration, retain usable bibliographic details and the record URL instead of fabricating a citation. |
 | 6 | Optional context | Approved related resources, taxonomy and conditional policy/statement/resolution information. Retain their source meaning and privacy/domain decisions; they do not become universal metadata. Omit empty sections. |
 
-On a wide screen a cover/details aside may accompany the description, but the reading sequence and information selection stay the same. The proposed geometry does not create a new archetype or an implemented `PublicationRecord` component.
+On a wide screen a cover/details aside may accompany the description, but the reading sequence and information selection stay the same. The proposed geometry does not create a new archetype or a published reusable `PublicationRecord` component. The experimental story owns its layout and does not satisfy the consumer-integration gates below.
 
 ## Semantic and adapter requirements
 
@@ -127,6 +127,7 @@ The source attachment template labels a status line “Last checked”, but the 
 | Plain title, early resource access and a simpler one-column/mobile or cover/details composition | A proposed reader-oriented order, including access before a potentially long body, rather than copying the source metadata strip, body-before-download sequence or three-column geometry. No Hero is required for an ordinary record. |
 | Complete uncropped cover | Deliberate departure from Drupal `por` cropping, consistent with Mangrove's established publication media-role policy. |
 | Explicitly labelled core bibliographic and resource information | Preserves distinct source meanings while making ordinary records easier to scan; it does not promote hidden fields or mandate every field configured for policies/statements. |
+| Optional supplied standfirst | Experimental story capability derived from the news-entry introduction, not automatic promotion of hidden `field_short_description` or truncation of the full body. The adapter must obtain approved text or omit it. |
 | Optional approved publication citation support | A future integration decision. It is not parity with the source's hazard-profile-only Drupal citation extra field/library and does not unhide `undrr_citation`; future Mangrove CiteThis reuse is a separate proposal. |
 | Omit or relabel the apparent “Last checked” assurance | A proposed correction to avoid representing media creation as a verified check. Needs an approved consumer decision before migration. |
 
@@ -136,7 +137,7 @@ No production adapter, data migration, Gutenberg serialization, live-domain pari
 
 1. **A distinct, approved record composition.** Readers can identify the work and find genuine resources without a campaign Hero or passing a long body. Approved omissions and departures preserve public historical content and distinct bibliographic roles; the result is clearly different from the curated report landing.
 2. **Adapter and rendered evidence agree.** Real consumer fixtures and rendered output demonstrate authors versus sources, year/date/language/identifier semantics, original versus backup access, truthful availability/check information and reviewed URL/access/citation decisions. Hidden fields are not promoted by default, and a discovery manifest is not treated as a validator.
-3. **The implemented composition and integration are reviewed.** Responsive/text-expansion, all-theme, RTL, keyboard, screen-reader, forced-colour and reduced-motion checks meet the agreed acceptance conditions with declared limits. The actual Drupal/template or applicable editor integration is demonstrated before publishing a callable renderer/import or claiming a round trip. Until then, this specification remains unimplemented.
+3. **The implemented composition and integration are reviewed.** Responsive/text-expansion, all-theme, RTL, keyboard, screen-reader, forced-colour and reduced-motion checks meet the agreed acceptance conditions with declared limits. The actual Drupal/template or applicable editor integration is demonstrated before publishing a callable renderer/import or claiming a round trip. Until then, the story composition remains experimental and production integration remains unimplemented.
 
 ## Implementation and verification checklist
 
@@ -144,7 +145,7 @@ No production adapter, data migration, Gutenberg serialization, live-domain pari
 2. Approve the proposed order and each departure, including complete covers, citation integration and truthful access/check-status language. Confirm which policy/statement extras remain public for the specific record.
 3. Build adapter fixtures for minimal records, no cover, multi-author/source records, publication year only, distinct policy/statement dates, untyped identifiers, external-only/local-only/combined/no-file resources, multiple languages/formats and inaccessible media. Verify omissions rather than filling placeholders.
 4. Validate real rendered output and metadata against those fixtures, including links, authors/source list structure, date roles, canonical/citation decisions and disclosure of new-window behaviour. A discovery manifest is not a validator or proof of production parity.
-5. Implement and review the proposed composition using existing components/tokens before changing its status from unimplemented. Test themes, viewport/text expansion, RTL, keyboard, screen readers, forced colours and reduced motion with declared limits.
+5. Review the experimental story composition using existing components/tokens before promoting it to a reusable renderer or consumer integration. Test themes, viewport/text expansion, RTL, keyboard, screen readers, forced colours and reduced motion with declared limits.
 6. Validate the actual Drupal/template or editor integration separately. Only then publish renderer/import contracts or claim a Gutenberg round trip; keep existing report-landing routes compatible.
 
 ## References

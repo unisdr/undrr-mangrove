@@ -14,7 +14,7 @@ import * as TeaserStories from '../../ContentTeaser/ContentTeaser.stories';
 
 A **publication record** is a catalogue/detail entry for one work: description, optional complete cover, bibliographic identity, available documents and citation information. A **report landing page** is an editorially curated experience around a report, using selected findings, narrative sections and report actions. A long description alone does not turn a record into a landing page.
 
-The [record specification](?path=/docs/patterns-content-publication-record-specification--docs) is provisional and **unimplemented**. The [existing full-page references](?path=/docs/patterns-content-publication-full-page--docs) show curated report landings only. Keep both within Publication; neither a CMS bundle nor a teaser/card projection establishes a canonical domain model or selects the full-page presentation automatically.
+The [record prototype](?path=/docs/patterns-publication-record--docs) is an **experimental story-only composition**. The [record specification](?path=/docs/patterns-content-publication-record-specification--docs) remains provisional; production integration, a reusable package renderer and a canonical record schema remain unimplemented. The [existing full-page references](?path=/docs/patterns-content-publication-full-page--docs) show curated report landings only. Keep both within Publication; neither a CMS bundle nor a teaser/card projection establishes a canonical domain model or selects the full-page presentation automatically.
 
 <ContentFamilyGuide
   family={publicationPatterns}
@@ -31,6 +31,8 @@ The [record specification](?path=/docs/patterns-content-publication-record-speci
 </ContentFamilyGuide>
 
 ## Changelog
+
+- **0.3.0**, 2026-10-29 ([#1437](https://github.com/unisdr/undrr-mangrove/pull/1437), [#1432](https://github.com/unisdr/undrr-mangrove/issues/1432)): Add an experimental story-only bibliographic record using the news-entry shell and reading layout. Keep production integration and a reusable package API unimplemented.
 
 - **0.2.0**, 2026-10-29 ([#1436](https://github.com/unisdr/undrr-mangrove/pull/1436)): Distinguish curated report landings from ordinary bibliographic records; link the source-grounded, unimplemented record specification without adding a renderer or changing Drupal bindings.
 
