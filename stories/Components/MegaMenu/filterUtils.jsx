@@ -97,7 +97,7 @@ export function formatLabel(template, variables = {}) {
   if (typeof template !== 'string') return '';
   return Object.entries(variables).reduce(
     (acc, [key, val]) =>
-      acc.replace(new RegExp(`\\{${key}\\}`, 'g'), String(val)),
+      acc.replace(new RegExp(`\\{${key}\\}`, 'g'), () => String(val)),
     template
   );
 }

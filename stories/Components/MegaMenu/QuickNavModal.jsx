@@ -21,6 +21,8 @@ export function QuickNavModal({
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef(null);
   const listRef = useRef(null);
+  const modalRef = useRef(null);
+  const previousActiveElementRef = useRef(null);
   const titleId = useId();
 
   const allItems = useMemo(() => {
@@ -33,15 +35,32 @@ export function QuickNavModal({
       : allItems.slice(0, 8);
   }, [allItems, query]);
 
-  // Focus input and reset query on open
+  // Lock body scroll while modal is open
+  useEffect(() => {
+    if (!isOpen) return;
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [isOpen]);
+
+  // Focus management: capture previous focus, autofocus input on open, and restore focus on close
   useEffect(() => {
     if (isOpen) {
+      previousActiveElementRef.current = document.activeElement;
       setQuery('');
       setSelectedIndex(0);
       const timer = setTimeout(() => {
         inputRef.current?.focus();
       }, 50);
       return () => clearTimeout(timer);
+    } else if (
+      previousActiveElementRef.current &&
+      typeof previousActiveElementRef.current.focus === 'function'
+    ) {
+      previousActiveElementRef.current.focus();
+      previousActiveElementRef.current = null;
     }
   }, [isOpen]);
 
@@ -50,12 +69,33 @@ export function QuickNavModal({
     setSelectedIndex(0);
   }, [query]);
 
-  // Handle keyboard navigation inside the palette
+  // Handle keyboard navigation and focus trapping inside the palette
   const handleKeyDown = e => {
     if (e.key === 'Escape') {
       e.stopPropagation();
       e.preventDefault();
       onClose();
+      return;
+    }
+
+    if (e.key === 'Tab') {
+      const dialog = modalRef.current;
+      if (!dialog) return;
+      const focusable = dialog.querySelectorAll(
+        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusable.length > 0) {
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
       return;
     }
 
@@ -124,6 +164,7 @@ export function QuickNavModal({
       role="presentation"
     >
       <div
+        ref={modalRef}
         className="mg-mega-quicknav"
         role="dialog"
         aria-modal="true"
@@ -164,13 +205,14 @@ export function QuickNavModal({
               ×
             </button>
           )}
-          <kbd
+          <button
+            type="button"
             className="mg-mega-quicknav__esc"
             onClick={onClose}
             aria-label={labels.closeLabel || 'Close'}
           >
-            ESC
-          </kbd>
+            <kbd aria-hidden="true">ESC</kbd>
+          </button>
         </div>
 
         <div className="mg-mega-quicknav__body">

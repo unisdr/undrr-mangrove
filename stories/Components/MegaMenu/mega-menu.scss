@@ -1158,7 +1158,6 @@
   border: none;
   cursor: pointer;
   color: rgb(var(--mg-color-interactive));
-  font-family: var(--mg-font-family-ui);
   font-size: var(--mg-font-size-200);
   font-weight: 600;
   text-decoration: none;
@@ -1188,8 +1187,7 @@
   border-radius: var(--mg-spacing-25, 2px);
   background: rgb(var(--mg-color-neutral-50));
   color: rgb(var(--mg-color-neutral-600));
-  font-family: monospace;
-  font-size: var(--mg-font-size-75);
+  font-size: var(--mg-font-size-100);
   line-height: 1;
 }
 
@@ -1234,7 +1232,7 @@
     padding-inline-end: mg-rem(56);
     border: none;
     background: transparent;
-    font-family: var(--mg-font-family-ui);
+    font-family: inherit;
     font-size: var(--mg-font-size-100);
     color: rgb(var(--mg-color-neutral-900));
 
@@ -1283,7 +1281,7 @@
   }
 
   &__status {
-    font-size: var(--mg-font-size-80, 0.8125rem);
+    font-size: var(--mg-font-size-150);
     font-weight: 600;
     color: rgb(var(--mg-color-neutral-600));
     margin-bottom: var(--mg-spacing-100);
@@ -1405,7 +1403,7 @@
   }
 
   &__item-breadcrumb {
-    font-size: var(--mg-font-size-75);
+    font-size: var(--mg-font-size-100);
     color: rgb(var(--mg-color-neutral-500));
     margin-bottom: var(--mg-spacing-25, 2px);
   }
@@ -1439,7 +1437,7 @@
 .mg-mega-quicknav-backdrop {
   position: fixed;
   inset: 0;
-  z-index: calc(var(--mg-z-index-nav, 100) + 100);
+  z-index: var(--mg-z-index-modal);
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -1448,15 +1446,6 @@
   backdrop-filter: blur(2px);
   animation: mg-quicknav-fade-in var(--mg-motion-duration-fast)
     var(--mg-motion-easing-standard);
-}
-
-@keyframes mg-quicknav-fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
 }
 
 .mg-mega-quicknav {
@@ -1495,7 +1484,7 @@
     height: mg-rem(42);
     border: none;
     background: transparent;
-    font-family: var(--mg-font-family-ui);
+    font-family: inherit;
     font-size: var(--mg-font-size-200);
     color: rgb(var(--mg-color-neutral-900));
 
@@ -1540,13 +1529,14 @@
     align-items: center;
     justify-content: center;
     padding: 0 var(--mg-spacing-50);
-    height: mg-rem(22);
+    min-height: mg-rem(24);
+    min-width: mg-rem(24);
+    padding: 0 var(--mg-spacing-50);
     border: 1px solid rgb(var(--mg-color-neutral-300));
     border-radius: var(--mg-spacing-25, 2px);
     background: rgb(var(--mg-color-neutral-50));
     color: rgb(var(--mg-color-neutral-600));
-    font-family: monospace;
-    font-size: var(--mg-font-size-75);
+    font-size: var(--mg-font-size-100);
     cursor: pointer;
   }
 
@@ -1557,7 +1547,7 @@
   }
 
   &__status {
-    font-size: var(--mg-font-size-75);
+    font-size: var(--mg-font-size-100);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -1608,7 +1598,7 @@
   }
 
   &__item-path {
-    font-size: var(--mg-font-size-75);
+    font-size: var(--mg-font-size-100);
     color: rgb(var(--mg-color-neutral-500));
   }
 
@@ -1682,7 +1672,7 @@
   }
 
   &__empty-search-subtitle {
-    font-size: var(--mg-font-size-75);
+    font-size: var(--mg-font-size-100);
     color: rgb(var(--mg-color-neutral-600));
   }
 
@@ -1692,8 +1682,7 @@
     border-radius: var(--mg-spacing-25, 2px);
     background: rgb(var(--mg-color-neutral-50));
     color: rgb(var(--mg-color-neutral-600));
-    font-family: monospace;
-    font-size: var(--mg-font-size-75);
+    font-size: var(--mg-font-size-100);
     font-weight: 600;
   }
 
@@ -1722,19 +1711,37 @@
 
   &__footer-action {
     margin-inline-start: auto;
-    font-size: var(--mg-font-size-75);
+    font-size: var(--mg-font-size-100);
     font-weight: 400;
     color: rgb(var(--mg-color-neutral-500));
   }
 }
 
-@keyframes mg-quicknav-slide-down {
-  from {
-    opacity: 0;
-    transform: translateY(-8px) scale(0.98);
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes mg-quicknav-slide-down {
+    from {
+      opacity: 0;
+      transform: translateY(-8px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
   }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
+
+  @keyframes mg-quicknav-fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mg-mega-quicknav-backdrop,
+  .mg-mega-quicknav {
+    animation: none;
   }
 }

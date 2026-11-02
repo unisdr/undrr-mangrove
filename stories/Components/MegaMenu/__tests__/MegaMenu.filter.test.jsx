@@ -424,4 +424,88 @@ describe('MegaMenu Desktop QuickNav Modal', () => {
 
     expect(await axe(quickNavDialog)).toHaveNoViolations();
   });
+
+  describe('Red-team security, focus and edge-case regressions', () => {
+    it('traps Tab and Shift+Tab focus inside QuickNav modal', () => {
+      render(
+        <MegaMenu
+          sections={sampleSections}
+          enableFilter={true}
+          searchUrl="/search"
+        />
+      );
+
+      fireEvent.keyDown(window, { key: '/' });
+      const quickNavDialog = screen.getByRole('dialog', {
+        name: /Filter menu items/i,
+      });
+
+      const focusable = quickNavDialog.querySelectorAll(
+        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      expect(focusable.length).toBeGreaterThanOrEqual(2);
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      // Shift+Tab from first element wraps to last
+      first.focus();
+      fireEvent.keyDown(quickNavDialog, { key: 'Tab', shiftKey: true });
+      expect(last).toHaveFocus();
+
+      // Tab from last element wraps to first
+      last.focus();
+      fireEvent.keyDown(quickNavDialog, { key: 'Tab', shiftKey: false });
+      expect(first).toHaveFocus();
+    });
+
+    it('locks body scroll when QuickNav opens and unlocks when closed', () => {
+      render(
+        <MegaMenu
+          sections={sampleSections}
+          enableFilter={true}
+          searchUrl="/search"
+        />
+      );
+
+      expect(document.body.style.overflow).toBe('');
+      fireEvent.keyDown(window, { key: '/' });
+      expect(document.body.style.overflow).toBe('hidden');
+
+      const quickNavDialog = screen.getByRole('dialog', {
+        name: /Filter menu items/i,
+      });
+      fireEvent.keyDown(quickNavDialog, { key: 'Escape' });
+      expect(document.body.style.overflow).toBe('');
+    });
+
+    it('does not trigger slash shortcut when typing in contenteditable elements', () => {
+      const editable = document.createElement('div');
+      editable.contentEditable = 'true';
+      document.body.appendChild(editable);
+
+      try {
+        render(
+          <MegaMenu
+            sections={sampleSections}
+            enableFilter={true}
+            searchUrl="/search"
+          />
+        );
+
+        fireEvent.keyDown(editable, { key: '/' });
+        expect(
+          screen.queryByRole('dialog', { name: /Filter menu items/i })
+        ).not.toBeInTheDocument();
+      } finally {
+        editable.remove();
+      }
+    });
+
+    it('escapes special characters safely in formatLabel without dollar injection', () => {
+      const result = formatLabel('Search for "{query}"', {
+        query: '$100 & $$',
+      });
+      expect(result).toBe('Search for "$100 & $$"');
+    });
+  });
 });

@@ -77,10 +77,15 @@ const MegaMenu = ({
   useEffect(() => {
     if (!enableFilter) return;
     const handleGlobalShortcut = e => {
+      const isEditable =
+        Boolean(e.target.isContentEditable) ||
+        e.target.contentEditable === 'true' ||
+        e.target.getAttribute?.('contenteditable') === 'true' ||
+        Boolean(e.target.closest?.('[contenteditable="true"]')) ||
+        ['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName);
       if (
         (e.key === 'k' && (e.metaKey || e.ctrlKey)) ||
-        (e.key === '/' &&
-          !['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName))
+        (e.key === '/' && !isEditable)
       ) {
         e.preventDefault();
         setQuickNavOpen(prev => !prev);
