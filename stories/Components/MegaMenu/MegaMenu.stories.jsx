@@ -530,6 +530,28 @@ export const WithLogo = {
   },
 };
 
+export const WithQuickFilter = {
+  render: ({ brand, ...args }) => (
+    <MegaMenu {...args} {...(brand ? brandLogos[brand] : {})} />
+  ),
+  args: {
+    delay: 5000,
+    sections: sections,
+    enableFilter: true,
+    searchUrl: '/search?q=',
+    brand: 'PreventionWeb',
+  },
+  argTypes: brandArgType,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Live navigation filter for complex menus. On desktop, pressing `/` or typing in the filter input narrows matching sections and provides a direct link to full-site search. On mobile, the drawer pins a quick filter bar that instantly flattens nested accordions into matching destinations.',
+      },
+    },
+  },
+};
+
 // Sections with icons on top-level items
 const sectionsWithIcons = sections.map((section, i) => ({
   ...section,

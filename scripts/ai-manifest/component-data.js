@@ -2971,6 +2971,10 @@ npm run build</code></pre>
           'Where the logo links to, e.g. /ar/ for a language-prefixed root (default /).',
         'data-logo-width': 'Explicit logo width, to avoid layout shift.',
         'data-logo-height': 'Explicit logo height, to avoid layout shift.',
+        'data-enable-filter':
+          'Set to "true" to show quick filter input in desktop and mobile menus.',
+        'data-search-url':
+          'Base URL for full-site search fallback (default /search?q=).',
       },
       events: [],
       example: hydrationExample({

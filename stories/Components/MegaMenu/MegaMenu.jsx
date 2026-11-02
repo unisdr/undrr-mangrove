@@ -30,12 +30,15 @@ import { getMegaMenuLabels } from './_labels';
  * @param {string} [logoHref='/'] - Where the logo links to. Defaults to `/`; on multilingual sites, pass the language-prefixed root from the CMS (e.g. `/ar/`)
  * @param {number} [logoWidth] - Optional explicit width for CLS prevention
  * @param {number} [logoHeight] - Optional explicit height for CLS prevention
+ * @param {boolean} [enableFilter=false] - Whether to show quick filter input in desktop and mobile navigation
+ * @param {string} [searchUrl='/search?q='] - Base URL for full-site search fallback
  * @returns {JSX.Element} Rendered MegaMenu component
  */
 import React, { useState, useEffect, useRef, useId } from 'react';
 import PropTypes from 'prop-types';
 import { TopBar } from './TopBar/TopBar';
 import { Sidebar } from './TopBar/Sidebar';
+import { QuickNavModal } from './QuickNavModal';
 
 export { getMegaMenuLabels } from './_labels';
 export { DEFAULT_MEGAMENU_LABELS } from './_labels';
@@ -49,6 +52,8 @@ const MegaMenu = ({
   logoHref = '/',
   logoWidth,
   logoHeight,
+  enableFilter = false,
+  searchUrl = '/search?q=',
   lang,
   dir,
   labels,
@@ -64,6 +69,23 @@ const MegaMenu = ({
   const [activeItem, setActiveItem] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
   const [jsActive, setJsActive] = useState(false);
+  const [quickNavOpen, setQuickNavOpen] = useState(false);
+
+  useEffect(() => {
+    if (!enableFilter) return;
+    const handleGlobalShortcut = e => {
+      if (
+        (e.key === 'k' && (e.metaKey || e.ctrlKey)) ||
+        (e.key === '/' &&
+          !['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName))
+      ) {
+        e.preventDefault();
+        setQuickNavOpen(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleGlobalShortcut);
+    return () => window.removeEventListener('keydown', handleGlobalShortcut);
+  }, [enableFilter]);
 
   const itemListRef = useRef([]);
   const sectionListRef = useRef([]);
@@ -248,6 +270,8 @@ const MegaMenu = ({
         logoHref={logoHref}
         logoWidth={logoWidth}
         logoHeight={logoHeight}
+        enableFilter={enableFilter}
+        onOpenQuickNav={() => setQuickNavOpen(true)}
       />
 
       {/* Backdrop overlay – closes sidebar on click */}
@@ -270,7 +294,20 @@ const MegaMenu = ({
         present={present}
         open={showSidebar}
         sections={sections}
+        enableFilter={enableFilter}
+        searchUrl={searchUrl}
       />
+
+      {/* Desktop Spotlight / Quicksilver QuickNav modal */}
+      {enableFilter && (
+        <QuickNavModal
+          isOpen={quickNavOpen}
+          onClose={() => setQuickNavOpen(false)}
+          sections={sections}
+          labels={resolvedLabels}
+          searchUrl={searchUrl}
+        />
+      )}
     </nav>
   );
 };
@@ -315,6 +352,10 @@ MegaMenu.propTypes = {
   logoWidth: PropTypes.number,
   /** Explicit height for the logo (CLS prevention). */
   logoHeight: PropTypes.number,
+  /** Enable live filtering of navigation items in desktop and mobile menus. */
+  enableFilter: PropTypes.bool,
+  /** URL template for full-site search fallback (default: '/search?q='). */
+  searchUrl: PropTypes.string,
   /** UI language tag; selects the built-in catalogue, with English fallback. */
   lang: PropTypes.string,
   /** Explicit text direction; otherwise known catalogue languages select their direction. */
@@ -329,6 +370,11 @@ MegaMenu.propTypes = {
     closeLabel: PropTypes.string,
     overviewLabel: PropTypes.string,
     toggleMobileNavLabel: PropTypes.string,
+    filterPlaceholder: PropTypes.string,
+    clearFilterLabel: PropTypes.string,
+    noFilterResultsLabel: PropTypes.string,
+    searchSiteLabel: PropTypes.string,
+    filterMatchesCount: PropTypes.string,
   }),
 };
 

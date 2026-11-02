@@ -21,6 +21,8 @@ export function TopBar({
   logoHref = '/',
   logoWidth,
   logoHeight,
+  enableFilter = false,
+  onOpenQuickNav,
 }) {
   const railDrag = useRailDrag(isMobile);
   const pendingPanelFocusRef = useRef(null);
@@ -92,6 +94,23 @@ export function TopBar({
     </TopBarItem>
   ));
 
+  const filterTriggerItem = enableFilter && !isMobile && (
+    <li className="mg-mega-topbar__item mg-mega-topbar__item--filter">
+      <button
+        type="button"
+        className="mg-mega-topbar__filter-trigger"
+        onClick={onOpenQuickNav}
+        aria-label="Jump to section"
+      >
+        <span className="mg-icon mg-icon-search" aria-hidden="true" />
+        <span>Jump to</span>
+        <kbd className="mg-mega-topbar__filter-kbd" aria-hidden="true">
+          /
+        </kbd>
+      </button>
+    </li>
+  );
+
   // Branded variant: logo + nav wrapped in a <div>
   if (logoSrc) {
     return (
@@ -121,6 +140,7 @@ export function TopBar({
         <ul className="mg-mega-topbar__nav" {...railDrag}>
           {/* Mobile labels open the corresponding section in the dialog. */}
           {menuItems}
+          {filterTriggerItem}
         </ul>
       </div>
     );
@@ -137,6 +157,7 @@ export function TopBar({
       />
       <ul className="mg-mega-topbar__nav" {...railDrag}>
         {menuItems}
+        {filterTriggerItem}
       </ul>
     </div>
   );
