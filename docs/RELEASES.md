@@ -414,8 +414,8 @@ Example CDN URLs:
 
 ```
 # Latest (rebuilt from the fork's dist branch each time the shared-web-assets pipeline runs)
-https://assets.undrr.org/testing/static/mangrove/latest/css/style.css
-https://assets.undrr.org/testing/static/mangrove/latest/components/MegaMenu.js
+https://assets.undrr.org/mangrove/latest/css/style.css
+https://assets.undrr.org/mangrove/latest/components/MegaMenu.js
 
 # Versioned (from tagged releases)
 https://assets.undrr.org/mangrove/2.3.0/css/style.css
