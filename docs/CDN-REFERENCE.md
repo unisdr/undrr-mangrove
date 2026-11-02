@@ -190,7 +190,7 @@ https://assets.undrr.org/mangrove/2.3.0/css/style.css
 ### Latest (testing only)
 
 ```
-https://assets.undrr.org/testing/static/mangrove/latest/css/style.css
+https://assets.undrr.org/mangrove/latest/css/style.css
 ```
 
 Use `/latest/` only for development/testing. Production should always pin specific versions.
@@ -200,7 +200,7 @@ Use `/latest/` only for development/testing. Production should always pin specif
 Pre-release assets:
 
 ```
-https://assets.undrr.org/testing/static/mangrove/{version}/
+https://test.undrr-asset-library.pages.dev/mangrove/{version}/
 ```
 
 ## See also
