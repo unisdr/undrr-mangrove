@@ -29,6 +29,9 @@ export default function megaMenuFromElement(container) {
   if (dataset.enableFilter !== undefined) {
     props.enableFilter = dataset.enableFilter !== 'false';
   }
+  if (dataset.enableSiteSearch !== undefined) {
+    props.enableSiteSearch = dataset.enableSiteSearch !== 'false';
+  }
   if (dataset.searchUrl) props.searchUrl = dataset.searchUrl;
 
   // Logo props (optional — Drupal wrapper also resolves logos via SITE_LOGOS body class lookup)

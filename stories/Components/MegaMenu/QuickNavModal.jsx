@@ -5,6 +5,7 @@ import {
   filterMenuItems,
   formatLabel,
   HighlightText,
+  getSiteSearchUrl,
 } from './filterUtils';
 
 export function QuickNavModal({
@@ -12,7 +13,9 @@ export function QuickNavModal({
   onClose,
   sections,
   labels = {},
-  searchUrl = '/search?q=',
+  enableSiteSearch = true,
+  searchUrl = '/search',
+  onNavigate,
 }) {
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -56,7 +59,15 @@ export function QuickNavModal({
       return;
     }
 
-    const totalSelectable = filteredResults.length + 1; // +1 for the full search fallback
+    const hasSiteSearch = Boolean(enableSiteSearch && query.trim());
+    const totalSelectable =
+      filteredResults.length > 0
+        ? filteredResults.length + (hasSiteSearch ? 1 : 0)
+        : hasSiteSearch
+          ? 1
+          : 0;
+
+    if (totalSelectable === 0) return;
 
     if (e.key === 'ArrowDown') {
       e.preventDefault();
@@ -66,14 +77,29 @@ export function QuickNavModal({
       setSelectedIndex(prev => (prev - 1 + totalSelectable) % totalSelectable);
     } else if (e.key === 'Enter') {
       e.preventDefault();
-      if (selectedIndex < filteredResults.length) {
+      if (
+        filteredResults.length > 0 &&
+        selectedIndex < filteredResults.length
+      ) {
         const item = filteredResults[selectedIndex];
         if (item?.url) {
-          window.location.href = item.url;
+          if (typeof onNavigate === 'function') {
+            onNavigate(item.url);
+          } else if (typeof window.location.assign === 'function') {
+            window.location.assign(item.url);
+          } else {
+            window.location.href = item.url;
+          }
         }
-      } else {
-        const term = query.trim();
-        window.location.href = `${searchUrl}${encodeURIComponent(term)}`;
+      } else if (hasSiteSearch) {
+        const targetUrl = getSiteSearchUrl(searchUrl, query);
+        if (typeof onNavigate === 'function') {
+          onNavigate(targetUrl);
+        } else if (typeof window.location.assign === 'function') {
+          window.location.assign(targetUrl);
+        } else {
+          window.location.href = targetUrl;
+        }
       }
     }
   };
@@ -208,36 +234,76 @@ export function QuickNavModal({
               })}
             </ul>
           ) : (
-            <p className="mg-mega-quicknav__empty">
-              {labels.noFilterResultsLabel || 'No menu items found'}
-            </p>
+            <div className="mg-mega-quicknav__empty-container">
+              <p className="mg-mega-quicknav__empty">
+                {labels.noFilterResultsLabel || 'No menu items found'}
+              </p>
+              {enableSiteSearch && query.trim() && (
+                <div className="mg-mega-quicknav__empty-actions">
+                  <a
+                    href={getSiteSearchUrl(searchUrl, query)}
+                    className={`mg-mega-quicknav__empty-search-cta ${
+                      selectedIndex === 0
+                        ? 'mg-mega-quicknav__empty-search-cta--selected'
+                        : ''
+                    }`}
+                    onClick={onClose}
+                  >
+                    <span
+                      className="mg-icon mg-icon-search mg-mega-quicknav__empty-search-icon"
+                      aria-hidden="true"
+                    />
+                    <div className="mg-mega-quicknav__empty-search-content">
+                      <span className="mg-mega-quicknav__empty-search-title">
+                        {formatLabel(labels.searchSiteLabel, {
+                          query: query.trim(),
+                        })}
+                      </span>
+                      <span className="mg-mega-quicknav__empty-search-subtitle">
+                        {labels.searchSitePromptLabel ||
+                          'Search across all site content'}
+                      </span>
+                    </div>
+                    <span
+                      className="mg-mega-quicknav__empty-search-badge"
+                      aria-hidden="true"
+                    >
+                      Enter ↵
+                    </span>
+                  </a>
+                </div>
+              )}
+            </div>
           )}
         </div>
 
-        <div className="mg-mega-quicknav__footer">
-          <a
-            href={`${searchUrl}${encodeURIComponent(query.trim())}`}
-            className={`mg-mega-quicknav__search-link ${
-              selectedIndex === filteredResults.length
-                ? 'mg-mega-quicknav__search-link--selected'
-                : ''
-            }`}
-            onClick={onClose}
-          >
-            <span className="mg-icon mg-icon-search" aria-hidden="true" />
-            <span>
-              {query.trim()
-                ? formatLabel(labels.searchSiteLabel, { query: query.trim() })
-                : 'Search full site'}
-            </span>
-            <span
-              className="mg-mega-quicknav__footer-action"
-              aria-hidden="true"
+        {enableSiteSearch && (
+          <div className="mg-mega-quicknav__footer">
+            <a
+              href={getSiteSearchUrl(searchUrl, query)}
+              className={`mg-mega-quicknav__search-link ${
+                selectedIndex ===
+                (filteredResults.length > 0 ? filteredResults.length : 0)
+                  ? 'mg-mega-quicknav__search-link--selected'
+                  : ''
+              }`}
+              onClick={onClose}
             >
-              Enter ↵
-            </span>
-          </a>
-        </div>
+              <span className="mg-icon mg-icon-search" aria-hidden="true" />
+              <span>
+                {query.trim()
+                  ? formatLabel(labels.searchSiteLabel, { query: query.trim() })
+                  : labels.searchSiteDefaultLabel || 'Search full site'}
+              </span>
+              <span
+                className="mg-mega-quicknav__footer-action"
+                aria-hidden="true"
+              >
+                Enter ↵
+              </span>
+            </a>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -248,5 +314,7 @@ QuickNavModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   sections: PropTypes.array.isRequired,
   labels: PropTypes.object,
+  enableSiteSearch: PropTypes.bool,
   searchUrl: PropTypes.string,
+  onNavigate: PropTypes.func,
 };

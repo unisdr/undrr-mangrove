@@ -58,6 +58,35 @@ export function filterMenuItems(items, query) {
 }
 
 /**
+ * Resolves the destination URL for full-site search, pointing by default to the
+ * syndicated search page (/search) and its #query= hash parameter.
+ *
+ * @param {string} searchUrl - Configured search URL or template (defaults to '/search').
+ * @param {string} query - The query term.
+ * @returns {string} Destination URL with query term appended appropriately.
+ */
+export function getSiteSearchUrl(searchUrl = '/search', query = '') {
+  const term = encodeURIComponent((query || '').trim());
+  if (!searchUrl) return `/search#query=${term}`;
+
+  if (searchUrl.endsWith('=')) {
+    return `${searchUrl}${term}`;
+  }
+
+  if (searchUrl.includes('#')) {
+    return `${searchUrl}&query=${term}`;
+  }
+
+  if (searchUrl.includes('?')) {
+    return `${searchUrl}&query=${term}`;
+  }
+
+  // Base path like '/search' or '/search/'
+  const base = searchUrl.replace(/\/+$/, '');
+  return `${base}#query=${term}`;
+}
+
+/**
  * Replaces `{var}` placeholders in a template string with provided variables.
  *
  * @param {string} template - The template string.

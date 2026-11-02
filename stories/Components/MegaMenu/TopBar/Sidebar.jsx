@@ -10,6 +10,7 @@ import {
   filterMenuItems,
   formatLabel,
   HighlightText,
+  getSiteSearchUrl,
 } from '../filterUtils';
 
 const EMPTY_PATH = [];
@@ -25,7 +26,8 @@ export function Sidebar({
   labels,
   id,
   enableFilter = false,
-  searchUrl = '/search?q=',
+  enableSiteSearch = true,
+  searchUrl = '/search',
 }) {
   const [path, setPath] = useState(EMPTY_PATH);
   const [filterQuery, setFilterQuery] = useState('');
@@ -303,30 +305,53 @@ export function Sidebar({
               ))}
             </ul>
           ) : (
-            <p className="mg-mega-filter__empty">
-              {labels.noFilterResultsLabel}
-            </p>
+            <div className="mg-mega-filter__empty-container">
+              <p className="mg-mega-filter__empty">
+                {labels.noFilterResultsLabel}
+              </p>
+              {enableSiteSearch && filterQuery.trim() && (
+                <div className="mg-mega-filter__empty-actions">
+                  <a
+                    href={getSiteSearchUrl(searchUrl, filterQuery)}
+                    className="mg-button mg-button--primary mg-mega-filter__empty-search-btn"
+                    onClick={onClose}
+                  >
+                    <span
+                      className="mg-icon mg-icon-search"
+                      aria-hidden="true"
+                    />
+                    <span>
+                      {formatLabel(labels.searchSiteLabel, {
+                        query: filterQuery.trim(),
+                      })}
+                    </span>
+                  </a>
+                </div>
+              )}
+            </div>
           )}
-          <div className="mg-mega-filter__fallback">
-            <a
-              href={`${searchUrl}${encodeURIComponent(filterQuery.trim())}`}
-              className="mg-mega-filter__site-search-link"
-              onClick={onClose}
-            >
-              <span className="mg-icon mg-icon-search" aria-hidden="true" />
-              <span>
-                {formatLabel(labels.searchSiteLabel, {
-                  query: filterQuery.trim(),
-                })}
-              </span>
-              <span
-                className="mg-mega-filter__fallback-arrow"
-                aria-hidden="true"
+          {enableSiteSearch && filteredResults.length > 0 && (
+            <div className="mg-mega-filter__fallback">
+              <a
+                href={getSiteSearchUrl(searchUrl, filterQuery)}
+                className="mg-mega-filter__site-search-link"
+                onClick={onClose}
               >
-                →
-              </span>
-            </a>
-          </div>
+                <span className="mg-icon mg-icon-search" aria-hidden="true" />
+                <span>
+                  {formatLabel(labels.searchSiteLabel, {
+                    query: filterQuery.trim(),
+                  })}
+                </span>
+                <span
+                  className="mg-mega-filter__fallback-arrow"
+                  aria-hidden="true"
+                >
+                  →
+                </span>
+              </a>
+            </div>
+          )}
         </div>
       ) : (
         <div

@@ -18,6 +18,7 @@ export const LABELS_ES = {
   clearFilterLabel: 'Borrar filtro',
   noFilterResultsLabel: 'No se encontraron elementos del menú',
   searchSiteLabel: 'Buscar en todo el sitio "{query}"',
+  searchSitePromptLabel: 'Buscar en todo el contenido del sitio web',
   filterMatchesCount: '{count} elementos encontrados',
 };
 
@@ -38,6 +39,7 @@ export const LABELS_FR = {
   clearFilterLabel: 'Effacer le filtre',
   noFilterResultsLabel: 'Aucun élément ne correspond au filtre',
   searchSiteLabel: 'Rechercher sur tout le site "{query}"',
+  searchSitePromptLabel: 'Rechercher dans tout le contenu du site',
   filterMatchesCount: '{count} éléments trouvés',
 };
 
@@ -58,6 +60,7 @@ export const LABELS_JA = {
   clearFilterLabel: '絞り込みをクリア',
   noFilterResultsLabel: '一致するメニュー項目がありません',
   searchSiteLabel: 'サイト全体で「{query}」を検索',
+  searchSitePromptLabel: 'サイト全体のすべてのコンテンツを検索',
   filterMatchesCount: '{count} 件の項目が見つかりました',
 };
 
@@ -78,6 +81,7 @@ export const LABELS_ZH = {
   clearFilterLabel: '清除筛选',
   noFilterResultsLabel: '未找到匹配的菜单项',
   searchSiteLabel: '在全站搜索 "{query}"',
+  searchSitePromptLabel: '在整个网站内容中搜索',
   filterMatchesCount: '找到 {count} 个菜单项',
 };
 
@@ -98,6 +102,7 @@ export const LABELS_AR = {
   clearFilterLabel: 'مسح التصفية',
   noFilterResultsLabel: 'لم يتم العثور على عناصر تطابق التصفية',
   searchSiteLabel: 'البحث في كامل الموقع عن "{query}"',
+  searchSitePromptLabel: 'البحث في جميع محتويات الموقع',
   filterMatchesCount: 'تم العثور على {count} عنصر',
 };
 
@@ -118,6 +123,7 @@ export const LABELS_RU = {
   clearFilterLabel: 'Очистить фильтр',
   noFilterResultsLabel: 'Элементы меню не найдены',
   searchSiteLabel: 'Искать по всему сайту «{query}»',
+  searchSitePromptLabel: 'Поиск по всем материалам сайта',
   filterMatchesCount: 'Найдено элементов: {count}',
 };
 
@@ -134,6 +140,7 @@ export const DEFAULT_MEGAMENU_LABELS = {
   clearFilterLabel: 'Clear filter',
   noFilterResultsLabel: 'No menu items match your filter',
   searchSiteLabel: 'Search entire site for "{query}"',
+  searchSitePromptLabel: 'Search across all site content',
   filterMatchesCount: '{count} menu items found',
 };
 

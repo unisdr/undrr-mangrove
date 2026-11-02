@@ -2973,8 +2973,10 @@ npm run build</code></pre>
         'data-logo-height': 'Explicit logo height, to avoid layout shift.',
         'data-enable-filter':
           'Set to "true" to show quick filter input in desktop and mobile menus.',
+        'data-enable-site-search':
+          'Set to "false" to disable full-site search fallback (default "true").',
         'data-search-url':
-          'Base URL for full-site search fallback (default /search?q=).',
+          'Base URL for full-site search fallback (default /search, formatting to #query=).',
       },
       events: [],
       example: hydrationExample({

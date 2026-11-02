@@ -74,18 +74,19 @@ wrapper resolves `logoSrc` and `logoAlt` from body class; it does not infer
 
 ## Props
 
-| Prop         | Type    | Default      | Description                                                                                                 |
-| ------------ | ------- | ------------ | ----------------------------------------------------------------------------------------------------------- |
-| sections     | array   | []           | Array of menu sections to display                                                                           |
-| delay        | number  | 300          | Delay in milliseconds before closing menu on mouse leave                                                    |
-| hoverDelay   | number  | 180          | Delay in milliseconds before opening menu (prevents accidental opens)                                       |
-| logoSrc      | string  | —            | Image URL for the logo. When provided, enables the branded variant                                          |
-| logoAlt      | string  | ''           | Alt text for the logo image                                                                                 |
-| logoHref     | string  | '/'          | Where the logo links to. For multilingual sites, pass the language-prefixed root from the CMS (e.g. `/ar/`) |
-| logoWidth    | number  | —            | Optional explicit width for CLS prevention                                                                  |
-| logoHeight   | number  | —            | Optional explicit height for CLS prevention                                                                 |
-| enableFilter | boolean | false        | Enable live filtering of navigation items in desktop panels and mobile drawer                               |
-| searchUrl    | string  | '/search?q=' | Base URL for full-site search fallback query link                                                           |
+| Prop             | Type    | Default   | Description                                                                                                 |
+| ---------------- | ------- | --------- | ----------------------------------------------------------------------------------------------------------- |
+| sections         | array   | []        | Array of menu sections to display                                                                           |
+| delay            | number  | 300       | Delay in milliseconds before closing menu on mouse leave                                                    |
+| hoverDelay       | number  | 180       | Delay in milliseconds before opening menu (prevents accidental opens)                                       |
+| logoSrc          | string  | —         | Image URL for the logo. When provided, enables the branded variant                                          |
+| logoAlt          | string  | ''        | Alt text for the logo image                                                                                 |
+| logoHref         | string  | '/'       | Where the logo links to. For multilingual sites, pass the language-prefixed root from the CMS (e.g. `/ar/`) |
+| logoWidth        | number  | —         | Optional explicit width for CLS prevention                                                                  |
+| logoHeight       | number  | —         | Optional explicit height for CLS prevention                                                                 |
+| enableFilter     | boolean | false     | Enable live filtering of navigation items in desktop command palette and mobile drawer                      |
+| enableSiteSearch | boolean | true      | Offer full-site search option when filtering (default: true)                                                |
+| searchUrl        | string  | '/search' | Base URL for full-site search fallback (defaults to syndicated search page /search#query=)                  |
 
 ### Section object properties
 
@@ -273,7 +274,7 @@ for consumers needing the same strings outside React.
 
 ## Changelog
 
-- **1.6**, 2026-11-02: Added quick navigation filter (`enableFilter`, `searchUrl`) for desktop and mobile menus. Pinned filter bar flattens deep menu hierarchies on mobile, enables keyboard jump (`/`) on desktop, and includes a full-site search bridge. Added translations across all 7 supported languages.
+- **1.6**, 2026-11-02: Added quick navigation filter (`enableFilter`, `enableSiteSearch`, `searchUrl`) for desktop and mobile menus. Pinned filter bar flattens deep menu hierarchies on mobile, enables keyboard jump (`/` or `⌘K`) on desktop, and includes a full-site search bridge defaulting to the syndicated search component (`/search#query=`). When no menu items match, a prominent full-site search action is offered by default. Added translations across all 7 supported languages.
 
 - **1.5**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance.
 

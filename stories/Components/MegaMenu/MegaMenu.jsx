@@ -31,7 +31,8 @@ import { getMegaMenuLabels } from './_labels';
  * @param {number} [logoWidth] - Optional explicit width for CLS prevention
  * @param {number} [logoHeight] - Optional explicit height for CLS prevention
  * @param {boolean} [enableFilter=false] - Whether to show quick filter input in desktop and mobile navigation
- * @param {string} [searchUrl='/search?q='] - Base URL for full-site search fallback
+ * @param {boolean} [enableSiteSearch=true] - Whether to offer full-site search option when filtering
+ * @param {string} [searchUrl='/search'] - Base URL for full-site search (defaults to syndicated search page /search)
  * @returns {JSX.Element} Rendered MegaMenu component
  */
 import React, { useState, useEffect, useRef, useId } from 'react';
@@ -53,7 +54,9 @@ const MegaMenu = ({
   logoWidth,
   logoHeight,
   enableFilter = false,
-  searchUrl = '/search?q=',
+  enableSiteSearch = true,
+  searchUrl = '/search',
+  onNavigate,
   lang,
   dir,
   labels,
@@ -295,6 +298,7 @@ const MegaMenu = ({
         open={showSidebar}
         sections={sections}
         enableFilter={enableFilter}
+        enableSiteSearch={enableSiteSearch}
         searchUrl={searchUrl}
       />
 
@@ -305,7 +309,9 @@ const MegaMenu = ({
           onClose={() => setQuickNavOpen(false)}
           sections={sections}
           labels={resolvedLabels}
+          enableSiteSearch={enableSiteSearch}
           searchUrl={searchUrl}
+          onNavigate={onNavigate}
         />
       )}
     </nav>
@@ -354,7 +360,9 @@ MegaMenu.propTypes = {
   logoHeight: PropTypes.number,
   /** Enable live filtering of navigation items in desktop and mobile menus. */
   enableFilter: PropTypes.bool,
-  /** URL template for full-site search fallback (default: '/search?q='). */
+  /** Offer full-site search fallback option when filtering (default: true). */
+  enableSiteSearch: PropTypes.bool,
+  /** Base URL for full-site search (default: '/search', which routes to syndicated search #query=). */
   searchUrl: PropTypes.string,
   /** UI language tag; selects the built-in catalogue, with English fallback. */
   lang: PropTypes.string,
