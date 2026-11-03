@@ -7,6 +7,7 @@ import {
   filterMenuItems,
   formatLabel,
   getSiteSearchUrl,
+  HighlightText,
 } from '../filterUtils';
 
 // Native focus containment is verified in a real browser. jsdom only models
@@ -181,6 +182,65 @@ describe('MegaMenu filter utilities', () => {
     expect(filterMenuItems(items, '𐐀𐐁𐐁𐐁𐐄')).toEqual([]);
   });
 
+  it.each([
+    'news events',
+    'events news',
+    'news and events',
+    'events & news',
+    'news & events',
+  ])('matches conjunctions and unordered terms for %s', query => {
+    const items = flattenMenuItems([
+      {
+        title: 'News & Events',
+        url: '/news',
+        items: [{ title: 'Latest News', url: '/latest' }],
+      },
+      { title: 'News archive', url: '/archive' },
+    ]);
+    expect(filterMenuItems(items, query).map(item => item.url)).toEqual([
+      '/news',
+      '/latest',
+    ]);
+    expect(getSiteSearchUrl('/search', query)).toBe(
+      '/search#query=' + encodeURIComponent(query)
+    );
+  });
+
+  it('requires every word and ranks title matches before ancestor and combined matches', () => {
+    const items = [
+      { title: 'Positions', fullPath: 'Open opportunities', url: '/combined' },
+      { title: 'Application guide', fullPath: 'Open Positions', url: '/path' },
+      { title: 'Open Positions', fullPath: 'Careers', url: '/title' },
+      { title: 'Open archive', fullPath: 'About', url: '/missing' },
+    ];
+    expect(
+      filterMenuItems(items, 'positions open').map(item => item.url)
+    ).toEqual(['/title', '/path', '/combined']);
+    expect(filterMenuItems(items, 'positions open unavailable')).toEqual([]);
+    expect(
+      filterMenuItems(
+        [{ title: 'Research and development', url: '/rd' }],
+        'development & research'
+      )
+    ).toHaveLength(1);
+    expect(
+      filterMenuItems([{ title: 'Sand dunes', url: '/sand' }], 's dunes')
+    ).toHaveLength(1);
+  });
+
+  it('highlights separately matched words while preserving displayed punctuation', () => {
+    const { container } = render(
+      <HighlightText text="News & Events" query="events and news" />
+    );
+    expect(container).toHaveTextContent('News & Events');
+    expect(
+      Array.from(
+        container.querySelectorAll('mark'),
+        element => element.textContent
+      )
+    ).toEqual(['News', '&', 'Events']);
+  });
+
   it('formats label templates with variables', () => {
     const formatted = formatLabel('Search all for "{query}" ({count})', {
       query: 'tsunami',
@@ -216,6 +276,29 @@ describe('MegaMenu filter utilities', () => {
 });
 
 describe('MegaMenu Mobile Filter UI', () => {
+  it('uses a shared outlined CTA and decorative arrow icon for mobile site search', () => {
+    render(<MegaMenu sections={sampleSections} enableFilter />);
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Open navigation menu' })
+    );
+    const dialog = screen.getByRole('dialog');
+    fireEvent.change(within(dialog).getByRole('searchbox'), {
+      target: { value: 'doc' },
+    });
+    const link = within(dialog).getByRole('link', {
+      name: 'Search entire site for "doc"',
+    });
+    expect(link).toHaveClass(
+      'mg-button',
+      'mg-button-secondary',
+      'mg-button-outline'
+    );
+    expect(link.querySelector('.mg-icon-arrow-right')).toHaveAttribute(
+      'aria-hidden',
+      'true'
+    );
+  });
+
   it('keeps the mobile drawer open while an IME handles composing Escape', () => {
     render(<MegaMenu sections={sampleSections} enableFilter />);
     const opener = screen.getByRole('button', { name: 'Open navigation menu' });

@@ -317,18 +317,18 @@ export function Sidebar({
                 <div className="mg-mega-filter__empty-actions">
                   <a
                     href={getSiteSearchUrl(searchUrl, filterQuery)}
-                    className="mg-mega-filter__empty-search-btn"
+                    className="mg-button mg-button-secondary mg-button-outline mg-mega-filter__empty-search-btn"
                     onClick={onClose}
                   >
-                    <span
-                      className="mg-icon mg-icon-search"
-                      aria-hidden="true"
-                    />
                     <span>
                       {formatLabel(labels.searchSiteLabel, {
                         query: filterQuery.trim(),
                       })}
                     </span>
+                    <span
+                      className="mg-icon mg-icon-arrow-right mg-mega-filter__fallback-arrow"
+                      aria-hidden="true"
+                    />
                   </a>
                 </div>
               )}
@@ -338,21 +338,18 @@ export function Sidebar({
             <div className="mg-mega-filter__fallback">
               <a
                 href={getSiteSearchUrl(searchUrl, filterQuery)}
-                className="mg-mega-filter__site-search-link"
+                className="mg-button mg-button-secondary mg-button-outline mg-mega-filter__site-search-link"
                 onClick={onClose}
               >
-                <span className="mg-icon mg-icon-search" aria-hidden="true" />
                 <span>
                   {formatLabel(labels.searchSiteLabel, {
                     query: filterQuery.trim(),
                   })}
                 </span>
                 <span
-                  className="mg-mega-filter__fallback-arrow"
+                  className="mg-icon mg-icon-arrow-right mg-mega-filter__fallback-arrow"
                   aria-hidden="true"
-                >
-                  →
-                </span>
+                />
               </a>
             </div>
           )}

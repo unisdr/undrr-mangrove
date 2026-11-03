@@ -63,6 +63,13 @@ function isNearWord(query, word) {
   return i === query.length && j === word.length;
 }
 
+/** English conjunctions share one search form; content keeps its original text. */
+function searchWords(text) {
+  return (text.toLowerCase().match(/[\p{L}\p{N}]+|&/gu) || []).map(word =>
+    word === '&' ? 'and' : word
+  );
+}
+
 /**
  * Filters a flat list of menu items by query string matching title or category path.
  *
@@ -72,20 +79,52 @@ function isNearWord(query, word) {
  */
 export function filterMenuItems(items, query) {
   if (!items || !query || !query.trim()) return [];
-  const normalized = query.trim().toLowerCase();
-  // A fixed number of rank buckets keeps stable menu order without sorting.
-  const buckets = [[], [], [], []];
+  const rawQuery = query.trim().toLowerCase();
+  const words = searchWords(rawQuery);
+  const keepAnd = words.length > 0 && words.every(word => word === 'and');
+  const terms = keepAnd ? ['and'] : words.filter(word => word !== 'and');
+  const useWords = words.length > 1 || words.includes('and');
+  const normalized = useWords ? terms.join(' ') : rawQuery;
+  if (!normalized) return [];
+  const textForms = new Map();
+  const searchForm = text => {
+    if (!useWords) return text.toLowerCase();
+    if (!textForms.has(text)) {
+      textForms.set(
+        text,
+        searchWords(text)
+          .filter(word => keepAnd || word !== 'and')
+          .join(' ')
+      );
+    }
+    return textForms.get(text);
+  };
+  // Fixed rank buckets preserve menu order without sorting. Every query word
+  // must occur; title-only matches precede breadcrumb and combined matches.
+  const buckets = [[], [], [], [], [], []];
   for (const item of items) {
-    const title = item.title?.toLowerCase() || '';
+    const title = searchForm(item.title || '');
+    const path = searchForm(item.fullPath || '');
     if (title === normalized) buckets[0].push(item);
     else if (title.startsWith(normalized)) buckets[1].push(item);
     else if (title.includes(normalized)) buckets[2].push(item);
-    else if (item.fullPath?.toLowerCase().includes(normalized))
+    else if (useWords && terms.every(term => title.includes(term)))
       buckets[3].push(item);
+    else if (
+      path.includes(normalized) ||
+      (useWords && terms.every(term => path.includes(term)))
+    )
+      buckets[4].push(item);
+    else if (
+      useWords &&
+      terms.every(term => title.includes(term) || path.includes(term))
+    )
+      buckets[5].push(item);
   }
   // Only fall back to typo tolerance when literal matching finds nothing.
   if (
     buckets.every(bucket => !bucket.length) &&
+    !useWords &&
     /^[\p{L}\p{N}]{4,}$/u.test(normalized)
   ) {
     const queryCharacters = Array.from(normalized);
@@ -174,7 +213,7 @@ export function formatLabel(template, variables = {}) {
 }
 
 /**
- * Recursively highlights occurrences of query in text using a <mark> element.
+ * Highlights individual query words, preserving authored text and punctuation.
  *
  * @param {Object} props
  * @param {string} props.text - The full text to display.
@@ -183,22 +222,19 @@ export function formatLabel(template, variables = {}) {
  */
 export function HighlightText({ text, query }) {
   if (!query || !query.trim() || !text) return text || '';
-  const q = query.trim();
-  const lowerText = text.toLowerCase();
-  const lowerQuery = q.toLowerCase();
-  const index = lowerText.indexOf(lowerQuery);
-  if (index === -1) return text;
-
-  const before = text.slice(0, index);
-  const match = text.slice(index, index + q.length);
-  const after = text.slice(index + q.length);
-
-  return (
-    <>
-      {before}
-      <mark className="mg-mega-filter__highlight">{match}</mark>
-      <HighlightText text={after} query={query} />
-    </>
+  const words = searchWords(query);
+  if (!words.length) return text;
+  const alternatives = [...new Set(words)].sort((a, b) => b.length - a.length);
+  if (alternatives.includes('and')) alternatives.push('&');
+  const parts = text.split(new RegExp(`(${alternatives.join('|')})`, 'giu'));
+  return parts.map((part, index) =>
+    index % 2 ? (
+      <mark key={index} className="mg-mega-filter__highlight">
+        {part}
+      </mark>
+    ) : (
+      part
+    )
   );
 }
 

@@ -220,13 +220,16 @@ export default function MenuFinder({
         <div className="mg-mega-menu-finder__footer">
           <a
             href={getSiteSearchUrl(searchUrl, query)}
-            className="mg-mega-filter__site-search-link"
+            className="mg-button mg-button-secondary mg-button-outline mg-mega-filter__site-search-link"
             onClick={handleLinkClick}
           >
-            <span className="mg-icon mg-icon-search" aria-hidden="true" />
             <span>
               {formatLabel(labels.searchSiteLabel, { query: query.trim() })}
             </span>
+            <span
+              className="mg-icon mg-icon-arrow-right mg-mega-filter__fallback-arrow"
+              aria-hidden="true"
+            />
           </a>
         </div>
       )}

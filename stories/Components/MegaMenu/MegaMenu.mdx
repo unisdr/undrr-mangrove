@@ -206,6 +206,11 @@ The component does not infer or remove Search items from translated titles.
   the input and Close control remain visible.
 - Results prioritize exact titles, title prefixes, other title matches, then
   breadcrumb-only matches. Repeated destination URLs appear once.
+- Search words can appear in any order across a title and its breadcrumb. Every
+  word is required; English “and” and “&” are interchangeable and optional
+  between other terms. For example, “events news” and “news and events” find
+  “News & Events”. Matched words are highlighted separately without changing
+  the displayed label. Full-site search preserves the original query.
 - If literal matching finds nothing, single-word queries of four or more
   characters allow one insertion, deletion, substitution or adjacent letter swap
   against whole title and breadcrumb words (for example, “carers” finds
@@ -217,7 +222,8 @@ The component does not infer or remove Search items from translated titles.
 - Counts are announced through a visually hidden live region. Empty results
   visibly announce **No matching pages in this menu** once.
 - `enableSiteSearch` adds one contextual full-site search link after typing,
-  preserving the query. In the desktop dialog it stays visible in a separate
+  preserving the query. It uses the shared outlined secondary CTA treatment
+  and a decorative right-arrow icon that mirrors in RTL. In the desktop dialog it stays visible in a separate
   footer while results scroll. The icon-only Close button retains its localized
   accessible name. It defaults to `/search#query=…`; consumers must provide
   that page or configure `searchUrl`. This fallback does not replace the site's
@@ -364,6 +370,7 @@ for consumers needing the same strings outside React.
 ## Changelog
 
 - **1.6**, 2026-11-03 ([#1445](https://github.com/unisdr/undrr-mangrove/pull/1445)): Added opt-in contextual navigation filtering (`enableFilter`, `enableSiteSearch`, `searchUrl`), runtime translations and hydration attributes.
+  - Word matching accepts any order and treats English “and”/“&” as optional conjunctions; matching terms highlight independently. Site search uses shared outlined secondary button styles and an unadorned RTL-aware arrow icon.
   - Composing keyboard input, including Escape used by an IME, remains with the input without dismissing either navigation surface.
   - Responsive/configuration changes that remove the desktop utility dismiss and reset the finder, restore focus to its top-level control and never reopen the modal automatically.
   - Desktop finder opens a native modal from a fixed left-column footer utility and searches the entire menu. Close restores the originating panel and focus without unmounting its navigation. The shortcut hint is platform-aware and handled only within the active menu, outside editors. Mobile retains its menu-wide drawer finder. The existing Search navigation item is unchanged; no extra header search entry or global keyboard shortcut is added.

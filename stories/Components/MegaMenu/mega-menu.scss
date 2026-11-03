@@ -1250,21 +1250,19 @@
   &__site-search-link {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: var(--mg-spacing-100);
     min-height: mg-rem(44);
-    padding: var(--mg-spacing-100);
-    border: 1px solid rgb(var(--mg-color-neutral-300));
-    border-radius: var(--mg-radius-form-input);
-    background: rgb(var(--mg-color-white));
-    color: rgb(var(--mg-color-interactive));
+    max-inline-size: 100%;
     font-size: var(--mg-mega-filter-font-size);
-    font-weight: 600;
-    text-decoration: underline;
-    text-underline-offset: 0.2em;
+    line-height: inherit;
+    text-align: start;
+    text-decoration: none;
+    white-space: normal;
     overflow-wrap: anywhere;
 
-    &:focus-visible {
-      @include mg-focus-ring-inset;
+    &:hover {
+      text-decoration: none;
     }
   }
 
