@@ -242,7 +242,12 @@ navigation visually unchanged. The existing Dialog surface styles provide its
 border, radius and scrim. Native `showModal()` supplies top-layer placement,
 inert background content and focus containment; opening and closing are immediate. Shared behaviour uses
 native links, 44px controls, readable text, explicit focus rings and immediate
-updates without additional motion. Matches follow card-title search highlights:
+updates without entrance, exit or result-list motion. Pointer hover tints on
+finder controls and result rows use the fast token (160ms) and standard easing
+to confirm the current target. These reversible background-colour transitions
+run only on hover-capable devices with no motion preference and outside forced
+colours; touch, keyboard focus, reduced motion and forced colours use immediate
+feedback. Theme changes and hydration leave the resting state unchanged. Matches follow card-title search highlights:
 pale neutral background, bold weight, inherited size, no padding or added
 underline. Forced colours preserve boundaries, focus rings and bold matches.
 Existing theme surfaces continue to own the surrounding menu's expression.
@@ -358,6 +363,7 @@ for consumers needing the same strings outside React.
 
 - **1.6**, 2026-11-03 ([#1445](https://github.com/unisdr/undrr-mangrove/pull/1445)): Added opt-in contextual navigation filtering (`enableFilter`, `enableSiteSearch`, `searchUrl`), runtime translations and hydration attributes.
   - Desktop finder opens a native modal from a fixed left-column footer utility and searches the entire menu. Close restores the originating panel and focus without unmounting its navigation. The shortcut hint is platform-aware and handled only within the active menu, outside editors. Mobile retains its menu-wide drawer finder. The existing Search navigation item is unchanged; no extra header search entry or global keyboard shortcut is added.
+  - Finder controls and result rows use brief token-timed pointer hover tints; touch, keyboard focus, reduced motion and forced colours remain immediate. Dialog open/close and result updates remain immediate.
   - The left-column finder utility uses the same full-width tinted hover surface as adjacent category links; its shortcut hint stays unadorned.
   - The desktop dialog uses an icon-only Close button with a localized accessible name and keeps full-site search in a fixed footer outside scrolling results.
   - Mobile filtering defers menu traversal until a nonempty query; Tab focus containment shares ancestor style reads within each event and rechecks fresh styles on the next keypress.

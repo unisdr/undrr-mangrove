@@ -1294,6 +1294,7 @@
   }
 
   &__mobile-link {
+    transition: none;
     display: flex;
     align-items: center;
     min-height: mg-rem(44);
@@ -1407,7 +1408,12 @@
   padding-inline: var(--mg-spacing-250);
   border-radius: 0;
 
-  &:hover,
+  @media (hover: hover) {
+    &:hover {
+      background: rgb(var(--mg-color-interactive) / 0.15);
+    }
+  }
+
   &:focus-visible {
     background: rgb(var(--mg-color-interactive) / 0.15);
   }
@@ -1440,6 +1446,7 @@
   }
 
   &__action {
+    transition: none;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1457,8 +1464,10 @@
     cursor: pointer;
     text-decoration: none;
 
-    &:hover {
-      background: rgb(var(--mg-color-neutral-100));
+    @media (hover: hover) {
+      &:hover {
+        background: rgb(var(--mg-color-neutral-100));
+      }
     }
 
     &:focus-visible {
@@ -1514,4 +1523,18 @@
   margin-block: min(10vh, 80px) auto;
   margin-inline: auto;
   overflow: hidden;
+}
+
+// A brief tint confirms pointer targeting without delaying navigation or focus.
+// Base states remain immediate; keyboard, touch and forced colours stay instant.
+@media (hover: hover) and (prefers-reduced-motion: no-preference) and (forced-colors: none) {
+  .mg-mega-menu-finder__action,
+  .mg-mega-filter__mobile-link {
+    transition: background-color var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
+
+    &:focus-visible {
+      transition: none;
+    }
+  }
 }
