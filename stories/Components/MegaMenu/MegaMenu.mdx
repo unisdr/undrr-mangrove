@@ -198,7 +198,9 @@ The component does not infer or remove Search items from translated titles.
 - Close, Escape or an outside click dismisses the dialog and restores the footer
   button's focus. The underlying menu remains mounted, retaining the selected
   category and its scroll position. Clear stays in the dialog. Closing the
-  parent section resets the query.
+  parent section resets the query. Switching to mobile, disabling filtering or
+  removing the left-column utility dismisses and clears the finder without
+  reopening it later; focus returns to the surviving top-level control.
 - The mobile finder searches the menu across sections, as its input label says.
   Clearing retains the current drill-down level. Only filtered results scroll;
   the input and Close control remain visible.
@@ -362,6 +364,8 @@ for consumers needing the same strings outside React.
 ## Changelog
 
 - **1.6**, 2026-11-03 ([#1445](https://github.com/unisdr/undrr-mangrove/pull/1445)): Added opt-in contextual navigation filtering (`enableFilter`, `enableSiteSearch`, `searchUrl`), runtime translations and hydration attributes.
+  - Composing keyboard input, including Escape used by an IME, remains with the input without dismissing either navigation surface.
+  - Responsive/configuration changes that remove the desktop utility dismiss and reset the finder, restore focus to its top-level control and never reopen the modal automatically.
   - Desktop finder opens a native modal from a fixed left-column footer utility and searches the entire menu. Close restores the originating panel and focus without unmounting its navigation. The shortcut hint is platform-aware and handled only within the active menu, outside editors. Mobile retains its menu-wide drawer finder. The existing Search navigation item is unchanged; no extra header search entry or global keyboard shortcut is added.
   - Finder controls and result rows use brief token-timed pointer hover tints; touch, keyboard focus, reduced motion and forced colours remain immediate. Dialog open/close and result updates remain immediate.
   - The left-column finder utility uses the same full-width tinted hover surface as adjacent category links; its shortcut hint stays unadorned.

@@ -216,6 +216,25 @@ describe('MegaMenu filter utilities', () => {
 });
 
 describe('MegaMenu Mobile Filter UI', () => {
+  it('keeps the mobile drawer open while an IME handles composing Escape', () => {
+    render(<MegaMenu sections={sampleSections} enableFilter />);
+    const opener = screen.getByRole('button', { name: 'Open navigation menu' });
+    fireEvent.click(opener);
+    const dialog = screen.getByRole('dialog');
+    const input = within(dialog).getByRole('searchbox');
+    input.focus();
+    fireEvent.change(input, { target: { value: '文書' } });
+    expect(fireEvent.keyDown(input, { key: 'Escape', isComposing: true })).toBe(
+      true
+    );
+    expect(dialog).toHaveAttribute('aria-modal', 'true');
+    expect(input).toHaveValue('文書');
+    expect(input).toHaveFocus();
+    fireEvent.keyDown(input, { key: 'Escape' });
+    expect(dialog).toHaveAttribute('aria-hidden', 'true');
+    expect(opener).toHaveFocus();
+  });
+
   it('renders filter input in mobile sidebar when enableFilter is true', () => {
     render(
       <MegaMenu
@@ -479,6 +498,71 @@ describe('MegaMenu contextual desktop finder', () => {
         name: /Documents and publications/,
       })
     ).toHaveAttribute('href', '/documents');
+  });
+
+  it('dismisses and clears the finder when filtering is disabled, without reopening when enabled', async () => {
+    const { rerender } = render(
+      <MegaMenu sections={sampleSections} enableFilter hoverDelay={0} />
+    );
+    const panel = await openDesktopFinder();
+    fireEvent.change(within(panel).getByRole('searchbox'), {
+      target: { value: 'doc' },
+    });
+    rerender(
+      <MegaMenu sections={sampleSections} enableFilter={false} hoverDelay={0} />
+    );
+    expect(within(panel).queryByRole('dialog')).not.toBeInTheDocument();
+    expect(document.body.style.overflow).not.toBe('hidden');
+    expect(document.querySelector('.mg-mega-topbar__item-link')).toHaveFocus();
+    rerender(
+      <MegaMenu sections={sampleSections} enableFilter hoverDelay={0} />
+    );
+    expect(within(panel).queryByRole('dialog')).not.toBeInTheDocument();
+    fireEvent.click(
+      within(panel).getByRole('button', { name: 'Find in menu' })
+    );
+    expect(within(panel).getByRole('searchbox')).toHaveValue('');
+  });
+
+  it('dismisses when a data update removes its left-column utility', async () => {
+    const { rerender } = render(
+      <MegaMenu sections={sampleSections} enableFilter hoverDelay={0} />
+    );
+    const panel = await openDesktopFinder();
+    rerender(
+      <MegaMenu
+        sections={sampleSections.map((s, i) =>
+          i === 0 ? { ...s, bannerDescription: '' } : s
+        )}
+        enableFilter
+        hoverDelay={0}
+      />
+    );
+    expect(within(panel).queryByRole('dialog')).not.toBeInTheDocument();
+    expect(document.body.style.overflow).not.toBe('hidden');
+    expect(document.querySelector('.mg-mega-topbar__item-link')).toHaveFocus();
+    rerender(
+      <MegaMenu sections={sampleSections} enableFilter hoverDelay={0} />
+    );
+    expect(within(panel).queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('leaves composing Escape to the IME without closing either menu', async () => {
+    render(<MegaMenu sections={sampleSections} enableFilter hoverDelay={0} />);
+    const panel = await openDesktopFinder();
+    const input = within(panel).getByRole('searchbox');
+    fireEvent.change(input, { target: { value: '文書' } });
+    expect(fireEvent.keyDown(input, { key: 'Escape', isComposing: true })).toBe(
+      true
+    );
+    expect(within(panel).getByRole('dialog')).toHaveAttribute('open');
+    expect(input).toHaveValue('文書');
+    expect(input).toHaveFocus();
+    fireEvent.keyDown(input, { key: 'Escape' });
+    expect(within(panel).queryByRole('dialog')).not.toBeInTheDocument();
+    expect(
+      within(panel).getByRole('button', { name: 'Find in menu' })
+    ).toHaveFocus();
   });
 
   it('moves focus through result links without hijacking text editing or browser shortcuts', async () => {

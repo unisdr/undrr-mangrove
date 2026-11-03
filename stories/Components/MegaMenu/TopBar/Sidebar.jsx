@@ -150,6 +150,10 @@ export function Sidebar({
     setPath(previous => previous.slice(0, -1));
   };
   const handleKeyDown = event => {
+    if (event.isComposing || event.nativeEvent?.isComposing) {
+      event.stopPropagation();
+      return;
+    }
     if (event.key === 'Escape') {
       event.stopPropagation();
       event.preventDefault();

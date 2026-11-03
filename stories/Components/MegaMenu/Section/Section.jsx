@@ -45,7 +45,10 @@ export default function Section({
   // CSS media queries control which version is visible.
   const [filterQuery, setFilterQuery] = useState('');
   const [finderOpen, setFinderOpen] = useState(false);
-  const filtering = enableFilter && finderOpen;
+  const hasIntroduction = Boolean(
+    section?.bannerHeading && section?.bannerDescription && section?.items
+  );
+  const filtering = enableFilter && finderOpen && isActive && hasIntroduction;
   const finderTriggerRef = useRef(null);
   const [shortcutLabel, setShortcutLabel] = useState('Ctrl K');
   useEffect(() => {
@@ -53,15 +56,16 @@ export default function Section({
     if (/Mac|iPhone|iPad|iPod/i.test(platform)) setShortcutLabel('⌘K');
   }, []);
   const restoreFinderFocusRef = useRef(false);
-  const hasIntroduction = Boolean(
-    section?.bannerHeading && section?.bannerDescription && section?.items
-  );
   useEffect(() => {
-    if (!isActive) {
+    if (!isActive || !enableFilter || !hasIntroduction) {
+      // Resizing or removing the owning utility dismisses the finder for good.
+      // Its former footer may be hidden/removed; use the surviving nav control.
+      if (finderOpen && isActive) itemListRef.current[index]?.focus();
+      restoreFinderFocusRef.current = false;
       setFilterQuery('');
       setFinderOpen(false);
     }
-  }, [isActive]);
+  }, [isActive, enableFilter, hasIntroduction, finderOpen, itemListRef, index]);
   useEffect(() => {
     if (!finderOpen && restoreFinderFocusRef.current) {
       restoreFinderFocusRef.current = false;

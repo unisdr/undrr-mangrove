@@ -50,6 +50,11 @@ export default function MenuFinder({
     onClose();
   };
   const handleKeyDown = event => {
+    // Let IMEs consume candidate-selection keys without dismissing either menu.
+    if (event.isComposing || event.nativeEvent?.isComposing) {
+      event.stopPropagation();
+      return;
+    }
     if (event.key === 'Tab') {
       const controls = Array.from(
         finderRef.current.querySelectorAll(
@@ -73,7 +78,6 @@ export default function MenuFinder({
       onBack();
       return;
     }
-    if (event.isComposing || event.nativeEvent?.isComposing) return;
     if (!['Enter', 'ArrowDown', 'ArrowUp'].includes(event.key)) return;
     const links = Array.from(finderRef.current.querySelectorAll('a[href]'));
     const index = links.indexOf(event.target);
