@@ -324,6 +324,46 @@ describe('MegaMenu filter utilities', () => {
     ).toEqual([]);
   });
 
+  it.each(['RO', 'ro', 'R-O'])(
+    'ranks exact acronym %s ahead of incidental inside-word matches',
+    query => {
+      const items = flattenMenuItems([
+        { title: 'Conference Proceedings', url: '/proceedings' },
+        { title: 'Working Groups', url: '/groups' },
+        { title: 'Nairobi Office', url: '/nairobi' },
+        { title: 'Junior Professional Officers', url: '/junior' },
+        { title: 'Regional Offices', url: '/regional' },
+        { title: 'Regional Organizations', url: '/organizations' },
+      ]);
+      expect(filterMenuItems(items, query).map(item => item.url)).toEqual([
+        '/regional',
+        '/organizations',
+        '/proceedings',
+        '/groups',
+        '/nairobi',
+        '/junior',
+      ]);
+      expect(filterMenuItems(items, 'region')[0].url).toBe('/regional');
+    }
+  );
+
+  it('ranks exact titles and whole-word prefixes above acronym and inside-word matches', () => {
+    const items = flattenMenuItems([
+      { title: 'Conference Proceedings', url: '/inside' },
+      { title: 'Regional Offices', url: '/initials' },
+      { title: 'Annual Road Report', url: '/word' },
+      { title: 'Road Maps', url: '/prefix' },
+      { title: 'RO', url: '/exact' },
+    ]);
+    expect(filterMenuItems(items, 'ro').map(item => item.url)).toEqual([
+      '/exact',
+      '/prefix',
+      '/word',
+      '/initials',
+      '/inside',
+    ]);
+  });
+
   it('does not highlight arbitrary individual letters in spelled acronym queries', () => {
     const { container } = render(
       <HighlightText text="Global Assessment Report" query="G-A-R" />

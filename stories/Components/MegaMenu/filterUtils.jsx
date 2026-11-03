@@ -152,39 +152,45 @@ export function filterMenuItems(items, query) {
   };
   // Fixed rank buckets preserve menu order without sorting. Every query word
   // must occur; title-only matches precede breadcrumb and combined matches.
-  const buckets = [[], [], [], [], [], [], [], []];
+  const buckets = [[], [], [], [], [], [], [], [], []];
   for (const item of items) {
     const title = searchForm(item.title || '');
     const path = searchForm(item.fullPath || '');
     if (title === normalized) buckets[0].push(item);
     else if (title.startsWith(normalized)) buckets[1].push(item);
-    else if (title.includes(normalized)) buckets[2].push(item);
-    else if (useWords && terms.every(term => title.includes(term)))
-      buckets[3].push(item);
+    else if (
+      !useWords &&
+      title.includes(normalized) &&
+      searchWords(title).some(word => word.startsWith(normalized))
+    )
+      buckets[2].push(item);
     else if (
       acronym &&
       (item.acronyms
         ? item.acronyms.title.includes(acronym)
         : hasAcronym(item.title || ''))
     )
-      buckets[4].push(item);
+      buckets[3].push(item);
+    else if (title.includes(normalized)) buckets[4].push(item);
+    else if (useWords && terms.every(term => title.includes(term)))
+      buckets[5].push(item);
     else if (
       path.includes(normalized) ||
       (useWords && terms.every(term => path.includes(term)))
     )
-      buckets[5].push(item);
+      buckets[6].push(item);
     else if (
       useWords &&
       terms.every(term => title.includes(term) || path.includes(term))
     )
-      buckets[6].push(item);
+      buckets[7].push(item);
     else if (
       acronym &&
       (item.acronyms
         ? item.acronyms.path.includes(acronym)
         : (item.path || (item.fullPath || '').split('›')).some(hasAcronym))
     )
-      buckets[7].push(item);
+      buckets[8].push(item);
   }
   // Only fall back to typo tolerance when literal matching finds nothing.
   if (

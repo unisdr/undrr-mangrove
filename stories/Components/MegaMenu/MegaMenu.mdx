@@ -172,15 +172,16 @@ current drill-down level. Results scroll while the input and Close remain visibl
 - Every query word must match the title or breadcrumb, in any order. English
   “and” and “&” are optional between other terms: “events news” finds
   “News & Events”. Each matching word is highlighted.
-- Ranking favours exact titles, prefixes and title matches before breadcrumb
-  or combined matches. Repeated URLs appear once; each breadcrumb row is one
+- Ranking favours exact titles and word prefixes, then exact acronyms, then
+  inside-word matches and other title matches, before breadcrumb/combined matches. Repeated URLs appear once; each breadcrumb row is one
   link and wraps in RTL or narrow layouts.
 - Acronyms match automatically by word initials or internal capitals: “GAR”
   finds “Global Assessment Report” and “PW” finds “PreventionWeb”. Matching is
   case-insensitive and accepts “G-A-R”, “G.A.R.” or “G A R”. English connector
   words such as “for” and “of” may be omitted; numeric years are ignored.
   Whole-label acronyms of at least two letters match titles or individual
-  ancestors, after direct title matches. Acronym prefixes and invented
+  ancestors. Exact acronyms rank above incidental inside-word matches: “RO”
+  favours “Regional Offices” over “Conference Proceedings”. Acronym prefixes and invented
   combinations across breadcrumb levels do not match. Displayed names and
   site-search queries stay unchanged.
 - If there are no matches, a single word of at least four characters allows
@@ -313,7 +314,7 @@ for consumers needing the same strings outside React.
 
 - **1.6**, 2026-11-03 ([#1445](https://github.com/unisdr/undrr-mangrove/pull/1445)): Added opt-in navigation finding (`enableFilter`, `enableSiteSearch`, `searchUrl`), translated labels and hydration support.
   - Desktop footer utility opens a menu-wide modal with contextual ⌘K/Ctrl K, preserved menu state and a fixed site-search footer. Mobile filters within the drawer; the existing Search item is unchanged.
-  - Ranked, deduplicated breadcrumb results support unordered words, optional English “and”/“&”, automatic word/CamelCase initials (GAR, PW) and conservative one-typo fallback. Site search preserves the query and uses an outlined CTA with an RTL-aware arrow.
+  - Ranked, deduplicated breadcrumb results support unordered words, optional English “and”/“&”, automatic word/CamelCase initials (GAR, PW, RO) ranked above inside-word matches and conservative one-typo fallback. Site search preserves the query and uses an outlined CTA with an RTL-aware arrow.
   - Native focus handling, IME-safe Escape, responsive/configuration reset, 44px targets, themeable type and preference-aware hover feedback preserve accessible navigation.
   - Reused menu indexes, rank buckets, query-local fuzzy caches and shared per-Tab visibility checks reduce repeated work. Mobile results use one separator before the site-search action.
 
