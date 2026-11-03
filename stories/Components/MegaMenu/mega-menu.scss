@@ -1289,6 +1289,10 @@
 
   &__mobile-item {
     border-bottom: 1px solid rgb(var(--mg-color-neutral-200));
+
+    &:last-child {
+      border-bottom: 0; // The site-search footer owns the closing separator.
+    }
   }
 
   &__mobile-link {
