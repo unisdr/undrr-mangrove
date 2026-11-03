@@ -1,15 +1,47 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+/** Infer whole-label initials, including CamelCase boundaries, without a dictionary. */
+function menuAcronyms(text) {
+  const words = (
+    text
+      .replace(/([\p{Ll}\p{N}])(\p{Lu})/gu, '$1 $2')
+      .replace(/(\p{Lu})(\p{Lu}\p{Ll})/gu, '$1 $2')
+      .match(/[\p{L}\p{N}]+/gu) || []
+  ).filter(word => /^\p{L}/u.test(word));
+  const initials = list =>
+    list
+      .map(word => Array.from(word)[0])
+      .join('')
+      .toLowerCase();
+  const significant = words.filter(
+    word => !/^(?:a|an|and|at|by|for|from|in|of|on|or|the|to|with)$/i.test(word)
+  );
+  return [...new Set([initials(words), initials(significant)])].filter(
+    alias => Array.from(alias).length >= 2
+  );
+}
+
+/** Accept GAR, G-A-R, G.A.R. and spaced initials, but not arbitrary phrases. */
+function acronymQuery(query) {
+  if (!/^(?:\p{L}{2,}|\p{L}(?:[-.\s]+\p{L})+\.?)$/u.test(query)) return null;
+  return query.replace(/[-.\s]/g, '');
+}
+
 /**
  * Extracts all navigable links from a sections tree, preserving full hierarchy paths.
  *
  * @param {Array} sections - The hierarchical menu sections array.
- * @returns {Array<{ title: string, url: string, path: string[], fullPath: string }>}
+ * @returns {Array} Destinations, hierarchy paths and precomputed title/ancestor acronym aliases.
  */
 export function flattenMenuItems(sections) {
   const results = [];
   const seen = new Set();
+  const aliases = new Map();
+  const getAliases = title => {
+    if (!aliases.has(title)) aliases.set(title, menuAcronyms(title));
+    return aliases.get(title);
+  };
 
   const walk = (items, ancestors = []) => {
     if (!items || !Array.isArray(items)) return;
@@ -27,6 +59,10 @@ export function flattenMenuItems(sections) {
             url,
             path: ancestors,
             fullPath: ancestors.join(' › '),
+            acronyms: {
+              title: getAliases(item.title),
+              path: ancestors.flatMap(getAliases),
+            },
           });
         }
       }
@@ -80,11 +116,18 @@ function searchWords(text) {
 export function filterMenuItems(items, query) {
   if (!items || !query || !query.trim()) return [];
   const rawQuery = query.trim().toLowerCase();
+  const acronym = acronymQuery(rawQuery);
+  const spelledAcronym = acronym && /[-.\s]/.test(rawQuery);
   const words = searchWords(rawQuery);
   const keepAnd = words.length > 0 && words.every(word => word === 'and');
   const terms = keepAnd ? ['and'] : words.filter(word => word !== 'and');
-  const useWords = words.length > 1 || words.includes('and');
-  const normalized = useWords ? terms.join(' ') : rawQuery;
+  const useWords =
+    !spelledAcronym && (words.length > 1 || words.includes('and'));
+  const normalized = spelledAcronym
+    ? acronym
+    : useWords
+      ? terms.join(' ')
+      : rawQuery;
   if (!normalized) return [];
   const textForms = new Map();
   const searchForm = text => {
@@ -99,9 +142,17 @@ export function filterMenuItems(items, query) {
     }
     return textForms.get(text);
   };
+  // Flattened menus already index aliases. Keep direct utility callers cheap
+  // too, sharing repeated ancestor labels within this query only.
+  const aliases = new Map();
+  const hasAcronym = text => {
+    if (!acronym) return false;
+    if (!aliases.has(text)) aliases.set(text, menuAcronyms(text));
+    return aliases.get(text).includes(acronym);
+  };
   // Fixed rank buckets preserve menu order without sorting. Every query word
   // must occur; title-only matches precede breadcrumb and combined matches.
-  const buckets = [[], [], [], [], [], []];
+  const buckets = [[], [], [], [], [], [], [], []];
   for (const item of items) {
     const title = searchForm(item.title || '');
     const path = searchForm(item.fullPath || '');
@@ -111,15 +162,29 @@ export function filterMenuItems(items, query) {
     else if (useWords && terms.every(term => title.includes(term)))
       buckets[3].push(item);
     else if (
+      acronym &&
+      (item.acronyms
+        ? item.acronyms.title.includes(acronym)
+        : hasAcronym(item.title || ''))
+    )
+      buckets[4].push(item);
+    else if (
       path.includes(normalized) ||
       (useWords && terms.every(term => path.includes(term)))
     )
-      buckets[4].push(item);
+      buckets[5].push(item);
     else if (
       useWords &&
       terms.every(term => title.includes(term) || path.includes(term))
     )
-      buckets[5].push(item);
+      buckets[6].push(item);
+    else if (
+      acronym &&
+      (item.acronyms
+        ? item.acronyms.path.includes(acronym)
+        : (item.path || (item.fullPath || '').split('›')).some(hasAcronym))
+    )
+      buckets[7].push(item);
   }
   // Only fall back to typo tolerance when literal matching finds nothing.
   if (
@@ -222,7 +287,9 @@ export function formatLabel(template, variables = {}) {
  */
 export function HighlightText({ text, query }) {
   if (!query || !query.trim() || !text) return text || '';
-  const words = searchWords(query);
+  const compact = acronymQuery(query.trim().toLowerCase());
+  const words =
+    compact && /[-.\s]/.test(query.trim()) ? [compact] : searchWords(query);
   if (!words.length) return text;
   const alternatives = [...new Set(words)].sort((a, b) => b.length - a.length);
   if (alternatives.includes('and')) alternatives.push('&');

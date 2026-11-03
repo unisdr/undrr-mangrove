@@ -241,6 +241,97 @@ describe('MegaMenu filter utilities', () => {
     ).toEqual(['News', '&', 'Events']);
   });
 
+  it.each(['GAR', 'gar', 'G-A-R', 'G.A.R.', 'G A R'])(
+    'infers word initials for %s and preserves the original site-search query',
+    query => {
+      const items = flattenMenuItems([
+        {
+          title: 'Publications',
+          items: [
+            {
+              title: 'Global Assessment Report 2025',
+              url: '/gar',
+              items: [{ title: 'Downloads', url: '/downloads' }],
+            },
+          ],
+        },
+      ]);
+      expect(filterMenuItems(items, query).map(item => item.url)).toEqual([
+        '/gar',
+        '/downloads',
+      ]);
+      expect(getSiteSearchUrl('/search', query)).toBe(
+        '/search#query=' + encodeURIComponent(query)
+      );
+    }
+  );
+
+  it('infers CamelCase initials and optional connector words without splitting capital runs', () => {
+    const items = flattenMenuItems([
+      { title: 'PreventionWeb', url: '/pw' },
+      { title: 'Preventionweb', url: '/lower' },
+      { title: 'International Day for Disaster Risk Reduction', url: '/day' },
+      { title: 'XMLParser', url: '/xml' },
+      { title: 'UNDRR', url: '/undrr' },
+    ]);
+    expect(filterMenuItems(items, 'pw').map(item => item.url)).toEqual(['/pw']);
+    expect(filterMenuItems(items, 'iddrr').map(item => item.url)).toEqual([
+      '/day',
+    ]);
+    expect(filterMenuItems(items, 'idf drr')).toEqual([]);
+    expect(filterMenuItems(items, 'xp').map(item => item.url)).toEqual([
+      '/xml',
+    ]);
+    expect(filterMenuItems(items, 'ud')).toEqual([]);
+    expect(filterMenuItems(items, 'g')).toEqual([]);
+  });
+
+  it('ranks literal titles before inferred acronyms, preserving deduplication', () => {
+    const items = [
+      {
+        title: 'Downloads',
+        fullPath: 'Global Assessment Report',
+        url: '/downloads',
+      },
+      { title: 'Global Assessment Report', fullPath: '', url: '/expanded' },
+      { title: 'GAR archive', fullPath: '', url: '/archive' },
+      { title: 'GAR', fullPath: '', url: '/literal' },
+      { title: 'Global Assessment Report', fullPath: '', url: '/literal' },
+    ];
+    expect(filterMenuItems(items, 'gar').map(item => item.url)).toEqual([
+      '/literal',
+      '/archive',
+      '/expanded',
+      '/downloads',
+    ]);
+    expect(
+      filterMenuItems(
+        [
+          {
+            title: 'Report',
+            fullPath: 'Global › Assessment',
+            url: '/separate',
+          },
+        ],
+        'gar'
+      )
+    ).toEqual([]);
+    expect(
+      filterMenuItems(
+        [{ title: 'Global Assessment Report', url: '/full' }],
+        'ga'
+      )
+    ).toEqual([]);
+  });
+
+  it('does not highlight arbitrary individual letters in spelled acronym queries', () => {
+    const { container } = render(
+      <HighlightText text="Global Assessment Report" query="G-A-R" />
+    );
+    expect(container).toHaveTextContent('Global Assessment Report');
+    expect(container.querySelector('mark')).toBeNull();
+  });
+
   it('formats label templates with variables', () => {
     const formatted = formatLabel('Search all for "{query}" ({count})', {
       query: 'tsunami',
