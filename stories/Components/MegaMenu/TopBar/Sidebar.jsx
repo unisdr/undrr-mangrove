@@ -40,9 +40,12 @@ export function Sidebar({
   const returningRef = useRef(null);
   const titleId = useId();
 
+  const hasFilterQuery = enableFilter && Boolean(filterQuery.trim());
+  // The mobile controller stays mounted on desktop. Traverse the menu only
+  // once a query needs it, and reuse that list across subsequent keystrokes.
   const allItems = useMemo(() => {
-    return enableFilter ? flattenMenuItems(sections) : [];
-  }, [enableFilter, sections]);
+    return hasFilterQuery ? flattenMenuItems(sections) : [];
+  }, [hasFilterQuery, sections]);
 
   const filteredResults = useMemo(() => {
     return enableFilter && filterQuery.trim()
@@ -153,6 +156,9 @@ export function Sidebar({
       onClose();
     }
     if (event.key === 'Tab') {
+      // Shared ancestors occur in every candidate's visibility walk. Read each
+      // style once per Tab, but recheck on the next event after CSS/DOM changes.
+      const hiddenByStyle = new Map();
       const focusable = Array.from(
         dialogRef.current.querySelectorAll(
           'a[href], button, input, select, textarea, summary, iframe, [contenteditable="true"], [tabindex], audio[controls], video[controls]'
@@ -177,9 +183,14 @@ export function Sidebar({
           ancestor && ancestor !== dialogRef.current;
           ancestor = ancestor.parentElement
         ) {
-          const style = window.getComputedStyle(ancestor);
-          if (style.display === 'none' || style.visibility === 'hidden')
-            return false;
+          if (!hiddenByStyle.has(ancestor)) {
+            const style = window.getComputedStyle(ancestor);
+            hiddenByStyle.set(
+              ancestor,
+              style.display === 'none' || style.visibility === 'hidden'
+            );
+          }
+          if (hiddenByStyle.get(ancestor)) return false;
         }
         return true;
       });
