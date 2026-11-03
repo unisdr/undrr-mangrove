@@ -749,6 +749,11 @@ describe('every component names the role it is meant to', () => {
     ['.mg-hero__label', 'ui'],
     ['.mg-hero__title', 'display'],
     ['.mg-mega-content__banner header', 'ui'],
+    ['.mg-mega-filter__clear', 'text'],
+    ['.mg-mega-filter__input', 'text'],
+    ['.mg-mega-filter__mobile-link', 'ui'],
+    ['.mg-mega-menu-finder__label', 'ui'],
+    ['.mg-mega-menu-finder__action', 'text'],
     [
       '.mg-mega-mobile-sidebar--progressive .mg-mega-mobile-sidebar__back',
       'text',
