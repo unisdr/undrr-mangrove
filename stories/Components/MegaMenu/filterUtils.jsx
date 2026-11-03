@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 /**
  * Extracts all navigable links from a sections tree, preserving full hierarchy paths.
@@ -40,6 +41,28 @@ export function flattenMenuItems(sections) {
   return results;
 }
 
+/** One insertion, deletion, substitution or adjacent transposition per word. */
+function isNearWord(query, word) {
+  if (Math.abs(query.length - word.length) > 1) return false;
+  let i = 0;
+  while (i < query.length && query[i] === word[i]) i++;
+  if (i === query.length) return true;
+  let j = i;
+  if (query.length < word.length) j++;
+  else if (query.length > word.length) i++;
+  else if (query[i] === word[i + 1] && query[i + 1] === word[i]) {
+    i += 2;
+    j += 2;
+  } else {
+    i++;
+    j++;
+  }
+  while (i < query.length && j < word.length) {
+    if (query[i++] !== word[j++]) return false;
+  }
+  return i === query.length && j === word.length;
+}
+
 /**
  * Filters a flat list of menu items by query string matching title or category path.
  *
@@ -50,11 +73,59 @@ export function flattenMenuItems(sections) {
 export function filterMenuItems(items, query) {
   if (!items || !query || !query.trim()) return [];
   const normalized = query.trim().toLowerCase();
-  return items.filter(item => {
-    const inTitle = item.title?.toLowerCase().includes(normalized);
-    const inPath = item.fullPath?.toLowerCase().includes(normalized);
-    return Boolean(inTitle || inPath);
-  });
+  // A fixed number of rank buckets keeps stable menu order without sorting.
+  const buckets = [[], [], [], []];
+  for (const item of items) {
+    const title = item.title?.toLowerCase() || '';
+    if (title === normalized) buckets[0].push(item);
+    else if (title.startsWith(normalized)) buckets[1].push(item);
+    else if (title.includes(normalized)) buckets[2].push(item);
+    else if (item.fullPath?.toLowerCase().includes(normalized))
+      buckets[3].push(item);
+  }
+  // Only fall back to typo tolerance when literal matching finds nothing.
+  if (
+    buckets.every(bucket => !bucket.length) &&
+    /^[\p{L}\p{N}]{4,}$/u.test(normalized)
+  ) {
+    const queryCharacters = Array.from(normalized);
+    const wordMatches = new Map();
+    const textMatches = new Map();
+    const hasNearWord = text => {
+      // Menu ancestors repeat for every descendant. Match each distinct text
+      // and word once per query, without retaining stale data between queries.
+      if (!textMatches.has(text)) {
+        const words = text.toLowerCase().match(/[\p{L}\p{N}]+/gu) || [];
+        textMatches.set(
+          text,
+          words.some(word => {
+            if (!wordMatches.has(word)) {
+              wordMatches.set(
+                word,
+                isNearWord(queryCharacters, Array.from(word))
+              );
+            }
+            return wordMatches.get(word);
+          })
+        );
+      }
+      return textMatches.get(text);
+    };
+    for (const item of items) {
+      if (hasNearWord(item.title || '')) buckets[0].push(item);
+      else if (hasNearWord(item.fullPath || '')) buckets[1].push(item);
+    }
+  }
+  const results = [];
+  const seen = new Set();
+  for (const bucket of buckets) {
+    for (const item of bucket) {
+      if (seen.has(item.url)) continue;
+      seen.add(item.url);
+      results.push(item);
+    }
+  }
+  return results;
 }
 
 /**
@@ -130,3 +201,27 @@ export function HighlightText({ text, query }) {
     </>
   );
 }
+
+/** Breadcrumb-style context for one destination; the enclosing link owns navigation. */
+export function MenuResultTrail({ item, query }) {
+  return (
+    <span className="mg-mega-filter__trail">
+      {item.path.map((title, index) => (
+        <span key={index} className="mg-mega-filter__trail-step">
+          <HighlightText text={title} query={query} />
+        </span>
+      ))}
+      <span className="mg-mega-filter__trail-step mg-mega-filter__item-title">
+        <HighlightText text={item.title} query={query} />
+      </span>
+    </span>
+  );
+}
+
+MenuResultTrail.propTypes = {
+  item: PropTypes.shape({
+    path: PropTypes.arrayOf(PropTypes.string).isRequired,
+    title: PropTypes.string.isRequired,
+  }).isRequired,
+  query: PropTypes.string,
+};

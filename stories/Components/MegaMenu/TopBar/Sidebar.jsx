@@ -9,7 +9,7 @@ import {
   flattenMenuItems,
   filterMenuItems,
   formatLabel,
-  HighlightText,
+  MenuResultTrail,
   getSiteSearchUrl,
 } from '../filterUtils';
 
@@ -204,7 +204,7 @@ export function Sidebar({
     <div
       id={id}
       ref={dialogRef}
-      className={`mg-mega-mobile-sidebar mg-mega-mobile-sidebar--progressive${open ? ' mg-mega-mobile-sidebar--open' : ''}`}
+      className={`mg-mega-mobile-sidebar mg-mega-mobile-sidebar--progressive${open ? ' mg-mega-mobile-sidebar--open' : ''}${enableFilter && filterQuery.trim() ? ' mg-mega-mobile-sidebar--filtering' : ''}`}
       role="dialog"
       aria-modal={open ? 'true' : undefined}
       aria-labelledby={titleId}
@@ -267,13 +267,15 @@ export function Sidebar({
             {labels.menuLabel || 'Menu'}
           </h2>
           <div
-            className="mg-mega-filter__status"
+            className={`mg-mega-filter__status${filteredResults.length > 0 ? ' mg-u-sr-only' : ''}`}
             role="status"
             aria-live="polite"
           >
-            {formatLabel(labels.filterMatchesCount, {
-              count: filteredResults.length,
-            })}
+            {filteredResults.length === 0
+              ? labels.noFilterResultsLabel
+              : formatLabel(labels.filterMatchesCount, {
+                  count: filteredResults.length,
+                })}
           </div>
           {filteredResults.length > 0 ? (
             <ul className="mg-mega-filter__mobile-list">
@@ -289,31 +291,18 @@ export function Sidebar({
                         : item.title
                     }
                   >
-                    {item.fullPath && (
-                      <span className="mg-mega-filter__item-breadcrumb">
-                        <HighlightText
-                          text={item.fullPath}
-                          query={filterQuery}
-                        />
-                      </span>
-                    )}
-                    <span className="mg-mega-filter__item-title">
-                      <HighlightText text={item.title} query={filterQuery} />
-                    </span>
+                    <MenuResultTrail item={item} query={filterQuery} />
                   </a>
                 </li>
               ))}
             </ul>
           ) : (
             <div className="mg-mega-filter__empty-container">
-              <p className="mg-mega-filter__empty">
-                {labels.noFilterResultsLabel}
-              </p>
               {enableSiteSearch && filterQuery.trim() && (
                 <div className="mg-mega-filter__empty-actions">
                   <a
                     href={getSiteSearchUrl(searchUrl, filterQuery)}
-                    className="mg-button mg-button--primary mg-mega-filter__empty-search-btn"
+                    className="mg-mega-filter__empty-search-btn"
                     onClick={onClose}
                   >
                     <span

@@ -22,7 +22,9 @@ export function TopBar({
   logoWidth,
   logoHeight,
   enableFilter = false,
-  onOpenQuickNav,
+  enableSiteSearch,
+  searchUrl,
+  onNavigate,
 }) {
   const railDrag = useRailDrag(isMobile);
   const pendingPanelFocusRef = useRef(null);
@@ -34,6 +36,7 @@ export function TopBar({
   }, [activeItem, sectionListRef]);
 
   const handleFocusByArrows = (e, index) => {
+    if (e.target.closest('.mg-mega-menu-finder')) return;
     // Prevent default browser scrolling for arrow keys
     if (['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
       e.preventDefault();
@@ -78,6 +81,7 @@ export function TopBar({
       }}
       activeItem={activeItem}
       section={section}
+      sections={sections}
       handleOnKeyDown={e => {
         if (isMobile && e.key === 'ArrowDown') {
           e.preventDefault();
@@ -89,27 +93,16 @@ export function TopBar({
       }}
       sectionListRef={sectionListRef}
       itemListRef={itemListRef}
+      enableFilter={enableFilter && !isMobile}
+      enableSiteSearch={enableSiteSearch}
+      searchUrl={searchUrl}
+      onNavigate={onNavigate}
+      onCloseSection={() => activateItem(null)}
+      labels={labels}
     >
       {section.sections}
     </TopBarItem>
   ));
-
-  const filterTriggerItem = enableFilter && !isMobile && (
-    <li className="mg-mega-topbar__item mg-mega-topbar__item--filter">
-      <button
-        type="button"
-        className="mg-mega-topbar__filter-trigger"
-        onClick={onOpenQuickNav}
-        aria-label="Jump to section"
-      >
-        <span className="mg-icon mg-icon-search" aria-hidden="true" />
-        <span>Jump to</span>
-        <kbd className="mg-mega-topbar__filter-kbd" aria-hidden="true">
-          /
-        </kbd>
-      </button>
-    </li>
-  );
 
   // Branded variant: logo + nav wrapped in a <div>
   if (logoSrc) {
@@ -140,7 +133,6 @@ export function TopBar({
         <ul className="mg-mega-topbar__nav" {...railDrag}>
           {/* Mobile labels open the corresponding section in the dialog. */}
           {menuItems}
-          {filterTriggerItem}
         </ul>
       </div>
     );
@@ -157,7 +149,6 @@ export function TopBar({
       />
       <ul className="mg-mega-topbar__nav" {...railDrag}>
         {menuItems}
-        {filterTriggerItem}
       </ul>
     </div>
   );

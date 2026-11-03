@@ -14,9 +14,16 @@ export function TopBarItem({
   handleOnKeyDown,
   ref,
   section,
+  sections,
   sectionListRef,
   itemListRef,
   index,
+  enableFilter,
+  enableSiteSearch,
+  searchUrl,
+  onNavigate,
+  onCloseSection,
+  labels,
 }) {
   const isActive = index === activeItem;
   // The panel below is a disclosure, not a menu: announce expanded state
@@ -40,7 +47,34 @@ export function TopBarItem({
       className={`mg-mega-topbar__item ${isActive ? 'mg-mega-topbar__item--active' : ''}`}
       onMouseEnter={section || bannerDescription ? onMouseEnter : undefined}
       onFocus={isMobile ? undefined : onMouseEnter}
-      onKeyDown={handleOnKeyDown}
+      onKeyDown={event => {
+        const isEditable =
+          event.target.isContentEditable ||
+          event.target.closest('input, textarea, select, [contenteditable]');
+        const shortcut =
+          event.key.toLowerCase() === 'k' && (event.metaKey || event.ctrlKey);
+        if (
+          isActive &&
+          enableFilter &&
+          shortcut &&
+          !isEditable &&
+          !event.altKey &&
+          !event.shiftKey &&
+          !event.repeat &&
+          !event.isComposing &&
+          !event.defaultPrevented
+        ) {
+          const trigger = sectionListRef.current[index]?.querySelector(
+            '.mg-mega-content__finder-trigger'
+          );
+          if (trigger) {
+            event.preventDefault();
+            trigger.click();
+            return;
+          }
+        }
+        handleOnKeyDown(event);
+      }}
     >
       {/* Render link if no children and link URL exists, otherwise just show title */}
       {/* {!children && link && link.url ? <a href={link.url}>{title}</a> : title} */}
@@ -76,10 +110,17 @@ export function TopBarItem({
 
       <Section
         section={section}
+        sections={sections}
         isActive={isActive}
         index={index}
         sectionListRef={sectionListRef}
         itemListRef={itemListRef}
+        enableFilter={enableFilter}
+        enableSiteSearch={enableSiteSearch}
+        searchUrl={searchUrl}
+        onNavigate={onNavigate}
+        onClose={onCloseSection}
+        labels={labels}
       />
     </li>
   );

@@ -2946,9 +2946,33 @@ npm run build</code></pre>
     summary:
       'Site-wide mega menu: a desktop navigation strip with multi-column panels, and a bounded progressive overlay below 900px.',
     description:
-      'Site-wide mega menu: a desktop nav strip with multi-column panels and a bounded progressive mobile overlay below 900px. The menu structure comes from a sections array, normally built server-side or fetched from an API. Below 900px the overlay is bounded (minimum 400px where space permits, maximum min(700px, 90dvh)) with Back above the title, a separate Close control and outside-click dismissal, nested groups, and section headings linked to their landing pages. Optional label props are menuLabel, backLabel, allSectionsLabel, closeLabel, overviewLabel and toggleMobileNavLabel. mg-mega-wrapper--js-active is added on mount, so pointer-events restrictions apply only once the sidebar is available; plain HTML nav markup and failed-hydration states stay clickable on mobile.',
+      'Site-wide mega menu: a desktop nav strip with multi-column panels and a bounded progressive mobile overlay below 900px. The menu structure comes from a sections array, normally built server-side or fetched from an API. Below 900px the overlay is bounded (minimum 400px where space permits, maximum min(700px, 90dvh)) with Back above the title, a separate Close control and outside-click dismissal, nested groups, and section headings linked to their landing pages. Optional enableFilter adds a menu-wide native finder dialog opened by a fixed footer utility in desktop panels with left columns and a menu-wide mobile drawer finder. The existing Search navigation item is unchanged; no second top-level search entry or global shortcut is added. Results use wrapping breadcrumb rows, rank title matches first and combine duplicate URLs. If literal matching finds nothing, single-word queries of at least four characters tolerate one edit or adjacent transposition against title and breadcrumb words. Counts are screen-reader-only. Close or Escape restores the footer focus; underlying navigation and scroll positions remain mounted. The platform-aware Cmd/Ctrl+K hint applies only with focus in the expanded menu outside editors; Clear stays in the dialog. The desktop dialog has an icon-only localized Close button and keeps full-site search visible in a separate footer while results scroll. enableSiteSearch offers a contextual full-site fallback (searchUrl defaults to /search#query=). menuFilterLabel names the utility and dialog; closeLabel names dismissal; other finder labels retain runtime translations and consumer overrides. mg-mega-wrapper--js-active is added on mount, so pointer-events restrictions apply only once the sidebar is available; plain HTML nav markup and failed-hydration states stay clickable on mobile.',
+    cssClasses: [
+      'mg-mega-content--filterable',
+      'mg-mega-menu-finder',
+      'mg-mega-menu-finder__header',
+      'mg-mega-menu-finder__heading',
+      'mg-mega-menu-finder__action',
+      'mg-mega-content__left-scroll',
+      'mg-mega-content__left-contents',
+      'mg-mega-content__finder-footer',
+      'mg-mega-content__finder-trigger',
+      'mg-mega-content__finder-shortcut',
+      'mg-mega-menu-finder__label',
+      'mg-mega-menu-finder__results',
+      'mg-mega-menu-finder__footer',
+      'mg-mega-filter',
+      'mg-mega-mobile-sidebar--filtering',
+      'mg-mega-filter__input',
+      'mg-mega-filter__mobile-list',
+      'mg-mega-filter__mobile-link',
+      'mg-mega-filter__item-title',
+      'mg-mega-filter__trail',
+      'mg-mega-filter__trail-step',
+      'mg-mega-filter__highlight',
+    ],
     hydration: {
-      note: "MegaMenu needs React: open and close state, keyboard navigation and the mobile drill-down are all component behaviour, so renderedHtml is not a working menu. This is a complex-tier component — fromElement reads only timing, logo and an optional inline data-sections attribute, and most integrations pass sections from an API in a consumer wrapper instead. Security: a section's bannerDescription is injected as raw HTML at the desktop banner, the no-items call-to-action panel and the mobile sidebar, and is NOT sanitised — unlike TextCta, Drawer and the card components, MegaMenu does not run DOMPurify. Sanitise it in the wrapper that builds sections, and never build it from untrusted input. bannerHeading and every title are rendered as text. Plain nav markup stays clickable before hydration and if hydration fails; the mg-mega-wrapper--js-active class is added on mount, so pointer-events restrictions apply only once the sidebar exists.",
+      note: "MegaMenu needs React: open and close state, keyboard navigation and the mobile drill-down are all component behaviour, so renderedHtml is not a working menu. This is a complex-tier component — fromElement reads timing, logo, finder/search options, language, labels and an optional inline data-sections attribute, and most integrations pass sections from an API in a consumer wrapper instead. Security: a section's bannerDescription is injected as raw HTML at the desktop banner, the no-items call-to-action panel and the mobile sidebar, and is NOT sanitised — unlike TextCta, Drawer and the card components, MegaMenu does not run DOMPurify. Sanitise it in the wrapper that builds sections, and never build it from untrusted input. bannerHeading and every title are rendered as text. Plain nav markup stays clickable before hydration and if hydration fails; the mg-mega-wrapper--js-active class is added on mount, so pointer-events restrictions apply only once the sidebar exists.",
       selector: '[data-mg-mega-menu]',
       modules: hydrationModules('MegaMenu'),
       dataAttributes: {
@@ -2972,7 +2996,7 @@ npm run build</code></pre>
         'data-logo-width': 'Explicit logo width, to avoid layout shift.',
         'data-logo-height': 'Explicit logo height, to avoid layout shift.',
         'data-enable-filter':
-          'Set to "true" to show quick filter input in desktop and mobile menus.',
+          'Set to "true" for a menu-wide desktop dialog opened from the expanded left-column footer and the mobile drawer finder.',
         'data-enable-site-search':
           'Set to "false" to disable full-site search fallback (default "true").',
         'data-search-url':

@@ -547,7 +547,7 @@ export const WithQuickFilter = {
     docs: {
       description: {
         story:
-          'Live navigation filter for complex menus. On desktop, pressing `/` or typing in the filter input narrows matching sections and provides a direct link to full-site search. On mobile, the drawer pins a quick filter bar that instantly flattens nested accordions into matching destinations.',
+          'Open Knowledge Hub or About Us, then choose Find in menu in the fixed left-column footer. The dialog searches all menu destinations, including other sections. Try news from Knowledge Hub. Close or Escape returns to the same panel and footer button. The displayed ⌘K / Ctrl K shortcut works only with focus in the expanded menu, outside text fields. The Search tab stays unchanged; mobile retains its drawer finder.',
       },
     },
   },

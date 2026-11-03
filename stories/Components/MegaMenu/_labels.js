@@ -14,11 +14,11 @@ export const LABELS_ES = {
 
   navLabel: 'Navegación principal',
   closeMobileNavLabel: 'Cerrar navegación móvil',
-  filterPlaceholder: 'Filtrar elementos del menú...',
+  menuFilterLabel: 'Buscar en el menú',
+  filterPlaceholder: 'Buscar una página en este menú',
   clearFilterLabel: 'Borrar filtro',
-  noFilterResultsLabel: 'No se encontraron elementos del menú',
+  noFilterResultsLabel: 'No hay páginas coincidentes en este menú',
   searchSiteLabel: 'Buscar en todo el sitio "{query}"',
-  searchSitePromptLabel: 'Buscar en todo el contenido del sitio web',
   filterMatchesCount: '{count} elementos encontrados',
 };
 
@@ -35,11 +35,11 @@ export const LABELS_FR = {
 
   navLabel: 'Navigation principale',
   closeMobileNavLabel: 'Fermer la navigation mobile',
-  filterPlaceholder: 'Filtrer les éléments du menu...',
+  menuFilterLabel: 'Rechercher dans le menu',
+  filterPlaceholder: 'Trouver une page dans ce menu',
   clearFilterLabel: 'Effacer le filtre',
-  noFilterResultsLabel: 'Aucun élément ne correspond au filtre',
+  noFilterResultsLabel: 'Aucune page correspondante dans ce menu',
   searchSiteLabel: 'Rechercher sur tout le site "{query}"',
-  searchSitePromptLabel: 'Rechercher dans tout le contenu du site',
   filterMatchesCount: '{count} éléments trouvés',
 };
 
@@ -56,11 +56,11 @@ export const LABELS_JA = {
 
   navLabel: 'メインナビゲーション',
   closeMobileNavLabel: 'モバイルナビゲーションを閉じる',
-  filterPlaceholder: 'メニュー項目を絞り込む...',
+  menuFilterLabel: 'メニュー内を探す',
+  filterPlaceholder: 'このメニューからページを探す',
   clearFilterLabel: '絞り込みをクリア',
-  noFilterResultsLabel: '一致するメニュー項目がありません',
+  noFilterResultsLabel: 'このメニューに一致するページはありません',
   searchSiteLabel: 'サイト全体で「{query}」を検索',
-  searchSitePromptLabel: 'サイト全体のすべてのコンテンツを検索',
   filterMatchesCount: '{count} 件の項目が見つかりました',
 };
 
@@ -77,11 +77,11 @@ export const LABELS_ZH = {
 
   navLabel: '主导航',
   closeMobileNavLabel: '关闭移动导航',
-  filterPlaceholder: '筛选菜单项...',
+  menuFilterLabel: '在菜单中查找',
+  filterPlaceholder: '在此菜单中查找页面',
   clearFilterLabel: '清除筛选',
-  noFilterResultsLabel: '未找到匹配的菜单项',
+  noFilterResultsLabel: '此菜单中没有匹配的页面',
   searchSiteLabel: '在全站搜索 "{query}"',
-  searchSitePromptLabel: '在整个网站内容中搜索',
   filterMatchesCount: '找到 {count} 个菜单项',
 };
 
@@ -98,11 +98,11 @@ export const LABELS_AR = {
 
   navLabel: 'التنقل الرئيسي',
   closeMobileNavLabel: 'إغلاق قائمة التنقل للجوال',
-  filterPlaceholder: 'تصفية عناصر القائمة...',
+  menuFilterLabel: 'البحث في القائمة',
+  filterPlaceholder: 'العثور على صفحة في هذه القائمة',
   clearFilterLabel: 'مسح التصفية',
-  noFilterResultsLabel: 'لم يتم العثور على عناصر تطابق التصفية',
+  noFilterResultsLabel: 'لا توجد صفحات مطابقة في هذه القائمة',
   searchSiteLabel: 'البحث في كامل الموقع عن "{query}"',
-  searchSitePromptLabel: 'البحث في جميع محتويات الموقع',
   filterMatchesCount: 'تم العثور على {count} عنصر',
 };
 
@@ -119,11 +119,11 @@ export const LABELS_RU = {
 
   navLabel: 'Основная навигация',
   closeMobileNavLabel: 'Закрыть мобильную навигацию',
-  filterPlaceholder: 'Фильтровать меню...',
+  menuFilterLabel: 'Поиск в меню',
+  filterPlaceholder: 'Найти страницу в этом меню',
   clearFilterLabel: 'Очистить фильтр',
-  noFilterResultsLabel: 'Элементы меню не найдены',
+  noFilterResultsLabel: 'В этом меню нет подходящих страниц',
   searchSiteLabel: 'Искать по всему сайту «{query}»',
-  searchSitePromptLabel: 'Поиск по всем материалам сайта',
   filterMatchesCount: 'Найдено элементов: {count}',
 };
 
@@ -136,11 +136,11 @@ export const DEFAULT_MEGAMENU_LABELS = {
   closeLabel: 'Close',
   overviewLabel: 'Overview',
   toggleMobileNavLabel: 'Open navigation menu',
-  filterPlaceholder: 'Filter menu items...',
+  menuFilterLabel: 'Find in menu',
+  filterPlaceholder: 'Find a page in this menu',
   clearFilterLabel: 'Clear filter',
-  noFilterResultsLabel: 'No menu items match your filter',
+  noFilterResultsLabel: 'No matching pages in this menu',
   searchSiteLabel: 'Search entire site for "{query}"',
-  searchSitePromptLabel: 'Search across all site content',
   filterMatchesCount: '{count} menu items found',
 };
 

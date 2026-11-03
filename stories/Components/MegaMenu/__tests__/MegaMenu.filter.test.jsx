@@ -9,6 +9,23 @@ import {
   getSiteSearchUrl,
 } from '../filterUtils';
 
+// Native focus containment is verified in a real browser. jsdom only models
+// the open attribute for rendering and interaction assertions.
+const originalShowModal = HTMLDialogElement.prototype.showModal;
+const originalCloseDialog = HTMLDialogElement.prototype.close;
+beforeAll(() => {
+  HTMLDialogElement.prototype.showModal = function () {
+    this.setAttribute('open', '');
+  };
+  HTMLDialogElement.prototype.close = function () {
+    this.removeAttribute('open');
+  };
+});
+afterAll(() => {
+  HTMLDialogElement.prototype.showModal = originalShowModal;
+  HTMLDialogElement.prototype.close = originalCloseDialog;
+});
+
 const sampleSections = [
   {
     title: 'Knowledge Base',
@@ -34,6 +51,8 @@ const sampleSections = [
   },
   {
     title: 'Understanding Risk',
+    bannerHeading: 'Understanding Risk',
+    bannerDescription: '<p>Understand risk</p>',
     bannerButton: { url: '/risk' },
     items: [
       {
@@ -81,6 +100,85 @@ describe('MegaMenu filter utilities', () => {
     expect(results.map(r => r.title)).toEqual(
       expect.arrayContaining(['Floods', 'Droughts'])
     );
+  });
+
+  it('ranks destination titles above ancestor-only matches and removes duplicate URLs', () => {
+    const results = filterMenuItems(
+      [
+        { title: 'Guidelines', url: '/guide', fullPath: 'Reports' },
+        { title: 'Annual Reports', url: '/annual', fullPath: 'Publications' },
+        { title: 'Reports', url: '/reports', fullPath: '' },
+        { title: 'Annual Reports', url: '/annual', fullPath: 'Reports' },
+      ],
+      'reports'
+    );
+    expect(results.map(item => item.url)).toEqual([
+      '/reports',
+      '/annual',
+      '/guide',
+    ]);
+  });
+
+  it.each(['carers', 'carrers', 'careeers', 'caerers'])(
+    'recovers a one-edit typo %s in titles and ancestor words',
+    query => {
+      const items = flattenMenuItems([
+        {
+          title: 'About Us',
+          items: [
+            {
+              title: 'Careers',
+              url: '/careers',
+              items: [{ title: 'Open Positions', url: '/jobs' }],
+            },
+          ],
+        },
+      ]);
+      expect(filterMenuItems(items, query).map(item => item.url)).toEqual([
+        '/careers',
+        '/jobs',
+      ]);
+    }
+  );
+
+  it('keeps literal matches exclusive and avoids fuzzy short queries or phrases', () => {
+    const items = [
+      { title: 'Careers', url: '/careers', fullPath: '' },
+      { title: 'Carers guide', url: '/carers', fullPath: '' },
+      { title: 'Risk', url: '/risk', fullPath: '' },
+    ];
+    expect(filterMenuItems(items, 'carers').map(item => item.url)).toEqual([
+      '/carers',
+    ]);
+    expect(filterMenuItems(items, 'riks')).toHaveLength(1);
+    expect(filterMenuItems(items, 'rik')).toEqual([]);
+    expect(filterMenuItems(items, 'carers advice')).toEqual([]);
+    expect(filterMenuItems(items, 'cxrxers')).toEqual([]);
+  });
+
+  it('ranks fuzzy titles before ancestor matches and deduplicates their URLs', () => {
+    const items = [
+      { title: 'Open Positions', url: '/jobs', fullPath: 'About Us › Careers' },
+      { title: 'Careers', url: '/careers', fullPath: 'About Us' },
+      { title: 'Careers', url: '/jobs', fullPath: 'Other' },
+      {
+        title: 'Internships',
+        url: '/internships',
+        fullPath: 'About Us › Careers',
+      },
+    ];
+    expect(filterMenuItems(items, 'carers')).toEqual([
+      items[1],
+      items[2],
+      items[3],
+    ]);
+  });
+
+  it('counts edits as Unicode characters rather than UTF-16 code units', () => {
+    const items = [{ title: '𐐀𐐁𐐂𐐃𐐄', url: '/unicode', fullPath: '' }];
+    expect(filterMenuItems(items, '𐐀𐐁𐐃𐐂𐐄')).toEqual(items);
+    expect(filterMenuItems(items, '𐐀𐐁𐐃𐐄')).toEqual(items);
+    expect(filterMenuItems(items, '𐐀𐐁𐐁𐐁𐐄')).toEqual([]);
   });
 
   it('formats label templates with variables', () => {
@@ -132,7 +230,7 @@ describe('MegaMenu Mobile Filter UI', () => {
 
     const dialog = screen.getByRole('dialog');
     const filterInput = within(dialog).getByPlaceholderText(
-      'Filter menu items...'
+      'Find a page in this menu'
     );
     expect(filterInput).toBeInTheDocument();
   });
@@ -151,7 +249,7 @@ describe('MegaMenu Mobile Filter UI', () => {
 
     const dialog = screen.getByRole('dialog');
     const filterInput = within(dialog).getByPlaceholderText(
-      'Filter menu items...'
+      'Find a page in this menu'
     );
     fireEvent.change(filterInput, { target: { value: 'doc' } });
 
@@ -159,6 +257,7 @@ describe('MegaMenu Mobile Filter UI', () => {
     expect(within(dialog).getByRole('status')).toHaveTextContent(
       '1 menu items found'
     );
+    expect(within(dialog).getByRole('status')).toHaveClass('mg-u-sr-only');
 
     // Matching link rendered
     const matchLink = within(dialog).getByRole('link', {
@@ -187,7 +286,7 @@ describe('MegaMenu Mobile Filter UI', () => {
 
     const dialog = screen.getByRole('dialog');
     const filterInput = within(dialog).getByPlaceholderText(
-      'Filter menu items...'
+      'Find a page in this menu'
     );
     fireEvent.change(filterInput, { target: { value: 'policy' } });
 
@@ -214,12 +313,12 @@ describe('MegaMenu Mobile Filter UI', () => {
 
     const dialog = screen.getByRole('dialog');
     const filterInput = within(dialog).getByPlaceholderText(
-      'Filter menu items...'
+      'Find a page in this menu'
     );
     fireEvent.change(filterInput, { target: { value: 'nonexistent' } });
 
     expect(
-      within(dialog).getByText('No menu items match your filter')
+      within(dialog).getByText('No matching pages in this menu')
     ).toBeInTheDocument();
 
     const siteSearchBtn = within(dialog).getByRole('link', {
@@ -242,7 +341,7 @@ describe('MegaMenu Mobile Filter UI', () => {
 
     const dialog = screen.getByRole('dialog');
     const filterInput = within(dialog).getByPlaceholderText(
-      'Filter menu items...'
+      'Find a page in this menu'
     );
     fireEvent.change(filterInput, { target: { value: 'nonexistent' } });
 
@@ -267,7 +366,7 @@ describe('MegaMenu Mobile Filter UI', () => {
 
     const dialog = screen.getByRole('dialog');
     const filterInput = within(dialog).getByPlaceholderText(
-      'Filter menu items...'
+      'Find a page in this menu'
     );
     fireEvent.change(filterInput, { target: { value: 'hazard' } });
 
@@ -275,237 +374,244 @@ describe('MegaMenu Mobile Filter UI', () => {
   });
 });
 
-describe('MegaMenu Desktop QuickNav Modal', () => {
-  it('opens QuickNav modal on trigger button click', () => {
+async function openDesktopSection(name = 'Knowledge Base') {
+  fireEvent.focus(screen.getByRole('link', { name, exact: true }));
+  return screen.findByRole('region', { name, exact: true });
+}
+
+async function openDesktopFinder(name = 'Knowledge Base') {
+  const panel = await openDesktopSection(name);
+  fireEvent.click(within(panel).getByRole('button', { name: 'Find in menu' }));
+  return panel;
+}
+
+describe('MegaMenu contextual desktop finder', () => {
+  it('keeps Search unchanged and reveals the finder only after its utility action', async () => {
     render(
       <MegaMenu
-        sections={sampleSections}
-        enableFilter={true}
-        searchUrl="/search?q="
+        sections={[
+          ...sampleSections,
+          { title: 'Search', bannerButton: { url: '/search' } },
+        ]}
+        enableFilter
+        hoverDelay={0}
       />
     );
-
-    const jumpBtn = screen.getByRole('button', { name: /Jump to/i });
-    fireEvent.click(jumpBtn);
-
-    const quickNavDialog = screen.getByRole('dialog', {
-      name: /Filter menu items/i,
-    });
-    expect(quickNavDialog).toBeInTheDocument();
-  });
-
-  it('opens QuickNav on global slash keydown', () => {
-    render(
-      <MegaMenu
-        sections={sampleSections}
-        enableFilter={true}
-        searchUrl="/search?q="
-      />
-    );
-
-    fireEvent.keyDown(window, { key: '/' });
-
-    const quickNavDialog = screen.getByRole('dialog', {
-      name: /Filter menu items/i,
-    });
-    expect(quickNavDialog).toBeInTheDocument();
-  });
-
-  it('live filters across all sections and closes on escape', () => {
-    render(
-      <MegaMenu
-        sections={sampleSections}
-        enableFilter={true}
-        searchUrl="/search?q="
-      />
-    );
-
-    fireEvent.keyDown(window, { key: 'k', metaKey: true });
-
-    const quickNavDialog = screen.getByRole('dialog', {
-      name: /Filter menu items/i,
-    });
-    const input =
-      within(quickNavDialog).getByPlaceholderText(/Filter menu items/i);
-    fireEvent.change(input, { target: { value: 'terminology' } });
-
-    expect(within(quickNavDialog).getByRole('status')).toHaveTextContent(
-      '1 menu items found'
+    expect(screen.getByRole('link', { name: 'Search' })).toHaveAttribute(
+      'href',
+      '/search'
     );
     expect(
-      within(quickNavDialog).getByRole('link', {
-        name: /^Terminology/i,
+      screen.queryByRole('button', { name: 'Find a page' })
+    ).not.toBeInTheDocument();
+    expect(screen.queryByRole('searchbox')).not.toBeInTheDocument();
+    const panel = await openDesktopSection();
+    expect(within(panel).queryByRole('searchbox')).not.toBeInTheDocument();
+    expect(
+      within(panel).getByRole('navigation', {
+        name: 'Knowledge Base categories',
       })
     ).toBeInTheDocument();
-
-    fireEvent.keyDown(quickNavDialog, { key: 'Escape' });
+    fireEvent.click(
+      within(panel).getByRole('button', { name: 'Find in menu' })
+    );
     expect(
-      screen.queryByRole('dialog', { name: /Filter menu items/i })
+      within(panel).getByRole('searchbox', { name: 'Find in menu' })
+    ).toHaveFocus();
+    expect(
+      within(panel).getByRole('dialog', { name: 'Find in menu' })
+    ).toHaveAttribute('open');
+  });
+
+  it('filters descendants in a modal and preserves the underlying menu', async () => {
+    render(<MegaMenu sections={sampleSections} enableFilter hoverDelay={0} />);
+    const panel = await openDesktopFinder();
+    const input = within(panel).getByRole('searchbox');
+    fireEvent.change(input, { target: { value: 'doc' } });
+    expect(
+      within(panel).getByRole('link', { name: /Documents and publications/ })
+    ).toHaveAttribute('href', '/documents');
+    expect(within(panel).getByRole('status')).toHaveClass('mg-u-sr-only');
+    expect(
+      within(panel).getByRole('dialog', { name: 'Find in menu' })
+    ).toHaveAttribute('open');
+    fireEvent.click(
+      within(panel).getByRole('button', { name: 'Clear filter' })
+    );
+    expect(input).toHaveValue('');
+    expect(input).toHaveFocus();
+    expect(
+      within(panel).getByRole('dialog', { name: 'Find in menu' })
+    ).toHaveAttribute('open');
+    fireEvent.click(within(panel).getByRole('button', { name: 'Close' }));
+    expect(
+      within(panel).getByRole('button', { name: 'Find in menu' })
+    ).toHaveFocus();
+    expect(
+      within(panel).getByRole('navigation', {
+        name: 'Knowledge Base categories',
+      })
+    ).toBeInTheDocument();
+  });
+
+  it('searches the entire menu regardless of the entry section and resets on Back', async () => {
+    render(<MegaMenu sections={sampleSections} enableFilter hoverDelay={0} />);
+    const panel = await openDesktopFinder();
+    fireEvent.change(within(panel).getByRole('searchbox'), {
+      target: { value: 'terminology' },
+    });
+    expect(
+      within(panel).getByRole('link', { name: /^Terminology/ })
+    ).toHaveAttribute('href', '/terminology');
+    fireEvent.click(within(panel).getByRole('button', { name: 'Close' }));
+    expect(
+      within(panel).getByRole('navigation', {
+        name: 'Knowledge Base categories',
+      })
+    ).toBeInTheDocument();
+    const otherPanel = await openDesktopFinder('Understanding Risk');
+    expect(within(otherPanel).getByRole('searchbox')).toHaveValue('');
+    fireEvent.change(within(otherPanel).getByRole('searchbox'), {
+      target: { value: 'doc' },
+    });
+    expect(
+      within(otherPanel).getByRole('link', {
+        name: /Documents and publications/,
+      })
+    ).toHaveAttribute('href', '/documents');
+  });
+
+  it('moves focus through result links without hijacking text editing or browser shortcuts', async () => {
+    render(<MegaMenu sections={sampleSections} enableFilter hoverDelay={0} />);
+    expect(fireEvent.keyDown(window, { key: '/' })).toBe(true);
+    expect(fireEvent.keyDown(window, { key: 'k', ctrlKey: true })).toBe(true);
+    const panel = await openDesktopFinder();
+    const input = within(panel).getByRole('searchbox');
+    input.focus();
+    expect(fireEvent.keyDown(input, { key: 'ArrowLeft' })).toBe(true);
+    expect(input).toHaveFocus();
+    fireEvent.change(input, { target: { value: 'hazard' } });
+    const links = within(panel).getAllByRole('link');
+    fireEvent.keyDown(input, { key: 'ArrowDown' });
+    expect(links[0]).toHaveFocus();
+    fireEvent.keyDown(links[0], { key: 'ArrowDown' });
+    expect(links[1]).toHaveFocus();
+    fireEvent.keyDown(links[1], { key: 'ArrowUp' });
+    fireEvent.keyDown(links[0], { key: 'ArrowUp' });
+    expect(input).toHaveFocus();
+    const dialog = within(panel).getByRole('dialog');
+    const close = within(dialog).getByRole('button', { name: 'Close' });
+    const lastLink = within(dialog).getAllByRole('link').at(-1);
+    lastLink.focus();
+    fireEvent.keyDown(lastLink, { key: 'Tab' });
+    expect(close).toHaveFocus();
+    fireEvent.keyDown(close, { key: 'Tab', shiftKey: true });
+    expect(lastLink).toHaveFocus();
+    input.focus();
+    fireEvent.keyDown(input, { key: 'Escape' });
+    expect(within(panel).queryByRole('searchbox')).not.toBeInTheDocument();
+    const finderButton = within(panel).getByRole('button', {
+      name: 'Find in menu',
+    });
+    expect(finderButton).toHaveFocus();
+    fireEvent.keyDown(finderButton, { key: 'Escape' });
+    expect(
+      screen.queryByRole('region', { name: 'Knowledge Base' })
     ).not.toBeInTheDocument();
   });
 
-  it('offers default-on site search when no items are found and triggers on enter', () => {
-    const onNavigateMock = jest.fn();
-
-    render(
-      <MegaMenu
-        sections={sampleSections}
-        enableFilter={true}
-        searchUrl="/search"
-        onNavigate={onNavigateMock}
-      />
-    );
-
-    fireEvent.keyDown(window, { key: '/' });
-    const quickNavDialog = screen.getByRole('dialog', {
-      name: /Filter menu items/i,
-    });
-    const input =
-      within(quickNavDialog).getByPlaceholderText(/Filter menu items/i);
-    fireEvent.change(input, { target: { value: 'undrr' } });
-
+  it('offers Ctrl+K only while focus is inside the expanded menu', async () => {
+    render(<MegaMenu sections={sampleSections} enableFilter hoverDelay={0} />);
+    expect(fireEvent.keyDown(window, { key: 'k', ctrlKey: true })).toBe(true);
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    const panel = await openDesktopSection();
+    const trigger = within(panel).getByRole('button', { name: 'Find in menu' });
+    expect(trigger).toHaveAttribute('aria-keyshortcuts', 'Meta+k Control+k');
+    trigger.focus();
+    expect(fireEvent.keyDown(trigger, { key: 'k', ctrlKey: true })).toBe(false);
     expect(
-      within(quickNavDialog).getByText('No menu items match your filter')
-    ).toBeInTheDocument();
-
-    const emptyActions = quickNavDialog.querySelector(
-      '.mg-mega-quicknav__empty-actions'
-    );
-    const emptyCta = within(emptyActions).getByRole('link', {
-      name: /Search entire site for "undrr"/i,
-    });
-    expect(emptyCta).toHaveAttribute('href', '/search#query=undrr');
-
-    // Press Enter to trigger site search
-    fireEvent.keyDown(quickNavDialog, { key: 'Enter' });
-    expect(onNavigateMock).toHaveBeenCalledWith('/search#query=undrr');
+      within(panel).getByRole('dialog', { name: 'Find in menu' })
+    ).toHaveAttribute('open');
+    expect(
+      fireEvent.keyDown(within(panel).getByRole('searchbox'), {
+        key: 'k',
+        ctrlKey: true,
+      })
+    ).toBe(true);
+    fireEvent.click(within(panel).getByRole('button', { name: 'Close' }));
+    expect(trigger).toHaveFocus();
   });
 
-  it('hides site search in desktop modal when enableSiteSearch is false', () => {
-    render(
+  it('activates the contextual fallback on Enter and honours disabled site search', async () => {
+    const onNavigate = jest.fn();
+    const { rerender } = render(
       <MegaMenu
         sections={sampleSections}
-        enableFilter={true}
+        enableFilter
+        hoverDelay={0}
+        onNavigate={onNavigate}
+      />
+    );
+    const panel = await openDesktopFinder();
+    const input = within(panel).getByRole('searchbox');
+    fireEvent.change(input, { target: { value: 'earthquake' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    expect(onNavigate).toHaveBeenCalledWith('/search#query=earthquake');
+    rerender(
+      <MegaMenu
+        sections={sampleSections}
+        enableFilter
+        hoverDelay={0}
         enableSiteSearch={false}
       />
     );
-
-    fireEvent.keyDown(window, { key: '/' });
-    const quickNavDialog = screen.getByRole('dialog', {
-      name: /Filter menu items/i,
+    const reopened = await openDesktopFinder();
+    fireEvent.change(within(reopened).getByRole('searchbox'), {
+      target: { value: 'earthquake' },
     });
-    const input =
-      within(quickNavDialog).getByPlaceholderText(/Filter menu items/i);
-    fireEvent.change(input, { target: { value: 'undrr' } });
-
     expect(
-      within(quickNavDialog).getByText('No menu items match your filter')
-    ).toBeInTheDocument();
-    expect(
-      within(quickNavDialog).queryByRole('link', {
-        name: /Search entire site/i,
-      })
+      within(within(reopened).getByRole('dialog')).queryByRole('link')
     ).not.toBeInTheDocument();
   });
 
-  it('passes axe accessibility audit for desktop QuickNav modal', async () => {
+  it('localizes the menu-wide scope and preserves label overrides', async () => {
     render(
       <MegaMenu
         sections={sampleSections}
-        enableFilter={true}
-        searchUrl="/search?q="
+        enableFilter
+        hoverDelay={0}
+        lang="fr-CA"
+        labels={{ menuFilterLabel: 'Chercher dans le menu' }}
       />
     );
-
-    fireEvent.keyDown(window, { key: '/' });
-    const quickNavDialog = screen.getByRole('dialog', {
-      name: /Filter menu items/i,
+    const panel = await openDesktopSection();
+    fireEvent.click(
+      within(panel).getByRole('button', { name: 'Chercher dans le menu' })
+    );
+    expect(
+      within(panel).getByRole('searchbox', {
+        name: 'Chercher dans le menu',
+      })
+    ).toBeInTheDocument();
+    fireEvent.change(within(panel).getByRole('searchbox'), {
+      target: { value: 'earthquake' },
     });
-
-    expect(await axe(quickNavDialog)).toHaveNoViolations();
+    expect(within(panel).getByRole('status')).toHaveTextContent(
+      'Aucune page correspondante dans ce menu'
+    );
   });
 
-  describe('Red-team security, focus and edge-case regressions', () => {
-    it('traps Tab and Shift+Tab focus inside QuickNav modal', () => {
-      render(
-        <MegaMenu
-          sections={sampleSections}
-          enableFilter={true}
-          searchUrl="/search"
-        />
-      );
-
-      fireEvent.keyDown(window, { key: '/' });
-      const quickNavDialog = screen.getByRole('dialog', {
-        name: /Filter menu items/i,
-      });
-
-      const focusable = quickNavDialog.querySelectorAll(
-        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-      );
-      expect(focusable.length).toBeGreaterThanOrEqual(2);
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-
-      // Shift+Tab from first element wraps to last
-      first.focus();
-      fireEvent.keyDown(quickNavDialog, { key: 'Tab', shiftKey: true });
-      expect(last).toHaveFocus();
-
-      // Tab from last element wraps to first
-      last.focus();
-      fireEvent.keyDown(quickNavDialog, { key: 'Tab', shiftKey: false });
-      expect(first).toHaveFocus();
+  it('passes axe in normal, filtered and empty states', async () => {
+    render(<MegaMenu sections={sampleSections} enableFilter hoverDelay={0} />);
+    const panel = await openDesktopFinder();
+    expect(await axe(panel)).toHaveNoViolations();
+    fireEvent.change(within(panel).getByRole('searchbox'), {
+      target: { value: 'hazard' },
     });
-
-    it('locks body scroll when QuickNav opens and unlocks when closed', () => {
-      render(
-        <MegaMenu
-          sections={sampleSections}
-          enableFilter={true}
-          searchUrl="/search"
-        />
-      );
-
-      expect(document.body.style.overflow).toBe('');
-      fireEvent.keyDown(window, { key: '/' });
-      expect(document.body.style.overflow).toBe('hidden');
-
-      const quickNavDialog = screen.getByRole('dialog', {
-        name: /Filter menu items/i,
-      });
-      fireEvent.keyDown(quickNavDialog, { key: 'Escape' });
-      expect(document.body.style.overflow).toBe('');
+    expect(await axe(panel)).toHaveNoViolations();
+    fireEvent.change(within(panel).getByRole('searchbox'), {
+      target: { value: 'earthquake' },
     });
-
-    it('does not trigger slash shortcut when typing in contenteditable elements', () => {
-      const editable = document.createElement('div');
-      editable.contentEditable = 'true';
-      document.body.appendChild(editable);
-
-      try {
-        render(
-          <MegaMenu
-            sections={sampleSections}
-            enableFilter={true}
-            searchUrl="/search"
-          />
-        );
-
-        fireEvent.keyDown(editable, { key: '/' });
-        expect(
-          screen.queryByRole('dialog', { name: /Filter menu items/i })
-        ).not.toBeInTheDocument();
-      } finally {
-        editable.remove();
-      }
-    });
-
-    it('escapes special characters safely in formatLabel without dollar injection', () => {
-      const result = formatLabel('Search for "{query}"', {
-        query: '$100 & $$',
-      });
-      expect(result).toBe('Search for "$100 & $$"');
-    });
+    expect(await axe(panel)).toHaveNoViolations();
   });
 });

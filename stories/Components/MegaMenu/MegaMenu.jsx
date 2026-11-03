@@ -39,7 +39,6 @@ import React, { useState, useEffect, useRef, useId } from 'react';
 import PropTypes from 'prop-types';
 import { TopBar } from './TopBar/TopBar';
 import { Sidebar } from './TopBar/Sidebar';
-import { QuickNavModal } from './QuickNavModal';
 
 export { getMegaMenuLabels } from './_labels';
 export { DEFAULT_MEGAMENU_LABELS } from './_labels';
@@ -72,28 +71,6 @@ const MegaMenu = ({
   const [activeItem, setActiveItem] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
   const [jsActive, setJsActive] = useState(false);
-  const [quickNavOpen, setQuickNavOpen] = useState(false);
-
-  useEffect(() => {
-    if (!enableFilter) return;
-    const handleGlobalShortcut = e => {
-      const isEditable =
-        Boolean(e.target.isContentEditable) ||
-        e.target.contentEditable === 'true' ||
-        e.target.getAttribute?.('contenteditable') === 'true' ||
-        Boolean(e.target.closest?.('[contenteditable="true"]')) ||
-        ['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName);
-      if (
-        (e.key === 'k' && (e.metaKey || e.ctrlKey)) ||
-        (e.key === '/' && !isEditable)
-      ) {
-        e.preventDefault();
-        setQuickNavOpen(prev => !prev);
-      }
-    };
-    window.addEventListener('keydown', handleGlobalShortcut);
-    return () => window.removeEventListener('keydown', handleGlobalShortcut);
-  }, [enableFilter]);
 
   const itemListRef = useRef([]);
   const sectionListRef = useRef([]);
@@ -172,6 +149,12 @@ const MegaMenu = ({
 
     // Set timeout to close the menu
     closeTimeoutRef.current = setTimeout(() => {
+      if (
+        wrapperRef.current?.ownerDocument.activeElement?.closest(
+          '.mg-mega-menu-finder'
+        )
+      )
+        return;
       releaseDesktopFocus();
       setActiveItem(null);
     }, delay);
@@ -218,7 +201,12 @@ const MegaMenu = ({
     const handleClickOutside = e => {
       // Check if click is outside the mega menu wrapper
       const megaWrapper = wrapperRef.current;
-      if (megaWrapper && !megaWrapper.contains(e.target)) {
+      // Mode changes can remove the clicked control before this document
+      // listener runs. Its original event path still identifies an inside click.
+      const clickedInside =
+        megaWrapper?.contains(e.target) ||
+        (e.composedPath?.() || []).includes(megaWrapper);
+      if (megaWrapper && !clickedInside) {
         releaseDesktopFocus();
         setActiveItem(null);
       }
@@ -279,7 +267,9 @@ const MegaMenu = ({
         logoWidth={logoWidth}
         logoHeight={logoHeight}
         enableFilter={enableFilter}
-        onOpenQuickNav={() => setQuickNavOpen(true)}
+        enableSiteSearch={enableSiteSearch}
+        searchUrl={searchUrl}
+        onNavigate={onNavigate}
       />
 
       {/* Backdrop overlay – closes sidebar on click */}
@@ -306,19 +296,6 @@ const MegaMenu = ({
         enableSiteSearch={enableSiteSearch}
         searchUrl={searchUrl}
       />
-
-      {/* Desktop Spotlight / Quicksilver QuickNav modal */}
-      {enableFilter && (
-        <QuickNavModal
-          isOpen={quickNavOpen}
-          onClose={() => setQuickNavOpen(false)}
-          sections={sections}
-          labels={resolvedLabels}
-          enableSiteSearch={enableSiteSearch}
-          searchUrl={searchUrl}
-          onNavigate={onNavigate}
-        />
-      )}
     </nav>
   );
 };
@@ -383,6 +360,7 @@ MegaMenu.propTypes = {
     closeLabel: PropTypes.string,
     overviewLabel: PropTypes.string,
     toggleMobileNavLabel: PropTypes.string,
+    menuFilterLabel: PropTypes.string,
     filterPlaceholder: PropTypes.string,
     clearFilterLabel: PropTypes.string,
     noFilterResultsLabel: PropTypes.string,

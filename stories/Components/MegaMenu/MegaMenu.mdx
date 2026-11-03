@@ -35,9 +35,13 @@ to switch logos.
 
 ## With quick filter
 
-Live navigation filter for large, deep menus. When enabled via `enableFilter`, both desktop panels and the mobile drawer display an instant search bar. Power users can press `/` to jump directly into filtering. If a destination is not in the menu, a bridge link offers a one-click full site search.
+Enable `enableFilter` to find destinations inside large, deep menus: a **Find in menu** utility in the left-column footer of desktop panels and an input in the mobile drawer. The existing Search navigation item remains the route to full-site search. The finder searches menu links as you type. A separate full-site search action is available when `enableSiteSearch` is enabled.
 
-<Canvas of={MegaMenuStories.WithQuickFilter} meta={MegaMenuStories} />
+<Canvas
+  of={MegaMenuStories.WithQuickFilter}
+  meta={MegaMenuStories}
+  story={{ inline: false, height: '700px' }}
+/>
 
 ## Usage
 
@@ -84,7 +88,7 @@ wrapper resolves `logoSrc` and `logoAlt` from body class; it does not infer
 | logoHref         | string  | '/'       | Where the logo links to. For multilingual sites, pass the language-prefixed root from the CMS (e.g. `/ar/`) |
 | logoWidth        | number  | —         | Optional explicit width for CLS prevention                                                                  |
 | logoHeight       | number  | —         | Optional explicit height for CLS prevention                                                                 |
-| enableFilter     | boolean | false     | Enable live filtering of navigation items in desktop command palette and mobile drawer                      |
+| enableFilter     | boolean | false     | Enable a contextual menu-finder dialog from desktop left columns and filtering in the mobile drawer         |
 | enableSiteSearch | boolean | true      | Offer full-site search option when filtering (default: true)                                                |
 | searchUrl        | string  | '/search' | Base URL for full-site search fallback (defaults to syndicated search page /search#query=)                  |
 
@@ -174,9 +178,87 @@ Two related details worth knowing:
 
 - On desktop, when a submenu closes via Escape or mouse leave, focus is not programmatically returned to the triggering menu item
 
+### Find links inside navigation
+
+Set `enableFilter` to add a dialog trigger in desktop panels with a left column
+and a finder above mobile navigation. No additional top-level search button is
+added: the site’s existing **Search** item remains unchanged.
+The component does not infer or remove Search items from translated titles.
+
+- Desktop panels with a left introduction/categories column show **Find in
+  menu** in a separate footer below the scrolling content. Panels without that
+  column do not add an extra tool strip. Ordinary navigation remains unchanged.
+- Activate the footer button by pointer, touch or keyboard to open a compact
+  native modal. It focuses the input and searches **all menu destinations**,
+  regardless of the section used to open it.
+- The visible hint shows ⌘K on Apple platforms and Ctrl K elsewhere. That
+  shortcut is handled only while focus is within the expanded menu that owns
+  the footer. It is ignored in inputs/editors, during composition and with
+  additional modifiers. No global shortcut or bare-letter shortcut is added.
+- Close, Escape or an outside click dismisses the dialog and restores the footer
+  button's focus. The underlying menu remains mounted, retaining the selected
+  category and its scroll position. Clear stays in the dialog. Closing the
+  parent section resets the query.
+- The mobile finder searches the menu across sections, as its input label says.
+  Clearing retains the current drill-down level. Only filtered results scroll;
+  the input and Close control remain visible.
+- Results prioritize exact titles, title prefixes, other title matches, then
+  breadcrumb-only matches. Repeated destination URLs appear once.
+- If literal matching finds nothing, single-word queries of four or more
+  characters allow one insertion, deletion, substitution or adjacent letter swap
+  against whole title and breadcrumb words (for example, “carers” finds
+  “Careers”). Short queries and phrases keep literal matching. Full-site search
+  preserves the original query.
+- Compact breadcrumb rows follow the Breadcrumbs component's chevron geometry,
+  mirror in RTL and wrap between segments on narrow screens. Each row remains
+  one link with a minimum 44px target; ancestors are context, not nested links.
+- Counts are announced through a visually hidden live region. Empty results
+  visibly announce **No matching pages in this menu** once.
+- `enableSiteSearch` adds one contextual full-site search link after typing,
+  preserving the query. In the desktop dialog it stays visible in a separate
+  footer while results scroll. The icon-only Close button retains its localized
+  accessible name. It defaults to `/search#query=…`; consumers must provide
+  that page or configure `searchUrl`. This fallback does not replace the site's
+  normal Search entry or change its first-click behaviour.
+- Tab and Enter retain native control behaviour. In the desktop finder, ↑ and ↓
+  move real focus between results and the input. Enter in the input opens the
+  first matching destination, or the site-search fallback if no links match.
+  Escape closes the finder. Other browser and editor
+  shortcuts are untouched. Focusing the finder prevents hover dismissal while
+  typing; moving focus away restores normal pointer behaviour.
+
+Built-in labels resolve at runtime in all seven supported languages. Override
+`menuFilterLabel` for the desktop utility and dialog name. The dialog uses the
+existing translated `closeLabel`. Existing
+`filterPlaceholder`, `clearFilterLabel`, `noFilterResultsLabel`,
+`filterMatchesCount` (`{count}`) and `searchSiteLabel` (`{query}`) remain available.
+
+#### Theme styling and experience principles
+
+Following the [experience principles](?path=/docs/design-decisions-experience-principles--docs)
+and [contribution standards](?path=/docs/contributing-component-standards--docs),
+the finder opens from a dedicated left-column footer, keeping ordinary
+navigation visually unchanged. The existing Dialog surface styles provide its
+border, radius and scrim. Native `showModal()` supplies top-layer placement,
+inert background content and focus containment; opening and closing are immediate. Shared behaviour uses
+native links, 44px controls, readable text, explicit focus rings and immediate
+updates without additional motion. Matches follow card-title search highlights:
+pale neutral background, bold weight, inherited size, no padding or added
+underline. Forced colours preserve boundaries, focus rings and bold matches.
+Existing theme surfaces continue to own the surrounding menu's expression.
+
+| Property                          | Default                     | Purpose                       |
+| --------------------------------- | --------------------------- | ----------------------------- |
+| `--mg-mega-filter-font-size`      | `--mg-font-size-300` (16px) | Inputs and destination titles |
+| `--mg-mega-filter-meta-font-size` | `--mg-font-size-250` (14px) | Labels, ancestors and status  |
+
+Override these properties on `.mg-mega-wrapper`; no global type or theme tokens
+change. Existing menus keep their behaviour while `enableFilter` is false.
+This refinement is a design review, not a user-research finding.
+
 ## Server-rendered / CDN usage
 
-MegaMenu supports [layered hydration](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md). This is a complex-tier component: in most integrations the `sections` prop comes from an API or server-side builder, not from static HTML. The `fromElement` function extracts timing props and an optional inline JSON sections attribute. Consumer wrappers typically override `sections`.
+MegaMenu supports [layered hydration](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md). This is a complex-tier component: in most integrations the `sections` prop comes from an API or server-side builder, not from static HTML. The `fromElement` function extracts timing, logo, finder/search options, language, labels and an optional inline JSON sections attribute. Consumer wrappers typically override `sections`.
 
 ```html
 <div
@@ -274,7 +356,14 @@ for consumers needing the same strings outside React.
 
 ## Changelog
 
-- **1.6**, 2026-11-02: Added quick navigation filter (`enableFilter`, `enableSiteSearch`, `searchUrl`) for desktop and mobile menus. Pinned filter bar flattens deep menu hierarchies on mobile, enables keyboard jump (`/` or `⌘K`) on desktop, and includes a full-site search bridge defaulting to the syndicated search component (`/search#query=`). When no menu items match, a prominent full-site search action is offered by default. Added translations across all 7 supported languages.
+- **1.6**, 2026-11-03 ([#1445](https://github.com/unisdr/undrr-mangrove/pull/1445)): Added opt-in contextual navigation filtering (`enableFilter`, `enableSiteSearch`, `searchUrl`), runtime translations and hydration attributes.
+  - Desktop finder opens a native modal from a fixed left-column footer utility and searches the entire menu. Close restores the originating panel and focus without unmounting its navigation. The shortcut hint is platform-aware and handled only within the active menu, outside editors. Mobile retains its menu-wide drawer finder. The existing Search navigation item is unchanged; no extra header search entry or global keyboard shortcut is added.
+  - The left-column finder utility uses the same full-width tinted hover surface as adjacent category links; its shortcut hint stays unadorned.
+  - The desktop dialog uses an icon-only Close button with a localized accessible name and keeps full-site search in a fixed footer outside scrolling results.
+  - Desktop finder reuses the flattened menu between keystrokes. Filtering uses stable rank buckets and query-local fuzzy-match caches; ordinary typing does not scan result links for keyboard navigation.
+  - When literal matching finds nothing, single-word queries of at least four characters tolerate one typo in title or ancestor words, including adjacent letter swaps.
+  - Compact breadcrumb rows rank title matches first, combine repeated URLs and retain native link behaviour. Counts are screen-reader-only; empty guidance identifies the menu scope and offers one full-site fallback with the query preserved.
+  - Readable token-based type, 44px targets, shared focus rings, card-style query highlights, RTL wrapping, immediate feedback and documented component type overrides follow Mangrove experience principles. Clear stays in the dialog; dismissing it restores the footer focus and closing the section resets the query.
 
 - **1.5**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance.
 
