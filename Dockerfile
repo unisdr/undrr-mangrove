@@ -1,4 +1,4 @@
-FROM node:24-bookworm
+FROM node:26-bookworm
 
 # Prevent the container from asking for user input during installation
 ENV DEBIAN_FRONTEND=noninteractive
