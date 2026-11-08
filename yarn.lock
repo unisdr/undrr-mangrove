@@ -4491,7 +4491,7 @@ __metadata:
     eslint-config-prettier: "npm:10.1.8"
     eslint-plugin-import: "npm:2.32.0"
     eslint-plugin-jsx-a11y: "npm:6.10.2"
-    eslint-plugin-mdx: "npm:3.8.2"
+    eslint-plugin-mdx: "npm:3.9.1"
     eslint-plugin-prettier: "npm:^5.5.6"
     eslint-plugin-react: "npm:7.37.5"
     eslint-plugin-react-hooks: "npm:7.1.1"
@@ -7141,14 +7141,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-mdx@npm:^3.8.2":
-  version: 3.8.2
-  resolution: "eslint-mdx@npm:3.8.2"
+"eslint-mdx@npm:^3.9.1":
+  version: 3.9.1
+  resolution: "eslint-mdx@npm:3.9.1"
   dependencies:
     acorn: "npm:^8.19.0"
     acorn-jsx: "npm:^5.3.2"
+    devlop: "npm:^1.1.0"
+    eslint-scope: "npm:^8.4.0 || ^9.1.2"
+    eslint-visitor-keys: "npm:^4.2.0 || ^5.0.1"
     espree: "npm:^9.6.1 || ^10.4.0 || ^11.2.0"
     estree-util-visit: "npm:^2.0.0"
+    mdast-util-from-markdown: "npm:^2.1.0"
     remark-mdx: "npm:^3.1.1"
     remark-parse: "npm:^11.0.0"
     remark-stringify: "npm:^11.0.0"
@@ -7156,14 +7160,18 @@ __metadata:
     unified: "npm:^11.0.5"
     unified-engine: "npm:^11.2.2"
     unist-util-visit: "npm:^5.1.0"
+    unist-util-visit-parents: "npm:^6.0.0"
     vfile: "npm:^6.0.3"
   peerDependencies:
+    "@types/estree": ^1.0.10
     eslint: ">=8.0.0"
     remark-lint-file-extension: "*"
   peerDependenciesMeta:
+    "@types/estree":
+      optional: true
     remark-lint-file-extension:
       optional: true
-  checksum: 10/3d38b049095d3a07225aa4683bba81798eb9457b6507cf6bdec261d9e67affa01836d7e57464b4943df328a7d0fc1992f65a0a3e141f22978eb699fc8b2f36ec
+  checksum: 10/89f70f0e0c0fe93559dff5474d5896ff1b1dcdce253fef54de76face69bf30310cb5a947f2d0edeb05dbb91d6894b38330d02bc480cbcedc8f6fa5a347f6eb91
   languageName: node
   linkType: hard
 
@@ -7233,23 +7241,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-mdx@npm:3.8.2":
-  version: 3.8.2
-  resolution: "eslint-plugin-mdx@npm:3.8.2"
+"eslint-plugin-mdx@npm:3.9.1":
+  version: 3.9.1
+  resolution: "eslint-plugin-mdx@npm:3.9.1"
   dependencies:
-    eslint-mdx: "npm:^3.8.2"
-    mdast-util-from-markdown: "npm:^2.1.0"
+    eslint-mdx: "npm:^3.9.1"
     mdast-util-mdx: "npm:^3.0.0"
-    micromark-extension-mdxjs: "npm:^3.0.0"
+    prettier-linter-helpers: "npm:^1.0.1"
     remark-mdx: "npm:^3.1.1"
     remark-parse: "npm:^11.0.0"
     remark-stringify: "npm:^11.0.0"
-    synckit: "npm:^0.12.3"
     unified: "npm:^11.0.5"
     vfile: "npm:^6.0.3"
   peerDependencies:
     eslint: ">=8.0.0"
-  checksum: 10/534883101e4a267e13de4966d5d1816904b1ec45e2ea61d4a5b6e868e1b855a1a437017a3c1f252e5f9f39e73db546164178f9aef14321e99016c7c02bb1ebc3
+  checksum: 10/de0b7b2b8c06077aa9e519ed49c3344a6573784c22ca10a5f7f25769a5c3e1bf47140b4f8bb47bec62befaf31c778c74cefec90b4471f8780f7cb30bc6378a2d
   languageName: node
   linkType: hard
 
@@ -7341,7 +7347,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-scope@npm:^9.1.2":
+"eslint-scope@npm:^8.4.0 || ^9.1.2, eslint-scope@npm:^9.1.2":
   version: 9.1.2
   resolution: "eslint-scope@npm:9.1.2"
   dependencies:
@@ -7360,17 +7366,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eslint-visitor-keys@npm:^4.2.0 || ^5.0.1, eslint-visitor-keys@npm:^5.0.0, eslint-visitor-keys@npm:^5.0.1":
+  version: 5.0.1
+  resolution: "eslint-visitor-keys@npm:5.0.1"
+  checksum: 10/f9cc1a57b75e0ef949545cac33d01e8367e302de4c1483266ed4d8646ee5c306376660196bbb38b004e767b7043d1e661cb4336b49eff634a1bbe75c1db709ec
+  languageName: node
+  linkType: hard
+
 "eslint-visitor-keys@npm:^4.2.1":
   version: 4.2.1
   resolution: "eslint-visitor-keys@npm:4.2.1"
   checksum: 10/3ee00fc6a7002d4b0ffd9dc99e13a6a7882c557329e6c25ab254220d71e5c9c4f89dca4695352949ea678eb1f3ba912a18ef8aac0a7fe094196fd92f441bfce2
-  languageName: node
-  linkType: hard
-
-"eslint-visitor-keys@npm:^5.0.0, eslint-visitor-keys@npm:^5.0.1":
-  version: 5.0.1
-  resolution: "eslint-visitor-keys@npm:5.0.1"
-  checksum: 10/f9cc1a57b75e0ef949545cac33d01e8367e302de4c1483266ed4d8646ee5c306376660196bbb38b004e767b7043d1e661cb4336b49eff634a1bbe75c1db709ec
   languageName: node
   linkType: hard
 
