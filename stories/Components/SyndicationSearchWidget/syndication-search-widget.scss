@@ -1791,8 +1791,16 @@ $search-input-padding-x: mg-rem(44);
   }
 
   @media (forced-colors: active) {
+    input:not(:checked) + span {
+      border-block-end-color: Canvas;
+    }
+
     input:checked + span {
       border-block-end-color: Highlight;
+    }
+
+    input:disabled + span {
+      color: GrayText;
     }
   }
 }

@@ -48,7 +48,11 @@ export function interpolateLabel(template, vars = {}) {
 }
 import { DEFAULT_CONFIG, EVENT_SORT_VALUES } from '../utils/constants';
 import { facetsFromDefaults } from '../utils/hashState';
-import { isTabFacet, tabSelections } from '../utils/customFacetTabs';
+import {
+  isTabFacet,
+  tabSelections,
+  tabOptionValue,
+} from '../utils/customFacetTabs';
 
 /**
  * Normalise aggregations from Elasticsearch. The year facet comes from a
@@ -280,10 +284,11 @@ function searchReducer(state, action) {
         const index = previous[facet.id][0];
         if (index === defaults[facet.id][0]) continue;
         const option = facet.options[Number(index)];
+        const value = tabOptionValue(facet, Number(index));
         const next = nextConfigs.find(candidate => candidate.id === facet.id);
-        const nextIndex = next?.options.findIndex(candidate =>
-          option.value
-            ? candidate.value === option.value
+        const nextIndex = next?.options.findIndex((candidate, index) =>
+          value
+            ? tabOptionValue(next, index) === value
             : candidate.query === option.query
         );
         if (nextIndex >= 0) retained[facet.id] = [String(nextIndex)];

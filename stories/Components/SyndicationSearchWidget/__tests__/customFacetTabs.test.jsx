@@ -225,3 +225,33 @@ it('round-trips only unique URL-safe option values and normalizes selected indic
   });
   expect(tabSelections(null)).toEqual({});
 });
+
+it('preserves an unshareable period by query when duplicate identifiers are reordered', async () => {
+  const duplicate = {
+    ...period,
+    options: period.options.map(option => ({ ...option, value: 'same' })),
+  };
+  const initial = { ...config, customFacets: [duplicate] };
+  const view = render(<SyndicationSearchWidget config={initial} />);
+  await waitFor(() => expect(requests()).toHaveLength(1));
+  fireEvent.click(screen.getByRole('radio', { name: 'Previous' }));
+  await waitFor(() => expect(requests()).toHaveLength(2));
+  view.rerender(
+    <SyndicationSearchWidget
+      config={{
+        ...initial,
+        customFacets: [
+          {
+            ...duplicate,
+            defaultValue: '1',
+            options: [...duplicate.options].reverse(),
+          },
+        ],
+      }}
+    />
+  );
+  await waitFor(() =>
+    expect(screen.getByRole('radio', { name: 'Previous' })).toBeChecked()
+  );
+  expect(requests()).toHaveLength(2);
+});
