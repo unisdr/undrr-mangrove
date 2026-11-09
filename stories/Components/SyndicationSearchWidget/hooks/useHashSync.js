@@ -189,6 +189,7 @@ export function useHashSync({ enabled = true } = {}) {
     facetFields,
     defaultFilters,
     defaultSort,
+    showSort,
     defaultQuery,
     resultsPerPage,
     customFacets: tabFacets,
@@ -247,7 +248,7 @@ export function useHashSync({ enabled = true } = {}) {
     return {
       facets: parsed.facets,
       facetOperators: parsed.facetOperators,
-      sort: parsed.sort,
+      sort: showSort === false ? null : parsed.sort,
       customFacets: parsed.customFacets,
       initialQuery: !isSearchHash(window.location.hash)
         ? (readAnchorState(fields, maxPage, tabFacets)?.query ?? null)
@@ -481,6 +482,8 @@ export function useHashSync({ enabled = true } = {}) {
               facetOperators: {},
             };
         }
+        if (showSort === false)
+          restored = { ...restored, sortBy: defaultSort || 'relevance' };
         lastHashRef.current = buildHashString(restored, hashOptions);
         lastLocationRef.current = currentLocationKey(
           fields,
@@ -500,7 +503,8 @@ export function useHashSync({ enabled = true } = {}) {
       const restored = {
         query: hashState.query ?? (defaultQuery || ''),
         page: hashState.page || 1,
-        sortBy: hashState.sort || defaultSort || 'relevance',
+        sortBy:
+          (showSort !== false && hashState.sort) || defaultSort || 'relevance',
         facets: hashState.facets || defaultFacets,
         facetOperators: hashState.facets ? hashState.facetOperators : {},
         customFacets: hashState.customFacets,
@@ -533,6 +537,7 @@ export function useHashSync({ enabled = true } = {}) {
     maxPage,
     defaultQuery,
     defaultSort,
+    showSort,
     defaultFacets,
     hashOptions,
     writeHash,

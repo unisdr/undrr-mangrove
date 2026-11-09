@@ -240,6 +240,49 @@ describe('useHashSync: facets, sort and history', () => {
     expect(pushSpy).not.toHaveBeenCalled();
   });
 
+  it('keeps the editor sort on load and history navigation when visitor sorting is disabled', async () => {
+    window.history.replaceState(
+      null,
+      '',
+      '/search#sort=oldest&f.field_theme=5'
+    );
+    renderHarness({ showSort: false, defaultSort: 'newest' });
+    await waitFor(() => expect(harness.state.isInitialized).toBe(true));
+    expect(harness.state.sortBy).toBe('newest');
+    expect(harness.state.facets).toEqual({ field_theme: ['5'] });
+    act(() => {
+      window.history.pushState(null, '', '/search#query=flood&sort=oldest');
+      window.dispatchEvent(new PopStateEvent('popstate'));
+    });
+    await waitFor(() => expect(harness.state.query).toBe('flood'));
+    expect(harness.state.sortBy).toBe('newest');
+    expect(currentHash()).not.toContain('sort=oldest');
+    act(() => {
+      window.history.pushState(
+        {
+          __mgSyndicationSearch: {
+            version: 1,
+            documentTimeOrigin: window.performance.timeOrigin,
+            path: '/search',
+            anchor: 'results',
+            searchState: {
+              query: 'anchor query',
+              page: 1,
+              sortBy: 'oldest',
+              facets: {},
+              facetOperators: {},
+            },
+          },
+        },
+        '',
+        '/search#results'
+      );
+      window.dispatchEvent(new PopStateEvent('popstate'));
+    });
+    await waitFor(() => expect(harness.state.query).toBe('anchor query'));
+    expect(harness.state.sortBy).toBe('newest');
+  });
+
   it('applies defaults when the hash has no f.* params', async () => {
     window.history.replaceState(null, '', '/search#query=flood&f.foo=1');
     renderHarness();

@@ -360,7 +360,7 @@ function SyndicationSearchWidgetInner({ lang, dir }) {
         defaultSort: config.defaultSort,
         initialFacets: fromHash?.facets || null,
         initialFacetOperators: fromHash?.facetOperators || null,
-        initialSort: fromHash?.sort || null,
+        initialSort: config.showSort === false ? null : fromHash?.sort || null,
       })
     );
   }, [
@@ -370,6 +370,13 @@ function SyndicationSearchWidgetInner({ lang, dir }) {
     config.defaultQuery,
     config.defaultSort,
   ]);
+
+  // Lock the configured order when an editor disables visitor sorting.
+  useEffect(() => {
+    if (config.showSort === false && state.sortBy !== config.defaultSort) {
+      dispatch(actions.setSort(config.defaultSort));
+    }
+  }, [dispatch, config.showSort, config.defaultSort, state.sortBy]);
 
   // Sync the input with query changes from elsewhere (URL hash, INITIALIZE,
   // back/forward). useDeferredValue lags the input, so the state briefly
