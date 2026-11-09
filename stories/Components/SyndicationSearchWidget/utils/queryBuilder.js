@@ -1,3 +1,4 @@
+import { isTabFacet, tabSelections } from './customFacetTabs';
 /**
  * @file queryBuilder.js
  * @description Elasticsearch query builder for the UNDRR Search Widget.
@@ -65,6 +66,13 @@ export function buildQuery(
 
   // Build the main query (excludes facet filters for disjunctive faceting)
   const mainQuery = buildMainQuery(query, scoring, config);
+  // Result tabs scope both hits and facet counts; dropdowns remain disjunctive.
+  mainQuery.function_score.query.bool.filter.push(
+    ...buildCustomFacetFilters(
+      tabSelections(config.customFacets, customFacets),
+      { customFacets: (config.customFacets || []).filter(isTabFacet) }
+    )
+  );
 
   // Build post_filter with all facet filters (applied after aggregations).
   // The facet UI being hidden only means no *user-driven* selections will
@@ -105,7 +113,7 @@ export function buildQuery(
 
   // Skip aggregations when facets are hidden: avoids unnecessary server work
   // and response payload for syndication embeds that only show result cards.
-  if (facetsActive) {
+  if (facetsActive || config.sharedControls?.id) {
     result.aggs = buildAggregations(facetFields, facetCountToShow, config);
   }
 
@@ -292,7 +300,12 @@ function buildPostFilter(facets, facetOperators, customFacets, config) {
   const filters = [];
 
   // Add custom facet filters (editor-defined dropdowns)
-  const customFacetFilters = buildCustomFacetFilters(customFacets, config);
+  const customFacetFilters = buildCustomFacetFilters(customFacets, {
+    ...config,
+    customFacets: (config.customFacets || []).filter(
+      facet => !isTabFacet(facet)
+    ),
+  });
   filters.push(...customFacetFilters);
 
   // Get custom facet IDs to skip them in regular facet processing

@@ -622,6 +622,7 @@ export const DEFAULT_CONFIG = {
   yearField: 'published_at',
 
   // UI element visibility
+  showSort: true,
   showSearchBox: true,
   showResultsCount: true,
   showSearchTimer: false,

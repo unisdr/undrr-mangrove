@@ -10,7 +10,23 @@ export { DEFAULT_LABELS } from '../_labels';
  * @module SearchWidget/context/SearchContext
  */
 
-import React, { createContext, use, useReducer, useMemo } from 'react';
+import React, {
+  createContext,
+  use,
+  useReducer,
+  useMemo,
+  useState,
+  useRef,
+  useLayoutEffect,
+  useEffect,
+  useCallback,
+  useSyncExternalStore,
+} from 'react';
+import {
+  withSharedControls,
+  getSharedStore,
+  sharedKeys,
+} from './sharedControls';
 
 /**
  * Resolve a label value and substitute `{key}` tokens.
@@ -48,6 +64,11 @@ export function interpolateLabel(template, vars = {}) {
 }
 import { DEFAULT_CONFIG, EVENT_SORT_VALUES } from '../utils/constants';
 import { facetsFromDefaults } from '../utils/hashState';
+import {
+  isTabFacet,
+  tabSelections,
+  tabOptionValue,
+} from '../utils/customFacetTabs';
 
 /**
  * Normalise aggregations from Elasticsearch. The year facet comes from a
@@ -92,6 +113,9 @@ const initialState = {
   // hasn't been changed by the reader, so a new defaultQuery replaces it.
   appliedDefaultQuery: '',
 
+  // Preserve a grouped display's reader sort unless its configured order changes.
+  appliedDefaultSort: null,
+
   // Active facet filters: { [key]: [values] }
   facets: {},
 
@@ -100,6 +124,7 @@ const initialState = {
 
   // Custom facet selections: { [facetId]: [selectedOptionIndices] }
   customFacets: {},
+  tabFacetConfigs: [],
 
   // Sort order: one of SORT_VALUES in utils/constants.js
   sortBy: 'relevance',
@@ -155,6 +180,7 @@ export const ActionTypes = {
   SET_LOADING: 'SET_LOADING',
   SET_ERROR: 'SET_ERROR',
   INITIALIZE: 'INITIALIZE',
+  CONFIGURE_TAB_FACETS: 'CONFIGURE_TAB_FACETS',
   RESTORE_STATE: 'RESTORE_STATE',
   RESET: 'RESET',
 };
@@ -167,6 +193,8 @@ export const ActionTypes = {
  */
 function searchReducer(state, action) {
   switch (action.type) {
+    case 'SHARED_PAGE_RESET':
+      return state.page === 1 ? state : { ...state, page: 1 };
     case ActionTypes.SET_QUERY:
       // Same query: keep the page. The input re-syncing a query restored from
       // the URL must not reset a restored page to 1.
@@ -250,7 +278,7 @@ function searchReducer(state, action) {
         ...state,
         facets: facetsFromDefaults(action.payload?.defaultFilters),
         facetOperators: {},
-        customFacets: {},
+        customFacets: tabSelections(state.tabFacetConfigs, state.customFacets),
         page: 1,
       };
 
@@ -266,15 +294,64 @@ function searchReducer(state, action) {
       };
     }
 
+    case ActionTypes.CONFIGURE_TAB_FACETS: {
+      const { configs = [], initialSelections = null } = action.payload;
+      const previousConfigs = state.tabFacetConfigs;
+      const nextConfigs = (configs || []).filter(isTabFacet);
+      const previous = tabSelections(previousConfigs, state.customFacets);
+      const defaults = tabSelections(previousConfigs);
+      const retained = {};
+      for (const facet of previousConfigs) {
+        const index = previous[facet.id][0];
+        if (index === defaults[facet.id][0]) continue;
+        const option = facet.options[Number(index)];
+        const value = tabOptionValue(facet, Number(index));
+        const next = nextConfigs.find(candidate => candidate.id === facet.id);
+        const nextIndex = next?.options.findIndex((candidate, index) =>
+          value
+            ? tabOptionValue(next, index) === value
+            : candidate.query === option.query
+        );
+        if (nextIndex >= 0) retained[facet.id] = [String(nextIndex)];
+      }
+      const selected = tabSelections(
+        nextConfigs,
+        initialSelections ?? retained
+      );
+      const scope = (facets, selections) =>
+        facets.map(facet => [
+          facet.id,
+          facet.options[Number(selections[facet.id][0])].query,
+        ]);
+      const scopeChanged =
+        JSON.stringify(scope(previousConfigs, previous)) !==
+        JSON.stringify(scope(nextConfigs, selected));
+      return {
+        ...state,
+        tabFacetConfigs: nextConfigs,
+        configuredCustomFacets: configs,
+        customFacets: {
+          ...Object.fromEntries(
+            Object.entries(state.customFacets).filter(
+              ([id]) => !previousConfigs.some(facet => facet.id === id)
+            )
+          ),
+          ...selected,
+        },
+        page: state.isInitialized && scopeChanged ? 1 : state.page,
+      };
+    }
+
     case ActionTypes.SET_CUSTOM_FACET: {
       const { facetId, value } = action.payload;
       const valueArray = Array.isArray(value) ? value : [value];
+      const selected = { ...state.customFacets, [facetId]: valueArray };
 
       return {
         ...state,
         customFacets: {
-          ...state.customFacets,
-          [facetId]: valueArray,
+          ...selected,
+          ...tabSelections(state.tabFacetConfigs, selected),
         },
         page: 1,
       };
@@ -282,6 +359,8 @@ function searchReducer(state, action) {
 
     case ActionTypes.REMOVE_CUSTOM_FACET: {
       const { facetId } = action.payload;
+      if (state.tabFacetConfigs.some(facet => facet.id === facetId))
+        return state;
       const { [facetId]: removed, ...remainingCustomFacets } =
         state.customFacets;
 
@@ -343,6 +422,7 @@ function searchReducer(state, action) {
         defaultQuery = '',
         initialQuery = null,
         defaultSort = 'relevance',
+        preserveSort = false,
         // State read from the URL hash; takes precedence over the defaults.
         // initialFacets replaces defaultFilters entirely when present.
         initialFacets = null,
@@ -369,10 +449,17 @@ function searchReducer(state, action) {
         ...state,
         query,
         appliedDefaultQuery: nextDefaultQuery,
+        appliedDefaultSort: defaultSort,
         // A re-initialise that swaps the query starts again from page 1. The
         // first INITIALIZE keeps a page restored from the URL hash.
         page: state.isInitialized && query !== state.query ? 1 : state.page,
-        sortBy: initialSort || defaultSort,
+        sortBy:
+          preserveSort &&
+          state.isInitialized &&
+          state.appliedDefaultSort === defaultSort &&
+          !initialSort
+            ? state.sortBy
+            : initialSort || defaultSort,
         hasEventSorts:
           state.hasEventSorts ||
           EVENT_SORT_VALUES.includes(defaultSort) ||
@@ -395,6 +482,7 @@ function searchReducer(state, action) {
         sortBy = 'relevance',
         facets = {},
         facetOperators = {},
+        customFacets = null,
       } = action.payload;
       return {
         ...state,
@@ -405,6 +493,10 @@ function searchReducer(state, action) {
           state.hasEventSorts || EVENT_SORT_VALUES.includes(sortBy),
         facets,
         facetOperators,
+        customFacets: {
+          ...state.customFacets,
+          ...tabSelections(state.tabFacetConfigs, customFacets || {}),
+        },
         // Back/forward: search at once.
         queryIsTyped: false,
       };
@@ -413,6 +505,8 @@ function searchReducer(state, action) {
     case ActionTypes.RESET:
       return {
         ...initialState,
+        tabFacetConfigs: state.tabFacetConfigs,
+        customFacets: tabSelections(state.tabFacetConfigs),
         hasEventSorts: state.hasEventSorts,
         isInitialized: true,
       };
@@ -455,14 +549,32 @@ export function SearchProvider({
   labels: userLabels,
   lang,
   children,
+  rootRef,
 }) {
-  // Merge user config with defaults
-  const config = useMemo(
-    () => ({
-      ...DEFAULT_CONFIG,
-      ...userConfig,
-    }),
+  // Merge user config with defaults.
+  const mergedConfig = useMemo(
+    () =>
+      withSharedControls({
+        ...DEFAULT_CONFIG,
+        ...userConfig,
+      }),
     [userConfig]
+  );
+  // Group configuration derives a new defaults array. Only changed values
+  // should reinitialize filters/sort; editing a local scope must not do so.
+  const groupedDefaultsKey = mergedConfig.sharedControls?.id
+    ? JSON.stringify(mergedConfig.defaultFilters)
+    : null;
+  const groupedDefaults = useMemo(
+    () => (groupedDefaultsKey === null ? null : JSON.parse(groupedDefaultsKey)),
+    [groupedDefaultsKey]
+  );
+  const config = useMemo(
+    () =>
+      groupedDefaults === null
+        ? mergedConfig
+        : { ...mergedConfig, defaultFilters: groupedDefaults },
+    [mergedConfig, groupedDefaults]
   );
 
   // Merge user labels with defaults
@@ -473,15 +585,97 @@ export function SearchProvider({
 
   // Initialize reducer with config-based initial state
   const [state, dispatch] = useReducer(searchReducer, initialState);
+  // Reconcile before children read config and state together. An effect would
+  // briefly pair new option positions with old selections, issuing a stale
+  // request and writing the wrong scope to browser history.
+  if (state.configuredCustomFacets !== config.customFacets) {
+    dispatch(actions.configureTabFacets(config.customFacets));
+  }
 
-  // Memoize the state value to prevent unnecessary re-renders
-  const stateValue = useMemo(() => state, [state]);
+  const [ownerDocument, setOwnerDocument] = useState(null);
+  useLayoutEffect(() => {
+    if (config.sharedControls?.id)
+      setOwnerDocument(
+        rootRef?.current?.ownerDocument || globalThis.document || null
+      );
+  }, [config.sharedControls?.id, rootRef]);
+  const store = useMemo(
+    () => getSharedStore(ownerDocument, config),
+    [ownerDocument, config]
+  );
+  const shared = useSyncExternalStore(
+    store.subscribe,
+    store.getSnapshot,
+    store.getSnapshot
+  );
+  const member = useRef(Symbol('search member'));
+  // Revision numbers belong to a store; another group may have the same number.
+  const seenSharedState = useRef({ store, revision: shared?.revision });
+  useLayoutEffect(() => {
+    store.configure?.(config);
+  }, [store, config]);
+  useLayoutEffect(() => {
+    if (
+      seenSharedState.current.store === store &&
+      seenSharedState.current.revision === shared?.revision
+    )
+      return;
+    seenSharedState.current = { store, revision: shared?.revision };
+    if (shared) dispatch({ type: 'SHARED_PAGE_RESET' });
+  }, [shared, store]);
+  useEffect(() => {
+    store.report?.(member.current, state.error ? null : state.aggregations);
+  }, [store, state.aggregations, state.error]);
+  useEffect(() => {
+    const id = member.current;
+    return () => store.remove?.(id);
+  }, [store]);
+
+  // Joining a group must not look like a new input dispatcher: replaying a
+  // late widget's empty input would overwrite the existing group's query.
+  const storeRef = useRef(store);
+  storeRef.current = store;
+  const dispatchAction = useCallback(action => {
+    const handled = storeRef.current.dispatch?.(action);
+    if (!handled || action.type === ActionTypes.CLEAR_FACETS) dispatch(action);
+  }, []);
+
+  const stateValue = useMemo(() => {
+    if (!shared) return state;
+    const keys = sharedKeys(config);
+    const privateValues = values =>
+      Object.fromEntries(
+        Object.entries(values).filter(([key]) => !keys.has(key))
+      );
+    const localTabs = Object.fromEntries(
+      Object.entries(state.customFacets).filter(([id]) =>
+        state.tabFacetConfigs.some(facet => facet.id === id)
+      )
+    );
+    return {
+      ...state,
+      query: shared.query,
+      queryIsTyped: shared.queryIsTyped,
+      facets: { ...privateValues(state.facets), ...shared.facets },
+      facetOperators: {
+        ...privateValues(state.facetOperators),
+        ...shared.facetOperators,
+      },
+      customFacets: { ...shared.customFacets, ...localTabs },
+      page:
+        seenSharedState.current.store === store &&
+        seenSharedState.current.revision === shared.revision
+          ? state.page
+          : 1,
+      sharedAggregations: shared.aggregations,
+    };
+  }, [state, shared, config, store]);
 
   return (
     <SearchConfigContext.Provider value={config}>
       <SearchLabelsContext.Provider value={labels}>
         <SearchStateContext.Provider value={stateValue}>
-          <SearchDispatchContext.Provider value={dispatch}>
+          <SearchDispatchContext.Provider value={dispatchAction}>
             {children}
           </SearchDispatchContext.Provider>
         </SearchStateContext.Provider>
@@ -559,6 +753,11 @@ export function useSearch() {
  * Action creators for common operations.
  */
 export const actions = {
+  configureTabFacets: (configs, initialSelections = null) => ({
+    type: ActionTypes.CONFIGURE_TAB_FACETS,
+    payload: { configs, initialSelections },
+  }),
+
   /**
    * @param {string} query
    * @param {Object} [options]

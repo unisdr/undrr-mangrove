@@ -6,6 +6,7 @@
  * (restricting the Type dropdown).
  */
 
+import { expect, userEvent, within } from 'storybook/test';
 import { SyndicationSearchWidget } from './SyndicationSearchWidget';
 import { defaultConfig, widgetMetaShared } from './_storyHelpers';
 
@@ -325,4 +326,91 @@ The second filter keeps events whose \`event_end\` is yesterday or later, and an
       },
     },
   },
+};
+
+export const EventPeriods = {
+  args: {
+    config: {
+      ...defaultConfig,
+      defaultSort: 'eventDateAsc',
+      customFilters: ['type:(event OR conference_event)'],
+      customFacets: [
+        {
+          id: 'event-status',
+          title: 'Event period',
+          display: 'tabs',
+          defaultValue: '0',
+          options: [
+            {
+              label: 'Upcoming',
+              value: 'upcoming',
+              query: 'event_end:[now-1d/d TO *]',
+            },
+            {
+              label: 'Previous',
+              value: 'past',
+              query: 'event_end:[* TO now-1d/d}',
+            },
+          ],
+        },
+      ],
+    },
+  },
+};
+
+const mockPeriodSearch = () => {
+  const original = globalThis.fetch;
+  globalThis.fetch = (url, options) =>
+    url === '/__mg-period-search'
+      ? Promise.resolve({
+          ok: true,
+          json: async () => ({
+            hits: { hits: [], total: { value: 0 } },
+            aggregations: {},
+            took: 1,
+          }),
+        })
+      : original(url, options);
+  return () => {
+    globalThis.fetch = original;
+  };
+};
+
+const checkPeriodKeyboard = async ({ canvasElement, args }) => {
+  const canvas = within(canvasElement);
+  const group = canvas.getByRole('group', { name: 'Event period' });
+  const controls = within(group);
+  const upcoming = controls.getByRole('radio', { name: 'Upcoming' });
+  const previous = controls.getByRole('radio', { name: 'Previous' });
+  await expect(upcoming).toBeChecked();
+  const input = canvas.getByRole('searchbox');
+  await userEvent.type(input, 'climate');
+  upcoming.focus();
+  await userEvent.keyboard(args.dir === 'rtl' ? '{ArrowLeft}' : '{ArrowRight}');
+  await expect(previous).toBeChecked();
+  await expect(previous).toHaveFocus();
+  await expect(input).toHaveValue('climate');
+  for (const radio of [upcoming, previous]) {
+    const target = radio.nextElementSibling.getBoundingClientRect();
+    await expect(target.width).toBeGreaterThanOrEqual(44);
+    await expect(target.height).toBeGreaterThanOrEqual(44);
+  }
+};
+
+export const EventPeriodsKeyboard = {
+  args: {
+    config: {
+      ...EventPeriods.args.config,
+      searchEndpoint: '/__mg-period-search',
+      enableHashSync: false,
+      showFacets: false,
+    },
+  },
+  beforeEach: mockPeriodSearch,
+  play: checkPeriodKeyboard,
+};
+
+export const EventPeriodsKeyboardRtl = {
+  ...EventPeriodsKeyboard,
+  args: { ...EventPeriodsKeyboard.args, lang: 'ar', dir: 'rtl' },
 };
