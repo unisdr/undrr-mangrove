@@ -1,3 +1,5 @@
+import { isTabFacet } from './utils/customFacetTabs';
+import CustomFacetTabs from './components/CustomFacetTabs';
 import { getLanguageProps } from '../../../src/i18n';
 /**
  * @file SyndicationSearchWidget.jsx
@@ -301,6 +303,8 @@ function SyndicationSearchWidgetInner({ lang, dir }) {
     dispatch(
       actions.initialize({
         defaultFilters: config.defaultFilters,
+        customFacets: config.customFacets,
+        initialCustomFacets: fromHash?.customFacets ?? null,
         defaultQuery: config.defaultQuery,
         initialQuery: fromHash?.initialQuery ?? null,
         defaultSort: config.defaultSort,
@@ -313,6 +317,7 @@ function SyndicationSearchWidgetInner({ lang, dir }) {
     dispatch,
     initialHashState,
     config.defaultFilters,
+    config.customFacets,
     config.defaultQuery,
     config.defaultSort,
   ]);
@@ -446,6 +451,8 @@ function SyndicationSearchWidgetInner({ lang, dir }) {
           <FacetsSidebar widgetId={widgetId} />
         </div>
       )}
+
+      <CustomFacetTabs widgetId={widgetId} />
 
       {/* Active filter chips */}
       {!inColumn && activeFilters}
@@ -627,7 +634,13 @@ function countActiveFilters(state) {
   }
 
   if (state.customFacets) {
-    for (const values of Object.values(state.customFacets)) {
+    for (const [id, values] of Object.entries(state.customFacets)) {
+      if (
+        state.tabFacetConfigs?.some(
+          facet => isTabFacet(facet) && facet.id === id
+        )
+      )
+        continue;
       if (Array.isArray(values)) {
         count += values.length;
       }

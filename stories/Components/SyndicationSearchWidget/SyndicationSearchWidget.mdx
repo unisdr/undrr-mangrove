@@ -158,6 +158,13 @@ customFacets: [
 
 <Canvas of={FiltersStories.CustomFacets} meta={FiltersStories} />
 
+### One search across result tabs
+
+A single-select custom facet with `display: 'tabs'` appears above the results as a labelled native radio group, styled as tabs. Set `defaultValue` to its initial option index (`'0'` for the first option). Switching keeps the search term and other filters, resets pagination, and scopes both results and facet counts. Clear all filters retains the selected tab. Give each option a stable `value` such as `'upcoming'` or `'past'` to preserve the selection in links and browser history (`t.<facetId>=<value>`). Ordinary dropdown facets remain unchanged.
+
+<Canvas of={FiltersStories.EventPeriods} meta={FiltersStories} />
+
+
 **Structure:**
 
 ```json
@@ -587,10 +594,7 @@ Rules:
   window (for the configured `resultsPerPage`) is ignored, and page 1 is shown.
 - **History.** Choosing a filter, a match mode, a sort order or a page adds a
   history entry. Typing a search query updates the current entry instead.
-- **Custom facets are not included.** Editor-defined facets (`customFacets`)
-  store selections by option position, so a link would select a different
-  option after an editor reorders, adds or removes options. They need stable
-  option IDs before they can be shared in the URL.
+- **Custom dropdown facets are not included.** They store selections by option position. Result tabs can use stable option `value` identifiers and sync through `t.<facetId>` parameters.
 
 Pages with more than one widget should leave hash sync on for at most one of
 them; the Drupal block's `auto` setting does this.
@@ -946,6 +950,8 @@ pass `dir` explicitly when external search or facet portals cross direction
 boundaries: a DOM portal cannot inherit direction from the widget's ancestors.
 
 ## Changelog
+
+- **1.8.0**, 2026-11-09 ([undrr/web-backlog#3310](https://gitlab.com/undrr/web-backlog/-/work_items/3310)): Required result tabs keep a single search and filter configuration across Upcoming/Previous or other scopes. Stable option values support links and browser history; selected scopes remain in place when filters are cleared.
 
 - **1.7.0**, 2026-11-09 ([undrr/web-backlog#3310](https://gitlab.com/undrr/web-backlog/-/work_items/3310)): Listings can use `yearField: 'display_date'` to align Year filters, counts, and fallback dates with reader-facing editorial dates across content types. Year-only publications preserve year precision, and missing public dates do not fall back to CMS timestamps. Historical public event ranges retain both dates. Event-only endpoints can still select `event_start`; the default remains `published_at` for existing consumers. Shared external controls render only for the first visible owner and transfer between tabs without resetting each widget's search state. Pages that need controls for several visible lists must provide separate targets.
 

@@ -59,7 +59,7 @@ function saveAnchorState(searchState) {
   return true;
 }
 
-function readAnchorState(fields, maxPage) {
+function readAnchorState(fields, maxPage, tabFacets) {
   const saved = window.history.state?.[HISTORY_KEY];
   if (
     !isRecord(saved) ||
@@ -87,26 +87,37 @@ function readAnchorState(fields, maxPage) {
       page: Number.isInteger(source.page) ? source.page : 1,
       sortBy: typeof source.sortBy === 'string' ? source.sortBy : 'relevance',
       facets,
+      customFacets: isRecord(source.customFacets) ? source.customFacets : {},
       facetOperators: isRecord(source.facetOperators)
         ? source.facetOperators
         : {},
     },
-    { facetFields: fields, defaultFacets: {}, defaultSort: 'relevance' }
+    {
+      facetFields: fields,
+      defaultFacets: {},
+      defaultSort: 'relevance',
+      tabFacets,
+    }
   );
-  const parsed = parseHashState(encoded, { facetFields: fields, maxPage });
+  const parsed = parseHashState(encoded, {
+    facetFields: fields,
+    maxPage,
+    tabFacets,
+  });
   return {
     query: parsed.query || '',
     page: parsed.page || 1,
     sortBy: parsed.sort || 'relevance',
     facets: parsed.facets || {},
     facetOperators: parsed.facetOperators,
+    ...(parsed.customFacets ? { customFacets: parsed.customFacets } : {}),
   };
 }
 
-function currentLocationKey(fields, maxPage) {
+function currentLocationKey(fields, maxPage, tabFacets) {
   const hash = window.location.hash.substring(1);
   return hash && !isSearchHash(hash)
-    ? `${hash}\n${JSON.stringify(readAnchorState(fields, maxPage))}`
+    ? `${hash}\n${JSON.stringify(readAnchorState(fields, maxPage, tabFacets))}`
     : hash;
 }
 
@@ -139,8 +150,8 @@ function getLegacyQueryParam() {
  * typing a query replaces the current one. Back/forward restores the state
  * for that entry.
  *
- * Custom facets are not synced: their selections are option positions,
- * which change meaning when an editor edits the options.
+ * Tab scopes sync stable option values. Ordinary custom dropdown selections
+ * remain unsynced because their option positions can change.
  *
  * @param {Object} options - Hook options
  * @param {boolean} options.enabled - Whether hash sync is enabled
@@ -164,7 +175,15 @@ export function useHashSync({ enabled = true } = {}) {
   // the first write must not replace that anchor.
   const keepLoadAnchorRef = useRef(false);
 
-  const { query, page, sortBy, facets, facetOperators, isInitialized } = state;
+  const {
+    query,
+    page,
+    sortBy,
+    facets,
+    facetOperators,
+    customFacets,
+    isInitialized,
+  } = state;
   const {
     enableHashSync,
     facetFields,
@@ -172,6 +191,7 @@ export function useHashSync({ enabled = true } = {}) {
     defaultSort,
     defaultQuery,
     resultsPerPage,
+    customFacets: tabFacets,
   } = config;
   const fields = facetFields || FACET_FIELDS;
   // Pages past Elasticsearch's result window can only return an error
@@ -197,8 +217,8 @@ export function useHashSync({ enabled = true } = {}) {
   );
 
   const hashOptions = useMemo(
-    () => ({ facetFields: fields, defaultFacets, defaultSort }),
-    [fields, defaultFacets, defaultSort]
+    () => ({ facetFields: fields, defaultFacets, defaultSort, tabFacets }),
+    [fields, defaultFacets, defaultSort, tabFacets]
   );
 
   /**
@@ -206,14 +226,15 @@ export function useHashSync({ enabled = true } = {}) {
    */
   const parseHash = useCallback(() => {
     if (typeof window === 'undefined') return {};
-    const saved = readAnchorState(fields, maxPage);
+    const saved = readAnchorState(fields, maxPage, tabFacets);
     if (saved && !isSearchHash(window.location.hash))
       return { ...saved, sort: saved.sortBy };
     return parseHashState(window.location.hash, {
       facetFields: fields,
       maxPage,
+      tabFacets,
     });
-  }, [fields, maxPage]);
+  }, [fields, maxPage, tabFacets]);
 
   // Facets and sort read from the hash on mount, passed to INITIALIZE by
   // the widget so the defaults don't overwrite them. Read during the first
@@ -222,13 +243,14 @@ export function useHashSync({ enabled = true } = {}) {
     if (!isEnabled || typeof window === 'undefined') return null;
     if (getLegacyQueryParam()) return null;
     const parsed = parseHash();
-    if (!parsed.facets && !parsed.sort) return null;
+    if (!parsed.facets && !parsed.sort && !parsed.customFacets) return null;
     return {
       facets: parsed.facets,
       facetOperators: parsed.facetOperators,
       sort: parsed.sort,
+      customFacets: parsed.customFacets,
       initialQuery: !isSearchHash(window.location.hash)
-        ? (readAnchorState(fields, maxPage)?.query ?? null)
+        ? (readAnchorState(fields, maxPage, tabFacets)?.query ?? null)
         : null,
     };
   });
@@ -266,13 +288,22 @@ export function useHashSync({ enabled = true } = {}) {
           sortBy,
           facets,
           facetOperators,
+          customFacets,
         },
         hashOptions
       );
       if (newHash === lastHashRef.current) return;
       writeHash(newHash, true);
     },
-    [isEnabled, sortBy, facets, facetOperators, hashOptions, writeHash]
+    [
+      isEnabled,
+      sortBy,
+      facets,
+      facetOperators,
+      customFacets,
+      hashOptions,
+      writeHash,
+    ]
   );
 
   /**
@@ -351,7 +382,14 @@ export function useHashSync({ enabled = true } = {}) {
   useEffect(() => {
     if (!isEnabled || !isInitialized || typeof window === 'undefined') return;
 
-    const current = { query, page, sortBy, facets, facetOperators };
+    const current = {
+      query,
+      page,
+      sortBy,
+      facets,
+      facetOperators,
+      customFacets,
+    };
     const previous = previousSearchStateRef.current;
     previousSearchStateRef.current = current;
     const newHash = buildHashString(current, hashOptions);
@@ -372,7 +410,11 @@ export function useHashSync({ enabled = true } = {}) {
         replaceNextRef.current = false;
         lastHashRef.current = newHash;
         saveAnchorState(current);
-        lastLocationRef.current = currentLocationKey(fields, maxPage);
+        lastLocationRef.current = currentLocationKey(
+          fields,
+          maxPage,
+          tabFacets
+        );
         return;
       }
     }
@@ -394,6 +436,8 @@ export function useHashSync({ enabled = true } = {}) {
     sortBy,
     facets,
     facetOperators,
+    customFacets,
+    tabFacets,
     hashOptions,
     writeHash,
   ]);
@@ -410,16 +454,23 @@ export function useHashSync({ enabled = true } = {}) {
       const currentHash = window.location.hash.substring(1);
 
       // Avoid loops: our own writes and already-handled navigations
-      const locationKey = currentLocationKey(fields, maxPage);
+      const locationKey = currentLocationKey(fields, maxPage, tabFacets);
       if (locationKey === lastLocationRef.current) return;
       lastLocationRef.current = locationKey;
 
       // Anchor entries keep their fragment and native scroll behaviour. Their
       // private same-document snapshot restores search state on traversal.
       if (currentHash && !isSearchHash(currentHash)) {
-        let restored = readAnchorState(fields, maxPage);
+        let restored = readAnchorState(fields, maxPage, tabFacets);
         if (!restored) {
-          const current = { query, page, sortBy, facets, facetOperators };
+          const current = {
+            query,
+            page,
+            sortBy,
+            facets,
+            facetOperators,
+            customFacets,
+          };
           if (saveAnchorState(current)) restored = current;
           else
             restored = {
@@ -431,7 +482,11 @@ export function useHashSync({ enabled = true } = {}) {
             };
         }
         lastHashRef.current = buildHashString(restored, hashOptions);
-        lastLocationRef.current = currentLocationKey(fields, maxPage);
+        lastLocationRef.current = currentLocationKey(
+          fields,
+          maxPage,
+          tabFacets
+        );
         prevQueryRef.current = restored.query;
         dispatch(actions.restoreState(restored));
         return;
@@ -440,6 +495,7 @@ export function useHashSync({ enabled = true } = {}) {
       const hashState = parseHashState(currentHash, {
         facetFields: fields,
         maxPage,
+        tabFacets,
       });
       const restored = {
         query: hashState.query ?? (defaultQuery || ''),
@@ -447,6 +503,7 @@ export function useHashSync({ enabled = true } = {}) {
         sortBy: hashState.sort || defaultSort || 'relevance',
         facets: hashState.facets || defaultFacets,
         facetOperators: hashState.facets ? hashState.facetOperators : {},
+        customFacets: hashState.customFacets,
       };
 
       // Record the canonical hash for this state so the write effect sees
@@ -484,6 +541,8 @@ export function useHashSync({ enabled = true } = {}) {
     sortBy,
     facets,
     facetOperators,
+    customFacets,
+    tabFacets,
   ]);
 
   return {

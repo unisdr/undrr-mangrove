@@ -326,3 +326,33 @@ The second filter keeps events whose \`event_end\` is yesterday or later, and an
     },
   },
 };
+
+export const EventPeriods = {
+  args: {
+    config: {
+      ...defaultConfig,
+      defaultSort: 'eventDateAsc',
+      customFilters: ['type:(event OR conference_event)'],
+      customFacets: [
+        {
+          id: 'event-status',
+          title: 'Event period',
+          display: 'tabs',
+          defaultValue: '0',
+          options: [
+            {
+              label: 'Upcoming',
+              value: 'upcoming',
+              query: 'event_end:[now-1d/d TO *]',
+            },
+            {
+              label: 'Previous',
+              value: 'past',
+              query: 'event_end:[* TO now-1d/d}',
+            },
+          ],
+        },
+      ],
+    },
+  },
+};

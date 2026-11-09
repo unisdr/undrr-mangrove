@@ -48,6 +48,7 @@ export function interpolateLabel(template, vars = {}) {
 }
 import { DEFAULT_CONFIG, EVENT_SORT_VALUES } from '../utils/constants';
 import { facetsFromDefaults } from '../utils/hashState';
+import { isTabFacet, tabSelections } from '../utils/customFacetTabs';
 
 /**
  * Normalise aggregations from Elasticsearch. The year facet comes from a
@@ -100,6 +101,7 @@ const initialState = {
 
   // Custom facet selections: { [facetId]: [selectedOptionIndices] }
   customFacets: {},
+  tabFacetConfigs: [],
 
   // Sort order: one of SORT_VALUES in utils/constants.js
   sortBy: 'relevance',
@@ -250,7 +252,7 @@ function searchReducer(state, action) {
         ...state,
         facets: facetsFromDefaults(action.payload?.defaultFilters),
         facetOperators: {},
-        customFacets: {},
+        customFacets: tabSelections(state.tabFacetConfigs, state.customFacets),
         page: 1,
       };
 
@@ -269,12 +271,13 @@ function searchReducer(state, action) {
     case ActionTypes.SET_CUSTOM_FACET: {
       const { facetId, value } = action.payload;
       const valueArray = Array.isArray(value) ? value : [value];
+      const selected = { ...state.customFacets, [facetId]: valueArray };
 
       return {
         ...state,
         customFacets: {
-          ...state.customFacets,
-          [facetId]: valueArray,
+          ...selected,
+          ...tabSelections(state.tabFacetConfigs, selected),
         },
         page: 1,
       };
@@ -282,6 +285,8 @@ function searchReducer(state, action) {
 
     case ActionTypes.REMOVE_CUSTOM_FACET: {
       const { facetId } = action.payload;
+      if (state.tabFacetConfigs.some(facet => facet.id === facetId))
+        return state;
       const { [facetId]: removed, ...remainingCustomFacets } =
         state.customFacets;
 
@@ -343,6 +348,8 @@ function searchReducer(state, action) {
         defaultQuery = '',
         initialQuery = null,
         defaultSort = 'relevance',
+        customFacets: customFacetConfigs = [],
+        initialCustomFacets = null,
         // State read from the URL hash; takes precedence over the defaults.
         // initialFacets replaces defaultFilters entirely when present.
         initialFacets = null,
@@ -357,6 +364,13 @@ function searchReducer(state, action) {
       const keepQuery =
         state.query !== '' && state.query !== state.appliedDefaultQuery;
 
+      const oldTabDefaults = tabSelections(state.tabFacetConfigs);
+      const readerTabSelections = Object.fromEntries(
+        Object.entries(state.customFacets).filter(
+          ([id, values]) =>
+            !oldTabDefaults[id] || values[0] !== oldTabDefaults[id][0]
+        )
+      );
       const nextDefaultQuery = defaultQuery || '';
       const query =
         !state.isInitialized && initialQuery !== null
@@ -367,6 +381,18 @@ function searchReducer(state, action) {
 
       return {
         ...state,
+        tabFacetConfigs: customFacetConfigs.filter(isTabFacet),
+        customFacets: {
+          ...Object.fromEntries(
+            Object.entries(state.customFacets).filter(
+              ([id]) => !state.tabFacetConfigs.some(facet => facet.id === id)
+            )
+          ),
+          ...tabSelections(
+            customFacetConfigs,
+            initialCustomFacets ?? readerTabSelections
+          ),
+        },
         query,
         appliedDefaultQuery: nextDefaultQuery,
         // A re-initialise that swaps the query starts again from page 1. The
@@ -395,6 +421,7 @@ function searchReducer(state, action) {
         sortBy = 'relevance',
         facets = {},
         facetOperators = {},
+        customFacets = null,
       } = action.payload;
       return {
         ...state,
@@ -405,6 +432,10 @@ function searchReducer(state, action) {
           state.hasEventSorts || EVENT_SORT_VALUES.includes(sortBy),
         facets,
         facetOperators,
+        customFacets: {
+          ...state.customFacets,
+          ...tabSelections(state.tabFacetConfigs, customFacets || {}),
+        },
         // Back/forward: search at once.
         queryIsTyped: false,
       };
@@ -413,6 +444,8 @@ function searchReducer(state, action) {
     case ActionTypes.RESET:
       return {
         ...initialState,
+        tabFacetConfigs: state.tabFacetConfigs,
+        customFacets: tabSelections(state.tabFacetConfigs),
         hasEventSorts: state.hasEventSorts,
         isInitialized: true,
       };

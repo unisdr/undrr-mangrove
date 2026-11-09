@@ -1734,3 +1734,54 @@ $search-input-padding-x: mg-rem(44);
     border-inline-end: 1px solid CanvasText;
   }
 }
+
+// A result scope is one required choice, distinct from removable filters.
+.mg-search__scope-tabs {
+  border: 0;
+  padding: 0;
+  margin: 0 0 var(--mg-spacing-100);
+  min-inline-size: 0;
+}
+
+.mg-search__scope-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mg-spacing-25);
+  border-block-end: 1px solid rgb(var(--mg-color-neutral-200));
+}
+
+.mg-search__scope-option {
+  position: relative;
+  cursor: pointer;
+  margin: 0;
+
+  input {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    opacity: 0;
+  }
+
+  span {
+    display: block;
+    padding: var(--mg-spacing-75) var(--mg-spacing-100);
+    border-block-end: 3px solid transparent;
+    font-family: var(--mg-font-family-ui);
+    color: rgb(var(--mg-color-text));
+  }
+
+  input:checked + span {
+    border-block-end-color: rgb(var(--mg-color-interactive));
+    font-weight: 700;
+  }
+
+  input:focus-visible + span {
+    @include mg-focus-ring-inset;
+  }
+
+  @media (forced-colors: active) {
+    input:checked + span {
+      border-block-end-color: Highlight;
+    }
+  }
+}
