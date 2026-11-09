@@ -210,16 +210,14 @@ export function useExternalTarget(selector, enabled, rootRef, onMissing) {
     observer = new MutationObserver(records => {
       if (
         !current?.isConnected ||
-        records.some(
-          record => {
-            if (record.type === 'attributes') return record.target.contains(root);
-            // Result and portal rendering also mutate the body. Only moving
-            // this widget (or an ancestor) can change its visibility or order.
-            return [...record.addedNodes, ...record.removedNodes].some(
-              node => node.contains(root)
-            );
-          }
-        )
+        records.some(record => {
+          if (record.type === 'attributes') return record.target.contains(root);
+          // Result and portal rendering also mutate the body. Only moving
+          // this widget (or an ancestor) can change its visibility or order.
+          return [...record.addedNodes, ...record.removedNodes].some(node =>
+            node.contains(root)
+          );
+        })
       ) {
         resolve();
       }
