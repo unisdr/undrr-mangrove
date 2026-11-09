@@ -376,7 +376,9 @@ function ResultItemComponent({
       const date = formatDisplayDate(readerDate, readerDatePrecision);
       if (!date) return null;
       return EVENT_TYPES.includes(type)
-        ? formatEventDate(readerDate, eventEnd) || date
+        ? formatEventDate(readerDate, eventEnd, 'en-US', {
+            allowBeforeEpoch: true,
+          }) || date
         : date;
     }
     if (EVENT_TYPES.includes(type)) {

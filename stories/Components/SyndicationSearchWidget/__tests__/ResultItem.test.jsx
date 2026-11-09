@@ -325,6 +325,20 @@ describe('ResultItem', () => {
       expect(time.textContent).toMatch(/Nov 12\s*–\s*14, 2025/);
     });
 
+    it('keeps both ends of a public event range before 1970', () => {
+      const time = renderFallback(
+        {
+          type: 'event',
+          display_date: [Date.parse('1965-01-01T12:00:00Z') / 1000],
+          display_date_precision: ['day'],
+          event_end: [Date.parse('1965-01-03T12:00:00Z') / 1000],
+        },
+        'display_date'
+      );
+      expect(time.textContent).toMatch(/Jan 1\s*–\s*3, 1965/);
+      expect(time).toHaveAttribute('dateTime', '1965-01-01');
+    });
+
     it.each(['publication', 'news', 'event'])(
       'leaves an absent public date absent for %s',
       type => {

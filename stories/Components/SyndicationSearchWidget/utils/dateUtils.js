@@ -121,13 +121,20 @@ export function formatDisplayDate(value, precision) {
  * @param {*} startValue - `event_start` from `_source`
  * @param {*} endValue - `event_end` from `_source`
  * @param {string} [locale='en-US'] - Locale for the formatted text
+ * @param {Object} [options] - Date parsing options for public historical dates
+ * @param {boolean} [options.allowBeforeEpoch=false] Accept timestamps before 1970
  * @returns {{ text: string, dateTime: string }|null} Display text and the
  *   start date's `datetime` value, or null without a usable start date
  */
-export function formatEventDate(startValue, endValue, locale = 'en-US') {
-  const start = toDate(startValue);
+export function formatEventDate(
+  startValue,
+  endValue,
+  locale = 'en-US',
+  { allowBeforeEpoch = false } = {}
+) {
+  const start = toDate(startValue, { allowBeforeEpoch });
   if (!start) return null;
-  const end = toDate(endValue);
+  const end = toDate(endValue, { allowBeforeEpoch });
   const formatter = getEventFormatter(locale);
 
   let text = formatter.format(start);

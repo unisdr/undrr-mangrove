@@ -84,6 +84,17 @@ describe('toDateTimeAttribute', () => {
 });
 
 describe('formatEventDate', () => {
+  it('preserves historical public ranges while keeping the default timestamp rules', () => {
+    const start = Date.parse('1965-01-01T12:00:00Z') / 1000;
+    const end = Date.parse('1965-01-03T12:00:00Z') / 1000;
+    expect(formatEventDate([start], [end])).toBeNull();
+    const date = formatEventDate([start], [end], 'en-US', {
+      allowBeforeEpoch: true,
+    });
+    expect(date.text).toMatch(/Jan 1\s*–\s*3, 1965/);
+    expect(date.dateTime).toBe('1965-01-01');
+  });
+
   it('returns null without a usable start', () => {
     expect(formatEventDate([0], [1762948800])).toBeNull();
   });
