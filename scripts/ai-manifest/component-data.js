@@ -2845,10 +2845,15 @@ npm run build</code></pre>
     },
   },
   'components-syndicated-search': {
+    cssClasses: [
+      'mg-search__scope-tabs',
+      'mg-search__scope-options',
+      'mg-search__scope-option',
+    ],
     summary:
       'Search with facets, result lists, photo cards or publication catalogues. Book mode preserves artwork URLs; use publication filters and explicit grid columns.',
     description:
-      'Search interface over the UNDRR syndication API: query box, facets, active filters, result list or cards, pager and search metrics. Book grids preserve supplied artwork URLs and use a shared desktop media stage; choose publication filters, explicit columns and concise fields for a cover catalogue. Teaser HTML is inserted directly into the result article when metrics are disabled; the metrics-enabled view keeps a separate teaser container alongside the scoring panel. Loading uses the shared flush ProgressBar in the results region and inline Loader on refresh. Skeletons remain static; optional motion uses shared timing tokens, with a dashed progress strip under reduced motion and visible outlines in forced colours. lang selects the bundled UI catalogue, independently of content-language filters. labels and data-labels provide explicit overrides. Built-in plural functions are bundled and work through hydration; custom functions require a JavaScript labels prop. The widget renders the search response as unsanitised HTML so Elasticsearch highlight markup survives, which puts the configured searchEndpoint inside its trust boundary: point it only at a service trusted to return safe HTML.',
+      'Search interface over the UNDRR syndication API: query box, facets, active filters, result list or cards, pager and search metrics. Custom facets with display tabs provide required native radio scopes above results, preserving other filters and scoping facet counts. Unique URL-safe option values synchronize selections with browser history; Clear all retains the scope. Book grids preserve supplied artwork URLs and use a shared desktop media stage; choose publication filters, explicit columns and concise fields for a cover catalogue. Teaser HTML is inserted directly into the result article when metrics are disabled; the metrics-enabled view keeps a separate teaser container alongside the scoring panel. Loading uses the shared flush ProgressBar in the results region and inline Loader on refresh. Skeletons remain static; optional motion uses shared timing tokens, with a dashed progress strip under reduced motion and visible outlines in forced colours. lang selects the bundled UI catalogue, independently of content-language filters. labels and data-labels provide explicit overrides. Built-in plural functions are bundled and work through hydration; custom functions require a JavaScript labels prop. The widget renders the search response as unsanitised HTML so Elasticsearch highlight markup survives, which puts the configured searchEndpoint inside its trust boundary: point it only at a service trusted to return safe HTML.',
     hydration: {
       note: 'The widget queries an Elasticsearch-backed API and owns all of its state, so renderedHtml is only the empty initial shell — no results, facets or pager are in it. Render an empty data-mg-search-widget container and hydrate it. fromElement returns config plus optional lang, dir and labels, so forward the full extracted props to retain language selection. Only attributes you set are included in config, so every unset option keeps its default. Malformed JSON in any of the JSON attributes is ignored and that option falls back to its default.',
       selector: '[data-mg-search-widget]',
@@ -2894,7 +2899,8 @@ npm run build</code></pre>
           'JSON object of filters applied to every search.',
         'data-allowed-types': 'JSON array of content types to include.',
         'data-custom-filters': 'JSON array of extra filter definitions.',
-        'data-custom-facets': 'JSON array of extra facet definitions.',
+        'data-custom-facets':
+          'JSON array of custom facets. display: tabs creates a required native radio scope above results; defaultValue is an option index. Unique URL-safe option values enable t.<facetId> history links. Labels and queries are consumer supplied.',
         'data-visible-teaser-fields':
           'JSON array of teaser fields to show on each result.',
         'data-interestingness-tiers': 'JSON tier configuration for ranking.',

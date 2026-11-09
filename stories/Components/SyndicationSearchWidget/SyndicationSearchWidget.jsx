@@ -335,6 +335,17 @@ function SyndicationSearchWidgetInner({ lang, dir }) {
   const isInitializedRef = useRef(state.isInitialized);
   isInitializedRef.current = state.isInitialized;
 
+  // Editing scope options must not reapply ordinary filter/sort defaults.
+  useEffect(() => {
+    if (isInitializedRef.current) return;
+    dispatch(
+      actions.configureTabFacets(
+        config.customFacets,
+        initialHashState?.customFacets
+      )
+    );
+  }, [dispatch, config.customFacets, initialHashState]);
+
   // Initialize widget on mount. Facets and sort from the URL hash, if any,
   // take precedence over the configured defaults.
   useEffect(() => {
@@ -342,8 +353,6 @@ function SyndicationSearchWidgetInner({ lang, dir }) {
     dispatch(
       actions.initialize({
         defaultFilters: config.defaultFilters,
-        customFacets: config.customFacets,
-        initialCustomFacets: fromHash?.customFacets ?? null,
         defaultQuery: config.defaultQuery,
         initialQuery: fromHash?.initialQuery ?? null,
         defaultSort: config.defaultSort,
@@ -356,7 +365,6 @@ function SyndicationSearchWidgetInner({ lang, dir }) {
     dispatch,
     initialHashState,
     config.defaultFilters,
-    config.customFacets,
     config.defaultQuery,
     config.defaultSort,
   ]);
