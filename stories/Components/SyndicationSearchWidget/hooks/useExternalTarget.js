@@ -17,6 +17,65 @@ import { getOwnerDocument } from '../utils/ownerDocument';
  */
 const THRASH_LIMIT = 10;
 const THRASH_WINDOW_MS = 1000;
+const targetClaims = new WeakMap();
+const pendingTargets = new WeakSet();
+
+function isVisible(root) {
+  if (!root?.isConnected) return false;
+  const view = root.ownerDocument.defaultView;
+  for (let node = root; node; node = node.parentElement) {
+    if (
+      node.hasAttribute('hidden') ||
+      node.getAttribute('aria-hidden') === 'true' ||
+      (node.tagName === 'DETAILS' &&
+        !node.open &&
+        !node.querySelector('summary')?.contains(root))
+    ) {
+      return false;
+    }
+    const style = view?.getComputedStyle(node);
+    if (style?.display === 'none' || style?.visibility === 'hidden')
+      return false;
+  }
+  return true;
+}
+
+function updateClaims(target) {
+  const claims = targetClaims.get(target);
+  if (!claims) return;
+  const visible = [...claims].filter(claim => isVisible(claim.root));
+  visible.sort((a, b) => {
+    if (a.root === b.root) return 0;
+    return a.root.compareDocumentPosition(b.root) & 4 ? -1 : 1;
+  });
+  const owner = visible[0];
+  claims.forEach(claim => claim.update(!!owner && claim.root === owner.root));
+}
+
+function scheduleClaimUpdate(target) {
+  if (pendingTargets.has(target)) return;
+  pendingTargets.add(target);
+  // Several widget observers can see the same tab switch. Scan its shared
+  // target once after that batch, rather than once per observing widget.
+  Promise.resolve().then(() => {
+    pendingTargets.delete(target);
+    updateClaims(target);
+  });
+}
+
+function claimTarget(target, claim) {
+  if (!targetClaims.has(target)) targetClaims.set(target, new Set());
+  targetClaims.get(target).add(claim);
+  updateClaims(target);
+}
+
+function releaseTarget(target, claim) {
+  const claims = targetClaims.get(target);
+  if (!claims) return;
+  claims.delete(claim);
+  if (claims.size) updateClaims(target);
+  else targetClaims.delete(target);
+}
 
 /**
  * Find the first element in `doc` matching `selector` that is outside the
@@ -52,9 +111,9 @@ function query(doc, selector, root) {
  * them, or replace them with new nodes. When the selector has no match at
  * mount, or the resolved element later leaves the document, the hook watches
  * that document's body for added or removed nodes and resolves the selector
- * again. While the element is connected the observer callback is a single
- * `isConnected` check, so it costs nothing measurable on busy pages. If
- * resolved targets keep leaving the document in a tight loop, the hook stops
+ * again. Visibility changes transfer ownership to the first visible widget
+ * in document order when multiple widgets share the target. If resolved
+ * targets keep leaving the document in a tight loop, the hook stops
  * watching and returns null.
  *
  * `onMissing` is called at most once per selector for the life of the
@@ -67,10 +126,11 @@ function query(doc, selector, root) {
  * @param {{current: (Node|null)}} rootRef - Ref to the widget root, used to
  *   find the document to search and to exclude the widget's own markup
  * @param {Function} [onMissing] - Called once when the selector doesn't match
- * @returns {Element|null} The connected target element, or null
+ * @returns {{target: Element|null, isOwner: boolean}} Target and control ownership
  */
 export function useExternalTarget(selector, enabled, rootRef, onMissing) {
   const [target, setTarget] = useState(null);
+  const [isOwner, setIsOwner] = useState(false);
   // A ref, so a new onMissing identity on each render doesn't re-run the
   // resolution or reset the once-only warning.
   const onMissingRef = useRef(onMissing);
@@ -85,6 +145,7 @@ export function useExternalTarget(selector, enabled, rootRef, onMissing) {
     const doc = getOwnerDocument(root);
     if (!enabled || !selector || !doc?.body) {
       setTarget(null);
+      setIsOwner(false);
       return undefined;
     }
 
@@ -92,6 +153,7 @@ export function useExternalTarget(selector, enabled, rootRef, onMissing) {
     let observer = null;
     let lostAt = [];
     let gaveUp = false;
+    const claim = { root, update: setIsOwner };
 
     const warnMissing = () => {
       if (warnedRef.current.has(selector)) return;
@@ -100,9 +162,14 @@ export function useExternalTarget(selector, enabled, rootRef, onMissing) {
     };
 
     const resolve = () => {
-      if (gaveUp || current?.isConnected) return;
+      if (gaveUp) return;
+      if (current?.isConnected) {
+        scheduleClaimUpdate(current);
+        return;
+      }
 
       if (current) {
+        releaseTarget(current, claim);
         // A target we portaled into has left the document. Count it, and
         // give up if that keeps happening in a burst.
         const now = Date.now();
@@ -113,6 +180,7 @@ export function useExternalTarget(selector, enabled, rootRef, onMissing) {
           observer?.disconnect();
           current = null;
           setTarget(null);
+          setIsOwner(false);
           console.warn(
             `[SyndicationSearchWidget] target selector "${selector}" kept being removed from the page; using the in-widget layout.`
           );
@@ -124,6 +192,8 @@ export function useExternalTarget(selector, enabled, rootRef, onMissing) {
       if (next !== current) {
         current = next;
         setTarget(next);
+        setIsOwner(false);
+        if (next) claimTarget(next, claim);
       }
       if (!next) warnMissing();
     };
@@ -132,18 +202,42 @@ export function useExternalTarget(selector, enabled, rootRef, onMissing) {
 
     // The observer of the window this code runs in can watch a same-origin
     // iframe's document, so the global constructor is enough.
-    if (typeof MutationObserver === 'undefined') return undefined;
+    if (typeof MutationObserver === 'undefined') {
+      return () => current && releaseTarget(current, claim);
+    }
 
-    // Observing stays on while resolved: nothing else reports that the
-    // target was removed, and the callback returns at once while it's
-    // still in the document.
-    observer = new MutationObserver(resolve);
-    observer.observe(doc.body, { childList: true, subtree: true });
+    // Tab/disclosure visibility changes do not remove their widget roots.
+    observer = new MutationObserver(records => {
+      if (
+        !current?.isConnected ||
+        records.some(record => {
+          if (record.type === 'attributes') return record.target.contains(root);
+          // Result and portal rendering also mutate the body. Only moving
+          // this widget (or an ancestor) can change its visibility or order.
+          return [...record.addedNodes, ...record.removedNodes].some(node =>
+            node.contains(root)
+          );
+        })
+      ) {
+        resolve();
+      }
+    });
+    doc.defaultView?.addEventListener('resize', resolve);
+    observer.observe(doc.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['hidden', 'aria-hidden', 'class', 'style', 'open'],
+    });
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      doc.defaultView?.removeEventListener('resize', resolve);
+      if (current) releaseTarget(current, claim);
+    };
   }, [selector, enabled, rootRef]);
 
-  return target;
+  return { target, isOwner };
 }
 
 export default useExternalTarget;
