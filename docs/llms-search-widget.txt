@@ -279,13 +279,15 @@ Items with no value set are ranked as if their longevity were 80, but a tier fil
 | Website | `showWebsiteFilter` | `field_domain_access` |
 | Type | `showTypeFilter` | `type` |
 | News type | `showNewsTypeFilter` | `field_news_type` |
-| Year | `showYearFilter` | `year`, from `published_at` |
+| Year | `showYearFilter` | `year`, from the configured date field |
 | Country | `showCountryFilter` | `field_country_region` |
 | Hazard | `showHazardFilter` | `field_hazard` |
 | Theme | `showThemeFilter` | `field_theme` |
 | Language | `showLanguageFilter` | `_language` |
 
 A fixed filter is a default value plus a hidden dropdown: set **Website** to `www_undrr_org` in **Search settings** and uncheck the **Website** dropdown here, for example.
+
+Once Drupal's reader-facing date mode is activated, **Year** follows the editorial date shown with each result. A report with publication year 2020 is found under 2020 even if added in 2026; undated records do not match a selected year. **Newest first** and **Oldest first** still use the CMS publication timestamp, so an older report added recently can appear first.
 
 **Result teaser fields** hide parts of each result: image, content type, publication type, date, site name, summary and organization.
 
