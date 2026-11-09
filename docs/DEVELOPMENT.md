@@ -26,7 +26,7 @@ These guides live inside Storybook and cover component standards, integration, a
 
 ## Prerequisites
 
-- Node.js 22+ (minimum supported; CI and Docker run on Node 24). The repo ships a `.nvmrc` so `nvm use` picks the pinned version. `engines.node` in `package.json` enforces the floor.
+- Node.js 22+ (minimum supported; CI and Docker run on Node 26). The repo ships a `.nvmrc` so `nvm use` picks the pinned version. `engines.node` in `package.json` enforces the floor.
 - Yarn v4 (enabled via Corepack; version pinned via `packageManager` in `package.json`)
 - Docker (optional, for containerized development)
 - Git
@@ -40,7 +40,8 @@ These guides live inside Storybook and cover component standards, integration, a
 git clone git@github.com:unisdr/undrr-mangrove.git
 cd undrr-mangrove
 
-# Enable Corepack for Yarn v4
+# Node 26 does not bundle Corepack; install it to enable Yarn v4
+npm install --global corepack@0.36.0
 corepack enable
 
 # Install dependencies
