@@ -9,8 +9,8 @@ RUN apt-get update && apt-get upgrade -y
 # Install necessary tools and software-properties-common
 RUN apt-get install -y wget software-properties-common curl joe iputils-ping git
 
-# Enable corepack for Yarn 4 support
-RUN corepack enable
+# Node 26 does not bundle Corepack; install it before enabling Yarn.
+RUN npm install --global corepack@0.36.0 && corepack enable
 RUN yarn -v
 
 # Create app directory
