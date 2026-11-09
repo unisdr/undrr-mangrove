@@ -163,7 +163,7 @@ const VANILLA_SCRIPTS = [
     selector: '[data-mg-dialog]',
     initFunction: 'mgDialog(scope)',
     description:
-      'Unreleased/build-only. Not in published 2.3.0; relative URL is for the local dist/assets web root after yarn build, not a released CDN folder. Enhances authored disclosures into native modal dialogs. Call mgDialog(scope) for inserted content and mgDialogDestroy(scope) before removing it. Labels and content stay in the authored HTML; unsupported browsers keep the disclosure.',
+      'First shipped experimentally in 2.4.0. The relative URL is for the local dist/assets web root after yarn build; versioned CDN URLs require npm publication and the shared-web-assets production deployment. Enhances authored disclosures into native modal dialogs. Call mgDialog(scope) for inserted content and mgDialogDestroy(scope) before removing it. Labels and content stay in the authored HTML; unsupported browsers keep the disclosure.',
   },
   {
     name: 'Tabs',
