@@ -15130,9 +15130,9 @@ __metadata:
   linkType: hard
 
 "vanilla-cookieconsent@npm:^3.1.0":
-  version: 3.1.0
-  resolution: "vanilla-cookieconsent@npm:3.1.0"
-  checksum: 10/053e887cde87cb1e583288d2c3d8b56acf9c97293e5c9ff5c35d0f43b68c8e20441a321469126e92ac78fbb8410fe245cd2f879d4c376b7b2a66ffca00dee41c
+  version: 3.3.0
+  resolution: "vanilla-cookieconsent@npm:3.3.0"
+  checksum: 10/4212fa4aed5c9e13b9dd7e97c2e6fa4a4984d497b848b4276029ddfe278c7071925952e600169ffcf3a1ae5ab479e379ac5d2b19034552af245ce03abe5d770b
   languageName: node
   linkType: hard
 
