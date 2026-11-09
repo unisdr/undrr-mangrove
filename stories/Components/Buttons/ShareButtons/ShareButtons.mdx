@@ -43,6 +43,22 @@ A widget with share buttons for social media that open new tabs or copy the link
 
 Clickable share buttons for LinkedIn, Facebook, Twitter, Email, and QR code. Includes a copy-to-clipboard option and optional QR code modal with UTM parameters.
 
+## Narrow containers
+
+The component responds to its own available inline size, including when embedded in a sidebar on a wide viewport. Buttons retain their 40px targets and DOM order. At 256px, all six actions fit one line; the device-share action appears only where the browser supports it. Below 250px, the group uses up to three columns, producing three-plus-three or three-plus-two rows rather than an orphaned QR action. Very narrow containers can reduce the column count further. The URL-copy block continues to wrap independently.
+
+Wide containers retain the existing spacing token. Between 250px and 265px, free space is distributed between the buttons. Below 250px, the grid uses `--mg-spacing-50` again. These geometry breakpoints use rem units and scale with the root font size; no new prop, class or theme token is needed. Consumers with a local narrow-sidebar spacing workaround can remove it after adopting this stylesheet.
+
+<Canvas
+  of={ShareButtonsStories.NarrowSidebar}
+  story={{ inline: false, height: '300px' }}
+/>
+
+<Canvas
+  of={ShareButtonsStories.CompactContainer}
+  story={{ inline: false, height: '340px' }}
+/>
+
 ## Configuration
 
 - **Default body**: "Check out this link: " + URL
@@ -123,6 +139,8 @@ fallback labels. Supplying a language uses that runtime catalogue. The QR dialog
 receives the share row's language and direction.
 
 ## Changelog
+
+- **1.12**, 2026-11-07 ([unisdr/undrr-mangrove#1448](https://github.com/unisdr/undrr-mangrove/issues/1448)): Adapts sharing geometry to the component container: six 40px actions fit the 256px sidebar, with an intentional compact grid at narrower widths. Adds five-/six-action and RTL browser regression stories; existing actions, focus styles, labels and theme surfaces are unchanged.
 
 - **1.11**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance.
 
