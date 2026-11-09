@@ -300,6 +300,7 @@ export const UpcomingEvents = {
         '(event_end:[now-1d/d TO *] OR (*:* -_exists_:event_end))',
       ],
       defaultSort: 'eventDateAsc',
+      yearField: 'event_start',
     },
   },
   parameters: {
@@ -315,6 +316,7 @@ config: {
     '(event_end:[now-1d/d TO *] OR (*:* -_exists_:event_end))',
   ],
   defaultSort: 'eventDateAsc',
+  yearField: 'event_start',
 }
 \`\`\`
 

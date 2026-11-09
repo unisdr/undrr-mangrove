@@ -117,6 +117,8 @@ SyndicationSearchWidget.propTypes = {
       'eventDateAsc',
       'eventDateDesc',
     ]),
+    /** Indexed date used for the Year filter and counts; display_date also drives fallback dates. */
+    yearField: PropTypes.oneOf(['published_at', 'event_start', 'display_date']),
     /** Whether to display the search input box. */
     showSearchBox: PropTypes.bool,
     /** Whether to display the total results count. */
@@ -379,20 +381,22 @@ function SyndicationSearchWidgetInner({ lang, dir }) {
   // editors. Until a target matches, the in-widget layout is used, with one
   // console warning per selector so editors and developers can see why the
   // portal didn't take effect.
-  const facetsTargetEl = useExternalTarget(
-    facetsTarget,
-    facetsActive,
-    rootRef,
-    warnFacetsTargetMissing
-  );
+  const { target: facetsTargetEl, isOwner: ownsFacetsTarget } =
+    useExternalTarget(
+      facetsTarget,
+      facetsActive,
+      rootRef,
+      warnFacetsTargetMissing
+    );
   const facetsPortaled = facetsActive && facetsTargetEl !== null;
 
-  const searchTargetEl = useExternalTarget(
-    searchTarget,
-    showSearchBox,
-    rootRef,
-    warnSearchTargetMissing
-  );
+  const { target: searchTargetEl, isOwner: ownsSearchTarget } =
+    useExternalTarget(
+      searchTarget,
+      showSearchBox,
+      rootRef,
+      warnSearchTargetMissing
+    );
   const searchPortaled = showSearchBox && searchTargetEl !== null;
 
   // With the facets sidebar, the search box and filter chips belong to the
@@ -496,6 +500,7 @@ function SyndicationSearchWidgetInner({ lang, dir }) {
           widget. The React tree spans the portal so SearchContext (and
           therefore live input state) still flows. */}
       {searchPortaled &&
+        ownsSearchTarget &&
         createPortal(
           <div
             {...getLanguageProps(lang, dir)}
@@ -517,6 +522,7 @@ function SyndicationSearchWidgetInner({ lang, dir }) {
           render the facets there instead of inside the widget. The React
           tree spans the portal so SearchContext still flows. */}
       {facetsPortaled &&
+        ownsFacetsTarget &&
         createPortal(
           <div
             {...getLanguageProps(lang, dir)}
