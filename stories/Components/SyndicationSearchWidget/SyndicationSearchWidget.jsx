@@ -373,10 +373,20 @@ function SyndicationSearchWidgetInner({ lang, dir }) {
 
   // Lock the configured order when an editor disables visitor sorting.
   useEffect(() => {
-    if (config.showSort === false && state.sortBy !== config.defaultSort) {
+    if (
+      state.isInitialized &&
+      config.showSort === false &&
+      state.sortBy !== config.defaultSort
+    ) {
       dispatch(actions.setSort(config.defaultSort));
     }
-  }, [dispatch, config.showSort, config.defaultSort, state.sortBy]);
+  }, [
+    dispatch,
+    config.showSort,
+    config.defaultSort,
+    state.sortBy,
+    state.isInitialized,
+  ]);
 
   // Sync the input with query changes from elsewhere (URL hash, INITIALIZE,
   // back/forward). useDeferredValue lags the input, so the state briefly
