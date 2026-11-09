@@ -17,26 +17,30 @@ export const EVENT_TYPES = ['event', 'conference_event'];
  * Normalise an index date value to a Date.
  *
  * Numbers and numeric strings are epoch seconds (or milliseconds from 1e12
- * up); zero, negative values and other types are not dates. A bare
- * four-digit string is a year, not epoch seconds.
+ * up). By default zero and negative values are rejected; reader-facing date
+ * fields can opt into historical timestamps. A bare four-digit string is a
+ * year, not epoch seconds.
  *
  * @param {number|string|Array|null|undefined} value - Seconds, milliseconds
  *   or an ISO string, optionally wrapped in an array
+ * @param {Object} [options]
+ * @param {boolean} [options.allowBeforeEpoch=false] Accept historical dates
+ *   from an explicitly selected reader-facing field, including Unix zero.
  * @returns {Date|null} The date, or null when the value is not a usable date
  */
-export function toDate(value) {
+export function toDate(value, { allowBeforeEpoch = false } = {}) {
   const raw = [].concat(value ?? [])[0];
   let date;
   if (typeof raw === 'number') {
-    if (!Number.isFinite(raw) || raw <= 0) return null;
-    date = new Date(raw < 1e12 ? raw * 1000 : raw);
+    if (!Number.isFinite(raw) || (!allowBeforeEpoch && raw <= 0)) return null;
+    date = new Date(Math.abs(raw) < 1e12 ? raw * 1000 : raw);
   } else if (typeof raw === 'string') {
     const trimmed = raw.trim();
     if (trimmed === '') return null;
     if (/^\d{4}$/.test(trimmed)) {
       date = new Date(`${trimmed}-01-01T00:00:00Z`);
     } else if (/^-?\d+(\.\d+)?$/.test(trimmed)) {
-      return toDate(Number(trimmed));
+      return toDate(Number(trimmed), { allowBeforeEpoch });
     } else {
       date = new Date(trimmed);
     }
@@ -82,6 +86,28 @@ function getEventFormatter(locale) {
     );
   }
   return formatters.get(locale);
+}
+
+/**
+ * Format the indexed reader-facing date without adding precision the editor
+ * did not supply. Year-only publication dates use January 1 for indexing,
+ * but readers see just that year. UTC keeps display and year buckets aligned.
+ *
+ * @param {*} value - display_date from _source
+ * @param {*} precision - display_date_precision, optionally array-wrapped
+ * @returns {{text: string, dateTime: string}|null} Reader-facing date
+ */
+export function formatDisplayDate(value, precision) {
+  const date = toDate(value, { allowBeforeEpoch: true });
+  if (!date) return null;
+  if ([].concat(precision ?? [])[0] === 'year') {
+    const year = String(date.getUTCFullYear()).padStart(4, '0');
+    return { text: year, dateTime: year };
+  }
+  return {
+    text: getEventFormatter('en-US').format(date),
+    dateTime: toDateTimeAttribute(date),
+  };
 }
 
 /**

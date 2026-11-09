@@ -254,8 +254,21 @@ function buildBaseFilters(config) {
 }
 
 /**
+ * Accept only supported indexed date fields, keeping query and counts aligned.
+ * @param {Object} config
+ * @returns {string}
+ * @private
+ */
+function resolveYearField(config) {
+  return ['event_start', 'display_date'].includes(config.yearField)
+    ? config.yearField
+    : 'published_at';
+}
+
+/**
  * Range clause matching one calendar year (UTC) of the configured date field.
  * @param {number} year
+ * @param {string} yearField
  * @returns {Object}
  * @private
  */
@@ -300,12 +313,7 @@ function buildPostFilter(facets, facetOperators, customFacets, config) {
       const ranges = values
         .map(y => parseInt(y, 10))
         .filter(Number.isFinite)
-        .map(year =>
-          buildYearRange(
-            year,
-            config.yearField === 'event_start' ? 'event_start' : 'published_at'
-          )
-        );
+        .map(year => buildYearRange(year, resolveYearField(config)));
       if (ranges.length === 0) continue;
       if (ranges.length === 1) {
         filters.push(ranges[0]);
@@ -936,8 +944,7 @@ function buildAggregations(facetFields, facetCount, config) {
   // SearchContext makes it the bucket key.
   aggs.year = {
     date_histogram: {
-      field:
-        config.yearField === 'event_start' ? 'event_start' : 'published_at',
+      field: resolveYearField(config),
       calendar_interval: 'year',
       format: 'yyyy',
       min_doc_count: 1,

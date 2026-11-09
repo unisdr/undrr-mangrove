@@ -581,6 +581,8 @@ export const SOURCE_FIELDS = [
   'vid',
   'field_domain_access',
   'published_at',
+  'display_date',
+  'display_date_precision',
   'event_start',
   'event_end',
   'field_meta_interestingness',

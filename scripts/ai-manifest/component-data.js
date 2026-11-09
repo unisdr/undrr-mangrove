@@ -2867,7 +2867,7 @@ npm run build</code></pre>
         'data-default-query': 'Query the widget starts with.',
         'data-default-sort': 'Initial sort key.',
         'data-year-field':
-          'Year filter date basis: published_at (default) or event_start.',
+          'Year filter date basis: published_at (default), event_start, or display_date. With display_date, fallback results use the reader-facing date and display_date_precision (year or day); the endpoint must index these fields before selection.',
         'data-display-mode':
           'Result layout: list, card or card-book. Book mode preserves supplied artwork URLs; use publication filters and explicit columns for a cover catalogue.',
         'data-grid-columns': 'Columns in the card grid.',

@@ -7,6 +7,7 @@ import {
   toDate,
   toDateTimeAttribute,
   formatEventDate,
+  formatDisplayDate,
 } from '../utils/dateUtils';
 
 describe('toDate', () => {
@@ -38,6 +39,31 @@ describe('toDate', () => {
   ])('returns null for %p', value => {
     expect(toDate(value)).toBeNull();
   });
+});
+
+describe('formatDisplayDate', () => {
+  it.each([
+    [['2020-01-01T12:00:00Z'], ['year'], { text: '2020', dateTime: '2020' }],
+    [[-315576000], 'year', { text: '1960', dateTime: '1960' }],
+    [[0], 'year', { text: '1970', dateTime: '1970' }],
+    [
+      ['2020-12-31T12:00:00Z'],
+      'day',
+      { text: 'Dec 31, 2020', dateTime: '2020-12-31' },
+    ],
+  ])(
+    'preserves reader-facing date precision for %p',
+    (value, precision, expected) => {
+      expect(formatDisplayDate(value, precision)).toEqual(expected);
+    }
+  );
+
+  it.each([undefined, [], ['not a date']])(
+    'omits unusable dates (%p)',
+    value => {
+      expect(formatDisplayDate(value, 'year')).toBeNull();
+    }
+  );
 });
 
 describe('toDateTimeAttribute', () => {

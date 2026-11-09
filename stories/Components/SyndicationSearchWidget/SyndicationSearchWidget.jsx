@@ -117,7 +117,8 @@ SyndicationSearchWidget.propTypes = {
       'eventDateAsc',
       'eventDateDesc',
     ]),
-    yearField: PropTypes.oneOf(['published_at', 'event_start']),
+    /** Indexed date used for the Year filter and counts; display_date also drives fallback dates. */
+    yearField: PropTypes.oneOf(['published_at', 'event_start', 'display_date']),
     /** Whether to display the search input box. */
     showSearchBox: PropTypes.bool,
     /** Whether to display the total results count. */

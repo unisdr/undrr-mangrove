@@ -227,9 +227,12 @@ describe('ResultItem', () => {
     const NOV_12 = 1762948800;
     const NOV_14 = 1763121600;
 
-    const renderFallback = overrides => {
+    const renderFallback = (overrides, yearField = 'published_at') => {
       const { container } = render(
-        <ResultItem hit={createHit({ teaser: null, ...overrides })} />
+        <ResultItem
+          hit={createHit({ teaser: null, ...overrides })}
+          yearField={yearField}
+        />
       );
       return container.querySelector('time.mg-search__result-date');
     };
@@ -281,6 +284,74 @@ describe('ResultItem', () => {
 
     it('omits the date when published_at is unusable', () => {
       expect(renderFallback({ published_at: ['not a date'] })).toBeNull();
+    });
+
+    it("shows a publication's editorial year without inventing a January 1 date", () => {
+      const time = renderFallback(
+        {
+          display_date: ['2020-01-01T12:00:00Z'],
+          display_date_precision: ['year'],
+          published_at: '2026-05-01T10:00:00Z',
+        },
+        'display_date'
+      );
+      expect(time).toHaveTextContent(/^2020$/);
+      expect(time).toHaveAttribute('dateTime', '2020');
+    });
+
+    it('shows the release date supplied for news rather than its CMS timestamp', () => {
+      const time = renderFallback(
+        {
+          type: 'news',
+          display_date: ['2020-12-31T12:00:00Z'],
+          display_date_precision: ['day'],
+          published_at: '2026-05-01T10:00:00Z',
+        },
+        'display_date'
+      );
+      expect(time).toHaveTextContent('Dec 31, 2020');
+      expect(time).toHaveAttribute('dateTime', '2020-12-31');
+    });
+
+    it('keeps the indexed reader-facing date as the start of an event range', () => {
+      const time = renderFallback(
+        {
+          type: 'event',
+          display_date: [NOV_12],
+          event_end: [NOV_14],
+        },
+        'display_date'
+      );
+      expect(time.textContent).toMatch(/Nov 12\s*–\s*14, 2025/);
+    });
+
+    it.each(['publication', 'news', 'event'])(
+      'leaves an absent public date absent for %s',
+      type => {
+        expect(
+          renderFallback(
+            {
+              type,
+              display_date: undefined,
+              event_start: [NOV_12],
+              published_at: [1718445600],
+            },
+            'display_date'
+          )
+        ).toBeNull();
+      }
+    );
+
+    it('renders historical publication years returned as negative Unix seconds', () => {
+      const time = renderFallback(
+        {
+          display_date: [-315576000],
+          display_date_precision: ['year'],
+        },
+        'display_date'
+      );
+      expect(time).toHaveTextContent(/^1960$/);
+      expect(time).toHaveAttribute('dateTime', '1960');
     });
   });
 

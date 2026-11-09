@@ -21,6 +21,7 @@ import { useSearchLabels, interpolateLabel } from '../context/SearchContext';
 import {
   EVENT_TYPES,
   formatEventDate,
+  formatDisplayDate,
   toDate,
   toDateTimeAttribute,
 } from '../utils/dateUtils';
@@ -292,12 +293,14 @@ export function buildTeaserHtml({
  * @param {boolean} props.showMetrics - Whether to show scoring metrics
  * @param {string} props.displayMode - Display mode: 'list', 'card', or 'card-book'
  * @param {Object|null} props.visibleTeaserFields - Teaser field visibility map from config
+ * @param {string} props.yearField - Date basis selected by the widget
  */
 function ResultItemComponent({
   hit,
   showMetrics = false,
   displayMode = 'list',
   visibleTeaserFields = null,
+  yearField = 'published_at',
 }) {
   const labels = useSearchLabels();
   const source = hit._source || {};
@@ -313,6 +316,8 @@ function ResultItemComponent({
     vid,
     field_domain_access: domainArray,
     published_at: publishedAt,
+    display_date: readerDate,
+    display_date_precision: readerDatePrecision,
     event_start: eventStart,
     event_end: eventEnd,
     teaser,
@@ -361,10 +366,19 @@ function ResultItemComponent({
     ]
   );
 
-  // Events show when they happen (start, or a start to end range); other
-  // results, and events not yet indexed with event_start, show the publish
-  // date. Index dates arrive as Unix seconds, often wrapped in an array.
+  // Reader-facing endpoints choose the date per content type. Existing
+  // endpoints retain event-range/publish-date behaviour. Index dates often
+  // arrive as Unix seconds wrapped in an array.
   const displayDate = useMemo(() => {
+    // The endpoint owns editorial date selection. Missing public dates stay
+    // absent rather than displaying a CMS timestamp the Year filter ignores.
+    if (yearField === 'display_date') {
+      const date = formatDisplayDate(readerDate, readerDatePrecision);
+      if (!date) return null;
+      return EVENT_TYPES.includes(type)
+        ? formatEventDate(readerDate, eventEnd) || date
+        : date;
+    }
     if (EVENT_TYPES.includes(type)) {
       const eventDate = formatEventDate(eventStart, eventEnd);
       if (eventDate) return eventDate;
@@ -375,7 +389,15 @@ function ResultItemComponent({
       text: PUBLISH_DATE_FORMAT.format(date),
       dateTime: toDateTimeAttribute(date),
     };
-  }, [type, eventStart, eventEnd, publishedAt]);
+  }, [
+    type,
+    eventStart,
+    eventEnd,
+    publishedAt,
+    readerDate,
+    readerDatePrecision,
+    yearField,
+  ]);
 
   // Get type label: vocabulary name for terms, content type for nodes
   const typeLabel = useMemo(() => {
