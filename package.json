@@ -163,7 +163,7 @@
     "react-syntax-highlighter": "16.1.2",
     "remark-gfm": "^4.0.1",
     "sass": "^1.105.1",
-    "sass-loader": "17.0.1",
+    "sass-loader": "17.1.0",
     "storybook": "10.6.6",
     "style-loader": "4.0.0",
     "stylelint": "~17.16.0",
