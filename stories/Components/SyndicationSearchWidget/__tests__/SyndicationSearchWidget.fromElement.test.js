@@ -53,6 +53,7 @@ describe('syndicationSearchWidgetFromElement', () => {
   it('extracts boolean props', () => {
     const { config } = syndicationSearchWidgetFromElement(
       makeContainer({
+        'show-sort': 'false',
         'show-search-box': 'false',
         'show-facets': 'true',
         'show-active-filters': 'false',
@@ -62,6 +63,7 @@ describe('syndicationSearchWidgetFromElement', () => {
         'enable-hash-sync': 'false',
       })
     );
+    expect(config.showSort).toBe(false);
     expect(config.showSearchBox).toBe(false);
     expect(config.showFacets).toBe(true);
     expect(config.showActiveFilters).toBe(false);
@@ -75,6 +77,7 @@ describe('syndicationSearchWidgetFromElement', () => {
     const { config } = syndicationSearchWidgetFromElement(makeContainer());
     expect(config).not.toHaveProperty('showSearchBox');
     expect(config).not.toHaveProperty('showFacets');
+    expect(config).not.toHaveProperty('showSort');
     expect(config).not.toHaveProperty('enableHashSync');
     expect(config).not.toHaveProperty('facets');
   });

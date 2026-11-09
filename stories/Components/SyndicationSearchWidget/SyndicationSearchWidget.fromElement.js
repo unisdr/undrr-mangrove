@@ -37,6 +37,8 @@ export default function syndicationSearchWidgetFromElement(container) {
     config.analyticsRegionPrefix = dataset.analyticsRegionPrefix;
 
   // Boolean props (only set if explicitly present)
+  if (dataset.showSort !== undefined)
+    config.showSort = dataset.showSort !== 'false';
   if (dataset.showSearchBox !== undefined)
     config.showSearchBox = dataset.showSearchBox !== 'false';
   if (dataset.showResultsCount !== undefined)

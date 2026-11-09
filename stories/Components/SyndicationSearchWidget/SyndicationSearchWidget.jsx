@@ -166,6 +166,8 @@ SyndicationSearchWidget.propTypes = {
     facets: PropTypes.oneOf([false, 'sidebar', 'horizontal']),
     /** @deprecated Use `facets` instead. Boolean shorthand: false hides, true → 'sidebar'. */
     showFacets: PropTypes.bool,
+    /** Whether visitors can see the sort selector. The configured order is retained when hidden. */
+    showSort: PropTypes.bool,
     /**
      * CSS selector for a DOM element outside the widget where the facets
      * UI should be rendered (via React portal). Useful when a consuming
