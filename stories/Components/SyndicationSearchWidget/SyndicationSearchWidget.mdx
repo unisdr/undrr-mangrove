@@ -632,6 +632,8 @@ them; the Drupal block's `auto` setting does this.
 
 When widgets share a target, only the first visible widget in document order renders controls there. Hidden tab and disclosure widgets keep their state and resume ownership when shown. Use separate targets when two result lists must be controlled at once. Visibility follows `hidden`, `aria-hidden`, and ancestor display/visibility styles, rather than viewport position. Missing targets retain the in-widget fallback.
 
+Compatibility: earlier versions rendered controls from every widget sharing a target. If an existing page intentionally places controls for several simultaneously visible lists in one container, give each widget its own target before upgrading. Single-widget targets and in-widget controls keep their existing behaviour. Existing year filters continue to use publication dates unless `yearField: 'event_start'` is explicitly configured.
+
 ## Analytics regions
 
 The widget marks its search form, results and facets with `data-vf-google-analytics-region`: `undrr-search-form`, `undrr-search-results` and `undrr-search-facets`. The shared UNDRR analytics script reports each click with the innermost region around it, so a region set on a section around the widget is never reported for clicks inside it.
@@ -939,7 +941,7 @@ boundaries: a DOM portal cannot inherit direction from the widget's ancestors.
 
 ## Changelog
 
-- **Unreleased**, 2026-11-08: Event listings can use `yearField: 'event_start'` for matching year filters and counts while general content keeps publication years. Shared external controls render only for the first visible owner and transfer between tabs without resetting each widget's search state.
+- **1.7.0**, 2026-11-09 ([web-backlog#3310](https://gitlab.com/undrr/web-backlog/-/work_items/3310)): Event listings can use `yearField: 'event_start'` for matching year filters and counts while general content keeps publication years. Shared external controls render only for the first visible owner and transfer between tabs without resetting each widget's search state. Pages that need controls for several visible lists must provide separate targets.
 
 - **1.6.1**, 2026-10-29 ([#1432](https://github.com/unisdr/undrr-mangrove/issues/1432)): Result-type labels, filter connectors and example headings preserve authored case instead of forcing uppercase. Query operators retain their required authored syntax.
 
