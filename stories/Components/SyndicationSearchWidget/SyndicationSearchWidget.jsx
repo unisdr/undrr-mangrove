@@ -358,6 +358,7 @@ function SyndicationSearchWidgetInner({ lang, dir }) {
         defaultQuery: config.defaultQuery,
         initialQuery: fromHash?.initialQuery ?? null,
         defaultSort: config.defaultSort,
+        preserveSort: !!config.sharedControls?.id,
         initialFacets: fromHash?.facets || null,
         initialFacetOperators: fromHash?.facetOperators || null,
         initialSort: config.showSort === false ? null : fromHash?.sort || null,
@@ -369,6 +370,7 @@ function SyndicationSearchWidgetInner({ lang, dir }) {
     config.defaultFilters,
     config.defaultQuery,
     config.defaultSort,
+    config.sharedControls?.id,
   ]);
 
   // Lock the configured order when an editor disables visitor sorting.

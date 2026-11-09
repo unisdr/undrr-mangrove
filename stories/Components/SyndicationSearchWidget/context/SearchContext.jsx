@@ -113,6 +113,9 @@ const initialState = {
   // hasn't been changed by the reader, so a new defaultQuery replaces it.
   appliedDefaultQuery: '',
 
+  // Preserve a grouped display's reader sort unless its configured order changes.
+  appliedDefaultSort: null,
+
   // Active facet filters: { [key]: [values] }
   facets: {},
 
@@ -419,6 +422,7 @@ function searchReducer(state, action) {
         defaultQuery = '',
         initialQuery = null,
         defaultSort = 'relevance',
+        preserveSort = false,
         // State read from the URL hash; takes precedence over the defaults.
         // initialFacets replaces defaultFilters entirely when present.
         initialFacets = null,
@@ -445,10 +449,17 @@ function searchReducer(state, action) {
         ...state,
         query,
         appliedDefaultQuery: nextDefaultQuery,
+        appliedDefaultSort: defaultSort,
         // A re-initialise that swaps the query starts again from page 1. The
         // first INITIALIZE keeps a page restored from the URL hash.
         page: state.isInitialized && query !== state.query ? 1 : state.page,
-        sortBy: initialSort || defaultSort,
+        sortBy:
+          preserveSort &&
+          state.isInitialized &&
+          state.appliedDefaultSort === defaultSort &&
+          !initialSort
+            ? state.sortBy
+            : initialSort || defaultSort,
         hasEventSorts:
           state.hasEventSorts ||
           EVENT_SORT_VALUES.includes(defaultSort) ||
@@ -598,15 +609,20 @@ export function SearchProvider({
     store.getSnapshot
   );
   const member = useRef(Symbol('search member'));
-  const seenRevision = useRef(shared?.revision);
+  // Revision numbers belong to a store; another group may have the same number.
+  const seenSharedState = useRef({ store, revision: shared?.revision });
   useLayoutEffect(() => {
     store.configure?.(config);
   }, [store, config]);
   useLayoutEffect(() => {
-    if (!shared || seenRevision.current === shared.revision) return;
-    seenRevision.current = shared.revision;
-    dispatch({ type: 'SHARED_PAGE_RESET' });
-  }, [shared]);
+    if (
+      seenSharedState.current.store === store &&
+      seenSharedState.current.revision === shared?.revision
+    )
+      return;
+    seenSharedState.current = { store, revision: shared?.revision };
+    if (shared) dispatch({ type: 'SHARED_PAGE_RESET' });
+  }, [shared, store]);
   useEffect(() => {
     store.report?.(member.current, state.error ? null : state.aggregations);
   }, [store, state.aggregations, state.error]);
@@ -646,10 +662,14 @@ export function SearchProvider({
         ...shared.facetOperators,
       },
       customFacets: { ...shared.customFacets, ...localTabs },
-      page: seenRevision.current === shared.revision ? state.page : 1,
+      page:
+        seenSharedState.current.store === store &&
+        seenSharedState.current.revision === shared.revision
+          ? state.page
+          : 1,
       sharedAggregations: shared.aggregations,
     };
-  }, [state, shared, config]);
+  }, [state, shared, config, store]);
 
   return (
     <SearchConfigContext.Provider value={config}>
