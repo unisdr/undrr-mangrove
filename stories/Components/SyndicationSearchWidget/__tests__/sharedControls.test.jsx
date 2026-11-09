@@ -420,3 +420,61 @@ it('builds server defaults equal to the first request without capturing later sh
     stable(expected)
   );
 });
+
+it('preserves a grouped display’s reader sort across local period configuration edits', async () => {
+  const period = {
+    id: 'period',
+    title: 'Period',
+    display: 'tabs',
+    defaultValue: '0',
+    options: [
+      { label: 'Upcoming', value: 'upcoming', query: 'event_end:[now TO *]' },
+      { label: 'Previous', value: 'past', query: 'event_end:[* TO now}' },
+    ],
+  };
+  const config = configs();
+  config.news.customFacets = [period];
+  const view = render(<Page config={config} second={false} />);
+  await waitFor(() => expect(latest('/news')).not.toBeNull());
+  const news = within(screen.getByRole('region', { name: 'News' }));
+  fireEvent.click(news.getByRole('button', { name: 'Sort' }));
+  fireEvent.click(news.getByRole('option', { name: 'Oldest', exact: true }));
+  await waitFor(() =>
+    expect(latest('/news').sort).toEqual([{ published_at: { order: 'asc' } }])
+  );
+  const changed = {
+    ...config,
+    news: { ...config.news, customFacets: [{ ...period, defaultValue: '1' }] },
+  };
+  view.rerender(<Page config={changed} second={false} />);
+  await waitFor(() =>
+    expect(news.getByRole('radio', { name: 'Previous' })).toBeChecked()
+  );
+  await waitFor(() =>
+    expect(latest('/news').query.function_score.query.bool.filter).toEqual(
+      expect.arrayContaining([
+        { query_string: { query: period.options[1].query } },
+      ])
+    )
+  );
+  expect(latest('/news').sort).toEqual([{ published_at: { order: 'asc' } }]);
+  const reordered = {
+    ...changed,
+    news: {
+      ...changed.news,
+      customFacets: [
+        {
+          ...period,
+          defaultValue: '0',
+          options: [...period.options].reverse(),
+        },
+      ],
+    },
+  };
+  view.rerender(<Page config={reordered} second={false} />);
+  expect(news.getByRole('radio', { name: 'Previous' })).toBeChecked();
+  expect(news.getByRole('button', { name: 'Sort' })).toHaveTextContent(
+    'Oldest'
+  );
+  expect(latest('/news').sort).toEqual([{ published_at: { order: 'asc' } }]);
+});

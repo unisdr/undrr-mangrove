@@ -540,14 +540,30 @@ export function SearchProvider({
   children,
   rootRef,
 }) {
-  // Merge user config with defaults
-  const config = useMemo(
+  // Merge user config with defaults.
+  const mergedConfig = useMemo(
     () =>
       withSharedControls({
         ...DEFAULT_CONFIG,
         ...userConfig,
       }),
     [userConfig]
+  );
+  // Group configuration derives a new defaults array. Only changed values
+  // should reinitialize filters/sort; editing a local scope must not do so.
+  const groupedDefaultsKey = mergedConfig.sharedControls?.id
+    ? JSON.stringify(mergedConfig.defaultFilters)
+    : null;
+  const groupedDefaults = useMemo(
+    () => (groupedDefaultsKey === null ? null : JSON.parse(groupedDefaultsKey)),
+    [groupedDefaultsKey]
+  );
+  const config = useMemo(
+    () =>
+      groupedDefaults === null
+        ? mergedConfig
+        : { ...mergedConfig, defaultFilters: groupedDefaults },
+    [mergedConfig, groupedDefaults]
   );
 
   // Merge user labels with defaults
