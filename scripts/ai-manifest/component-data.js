@@ -2866,6 +2866,8 @@ npm run build</code></pre>
         'data-min-search-length': 'Minimum query length before a search runs.',
         'data-default-query': 'Query the widget starts with.',
         'data-default-sort': 'Initial sort key.',
+        'data-year-field':
+          'Year filter date basis: published_at (default) or event_start.',
         'data-display-mode':
           'Result layout: list, card or card-book. Book mode preserves supplied artwork URLs; use publication filters and explicit columns for a cover catalogue.',
         'data-grid-columns': 'Columns in the card grid.',

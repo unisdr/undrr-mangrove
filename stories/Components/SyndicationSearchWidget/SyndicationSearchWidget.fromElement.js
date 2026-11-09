@@ -26,6 +26,7 @@ export default function syndicationSearchWidgetFromElement(container) {
     config.minSearchLength = parseInt(dataset.minSearchLength, 10);
   if (dataset.defaultQuery) config.defaultQuery = dataset.defaultQuery;
   if (dataset.defaultSort) config.defaultSort = dataset.defaultSort;
+  if (dataset.yearField) config.yearField = dataset.yearField;
   if (dataset.displayMode) config.displayMode = dataset.displayMode;
   if (dataset.gridColumns)
     config.gridColumns = parseInt(dataset.gridColumns, 10);

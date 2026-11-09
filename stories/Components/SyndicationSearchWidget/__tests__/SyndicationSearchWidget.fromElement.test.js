@@ -31,6 +31,7 @@ describe('syndicationSearchWidgetFromElement', () => {
         'min-search-length': '2',
         'default-query': 'climate',
         'default-sort': 'newest',
+        'year-field': 'event_start',
         'display-mode': 'card',
         'grid-columns': '3',
         'query-append': 'AND type:news',
@@ -43,6 +44,7 @@ describe('syndicationSearchWidgetFromElement', () => {
     expect(config.minSearchLength).toBe(2);
     expect(config.defaultQuery).toBe('climate');
     expect(config.defaultSort).toBe('newest');
+    expect(config.yearField).toBe('event_start');
     expect(config.displayMode).toBe('card');
     expect(config.gridColumns).toBe(3);
     expect(config.queryAppend).toBe('AND type:news');

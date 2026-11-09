@@ -617,6 +617,7 @@ export const DEFAULT_CONFIG = {
   // Default search query and sort
   defaultQuery: '',
   defaultSort: 'relevance',
+  yearField: 'published_at',
 
   // UI element visibility
   showSearchBox: true,
