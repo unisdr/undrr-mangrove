@@ -1,4 +1,4 @@
-import { isTabFacet, tabSelections } from './customFacetTabs';
+import { isTabFacet, tabSelections, tabOptionValue } from './customFacetTabs';
 /**
  * @file hashState.js
  * @description Read and write search state in the URL hash.
@@ -112,16 +112,17 @@ export function parseHashState(
   }
 
   const selectedTabs = {};
-  for (const facet of tabFacets.filter(isTabFacet)) {
+  for (const facet of (tabFacets || []).filter(isTabFacet)) {
     const value = params.get(`${TAB_PREFIX}${facet.id}`);
     const index = facet.options.findIndex(
-      option => option.value && option.value === value
+      (option, index) =>
+        value !== null && tabOptionValue(facet, index) === value
     );
     if (index >= 0) selectedTabs[facet.id] = [String(index)];
   }
 
   return {
-    ...(tabFacets.some(isTabFacet)
+    ...((tabFacets || []).some(isTabFacet)
       ? { customFacets: tabSelections(tabFacets, selectedTabs) }
       : {}),
     query: params.get('query'),
@@ -212,14 +213,10 @@ export function buildHashString(
 
   const selectedTabs = tabSelections(tabFacets, customFacets);
   const defaultTabs = tabSelections(tabFacets);
-  for (const facet of tabFacets.filter(isTabFacet)) {
+  for (const facet of (tabFacets || []).filter(isTabFacet)) {
     const selected = selectedTabs[facet.id][0];
-    const value = facet.options[Number(selected)]?.value;
-    if (
-      selected !== defaultTabs[facet.id][0] &&
-      typeof value === 'string' &&
-      /^[a-zA-Z0-9_-]{1,80}$/.test(value)
-    ) {
+    const value = tabOptionValue(facet, Number(selected));
+    if (selected !== defaultTabs[facet.id][0] && value !== null) {
       params.set(`${TAB_PREFIX}${facet.id}`, value);
     }
   }

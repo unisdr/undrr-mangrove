@@ -9,6 +9,7 @@ import {
   isTabFacet,
   isValidTabOption,
   tabSelections,
+  tabOptionValue,
 } from '../utils/customFacetTabs';
 
 /** Native radio groups retain their label, checked state and arrow-key behaviour. */
@@ -22,13 +23,15 @@ export default function CustomFacetTabs({ widgetId }) {
     <fieldset className="mg-search__scope-tabs" key={facet.id}>
       <legend className="mg-u-sr-only">{facet.title}</legend>
       <div className="mg-search__scope-options">
+        {/* Unlinkable options have no stable ID; positional keys are the fallback. */}
         {facet.options.map((option, index) => (
           <label
             className="mg-search__scope-option"
-            key={option.value || index}
+            key={tabOptionValue(facet, index) ?? index}
           >
             <input
               type="radio"
+              required
               name={`${widgetId}-${facet.id}`}
               value={String(index)}
               disabled={!isValidTabOption(option)}

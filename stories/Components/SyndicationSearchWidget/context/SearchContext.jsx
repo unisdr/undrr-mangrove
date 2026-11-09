@@ -157,6 +157,7 @@ export const ActionTypes = {
   SET_LOADING: 'SET_LOADING',
   SET_ERROR: 'SET_ERROR',
   INITIALIZE: 'INITIALIZE',
+  CONFIGURE_TAB_FACETS: 'CONFIGURE_TAB_FACETS',
   RESTORE_STATE: 'RESTORE_STATE',
   RESET: 'RESET',
 };
@@ -268,6 +269,53 @@ function searchReducer(state, action) {
       };
     }
 
+    case ActionTypes.CONFIGURE_TAB_FACETS: {
+      const { configs = [], initialSelections = null } = action.payload;
+      const previousConfigs = state.tabFacetConfigs;
+      const nextConfigs = (configs || []).filter(isTabFacet);
+      const previous = tabSelections(previousConfigs, state.customFacets);
+      const defaults = tabSelections(previousConfigs);
+      const retained = {};
+      for (const facet of previousConfigs) {
+        const index = previous[facet.id][0];
+        if (index === defaults[facet.id][0]) continue;
+        const option = facet.options[Number(index)];
+        const next = nextConfigs.find(candidate => candidate.id === facet.id);
+        const nextIndex = next?.options.findIndex(candidate =>
+          option.value
+            ? candidate.value === option.value
+            : candidate.query === option.query
+        );
+        if (nextIndex >= 0) retained[facet.id] = [String(nextIndex)];
+      }
+      const selected = tabSelections(
+        nextConfigs,
+        initialSelections ?? retained
+      );
+      const scope = (facets, selections) =>
+        facets.map(facet => [
+          facet.id,
+          facet.options[Number(selections[facet.id][0])].query,
+        ]);
+      const scopeChanged =
+        JSON.stringify(scope(previousConfigs, previous)) !==
+        JSON.stringify(scope(nextConfigs, selected));
+      return {
+        ...state,
+        tabFacetConfigs: nextConfigs,
+        configuredCustomFacets: configs,
+        customFacets: {
+          ...Object.fromEntries(
+            Object.entries(state.customFacets).filter(
+              ([id]) => !previousConfigs.some(facet => facet.id === id)
+            )
+          ),
+          ...selected,
+        },
+        page: state.isInitialized && scopeChanged ? 1 : state.page,
+      };
+    }
+
     case ActionTypes.SET_CUSTOM_FACET: {
       const { facetId, value } = action.payload;
       const valueArray = Array.isArray(value) ? value : [value];
@@ -348,8 +396,6 @@ function searchReducer(state, action) {
         defaultQuery = '',
         initialQuery = null,
         defaultSort = 'relevance',
-        customFacets: customFacetConfigs = [],
-        initialCustomFacets = null,
         // State read from the URL hash; takes precedence over the defaults.
         // initialFacets replaces defaultFilters entirely when present.
         initialFacets = null,
@@ -364,13 +410,6 @@ function searchReducer(state, action) {
       const keepQuery =
         state.query !== '' && state.query !== state.appliedDefaultQuery;
 
-      const oldTabDefaults = tabSelections(state.tabFacetConfigs);
-      const readerTabSelections = Object.fromEntries(
-        Object.entries(state.customFacets).filter(
-          ([id, values]) =>
-            !oldTabDefaults[id] || values[0] !== oldTabDefaults[id][0]
-        )
-      );
       const nextDefaultQuery = defaultQuery || '';
       const query =
         !state.isInitialized && initialQuery !== null
@@ -381,18 +420,6 @@ function searchReducer(state, action) {
 
       return {
         ...state,
-        tabFacetConfigs: customFacetConfigs.filter(isTabFacet),
-        customFacets: {
-          ...Object.fromEntries(
-            Object.entries(state.customFacets).filter(
-              ([id]) => !state.tabFacetConfigs.some(facet => facet.id === id)
-            )
-          ),
-          ...tabSelections(
-            customFacetConfigs,
-            initialCustomFacets ?? readerTabSelections
-          ),
-        },
         query,
         appliedDefaultQuery: nextDefaultQuery,
         // A re-initialise that swaps the query starts again from page 1. The
@@ -506,6 +533,12 @@ export function SearchProvider({
 
   // Initialize reducer with config-based initial state
   const [state, dispatch] = useReducer(searchReducer, initialState);
+  // Reconcile before children read config and state together. An effect would
+  // briefly pair new option positions with old selections, issuing a stale
+  // request and writing the wrong scope to browser history.
+  if (state.configuredCustomFacets !== config.customFacets) {
+    dispatch(actions.configureTabFacets(config.customFacets));
+  }
 
   // Memoize the state value to prevent unnecessary re-renders
   const stateValue = useMemo(() => state, [state]);
@@ -592,6 +625,11 @@ export function useSearch() {
  * Action creators for common operations.
  */
 export const actions = {
+  configureTabFacets: (configs, initialSelections = null) => ({
+    type: ActionTypes.CONFIGURE_TAB_FACETS,
+    payload: { configs, initialSelections },
+  }),
+
   /**
    * @param {string} query
    * @param {Object} [options]

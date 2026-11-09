@@ -142,3 +142,86 @@ it('uses stable validated option values in links and ignores unknown selections'
   });
   expect(tabSelections([{ ...period, display: undefined }])).toEqual({});
 });
+
+it('preserves the selected period and filters when options are reordered', async () => {
+  window.history.replaceState(
+    null,
+    '',
+    '/#query=climate&page=3&f.field_country_region=5&t.event-status=past'
+  );
+  const initial = { ...config, enableHashSync: true, showFacets: true };
+  const view = render(<SyndicationSearchWidget config={initial} />);
+  await waitFor(() => expect(requests()).toHaveLength(1));
+  expect(requests()[0].from).toBeGreaterThan(0);
+  view.rerender(
+    <SyndicationSearchWidget
+      config={{
+        ...initial,
+        customFacets: [
+          {
+            ...period,
+            options: [...period.options].reverse(),
+            defaultValue: '1',
+          },
+        ],
+      }}
+    />
+  );
+  await waitFor(() =>
+    expect(screen.getByRole('radio', { name: 'Previous' })).toBeChecked()
+  );
+  expect(window.location.hash).toContain('t.event-status=past');
+  expect(window.location.hash).toContain('f.field_country_region=5');
+  expect(requests()).toHaveLength(1);
+});
+
+it('starts at page one when an edited default changes the period without clearing filters', async () => {
+  window.history.replaceState(
+    null,
+    '',
+    '/#query=climate&page=3&f.field_country_region=5'
+  );
+  const initial = { ...config, enableHashSync: true, showFacets: true };
+  const view = render(<SyndicationSearchWidget config={initial} />);
+  await waitFor(() => expect(requests()).toHaveLength(1));
+  view.rerender(
+    <SyndicationSearchWidget
+      config={{ ...initial, customFacets: [{ ...period, defaultValue: '1' }] }}
+    />
+  );
+  await waitFor(() => expect(requests()).toHaveLength(2));
+  expect(requests()[1].from).toBe(0);
+  expect(asText(requests()[1].post_filter)).toContain('5');
+  expect(screen.getByRole('radio', { name: 'Previous' })).toBeChecked();
+  expect(requests()[1].aggs).toBeDefined();
+});
+
+it('round-trips only unique URL-safe option values and normalizes selected indices', () => {
+  const duplicate = {
+    ...period,
+    options: period.options.map(option => ({ ...option, value: 'same' })),
+  };
+  const invalid = {
+    ...period,
+    options: [
+      period.options[0],
+      { ...period.options[1], value: 'not URL safe' },
+    ],
+  };
+  for (const facet of [duplicate, invalid]) {
+    const options = { facetFields: [], defaultFacets: {}, tabFacets: [facet] };
+    expect(
+      buildHashString({ customFacets: { 'event-status': ['1'] } }, options)
+    ).toBe('');
+    expect(
+      parseHashState(
+        `t.event-status=${encodeURIComponent(facet.options[1].value)}`,
+        options
+      ).customFacets
+    ).toEqual({ 'event-status': ['0'] });
+  }
+  expect(tabSelections([period], { 'event-status': ['01'] })).toEqual({
+    'event-status': ['1'],
+  });
+  expect(tabSelections(null)).toEqual({});
+});
