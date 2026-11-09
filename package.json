@@ -143,7 +143,7 @@
     "eslint-plugin-spellcheck": "0.0.20",
     "eslint-plugin-storybook": "^10.6.4",
     "glob": "14.0.3",
-    "globals": "17.13.0",
+    "globals": "17.14.0",
     "html-entities": "2.6.0",
     "jest": "30.5.2",
     "jest-axe": "^11.0.0",
