@@ -40,7 +40,13 @@ const NO_VALUES = [];
 
 export function FacetsSidebar({ widgetId = 'search' }) {
   const config = useSearchConfig();
-  const { aggregations, facets, facetOperators } = useSearchState();
+  const {
+    aggregations: localAggregations,
+    sharedAggregations,
+    facets,
+    facetOperators,
+  } = useSearchState();
+  const aggregations = sharedAggregations || localAggregations;
   const labels = useSearchLabels();
   const {
     getLabel,
@@ -159,7 +165,7 @@ export function FacetsSidebar({ widgetId = 'search' }) {
   return (
     <div className="mg-search__facets" data-mg-search-facets>
       {/* Sort options */}
-      <SortOptions widgetId={widgetId} />
+      {!config.sharedControls?.id && <SortOptions widgetId={widgetId} />}
 
       {/* Loading indicator for taxonomies */}
       {taxonomiesLoading && (

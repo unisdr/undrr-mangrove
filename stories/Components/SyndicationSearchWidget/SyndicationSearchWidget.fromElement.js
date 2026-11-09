@@ -74,6 +74,16 @@ export default function syndicationSearchWidgetFromElement(container) {
   if (dataset.requireImage !== undefined)
     config.requireImage = dataset.requireImage === 'true';
 
+  if (dataset.sharedControls) {
+    try {
+      const shared = JSON.parse(dataset.sharedControls);
+      if (shared && typeof shared.id === 'string' && shared.id.trim())
+        config.sharedControls = shared;
+    } catch {
+      /* ignore malformed JSON */
+    }
+  }
+
   // JSON-encoded complex props
   if (dataset.defaultFilters) {
     try {

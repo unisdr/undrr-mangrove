@@ -1,7 +1,10 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { axe } from 'jest-axe';
-import { SyndicationSearchWidget } from '../SyndicationSearchWidget';
+import {
+  SyndicationSearchWidget,
+  buildInitialSearchQuery,
+} from '../SyndicationSearchWidget';
 import { buildHashString, parseHashState } from '../utils/hashState';
 import { tabSelections } from '../utils/customFacetTabs';
 
@@ -54,6 +57,13 @@ it('defaults the first request and preserves search, country and empty-result se
   render(<SyndicationSearchWidget config={config} />);
   await waitFor(() => expect(requests().length).toBe(1));
   expect(asText(requests()[0].query)).toContain(period.options[0].query);
+  const stable = value =>
+    JSON.parse(
+      JSON.stringify(value, (key, entry) => (key === 'now' ? undefined : entry))
+    );
+  expect(stable(requests()[0])).toEqual(
+    stable(buildInitialSearchQuery(config))
+  );
   expect(screen.getByRole('radio', { name: 'Upcoming' })).toBeChecked();
   fireEvent.click(screen.getByRole('radio', { name: 'Previous' }));
   await waitFor(() => expect(requests().length).toBe(2));

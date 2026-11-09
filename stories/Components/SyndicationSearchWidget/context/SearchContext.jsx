@@ -10,7 +10,23 @@ export { DEFAULT_LABELS } from '../_labels';
  * @module SearchWidget/context/SearchContext
  */
 
-import React, { createContext, use, useReducer, useMemo } from 'react';
+import React, {
+  createContext,
+  use,
+  useReducer,
+  useMemo,
+  useState,
+  useRef,
+  useLayoutEffect,
+  useEffect,
+  useCallback,
+  useSyncExternalStore,
+} from 'react';
+import {
+  withSharedControls,
+  getSharedStore,
+  sharedKeys,
+} from './sharedControls';
 
 /**
  * Resolve a label value and substitute `{key}` tokens.
@@ -169,6 +185,8 @@ export const ActionTypes = {
  */
 function searchReducer(state, action) {
   switch (action.type) {
+    case 'SHARED_PAGE_RESET':
+      return state.page === 1 ? state : { ...state, page: 1 };
     case ActionTypes.SET_QUERY:
       // Same query: keep the page. The input re-syncing a query restored from
       // the URL must not reset a restored page to 1.
@@ -488,13 +506,15 @@ export function SearchProvider({
   labels: userLabels,
   lang,
   children,
+  rootRef,
 }) {
   // Merge user config with defaults
   const config = useMemo(
-    () => ({
-      ...DEFAULT_CONFIG,
-      ...userConfig,
-    }),
+    () =>
+      withSharedControls({
+        ...DEFAULT_CONFIG,
+        ...userConfig,
+      }),
     [userConfig]
   );
 
@@ -507,14 +527,81 @@ export function SearchProvider({
   // Initialize reducer with config-based initial state
   const [state, dispatch] = useReducer(searchReducer, initialState);
 
-  // Memoize the state value to prevent unnecessary re-renders
-  const stateValue = useMemo(() => state, [state]);
+  const [ownerDocument, setOwnerDocument] = useState(null);
+  useLayoutEffect(() => {
+    if (config.sharedControls?.id)
+      setOwnerDocument(
+        rootRef?.current?.ownerDocument || globalThis.document || null
+      );
+  }, [config.sharedControls?.id, rootRef]);
+  const store = useMemo(
+    () => getSharedStore(ownerDocument, config),
+    [ownerDocument, config]
+  );
+  const shared = useSyncExternalStore(
+    store.subscribe,
+    store.getSnapshot,
+    store.getSnapshot
+  );
+  const member = useRef(Symbol('search member'));
+  const seenRevision = useRef(shared?.revision);
+  useLayoutEffect(() => {
+    store.configure?.(config);
+  }, [store, config]);
+  useLayoutEffect(() => {
+    if (!shared || seenRevision.current === shared.revision) return;
+    seenRevision.current = shared.revision;
+    dispatch({ type: 'SHARED_PAGE_RESET' });
+  }, [shared]);
+  useEffect(() => {
+    store.report?.(member.current, state.error ? null : state.aggregations);
+  }, [store, state.aggregations, state.error]);
+  useEffect(() => {
+    const id = member.current;
+    return () => store.remove?.(id);
+  }, [store]);
+
+  // Joining a group must not look like a new input dispatcher: replaying a
+  // late widget's empty input would overwrite the existing group's query.
+  const storeRef = useRef(store);
+  storeRef.current = store;
+  const dispatchAction = useCallback(action => {
+    const handled = storeRef.current.dispatch?.(action);
+    if (!handled || action.type === ActionTypes.CLEAR_FACETS) dispatch(action);
+  }, []);
+
+  const stateValue = useMemo(() => {
+    if (!shared) return state;
+    const keys = sharedKeys(config);
+    const privateValues = values =>
+      Object.fromEntries(
+        Object.entries(values).filter(([key]) => !keys.has(key))
+      );
+    const localTabs = Object.fromEntries(
+      Object.entries(state.customFacets).filter(([id]) =>
+        state.tabFacetConfigs.some(facet => facet.id === id)
+      )
+    );
+    return {
+      ...state,
+      query: shared.query,
+      queryIsTyped: shared.queryIsTyped,
+      facets: { ...privateValues(state.facets), ...shared.facets },
+      facetOperators: {
+        ...privateValues(state.facetOperators),
+        ...shared.facetOperators,
+      },
+      customFacets: { ...shared.customFacets, ...localTabs },
+      page: seenRevision.current === shared.revision ? state.page : 1,
+      sharedAggregations: shared.aggregations,
+    };
+  }, [state, shared, config]);
 
   return (
     <SearchConfigContext.Provider value={config}>
       <SearchLabelsContext.Provider value={labels}>
         <SearchStateContext.Provider value={stateValue}>
-          <SearchDispatchContext.Provider value={dispatch}>
+          <SearchDispatchContext.Provider value={dispatchAction}>
             {children}
           </SearchDispatchContext.Provider>
         </SearchStateContext.Provider>

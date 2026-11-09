@@ -113,7 +113,7 @@ export function buildQuery(
 
   // Skip aggregations when facets are hidden: avoids unnecessary server work
   // and response payload for syndication embeds that only show result cards.
-  if (facetsActive) {
+  if (facetsActive || config.sharedControls?.id) {
     result.aggs = buildAggregations(facetFields, facetCountToShow, config);
   }
 

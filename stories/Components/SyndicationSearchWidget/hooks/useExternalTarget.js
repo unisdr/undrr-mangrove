@@ -43,12 +43,18 @@ function isVisible(root) {
 function updateClaims(target) {
   const claims = targetClaims.get(target);
   if (!claims) return;
-  const visible = [...claims].filter(claim => isVisible(claim.root));
-  visible.sort((a, b) => {
+  const connected = [...claims].filter(claim => claim.root?.isConnected);
+  const visible = connected.filter(claim => isVisible(claim.root));
+  // Shared controls belong to the group rather than a display. Keep one
+  // controller outside closed panels even when no display is visible.
+  const candidates = visible.length
+    ? visible
+    : connected.filter(claim => claim.keepWhenHidden);
+  candidates.sort((a, b) => {
     if (a.root === b.root) return 0;
     return a.root.compareDocumentPosition(b.root) & 4 ? -1 : 1;
   });
-  const owner = visible[0];
+  const owner = candidates[0];
   claims.forEach(claim => claim.update(!!owner && claim.root === owner.root));
 }
 
@@ -126,9 +132,16 @@ function query(doc, selector, root) {
  * @param {{current: (Node|null)}} rootRef - Ref to the widget root, used to
  *   find the document to search and to exclude the widget's own markup
  * @param {Function} [onMissing] - Called once when the selector doesn't match
+ * @param {boolean} [keepWhenHidden=false] - Keep group controls outside closed displays
  * @returns {{target: Element|null, isOwner: boolean}} Target and control ownership
  */
-export function useExternalTarget(selector, enabled, rootRef, onMissing) {
+export function useExternalTarget(
+  selector,
+  enabled,
+  rootRef,
+  onMissing,
+  keepWhenHidden = false
+) {
   const [target, setTarget] = useState(null);
   const [isOwner, setIsOwner] = useState(false);
   // A ref, so a new onMissing identity on each render doesn't re-run the
@@ -153,7 +166,7 @@ export function useExternalTarget(selector, enabled, rootRef, onMissing) {
     let observer = null;
     let lostAt = [];
     let gaveUp = false;
-    const claim = { root, update: setIsOwner };
+    const claim = { root, update: setIsOwner, keepWhenHidden };
 
     const warnMissing = () => {
       if (warnedRef.current.has(selector)) return;
@@ -235,7 +248,7 @@ export function useExternalTarget(selector, enabled, rootRef, onMissing) {
       doc.defaultView?.removeEventListener('resize', resolve);
       if (current) releaseTarget(current, claim);
     };
-  }, [selector, enabled, rootRef]);
+  }, [selector, enabled, rootRef, keepWhenHidden]);
 
   return { target, isOwner };
 }

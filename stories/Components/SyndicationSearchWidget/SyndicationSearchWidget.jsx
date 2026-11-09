@@ -1,4 +1,8 @@
-import { isTabFacet } from './utils/customFacetTabs';
+import SortOptions from './components/SortOptions';
+import { isTabFacet, tabSelections } from './utils/customFacetTabs';
+import { facetsFromDefaults } from './utils/hashState';
+import { withSharedControls } from './context/sharedControls';
+import { buildQuery } from './utils/queryBuilder';
 import CustomFacetTabs from './components/CustomFacetTabs';
 import { getLanguageProps } from '../../../src/i18n';
 /**
@@ -42,7 +46,11 @@ import {
 import { useSearch } from './hooks/useSearch';
 import { useHashSync } from './hooks/useHashSync';
 import { useExternalTarget } from './hooks/useExternalTarget';
-import { analyticsRegion, resolveFacetsLayout } from './utils/constants';
+import {
+  DEFAULT_CONFIG,
+  analyticsRegion,
+  resolveFacetsLayout,
+} from './utils/constants';
 import {
   WidgetRootContext,
   useWidgetRootRef,
@@ -55,6 +63,23 @@ import FacetsSidebar from './components/FacetsSidebar';
 import MobileFilterDrawer from './components/MobileFilterDrawer';
 
 export { getSyndicationSearchWidgetLabels } from './_labels';
+
+/** Deterministic default query for server snapshots; never reads live group state. */
+export function buildInitialSearchQuery(userConfig = {}) {
+  const config = withSharedControls({ ...DEFAULT_CONFIG, ...userConfig });
+  return buildQuery(
+    {
+      query: config.defaultQuery || '',
+      facets: facetsFromDefaults(config.defaultFilters),
+      facetOperators: {},
+      customFacets: tabSelections(config.customFacets),
+      sortBy: config.defaultSort,
+      page: 1,
+    },
+    config,
+    { highlight: false }
+  );
+}
 
 /**
  * SyndicationSearchWidget component.
@@ -71,7 +96,12 @@ export function SyndicationSearchWidget({ config, labels, lang, dir }) {
   // iframe rather than in the window its script runs in.
   const rootRef = useRef(null);
   return (
-    <SearchProvider config={config} labels={labels} lang={lang}>
+    <SearchProvider
+      config={config}
+      labels={labels}
+      lang={lang}
+      rootRef={rootRef}
+    >
       <WidgetRootContext value={rootRef}>
         <SyndicationSearchWidgetInner lang={lang} dir={dir} />
       </WidgetRootContext>
@@ -190,6 +220,15 @@ SyndicationSearchWidget.propTypes = {
     customFilters: PropTypes.array,
     /** Custom facet definitions. */
     customFacets: PropTypes.array,
+    /** Explicit document-scoped search/filter group; omitted widgets remain independent. */
+    sharedControls: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      visibleFilters: PropTypes.object,
+      allowedTypes: PropTypes.object,
+      customFacets: PropTypes.array,
+      defaultFilters: PropTypes.array,
+      defaultQuery: PropTypes.string,
+    }),
     /** Result display mode. */
     displayMode: PropTypes.oneOf(['list', 'card', 'card-book']),
     /** Number of grid columns for card display modes. */
@@ -391,7 +430,8 @@ function SyndicationSearchWidgetInner({ lang, dir }) {
       facetsTarget,
       facetsActive,
       rootRef,
-      warnFacetsTargetMissing
+      warnFacetsTargetMissing,
+      !!config.sharedControls?.id
     );
   const facetsPortaled = facetsActive && facetsTargetEl !== null;
 
@@ -400,7 +440,8 @@ function SyndicationSearchWidgetInner({ lang, dir }) {
       searchTarget,
       showSearchBox,
       rootRef,
-      warnSearchTargetMissing
+      warnSearchTargetMissing,
+      !!config.sharedControls?.id
     );
   const searchPortaled = showSearchBox && searchTargetEl !== null;
 
@@ -453,6 +494,7 @@ function SyndicationSearchWidgetInner({ lang, dir }) {
       )}
 
       <CustomFacetTabs widgetId={widgetId} />
+      {config.sharedControls?.id && <SortOptions widgetId={widgetId} />}
 
       {/* Active filter chips */}
       {!inColumn && activeFilters}

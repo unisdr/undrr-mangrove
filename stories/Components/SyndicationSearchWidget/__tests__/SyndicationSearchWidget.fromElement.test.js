@@ -284,3 +284,22 @@ describe('syndicationSearchWidgetFromElement', () => {
     });
   });
 });
+
+test('reads only an explicit valid shared-controls group from JSON', () => {
+  const element = document.createElement('div');
+  element.dataset.sharedControls = JSON.stringify({
+    id: '#shared-filters',
+    visibleFilters: { year: true },
+  });
+  expect(
+    syndicationSearchWidgetFromElement(element).config.sharedControls
+  ).toEqual({ id: '#shared-filters', visibleFilters: { year: true } });
+  element.dataset.sharedControls = '{invalid';
+  expect(syndicationSearchWidgetFromElement(element).config).not.toHaveProperty(
+    'sharedControls'
+  );
+  element.dataset.sharedControls = JSON.stringify({ id: 42 });
+  expect(syndicationSearchWidgetFromElement(element).config).not.toHaveProperty(
+    'sharedControls'
+  );
+});
