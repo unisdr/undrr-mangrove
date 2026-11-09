@@ -78,7 +78,7 @@ Supply a root `data-mg-dialog`, a hidden button `data-mg-dialog-trigger`, a disc
 ></script>
 ```
 
-This component is **unreleased/build-only** and is not available in the published 2.3.0 JavaScript or CSS. For this source build, run `yarn build`, serve `dist/assets` as the web root, and place the authored markup in a page served from that root with `css/style.css` and `js/dialog.js`. The machine-readable example uses those relative local-build paths. Replace `{release}` in the production example above only after the first release containing Dialog is published and its matching CSS/module CDN URLs are verified. No CSS-only open state is provided.
+This experimental component first ships in **2.4.0**, under `js/dialog.js` with matching CSS. The versioned CDN paths become available after npm publication and the shared-web-assets production deployment; verify both before upgrading a consumer. For local builds, run `yarn build`, serve `dist/assets` as the web root, and use the relative `css/style.css` and `js/dialog.js` paths shown in the machine-readable example. Use `2.4.0` for `{release}` in the production example once those assets are live. No CSS-only open state is provided.
 
 For a local smoke test, first run `yarn build`. After the build completes, save the authored page as `dist/assets/dialog-example.html` and include the generated example’s relative CSS/module paths. Then serve the assembled assets:
 
