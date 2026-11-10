@@ -3,7 +3,6 @@ import { expect } from 'storybook/test';
 import ScrollContainer from '../../ScrollContainer/ScrollContainer';
 import { scrollCardExamples } from '../../ScrollContainer/ScrollContainerExamples';
 import { VerticalCard } from './VerticalCard';
-
 const getCaptionForLocale = locale => {
   switch (locale) {
     case 'english':
@@ -12,15 +11,15 @@ const getCaptionForLocale = locale => {
           {
             contenttile: 'Content tag',
             title: 'Title in large size',
-            summaryText: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
+            summary: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
 by vulnerable populations and communities.This paper explores health risks from climate change in a global context, setting out key risks actions`,
-            label1: 'Label 1',
-            label2: 'Label 2',
+            labels: ['Label 1', 'Label 2'],
             button: 'Primary action',
             link: 'javascript:void(0)',
-            imgalt: 'A person looks on',
-            imgback:
-              'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+            image: {
+              src: 'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+              alt: 'A person looks on',
+            },
           },
         ],
       };
@@ -31,14 +30,14 @@ by vulnerable populations and communities.This paper explores health risks from 
           {
             contenttile: 'علامة المحتوى',
             title: 'عنوان بحجم كبير',
-            summaryText: `يُعد تغير المناخ <a href="#" class="mg-card__text-link">حالة طوارئ صحية عالمية</a>، حيث تشعر الفئات السكانية والمجتمعات الأكثر ضعفاً بتأثيراته بشكل أكبر. تستكشف هذه الورقة المخاطر الصحية الناجمة عن تغير المناخ في سياق عالمي.`,
-            label1: 'التسمية 1',
-            label2: 'التسمية 2',
+            summary: `يُعد تغير المناخ <a href="#" class="mg-card__text-link">حالة طوارئ صحية عالمية</a>، حيث تشعر الفئات السكانية والمجتمعات الأكثر ضعفاً بتأثيراته بشكل أكبر. تستكشف هذه الورقة المخاطر الصحية الناجمة عن تغير المناخ في سياق عالمي.`,
+            labels: ['التسمية 1', 'التسمية 2'],
             button: 'الإجراء الأساسي',
             link: 'javascript:void(0)',
-            imgalt: 'شخص ينظر',
-            imgback:
-              'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+            image: {
+              src: 'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+              alt: 'شخص ينظر',
+            },
           },
         ],
       };
@@ -51,9 +50,10 @@ by vulnerable populations and communities.This paper explores health risks from 
             title: '投稿のタイトルはここにあり、2行です',
             button: '続きを読む',
             link: 'javascript:void(0)',
-            imgalt: 'A person looks on',
-            imgback:
-              'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+            image: {
+              src: 'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+              alt: 'A person looks on',
+            },
           },
         ],
       };
@@ -64,65 +64,56 @@ by vulnerable populations and communities.This paper explores health risks from 
           {
             contenttile: 'Vertical card',
             title: 'Title in large size with up to two lines of text',
-            summaryText: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
+            summary: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
 by vulnerable populations and communities.
 This paper explores health risks from climate change in a global context, setting out key risks actions`,
-            label1: 'Label 1',
-            label2: 'Label 2',
+            labels: ['Label 1', 'Label 2'],
             button: 'Primary action',
             link: 'javascript:void(0)',
-            imgalt: 'A person looks on',
-            imgback:
-              'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+            image: {
+              src: 'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+              alt: 'A person looks on',
+            },
           },
         ],
       };
       return dummy;
   }
 };
-
 export default {
   title: 'Components/Cards/Vertical Card',
   component: VerticalCard,
-
   args: {
     variant: 'primary',
   },
-
   argTypes: {
     variant: {
       options: ['primary', 'secondary', 'tertiary', 'quaternary'],
-
       control: {
         type: 'inline-radio',
       },
     },
   },
 };
-
 export const DefaultVerticalCard = {
   play: checkPhotoCardEdges,
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
-
     return (
       <div
         style={{
           maxWidth: '300px',
         }}
       >
-        <VerticalCard data={caption.contentdata} {...args}></VerticalCard>
+        <VerticalCard items={caption.contentdata} {...args}></VerticalCard>
       </div>
     );
   },
-
   name: 'Vertical Card',
 };
-
 export const PlainTitleVerticalCard = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
-
     return (
       <div
         style={{
@@ -130,38 +121,36 @@ export const PlainTitleVerticalCard = {
         }}
       >
         <VerticalCard
-          data={caption.contentdata}
+          items={caption.contentdata}
           className="mg-card--plain-title"
           {...args}
         ></VerticalCard>
       </div>
     );
   },
-
   name: 'Plain title (opt-out)',
 };
-
 export const NoImageVerticalCard = {
   play: checkPhotoCardEdges,
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
     const noImageData = caption.contentdata.map(item => ({
       ...item,
-      imgback: null,
-      imgalt: null,
+      image: {
+        src: null,
+        alt: null,
+      },
     }));
-
     return (
       <div
         style={{
           maxWidth: '300px',
         }}
       >
-        <VerticalCard data={noImageData} {...args}></VerticalCard>
+        <VerticalCard items={noImageData} {...args}></VerticalCard>
       </div>
     );
   },
-
   name: 'Vertical Card Without Image',
 };
 
@@ -176,21 +165,18 @@ export const NoLinkVerticalCard = {
       link: null,
       button: null,
     }));
-
     return (
       <div
         style={{
           maxWidth: '300px',
         }}
       >
-        <VerticalCard data={unlinked} {...args}></VerticalCard>
+        <VerticalCard items={unlinked} {...args}></VerticalCard>
       </div>
     );
   },
-
   name: 'Without a link',
 };
-
 export const ButtonOnlyVerticalCard = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
@@ -199,30 +185,36 @@ export const ButtonOnlyVerticalCard = {
       link: null,
       buttonLink: 'javascript:void(0)',
     }));
-
     return (
       <div
         style={{
           maxWidth: '300px',
         }}
       >
-        <VerticalCard data={buttonOnly} {...args}></VerticalCard>
+        <VerticalCard items={buttonOnly} {...args}></VerticalCard>
       </div>
     );
   },
-
   name: 'Button only, no card link',
 };
-
 export const MixedLinkVerticalCards = {
   render: (args, { globals: { locale } }) => {
     const [item] = getCaptionForLocale(locale).contentdata;
     const mixed = [
-      { ...item },
-      { ...item, link: null, buttonLink: 'javascript:void(0)' },
-      { ...item, link: null, button: null },
+      {
+        ...item,
+      },
+      {
+        ...item,
+        link: null,
+        buttonLink: 'javascript:void(0)',
+      },
+      {
+        ...item,
+        link: null,
+        button: null,
+      },
     ];
-
     return (
       <div
         style={{
@@ -231,11 +223,10 @@ export const MixedLinkVerticalCards = {
           gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
         }}
       >
-        <VerticalCard data={mixed} {...args}></VerticalCard>
+        <VerticalCard items={mixed} {...args}></VerticalCard>
       </div>
     );
   },
-
   name: 'Mixed group (linked, button only, unlinked)',
 };
 
@@ -262,16 +253,17 @@ export const LegacyEmptyHrefMarkup = {
       }}
     />
   ),
-
   name: 'Legacy Gutenberg markup (empty href)',
 };
 
 // Mixed content deliberately exercises wrapping, missing media and missing CTAs.
 const groupedCards = scrollCardExamples.map((card, index) => ({
   title: card.title,
-  summaryText: card.summary,
-  imgback: index === 3 ? undefined : card.image,
-  imgalt: card.alt,
+  summary: card.summary,
+  image: {
+    src: index === 3 ? undefined : card.image,
+    alt: card.alt,
+  },
   button: index === 4 ? undefined : card.action,
   link: `#card-example-${index + 1}`,
 }));
@@ -304,7 +296,6 @@ const checkCardRows = async ({ canvasElement }) => {
     }
   });
 };
-
 export const InSeparateColumns = {
   name: 'In separate columns (uneven content)',
   play: async ({ canvasElement }) => {
@@ -344,22 +335,21 @@ export const InSeparateColumns = {
           card inside each column fill that column's height without this
           component's own block-size: 100%. */}
       <div className="mg-story-column">
-        <VerticalCard {...args} data={[groupedCards[0]]} />
+        <VerticalCard {...args} items={[groupedCards[0]]} />
       </div>
       <div className="mg-story-column">
-        <VerticalCard {...args} data={[groupedCards[1]]} />
+        <VerticalCard {...args} items={[groupedCards[1]]} />
         <p>
           Extra content below the card makes this column taller than its
           neighbours.
         </p>
       </div>
       <div className="mg-story-column">
-        <VerticalCard {...args} data={[groupedCards[2]]} />
+        <VerticalCard {...args} items={[groupedCards[2]]} />
       </div>
     </div>
   ),
 };
-
 export const GridOfCards = {
   play: checkCardRows,
   render: args => (
@@ -371,11 +361,10 @@ export const GridOfCards = {
         maxWidth: '1000px',
       }}
     >
-      <VerticalCard {...args} data={groupedCards} />
+      <VerticalCard {...args} items={groupedCards} />
     </div>
   ),
 };
-
 export const FlexRowOfCards = {
   play: checkCardRows,
   render: args => (
@@ -391,37 +380,42 @@ export const FlexRowOfCards = {
       {groupedCards.map(card => (
         <div
           key={card.link}
-          style={{ display: 'flex', flex: '1 1 260px', minWidth: 0 }}
+          style={{
+            display: 'flex',
+            flex: '1 1 260px',
+            minWidth: 0,
+          }}
         >
-          <VerticalCard {...args} data={[card]} />
+          <VerticalCard {...args} items={[card]} />
         </div>
       ))}
     </div>
   ),
 };
-
 export const ScrollingCards = {
   play: checkCardRows,
   render: args => (
     <ScrollContainer stretchItems itemWidth="280px" showArrows>
       {groupedCards.map(card => (
-        <VerticalCard {...args} key={card.link} data={[card]} />
+        <VerticalCard {...args} key={card.link} items={[card]} />
       ))}
     </ScrollContainer>
   ),
 };
-
 export const NoLabels = {
   name: 'Without labels',
   render: (args, { globals: { locale } }) => {
     const data = getCaptionForLocale(locale).contentdata.map(item => ({
       ...item,
-      label1: null,
-      label2: null,
+      labels: [null, null],
     }));
     return (
-      <div style={{ maxWidth: '300px' }}>
-        <VerticalCard {...args} data={data} />
+      <div
+        style={{
+          maxWidth: '300px',
+        }}
+      >
+        <VerticalCard {...args} items={data} />
       </div>
     );
   },

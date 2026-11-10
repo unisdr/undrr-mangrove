@@ -7,6 +7,8 @@ import * as BookCardStories from './BookCard.stories';
 
 # Book card
 
+This draft schema candidate changes `data` → `items` and `imgback`/`imgalt` → `image.{src,alt}`. Existing link handling, geometry and media presentation are retained. See the [schema migration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/MIGRATION-SCHEMA-V2.md) before adopting this unreleased API.
+
 A compact card variant for publications and brochures. Displays a complete cover at its natural aspect ratio with a title below. Designed to fit 5-6 across in a row on desktop.
 
 ## When to use
@@ -47,7 +49,7 @@ Use the `variant` prop to change the title accent color.
 
 Card titles show: blue color, underline, and a chevron indicator. Add `mg-card--plain-title` to disable these signals.
 
-**React:** `<BookCard data={data} className="mg-card--plain-title" />`
+**React:** `<BookCard items={data} className="mg-card--plain-title" />`
 
 **HTML:** `<article class="mg-card mg-card__vc mg-card__book mg-card--plain-title">...</article>`
 
@@ -67,18 +69,18 @@ See [Vertical card](?path=/docs/components-cards-vertical-card--docs#cards-witho
 
 | Prop        | Type   | Default     | Description                                                             |
 | ----------- | ------ | ----------- | ----------------------------------------------------------------------- |
-| `data`      | Array  | Required    | Array of card data objects                                              |
+| `items`     | Array  | Required    | Array of card data objects                                              |
 | `variant`   | String | `'primary'` | Color variant: `'primary'`, `'secondary'`, `'tertiary'`, `'quaternary'` |
 | `className` | String | —           | Additional CSS classes on the card element                              |
 
 ### Data object properties
 
-| Property  | Type   | Description                                                                                             |
-| --------- | ------ | ------------------------------------------------------------------------------------------------------- |
-| `title`   | String | Card heading text                                                                                       |
-| `link`    | String | URL for the title link and stretched link. Omit it, or pass an empty string, to render an unlinked card |
-| `imgback` | String | Cover image URL                                                                                         |
-| `imgalt`  | String | Alt text for the cover image                                                                            |
+| Property    | Type   | Description                                                                                             |
+| ----------- | ------ | ------------------------------------------------------------------------------------------------------- |
+| `title`     | String | Card heading text                                                                                       |
+| `link`      | String | URL for the title link and stretched link. Omit it, or pass an empty string, to render an unlinked card |
+| `image.src` | String | Cover image URL                                                                                         |
+| `image.alt` | String | Alt text for the cover image                                                                            |
 
 ## Publication surface
 
@@ -122,6 +124,8 @@ and cover-to-caption gaps are separate. Unlinked cards keep the resting shadow
 on hover. The secondary accent retains a leading inset from `--mg-card-padding`.
 
 ## Changelog
+
+- **2.0.0**, 2026-10-27 ([#891](https://github.com/unisdr/undrr-mangrove/pull/891)): **Unreleased breaking candidate.** Rename `data` → `items` and `imgback`/`imgalt` → `image.{src,alt}`. Preserve current media geometry, optional content and link behaviour while aligning the draft contract.
 
 - **1.6.0**, 2026-10-16: Remove the outer publication card surface and padding; retain a single square cover border, natural cover proportions and clear caption spacing. Publication covers no longer zoom or fade on hover. Add five publication surface tokens so themes can restore enclosure independently of photo cards.
 

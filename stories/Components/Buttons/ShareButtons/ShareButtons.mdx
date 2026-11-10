@@ -37,6 +37,8 @@ export const getCaptionForLocale = locale => {
 
 # ShareButtons
 
+> **Draft contract:** examples on this branch use the unmerged [schema phase-two proposal](?path=/docs/design-decisions-schema-phase-2-proposal--docs). Published 2.3.0 bundles retain their released prop names.
+
 A widget with share buttons for social media that open new tabs or copy the link to clipboard.
 
 ## Overview
@@ -139,6 +141,8 @@ fallback labels. Supplying a language uses that runtime catalogue. The QR dialog
 receives the share row's language and direction.
 
 ## Changelog
+
+- **Unreleased, draft schema proposal:** Adopt the schema-aligned input documented in [the migration proposal](?path=/docs/design-decisions-schema-phase-2-proposal--docs), preserving current rendering, accessibility and language handling.
 
 - **1.12**, 2026-11-07 ([unisdr/undrr-mangrove#1448](https://github.com/unisdr/undrr-mangrove/issues/1448)): Adapts sharing geometry to the component container: six 40px actions fit the 256px sidebar, with an intentional compact grid at narrower widths. Adds five-/six-action and RTL browser regression stories; existing actions, focus styles, labels and theme surfaces are unchanged.
 

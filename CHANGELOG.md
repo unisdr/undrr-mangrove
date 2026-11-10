@@ -11,6 +11,8 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 ## Unreleased
 
+- Draft schema-aligned API proposal: rename legacy card, statistic, quote, share and call-to-action inputs and add schema contract tests. This branch remains a draft; the actual 2.0 and subsequent release history is preserved.
+
 ## 2.4.0, 2026-11-09
 
 See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.4.0) for full details.
@@ -93,7 +95,10 @@ Mangrove 2.3 brings existing interface translations into production components, 
 The versioned paths become available after npm publication and the shared-web-assets production deployment. Verify the CSS version banner and module paths before upgrading consumers.
 
 ```html
-<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.3.0/css/style.css">
+<link
+  rel="stylesheet"
+  href="https://assets.undrr.org/mangrove/2.3.0/css/style.css"
+/>
 ```
 
 ### Repository maintenance
@@ -144,7 +149,10 @@ Mangrove 2.2 improves card presentation and adds experimental content patterns f
 The versioned paths become available after npm publication and the shared-web-assets production deployment. Verify the CSS version banner and newly published module paths before upgrading consumers.
 
 ```html
-<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.2.0/css/style.css">
+<link
+  rel="stylesheet"
+  href="https://assets.undrr.org/mangrove/2.2.0/css/style.css"
+/>
 ```
 
 ### Repository maintenance

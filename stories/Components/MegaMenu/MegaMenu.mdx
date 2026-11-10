@@ -3,6 +3,8 @@ import * as MegaMenuStories from './MegaMenu.stories';
 
 # Mega menu
 
+> **Draft contract:** examples on this branch use the unmerged [schema phase-two proposal](?path=/docs/design-decisions-schema-phase-2-proposal--docs). Published 2.3.0 bundles retain their released prop names.
+
 A multi-level navigation component for site navigation.
 
 <Meta of={MegaMenuStories} />
@@ -80,6 +82,8 @@ wrapper resolves `logoSrc` and `logoAlt` from body class; it does not infer
 
 ## Props
 
+The draft’s optional `ariaLabel` sets the navigation landmark name. When omitted, the existing runtime `labels.navLabel` is used, preserving translated defaults and explicit label overrides.
+
 | Prop             | Type    | Default   | Description                                                                                                 |
 | ---------------- | ------- | --------- | ----------------------------------------------------------------------------------------------------------- |
 | sections         | array   | []        | Array of menu sections to display                                                                           |
@@ -93,6 +97,7 @@ wrapper resolves `logoSrc` and `logoAlt` from body class; it does not infer
 | enableFilter     | boolean | false     | Enable a contextual menu-finder dialog from desktop left columns and filtering in the mobile drawer         |
 | enableSiteSearch | boolean | true      | Offer full-site search option when filtering (default: true)                                                |
 | searchUrl        | string  | '/search' | Base URL for full-site search fallback (defaults to syndicated search page /search#query=)                  |
+| ariaLabel        | string  | —         | Optional navigation landmark name; otherwise uses the translated navLabel.                                  |
 
 ### Section object properties
 
@@ -311,6 +316,8 @@ explains language matching, fallback, direction and hydration precedence.
 for consumers needing the same strings outside React.
 
 ## Changelog
+
+- **Unreleased, draft schema proposal:** Adopt the schema-aligned input documented in [the migration proposal](?path=/docs/design-decisions-schema-phase-2-proposal--docs), preserving current rendering, accessibility and language handling.
 
 - **1.6**, 2026-11-03 ([#1445](https://github.com/unisdr/undrr-mangrove/pull/1445)): Added opt-in navigation finding (`enableFilter`, `enableSiteSearch`, `searchUrl`), translated labels and hydration support.
   - Desktop footer utility opens a menu-wide modal with contextual ⌘K/Ctrl K, preserved menu state and a fixed site-search footer. Mobile filters within the drawer; the existing Search item is unchanged.

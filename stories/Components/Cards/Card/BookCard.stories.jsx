@@ -5,7 +5,6 @@ import {
   publicationCoverFixture,
 } from './cardGeometryChecks';
 import { BookCard } from './BookCard';
-
 const getCaptionForLocale = locale => {
   switch (locale) {
     case 'english':
@@ -15,9 +14,10 @@ const getCaptionForLocale = locale => {
             contenttile: 'Content tag',
             title: 'Title in large size',
             link: 'javascript:void(0)',
-            imgalt: 'A publication cover',
-            imgback:
-              'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
+            image: {
+              src: 'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
+              alt: 'A publication cover',
+            },
           },
         ],
       };
@@ -29,9 +29,10 @@ const getCaptionForLocale = locale => {
             contenttile: 'علامة المحتوى',
             title: 'عنوان بحجم كبير',
             link: 'javascript:void(0)',
-            imgalt: 'غلاف منشور',
-            imgback:
-              'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
+            image: {
+              src: 'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
+              alt: 'غلاف منشور',
+            },
           },
         ],
       };
@@ -44,9 +45,10 @@ const getCaptionForLocale = locale => {
             title: '投稿のタイトルはここにあり、2行です',
             button: '続きを読む',
             link: 'javascript:void(0)',
-            imgalt: 'A publication cover',
-            imgback:
-              'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
+            image: {
+              src: 'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
+              alt: 'A publication cover',
+            },
           },
         ],
       };
@@ -59,48 +61,42 @@ const getCaptionForLocale = locale => {
             title:
               'Book title in normal header size with up to three lines of text',
             link: 'javascript:void(0)',
-            imgalt: 'A publication cover',
-            imgback:
-              'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
+            image: {
+              src: 'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
+              alt: 'A publication cover',
+            },
           },
         ],
       };
       return dummy;
   }
 };
-
 export default {
   title: 'Components/Cards/Book Card',
   component: BookCard,
-
   argTypes: {
     variant: {
       options: ['primary', 'secondary', 'tertiary', 'quaternary'],
-
       control: {
         type: 'inline-radio',
       },
-
       defaultValue: 'primary',
     },
   },
 };
-
 export const DefaultBookCard = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
-
     return (
       <div
         style={{
           maxWidth: '200px',
         }}
       >
-        <BookCard data={caption.contentdata} {...args}></BookCard>
+        <BookCard items={caption.contentdata} {...args}></BookCard>
       </div>
     );
   },
-
   name: 'Book Card',
 };
 
@@ -114,21 +110,18 @@ export const NoLinkBookCard = {
       ...item,
       link: null,
     }));
-
     return (
       <div
         style={{
           maxWidth: '200px',
         }}
       >
-        <BookCard data={unlinked} {...args}></BookCard>
+        <BookCard items={unlinked} {...args}></BookCard>
       </div>
     );
   },
-
   name: 'Without a link',
 };
-
 export const MixedTitleLengths = {
   render: (args, { globals: { locale } }) => {
     const base = getCaptionForLocale(locale).contentdata[0];
@@ -155,7 +148,7 @@ export const MixedTitleLengths = {
       >
         <BookCard
           {...args}
-          data={titles.map((title, index) => ({
+          items={titles.map((title, index) => ({
             ...base,
             title,
             link: `#publication-${index + 1}`,
@@ -165,28 +158,30 @@ export const MixedTitleLengths = {
     );
   },
 };
-
 export const NaturalCoverRatio = {
   name: 'Complete cover without outer frame',
   render: (args, { globals: { locale } }) => {
     const data = getCaptionForLocale(locale).contentdata.map(item => ({
       ...item,
-      imgback: publicationCoverFixture,
+      image: {
+        src: publicationCoverFixture,
+      },
     }));
-    return <BookCard {...args} data={data} />;
+    return <BookCard {...args} items={data} />;
   },
   play: checkPublicationSurface,
 };
-
 export const ThemedSurface = {
   name: 'Theme-owned publication surface',
   render: (args, { globals: { locale } }) => (
     <div style={publicationSurfaceOverrides}>
       <BookCard
         {...args}
-        data={getCaptionForLocale(locale).contentdata.map(item => ({
+        items={getCaptionForLocale(locale).contentdata.map(item => ({
           ...item,
-          imgback: publicationCoverFixture,
+          image: {
+            src: publicationCoverFixture,
+          },
         }))}
       />
     </div>

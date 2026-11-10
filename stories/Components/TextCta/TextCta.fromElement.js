@@ -24,8 +24,9 @@ export default function textCtaFromElement(container) {
     tone: dataset.tone === 'soft' ? 'soft' : 'strong',
     backgroundColor: dataset.backgroundColor || undefined,
     padding: dataset.padding || undefined,
-    image: dataset.image || undefined,
-    imageAlt: dataset.imageAlt || '',
+    image: dataset.image
+      ? { src: dataset.image, alt: dataset.imageAlt || '' }
+      : undefined,
     centered: dataset.centered !== 'false',
     layout: dataset.layout === 'inline' ? 'inline' : 'stacked',
     className: dataset.className || undefined,

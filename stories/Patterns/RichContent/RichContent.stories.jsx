@@ -46,11 +46,11 @@ export const Boundaries = {
           </ul>
         </nav>
         <VerticalCard
-          data={[
+          items={[
             {
               title: 'Component card title',
               link: '#outside-prose',
-              summaryText: 'A component-owned summary paragraph.',
+              summary: 'A component-owned summary paragraph.',
               button: 'Read more',
             },
           ]}

@@ -7,11 +7,11 @@ export default {
   component: ShareButtons,
   decorators: [withLanguage],
   argTypes: {
-    SharingSubject: {
+    sharingSubject: {
       control: { type: 'text' },
       defaultValue: 'Sharing Link',
     },
-    SharingTextBody: {
+    sharingBody: {
       control: { type: 'text' },
       defaultValue: 'Check out this link: ',
     },

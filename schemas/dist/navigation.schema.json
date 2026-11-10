@@ -117,14 +117,11 @@
   "title": "Navigation",
   "description": "Multi-level navigation structure with section banners and up to 3 levels of menu items. Used for mega-menu and primary site navigation.",
   "x-mangrove": {
-    "version": "1.0.0",
-    "phase": 1,
+    "version": "2.0.0",
+    "phase": 2,
     "implementors": [
       "MegaMenu"
     ],
-    "deviations": {
-      "ariaLabel": "Current component hardcodes aria-label=\"Main Navigation\". The `ariaLabel` field enables consumers to supply a custom label, which is required when multiple navigation landmarks appear on the same page."
-    },
     "notes": "MegaMenu also accepts presentation-only props (delay, hoverDelay, logo*) that are component configuration, not content. These are not part of the content schema."
   }
 }

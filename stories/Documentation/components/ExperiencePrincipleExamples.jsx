@@ -8,11 +8,11 @@ import './experience-principle-examples.css';
 const CARD_DATA = [
   {
     title: 'Plan services around local risk',
-    summaryText:
+    summary:
       'Use a clear heading, concise evidence and one predictable next step.',
     button: 'Read the guidance',
     link: '#change-evidence',
-    label1: 'Practice note',
+    labels: ['Practice note'],
   },
 ];
 
@@ -155,7 +155,7 @@ export default function ExperiencePrincipleExamples({ example }) {
           summary="Use hierarchy and one clear next step instead of turning every fragment into a competing surface."
         >
           <ExamplePanel verdict="Do" title="Let the card structure do the work">
-            <VerticalCard data={CARD_DATA} />
+            <VerticalCard items={CARD_DATA} />
           </ExamplePanel>
           <ExamplePanel verdict="Don't" title="Flatten the hierarchy">
             <div className="mg-principle-vague-card">

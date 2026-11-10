@@ -17,42 +17,42 @@ const destinations = [
   {
     icon: 'mg-icon mg-icon-graduation-cap',
     title: 'Getting started',
-    summaryText:
+    summary:
       'Install Mangrove and choose the integration path that fits your project.',
     kind: 'getting-started-getting-started-guide',
   },
   {
     icon: 'mg-icon mg-icon-lightbulb',
     title: 'Foundations',
-    summaryText:
+    summary:
       'Explore the principles, tokens and themes behind every component.',
     kind: 'design-decisions-experience-principles',
   },
   {
     icon: 'mg-icon mg-icon-cubes',
     title: 'Components',
-    summaryText:
+    summary:
       'Browse production-ready patterns for content, forms and navigation.',
     kind: 'brand-component-gallery',
   },
   {
     icon: 'mg-icon mg-icon-globe',
     title: 'Platform services',
-    summaryText:
+    summary:
       'Connect shared search, content, analytics and critical messaging services.',
     kind: 'platform-services-search-syndication',
   },
   {
     icon: 'mg-icon mg-icon-life-ring',
     title: 'Accessibility',
-    summaryText:
+    summary:
       'Build inclusive experiences with our standards, checks and guidance.',
     kind: 'getting-started-accessibility',
   },
   {
     icon: 'mg-icon mg-icon-code-branch',
     title: 'Contributing',
-    summaryText:
+    summary:
       'Learn the component workflow and help improve the shared library.',
     kind: 'contributing-build-a-component-step-by-step',
   },
@@ -68,67 +68,75 @@ function storyNavigation(kind) {
 const componentExamples = [
   {
     title: 'Start building with Mangrove',
-    summaryText:
+    summary:
       'Install the library, choose an integration path and build your first theme-aware page.',
     button: 'Read getting started',
     link: '/?path=/docs/getting-started-getting-started-guide--docs',
     target: '_top',
-    imgalt: 'A person working in a harvested field',
-    imgback: heroImage,
+    image: {
+      src: heroImage,
+      alt: 'A person working in a harvested field',
+    },
   },
   {
     title: 'Design with shared principles',
-    summaryText:
+    summary:
       'Use Mangrove’s experience principles to make interfaces clear, calm and recognizably purposeful.',
     button: 'Explore the principles',
     link: '/?path=/docs/design-decisions-experience-principles--docs',
     target: '_top',
-    imgalt: 'People working together outdoors in Bali',
-    imgback:
-      'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
+    image: {
+      src: 'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
+      alt: 'People working together outdoors in Bali',
+    },
   },
   {
     title: 'Build editorial card layouts',
-    summaryText:
+    summary:
       'Compose meaningful imagery, clear hierarchy, summaries and calls to action in a reusable content pattern.',
     button: 'View card documentation',
     link: '/?path=/docs/components-cards-vertical-card--docs',
     target: '_top',
-    imgalt: 'Aerial view of a canal through Almaty, Kazakhstan',
-    imgback:
-      'https://www.undrr.org/sites/default/files/2023-11/resilient-infrastructure-pikoso-kz-shutterstock.jpg',
+    image: {
+      src: 'https://www.undrr.org/sites/default/files/2023-11/resilient-infrastructure-pikoso-kz-shutterstock.jpg',
+      alt: 'Aerial view of a canal through Almaty, Kazakhstan',
+    },
   },
   {
     title: 'Explore syndicated search',
-    summaryText:
+    summary:
       'See search, filters, results and pagination working together in the library’s most complete integration.',
     button: 'Open the search story',
     link: '/?path=/story/components-syndicated-search--default',
     target: '_top',
-    imgalt: 'People walking through terraced rice fields',
-    imgback:
-      'https://www.undrr.org/sites/default/files/styles/ultrawide_16_6/public/2023-03/Shutterstock_656134321-min.jpg?h=90c64985&itok=ukR7hDqu',
+    image: {
+      src: 'https://www.undrr.org/sites/default/files/styles/ultrawide_16_6/public/2023-03/Shutterstock_656134321-min.jpg?h=90c64985&itok=ukR7hDqu',
+      alt: 'People walking through terraced rice fields',
+    },
   },
   {
     title: 'Test accessible interactions',
-    summaryText:
+    summary:
       'Review keyboard, focus, contrast, reflow and assistive-technology requirements before shipping.',
     button: 'Review accessibility',
     link: '/?path=/docs/getting-started-accessibility--docs',
     target: '_top',
-    imgalt: 'People collaborating on disaster risk reduction',
-    imgback:
-      'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+    image: {
+      src: 'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+      alt: 'People collaborating on disaster risk reduction',
+    },
   },
   {
     title: 'Contribute a component',
-    summaryText:
+    summary:
       'Follow the shared structure, documentation, testing and review standards used across Mangrove.',
     button: 'Read component standards',
     link: '/?path=/docs/contributing-component-standards--docs',
     target: '_top',
-    imgalt: 'A community landscape illustrating recovery and resilience',
-    imgback: figcaptionImage,
+    image: {
+      src: figcaptionImage,
+      alt: 'A community landscape illustrating recovery and resilience',
+    },
   },
 ];
 
@@ -189,7 +197,7 @@ export function IntroLanding() {
         <div className="mg-grid mg-grid__col-3">
           {destinations.map(destination => (
             <IconCard
-              data={[
+              items={[
                 {
                   ...destination,
                   imageScale: 'small',
@@ -217,7 +225,7 @@ export function IntroLanding() {
         </div>
         <ScrollContainer showArrows stretchItems itemWidth="19rem">
           {componentExamples.map(example => (
-            <VerticalCard data={[example]} key={example.title} />
+            <VerticalCard items={[example]} key={example.title} />
           ))}
         </ScrollContainer>
       </section>

@@ -277,7 +277,7 @@ export function ContentHub({
   ];
   const groupCards = [1, 2, 3].map((index, i) => ({
     title: text.sections[index],
-    summaryText: text.cards[i],
+    summary: text.cards[i],
     link: href(sections[index]),
     ...(routeCards === 'icon' && {
       icon: `mg-icon mg-icon-${routeIcons[i]}`,
@@ -392,7 +392,7 @@ export function ContentHub({
                 </p>
                 <div className={`mg-grid mg-grid__col-3`}>
                   <RouteCards
-                    data={groupCards}
+                    items={groupCards}
                     {...(routeCards === 'icon' && {
                       orientation: 'horizontal',
                     })}
@@ -411,7 +411,7 @@ export function ContentHub({
                     <div className="mg-grid mg-grid__col-3">
                       <IconCard
                         orientation="horizontal"
-                        data={text.facts.map((fact, index) => ({
+                        items={text.facts.map((fact, index) => ({
                           title: fact,
                           icon: `mg-icon mg-icon-${factIcons[index]}`,
                         }))}
@@ -425,15 +425,15 @@ export function ContentHub({
           {page === 'reporting' && (
             <div className="mg-grid mg-grid__col-2">
               <VerticalCard
-                data={[
+                items={[
                   {
                     title: text.how,
-                    summaryText: text.howIntro,
+                    summary: text.howIntro,
                     link: href('how-to-report'),
                   },
                   {
                     title: text.validation,
-                    summaryText: text.validationIntro,
+                    summary: text.validationIntro,
                     link: href('validate-data'),
                   },
                 ]}

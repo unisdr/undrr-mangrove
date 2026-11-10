@@ -30,7 +30,7 @@ export default function shareButtonsFromElement(container) {
         ? {}
         : { onCopy: dataset.onCopyLabel }),
     },
-    SharingSubject: dataset.sharingSubject || 'Sharing Link',
-    SharingTextBody: dataset.sharingBody || '',
+    sharingSubject: dataset.sharingSubject || 'Sharing Link',
+    sharingBody: dataset.sharingBody || '',
   };
 }

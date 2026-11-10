@@ -190,8 +190,8 @@ const QRCodeModal = ({
  *  @param {Object} labels - should contain language specific values like:
  *                           mainLabel: "SHARE THIS "
  *                           onCopy: "Copied"
- *  @param {string} SharingSubject - subject of the Email that will be prefilled to the user
- *  @param {string} SharingTextBody - body of the Email that will be prefilled and appended with LINK to the site
+ *  @param {string} sharingSubject - subject of the Email that will be prefilled to the user
+ *  @param {string} sharingBody - body of the Email that will be prefilled and appended with LINK to the site
  *
  *  @see schemas/share-action.schema.js — canonical field names and documented deviations.
  */
@@ -199,8 +199,8 @@ const ShareButtons = ({
   lang,
   dir,
   labels,
-  SharingSubject,
-  SharingTextBody,
+  sharingSubject,
+  sharingBody,
   // CustomUrl,
   ...props
 }) => {
@@ -219,10 +219,10 @@ const ShareButtons = ({
   const getShareableLinkForPlatform = Platform => {
     const baseLink = LinkUrls[Platform];
     const subject = encodeURIComponent(
-      SharingSubject ?? defaults.defaultSharingTextSubject
+      sharingSubject ?? defaults.defaultSharingTextSubject
     );
     const body =
-      encodeURIComponent(SharingTextBody ?? defaults.defaultSharingTextBody) +
+      encodeURIComponent(sharingBody ?? defaults.defaultSharingTextBody) +
       encodeURIComponent(sharedLink);
 
     return baseLink
@@ -237,8 +237,8 @@ const ShareButtons = ({
       // Use the Web Share API
       navigator
         .share({
-          title: SharingSubject ?? defaults.defaultSharingTextSubject,
-          text: SharingTextBody ?? defaults.defaultSharingTextBody,
+          title: sharingSubject ?? defaults.defaultSharingTextSubject,
+          text: sharingBody ?? defaults.defaultSharingTextBody,
           url: sharedLink,
         })
         .catch(error => console.error('Error sharing', error));
@@ -558,9 +558,9 @@ ShareButtons.propTypes = {
     copyToClipboard: PropTypes.string,
   }),
   /** Subject line used for email share and the QR caption. */
-  SharingSubject: PropTypes.string,
+  sharingSubject: PropTypes.string,
   /** Body text prefixed to the shared URL in email and clipboard payloads. */
-  SharingTextBody: PropTypes.string,
+  sharingBody: PropTypes.string,
 };
 
 CopyButton.propTypes = {

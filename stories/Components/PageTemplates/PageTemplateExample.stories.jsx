@@ -110,62 +110,67 @@ const insightCards = [
   {
     contenttile: 'Research brief',
     title: 'Financing resilience before disasters strike',
-    summaryText:
+    summary:
       'Explore practical approaches for moving investment from response towards prevention and anticipatory action.',
-    label1: '28 August 2026',
     button: 'Read the brief',
     link: '#',
-    imgalt: 'A coastal city viewed from above',
-    imgback:
-      'https://images.unsplash.com/photo-1518005020951-eccb494ad742?w=900&q=80',
+    image: {
+      src: 'https://images.unsplash.com/photo-1518005020951-eccb494ad742?w=900&q=80',
+      alt: 'A coastal city viewed from above',
+    },
+    labels: ['28 August 2026'],
   },
   {
     contenttile: 'Data insight',
     title: 'Tracking disaster losses across regions',
-    summaryText:
+    summary:
       'Comparable data helps governments identify risk patterns and direct resources.',
-    label1: '24 August 2026',
     button: 'Explore the data',
     link: '#',
-    imgalt: 'Aerial landscape showing a river and settlements',
-    imgback:
-      'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=900&q=80',
+    image: {
+      src: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=900&q=80',
+      alt: 'Aerial landscape showing a river and settlements',
+    },
+    labels: ['24 August 2026'],
   },
   {
     contenttile: 'Guidance',
     title: 'Building inclusive early warning systems',
-    summaryText:
+    summary:
       'A people-centred approach makes warnings understandable, actionable and accessible to everyone at risk.',
-    label1: '18 August 2026',
     button: 'View the guidance',
     link: '#',
-    imgalt: 'Community members meeting outdoors',
-    imgback:
-      'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=900&q=80',
+    image: {
+      src: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=900&q=80',
+      alt: 'Community members meeting outdoors',
+    },
+    labels: ['18 August 2026'],
   },
   {
     contenttile: 'Case study',
     title: 'Local leadership for heat resilience',
-    summaryText:
+    summary:
       'Cities are combining climate information, public health planning and community networks to reduce extreme heat impacts.',
-    label1: '12 August 2026',
     button: 'Read the case study',
     link: '#',
-    imgalt: 'Dense city buildings seen in warm light',
-    imgback:
-      'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=900&q=80',
+    image: {
+      src: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=900&q=80',
+      alt: 'Dense city buildings seen in warm light',
+    },
+    labels: ['12 August 2026'],
   },
   {
     contenttile: 'Policy update',
     title: 'Strengthening resilience through national planning',
-    summaryText:
+    summary:
       'New policy approaches connect risk reduction targets with climate adaptation, public investment and local delivery.',
-    label1: '6 August 2026',
     button: 'Read the update',
     link: '#',
-    imgalt: 'People collaborating around a meeting table',
-    imgback:
-      'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=900&q=80',
+    image: {
+      src: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=900&q=80',
+      alt: 'People collaborating around a meeting table',
+    },
+    labels: ['6 August 2026'],
   },
 ];
 
@@ -349,7 +354,7 @@ const PageTemplateExample = () => {
         <div className="mg-container-full-width mg-container--padded mg-u-background-color--neutral-25">
           <section className="mg-grid mg-grid__col-3">
             {insightCards.slice(0, 3).map(card => (
-              <VerticalCard key={card.title} data={[card]} />
+              <VerticalCard key={card.title} items={[card]} />
             ))}
           </section>
         </div>
@@ -440,7 +445,7 @@ const PageTemplateExample = () => {
           />
           <ScrollContainer showArrows itemWidth="300px" stepSize={324}>
             {insightCards.map(card => (
-              <VerticalCard key={card.title} data={[card]} />
+              <VerticalCard key={card.title} items={[card]} />
             ))}
           </ScrollContainer>
         </section>
@@ -767,34 +772,37 @@ const deltaHeroData = [
 
 const howItWorksCards = [
   {
-    imgback:
-      'https://dts-testing.undrr.org/assets/images/how-it-works-collect.png',
-    imgalt: 'Collect — record and link hazardous events with disaster data',
     imageScale: 'large',
     title: 'Collect',
     visualLabel: 'Data',
-    summaryText:
+    summary:
       'Record and link hazardous events with disaster losses and damages data. Systematically track disaster effects across sectors, social groups and geographic areas.',
+    image: {
+      src: 'https://dts-testing.undrr.org/assets/images/how-it-works-collect.png',
+      alt: 'Collect — record and link hazardous events with disaster data',
+    },
   },
   {
-    imgback:
-      'https://dts-testing.undrr.org/assets/images/how-it-works-analyze.png',
-    imgalt: 'Analyze — reveal patterns, trends and hotspots',
     imageScale: 'large',
     title: 'Analyze',
     visualLabel: 'Analysis',
-    summaryText:
+    summary:
       'Analyze links between hazardous events and losses and damages to reveal patterns, trends, and hotspots. Compare across hazards, sectors, events, and locations.',
+    image: {
+      src: 'https://dts-testing.undrr.org/assets/images/how-it-works-analyze.png',
+      alt: 'Analyze — reveal patterns, trends and hotspots',
+    },
   },
   {
-    imgback:
-      'https://dts-testing.undrr.org/assets/images/how-it-works-insights-for-action.png',
-    imgalt: 'Insights for action — turn raw data into insight',
     imageScale: 'large',
     title: 'Insights for action',
     visualLabel: 'Insights for action',
-    summaryText:
+    summary:
       'Turn raw data into insight. Produce analytical outputs to support decision-making for prevention, risk reduction, preparedness, recovery, financing and adaptation.',
+    image: {
+      src: 'https://dts-testing.undrr.org/assets/images/how-it-works-insights-for-action.png',
+      alt: 'Insights for action — turn raw data into insight',
+    },
   },
 ];
 
@@ -804,7 +812,7 @@ const featureCards = [
     borderColor: '#e8963a',
     imageScale: 'small',
     title: 'Analytics',
-    summaryText:
+    summary:
       'From data to decisions - analysis that drives multiple DRR applications including recovery planning, financing, early warning and risk-informed planning.',
   },
   {
@@ -812,7 +820,7 @@ const featureCards = [
     borderColor: '#007a8a',
     imageScale: 'small',
     title: 'Monitoring',
-    summaryText:
+    summary:
       'Continuous monitoring and tracking of hazardous events and disaster events and their effects across human, socio-economic and ecosystem dimensions.',
   },
   {
@@ -820,7 +828,7 @@ const featureCards = [
     borderColor: '#00a89a',
     imageScale: 'small',
     title: 'Data management & integration',
-    summaryText:
+    summary:
       'Preserve, connect and enrich disaster impact data using exposure, vulnerability and baseline information.',
   },
   {
@@ -828,7 +836,7 @@ const featureCards = [
     borderColor: '#4d9fd8',
     imageScale: 'small',
     title: 'Losses and damages overview',
-    summaryText:
+    summary:
       'Analyze losses and damages through interactive dashboards per disaster event, hazard type, sector and geography.',
   },
   {
@@ -836,7 +844,7 @@ const featureCards = [
     borderColor: '#b52a32',
     imageScale: 'small',
     title: 'Connected disaster data',
-    summaryText:
+    summary:
       'Support data sharing and application across sectors and multiple levels of government.',
   },
   {
@@ -844,7 +852,7 @@ const featureCards = [
     borderColor: '#d4a020',
     imageScale: 'small',
     title: 'Baseline & contextual data integration',
-    summaryText:
+    summary:
       'Integrate exposure, vulnerability, statistical and geospatial data enabling post-disaster change and impact analysis.',
   },
 ];
@@ -898,7 +906,7 @@ const DeltaLandingPage = () => (
         <div className="mg-container">
           <div className="mg-grid mg-grid__col-3">
             {howItWorksCards.map((card, i) => (
-              <IconCard key={i} data={[card]} />
+              <IconCard key={i} items={[card]} />
             ))}
           </div>
         </div>
@@ -917,7 +925,7 @@ const DeltaLandingPage = () => (
         <section className="mg-container--padded">
           <div className="mg-grid mg-grid__col-3">
             {featureCards.map((card, i) => (
-              <IconCard key={i} data={[card]} />
+              <IconCard key={i} items={[card]} />
             ))}
           </div>
         </section>

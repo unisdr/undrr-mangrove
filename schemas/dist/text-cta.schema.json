@@ -98,15 +98,10 @@
   "title": "Text CTA",
   "description": "Call-to-action banner with heading, rich text, action buttons, and optional image.",
   "x-mangrove": {
-    "version": "1.0.0",
-    "phase": 1,
+    "version": "2.0.0",
+    "phase": 2,
     "implementors": [
       "TextCta"
-    ],
-    "deviations": {
-      "image": "Current component uses flat `image` (URL string) and `imageAlt` (string) props. Schema uses a nested image object with src/alt.",
-      "image.src": "Maps to current `image` prop (which is a URL string).",
-      "image.alt": "Maps to current `imageAlt` prop."
-    }
+    ]
   }
 }

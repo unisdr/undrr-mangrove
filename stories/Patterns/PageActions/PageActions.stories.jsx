@@ -36,7 +36,7 @@ export function PageActions({ share = true, cite = true }) {
   return (
     <div className="mg-container">
       <div className="mg-grid mg-grid__col-2">
-        {share && <ShareButtons SharingSubject={work.title} />}
+        {share && <ShareButtons sharingSubject={work.title} />}
         {cite && <CiteThis />}
       </div>
     </div>

@@ -5,7 +5,6 @@ import {
   publicationCoverFixture,
 } from './cardGeometryChecks';
 import { HorizontalBookCard } from './HorizontalBookCard';
-
 const getCaptionForLocale = locale => {
   switch (locale) {
     case 'english':
@@ -14,16 +13,16 @@ const getCaptionForLocale = locale => {
           {
             contenttile: 'Content tag',
             title: 'Title in large size',
-            summaryText: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
+            summary: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
 by vulnerable populations and communities.
 This paper explores health risks from climate change in a global context, setting out key risks actions`,
-            label1: 'Label 1',
-            label2: 'Label 2',
+            labels: ['Label 1', 'Label 2'],
             button: 'Primary action',
             link: 'javascript:void(0)',
-            imgalt: 'A person looks on',
-            imgback:
-              'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
+            image: {
+              src: 'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
+              alt: 'A person looks on',
+            },
           },
         ],
       };
@@ -34,14 +33,14 @@ This paper explores health risks from climate change in a global context, settin
           {
             contenttile: 'علامة المحتوى',
             title: 'عنوان بحجم كبير',
-            summaryText: `يُعد تغير المناخ <a href="#" class="mg-card__text-link">حالة طوارئ صحية عالمية</a>، حيث تشعر الفئات السكانية والمجتمعات الأكثر ضعفاً بتأثيراته بشكل أكبر. تستكشف هذه الورقة المخاطر الصحية الناجمة عن تغير المناخ في سياق عالمي.`,
-            label1: 'التسمية 1',
-            label2: 'التسمية 2',
+            summary: `يُعد تغير المناخ <a href="#" class="mg-card__text-link">حالة طوارئ صحية عالمية</a>، حيث تشعر الفئات السكانية والمجتمعات الأكثر ضعفاً بتأثيراته بشكل أكبر. تستكشف هذه الورقة المخاطر الصحية الناجمة عن تغير المناخ في سياق عالمي.`,
+            labels: ['التسمية 1', 'التسمية 2'],
             button: 'الإجراء الأساسي',
             link: 'javascript:void(0)',
-            imgalt: 'شخص ينظر',
-            imgback:
-              'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
+            image: {
+              src: 'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
+              alt: 'شخص ينظر',
+            },
           },
         ],
       };
@@ -54,9 +53,10 @@ This paper explores health risks from climate change in a global context, settin
             title: '投稿のタイトルはここにあり、2行です',
             button: '続きを読む',
             link: 'javascript:void(0)',
-            imgalt: 'A person looks on',
-            imgback:
-              'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
+            image: {
+              src: 'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
+              alt: 'A person looks on',
+            },
           },
         ],
       };
@@ -67,68 +67,61 @@ This paper explores health risks from climate change in a global context, settin
           {
             contenttile: 'Horizontal card',
             title: 'Title in large size',
-            summaryText: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
+            summary: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
 by vulnerable populations and communities.
 This paper explores health risks from climate change in a global context, setting out key risks actions`,
-            label1: 'Label 1',
-            label2: 'Label 2',
+            labels: ['Label 1', 'Label 2'],
             button: 'Primary action',
             link: 'javascript:void(0)',
-            imgalt: 'A person looks on',
-            imgback:
-              'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
+            image: {
+              src: 'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
+              alt: 'A person looks on',
+            },
           },
         ],
       };
       return dummy;
   }
 };
-
 export default {
   title: 'Components/Cards/Horizontal Book Card',
   component: HorizontalBookCard,
-
   argTypes: {
     variant: {
       options: ['primary', 'secondary', 'tertiary', 'quaternary'],
-
       control: {
         type: 'inline-radio',
       },
-
       defaultValue: 'primary',
     },
   },
 };
-
 export const DefaultHorizontalBookCard = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
     return (
       <HorizontalBookCard
-        data={caption.contentdata}
+        items={caption.contentdata}
         {...args}
       ></HorizontalBookCard>
     );
   },
-
   name: 'Horizontal Book Card',
 };
-
 export const HorizontalBookCardNoImageVerticalCard = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
     const noImageData = caption.contentdata.map(item => ({
       ...item,
-      imgback: null,
-      imgalt: null,
+      image: {
+        src: null,
+        alt: null,
+      },
     }));
-
     return (
-      <HorizontalBookCard data={noImageData} {...args}></HorizontalBookCard>
+      <HorizontalBookCard items={noImageData} {...args}></HorizontalBookCard>
     );
   },
-
   name: 'Horizontal Book Card Without Image',
 };
 
@@ -143,13 +136,10 @@ export const NoLinkHorizontalBookCard = {
       link: null,
       button: null,
     }));
-
-    return <HorizontalBookCard data={unlinked} {...args}></HorizontalBookCard>;
+    return <HorizontalBookCard items={unlinked} {...args}></HorizontalBookCard>;
   },
-
   name: 'Without a link',
 };
-
 export const ButtonOnlyHorizontalBookCard = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
@@ -158,36 +148,36 @@ export const ButtonOnlyHorizontalBookCard = {
       link: null,
       buttonLink: 'javascript:void(0)',
     }));
-
     return (
-      <HorizontalBookCard data={buttonOnly} {...args}></HorizontalBookCard>
+      <HorizontalBookCard items={buttonOnly} {...args}></HorizontalBookCard>
     );
   },
-
   name: 'Button only, no card link',
 };
-
 export const NaturalCoverRatio = {
   name: 'Complete cover without outer frame',
   render: (args, { globals: { locale } }) => {
     const data = getCaptionForLocale(locale).contentdata.map(item => ({
       ...item,
-      imgback: publicationCoverFixture,
+      image: {
+        src: publicationCoverFixture,
+      },
     }));
-    return <HorizontalBookCard {...args} data={data} />;
+    return <HorizontalBookCard {...args} items={data} />;
   },
   play: checkPublicationSurface,
 };
-
 export const ThemedSurface = {
   name: 'Theme-owned publication surface',
   render: (args, { globals: { locale } }) => (
     <div style={publicationSurfaceOverrides}>
       <HorizontalBookCard
         {...args}
-        data={getCaptionForLocale(locale).contentdata.map(item => ({
+        items={getCaptionForLocale(locale).contentdata.map(item => ({
           ...item,
-          imgback: publicationCoverFixture,
+          image: {
+            src: publicationCoverFixture,
+          },
         }))}
       />
     </div>

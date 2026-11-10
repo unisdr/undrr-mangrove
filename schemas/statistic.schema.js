@@ -55,9 +55,5 @@ export default schemaDocument({
   },
   meta: {
     implementors: ['StatsCard', 'StatsCardItem'],
-    deviations: {
-      'stats[].summary':
-        'Current component uses `summaryText` as the prop name.',
-    },
   },
 });
