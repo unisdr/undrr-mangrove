@@ -53,6 +53,15 @@
   .sbdocs code {
     white-space: break-spaces !important;
   }
+
+  /* GFM task lists: hide the redundant bullet when a list item leads with
+     a checkbox input. Matches GitHub's rendering and keeps Markdown
+     semantics (still a list, just no list-marker disc). */
+  .sbdocs ul li.task-list-item,
+  .sbdocs ul li:has(> input[type='checkbox']) {
+    list-style: none;
+    margin-left: -1.5em;
+  }
 </style>
 
 <!-- Primarily to power the ShareButtons shortlink demo -->

@@ -9,6 +9,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import LinkTo from '@storybook/addon-links/react';
 import { HighlightBox } from '../../Components/HighlightBox/HighlightBox';
+import { DocCallout } from './components/DocCallout';
 
 <Meta
   title="Brand/Brand guidelines"
@@ -22,11 +23,18 @@ import { HighlightBox } from '../../Components/HighlightBox/HighlightBox';
 
 # Brand guidelines
 
+<DocCallout variant="warning">
+  <strong>Prototype guidance, under review (May 2026).</strong> The Brand section is a working draft pending UNDRR Communications confirmation. Treat its claims as provisional and contribute corrections via <a href="https://github.com/unisdr/undrr-mangrove/issues">a GitHub issue</a> or <code>undrrcomms@un.org</code>.
+</DocCallout>
+
 {/* prettier-ignore */}
 Editorial and visual identity guidance for UNDRR communications. For
 theme-specific colors, typography, and component previews, see
 <LinkTo kind="brand-brand-identity" story="docs">Brand identity</LinkTo> and
 use the toolbar theme picker.
+
+{/* prettier-ignore */}
+For the canonical reading order across the Brand section, see <LinkTo kind="brand-where-to-start" story="docs">Where to start</LinkTo>. For the strategic model behind these guidelines (core UNDRR → sub-brand → campaign), see <LinkTo kind="brand-layered-identity" story="docs">Layered identity</LinkTo>. For practical voice and tone direction, see <LinkTo kind="brand-visual-voice" story="docs">Visual voice</LinkTo>, <LinkTo kind="brand-written-voice" story="docs">Written voice</LinkTo>, <LinkTo kind="brand-audience-mapping" story="docs">Audience mapping</LinkTo>, <LinkTo kind="brand-sub-brand-rationale" story="docs">Sub-brand rationale</LinkTo>, and <LinkTo kind="brand-anti-patterns" story="docs">Anti-patterns and pre-publish checklist</LinkTo>. For generative imagery, see the <LinkTo kind="brand-ai-imagery-policy" story="docs">AI imagery policy</LinkTo> (the standing rules) and the <LinkTo kind="brand-ai-imagery-prompts" story="docs">AI imagery prompts</LinkTo> cookbook (formula plus an LLM meta-prompt).
 
 ---
 
@@ -62,10 +70,10 @@ UNDRR brand voice is anchored in three traits:
 ### Brand awareness priorities
 
 > "Awareness should be enhanced because frequency and severity of disasters
-> are increasing. However, it is not so much about the organization but more
+> are increasing. However, it is not so much about the organisation but more
 > about the agenda."
 >
-> — Mami Mizutori
+> – Mami Mizutori, former SRSG for Disaster Risk Reduction (2018–2024)
 
 **How to strengthen awareness:**
 
@@ -77,6 +85,7 @@ UNDRR brand voice is anchored in three traits:
 - Promote partners while retaining clear ownership where appropriate.
 - Strengthen social presence and rapid prevention/recovery messaging.
 - Keep digital experiences visually consistent with Sendai branding.
+
 
 ---
 
@@ -93,6 +102,7 @@ UNDRR brand voice is anchored in three traits:
 - **Frame prevention positively** — use constructive imagery
 - **Center stories on people**, not just issues
 - **Keep web copy concise** — follow inverted-pyramid structure
+
 - For detailed writing guidance, see the <LinkTo kind="contributing-writing-guidelines" story="docs">Writing guidelines</LinkTo>
 
 ---
@@ -115,14 +125,17 @@ For logo files and downloads, switch to your property's theme on the <LinkTo kin
 
 ### Sendai Framework logo
 
+The [Sendai Framework for Disaster Risk Reduction 2015–2030](https://www.undrr.org/publication/sendai-framework-disaster-risk-reduction-2015-2030) (Sendai Framework) is the international agreement UNDRR coordinates implementation of; its logo is institutional, not decorative.
+
 - The Sendai Framework logo should appear on all official publications and online sites.
 - The inverse logo should be placed on dark backgrounds.
 - Sendai logo can support sub-brands; place sub-brand above the color stripe.
 
+
 ### UN and SDG logos
 
 - When using the UN logo, it takes precedence over UNDRR.
-- UNDRR can be used in conjunction with the SDG logo and wheel.
+- UNDRR can be used in conjunction with the Sustainable Development Goals (SDG) logo and wheel.
 - Access the official UN/SDG artwork at [United Nations brand resources](https://www.un.org/styleguide/).
 
 ---
@@ -147,7 +160,7 @@ For logo files and downloads, switch to your property's theme on the <LinkTo kin
   <HighlightBox variant="secondary">
     <strong>Don't:</strong> Conference pictures should be kept to the strict
     minimum. We do not want to convey a conference-focused image of the
-    organization.
+    organisation.
   </HighlightBox>
 </div>
 
@@ -184,11 +197,13 @@ shared across sites:
 The page header carries the Sendai stripe, UNDRR logo, global navigation,
 language selector, and account/tools links.
 
+
 See: <LinkTo kind="components-pageheader" story="docs">Page header component</LinkTo>, <LinkTo kind="components-navigation-megamenu" story="docs">Mega menu component</LinkTo>
 
 ### Footer
 
 The footer is visually shared across sites, with customizable link groups:
+
 
 - **Stay in touch**: Social channel icons (default: UNDRR channels, can link to sub-channels)
 - **Custom links**: Shortcuts and additional information specific to each site
@@ -200,7 +215,7 @@ See: <LinkTo kind="components-footer" story="docs">Footer component</LinkTo>
 
 ### Typography
 
-External-facing print/web uses **Roboto** (UN official typeface) for body text
+External-facing print/web uses **Roboto** (UNDRR-adopted web typeface) for body text
 and headings, with **Roboto Condensed** for the hero title and for interface
 chrome such as card titles, tabs and tags. Internal/email communication may use
 Arial. In CSS, name a font role — `var(--mg-font-family-text)`, `-heading`,
@@ -209,9 +224,12 @@ Arial. In CSS, name a font role — `var(--mg-font-family-text)`, `-heading`,
 **Language-specific fonts:** Mangrove applies script-specific font overrides via
 `:lang()` selectors (for example `lang="ar"`).
 
+
 | Language | Selector    | Font override                                        |
 | -------- | ----------- | ---------------------------------------------------- |
 | Arabic   | `:lang(ar)` | Noto Kufi Arabic (headings), Noto Sans Arabic (body) |
+
+> **Note:** The older UNDRR SharePoint Colors & Typography page lists Noto Nasteh for Arabic. Mangrove supersedes that – the live source of truth for web is the table above. If you find conflicting guidance elsewhere, default to Mangrove and flag the source for the UNDRR Communications team to update.
 
 See: <LinkTo kind="design-decisions-fonts" story="docs">Fonts documentation</LinkTo>
 
@@ -220,12 +238,12 @@ See: <LinkTo kind="design-decisions-fonts" story="docs">Fonts documentation</Lin
 ## Resources
 
 {/* prettier-ignore */}
-- <LinkTo kind="brand-brand-identity" story="docs">Brand identity</LinkTo> — theme-specific colors, typography, logos, buttons, and icons
-- <LinkTo kind="brand-about-this-guide" story="docs">About this guide</LinkTo> — overview of all UNDRR web properties
-- <LinkTo kind="contributing-writing-guidelines" story="docs">Writing guidelines</LinkTo> — editorial standards for web content
-- [UNDRR Style Guides (intranet)](https://unitednations.sharepoint.com/sites/UNDRR-DRR-COMMS/SitePages/Style-Guides.aspx) — additional communications guidance for internal UNDRR users (requires UN SharePoint access)
-- [UN web standards](https://www.un.org/styleguide/) — UN-wide branding and style guidance
+- <LinkTo kind="brand-brand-identity" story="docs">Brand identity</LinkTo> – theme-specific colors, typography, logos, buttons, and icons
+- <LinkTo kind="brand-about-this-guide" story="docs">About this guide</LinkTo> – overview of all UNDRR web properties
+- <LinkTo kind="contributing-writing-guidelines" story="docs">Writing guidelines</LinkTo> – editorial standards for web content
+- [UNDRR Style Guides (intranet)](https://unitednations.sharepoint.com/sites/UNDRR-DRR-COMMS/SitePages/Style-Guides.aspx) – additional communications guidance for internal UNDRR users (requires UN SharePoint access)
+- [UN web standards](https://www.un.org/styleguide/) – UN-wide branding and style guidance
 
 ---
 
-Last updated: 11 April 2026
+Last updated: 18 May 2026

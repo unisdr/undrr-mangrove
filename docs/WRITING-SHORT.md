@@ -14,11 +14,13 @@ Use this as a compact, LLM‑friendly summary of the Mangrove Writing standards.
 8. Strong writing basics: active voice, plain language, clarity, rhythm.
 9. Write for two audiences: consumers scan (give them a description + example + props); maintainers read for the “why” (design decisions, edge cases, history). Don’t conflate them in one document.
 
+
 Layer your docs: what it does → how to use it → why it works that way. Keep the “why” at the end or behind a details block.
 
 **Callout labels:** `> **Note:**` (consumer status), `> **Tip:**` (consumer best practice), `> **Integration note:**` (CDN/Drupal/SSR context for consumers), `> **Implementation note (for contributors):**` (internal rationale, maintainers only). Large contributor sections → use an additional blockquote callout or move content to a separate heading.
 
 > “Too much information and no information accomplish the same goal.” (Ibrahim Diallo)
+
 
 Also:
 
@@ -31,8 +33,9 @@ Also:
 ## Additions from style guides
 
 - Use direct, plain language; front‑load key info; keep sentences short. (GOV.UK, PlainLanguage.gov)
-- Descriptive link text; avoid “click here.” (GOV.UK)
+- Descriptive link text; avoid “click here.” In tables, link the row’s title rather than adding a trailing “View” column. (GOV.UK)
 - Sentence case for UI; keep proper nouns/acronyms capitalized. Menu and navigation labels take title case. (Material Design; UN Geneva)
+
 - Calm, actionable errors: what happened, why (if helpful), what to do next. (NN/g)
 - Inclusive language; avoid idioms/slang; meaningful alt text and link text. (Microsoft)
 - Plan for localization: avoid idioms; allow text expansion; clear dates/times. (Microsoft, GOV.UK)
@@ -51,10 +54,12 @@ United Nations guidance:
 - [Microsoft: inclusive communication](https://learn.microsoft.com/style-guide/inclusive-communication/)
 - [Material Design: writing](https://m2.material.io/design/communication/writing.html)
 - [PlainLanguage.gov: guidelines](https://www.plainlanguage.gov/guidelines/)
+
 - [Mailchimp content style guide](https://styleguide.mailchimp.com/)
 - [A Handbook for Writers of the United Nations (PDF)](https://languages.un.org/sites/default/files/2024-01/writing_for_the_united_natons_a_handbook_of_guidelines_techniques_and_resources.pdf)
 
 Originally inspired by Nick DiLallo’s “This is good UX writing: Eight principles for every interface you’ll ever write” ([UX Collective, 2020](https://uxdesign.cc/this-is-good-ux-writing-10c4b956a6c3)).
+
 
 The “Write for two audiences” principle is inspired by Ibrahim Diallo’s “[How do we get developers to read the docs?](https://idiallo.com/blog/how-do-we-get-developers-to-read-the-docs)” (2025).
 
@@ -64,3 +69,4 @@ The “Write for two audiences” principle is inspired by Ibrahim Diallo’s �
 - [Editorial manual](EDITORIAL-MANUAL.md): capitalization, punctuation, numbers, abbreviations, italics and spelling rules, plus UNDRR terminology and inclusive-language terms, credited to United Nations system sources and the UNDRR Publications SOP
 - [Component guide](COMPONENT-GUIDE.md): step-by-step tutorial for building a component
 - [Review checklist](REVIEW-CHECKLIST.md): pre-submission component checklist
+

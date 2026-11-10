@@ -1,0 +1,53 @@
+/**
+ * @tokens ARISE Colors
+ * @presenter Color
+ *
+ * ARISE (Private Sector Alliance for Disaster Resilient Societies)
+ * theme overrides for Mangrove.
+ *
+ * Source: docroot/themes/custom/arise/scss/utils/variables.scss
+ * Logo guidelines: ARISE-LOGO-GUIDELINES.pdf (UNDRR SharePoint)
+ *
+ * Note: ARISE uses its distinctive burgundy red (#921d2c) for the
+ * nav/header/topbar — this is the interactive color here.
+ * The live site also uses a near-black navy (#00223f) for footer
+ * and dark-section backgrounds.
+ *
+ * TODO: ARISE uses Teko for headings on ariseglobalnetwork.org.
+ * Adding that font import here is deferred until a designer confirms
+ * it should be part of the Mangrove ARISE theme.
+ */
+
+@use "tokens-tabs" as *;
+
+.mg-theme-arise {
+  --mg-color-interactive: 146 29 44;
+  --mg-color-interactive-active: 110 22 33;
+  --mg-color-tag: 146 29 44;
+  --mg-color-tag--hover: 110 22 33;
+  --mg-color-button-background: rgb(146 29 44);
+  --mg-color-button-background--hover: rgb(110 22 33);
+  --mg-color-button-outline-primary: 146 29 44;
+  --mg-color-button-outline-primary--hover: 110 22 33;
+  --mg-color-form-check: 146 29 44;
+  --mg-color-form-check--hover: 110 22 33;
+  --mg-color-form-check--checked: 146 29 44;
+  --mg-color-form-focus: 146 29 44;
+  --mg-color-hero: 146 29 44;
+  --mg-radius-tag: var(--mg-spacing-50);
+  --mg-radius-button: var(--mg-spacing-50);
+  --mg-radius-form-input: var(--mg-spacing-50);
+  --mg-color-tabbar-background: rgb(146 29 44 / 0.1);
+  --mg-color-tab-background: rgb(146 29 44 / 0.8);
+  --mg-color-tab-background--inactive: rgb(146 29 44 / 0.1);
+  --mg-color-tab-background--hover: rgb(146 29 44);
+  --mg-color-tab-border: rgb(146 29 44 / 0.3);
+  --mg-color-tab-border--hover: rgb(110 22 33);
+  --mg-color-tab-border--active: rgb(146 29 44 / 0.3);
+  --mg-radius-tab: var(--mg-spacing-50) var(--mg-spacing-50) 0 0;
+  --mg-color-text-tab: rgb(var(--mg-color-neutral-700));
+  --mg-color-text-tab--hover: rgb(var(--mg-color-neutral-0));
+  --mg-color-text-tab-active: rgb(var(--mg-color-neutral-0));
+
+  @include mg-tokens-tabs;
+}
