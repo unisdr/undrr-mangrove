@@ -45,6 +45,20 @@ https://mangrove.undrr.org/ai-components/components-navigation-pager.json
 Create a similar paginated list using this component.
 ```
 
+## Choose the shortest discovery path
+
+Start with the task, then fetch only the relevant guide and component details:
+
+| Task | Start here | Next step |
+|---|---|---|
+| UI prototype | `llms.json`, then `ai-components/index.json` | Make a small component map (page section → component → `detailsUrl` → static HTML, hydration or vanilla module) before writing custom markup. |
+| Drupal Gutenberg page | [Page-building guide](https://mangrove.undrr.org/llms-page-building.txt) | Choose the page shape and supported blocks, then inspect only the selected components. This guide owns the Hero/HubHeader distinction. |
+| Copy or editorial review | [Editorial manual](https://mangrove.undrr.org/llms-editorial-manual.txt) | Consult the relevant content-family guide when choosing editorial fields. |
+| Search configuration or metadata | [Search widget guide](https://mangrove.undrr.org/llms-search-widget.txt), or the relevant structured manifest named in `llms.json` | Use the dedicated reference for the requested configuration or metadata, then fetch component details if needed. |
+| CSS-property validation | [Validation recipe below](#consumer-validation-recipe) | Combine theme, component and global evidence before judging a property. |
+
+Always follow the selected index entry's **`detailsUrl`**. Do not construct a URL from a display name or a guessed short ID: StatsCard, for example, uses `components-cards-stats-card`, not `stats-card`. Keep the library version and source URLs with your component map; deployed metadata may be newer than a pinned stylesheet.
+
 ## Tool-specific setup
 
 ### Claude Code
@@ -241,6 +255,31 @@ The names, types and defaults are extracted from the compiled CSS bundles on eve
 
 Not every `--mg-*` property is in `tokens.json` or in this field. The groups that are global rather than component-scoped but declared straight in SCSS rather than generated from `tokens/*.yaml` — the data visualisation palettes (`--mg-dataviz-*`), the Sendai Framework ramps (`--mg-sendai-*`), the five typography roles (`--mg-font-family-*`) and the legacy one-off brand colours (`--mg-color-*`) — are in neither. `llms.txt` names every group and says where each is defined, generated from `GLOBAL_PREFIXES` in `custom-properties.js` so the sentence cannot drift from the list.
 
+### Consumer validation recipe
+
+This is a recipe for a consuming project's validator, not an exhaustive public-property registry. A custom property can accept arbitrary token text when declared and still make the consuming CSS declaration invalid after substitution. Separate **name resolution**, **value format**, and **rendered behaviour** in the report.
+
+The current JSON shapes are `tokens.json.tokens[]` (records keyed by `name`), `index.json.components[]` (with `detailsUrl` and an optional numeric `customProperties` count), and each detail's `customProperties.properties[]`. The library version is `tokens.json.version`, `llms.json.version` or `index.json.library.version`; `schemaVersion` describes the dictionary schema, not the library release. Component detail responses do not carry their own release version. An index version therefore cannot prove that a separately fetched detail belongs to the same snapshot: archive a coherent matching build for reproducible audits, and leave checks that depend on unavailable matching metadata unresolved.
+
+To obtain matching global source for a released npm/CDN build, inspect its registry record, for example `npm view @undrr/undrr-mangrove@2.3.0 gitHead dist.tarball dist.integrity --json`. Download that exact package with `npm pack @undrr/undrr-mangrove@2.3.0 --ignore-scripts` in a scratch directory. The assembled release package places the relevant source at `package/scss/assets/scss/_variables.scss`, `_fonts.scss` and `_tokens-data-viz.scss`; the repository paths below start at `stories/assets/scss/`. Inspect the archive rather than assuming a package layout in future versions. Where the registry supplies `gitHead`, an immutable checkout at that commit is another source; confirm that the public mirror actually serves it. Do not substitute the public mirror's moving `main`, assume a `v{version}` tag exists, or infer source equivalence from the package version alone. If the package/source is unavailable or cannot be tied to the loaded build, report the affected check as unresolved.
+
+1. **Record the evidence version.** Save the loaded stylesheet URL/theme/version, the metadata URLs and their reported versions, and the source revision used for global declarations. Fetch failures or mismatched versions make a check unresolved; they do not prove an invalid property. Use matching release assets or a local build rather than silently comparing an old pinned CSS bundle with today's metadata.
+2. **Load the theme dictionary.** Read `tokens.json`, including `scope` and the token records' `format`/`wrapInRgb` metadata. This establishes theme-generated names only.
+3. **Load component properties.** Follow `detailsUrl` for the components in the component map; collect `customProperties.properties`. For a whole-library name audit, inspect every index entry with a non-zero `customProperties` count. Keep the owning component and its `type`, `default`, description and any wrapping metadata. A component's `type: "default"` or `"hook"` describes how the value is supplied, not a CSS value grammar. A default is not an enumeration of permitted values.
+4. **Resolve global names separately.** For names absent from those records, inspect the documented SCSS sources for the matching release: typography roles and legacy brand colours in `_variables.scss` (Arabic font routing in `_fonts.scss`), and visualization/Sendai palettes in `_tokens-data-viz.scss`, all under `stories/assets/scss/`. The global groups above identify where to look; a matching prefix alone does not prove an exact property exists or is public. Confirm the exact declaration, intended use and consumer reads. If the matching source is unavailable, retain an unresolved result.
+5. **Check the value at its use site.** Follow explicit `format` and `wrapInRgb` metadata. Channel values such as `255 255 255` require the consuming `rgb()` wrapper; complete colour expressions are used directly. Do not infer wrapping from `--mg-color-*`, or add a second wrapper merely because the value represents a colour. Where metadata supplies no value grammar, inspect the consuming declaration and test the resolved value in that CSS property's context. Preserve `var()` references and fallbacks; unresolved references, cascade or conditional states require further inspection.
+6. **Report evidence, then verify rendering.** Emit the property, owner/scope, source/version, expected format, supplied value and one of the outcomes below. Check the actual consuming CSS property in a browser on the target element/theme/state, including inherited values and overrides. `CSS.supports('--mg-example', value)` only tests custom-property syntax and cannot validate the eventual colour, font or length; `getComputedStyle(element).getPropertyValue('--mg-example')` alone does not establish that a consumer uses it successfully.
+
+| Outcome | Meaning | Example |
+|---|---|---|
+| Resolved | Exact name and any checked format have supporting evidence; rendering still needs verification. | `--mg-font-family-text` and `--mg-font-family-ui` are resolved from matching global SCSS even though the theme dictionary omits them. |
+| Invalid | A specific use contradicts an evidenced contract or demonstrably fails in the consuming declaration. | Assigning `#fff` to a record explicitly marked `format: "srgb-channels"`, `wrapInRgb: true` produces an invalid colour when the component wraps it in `rgb()`. |
+| Unresolved | Available evidence is insufficient or incompatible. | An unlisted `--mg-*` name, a missing component detail response, an unavailable global source or an unexpanded `var()` dependency needs review; absence from `tokens.json` is insufficient to label it invalid. |
+
+For example, `color: rgb(var(--mg-color-interactive))` uses channels, while `color: var(--mg-color-text-tab)` uses a complete colour expression. Confirm their records or matching source rather than generalizing from either name. Apply the same lookup process to `--mg-dataviz-*` and `--mg-sendai-*`; these groups are not enumerated by the theme dictionary. A known internal property is unsupported public API, which is a different finding from invalid CSS. Consumer-owned properties also need their own contract rather than a Mangrove rejection.
+
+A successful name/format audit does not establish contrast, focus visibility, responsive behaviour or accessibility. Keep those checks and any unresolved properties visible in the handoff instead of reporting a blanket “all tokens valid”.
+
 ### CSS utilities (`ai-components/utilities.json`)
 
 The [utilities reference](https://mangrove.undrr.org/ai-components/utilities.json) lists all CSS utility classes grouped by category. Each class has a description and usage example.
@@ -273,12 +312,12 @@ The [PageTemplateExample](https://mangrove.undrr.org/ai-components/example-page-
 **Vanilla HTML consumers**
 1. Fetch `llms.json` for URLs and conventions.
 2. Fetch `ai-components/index.json` and filter `vanillaHtml: true`.
-3. Use `quickstart` + `requiredAssets`, then component `renderedHtml`.
+3. Make a component map before custom markup. Follow each selected entry's `detailsUrl`; use `quickstart` + `requiredAssets`, then component `renderedHtml`.
 4. For entries with `hydration: true`, use the detail file's `hydration.example` instead of the static `renderedHtml` when the component needs to be interactive. For entries with `vanillaModule: true`, use `vanillaModule.example`, which loads a plain module script and no React.
 
 **React consumers**
 1. Fetch `ai-components/index.json`.
-2. Fetch component detail files for props/types/examples.
+2. Make a component map, then follow each selected entry's `detailsUrl` for props/types/examples; do not guess component IDs.
 3. Use the entry's own `import` line, which names the package subpath: `import { ComponentName } from "@undrr/undrr-mangrove/components/ComponentName.js"`. The package root is not an entry point and resolves on no published version (unisdr/undrr-mangrove#1252). An entry with no `import` line ships in no bundle; one flagged `importRequiresDom: true` cannot be imported in Node or during server-side rendering.
 
 ### How it's generated

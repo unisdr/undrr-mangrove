@@ -21,6 +21,10 @@ export function TopBar({
   logoHref = '/',
   logoWidth,
   logoHeight,
+  enableFilter = false,
+  enableSiteSearch,
+  searchUrl,
+  onNavigate,
 }) {
   const railDrag = useRailDrag(isMobile);
   const pendingPanelFocusRef = useRef(null);
@@ -32,6 +36,7 @@ export function TopBar({
   }, [activeItem, sectionListRef]);
 
   const handleFocusByArrows = (e, index) => {
+    if (e.target.closest('.mg-mega-menu-finder')) return;
     // Prevent default browser scrolling for arrow keys
     if (['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
       e.preventDefault();
@@ -76,6 +81,7 @@ export function TopBar({
       }}
       activeItem={activeItem}
       section={section}
+      sections={sections}
       handleOnKeyDown={e => {
         if (isMobile && e.key === 'ArrowDown') {
           e.preventDefault();
@@ -87,6 +93,12 @@ export function TopBar({
       }}
       sectionListRef={sectionListRef}
       itemListRef={itemListRef}
+      enableFilter={enableFilter && !isMobile}
+      enableSiteSearch={enableSiteSearch}
+      searchUrl={searchUrl}
+      onNavigate={onNavigate}
+      onCloseSection={() => activateItem(null)}
+      labels={labels}
     >
       {section.sections}
     </TopBarItem>

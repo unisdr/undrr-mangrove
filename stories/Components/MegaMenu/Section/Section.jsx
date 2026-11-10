@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import MenuFinder from './MenuFinder';
 
 /**
  * Trust boundary: `bannerDescription` is rendered unescaped, on purpose.
@@ -28,13 +29,69 @@ import React, { useState, useRef, useEffect } from 'react';
 
 export default function Section({
   section,
+  sections,
   isActive,
   index,
   sectionListRef,
   itemListRef,
+  enableFilter = false,
+  enableSiteSearch = true,
+  searchUrl = '/search',
+  onNavigate,
+  onClose,
+  labels,
 }) {
   // Note: We render both mobile and desktop content structures.
   // CSS media queries control which version is visible.
+  const [filterQuery, setFilterQuery] = useState('');
+  const [finderOpen, setFinderOpen] = useState(false);
+  const hasIntroduction = Boolean(
+    section?.bannerHeading && section?.bannerDescription && section?.items
+  );
+  const filtering = enableFilter && finderOpen && isActive && hasIntroduction;
+  const finderTriggerRef = useRef(null);
+  const [shortcutLabel, setShortcutLabel] = useState('Ctrl K');
+  useEffect(() => {
+    const platform = navigator.userAgentData?.platform || navigator.platform;
+    if (/Mac|iPhone|iPad|iPod/i.test(platform)) setShortcutLabel('⌘K');
+  }, []);
+  const restoreFinderFocusRef = useRef(false);
+  useEffect(() => {
+    if (!isActive || !enableFilter || !hasIntroduction) {
+      // Resizing or removing the owning utility dismisses the finder for good.
+      // Its former footer may be hidden/removed; use the surviving nav control.
+      if (finderOpen && isActive) itemListRef.current[index]?.focus();
+      restoreFinderFocusRef.current = false;
+      setFilterQuery('');
+      setFinderOpen(false);
+    }
+  }, [isActive, enableFilter, hasIntroduction, finderOpen, itemListRef, index]);
+  useEffect(() => {
+    if (!finderOpen && restoreFinderFocusRef.current) {
+      restoreFinderFocusRef.current = false;
+      finderTriggerRef.current?.focus();
+    }
+  }, [finderOpen]);
+  const backToMenu = () => {
+    restoreFinderFocusRef.current = true;
+    setFilterQuery('');
+    setFinderOpen(false);
+  };
+  const finderTrigger = enableFilter && (
+    <button
+      ref={finderTriggerRef}
+      type="button"
+      className="mg-mega-menu-finder__action mg-mega-content__finder-trigger"
+      aria-haspopup="dialog"
+      aria-keyshortcuts="Meta+k Control+k"
+      onClick={() => setFinderOpen(true)}
+    >
+      <span>{labels.menuFilterLabel}</span>
+      <kbd className="mg-mega-content__finder-shortcut" aria-hidden="true">
+        {shortcutLabel}
+      </kbd>
+    </button>
+  );
   const [itemIndex, setItemIndex] = useState(0);
   const [focusIndex, setFocusIndex] = useState(0);
   const [focusableElements, setFocusableElements] = useState([]);
@@ -47,6 +104,8 @@ export default function Section({
   const contentRef = useRef(null);
 
   const handleArrowFocus = e => {
+    if (e.target.closest('.mg-mega-menu-finder')) return;
+    if (enableFilter && e.key === 'Tab') return;
     // Prevent default browser scrolling behavior for arrow keys
     if (['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
       e.preventDefault();
@@ -112,7 +171,7 @@ export default function Section({
     );
 
     setFocusableElements(Array.from(tabableElements || []));
-  }, [sectionListRef, index, itemIndex]);
+  }, [sectionListRef, index, itemIndex, filtering]);
 
   useEffect(() => {
     if (focusableElements.length > 0 && focusIndex >= 0) {
@@ -124,7 +183,7 @@ export default function Section({
     <>
       {section && section.items && (
         <article
-          className="mg-mega-content | mg-container-full-width"
+          className={`mg-mega-content${enableFilter && hasIntroduction ? ' mg-mega-content--filterable' : ''} | mg-container-full-width`}
           aria-label={sectionTitle}
           aria-live="polite"
           aria-hidden={!isActive}
@@ -136,6 +195,19 @@ export default function Section({
           onKeyDown={handleArrowFocus}
           role="region"
         >
+          {filtering && (
+            <MenuFinder
+              sections={sections}
+              query={filterQuery}
+              onQueryChange={setFilterQuery}
+              onBack={backToMenu}
+              labels={labels}
+              enableSiteSearch={enableSiteSearch}
+              searchUrl={searchUrl}
+              onNavigate={onNavigate}
+              onClose={onClose}
+            />
+          )}
           {/* Only show the left area if there are child items and heading */}
           {section.bannerHeading &&
             section.bannerDescription &&
@@ -146,69 +218,82 @@ export default function Section({
                 ref={asideRef}
                 tabIndex={0}
               >
-                <section className="mg-mega-content__banner">
-                  <header>{section.bannerHeading}</header>
-                  {/* Authored banner copy, rendered as-is so its links and
+                <div
+                  className={
+                    enableFilter
+                      ? 'mg-mega-content__left-scroll'
+                      : 'mg-mega-content__left-contents'
+                  }
+                >
+                  <section className="mg-mega-content__banner">
+                    <header>{section.bannerHeading}</header>
+                    {/* Authored banner copy, rendered as-is so its links and
                       inline markup survive. The `<` check routes between markup
                       and text; it does not filter. See the trust boundary note
                       at the top of this file. */}
-                  {section.bannerDescription.includes('<') ? (
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: section.bannerDescription,
-                      }}
-                    />
-                  ) : (
-                    <p>{section.bannerDescription}</p>
-                  )}
-                  {section.bannerButton?.label && (
-                    <a
-                      href={section.bannerButton.url}
-                      className="mg-button mg-button-primary"
-                    >
-                      {section.bannerButton.label}
-                    </a>
-                  )}
-                </section>
-                {section.items.length > 0 &&
-                section.items[0].items &&
-                section.items[0].items.length > 0 ? (
-                  <ul
-                    className="mg-mega-content__section-list"
-                    role="menu"
-                    aria-label="Categories"
-                  >
-                    {section.items.map((item, index) => (
-                      <li
-                        key={index}
-                        className="mg-mega-content__section-list-item"
-                        onMouseEnter={() => setItemIndex(index)}
-                        role="none"
+                    {section.bannerDescription.includes('<') ? (
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: section.bannerDescription,
+                        }}
+                      />
+                    ) : (
+                      <p>{section.bannerDescription}</p>
+                    )}
+                    {section.bannerButton?.label && (
+                      <a
+                        href={section.bannerButton.url}
+                        className="mg-button mg-button-primary"
                       >
-                        <a
-                          className={`mg-mega-content__section-list-link ${
-                            itemIndex === index
-                              ? 'mg-mega-content__section-list-link--active'
-                              : ''
-                          }`}
-                          href={item.url}
-                          aria-current={
-                            itemIndex === index ? 'page' : undefined
-                          }
-                          onFocus={() => setItemIndex(index)}
-                          role="menuitem"
-                          aria-haspopup={
-                            item.items && item.items.length > 0
-                              ? 'true'
-                              : undefined
-                          }
+                        {section.bannerButton.label}
+                      </a>
+                    )}
+                  </section>
+                  {section.items.length > 0 &&
+                  section.items[0].items &&
+                  section.items[0].items.length > 0 ? (
+                    <ul
+                      className="mg-mega-content__section-list"
+                      role="menu"
+                      aria-label="Categories"
+                    >
+                      {section.items.map((item, index) => (
+                        <li
+                          key={index}
+                          className="mg-mega-content__section-list-item"
+                          onMouseEnter={() => setItemIndex(index)}
+                          role="none"
                         >
-                          {item.title}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                ) : null}
+                          <a
+                            className={`mg-mega-content__section-list-link ${
+                              itemIndex === index
+                                ? 'mg-mega-content__section-list-link--active'
+                                : ''
+                            }`}
+                            href={item.url}
+                            aria-current={
+                              itemIndex === index ? 'page' : undefined
+                            }
+                            onFocus={() => setItemIndex(index)}
+                            role="menuitem"
+                            aria-haspopup={
+                              item.items && item.items.length > 0
+                                ? 'true'
+                                : undefined
+                            }
+                          >
+                            {item.title}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </div>
+                {enableFilter && (
+                  <div className="mg-mega-content__finder-footer">
+                    {finderTrigger}
+                  </div>
+                )}
               </nav>
             )}
           {section.items && (

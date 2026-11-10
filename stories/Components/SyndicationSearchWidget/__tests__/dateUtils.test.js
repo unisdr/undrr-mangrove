@@ -7,6 +7,7 @@ import {
   toDate,
   toDateTimeAttribute,
   formatEventDate,
+  formatDisplayDate,
 } from '../utils/dateUtils';
 
 describe('toDate', () => {
@@ -40,6 +41,31 @@ describe('toDate', () => {
   });
 });
 
+describe('formatDisplayDate', () => {
+  it.each([
+    [['2020-01-01T12:00:00Z'], ['year'], { text: '2020', dateTime: '2020' }],
+    [[-315576000], 'year', { text: '1960', dateTime: '1960' }],
+    [[0], 'year', { text: '1970', dateTime: '1970' }],
+    [
+      ['2020-12-31T12:00:00Z'],
+      'day',
+      { text: 'Dec 31, 2020', dateTime: '2020-12-31' },
+    ],
+  ])(
+    'preserves reader-facing date precision for %p',
+    (value, precision, expected) => {
+      expect(formatDisplayDate(value, precision)).toEqual(expected);
+    }
+  );
+
+  it.each([undefined, [], ['not a date']])(
+    'omits unusable dates (%p)',
+    value => {
+      expect(formatDisplayDate(value, 'year')).toBeNull();
+    }
+  );
+});
+
 describe('toDateTimeAttribute', () => {
   it('writes date-only values (12:00 or 00:00 UTC) as YYYY-MM-DD', () => {
     expect(toDateTimeAttribute(new Date('2025-11-12T12:00:00Z'))).toBe(
@@ -58,6 +84,17 @@ describe('toDateTimeAttribute', () => {
 });
 
 describe('formatEventDate', () => {
+  it('preserves historical public ranges while keeping the default timestamp rules', () => {
+    const start = Date.parse('1965-01-01T12:00:00Z') / 1000;
+    const end = Date.parse('1965-01-03T12:00:00Z') / 1000;
+    expect(formatEventDate([start], [end])).toBeNull();
+    const date = formatEventDate([start], [end], 'en-US', {
+      allowBeforeEpoch: true,
+    });
+    expect(date.text).toMatch(/Jan 1\s*–\s*3, 1965/);
+    expect(date.dateTime).toBe('1965-01-01');
+  });
+
   it('returns null without a usable start', () => {
     expect(formatEventDate([0], [1762948800])).toBeNull();
   });

@@ -158,6 +158,12 @@ customFacets: [
 
 <Canvas of={FiltersStories.CustomFacets} meta={FiltersStories} />
 
+### One search across result tabs
+
+A single-select custom facet with `display: 'tabs'` appears above the results as a labelled native radio group, styled as tabs. Set `defaultValue` to its initial option index (`'0'` for the first option). Switching keeps the search term and other filters, resets pagination, and scopes both results and facet counts. Clear all filters retains the selected tab. Give each option a unique, stable URL-safe `value` (`A–Z`, `a–z`, digits, `_` or `-`, up to 80 characters) such as `'upcoming'` or `'past'` to preserve the selection in links and browser history (`t.<facetId>=<value>`). Options without unique URL-safe values still work as controls but are omitted from links. Editing scope options preserves the reader’s non-default choice by value; changing an untouched default changes the scope and returns to page 1, without clearing other filters. Ordinary dropdown facets remain unchanged.
+
+<Canvas of={FiltersStories.EventPeriods} meta={FiltersStories} />
+
 **Structure:**
 
 ```json
@@ -177,6 +183,12 @@ customFacets: [
 | `weight`      | number  | Sort order (lower = higher)     |
 | `multiSelect` | boolean | Allow multiple selections       |
 | `options`     | array   | Array of `{label, query}` pairs |
+
+## Shared controls for separate result lists
+
+Opt into a group by giving each participating widget the same `sharedControls` object with an `id`, `visibleFilters`, `allowedTypes`, `customFacets`, `defaultFilters`, and `defaultQuery`. Its search term and selected filters update all members, including hidden and newly mounted displays. Each display retains its content restrictions, required result tabs, date basis, layout, sort, page size, and non-offered default filters. Changing shared selections or moving a display to another group resets it to page 1; Clear all keeps the search term and restores group defaults. Editing shared defaults preserves a visitor-selected sort unless the display’s configured sort changes.
+
+Place search and filter controls with the usual `searchTarget` and `facetsTarget` selectors. The shared filter options are the union of the members' available values, without misleading combined result counts. Each display retains its own Sort control. Group selections survive same-document remounts; stale options are removed when a member leaves, while selected values remain available even with no matching results. Integrations can build server snapshots with `buildInitialSearchQuery(config)`, which reads configuration defaults rather than live group selections. Grouped hydration uses the live group state and disables URL hash sync, avoiding competing per-display URL state. Existing widgets without `sharedControls` keep their previous behaviour.
 
 ## Custom filters and facets
 
@@ -247,6 +259,14 @@ The UNDRR index holds `event_start` and `event_end` date fields for `event` and 
 - **`defaultSort: 'eventDateAsc'`** (soonest first) or **`'eventDateDesc'`** (latest first) sorts by `event_start`. Results without an event date sort last in both directions, and ties (date-only events share 12:00 UTC) are broken by publish date, newest first, then `nid`, so paging is stable. The sort uses `unmapped_type: 'date'`, so it is safe on an index that doesn't have the field yet.
 
 The Sort dropdown offers the two event date sorts when `defaultSort` is one of them or the widget has encountered one during the current session (for example through a shared URL). Once available, both choices remain available after selecting a different sort or moving between layouts. Ordinary listings that have never used an event sort keep the standard choices, so they don't show sorts that would push every non-event to the end. To limit a listing to a date window, add a `customFilters` range such as `event_start:[2026-01-01 TO 2026-03-31]`.
+
+Set `yearField: 'display_date'` when the endpoint supplies each result's reader-facing date. This supports mixed listings: the same year can include an event that takes place that year, a document with that publication year, and news released that year. Both the selected-year filter and year counts use `display_date`. The endpoint owns which editorial field supplies it. Missing public dates stay absent; the widget does not substitute CMS publication timestamps.
+
+For the no-teaser fallback, supply `display_date_precision: 'year'` for year-only publications or `'day'` for complete dates. Search API may wrap these values in arrays. A year-only publication is displayed as `2020`, even though its indexed date uses January 1 for year filtering. Public dates are displayed in UTC to match year buckets; historical dates before 1970 are supported. Pre-rendered teaser HTML must use the same editorial date. Reindex existing documents before selecting this field.
+
+`newest` / `oldest` sorting and recency scoring continue to use `published_at`, independently of the reader-facing Year filter.
+
+Set `yearField: 'event_start'` on event-only endpoints that expose event dates but do not supply `display_date`. The default is `'published_at'` for general content. Event year means the UTC calendar year in which an event starts: a December–January event belongs to its starting year, regardless of its publication date. Events without a start date do not match a selected event year; the filter does not substitute publication metadata. Use a date-range query when you need events that overlap a period rather than events that start in it.
 
 In list mode without teaser HTML, event results show their event date (a range when the event runs over several days) instead of the publish date.
 
@@ -579,10 +599,7 @@ Rules:
   window (for the configured `resultsPerPage`) is ignored, and page 1 is shown.
 - **History.** Choosing a filter, a match mode, a sort order or a page adds a
   history entry. Typing a search query updates the current entry instead.
-- **Custom facets are not included.** Editor-defined facets (`customFacets`)
-  store selections by option position, so a link would select a different
-  option after an editor reorders, adds or removes options. They need stable
-  option IDs before they can be shared in the URL.
+- **Custom dropdown facets are not included.** They store selections by option position. Result tabs can use stable option `value` identifiers and sync through `t.<facetId>` parameters.
 
 Pages with more than one widget should leave hash sync on for at most one of
 them; the Drupal block's `auto` setting does this.
@@ -591,41 +608,46 @@ them; the Drupal block's `auto` setting does this.
 
 ### Config object
 
-| Prop                    | Type           | Default                                 | Description                                                                                                                                                                      |
-| ----------------------- | -------------- | --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `searchEndpoint`        | string         | `https://www.undrr.org/search-endpoint` | API endpoint for Elasticsearch queries. Its HTML is rendered unsanitised — see [Endpoint trust contract](#endpoint-trust-contract)                                               |
-| `taxonomyEndpoint`      | string         | PreventionWeb v1 taxonomy URL           | Taxonomy API for country, hazard and theme facet labels. See [Taxonomy endpoint](#taxonomy-endpoint)                                                                             |
-| `resultsPerPage`        | number         | 50                                      | Number of results to display per page                                                                                                                                            |
-| `debounceDelay`         | number         | 500                                     | Milliseconds to wait after typing before searching. Only typing is debounced: the first search, Enter, Clear, back/forward and filter, sort, page and config changes run at once |
-| `minSearchLength`       | number         | 3                                       | Minimum characters required to trigger search                                                                                                                                    |
-| `defaultQuery`          | string         | `''`                                    | Initial search query                                                                                                                                                             |
-| `defaultSort`           | string         | `'relevance'`                           | Initial sort order: `relevance`, `newest`, `oldest`, `eventDateAsc` or `eventDateDesc`. See [Event listings](#event-listings)                                                    |
-| `defaultFilters`        | array          | `[]`                                    | Default facet filters (array of `{key, value}`)                                                                                                                                  |
-| `showSearchBox`         | boolean        | `true`                                  | Show the search input                                                                                                                                                            |
-| `showResultsCount`      | boolean        | `true`                                  | Show "Showing X of Y results"                                                                                                                                                    |
-| `showSearchTimer`       | boolean        | `true`                                  | Show search execution time                                                                                                                                                       |
-| `showFacets`            | boolean        | `true`                                  | Show the facets sidebar                                                                                                                                                          |
-| `showActiveFilters`     | boolean        | `true`                                  | Show active filter chips                                                                                                                                                         |
-| `showSearchMetrics`     | boolean        | `false`                                 | Show debug metrics (score, etc.)                                                                                                                                                 |
-| `enableHashSync`        | string/boolean | `'auto'`                                | Sync search state to URL hash (see [URL hash](#url-hash))                                                                                                                        |
-| `visibleFilters`        | object         | `null`                                  | Control which filters are visible                                                                                                                                                |
-| `allowedTypes`          | object         | `null`                                  | Restrict content types shown                                                                                                                                                     |
-| `customFilters`         | array          | `[]`                                    | Additional Elasticsearch filters                                                                                                                                                 |
-| `customFacets`          | array          | `[]`                                    | Custom facet definitions                                                                                                                                                         |
-| `displayMode`           | string         | `'list'`                                | Result rendering style: `'list'`, `'card'`, or `'card-book'`                                                                                                                     |
-| `gridColumns`           | number         | `null`                                  | Grid columns for card modes (2-6). `null` = use `resultsPerPage`                                                                                                                 |
-| `visibleTeaserFields`   | object         | `null`                                  | Toggle teaser field visibility (`{image: false, ...}`). `null` = all visible                                                                                                     |
-| `requireImage`          | boolean        | `false`                                 | Only return results that have an image (`has_image:true` ES filter)                                                                                                              |
-| `interestingnessTiers`  | array          | `[]`                                    | Restrict by editorial weight tiers (e.g., `['promoted', 'announced']`)                                                                                                           |
-| `longevityTiers`        | array          | `[]`                                    | Restrict by content freshness tiers (e.g., `['year', 'longtime', 'always']`)                                                                                                     |
-| `analyticsRegionPrefix` | string         | `'undrr-search'`                        | Stem for the analytics regions (`<prefix>-form`, `-results`, `-facets`). See [Analytics regions](#analytics-regions)                                                             |
-| `onResults`             | function       | —                                       | Called after each completed search with `{ total, query, page }`. See [Results notification](#results-notification)                                                              |
-| `sourceFields`          | array          | `SOURCE_FIELDS`                         | `_source` fields requested per hit; the default is what the widget renders. Set only for an endpoint whose hits need other fields                                                |
-| `ssrResults`            | Element        | —                                       | Server-rendered results to keep on screen until the first client results. See [Server-rendered results](#server-rendered-results)                                                |
-| `facetsTarget`          | string         | `null`                                  | CSS selector for an element outside the widget to render the facets into (Drupal: `data-facets-target`)                                                                          |
-| `searchTarget`          | string         | `null`                                  | CSS selector for an element outside the widget to render the search input into (Drupal: `data-search-target`)                                                                    |
+| Prop                    | Type           | Default                                 | Description                                                                                                                                                                                              |
+| ----------------------- | -------------- | --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `searchEndpoint`        | string         | `https://www.undrr.org/search-endpoint` | API endpoint for Elasticsearch queries. Its HTML is rendered unsanitised — see [Endpoint trust contract](#endpoint-trust-contract)                                                                       |
+| `taxonomyEndpoint`      | string         | PreventionWeb v1 taxonomy URL           | Taxonomy API for country, hazard and theme facet labels. See [Taxonomy endpoint](#taxonomy-endpoint)                                                                                                     |
+| `resultsPerPage`        | number         | 50                                      | Number of results to display per page                                                                                                                                                                    |
+| `debounceDelay`         | number         | 500                                     | Milliseconds to wait after typing before searching. Only typing is debounced: the first search, Enter, Clear, back/forward and filter, sort, page and config changes run at once                         |
+| `minSearchLength`       | number         | 3                                       | Minimum characters required to trigger search                                                                                                                                                            |
+| `defaultQuery`          | string         | `''`                                    | Initial search query                                                                                                                                                                                     |
+| `yearField`             | string         | `'published_at'`                        | Date field used for Year filtering and counts: `'published_at'`, `'event_start'`, or `'display_date'`. The latter also supplies fallback result dates, with `display_date_precision: 'year'` or `'day'`. |
+| `defaultSort`           | string         | `'relevance'`                           | Initial sort order: `relevance`, `newest`, `oldest`, `eventDateAsc` or `eventDateDesc`. See [Event listings](#event-listings)                                                                            |
+| `defaultFilters`        | array          | `[]`                                    | Default facet filters (array of `{key, value}`)                                                                                                                                                          |
+| `showSearchBox`         | boolean        | `true`                                  | Show the search input                                                                                                                                                                                    |
+| `showResultsCount`      | boolean        | `true`                                  | Show "Showing X of Y results"                                                                                                                                                                            |
+| `showSearchTimer`       | boolean        | `true`                                  | Show search execution time                                                                                                                                                                               |
+| `showFacets`            | boolean        | `true`                                  | Show the facets sidebar                                                                                                                                                                                  |
+| `showActiveFilters`     | boolean        | `true`                                  | Show active filter chips                                                                                                                                                                                 |
+| `showSearchMetrics`     | boolean        | `false`                                 | Show debug metrics (score, etc.)                                                                                                                                                                         |
+| `enableHashSync`        | string/boolean | `'auto'`                                | Sync search state to URL hash (see [URL hash](#url-hash))                                                                                                                                                |
+| `visibleFilters`        | object         | `null`                                  | Control which filters are visible                                                                                                                                                                        |
+| `allowedTypes`          | object         | `null`                                  | Restrict content types shown                                                                                                                                                                             |
+| `customFilters`         | array          | `[]`                                    | Additional Elasticsearch filters                                                                                                                                                                         |
+| `customFacets`          | array          | `[]`                                    | Custom facet definitions                                                                                                                                                                                 |
+| `displayMode`           | string         | `'list'`                                | Result rendering style: `'list'`, `'card'`, or `'card-book'`                                                                                                                                             |
+| `gridColumns`           | number         | `null`                                  | Grid columns for card modes (2-6). `null` = use `resultsPerPage`                                                                                                                                         |
+| `visibleTeaserFields`   | object         | `null`                                  | Toggle teaser field visibility (`{image: false, ...}`). `null` = all visible                                                                                                                             |
+| `requireImage`          | boolean        | `false`                                 | Only return results that have an image (`has_image:true` ES filter)                                                                                                                                      |
+| `interestingnessTiers`  | array          | `[]`                                    | Restrict by editorial weight tiers (e.g., `['promoted', 'announced']`)                                                                                                                                   |
+| `longevityTiers`        | array          | `[]`                                    | Restrict by content freshness tiers (e.g., `['year', 'longtime', 'always']`)                                                                                                                             |
+| `analyticsRegionPrefix` | string         | `'undrr-search'`                        | Stem for the analytics regions (`<prefix>-form`, `-results`, `-facets`). See [Analytics regions](#analytics-regions)                                                                                     |
+| `onResults`             | function       | —                                       | Called after each completed search with `{ total, query, page }`. See [Results notification](#results-notification)                                                                                      |
+| `sourceFields`          | array          | `SOURCE_FIELDS`                         | `_source` fields requested per hit; the default is what the widget renders. Set only for an endpoint whose hits need other fields                                                                        |
+| `ssrResults`            | Element        | —                                       | Server-rendered results to keep on screen until the first client results. See [Server-rendered results](#server-rendered-results)                                                                        |
+| `facetsTarget`          | string         | `null`                                  | CSS selector for an element outside the widget to render the facets into (Drupal: `data-facets-target`)                                                                                                  |
+| `searchTarget`          | string         | `null`                                  | CSS selector for an element outside the widget to render the search input into (Drupal: `data-search-target`)                                                                                            |
 
 `facetsTarget` and `searchTarget` are matched in the document the widget is mounted in, not the global `document`. On a normal page these are the same document. They differ when the widget renders inside an iframe while its script runs in the parent window, as in a block editor canvas (Drupal's Gutenberg 4 editor, for example): the targets are found in the iframe, next to the widget. The same applies to the widget's other document lookups: the pager's scroll back to the results, the dropdown backdrop, and the mobile filter drawer's scroll lock and Escape key handling. A target that exists only in another document is not found, and the widget falls back to its in-widget layout with a console warning.
+
+When widgets share a target, only the first visible widget in document order renders controls there. Hidden tab and disclosure widgets keep their state and resume ownership when shown. Use separate targets when two result lists must be controlled at once. Visibility follows `hidden`, `aria-hidden`, and ancestor display/visibility styles, rather than viewport position. Missing targets retain the in-widget fallback.
+
+Compatibility: earlier versions rendered controls from every widget sharing a target. If an existing page intentionally places controls for several simultaneously visible lists in one container, give each widget its own target before upgrading. Single-widget targets and in-widget controls keep their existing behaviour. Existing year filters continue to use CMS publication dates unless `yearField: 'event_start'` or `'display_date'` is explicitly configured. Select `display_date` only after the endpoint has indexed the reader-facing dates and aligned its teaser HTML; a missing public date produces no year bucket or fallback date.
 
 ## Analytics regions
 
@@ -773,6 +795,7 @@ SyndicationSearchWidget supports [layered hydration](https://github.com/Preventi
 | `data-debounce-delay`          |         | Milliseconds before executing search                                                                                                |
 | `data-min-search-length`       |         | Minimum characters to trigger search                                                                                                |
 | `data-default-query`           |         | Initial search query                                                                                                                |
+| `data-year-field`              |         | Year filter date basis: `published_at` (default), `event_start`, or `display_date`                                                  |
 | `data-default-sort`            |         | Initial sort order                                                                                                                  |
 | `data-display-mode`            |         | `'list'`, `'card'`, or `'card-book'`                                                                                                |
 | `data-grid-columns`            |         | Grid columns for card modes (2-6)                                                                                                   |
@@ -801,10 +824,10 @@ SyndicationSearchWidget supports [layered hydration](https://github.com/Preventi
 All attributes are optional. Only attributes present on the container are included in the config; the component uses its own defaults for anything missing.
 
 ```js
-import createHydrator from 'https://assets.undrr.org/mangrove/2.3.0/components/hydrate.js';
+import createHydrator from 'https://assets.undrr.org/mangrove/2.4.0/components/hydrate.js';
 import SyndicationSearchWidget, {
   fromElement,
-} from 'https://assets.undrr.org/mangrove/2.3.0/components/SyndicationSearchWidget.js';
+} from 'https://assets.undrr.org/mangrove/2.4.0/components/SyndicationSearchWidget.js';
 createHydrator({
   selector: '[data-mg-search-widget]',
   component: SyndicationSearchWidget,
@@ -932,6 +955,12 @@ pass `dir` explicitly when external search or facet portals cross direction
 boundaries: a DOM portal cannot inherit direction from the widget's ancestors.
 
 ## Changelog
+
+- **1.8.0**, 2026-11-09 ([undrr/web-backlog#3310](https://gitlab.com/undrr/web-backlog/-/work_items/3310)): Set `showSort: false` to hide the visitor sort selector while retaining the configured order. Opt-in shared controls connect independently scoped displays to one query and filter selection without sharing sort or hidden defaults. Shared-default edits retain visitor sorting unless the configured sort changes; switching groups resets pagination even when their revision numbers match. Required result tabs keep a single search and filter configuration across Upcoming/Previous or other scopes. Stable option values support links and browser history; selected scopes remain in place when filters are cleared. Scope configuration edits retain other filters and sort order, preserve non-default selections by value, and reset pagination when the scope changes. Radio targets are at least 44px, with visible keyboard focus and disabled states.
+
+- **1.7.0**, 2026-11-09 ([undrr/web-backlog#3310](https://gitlab.com/undrr/web-backlog/-/work_items/3310)): Listings can use `yearField: 'display_date'` to align Year filters, counts, and fallback dates with reader-facing editorial dates across content types. Year-only publications preserve year precision, and missing public dates do not fall back to CMS timestamps. Historical public event ranges retain both dates. Event-only endpoints can still select `event_start`; the default remains `published_at` for existing consumers. Shared external controls render only for the first visible owner and transfer between tabs without resetting each widget's search state. Pages that need controls for several visible lists must provide separate targets.
+
+- **1.6.1**, 2026-10-29 ([#1432](https://github.com/unisdr/undrr-mangrove/issues/1432)): Result-type labels, filter connectors and example headings preserve authored case instead of forcing uppercase. Query operators retain their required authored syntax.
 
 - **1.6**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance.
 

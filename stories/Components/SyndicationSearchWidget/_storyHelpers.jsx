@@ -40,7 +40,6 @@ export const withInlineDescription = (Story, context) => {
             fontWeight: '600',
             marginBottom: '0.5rem',
             color: '#0969da',
-            textTransform: 'uppercase',
             letterSpacing: '0.05em',
           }}
         >
