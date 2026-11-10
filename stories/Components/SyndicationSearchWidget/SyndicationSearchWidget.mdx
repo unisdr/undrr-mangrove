@@ -935,7 +935,7 @@ does not change group order; a new response can still change aggregation order.
 The collapsed summary retains the parent name for a selected subtype. Type
 selections continue to use OR: selecting News and Update includes all News.
 
-When a parent is selected, unselected children have a tinted row and half-filled
+When a parent is selected, unselected children have a tinted row and pale checked
 indicator to show inherited inclusion. Explicitly selected children retain a full
 checkmark. A parent with explicitly selected subtypes, but no parent selection,
 has a dash to show partial selection. These states have localized screen-reader
@@ -972,7 +972,7 @@ boundaries: a DOM portal cannot inherit direction from the widget's ancestors.
 
 ## Changelog
 
-- **1.8.1**, 2026-11-10 ([#1468](https://github.com/unisdr/undrr-mangrove/issues/1468)): Keep Type parents and subtypes together when selections change, including retained selections missing from current results. Selected subtypes retain their indentation and summary context. Keyboard highlighting follows the option value through asynchronous updates. Inherited children show a tint and half-filled indicator; parents with selected subtypes show a dash, with localized accessible descriptions.
+- **1.8.1**, 2026-11-10 ([#1468](https://github.com/unisdr/undrr-mangrove/issues/1468)): Keep Type parents and subtypes together when selections change, including retained selections missing from current results. Selected subtypes retain their indentation and summary context. Keyboard highlighting follows the option value through asynchronous updates. Inherited children show a tint and pale checked indicator; parents with selected subtypes show a dash, with localized accessible descriptions.
 
 - **1.8.0**, 2026-11-09 ([undrr/web-backlog#3310](https://gitlab.com/undrr/web-backlog/-/work_items/3310)): Set `showSort: false` to hide the visitor sort selector while retaining the configured order. Opt-in shared controls connect independently scoped displays to one query and filter selection without sharing sort or hidden defaults. Shared-default edits retain visitor sorting unless the configured sort changes; switching groups resets pagination even when their revision numbers match. Required result tabs keep a single search and filter configuration across Upcoming/Previous or other scopes. Stable option values support links and browser history; selected scopes remain in place when filters are cleared. Scope configuration edits retain other filters and sort order, preserve non-default selections by value, and reset pagination when the scope changes. Radio targets are at least 44px, with visible keyboard focus and disabled states.
 

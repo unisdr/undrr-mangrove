@@ -1298,7 +1298,7 @@ $search-input-padding-x: mg-rem(44);
 }
 
 // Inclusion inherited from a parent is distinct from an explicit selection.
-// Shapes carry the state as well as tint, including in forced colours.
+// A pale checked box inherits inclusion; an explicit selection has a solid box.
 .mg-select__option--inherited {
   background-color: rgb(var(--mg-color-form-check--checked) / 0.05);
 
@@ -1318,6 +1318,16 @@ $search-input-padding-x: mg-rem(44);
       border-color: CanvasText;
       color: CanvasText;
     }
+  }
+}
+
+// Preserve the pale/solid distinction using system colours in high contrast.
+@media (forced-colors: active) {
+  .mg-select__option--selected .mg-select__indicator {
+    forced-color-adjust: none;
+    border-color: Highlight;
+    background-color: Highlight;
+    color: HighlightText;
   }
 }
 

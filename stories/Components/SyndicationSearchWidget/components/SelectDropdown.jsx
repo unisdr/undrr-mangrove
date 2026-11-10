@@ -390,7 +390,12 @@ export function SelectDropdown({
                           fill="currentColor"
                         >
                           {option.selectionState === 'inherited' ? (
-                            <path d="M1 6h10v5H1z" />
+                            <path
+                              d="M10 3L4.5 8.5L2 6"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              fill="none"
+                            />
                           ) : (
                             <path d="M2 5h8v2H2z" />
                           )}
