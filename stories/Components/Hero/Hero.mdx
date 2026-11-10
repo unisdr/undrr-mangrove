@@ -176,6 +176,8 @@ should respect parent width. Content can include `logo` and `buttons`.
 
 ## Changelog
 
+- **1.10.2**, 2026-11-09 ([undrr/web-backlog#3168](https://gitlab.com/undrr/web-backlog/-/work_items/3168)): Hero titles explicitly reset their top margin and letter spacing, preserving the wrapped title’s appearance when `mg-hero__title` moves onto an `h1`–`h6`. The reset applies in every theme; font, size, colour and bottom spacing keep their existing theme routing.
+
 - **1.10.1**, 2026-10-29 ([#1432](https://github.com/unisdr/undrr-mangrove/issues/1432)): The custom-composition example preserves the authored sentence case of its eyebrow label instead of forcing uppercase.
 
 - **1.10.0**, 2026-10-14 ([undrr/web-backlog#2728](https://gitlab.com/undrr/web-backlog/-/work_items/2728)): New `variant="neutral"`: the page's white surface, `--mg-color-text` copy, underlined `--mg-color-interactive` links and ordinary page buttons, for a split page header that should not read as a coloured band. In the background layout it drops the photograph, and the stylesheet enforces that for markup with an inline image. On a phone its split image is a short banner above the copy. `label` and `detail` accept a React node as well as a string, so each can hold links. A new `tags` field renders a list of outline tags named "Topics" (`tagsLabel` to change it) that read on every variant, and tags with a Tag modifier keep it. `summaryText` is optional, and buttons accept `analyticsLabel`. Strings, and heroes without these fields, render as before, except that a hero with no `summaryText` no longer renders an empty summary block.
