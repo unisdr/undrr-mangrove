@@ -36,6 +36,13 @@ export default function syndicationSearchWidgetFromElement(container) {
   if (dataset.analyticsRegionPrefix)
     config.analyticsRegionPrefix = dataset.analyticsRegionPrefix;
 
+  if (dataset.showExport !== undefined)
+    config.showExport = dataset.showExport === 'true';
+  if (dataset.exportLimit !== undefined)
+    config.exportLimit = Number(dataset.exportLimit);
+  if (dataset.exportContactUrl)
+    config.exportContactUrl = dataset.exportContactUrl;
+
   // Boolean props (only set if explicitly present)
   if (dataset.showSort !== undefined)
     config.showSort = dataset.showSort !== 'false';

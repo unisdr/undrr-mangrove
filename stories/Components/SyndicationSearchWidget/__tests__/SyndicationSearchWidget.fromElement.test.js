@@ -306,3 +306,24 @@ test('reads only an explicit valid shared-controls group from JSON', () => {
     'sharedControls'
   );
 });
+
+test('reads opt-in export settings without requiring a Drupal endpoint change', () => {
+  expect(
+    syndicationSearchWidgetFromElement(
+      makeContainer({
+        'show-export': 'true',
+        'export-limit': '10',
+        'export-contact-url': '/contact',
+      })
+    ).config
+  ).toEqual({
+    showExport: true,
+    exportLimit: 10,
+    exportContactUrl: '/contact',
+  });
+  expect(
+    syndicationSearchWidgetFromElement(
+      makeContainer({ 'show-export': 'false' })
+    ).config.showExport
+  ).toBe(false);
+});

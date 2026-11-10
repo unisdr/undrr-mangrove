@@ -623,6 +623,9 @@ export const DEFAULT_CONFIG = {
 
   // UI element visibility
   showSort: true,
+  showExport: false,
+  exportLimit: 100,
+  exportContactUrl: 'https://www.preventionweb.net/contact',
   showSearchBox: true,
   showResultsCount: true,
   showSearchTimer: false,

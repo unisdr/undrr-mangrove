@@ -5,6 +5,7 @@ import * as DisplayModesStories from './SyndicationSearchWidget.DisplayModes.sto
 import * as FiltersStories from './SyndicationSearchWidget.Filters.stories';
 import * as IntegrationsStories from './SyndicationSearchWidget.Integrations.stories';
 import * as TogglesStories from './SyndicationSearchWidget.Toggles.stories';
+import * as ExportStories from './SyndicationSearchWidget.Export.stories';
 import * as MotionStories from './SyndicationSearchWidget.Motion.stories';
 
 <Meta of={SyndicationSearchWidgetStories} />
@@ -604,6 +605,58 @@ Rules:
 Pages with more than one widget should leave hash sync on for at most one of
 them; the Drupal block's `auto` setting does this.
 
+## Download search metadata
+
+Enable `config.showExport` to add **Download results (CSV)** and **Download results (JSON)** below the results. This opt-in feature addresses [undrr/web-backlog#3314](https://gitlab.com/undrr/web-backlog/-/work_items/3314). Existing widgets remain unchanged.
+
+Downloads contain up to the first `config.exportLimit` matching records across search pages, using the current query, filters, result scope and sort order. The default limit is 100, with a hard maximum of 1,000. It is an overall download cap, independent of `resultsPerPage`. Invalid or non-positive limits fall back to 100; positive fractional limits round down. The controls describe the cap before use, and the completion message reports the fresh matching total and whether the download was capped. A limited download is never presented as the full dataset.
+
+<Canvas of={ExportStories.DownloadResults} />
+
+```jsx
+<SyndicationSearchWidget
+  config={{
+    showExport: true,
+    exportLimit: 100,
+    exportContactUrl: 'https://www.preventionweb.net/contact',
+    customFilters: ['type:publication'],
+    defaultSort: 'newest',
+  }}
+/>
+```
+
+The same configuration can provide an editor-defined list, for example the latest ten publications, with `exportLimit: 10`, `defaultSort: 'newest'`, a publication filter and optional search controls hidden. This first version reuses the widget's configuration; it does not introduce a separate query builder or field picker.
+
+### Formats and fields
+
+CSV is intended for spreadsheets and has a UTF-8 byte order mark, quoted cells and CRLF record endings. Multi-value taxonomy fields contain JSON arrays of string IDs inside their CSV cells. Cells that could be interpreted as spreadsheet formulas receive a leading apostrophe; JSON retains the original text values. JSON includes `schemaVersion`, `exportedAt` (UTC), `scope` (`limit`, `count`, exact `total`, `limited`) and `records`.
+
+Both formats use the following fixed metadata projection. Missing scalar values are empty strings; missing multi-value fields are empty arrays. The export excludes teaser/body HTML, scoring fields and other index internals. This is a search metadata export rather than a complete bibliographic record or a download of publication files.
+
+| Field                                           | Meaning                                                                                                                        |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `id`                                            | Search document identifier, falling back to the node ID when absent.                                                           |
+| `title`                                         | Indexed title with character entities decoded.                                                                                 |
+| `url`                                           | Absolute HTTP(S) content URL resolved using the result's domain, matching the search result domain rules.                      |
+| `type`                                          | Indexed content type, or vocabulary for taxonomy results.                                                                      |
+| `language`                                      | Indexed content language; independent of the UI language.                                                                      |
+| `posted_at`                                     | Indexed `published_at` as a UTC ISO timestamp: the website posting date, not necessarily the publication's bibliographic date. |
+| `display_date`                                  | Indexed reader-facing date as `YYYY-MM-DD`, or `YYYY` for year precision. No posting-date fallback.                            |
+| `display_date_precision`                        | Indexed precision describing the reader-facing date.                                                                           |
+| `country_region_ids`, `hazard_ids`, `theme_ids` | Indexed taxonomy identifiers, not translated labels. Resolving labels or adding publisher metadata is follow-up scope.         |
+
+### Interaction and limits
+
+The widget makes one bounded request through its existing search endpoint, starting at the first match, retaining publication/domain/language constraints and active facet filters. It requests only the metadata above, without facet aggregations or highlights. Export requests ask for exact totals and reject timed-out, failed-shard, malformed or incomplete responses instead of producing a misleading partial file. The cap is not an access-control boundary; endpoint owners remain responsible for server-side access and resource limits.
+
+Downloads are unavailable while search is loading, the input is unsettled, a search has failed or no matches are known. During preparation the buttons remain focusable with `aria-disabled`, repeat activation is ignored, and a nearby status announces progress. Changes to the query, filters, sort or raw input cancel an in-flight export; unmount also cancels it. Empty responses and failures announce clear messages, and failures allow retry. A dated filename identifies the generated format; “download prepared” means the browser was asked to download, not that the file was saved successfully.
+
+The adjacent contact prompt remains visible for users needing more data or ongoing access. `exportContactUrl` selects the contact route; its default is the PreventionWeb contact page. The prompt offers help arranging an export or facilitating API access; it does not provision access. A dedicated backend export service, background jobs, field selection and API access arrangements are separate follow-up work. Drupal needs only release/configuration integration unless required metadata is missing from the index or editor controls are desired.
+
+All export UI copy is part of the existing runtime catalogue (`exportRegion`, `exportCsv`, `exportJson`, `exportScope`, `exportContact`, `exportContactLink`, `exportLoading`, `exportComplete`, `exportLimited`, `exportEmpty`, `exportError`), with the usual `lang` selection and `labels` overrides. New translations require native-speaker review. No motion is added; layout wraps across small screens and follows the existing theme and direction.
+
+Hydration accepts `data-show-export="true"`, `data-export-limit="100"` and `data-export-contact-url="/contact"` through the published `fromElement` adapter. Drupal wrappers that construct their own config must forward these options before editors can enable them.
+
 ## Props
 
 ### Config object
@@ -977,6 +1030,8 @@ pass `dir` explicitly when external search or facet portals cross direction
 boundaries: a DOM portal cannot inherit direction from the widget's ancestors.
 
 ## Changelog
+
+- **1.9.0**, 2026-11-10 ([undrr/web-backlog#3314](https://gitlab.com/undrr/web-backlog/-/work_items/3314)): Add opt-in bounded CSV/JSON search metadata downloads with fixed fields, explicit scope and cap reporting, request cancellation, translated status messages, hydration settings and a contact route for larger data needs. Existing widgets retain their current behaviour.
 
 - **1.8.1**, 2026-11-10 ([#1468](https://github.com/unisdr/undrr-mangrove/issues/1468)): Keep Type parents and subtypes together when selections change, including retained selections missing from current results. Selected subtypes retain their indentation and summary context. Keyboard highlighting follows the option value through asynchronous updates. Inherited children show a tint and pale checked indicator; parents with selected subtypes show a dash, with localized accessible descriptions. Search fields persist for the open dropdown session, pointer selection retains keyboard focus, and Escape dismisses the dropdown before its enclosing filter drawer.
 
