@@ -69,7 +69,7 @@ export function SelectDropdown({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const [highlightedValue, setHighlightedValue] = useState(null);
 
   const containerRef = useRef(null);
   const triggerRef = useRef(null);
@@ -86,10 +86,6 @@ export function SelectDropdown({
     [selectId]
   );
 
-  // Current active descendant for screen readers
-  const activeDescendant =
-    isOpen && highlightedIndex >= 0 ? getOptionId(highlightedIndex) : undefined;
-
   // Normalize value to array for consistent handling
   const selectedValues = useMemo(() => {
     if (Array.isArray(value)) return value;
@@ -103,6 +99,16 @@ export function SelectDropdown({
     const query = searchQuery.toLowerCase();
     return options.filter(opt => opt.label.toLowerCase().includes(query));
   }, [options, searchQuery]);
+
+  // Track keyboard identity by value so asynchronous count/order changes do
+  // not redirect Enter to another option. Removed options have no descendant.
+  const highlightedIndex = filteredOptions.findIndex(
+    option => option.value === highlightedValue
+  );
+
+  // Current active descendant for screen readers
+  const activeDescendant =
+    isOpen && highlightedIndex >= 0 ? getOptionId(highlightedIndex) : undefined;
 
   // Show search input when we have many options
   const showSearch = options.length > searchThreshold;
@@ -132,11 +138,6 @@ export function SelectDropdown({
       searchInputRef.current.focus();
     }
   }, [isOpen, showSearch]);
-
-  // Reset highlighted index when options change
-  useEffect(() => {
-    setHighlightedIndex(-1);
-  }, [filteredOptions.length]);
 
   // Handle option selection (declared before handleKeyDown which references it)
   const handleOptionClick = useCallback(
@@ -177,15 +178,23 @@ export function SelectDropdown({
 
         case 'ArrowDown':
           e.preventDefault();
-          setHighlightedIndex(prev =>
-            prev < filteredOptions.length - 1 ? prev + 1 : 0
+          setHighlightedValue(
+            filteredOptions[
+              highlightedIndex < filteredOptions.length - 1
+                ? highlightedIndex + 1
+                : 0
+            ]?.value ?? null
           );
           break;
 
         case 'ArrowUp':
           e.preventDefault();
-          setHighlightedIndex(prev =>
-            prev > 0 ? prev - 1 : filteredOptions.length - 1
+          setHighlightedValue(
+            filteredOptions[
+              highlightedIndex > 0
+                ? highlightedIndex - 1
+                : filteredOptions.length - 1
+            ]?.value ?? null
           );
           break;
 
@@ -228,10 +237,17 @@ export function SelectDropdown({
   }, [isOpen]);
 
   // Handle search input change
-  const handleSearchChange = useCallback(e => {
-    setSearchQuery(e.target.value);
-    setHighlightedIndex(0);
-  }, []);
+  const handleSearchChange = useCallback(
+    e => {
+      const query = e.target.value.toLowerCase();
+      setSearchQuery(e.target.value);
+      setHighlightedValue(
+        options.find(option => option.label.toLowerCase().includes(query))
+          ?.value ?? null
+      );
+    },
+    [options]
+  );
 
   // Check if option is selected
   const isSelected = useCallback(
@@ -322,7 +338,7 @@ export function SelectDropdown({
             // keyboard highlight so two options don't both look current;
             // after that, pointer movement costs no renders.
             onPointerMove={() => {
-              if (highlightedIndex !== -1) setHighlightedIndex(-1);
+              if (highlightedIndex !== -1) setHighlightedValue(null);
             }}
           >
             {filteredOptions.length === 0 ? (
@@ -337,9 +353,7 @@ export function SelectDropdown({
                       ? 'mg-select__option--selected'
                       : ''
                   } ${index === highlightedIndex ? 'mg-select__option--highlighted' : ''} ${
-                    option.isSubtype && !isSelected(option.value)
-                      ? 'mg-select__option--subtype'
-                      : ''
+                    option.isSubtype ? 'mg-select__option--subtype' : ''
                   }`}
                   role="option"
                   aria-selected={isSelected(option.value)}

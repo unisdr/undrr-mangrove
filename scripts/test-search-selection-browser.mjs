@@ -173,7 +173,12 @@ try {
     );
     await page.close();
     for (const mobile of [true, false]) {
-      for (const reducedMotion of ['no-preference', 'reduce']) {
+      for (const { reducedMotion, locale } of [
+        'no-preference',
+        'reduce',
+      ].flatMap(reducedMotion =>
+        ['english', 'arabic'].map(locale => ({ reducedMotion, locale }))
+      )) {
         const page = await browser.newPage({
           viewport: mobile
             ? { width: 390, height: 844 }
@@ -184,7 +189,11 @@ try {
         });
         const input = locator => (mobile ? locator.tap() : locator.click());
         await page.goto(
-          `${base}/iframe.html?id=components-syndicated-search--filter-selection&viewMode=story&globals=${encodeURIComponent(`theme:${theme}`)}`
+          `${base}/iframe.html?id=components-syndicated-search--filter-selection&viewMode=story&globals=${encodeURIComponent(`theme:${theme};locale:${locale}`)}`
+        );
+        await page.waitForFunction(
+          expected => document.documentElement.dir === expected,
+          locale === 'arabic' ? 'rtl' : 'ltr'
         );
         if (mobile)
           await input(
@@ -193,6 +202,63 @@ try {
         const surface = page.locator(
           mobile ? '.mg-search__drawer' : '.mg-search__sidebar'
         );
+        const type = surface
+          .locator('[data-facet-key="type"]')
+          .getByRole('button');
+        // Parent and child selections must retain the same order in the real
+        // mobile drawer and desktop sidebar, across all themes and motion modes.
+        await input(type);
+        const optionLabels = () =>
+          page
+            .locator('[role="listbox"] .mg-select__option-label')
+            .allTextContents();
+        const original = await optionLabels();
+        assert.equal(original.length, 5);
+        await input(page.getByRole('option', { name: /^News 10$/ }));
+        assert.deepEqual(await optionLabels(), original);
+        await input(page.getByRole('option', { name: /Update 7$/ }));
+        const selectedLabels = await optionLabels();
+        assert.deepEqual(
+          selectedLabels,
+          original.map(label => (label === 'Update' ? 'News: Update' : label))
+        );
+        const subtype = page.getByRole('option', { name: /News: Update 7$/ });
+        assert.equal(await subtype.getAttribute('aria-selected'), 'true');
+        assert(
+          await subtype.evaluate(el =>
+            el.classList.contains('mg-select__option--subtype')
+          )
+        );
+        const indent = await subtype.evaluate(
+          el => getComputedStyle(el).paddingInlineStart
+        );
+        assert(parseFloat(indent) > 0);
+        if (theme === themes[0] && reducedMotion === 'no-preference') {
+          await page.screenshot({
+            path: `/tmp/mangrove-1468-${mobile ? 'mobile' : 'desktop'}-${locale}.png`,
+            fullPage: true,
+          });
+        }
+        await type.focus();
+        await page.keyboard.press('Escape');
+        // Escape also dismisses the enclosing mobile drawer.
+        if (mobile)
+          await input(
+            page.getByRole('button', { name: 'Filters', exact: true })
+          );
+        await input(type);
+        assert.deepEqual(await optionLabels(), selectedLabels);
+        await input(page.getByRole('option', { name: /News: Update 7$/ }));
+        await input(page.getByRole('option', { name: /^News 10$/ }));
+        assert.deepEqual(await optionLabels(), original);
+        await type.focus();
+        await page.keyboard.press('Escape');
+        // Escape also dismisses the enclosing mobile drawer.
+        if (mobile)
+          await input(
+            page.getByRole('button', { name: 'Filters', exact: true })
+          );
+
         const region = surface.getByRole('button', {
           name: 'Region',
           exact: true,
@@ -249,7 +315,7 @@ try {
           assert.equal(await surface.count(), 0);
         }
         console.log(
-          `${engine}: ${theme}, ${mobile ? 'touch drawer' : 'desktop mouse'}, ${reducedMotion}: passed`
+          `${engine}: ${theme}, ${mobile ? 'touch drawer' : 'desktop mouse'}, ${reducedMotion}, ${locale}: passed`
         );
         await page.close();
       }

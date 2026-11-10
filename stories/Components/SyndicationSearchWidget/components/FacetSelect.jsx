@@ -254,16 +254,22 @@ function FacetSelectComponent({
     // Combine options
     const allOptions = [...bucketOptions, ...missingSelectedOptions];
 
-    // For type facet, preserve hierarchical order (parent-child grouping)
-    // Only float selected items to top, don't re-sort by count
+    // Keep the aggregation's group order, including retained selections that
+    // have no bucket in the latest response. Never synthesize a missing parent.
     if (isTypeFacet) {
-      return allOptions.sort((a, b) => {
-        // Selected items float to top
-        if (a.isSelected && !b.isSelected) return -1;
-        if (!a.isSelected && b.isSelected) return 1;
-        // Keep original hierarchical order for same selection state
-        return 0;
-      });
+      const groups = new Map();
+      for (const option of allOptions) {
+        const groupKey =
+          option.isSubtype && option.parentType
+            ? option.parentType
+            : option.value;
+        if (!groups.has(groupKey)) groups.set(groupKey, []);
+        groups.get(groupKey).push(option);
+      }
+      return Array.from(groups.values()).flatMap(group => [
+        ...group.filter(option => !option.isSubtype),
+        ...group.filter(option => option.isSubtype),
+      ]);
     }
 
     // Year: selected first, then newest first
