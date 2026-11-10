@@ -4,7 +4,10 @@
 
 Mangrove hydrates React components into server-rendered containers (`data-mg-*`). Use `createHydrator` to query DOM nodes, extract props with `fromElement`, manage roots, and recover original HTML on mount errors.
 
-Related: [GitHub issue #803](https://github.com/unisdr/undrr-mangrove/issues/803) · Component authoring guide: [Adding hydration support](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-hydration--docs).
+Use this guide when integrating existing components into server-rendered HTML.
+For a complete browser page with CSS and an import map, start with the
+[vanilla HTML guide](https://mangrove.undrr.org/?path=/docs/getting-started-integration-vanilla-html-and-css--docs#complete-html-page).
+To add hydration support to a component, use [Hydration authoring](HYDRATION-AUTHORING.md).
 
 ## Hydration flow
 
@@ -16,6 +19,10 @@ Related: [GitHub issue #803](https://github.com/unisdr/undrr-mangrove/issues/803
 ## Integration examples
 
 ### Vanilla HTML (CDN)
+
+Load the theme CSS as well as this script setup. Place the import map before
+module scripts; use matching React and React DOM versions. After mounting, the
+section contains the sharing controls.
 
 ```html
 <script type="importmap">
@@ -36,6 +43,12 @@ Related: [GitHub issue #803](https://github.com/unisdr/undrr-mangrove/issues/803
 ```
 
 ### Drupal
+
+The imports below use illustrative Drupal build aliases. Configure `@mangrove/*`
+in the consuming project to resolve to its bundled Mangrove files; these aliases
+are not npm package names. Replace `ComponentName`, its selector and its props
+with the chosen component's contract. For direct npm imports, use the subpaths
+shown in the Astro / Vite example.
 
 ```js
 import createHydrator from "@mangrove/hydrate";

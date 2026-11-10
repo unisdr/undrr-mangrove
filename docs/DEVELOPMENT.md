@@ -1,44 +1,40 @@
-# Development Guide
+# Development guide
 
-This guide covers the development setup and workflow for contributing to the UNDRR Mangrove component library.
-
-For more detailed information, see the [Getting Started Guide](https://mangrove.undrr.org/?path=/docs/getting-started-getting-started-guide--docs).
+Set up a local checkout to develop Mangrove components and run Storybook.
+To use the library in a site, [choose an integration path](../README.md#choose-an-integration-path)
+instead.
 
 ## Related guides
 
-- **Project readme**: see the top-level [README](../README.md) for an overview, install, and common tasks
-- **Contributing guide**: how to propose changes and follow our workflow — [CONTRIBUTING.md](../CONTRIBUTING.md)
-- **Release process**: versioning, tagging, and publishing — [docs/RELEASES.md](./RELEASES.md)
-- **Testing guide**: unit, visual, and accessibility testing — [docs/TESTING.md](./TESTING.md)
-- **Writing guidelines**: UX writing standards — [docs/WRITING.md](./WRITING.md)
-- **Writing quick reference**: concise checklist for AI tools and reviews — [docs/WRITING-SHORT.md](./WRITING-SHORT.md)
-- **Architecture**: build system, distribution channels, and Drupal integration — [docs/ARCHITECTURE.md](./ARCHITECTURE.md)
-- **Component guide**: step-by-step tutorial for building a new component — [docs/COMPONENT-GUIDE.md](./COMPONENT-GUIDE.md)
+Use [Contributing](../CONTRIBUTING.md) for contribution rules, the
+[component guide](COMPONENT-GUIDE.md) to build a component and the
+[testing guide](TESTING.md) to choose checks. The [documentation index](README.md)
+links the remaining references.
 
 ### Storybook documentation
 
-These guides live inside Storybook and cover component standards, integration, and best practices:
-
-- [Getting started guide](https://mangrove.undrr.org/?path=/docs/getting-started-getting-started-guide--docs) — onboarding, installation methods, and integration options
-- [Component standards](https://mangrove.undrr.org/?path=/docs/contributing-component-standards--docs) — component structure, code conventions, and PR process
-- [Testing components](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-testing--docs) — testing strategies within Storybook
-- [Best practices](https://mangrove.undrr.org/?path=/docs/getting-started-best-practices--docs) — accessibility, performance, and architecture guidance
+The published [component standards](https://mangrove.undrr.org/?path=/docs/contributing-component-standards--docs)
+cover code conventions. The [getting started guide](https://mangrove.undrr.org/?path=/docs/getting-started-getting-started-guide--docs)
+covers consuming Mangrove rather than developing it.
 
 ## Prerequisites
 
-- Node.js 22+ (minimum supported; CI and Docker run on Node 26). The repo ships a `.nvmrc` so `nvm use` picks the pinned version. `engines.node` in `package.json` enforces the floor.
+- Node.js 22.12.0 or later; CI and Docker run on Node 26. The repo ships a `.nvmrc` so `nvm use` picks the pinned version. `engines.node` in `package.json` enforces the floor.
 - Yarn v4 (enabled via Corepack; version pinned via `packageManager` in `package.json`)
 - Docker (optional, for containerized development)
 - Git
 
-## Getting Started
+## Getting started
 
-### Local Development
+### Local development
 
 ```bash
 # Clone the repository
 git clone git@github.com:unisdr/undrr-mangrove.git
 cd undrr-mangrove
+
+# Select the version pinned in .nvmrc (with nvm installed)
+nvm use
 
 # Node 26 does not bundle Corepack; install it to enable Yarn v4
 npm install --global corepack@0.36.0
@@ -47,27 +43,38 @@ corepack enable
 # Install dependencies
 yarn install
 
+# Generate tokens, icons and CSS in a fresh checkout
+yarn scss
+
 # Start Storybook development server
-yarn dev
-# or
 yarn storybook
 ```
 
-### Docker Development
+Open <http://localhost:6006> after Storybook reports that it is ready. You should
+see the component sidebar and live examples. For ongoing Sass/token edits, use
+`yarn dev` instead; it starts the Sass watcher alongside Storybook. Stop the
+foreground command with Ctrl+C and check that the watcher has stopped too.
+
+### Docker development
 
 For consistent environments or Windows development:
 
 ```bash
-# Start containers and run Storybook
-yarn docker-run
+# Start containers, install dependencies and generate CSS
+yarn docker-up
+yarn docker-install
+docker exec -it undrr-mangrove-client-1 bash -c "yarn scss"
 
-# Or use Make commands
-make up
-make install
-make run
+# Start Storybook in the container
+docker exec -it undrr-mangrove-client-1 bash -c "yarn storybook --ci"
 ```
 
-## Development Workflow
+Use <http://localhost:6006> for the container server too. Stop the containers
+with `yarn docker-down` when finished. `yarn docker-run` combines startup,
+installation and Storybook; run the Sass generation step above first in a fresh
+checkout.
+
+## Development workflow
 
 ### Branch and commit workflow
 
@@ -88,7 +95,7 @@ Typical flow:
 
 1. Create a branch from `main`.
 2. Implement your changes.
-3. Run `yarn test` and `yarn lint`.
+3. Complete the [submission checks](../CONTRIBUTING.md#submitting-changes) for the change.
 4. Open a PR to `main` with linked issues and passing CI.
 
 ### Dependency maintenance
@@ -127,14 +134,14 @@ Include `BREAKING CHANGE:` in the commit body for major releases.
 
 A local `commit-msg` hook enforces this format. It is installed by `yarn install` (via `prepare` and `core.hooksPath`) or manually with `yarn hooks:install`. The hook also rejects AI-assistant attribution trailers/lines (bot `Co-authored-by`, `Claude-Session:`, and "Generated with …"). Use `--no-verify` only in emergencies.
 
-## Available Scripts
+## Available scripts
 
-### Development Commands
+### Development commands
 
 ```bash
 # Start Storybook dev server
-yarn dev
-yarn storybook
+yarn dev                  # Sass/token watcher plus Storybook
+yarn storybook            # Storybook only; run yarn scss first
 
 # Run tests (see docs/TESTING.md for detailed patterns and coverage requirements)
 yarn test                 # Run all tests
@@ -143,9 +150,9 @@ yarn test:coverage       # Generate coverage report
 yarn test path/to/file   # Test specific file
 
 # Linting
-yarn lint               # Run all linters
-yarn lint:js           # Lint JavaScript/JSX
-yarn lint:css          # Lint CSS/SCSS
+yarn lint:check         # Check without changing source files
+yarn lint               # Apply lint fixes
+yarn prettier:check     # Check source formatting
 
 # Component-quality audit (correctness, perf, a11y, architecture)
 npx -y react-doctor@latest .   # See docs/AI-CODING-AGENTS.md
@@ -154,7 +161,7 @@ npx -y react-doctor@latest .   # See docs/AI-CODING-AGENTS.md
 yarn build             # Build for production (SCSS + Storybook + webpack)
 ```
 
-### Docker Commands
+### Docker commands
 
 ```bash
 # NPM scripts for Docker
@@ -224,35 +231,33 @@ While JSX is the default, TypeScript is fully supported. Path aliases available:
 
 ## Debugging
 
-### Storybook Issues
+### Storybook issues
 
 - Clear `.cache` and `node_modules` if builds fail
 - Check browser console for runtime errors
 - Use React DevTools for component inspection
 
-### Test Failures
+### Test failures
 
 - Run tests in watch mode for faster feedback
 - Use `--verbose` flag for detailed output
 - Check test coverage reports in `coverage/`
 
-### Build Problems
+### Build problems
 
 - Ensure Node version matches requirements
 - Clear Yarn cache: `yarn cache clean`
 - Rebuild from scratch: `rm -rf node_modules && yarn install`
 
-## Performance Considerations
+## Performance considerations
 
-- Lazy load heavy components
-- Use React.memo for expensive renders
-- Optimize images and assets
-- Monitor bundle size
+Use the [testing guide](TESTING.md#performance-testing) to investigate a measured
+performance problem. Review the affected component's render work, assets and
+bundle size before choosing an optimization.
 
 ## Accessibility
 
-- Test with keyboard navigation
-- Use semantic HTML
-- Include ARIA labels where needed
-- Test with screen readers
-- Maintain color contrast ratios
+Follow the [accessibility requirements](ACCESSIBILITY.md) when authoring a
+component and the [review checklist](REVIEW-CHECKLIST.md) before submitting it.
+The [testing guide](TESTING.md#accessibility-testing) covers automated and manual
+checks.
