@@ -208,7 +208,7 @@ export default function SearchExport({ isStale = false }) {
       <button
         ref={triggerRef}
         type="button"
-        className={`mg-button mg-button-secondary${unavailable ? ' disabled' : ''}`}
+        className={`mg-button mg-button-secondary mg-button-outline${unavailable ? ' disabled' : ''}`}
         aria-haspopup="dialog"
         disabled={unavailable}
         onClick={() => {

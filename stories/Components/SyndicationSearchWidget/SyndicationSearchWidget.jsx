@@ -549,9 +549,7 @@ function SyndicationSearchWidgetInner({ lang, dir }) {
             aria-busy={isLoading || isPending}
           >
             {(isLoading || isPending) && <SearchProgress />}
-            {config.showExport && (
-              <SearchExport isStale={isPending || inputValue !== state.query} />
-            )}
+
             <Suspense
               fallback={
                 <SearchResultsSkeleton
@@ -569,6 +567,9 @@ function SyndicationSearchWidgetInner({ lang, dir }) {
                 activeFilterCount={activeFilterCount}
               />
             </Suspense>
+            {config.showExport && (
+              <SearchExport isStale={isPending || inputValue !== state.query} />
+            )}
           </div>
         </div>
 

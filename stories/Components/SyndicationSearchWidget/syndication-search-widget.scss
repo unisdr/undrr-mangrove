@@ -1841,8 +1841,8 @@ $search-input-padding-x: mg-rem(44);
 
 .mg-search__export {
   display: flex;
-  justify-content: flex-end;
-  margin-block-end: var(--mg-spacing-100);
+  justify-content: flex-start;
+  margin-block-start: var(--mg-spacing-100);
 }
 
 .mg-search__export-dialog {

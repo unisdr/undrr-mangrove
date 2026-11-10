@@ -121,7 +121,7 @@ export const DownloadResults = {
       resultsPerPage: 3,
       showSearchBox: true,
       showSort: true,
-      showPager: false,
+      showPager: true,
       facets: 'sidebar',
       visibleFilters: ['field_theme'],
       taxonomyEndpoint: '/__mg-export-taxonomy',
@@ -139,6 +139,12 @@ export const DownloadResults = {
     const canvas = within(canvasElement);
     await waitFor(() => expect(cta(canvas)).toBeEnabled());
     await expect(canvas.queryByRole('dialog')).not.toBeInTheDocument();
+    const pagination = canvas.getByRole('navigation');
+    await expect(
+      pagination.compareDocumentPosition(cta(canvas)) &
+        Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+    await expect(cta(canvas)).toHaveClass('mg-button-outline');
   },
   parameters: {
     docs: {
@@ -238,5 +244,26 @@ export const DownloadActiveSearch = {
     await expect(exported.sort).toEqual(search.sort);
     await expect(exported.from).toBe(0);
     await expect(within(dialog(canvas)).getByRole('status')).toBeVisible();
+  },
+};
+
+export const DownloadWithoutPagination = {
+  ...DownloadResults,
+  args: {
+    ...DownloadResults.args,
+    config: { ...DownloadResults.args.config, showPager: false },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await waitFor(() => expect(cta(canvas)).toBeEnabled());
+    await expect(canvas.queryByRole('navigation')).not.toBeInTheDocument();
+    const results = canvasElement.querySelector(
+      '.mg-search__results-list, .mg-search__results-grid'
+    );
+    await expect(
+      results.compareDocumentPosition(cta(canvas)) &
+        Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+    await expect(cta(canvas)).toHaveClass('mg-button-outline');
   },
 };
