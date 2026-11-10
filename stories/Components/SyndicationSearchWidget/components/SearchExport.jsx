@@ -89,6 +89,15 @@ export default function SearchExport({ isStale = false }) {
     state.totalResults === 0 ||
     isQueryTooShortToSearch(state, config.minSearchLength);
 
+  const availability = !unavailable
+    ? interpolateLabel(
+        state.totalResultsRelation === 'gte'
+          ? labels.exportAvailableAtLeast
+          : labels.exportAvailable,
+        { count: state.totalResults }
+      )
+    : null;
+
   const closeModal = useCallback(() => {
     requestRef.current?.abort();
     setOpenKey(null);
@@ -296,7 +305,9 @@ export default function SearchExport({ isStale = false }) {
               required
               value={countValue}
               disabled={busy}
-              helpText={labels.exportCountHelp}
+              helpText={[availability, labels.exportCountHelp]
+                .filter(Boolean)
+                .join(' · ')}
               error={countError}
               errorText={labels.exportCountError}
               onChange={event => {

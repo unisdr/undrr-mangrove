@@ -1,11 +1,17 @@
 /** Runtime UI labels for SyndicationSearchWidget; shared by production and Storybook. */
 import { createLabelResolver } from '../../../src/i18n';
 
+const formatCount = (count, lang) => new Intl.NumberFormat(lang).format(count);
+
 export const LABELS_ES = {
   exportFormatHelp: 'CSV para hojas de cálculo; JSON para programas.',
   exportFormatTitle: 'Descargar como',
   exportCountLabel: 'Número de resultados',
   exportCountHelp: 'Máx. 1000',
+  exportAvailable: ({ count }) =>
+    `${formatCount(count, 'es')} ${count === 1 ? 'resultado disponible' : 'resultados disponibles'}`,
+  exportAvailableAtLeast: ({ count }) =>
+    `Al menos ${formatCount(count, 'es')} ${count === 1 ? 'resultado disponible' : 'resultados disponibles'}`,
   exportCountError: 'Introduzca un número entero entre 1 y 1000.',
 
   exportFieldType: 'Tipo de contenido',
@@ -122,6 +128,10 @@ export const LABELS_FR = {
   exportFormatTitle: 'Télécharger au format',
   exportCountLabel: 'Nombre de résultats',
   exportCountHelp: 'Max. 1 000',
+  exportAvailable: ({ count }) =>
+    `${formatCount(count, 'fr')} ${count === 1 ? 'résultat disponible' : 'résultats disponibles'}`,
+  exportAvailableAtLeast: ({ count }) =>
+    `Au moins ${formatCount(count, 'fr')} ${count === 1 ? 'résultat disponible' : 'résultats disponibles'}`,
   exportCountError: 'Saisissez un nombre entier de 1 à 1 000.',
 
   exportFieldType: 'Type de contenu',
@@ -238,6 +248,10 @@ export const LABELS_JA = {
   exportFormatTitle: 'ダウンロード形式',
   exportCountLabel: '結果の件数',
   exportCountHelp: '最大1,000件',
+  exportAvailable: ({ count }) =>
+    `利用可能な結果：${formatCount(count, 'ja')}件`,
+  exportAvailableAtLeast: ({ count }) =>
+    `少なくとも${formatCount(count, 'ja')}件の結果を利用できます`,
   exportCountError: '1から1,000までの整数を入力してください。',
 
   exportFieldType: 'コンテンツの種類',
@@ -354,6 +368,9 @@ export const LABELS_ZH = {
   exportFormatTitle: '下载格式',
   exportCountLabel: '结果数量',
   exportCountHelp: '最多1,000条',
+  exportAvailable: ({ count }) => `有${formatCount(count, 'zh')}条结果可用`,
+  exportAvailableAtLeast: ({ count }) =>
+    `至少有${formatCount(count, 'zh')}条结果可用`,
   exportCountError: '请输入1到1,000之间的整数。',
 
   exportFieldType: '内容类型',
@@ -492,6 +509,10 @@ export const LABELS_AR = {
   exportFormatTitle: 'التنزيل بصيغة',
   exportCountLabel: 'عدد النتائج',
   exportCountHelp: 'الحد الأقصى 1000',
+  exportAvailable: ({ count }) =>
+    `النتائج المتاحة: ${formatCount(count, 'ar')}`,
+  exportAvailableAtLeast: ({ count }) =>
+    `النتائج المتاحة: ${formatCount(count, 'ar')} على الأقل`,
   exportCountError: 'أدخل عددًا صحيحًا من 1 إلى 1000.',
 
   exportFieldType: 'نوع المحتوى',
@@ -652,6 +673,10 @@ export const LABELS_RU = {
   exportFormatTitle: 'Скачать в формате',
   exportCountLabel: 'Количество результатов',
   exportCountHelp: 'Макс. 1000',
+  exportAvailable: ({ count }) =>
+    `Доступно: ${formatCount(count, 'ru')} ${RU_RESULT_FORMS[ruResults.select(count)] ?? RU_RESULT_FORMS.other}`,
+  exportAvailableAtLeast: ({ count }) =>
+    `Доступно как минимум: ${formatCount(count, 'ru')} ${RU_RESULT_FORMS[ruResults.select(count)] ?? RU_RESULT_FORMS.other}`,
   exportCountError: 'Введите целое число от 1 до 1000.',
 
   exportFieldType: 'Тип содержимого',
@@ -788,6 +813,10 @@ export const DEFAULT_LABELS = {
   exportFormatTitle: 'Download as',
   exportCountLabel: 'Number of results',
   exportCountHelp: 'Max 1,000',
+  exportAvailable: ({ count }) =>
+    `${formatCount(count, 'en')} ${count === 1 ? 'result' : 'results'} available`,
+  exportAvailableAtLeast: ({ count }) =>
+    `At least ${formatCount(count, 'en')} ${count === 1 ? 'result' : 'results'} available`,
   exportCountError: 'Enter a whole number from 1 to 1,000.',
 
   exportFieldType: 'Content type',

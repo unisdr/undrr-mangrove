@@ -34,7 +34,7 @@ const config = {
   defaultFilters: [],
   enableHashSync: false,
 };
-function setup(open = true, labels = {}) {
+function setup(open = true, labels = {}, searchResult = response()) {
   const view = isStale => (
     <SearchProvider config={config} labels={labels}>
       <Capture />
@@ -44,10 +44,14 @@ function setup(open = true, labels = {}) {
   const rendered = render(view(false));
   act(() => {
     dispatch(actions.initialize({}));
-    dispatch(actions.setResults(response()));
+    dispatch(actions.setResults(searchResult));
   });
   if (open)
-    fireEvent.click(screen.getByRole('button', { name: 'Download results' }));
+    fireEvent.click(
+      screen.getByRole('button', {
+        name: labels.exportOpen || 'Download results',
+      })
+    );
   return { ...rendered, stale: value => rendered.rerender(view(value)) };
 }
 let click;
@@ -80,6 +84,9 @@ afterEach(() => {
 
 test('downloads the configured first records and reports truncation with a contact link', async () => {
   setup();
+  expect(screen.getByRole('spinbutton')).toHaveAccessibleDescription(
+    '1 result available · Max 1,000'
+  );
   const button = screen.getByRole('button', { name: 'Download CSV' });
   expect(button).toHaveAccessibleDescription(
     expect.stringContaining('current terms, filters and sort order')
@@ -552,5 +559,69 @@ test.each(['', '   '])(
   label => {
     setup(true, { exportClose: label });
     expect(screen.getByRole('button', { name: 'Close' })).toBeVisible();
+  }
+);
+
+test('availability describes the full matching set across pages, independently of quantity', () => {
+  setup(true, {}, response(73));
+  act(() => dispatch(actions.setPage(3)));
+  const input = screen.getByRole('spinbutton');
+  expect(input).toHaveAccessibleDescription('73 results available · Max 1,000');
+  fireEvent.change(input, { target: { value: '5' } });
+  expect(input).toHaveAccessibleDescription('73 results available · Max 1,000');
+  expect(fetch).not.toHaveBeenCalled();
+});
+
+test('availability distinguishes a formatted lower bound from an exact total', () => {
+  const result = response(10000);
+  result.hits.total.relation = 'gte';
+  setup(true, {}, result);
+  expect(screen.getByRole('spinbutton')).toHaveAccessibleDescription(
+    'At least 10,000 results available · Max 1,000'
+  );
+  act(() => dispatch(actions.setResults(response(12345))));
+  expect(screen.getByRole('spinbutton')).toHaveAccessibleDescription(
+    '12,345 results available · Max 1,000'
+  );
+});
+
+test('availability is hidden during a search refresh', () => {
+  setup(true, {}, response(73));
+  act(() => dispatch(actions.setLoading(true)));
+  expect(screen.getByRole('spinbutton')).toHaveAccessibleDescription(
+    'Max 1,000'
+  );
+  expect(screen.queryByText(/73 results available/)).not.toBeInTheDocument();
+});
+
+test('availability supports string and function overrides with numeric counts', () => {
+  const lower = jest.fn(({ count }) => `Matching at least: ${count}`);
+  setup(
+    true,
+    {
+      exportAvailable: '{count} matching items',
+      exportAvailableAtLeast: lower,
+    },
+    response(73)
+  );
+  expect(screen.getByRole('spinbutton')).toHaveAccessibleDescription(
+    '73 matching items · Max 1,000'
+  );
+  const result = response(10000);
+  result.hits.total.relation = 'gte';
+  act(() => dispatch(actions.setResults(result)));
+  expect(lower).toHaveBeenCalledWith({ count: 10000 });
+  expect(screen.getByRole('spinbutton')).toHaveAccessibleDescription(
+    'Matching at least: 10000 · Max 1,000'
+  );
+});
+
+test.each(['en', 'es', 'fr', 'ja', 'zh', 'ar', 'ru'])(
+  'availability uses catalogue number formatting for %s',
+  lang => {
+    setup(true, getSyndicationSearchWidgetLabels(lang), response(12345));
+    expect(screen.getByRole('spinbutton')).toHaveAccessibleDescription(
+      expect.stringContaining(new Intl.NumberFormat(lang).format(12345))
+    );
   }
 );
