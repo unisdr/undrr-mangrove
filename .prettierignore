@@ -40,3 +40,5 @@ stories/assets/scss/generated/
 stories/Documentation/Brand/BrandGuidelines.mdx
 stories/Documentation/Brand/CommonPatterns.mdx
 stories/Documentation/Brand/ComponentGallery.mdx
+aria/tokens/
+aria/react-aria.css

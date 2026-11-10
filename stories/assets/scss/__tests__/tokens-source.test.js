@@ -2,8 +2,9 @@
  * Design-token source contract.
  *
  * `tokens/*.yaml` is the single source every brand is built from;
- * `scripts/build-tokens.cjs` emits the Sass partials Mangrove's own stylesheet
- * compiles against. Three ways that can rot, all silent:
+ * `scripts/build-tokens.cjs` emits the Sass partials that Mangrove's own
+ * stylesheet and framework-neutral brand tokens consume. Four ways
+ * that can rot, all silent:
  *
  *   1. someone edits a generated partial, or edits the YAML without
  *      rebuilding, so the working copy the SCSS compiles against and the YAML
@@ -13,8 +14,7 @@
  *      writes them only when they are MISSING, precisely so a stale one still
  *      fails here instead of being repaired behind the developer's back;
  *   2. someone re-hardcodes a brand value into a hand-written Sass file,
- *      which is exactly how _theme-delta.scss came to hold a second,
- *      independent copy of the DELTA brand;
+ *      which is how theme overrides can diverge from the source;
  *   3. the generated partials are build output and are not committed, so
  *      nothing in the repository records what the generator produces. On a
  *      fresh clone — every CI run — globalSetup writes the partials from
@@ -153,16 +153,16 @@ describe('design-token generator', () => {
     }
     expect(literals.length).toBeGreaterThan(10);
 
-    // Scoped to the hand-written theme files, which are where the duplication
-    // actually happened: _theme-delta.scss held an independent copy of the
-    // DELTA brand alongside the generated one. (_tokens-data-viz.scss does
-    // re-state neutral and DELTA channel values; that palette is a separate
-    // concern and is not migrated here.)
+    // Scoped to hand-written themes and adapter files where duplication has
+    // occurred. (_tokens-data-viz.scss does re-state neutral and DELTA channel
+    // values; that palette is a separate concern and is not migrated here.)
     const hardcoded = [];
     const guarded = [
       ...['preventionweb', 'irp', 'mcr', 'delta'].map(
         brand => `stories/assets/scss/_theme-${brand}.scss`
       ),
+      'stories/assets/scss/aria/_runtime-theme-aliases.scss',
+      'stories/assets/scss/aria/_tokens-shared.scss',
       'stories/assets/scss/_tokens-tabs.scss',
       'stories/assets/scss/_variables.scss',
     ];

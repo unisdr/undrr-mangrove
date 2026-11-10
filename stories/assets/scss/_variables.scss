@@ -31,10 +31,12 @@
 @use "tokens-data-viz";
 @forward "config";
 @use "config" as *;
+@use "control-tokens" as *;
 
 :root {
   @include mg-tokens-mangrove;
   @include mg-tokens-tabs;
+  @include mg-control-tokens;
 }
 
 // Tokens deliberately NOT in the token sources.
