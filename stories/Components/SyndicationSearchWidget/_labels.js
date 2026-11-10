@@ -2,11 +2,13 @@
 import { createLabelResolver } from '../../../src/i18n';
 
 export const LABELS_ES = {
+  exportOpen: 'Descargar resultados',
+  exportClose: 'Cerrar',
   exportRegion: 'Descargar resultados de búsqueda',
   exportCsv: 'Descargar resultados (CSV)',
   exportJson: 'Descargar resultados (JSON)',
   exportScope:
-    'Descargue hasta los primeros {limit} registros coincidentes con los filtros y el orden actuales. CSV para hojas de cálculo; JSON para programas.',
+    'Descargue hasta los primeros {limit} registros coincidentes según la configuración de esta búsqueda y sus términos, filtros y orden actuales. CSV para hojas de cálculo; JSON para programas.',
   exportContact:
     '¿Necesita más datos o acceso continuo? Podemos ayudarle a organizar una exportación adecuada o facilitar el acceso mediante API.',
   exportContactLink: 'Contáctenos',
@@ -98,11 +100,13 @@ export const LABELS_ES = {
 // French (fr) — standard international French, UN register
 // ---------------------------------------------------------------------------
 export const LABELS_FR = {
+  exportOpen: 'Télécharger les résultats',
+  exportClose: 'Fermer',
   exportRegion: 'Télécharger les résultats de recherche',
   exportCsv: 'Télécharger les résultats (CSV)',
   exportJson: 'Télécharger les résultats (JSON)',
   exportScope:
-    'Téléchargez les {limit} premiers enregistrements correspondants au maximum, avec les filtres et le tri actuels. CSV pour les tableurs ; JSON pour les logiciels.',
+    'Téléchargez les {limit} premiers enregistrements correspondants au maximum, selon la configuration de cette recherche et vos termes, filtres et tri actuels. CSV pour les tableurs ; JSON pour les logiciels.',
   exportContact:
     'Besoin de plus de données ou d’un accès régulier ? Nous pouvons vous aider à organiser une exportation adaptée ou faciliter un accès par API.',
   exportContactLink: 'Contactez-nous',
@@ -194,11 +198,13 @@ export const LABELS_FR = {
 // Japanese (ja) — polite register (丁寧語); no singular/plural distinction
 // ---------------------------------------------------------------------------
 export const LABELS_JA = {
+  exportOpen: '結果をダウンロード',
+  exportClose: '閉じる',
   exportRegion: '検索結果をダウンロード',
   exportCsv: '結果をダウンロード（CSV）',
   exportJson: '結果をダウンロード（JSON）',
   exportScope:
-    '現在の絞り込みと並び順で、一致するレコードを先頭から最大{limit}件ダウンロードします。CSVは表計算用、JSONはソフトウェア用です。',
+    '検索の設定と現在の検索語、絞り込み、並び順に基づき、一致するレコードを先頭から最大{limit}件ダウンロードします。CSVは表計算用、JSONはソフトウェア用です。',
   exportContact:
     'より多くのデータや継続的なアクセスが必要ですか？適切なエクスポートやAPIアクセスについてご相談いただけます。',
   exportContactLink: 'お問い合わせ',
@@ -290,11 +296,13 @@ export const LABELS_JA = {
 // Simplified Chinese (zh-Hans) — no singular/plural distinction
 // ---------------------------------------------------------------------------
 export const LABELS_ZH = {
+  exportOpen: '下载结果',
+  exportClose: '关闭',
   exportRegion: '下载搜索结果',
   exportCsv: '下载结果（CSV）',
   exportJson: '下载结果（JSON）',
   exportScope:
-    '按照当前筛选条件和排序，下载前{limit}条匹配记录以内的数据。CSV用于电子表格，JSON用于软件。',
+    '按照此搜索的设置及当前搜索词、筛选条件和排序，下载前{limit}条匹配记录以内的数据。CSV用于电子表格，JSON用于软件。',
   exportContact:
     '需要更多数据或持续访问？我们可以协助安排适当的数据导出或提供API访问方面的帮助。',
   exportContactLink: '联系我们',
@@ -410,11 +418,13 @@ const AR_FILTER_FORMS = {
 };
 
 export const LABELS_AR = {
+  exportOpen: 'تنزيل النتائج',
+  exportClose: 'إغلاق',
   exportRegion: 'تنزيل نتائج البحث',
   exportCsv: 'تنزيل النتائج (CSV)',
   exportJson: 'تنزيل النتائج (JSON)',
   exportScope:
-    'نزّل ما يصل إلى أول {limit} سجل مطابق باستخدام عوامل التصفية والترتيب الحاليين. CSV لجداول البيانات وJSON للبرامج.',
+    'نزّل ما يصل إلى أول {limit} سجل مطابق وفق إعدادات هذا البحث وكلمات البحث وعوامل التصفية والترتيب الحالية. CSV لجداول البيانات وJSON للبرامج.',
   exportContact:
     'هل تحتاج إلى مزيد من البيانات أو الوصول المستمر؟ يمكننا المساعدة في ترتيب تصدير مناسب أو تسهيل الوصول عبر واجهة برمجة التطبيقات.',
   exportContactLink: 'اتصل بنا',
@@ -550,11 +560,13 @@ const RU_ACTIVE_FORMS = {
 };
 
 export const LABELS_RU = {
+  exportOpen: 'Скачать результаты',
+  exportClose: 'Закрыть',
   exportRegion: 'Скачать результаты поиска',
   exportCsv: 'Скачать результаты (CSV)',
   exportJson: 'Скачать результаты (JSON)',
   exportScope:
-    'Скачайте до {limit} первых подходящих записей с текущими фильтрами и порядком сортировки. CSV для электронных таблиц; JSON для программ.',
+    'Скачайте до {limit} первых подходящих записей с настройками этого поиска и текущими поисковыми словами, фильтрами и порядком сортировки. CSV для электронных таблиц; JSON для программ.',
   exportContact:
     'Нужно больше данных или постоянный доступ? Мы можем помочь организовать подходящую выгрузку или доступ через API.',
   exportContactLink: 'Свяжитесь с нами',
@@ -666,11 +678,13 @@ export const LABELS_RU = {
 };
 
 export const DEFAULT_LABELS = {
+  exportOpen: 'Download results',
+  exportClose: 'Close',
   exportRegion: 'Download search results',
   exportCsv: 'Download results (CSV)',
   exportJson: 'Download results (JSON)',
   exportScope:
-    'Download up to the first {limit} matching records, using the current filters and sort order. CSV is for spreadsheets; JSON is for software.',
+    'Download up to the first {limit} matching records using this search’s settings and your current search terms, filters and sort order. CSV is for spreadsheets; JSON is for software.',
   exportContact:
     'Need more data or ongoing access? We can help arrange a suitable export or facilitate API access.',
   exportContactLink: 'Contact us',

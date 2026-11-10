@@ -1840,12 +1840,14 @@ $search-input-padding-x: mg-rem(44);
 }
 
 .mg-search__export {
-  margin-block-start: var(--mg-spacing-200);
-  padding-block-start: var(--mg-spacing-100);
-  border-block-start: 1px solid rgb(var(--mg-color-neutral-100));
+  display: flex;
+  justify-content: flex-end;
+  margin-block-end: var(--mg-spacing-100);
+}
 
+.mg-search__export-dialog {
   p {
-    margin-block: var(--mg-spacing-75);
+    margin-block: 0 var(--mg-spacing-100);
   }
 
   a {

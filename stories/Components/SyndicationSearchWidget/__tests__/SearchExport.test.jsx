@@ -8,6 +8,7 @@ import {
 } from '@testing-library/react';
 import { axe } from 'jest-axe';
 import SearchExport from '../components/SearchExport';
+import { WidgetRootContext } from '../context/WidgetRootContext';
 import {
   SearchProvider,
   useSearchDispatch,
@@ -33,7 +34,7 @@ const config = {
   defaultFilters: [],
   enableHashSync: false,
 };
-function setup() {
+function setup(open = true) {
   const view = isStale => (
     <SearchProvider config={config}>
       <Capture />
@@ -45,10 +46,23 @@ function setup() {
     dispatch(actions.initialize({}));
     dispatch(actions.setResults(response()));
   });
+  if (open)
+    fireEvent.click(screen.getByRole('button', { name: 'Download results' }));
   return { ...rendered, stale: value => rendered.rerender(view(value)) };
 }
 let click;
 const originalFetch = global.fetch;
+beforeAll(() => {
+  window.PointerEvent = MouseEvent;
+  HTMLDialogElement.prototype.showModal = function showModal() {
+    this.setAttribute('open', '');
+  };
+  HTMLDialogElement.prototype.close = function close() {
+    this.removeAttribute('open');
+    this.dispatchEvent(new Event('close'));
+  };
+});
+
 beforeEach(() => {
   global.fetch = jest
     .fn()
@@ -136,6 +150,8 @@ test.each(['input', 'query', 'unmount'])(
     expect(click).not.toHaveBeenCalled();
     if (change === 'input') {
       view.stale(false);
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+      fireEvent.click(screen.getByRole('button', { name: 'Download results' }));
       expect(
         screen.getByRole('button', { name: 'Download results (CSV)' })
       ).not.toHaveAttribute('aria-disabled');
@@ -198,4 +214,139 @@ test('has no accessibility violations and preserves language overrides', async (
     expect(labels.exportLimited).toContain('{total}');
     expect(labels.exportContactLink).not.toBe('Contact us');
   }
+});
+
+test('offers one optional CTA that opens both formats in a labelled modal', () => {
+  setup(false);
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  expect(
+    screen.queryByRole('button', { name: 'Download results (CSV)' })
+  ).not.toBeInTheDocument();
+  const trigger = screen.getByRole('button', { name: 'Download results' });
+  expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
+  fireEvent.click(trigger);
+  const dialog = screen.getByRole('dialog', {
+    name: 'Download search results',
+  });
+  expect(dialog).toHaveAttribute('open');
+  expect(dialog).toHaveAccessibleDescription(
+    expect.stringContaining('first 1 matching records')
+  );
+  expect(
+    screen.getByRole('heading', { name: 'Download search results' })
+  ).toHaveFocus();
+  expect(
+    screen.getByRole('button', { name: 'Download results (CSV)' })
+  ).toBeVisible();
+  expect(
+    screen.getByRole('button', { name: 'Download results (JSON)' })
+  ).toBeVisible();
+  expect(document.documentElement.style.overflow).toBe('hidden');
+  fireEvent.click(screen.getByRole('button', { name: 'Close' }));
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  expect(trigger).toHaveFocus();
+  expect(document.documentElement.style.overflow).toBe('');
+});
+
+test('Close cancels a pending export and reopening starts a fresh session', async () => {
+  let resolve;
+  fetch.mockReturnValue(
+    new Promise(done => {
+      resolve = done;
+    })
+  );
+  setup();
+  fireEvent.click(
+    screen.getByRole('button', { name: 'Download results (CSV)' })
+  );
+  const signal = fetch.mock.calls[0][1].signal;
+  fireEvent.click(screen.getByRole('button', { name: 'Close' }));
+  expect(signal.aborted).toBe(true);
+  expect(
+    screen.getByRole('button', { name: 'Download results' })
+  ).toHaveFocus();
+  fireEvent.click(screen.getByRole('button', { name: 'Download results' }));
+  await act(async () => resolve({ ok: true, json: async () => response() }));
+  expect(click).not.toHaveBeenCalled();
+  expect(screen.getByRole('status')).toBeEmptyDOMElement();
+  expect(
+    screen.getByRole('button', { name: 'Download results (CSV)' })
+  ).not.toHaveAttribute('aria-disabled');
+});
+
+test('native cancellation and genuine backdrop presses close and restore focus', () => {
+  setup();
+  fireEvent(
+    screen.getByRole('dialog'),
+    new Event('cancel', { bubbles: false, cancelable: true })
+  );
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  const trigger = screen.getByRole('button', { name: 'Download results' });
+  expect(trigger).toHaveFocus();
+  fireEvent.click(trigger);
+  const dialog = screen.getByRole('dialog');
+  dialog.getBoundingClientRect = () => ({
+    left: 10,
+    right: 100,
+    top: 10,
+    bottom: 100,
+  });
+  fireEvent.pointerDown(screen.getByRole('heading'), {
+    clientX: 20,
+    clientY: 20,
+  });
+  fireEvent.click(dialog, { clientX: 150, clientY: 150 });
+  expect(dialog).toHaveAttribute('open');
+  fireEvent.pointerDown(dialog, { clientX: 150, clientY: 150 });
+  fireEvent.click(dialog, { clientX: 150, clientY: 150 });
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  expect(trigger).toHaveFocus();
+});
+
+test('restores existing scroll declarations and priorities after dismissal', () => {
+  const root = document.documentElement;
+  root.style.setProperty('overflow-x', 'clip', 'important');
+  root.style.setProperty('overflow-y', 'scroll');
+  setup();
+  fireEvent.click(screen.getByRole('button', { name: 'Close' }));
+  expect(root.style.getPropertyValue('overflow-x')).toBe('clip');
+  expect(root.style.getPropertyPriority('overflow-x')).toBe('important');
+  expect(root.style.getPropertyValue('overflow-y')).toBe('scroll');
+  root.style.removeProperty('overflow-x');
+  root.style.removeProperty('overflow-y');
+});
+
+test('invalidating input focuses the connected results region when the CTA becomes disabled', () => {
+  const rootRef = { current: null };
+  const view = stale => (
+    <SearchProvider config={config}>
+      <WidgetRootContext value={rootRef}>
+        <div
+          ref={element => {
+            rootRef.current = element;
+          }}
+        >
+          <Capture />
+          <div className="mg-search__main">
+            <SearchExport isStale={stale} />
+          </div>
+        </div>
+      </WidgetRootContext>
+    </SearchProvider>
+  );
+  const { container, rerender } = render(view(false));
+  act(() => {
+    dispatch(actions.initialize({}));
+    dispatch(actions.setResults(response()));
+  });
+  fireEvent.click(screen.getByRole('button', { name: 'Download results' }));
+  expect(
+    screen.getByRole('heading', { name: 'Download search results' })
+  ).toHaveFocus();
+  rerender(view(true));
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  const main = container.querySelector('.mg-search__main');
+  expect(main).toHaveFocus();
+  expect(main).not.toHaveAttribute('tabindex');
+  expect(document.documentElement.style.overflow).toBe('');
 });
