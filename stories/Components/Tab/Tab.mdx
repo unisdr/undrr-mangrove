@@ -44,7 +44,7 @@ horizontal scrollport; making `.mg-tabs__scroll` sticky does not pin the rail.
   position: sticky;
   top: calc(
     var(--mg-on-this-page-nav-offset, 0px) +
-      var(--mg-on-this-page-nav-block-size, 0px) + 0.5rem
+      var(--mg-on-this-page-nav-block-size, 0px) + var(--mg-spacing-75)
   );
   z-index: calc(var(--mg-z-index-sticky) - 1);
   background: rgb(var(--mg-color-neutral-0));
@@ -85,14 +85,12 @@ rail and any deliberate return to the selected panel's start; Tab does not scrol
 the page vertically on selection. Include the rail's measured height in that
 clearance rather than hiding focused content behind the two navigation layers.
 
-The isolated example below uses the real page-navigation runtime and the same
-CSS recipe. Scroll into the panel and past the section to check both docking and
-release. Use the locale, theme and viewport controls to inspect reflow.
-
-<Canvas
-  of={TabStories.StickyWithinSection}
-  story={{ inline: false, height: '640px' }}
-/>
+[Open the sticky controls example](?path=/story/components-tabs--sticky-within-section)
+in its dedicated Storybook canvas. It uses the real page-navigation runtime and
+the same CSS recipe. Scroll into the panel and past the section to check docking
+and release; use the locale, theme and viewport controls to inspect reflow.
+Keeping this scrolling example in its own canvas protects the documentation’s
+scroll position, focus and language toolbar state.
 
 ### Optional mobile stacking
 
@@ -610,7 +608,7 @@ The published bundle retains its browser DOM requirement at import time.
 
 ## Changelog
 
-- **2.12.1**, 2026-11-10 ([GAR tracker #3161](https://gitlab.com/undrr/web-backlog/-/issues/3161)): Documents an opt-in sticky-rail composition beneath measured page navigation, with an isolated scrolling example and CMS, focus and short-viewport checks. Component defaults and runtime are unchanged.
+- **2.12.1**, 2026-11-10 ([web-backlog#3161](https://gitlab.com/undrr/web-backlog/-/issues/3161)): Documents an opt-in sticky-rail composition beneath measured page navigation, with a dedicated scrolling example and CMS, focus and short-viewport checks. Component defaults and runtime are unchanged.
 
 - **2.12**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance.
 

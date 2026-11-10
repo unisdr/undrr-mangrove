@@ -359,6 +359,7 @@ export const RightToLeft = {
 
 // Consumer-scoped composition: intentionally not part of Tab's default CSS/API.
 export const StickyWithinSection = {
+  name: 'Sticky within section',
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale).map((tab, index) => ({
       ...tab,
@@ -370,17 +371,17 @@ export const StickyWithinSection = {
         <style>{`
           .mg-tabs-sticky-example__tabs > .mg-tabs--horizontal > .mg-tabs__rail {
             position: sticky;
-            top: calc(var(--mg-on-this-page-nav-offset, 0px) + var(--mg-on-this-page-nav-block-size, 0px) + 0.5rem);
+            top: calc(var(--mg-on-this-page-nav-offset, 0px) + var(--mg-on-this-page-nav-block-size, 0px) + var(--mg-spacing-75));
             z-index: calc(var(--mg-z-index-sticky) - 1);
             background: rgb(var(--mg-color-neutral-0));
           }
           .mg-tabs-sticky-example__intro {
             min-block-size: 70vh;
-            padding-block: 2rem;
+            padding-block: var(--mg-spacing-300);
           }
           .mg-tabs-sticky-example__after {
             min-block-size: 140vh;
-            padding-block: 2rem;
+            padding-block: var(--mg-spacing-300);
           }
           @media (max-height: 400px) {
             .mg-tabs-sticky-example__tabs > .mg-tabs--horizontal > .mg-tabs__rail {
@@ -390,6 +391,8 @@ export const StickyWithinSection = {
           }
         `}</style>
         <OnThisPageNav
+          lang={args.lang}
+          dir={args.dir}
           items={[
             { href: '#sticky-example-tabs', text: caption[0].text },
             { href: '#sticky-example-after', text: caption[1].text },
