@@ -61,9 +61,12 @@ needs no JavaScript.
 
 ### 2. Copy HTML structures
 
-Open a component story and expand **Show code**. CSS-only stories show rendered
-HTML there. Copy the complete structure and follow the component's setup
-instructions; a class name alone may omit required wrappers, labels or scripts.
+Open the component's docs and expand **Show code**. Stories such as Tag opt in
+to rendered HTML there; other stories show JSX. If the snippet is JSX, open the
+story in its Canvas view and select the **HTML** panel to copy the live markup.
+For interactive components, follow the documented JavaScript or hydration setup
+rather than copying runtime-generated markup alone. Keep the complete structure;
+a class name may omit required wrappers, labels or scripts.
 
 For agents consuming the library, the [AI integration guide](?path=/docs/getting-started-ai-and-mcp-integration--docs)
 explains how to obtain rendered HTML and hydration examples from the manifest.
@@ -182,9 +185,32 @@ own import, selector and data attributes from its documentation.
 ### Manual mounting (for components without hydration support)
 
 A published component without `fromElement` needs explicit props and a React
-root. Follow the [React integration guide](?path=/docs/getting-started-integration-react-integration--docs)
-and the component's import contract. Do not infer a bundle path from a story
+root. The [React integration guide](?path=/docs/getting-started-integration-react-integration--docs)
+lists each bundle's import contract. Do not infer a bundle path from a story
 name; confirm that the component is published first.
+
+For example, keep the CSS and import map from the complete page below, then
+replace its sharing section and module script with this CtaButton mount:
+
+```html
+<div id="mangrove-action"></div>
+
+<script type="module">
+  import React from 'react';
+  import { createRoot } from 'react-dom/client';
+  import { CtaButton } from 'https://assets.undrr.org/mangrove/2.4.0/components/CtaButton.js';
+
+  createRoot(document.getElementById('mangrove-action')).render(
+    React.createElement(CtaButton, {
+      label: 'Browse publications',
+      href: '/publications',
+    })
+  );
+</script>
+```
+
+This demonstrates manual mounting. The [HTML button example](#1-semantic-html-first)
+above is sufficient for a static navigation link.
 
 ## Complete HTML page
 
@@ -317,7 +343,7 @@ If a `data-mg-*` container stays empty after the page loads, check these items i
 ## Next steps
 
 - Explore the component library in the sidebar
-- Expand **Show code** in each CSS-only component story to copy rendered HTML
+- Copy rendered HTML from **Show code** where available, or the story's **HTML** panel
 - See the [CDN reference](?path=/docs/getting-started-integration-cdn-reference--docs) for all available assets
 - See the [DELTA Resilience CodePen](https://codepen.io/khawkins98/pen/019d3720-5233-796f-ae0a-dc141475a30f) for a full-page vanilla HTML + hydration example
 - Override CSS variables for theming

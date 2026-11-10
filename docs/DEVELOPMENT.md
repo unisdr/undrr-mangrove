@@ -66,7 +66,7 @@ yarn docker-install
 docker exec -it undrr-mangrove-client-1 bash -c "yarn scss"
 
 # Start Storybook in the container
-make run
+docker exec -it undrr-mangrove-client-1 bash -c "yarn storybook --ci"
 ```
 
 Use <http://localhost:6006> for the container server too. Stop the containers
