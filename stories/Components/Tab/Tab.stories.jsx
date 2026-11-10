@@ -1,6 +1,7 @@
 import { withLanguage } from '../../../.storybook/withLanguage';
 // stories\Components\Tab\Tab.stories.jsx
 import { Tab } from './Tab';
+import OnThisPageNav from '../OnThisPageNav/OnThisPageNav';
 import { expect, within } from 'storybook/test';
 
 // Tab content (tabdata) per locale — separate from UI labels.
@@ -352,6 +353,66 @@ export const RightToLeft = {
         );
         await expect(getComputedStyle(group).direction).toBe('rtl');
       })
+    );
+  },
+};
+
+// Consumer-scoped composition: intentionally not part of Tab's default CSS/API.
+export const StickyWithinSection = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale).map((tab, index) => ({
+      ...tab,
+      text_id: `sticky-${index}`,
+      data: Array.from({ length: 12 }, () => `<p>${tab.data}</p>`).join(''),
+    }));
+    return (
+      <div className="mg-tabs-sticky-example">
+        <style>{`
+          .mg-tabs-sticky-example__tabs > .mg-tabs--horizontal > .mg-tabs__rail {
+            position: sticky;
+            top: calc(var(--mg-on-this-page-nav-offset, 0px) + var(--mg-on-this-page-nav-block-size, 0px) + 0.5rem);
+            z-index: calc(var(--mg-z-index-sticky) - 1);
+            background: rgb(var(--mg-color-neutral-0));
+          }
+          .mg-tabs-sticky-example__intro {
+            min-block-size: 70vh;
+            padding-block: 2rem;
+          }
+          .mg-tabs-sticky-example__after {
+            min-block-size: 140vh;
+            padding-block: 2rem;
+          }
+          @media (max-height: 400px) {
+            .mg-tabs-sticky-example__tabs > .mg-tabs--horizontal > .mg-tabs__rail {
+              position: relative;
+              top: auto;
+            }
+          }
+        `}</style>
+        <OnThisPageNav
+          items={[
+            { href: '#sticky-example-tabs', text: caption[0].text },
+            { href: '#sticky-example-after', text: caption[1].text },
+          ]}
+        />
+        <div className="mg-tabs-sticky-example__intro">
+          <h1>{caption[0].text}</h1>
+          <p>{caption[0].text}</p>
+        </div>
+        <section
+          id="sticky-example-tabs"
+          className="mg-tabs-sticky-example__tabs"
+        >
+          <h2>{caption[1].text}</h2>
+          <Tab {...args} tabdata={caption} />
+        </section>
+        <section
+          id="sticky-example-after"
+          className="mg-tabs-sticky-example__after"
+        >
+          <h2>{caption[2].text}</h2>
+        </section>
+      </div>
     );
   },
 };

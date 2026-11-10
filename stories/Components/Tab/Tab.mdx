@@ -32,6 +32,68 @@ The tab rail scrolls independently of the content below. Faded edges indicate mo
 
 <Canvas of={TabStories.NarrowContainer} meta={TabStories} />
 
+### Sticky controls in long sections
+
+For long panels, keep the horizontal rail visible within its own tab set. This
+is a page composition, not a new Tab prop: add a class to a wrapper containing
+one direct-child tab set and apply the following consumer CSS. Keep the rail outside its
+horizontal scrollport; making `.mg-tabs__scroll` sticky does not pin the rail.
+
+```css
+.report-tabs > .mg-tabs--horizontal > .mg-tabs__rail {
+  position: sticky;
+  top: calc(
+    var(--mg-on-this-page-nav-offset, 0px) +
+      var(--mg-on-this-page-nav-block-size, 0px) + 0.5rem
+  );
+  z-index: calc(var(--mg-z-index-sticky) - 1);
+  background: rgb(var(--mg-color-neutral-0));
+}
+
+@media (max-height: 400px) {
+  .report-tabs > .mg-tabs--horizontal > .mg-tabs__rail {
+    position: relative;
+    top: auto;
+  }
+}
+```
+
+[On this page nav](?path=/docs/components-navigation-on-this-page-nav--docs) publishes its
+measured sticky height through `--mg-on-this-page-nav-block-size`, including
+changes at narrow widths. Set `--mg-on-this-page-nav-offset` on `:root` for the
+site header (in Drupal, `var(--drupal-displace-offset-top, 0px)` can supply the
+admin-toolbar displacement). The nav and tab rail then share that offset. If the
+page has another navigation implementation, the consumer must publish its own
+measured height and substitute that variable; do not assume a fixed desktop
+height or write into Mangrove's measured variable.
+
+Keep one rail and its panels inside the same `.mg-tabs` element: that element
+confines the sticky rail to the current section. Ancestor `overflow: auto`,
+`scroll` or `hidden` can change the sticky scroll container; inspect the actual
+CMS wrappers. Do not pin the whole panel, make a second copy of the controls, or
+apply this rule to stacked disclosures. The horizontal modifier is removed when
+`stackOnMobile` switches to disclosures, so the rule stops applying.
+
+The opaque surface prevents panel text showing through the rail. Its layer stays
+below page navigation; existing focus rings, arrow-key behaviour, RTL scrolling
+and tab selection remain unchanged. For short landscape viewports or zoom that
+leaves too little reading space, disable the extra sticky layer, as above.
+
+Test deep links, focusable panel content and switching from a long panel to a
+short one while scrolled. The page owns any additional scroll clearance for its
+rail and any deliberate return to the selected panel's start; Tab does not scroll
+the page vertically on selection. Include the rail's measured height in that
+clearance rather than hiding focused content behind the two navigation layers.
+
+The isolated example below uses the real page-navigation runtime and the same
+CSS recipe. Scroll into the panel and past the section to check both docking and
+release. Use the locale, theme and viewport controls to inspect reflow.
+
+<Canvas
+  of={TabStories.StickyWithinSection}
+  story={{ inline: false, height: '640px' }}
+/>
+
 ### Optional mobile stacking
 
 Horizontal scrolling is the default. To restore the older mobile disclosure
@@ -547,6 +609,8 @@ for consumers needing the same strings outside React.
 The published bundle retains its browser DOM requirement at import time.
 
 ## Changelog
+
+- **2.12.1**, 2026-11-10 ([GAR tracker #3161](https://gitlab.com/undrr/web-backlog/-/issues/3161)): Documents an opt-in sticky-rail composition beneath measured page navigation, with an isolated scrolling example and CMS, focus and short-viewport checks. Component defaults and runtime are unchanged.
 
 - **2.12**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance.
 
