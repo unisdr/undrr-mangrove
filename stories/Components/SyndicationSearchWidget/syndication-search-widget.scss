@@ -1913,20 +1913,6 @@ $search-input-padding-x: mg-rem(44);
   }
 }
 
-.mg-search__export-field-heading {
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: var(--mg-spacing-75);
-  inline-size: calc(100% - 1.5rem);
-  vertical-align: middle;
-}
-
-.mg-search__export-field-count {
-  font-variant-numeric: tabular-nums;
-}
-
 .mg-search__export-fields {
   min-inline-size: 0;
   border: 0;
@@ -2029,8 +2015,6 @@ $search-input-padding-x: mg-rem(44);
       padding: var(--mg-spacing-100);
     }
 
-    .mg-search__export-field-heading,
-    .mg-search__export-field-heading > *,
     .mg-search__export-field-grid > *,
     .mg-form-check__label {
       min-inline-size: 0;

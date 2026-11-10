@@ -15,7 +15,6 @@ export const LABELS_ES = {
   exportFieldTheme: 'Identificadores de tema',
 
   exportFields: 'Campos que se incluirán',
-  exportFieldsCount: '{count} campos incluidos',
   exportFieldsHelp:
     'El identificador del registro y la URL siempre se incluyen. Estas opciones se aplican a ambos formatos.',
   exportFieldTitle: 'Título',
@@ -132,7 +131,6 @@ export const LABELS_FR = {
   exportFieldTheme: 'Identifiants de thème',
 
   exportFields: 'Champs à inclure',
-  exportFieldsCount: '{count} champs inclus',
   exportFieldsHelp:
     'L’identifiant de l’enregistrement et l’URL sont toujours inclus. Ces choix s’appliquent aux deux formats.',
   exportFieldTitle: 'Titre',
@@ -249,7 +247,6 @@ export const LABELS_JA = {
   exportFieldTheme: 'テーマのID',
 
   exportFields: '含める項目',
-  exportFieldsCount: '{count}項目を含む',
   exportFieldsHelp:
     'レコードIDとURLは常に含まれます。選択は両方の形式に適用されます。',
   exportFieldTitle: 'タイトル',
@@ -366,7 +363,6 @@ export const LABELS_ZH = {
   exportFieldTheme: '主题ID',
 
   exportFields: '包含的字段',
-  exportFieldsCount: '包含{count}个字段',
   exportFieldsHelp: '记录ID和URL始终包含在内。这些选择适用于两种格式。',
   exportFieldTitle: '标题',
   exportFieldPosted: '网站发布日期',
@@ -505,7 +501,6 @@ export const LABELS_AR = {
   exportFieldTheme: 'معرّفات المواضيع',
 
   exportFields: 'الحقول المراد تضمينها',
-  exportFieldsCount: '{count} حقول مضمّنة',
   exportFieldsHelp:
     'يُضمَّن معرّف السجل والرابط دائمًا. تنطبق هذه الخيارات على كلا التنسيقين.',
   exportFieldTitle: 'العنوان',
@@ -666,7 +661,6 @@ export const LABELS_RU = {
   exportFieldTheme: 'Идентификаторы тем',
 
   exportFields: 'Поля для включения',
-  exportFieldsCount: 'Полей включено: {count}',
   exportFieldsHelp:
     'Идентификатор записи и URL включаются всегда. Выбор применяется к обоим форматам.',
   exportFieldTitle: 'Заголовок',
@@ -803,7 +797,6 @@ export const DEFAULT_LABELS = {
   exportFieldTheme: 'Theme IDs',
 
   exportFields: 'Fields to include',
-  exportFieldsCount: '{count} fields included',
   exportFieldsHelp:
     'Record ID and URL are always included. These choices apply to both formats.',
   exportFieldTitle: 'Title',

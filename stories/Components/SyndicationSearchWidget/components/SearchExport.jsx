@@ -325,16 +325,7 @@ export default function SearchExport({ isStale = false }) {
               }}
             />
             <details className="mg-search__export-field-options" open>
-              <summary>
-                <span className="mg-search__export-field-heading">
-                  <span>{labels.exportFields}</span>
-                  <span className="mg-badge mg-search__export-field-count">
-                    {interpolateLabel(labels.exportFieldsCount, {
-                      count: columnsForExportGroups(selectedGroups).length,
-                    })}
-                  </span>
-                </span>
-              </summary>
+              <summary>{labels.exportFields}</summary>
               <fieldset
                 className="mg-search__export-fields"
                 disabled={busy}

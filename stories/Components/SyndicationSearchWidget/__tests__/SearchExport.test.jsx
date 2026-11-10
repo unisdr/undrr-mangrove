@@ -232,7 +232,7 @@ test('offers one optional CTA that opens both formats in a labelled modal', () =
   expect(screen.getByRole('button', { name: 'Download JSON' })).toBeVisible();
   const quantity = screen.getByRole('spinbutton');
   const fields = screen
-    .getByText('Fields to include', { selector: 'summary span' })
+    .getByText('Fields to include', { selector: 'summary' })
     .closest('summary');
   const format = screen.getByRole('region', { name: 'Download as' });
   expect(quantity.compareDocumentPosition(fields)).toBe(
@@ -365,7 +365,7 @@ const blobText = blob =>
 
 function revealFields() {
   const summary = screen
-    .getByText('Fields to include', { selector: 'summary span' })
+    .getByText('Fields to include', { selector: 'summary' })
     .closest('summary');
   if (!summary.closest('details').open) fireEvent.click(summary);
   return screen.getAllByRole('checkbox');
@@ -377,7 +377,6 @@ test('optional fields have useful defaults, keep core fields and reset on reopen
     screen.getByRole('group', { name: 'Fields to include' }).closest('details')
   ).toHaveAttribute('open');
   const checkboxes = revealFields();
-  expect(screen.getByText('11 fields included')).toBeVisible();
   expect(checkboxes).toHaveLength(8);
   for (const checkbox of checkboxes) expect(checkbox).toBeChecked();
   expect(
@@ -398,7 +397,6 @@ test('optional fields have useful defaults, keep core fields and reset on reopen
 test('clearing all optional groups exports only ID and URL in both formats', async () => {
   setup();
   for (const checkbox of revealFields()) fireEvent.click(checkbox);
-  expect(screen.getByText('2 fields included')).toBeVisible();
   fireEvent.click(screen.getByRole('button', { name: 'Download CSV' }));
   await waitFor(() => expect(URL.createObjectURL).toHaveBeenCalledTimes(1));
   const csv = await blobText(URL.createObjectURL.mock.calls[0][0]);
