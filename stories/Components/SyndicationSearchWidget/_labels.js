@@ -5,8 +5,7 @@ export const LABELS_ES = {
   exportFormatHelp: 'CSV para hojas de cálculo; JSON para programas.',
   exportFormatTitle: 'Descargar como',
   exportCountLabel: 'Número de resultados',
-  exportCountHelp:
-    'De 1 a 1000 resultados. Si hay menos coincidencias, obtendrá las disponibles.',
+  exportCountHelp: 'Máx. 1000',
   exportCountError: 'Introduzca un número entero entre 1 y 1000.',
 
   exportFieldType: 'Tipo de contenido',
@@ -16,6 +15,7 @@ export const LABELS_ES = {
   exportFieldTheme: 'Identificadores de tema',
 
   exportFields: 'Campos que se incluirán',
+  exportFieldsCount: '{count} campos incluidos',
   exportFieldsHelp:
     'El identificador del registro y la URL siempre se incluyen. Estas opciones se aplican a ambos formatos.',
   exportFieldTitle: 'Título',
@@ -122,8 +122,7 @@ export const LABELS_FR = {
   exportFormatHelp: 'CSV pour les tableurs ; JSON pour les logiciels.',
   exportFormatTitle: 'Télécharger au format',
   exportCountLabel: 'Nombre de résultats',
-  exportCountHelp:
-    'De 1 à 1 000 résultats. Si moins correspondent, vous obtiendrez ceux disponibles.',
+  exportCountHelp: 'Max. 1 000',
   exportCountError: 'Saisissez un nombre entier de 1 à 1 000.',
 
   exportFieldType: 'Type de contenu',
@@ -133,6 +132,7 @@ export const LABELS_FR = {
   exportFieldTheme: 'Identifiants de thème',
 
   exportFields: 'Champs à inclure',
+  exportFieldsCount: '{count} champs inclus',
   exportFieldsHelp:
     'L’identifiant de l’enregistrement et l’URL sont toujours inclus. Ces choix s’appliquent aux deux formats.',
   exportFieldTitle: 'Titre',
@@ -239,8 +239,7 @@ export const LABELS_JA = {
   exportFormatHelp: 'CSVは表計算用、JSONはソフトウェア用です。',
   exportFormatTitle: 'ダウンロード形式',
   exportCountLabel: '結果の件数',
-  exportCountHelp:
-    '1〜1,000件。一致する件数が少ない場合は、その件数を取得できます。',
+  exportCountHelp: '最大1,000件',
   exportCountError: '1から1,000までの整数を入力してください。',
 
   exportFieldType: 'コンテンツの種類',
@@ -250,6 +249,7 @@ export const LABELS_JA = {
   exportFieldTheme: 'テーマのID',
 
   exportFields: '含める項目',
+  exportFieldsCount: '{count}項目を含む',
   exportFieldsHelp:
     'レコードIDとURLは常に含まれます。選択は両方の形式に適用されます。',
   exportFieldTitle: 'タイトル',
@@ -356,7 +356,7 @@ export const LABELS_ZH = {
   exportFormatHelp: 'CSV用于电子表格，JSON用于软件。',
   exportFormatTitle: '下载格式',
   exportCountLabel: '结果数量',
-  exportCountHelp: '1至1,000条结果。匹配较少时，将提供可用的匹配结果。',
+  exportCountHelp: '最多1,000条',
   exportCountError: '请输入1到1,000之间的整数。',
 
   exportFieldType: '内容类型',
@@ -366,6 +366,7 @@ export const LABELS_ZH = {
   exportFieldTheme: '主题ID',
 
   exportFields: '包含的字段',
+  exportFieldsCount: '包含{count}个字段',
   exportFieldsHelp: '记录ID和URL始终包含在内。这些选择适用于两种格式。',
   exportFieldTitle: '标题',
   exportFieldPosted: '网站发布日期',
@@ -494,8 +495,7 @@ export const LABELS_AR = {
   exportFormatHelp: 'CSV لجداول البيانات وJSON للبرامج.',
   exportFormatTitle: 'التنزيل بصيغة',
   exportCountLabel: 'عدد النتائج',
-  exportCountHelp:
-    'من 1 إلى 1000 نتيجة. إذا كانت المطابقات أقل، فستحصل على المتاح منها.',
+  exportCountHelp: 'الحد الأقصى 1000',
   exportCountError: 'أدخل عددًا صحيحًا من 1 إلى 1000.',
 
   exportFieldType: 'نوع المحتوى',
@@ -505,6 +505,7 @@ export const LABELS_AR = {
   exportFieldTheme: 'معرّفات المواضيع',
 
   exportFields: 'الحقول المراد تضمينها',
+  exportFieldsCount: '{count} حقول مضمّنة',
   exportFieldsHelp:
     'يُضمَّن معرّف السجل والرابط دائمًا. تنطبق هذه الخيارات على كلا التنسيقين.',
   exportFieldTitle: 'العنوان',
@@ -655,8 +656,7 @@ export const LABELS_RU = {
   exportFormatHelp: 'CSV для электронных таблиц; JSON для программ.',
   exportFormatTitle: 'Скачать в формате',
   exportCountLabel: 'Количество результатов',
-  exportCountHelp:
-    'От 1 до 1000 результатов. Если совпадений меньше, будут доступны найденные записи.',
+  exportCountHelp: 'Макс. 1000',
   exportCountError: 'Введите целое число от 1 до 1000.',
 
   exportFieldType: 'Тип содержимого',
@@ -666,6 +666,7 @@ export const LABELS_RU = {
   exportFieldTheme: 'Идентификаторы тем',
 
   exportFields: 'Поля для включения',
+  exportFieldsCount: 'Полей включено: {count}',
   exportFieldsHelp:
     'Идентификатор записи и URL включаются всегда. Выбор применяется к обоим форматам.',
   exportFieldTitle: 'Заголовок',
@@ -792,8 +793,7 @@ export const DEFAULT_LABELS = {
   exportFormatHelp: 'CSV for spreadsheets; JSON for software.',
   exportFormatTitle: 'Download as',
   exportCountLabel: 'Number of results',
-  exportCountHelp:
-    '1–1,000 results. If fewer match, you’ll get those available.',
+  exportCountHelp: 'Max 1,000',
   exportCountError: 'Enter a whole number from 1 to 1,000.',
 
   exportFieldType: 'Content type',
@@ -803,6 +803,7 @@ export const DEFAULT_LABELS = {
   exportFieldTheme: 'Theme IDs',
 
   exportFields: 'Fields to include',
+  exportFieldsCount: '{count} fields included',
   exportFieldsHelp:
     'Record ID and URL are always included. These choices apply to both formats.',
   exportFieldTitle: 'Title',

@@ -379,12 +379,6 @@ export const ChooseFields = {
   play: async context => {
     await openExport(context);
     const modal = within(dialog(within(context.canvasElement)));
-    await userEvent.click(
-      modal.getByText(
-        /Fields to include|Campos que se incluirán|Champs à inclure|含める項目|包含的字段|الحقول المراد تضمينها|Поля для включения/,
-        { selector: 'summary' }
-      )
-    );
     await expect(modal.getAllByRole('checkbox')).toHaveLength(8);
   },
 };

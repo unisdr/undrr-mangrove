@@ -34,9 +34,9 @@ const config = {
   defaultFilters: [],
   enableHashSync: false,
 };
-function setup(open = true) {
+function setup(open = true, labels = {}) {
   const view = isStale => (
-    <SearchProvider config={config}>
+    <SearchProvider config={config} labels={labels}>
       <Capture />
       <SearchExport isStale={isStale} />
     </SearchProvider>
@@ -231,7 +231,9 @@ test('offers one optional CTA that opens both formats in a labelled modal', () =
   expect(screen.getByRole('button', { name: 'Download CSV' })).toBeVisible();
   expect(screen.getByRole('button', { name: 'Download JSON' })).toBeVisible();
   const quantity = screen.getByRole('spinbutton');
-  const fields = screen.getByText('Fields to include', { selector: 'summary' });
+  const fields = screen
+    .getByText('Fields to include', { selector: 'summary span' })
+    .closest('summary');
   const format = screen.getByRole('region', { name: 'Download as' });
   expect(quantity.compareDocumentPosition(fields)).toBe(
     Node.DOCUMENT_POSITION_FOLLOWING
@@ -362,15 +364,20 @@ const blobText = blob =>
   });
 
 function revealFields() {
-  fireEvent.click(
-    screen.getByText('Fields to include', { selector: 'summary' })
-  );
+  const summary = screen
+    .getByText('Fields to include', { selector: 'summary span' })
+    .closest('summary');
+  if (!summary.closest('details').open) fireEvent.click(summary);
   return screen.getAllByRole('checkbox');
 }
 
 test('optional fields have useful defaults, keep core fields and reset on reopening', () => {
   setup();
+  expect(
+    screen.getByRole('group', { name: 'Fields to include' }).closest('details')
+  ).toHaveAttribute('open');
   const checkboxes = revealFields();
+  expect(screen.getByText('11 fields included')).toBeVisible();
   expect(checkboxes).toHaveLength(8);
   for (const checkbox of checkboxes) expect(checkbox).toBeChecked();
   expect(
@@ -382,12 +389,16 @@ test('optional fields have useful defaults, keep core fields and reset on reopen
   expect(screen.getByRole('checkbox', { name: 'Title' })).not.toBeChecked();
   fireEvent.click(screen.getByRole('button', { name: 'Close' }));
   fireEvent.click(screen.getByRole('button', { name: 'Download results' }));
+  expect(
+    screen.getByRole('group', { name: 'Fields to include' }).closest('details')
+  ).toHaveAttribute('open');
   for (const checkbox of revealFields()) expect(checkbox).toBeChecked();
 });
 
 test('clearing all optional groups exports only ID and URL in both formats', async () => {
   setup();
   for (const checkbox of revealFields()) fireEvent.click(checkbox);
+  expect(screen.getByText('2 fields included')).toBeVisible();
   fireEvent.click(screen.getByRole('button', { name: 'Download CSV' }));
   await waitFor(() => expect(URL.createObjectURL).toHaveBeenCalledTimes(1));
   const csv = await blobText(URL.createObjectURL.mock.calls[0][0]);
@@ -457,9 +468,7 @@ test('quantity is modal-local, starts from configuration, and both formats reuse
   expect(csvBody).toMatchObject({ size: 3, from: 0 });
   const csv = await blobText(URL.createObjectURL.mock.calls[0][0]);
   expect(csv.split('\r\n').filter(Boolean)).toHaveLength(4);
-  fireEvent.click(
-    screen.getByText('Fields to include', { selector: 'summary' })
-  );
+  revealFields();
   fireEvent.click(screen.getByRole('checkbox', { name: 'Title' }));
   fireEvent.click(screen.getByRole('button', { name: 'Download JSON' }));
   await waitFor(() => expect(URL.createObjectURL).toHaveBeenCalledTimes(2));
@@ -539,3 +548,11 @@ test('reopening resets quantity and validation to the configured initial count',
   ).toHaveValue(1);
   expect(screen.queryByRole('alert')).not.toBeInTheDocument();
 });
+
+test.each(['', '   '])(
+  'icon Close remains named for blank override %p',
+  label => {
+    setup(true, { exportClose: label });
+    expect(screen.getByRole('button', { name: 'Close' })).toBeVisible();
+  }
+);

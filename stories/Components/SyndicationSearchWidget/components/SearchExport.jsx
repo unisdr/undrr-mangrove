@@ -16,6 +16,7 @@ import {
   useSearchState,
   useSearchLabels,
   interpolateLabel,
+  DEFAULT_LABELS,
 } from '../context/SearchContext';
 import { isQueryTooShortToSearch } from '../utils/constants';
 import {
@@ -273,7 +274,10 @@ export default function SearchExport({ isStale = false }) {
             outsideRef.current = false;
           }}
         >
-          <header className="mg-dialog__header">
+          <header className="mg-dialog__header mg-search__export-header">
+            <span className="mg-search__export-header-icon" aria-hidden="true">
+              <span className="mg-icon mg-icon-download" />
+            </span>
             <h2
               ref={titleRef}
               id={titleId}
@@ -284,18 +288,21 @@ export default function SearchExport({ isStale = false }) {
             </h2>
             <button
               type="button"
-              className="mg-button mg-button-secondary mg-button-outline mg-dialog__close"
+              className="mg-icon-button mg-dialog__close"
+              aria-label={
+                labels.exportClose?.trim() || DEFAULT_LABELS.exportClose
+              }
               onClick={closeModal}
             >
-              {labels.exportClose}
+              <span className="mg-icon mg-icon-close" aria-hidden="true" />
             </button>
-          </header>
-          <div className="mg-dialog__body">
-            <p id={helpId}>
+            <p id={helpId} className="mg-search__export-scope">
               {interpolateLabel(labels.exportScope, {
                 limit: requestedExportCount(countValue) ?? '…',
               })}
             </p>
+          </header>
+          <div className="mg-dialog__body">
             <TextInput
               className="mg-search__export-count"
               id={countId}
@@ -317,8 +324,17 @@ export default function SearchExport({ isStale = false }) {
                 setStatus(null);
               }}
             />
-            <details className="mg-search__export-field-options">
-              <summary>{labels.exportFields}</summary>
+            <details className="mg-search__export-field-options" open>
+              <summary>
+                <span className="mg-search__export-field-heading">
+                  <span>{labels.exportFields}</span>
+                  <span className="mg-search__export-field-count">
+                    {interpolateLabel(labels.exportFieldsCount, {
+                      count: columnsForExportGroups(selectedGroups).length,
+                    })}
+                  </span>
+                </span>
+              </summary>
               <fieldset
                 className="mg-search__export-fields"
                 disabled={busy}
@@ -328,24 +344,26 @@ export default function SearchExport({ isStale = false }) {
                   <span className="mg-u-sr-only">{labels.exportFields}</span>
                 </legend>
                 <p id={fieldsHelpId}>{labels.exportFieldsHelp}</p>
-                {EXPORT_FIELD_GROUPS.map(group => (
-                  <Checkbox
-                    key={group.id}
-                    label={labels[group.label]}
-                    value={group.id}
-                    checked={selectedGroups.includes(group.id)}
-                    disabled={busy}
-                    onChange={event => {
-                      const checked = event.target.checked;
-                      setStatus(null);
-                      setSelectedGroups(previous =>
-                        checked
-                          ? [...previous, group.id]
-                          : previous.filter(id => id !== group.id)
-                      );
-                    }}
-                  />
-                ))}
+                <div className="mg-search__export-field-grid">
+                  {EXPORT_FIELD_GROUPS.map(group => (
+                    <Checkbox
+                      key={group.id}
+                      label={labels[group.label]}
+                      value={group.id}
+                      checked={selectedGroups.includes(group.id)}
+                      disabled={busy}
+                      onChange={event => {
+                        const checked = event.target.checked;
+                        setStatus(null);
+                        setSelectedGroups(previous =>
+                          checked
+                            ? [...previous, group.id]
+                            : previous.filter(id => id !== group.id)
+                        );
+                      }}
+                    />
+                  ))}
+                </div>
               </fieldset>
             </details>
           </div>
@@ -362,7 +380,7 @@ export default function SearchExport({ isStale = false }) {
             <div className="mg-search__export-actions" aria-busy={busy}>
               <button
                 type="button"
-                className={`mg-button mg-button-secondary${unavailable || busy ? ' disabled' : ''}`}
+                className={`mg-button mg-button-primary${unavailable || busy ? ' disabled' : ''}`}
                 aria-describedby={`${helpId} ${formatHelpId}`}
                 disabled={unavailable}
                 aria-disabled={busy || undefined}
@@ -370,11 +388,12 @@ export default function SearchExport({ isStale = false }) {
                   download('csv', event.currentTarget.ownerDocument)
                 }
               >
+                <span className="mg-icon mg-icon-download" aria-hidden="true" />
                 {labels.exportCsv}
               </button>
               <button
                 type="button"
-                className={`mg-button mg-button-secondary${unavailable || busy ? ' disabled' : ''}`}
+                className={`mg-button mg-button-secondary mg-button-outline${unavailable || busy ? ' disabled' : ''}`}
                 aria-describedby={`${helpId} ${formatHelpId}`}
                 disabled={unavailable}
                 aria-disabled={busy || undefined}
@@ -382,6 +401,7 @@ export default function SearchExport({ isStale = false }) {
                   download('json', event.currentTarget.ownerDocument)
                 }
               >
+                <span className="mg-icon mg-icon-download" aria-hidden="true" />
                 {labels.exportJson}
               </button>
             </div>
