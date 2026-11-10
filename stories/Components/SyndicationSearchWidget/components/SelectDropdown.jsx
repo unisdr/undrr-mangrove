@@ -49,7 +49,7 @@ const EMPTY_VALUE = [];
  * @param {string} props.id - Unique ID for the select
  * @param {string} props.label - Label for the select
  * @param {string} props.placeholder - Placeholder text when nothing selected
- * @param {Array} props.options - Array of { value, label, count } objects
+ * @param {Array} props.options - Array of { value, label, count, selectionState, description } objects
  * @param {Array|string} props.value - Selected value(s)
  * @param {Function} props.onChange - Callback when selection changes
  * @param {boolean} props.multiple - Enable multi-select mode
@@ -200,6 +200,8 @@ export function SelectDropdown({
 
         case 'Enter':
         case ' ':
+          // Space edits the searchable input; Enter activates its option.
+          if (e.key === ' ' && e.target === searchInputRef.current) return;
           e.preventDefault();
           if (highlightedIndex >= 0 && filteredOptions[highlightedIndex]) {
             handleOptionClick(filteredOptions[highlightedIndex].value);
@@ -271,7 +273,7 @@ export function SelectDropdown({
         aria-expanded={isOpen}
         aria-labelledby={`${selectId}-label`}
         aria-controls={listboxId}
-        aria-activedescendant={activeDescendant}
+        aria-activedescendant={showSearch ? undefined : activeDescendant}
         onClick={handleTriggerClick}
       >
         <span className="mg-select__trigger-text">{displayText}</span>
@@ -316,6 +318,11 @@ export function SelectDropdown({
               <input
                 ref={searchInputRef}
                 type="text"
+                role="combobox"
+                aria-autocomplete="list"
+                aria-expanded={isOpen}
+                aria-controls={listboxId}
+                aria-activedescendant={activeDescendant}
                 className="mg-select__search-input"
                 placeholder={searchInputPlaceholder}
                 value={searchQuery}
@@ -354,9 +361,14 @@ export function SelectDropdown({
                       : ''
                   } ${index === highlightedIndex ? 'mg-select__option--highlighted' : ''} ${
                     option.isSubtype ? 'mg-select__option--subtype' : ''
-                  }`}
+                  } ${option.selectionState === 'inherited' ? 'mg-select__option--inherited' : ''} ${option.selectionState === 'partial' ? 'mg-select__option--partial' : ''}`}
                   role="option"
                   aria-selected={isSelected(option.value)}
+                  aria-describedby={
+                    option.description
+                      ? `${getOptionId(index)}-description`
+                      : undefined
+                  }
                   onClick={() => handleOptionClick(option.value)}
                 >
                   {/* Checkbox/Radio indicator */}
@@ -368,6 +380,22 @@ export function SelectDropdown({
                     }`}
                     aria-hidden="true"
                   >
+                    {!isSelected(option.value) &&
+                      multiple &&
+                      option.selectionState && (
+                        <svg
+                          width="12"
+                          height="12"
+                          viewBox="0 0 12 12"
+                          fill="currentColor"
+                        >
+                          {option.selectionState === 'inherited' ? (
+                            <path d="M1 6h10v5H1z" />
+                          ) : (
+                            <path d="M2 5h8v2H2z" />
+                          )}
+                        </svg>
+                      )}
                     {isSelected(option.value) &&
                       (multiple ? (
                         <svg
@@ -392,6 +420,12 @@ export function SelectDropdown({
                   <span className="mg-select__option-label">
                     {option.label}
                   </span>
+
+                  {option.description && (
+                    <span id={`${getOptionId(index)}-description`} hidden>
+                      {option.description}
+                    </span>
+                  )}
 
                   {/* Count badge */}
                   {option.count !== undefined && (

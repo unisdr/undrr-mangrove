@@ -4,6 +4,7 @@ import { chromium, webkit } from 'playwright-core';
 
 const base = process.env.SEARCH_STORYBOOK_URL || 'http://127.0.0.1:6099';
 const engine = process.env.SEARCH_BROWSER || 'chromium';
+const forcedColors = process.env.SEARCH_FORCED_COLORS || 'none';
 assert(['chromium', 'webkit'].includes(engine));
 const browser = await { chromium, webkit }[engine].launch();
 const themes = [
@@ -186,6 +187,7 @@ try {
           isMobile: mobile,
           hasTouch: mobile,
           reducedMotion,
+          forcedColors,
         });
         const input = locator => (mobile ? locator.tap() : locator.click());
         await page.goto(
@@ -216,7 +218,28 @@ try {
         assert.equal(original.length, 5);
         await input(page.getByRole('option', { name: /^News 10$/ }));
         assert.deepEqual(await optionLabels(), original);
-        await input(page.getByRole('option', { name: /Update 7$/ }));
+        const inherited = page.getByRole('option', { name: /Update 7$/ });
+        assert(
+          await inherited.evaluate(el =>
+            el.classList.contains('mg-select__option--inherited')
+          )
+        );
+        assert.equal(await inherited.getAttribute('aria-selected'), 'false');
+        assert.equal(
+          (await inherited.getAttribute('aria-describedby')) !== null,
+          true
+        );
+        assert(
+          await inherited.locator('svg').evaluate(el => {
+            const rect = el.getBoundingClientRect();
+            return (
+              rect.width > 0 &&
+              rect.height > 0 &&
+              getComputedStyle(el).color !== 'rgba(0, 0, 0, 0)'
+            );
+          })
+        );
+        await input(inherited);
         const selectedLabels = await optionLabels();
         assert.deepEqual(
           selectedLabels,
@@ -248,8 +271,38 @@ try {
           );
         await input(type);
         assert.deepEqual(await optionLabels(), selectedLabels);
-        await input(page.getByRole('option', { name: /News: Update 7$/ }));
         await input(page.getByRole('option', { name: /^News 10$/ }));
+        const partialParent = page.getByRole('option', { name: /^News 10$/ });
+        assert(
+          await partialParent.evaluate(el =>
+            el.classList.contains('mg-select__option--partial')
+          )
+        );
+        assert.equal(
+          await partialParent.getAttribute('aria-selected'),
+          'false'
+        );
+        assert(
+          await partialParent.locator('svg').evaluate(el => {
+            const rect = el.getBoundingClientRect();
+            return (
+              rect.width > 0 &&
+              rect.height > 0 &&
+              getComputedStyle(el).color !== 'rgba(0, 0, 0, 0)'
+            );
+          })
+        );
+        assert.equal(
+          (await partialParent.getAttribute('aria-describedby')) !== null,
+          true
+        );
+        assert.equal(
+          await page
+            .getByRole('option', { name: /News: Update 7$/ })
+            .getAttribute('aria-selected'),
+          'true'
+        );
+        await input(page.getByRole('option', { name: /News: Update 7$/ }));
         assert.deepEqual(await optionLabels(), original);
         await type.focus();
         await page.keyboard.press('Escape');
@@ -273,7 +326,7 @@ try {
           exact: true,
         });
         await input(topics);
-        const search = page.getByRole('textbox', { name: 'Search Topics' });
+        const search = page.getByRole('combobox', { name: 'Search Topics' });
         await search.fill('Topic 12');
         const option = page.getByRole('option', {
           name: 'Topic 12',
@@ -315,7 +368,7 @@ try {
           assert.equal(await surface.count(), 0);
         }
         console.log(
-          `${engine}: ${theme}, ${mobile ? 'touch drawer' : 'desktop mouse'}, ${reducedMotion}, ${locale}: passed`
+          `${engine}: ${theme}, ${mobile ? 'touch drawer' : 'desktop mouse'}, ${reducedMotion}, ${locale}, forced colours ${forcedColors}: passed`
         );
         await page.close();
       }

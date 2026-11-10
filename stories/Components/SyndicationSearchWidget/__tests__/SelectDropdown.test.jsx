@@ -113,3 +113,36 @@ it('has no automated accessibility violations with a selected indented subtype',
   fireEvent.click(screen.getByRole('button'));
   expect(await axe(container)).toHaveNoViolations();
 });
+
+it('exposes highlighted inclusion descriptions from the focused searchable combobox', async () => {
+  const options = Array.from({ length: 9 }, (_, i) => ({
+    value: `option-${i}`,
+    label: `Option ${i}`,
+    selectionState: i === 0 ? 'inherited' : undefined,
+    description: i === 0 ? 'Included through parent type' : undefined,
+  }));
+  const { container } = render(
+    <SelectDropdown
+      id="search-type"
+      label="Type"
+      options={options}
+      value={[]}
+      multiple
+      onChange={() => {}}
+    />
+  );
+  const trigger = screen.getByRole('button');
+  fireEvent.click(trigger);
+  const search = screen.getByRole('combobox', { name: 'Search Type' });
+  expect(search).toHaveFocus();
+  expect(fireEvent.keyDown(search, { key: ' ' })).toBe(true);
+  expect(search).toHaveAttribute('aria-controls', 'search-type-listbox');
+  fireEvent.keyDown(search, { key: 'ArrowDown' });
+  const highlighted = screen.getByRole('option', { name: 'Option 0' });
+  expect(search).toHaveAttribute('aria-activedescendant', highlighted.id);
+  expect(highlighted).toHaveAccessibleDescription(
+    'Included through parent type'
+  );
+  expect(trigger).not.toHaveAttribute('aria-activedescendant');
+  expect(await axe(container)).toHaveNoViolations();
+});

@@ -1297,6 +1297,30 @@ $search-input-padding-x: mg-rem(44);
   color: $search-text-muted;
 }
 
+// Inclusion inherited from a parent is distinct from an explicit selection.
+// Shapes carry the state as well as tint, including in forced colours.
+.mg-select__option--inherited {
+  background-color: rgb(var(--mg-color-form-check--checked) / 0.05);
+
+  .mg-select__indicator {
+    background-color: rgb(var(--mg-color-form-check--checked) / 0.12);
+  }
+}
+
+.mg-select__option--inherited,
+.mg-select__option--partial {
+  .mg-select__indicator {
+    color: rgb(var(--mg-color-form-check--checked));
+  }
+
+  @media (forced-colors: active) {
+    .mg-select__indicator {
+      border-color: CanvasText;
+      color: CanvasText;
+    }
+  }
+}
+
 // Subtype options (indented children under parent content types)
 .mg-select__option--subtype {
   padding-inline-start: var(--mg-spacing-150);
