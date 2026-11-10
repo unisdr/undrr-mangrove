@@ -19,7 +19,7 @@ export const LABELS_ES = {
     'El identificador del registro y la URL siempre se incluyen. Estas opciones se aplican a ambos formatos.',
   exportFieldTitle: 'Título',
   exportFieldPosted: 'Fecha de publicación en el sitio web',
-  exportFieldReaderDate: 'Fecha del contenido y su precisión',
+  exportFieldReaderDate: 'Fecha mostrada en los resultados',
 
   exportOpen: 'Descargar resultados',
   exportClose: 'Cerrar',
@@ -135,7 +135,7 @@ export const LABELS_FR = {
     'L’identifiant de l’enregistrement et l’URL sont toujours inclus. Ces choix s’appliquent aux deux formats.',
   exportFieldTitle: 'Titre',
   exportFieldPosted: 'Date de mise en ligne',
-  exportFieldReaderDate: 'Date du contenu et sa précision',
+  exportFieldReaderDate: 'Date affichée dans les résultats',
 
   exportOpen: 'Télécharger les résultats',
   exportClose: 'Fermer',
@@ -251,7 +251,7 @@ export const LABELS_JA = {
     'レコードIDとURLは常に含まれます。選択は両方の形式に適用されます。',
   exportFieldTitle: 'タイトル',
   exportFieldPosted: 'ウェブサイト掲載日',
-  exportFieldReaderDate: 'コンテンツの日付とその精度',
+  exportFieldReaderDate: '検索結果に表示される日付',
 
   exportOpen: '結果をダウンロード',
   exportClose: '閉じる',
@@ -366,7 +366,7 @@ export const LABELS_ZH = {
   exportFieldsHelp: '记录ID和URL始终包含在内。这些选择适用于两种格式。',
   exportFieldTitle: '标题',
   exportFieldPosted: '网站发布日期',
-  exportFieldReaderDate: '内容日期及其精度',
+  exportFieldReaderDate: '结果中显示的日期',
 
   exportOpen: '下载结果',
   exportClose: '关闭',
@@ -505,7 +505,7 @@ export const LABELS_AR = {
     'يُضمَّن معرّف السجل والرابط دائمًا. تنطبق هذه الخيارات على كلا التنسيقين.',
   exportFieldTitle: 'العنوان',
   exportFieldPosted: 'تاريخ النشر على الموقع',
-  exportFieldReaderDate: 'تاريخ المحتوى ودقته',
+  exportFieldReaderDate: 'التاريخ المعروض في النتائج',
 
   exportOpen: 'تنزيل النتائج',
   exportClose: 'إغلاق',
@@ -665,7 +665,7 @@ export const LABELS_RU = {
     'Идентификатор записи и URL включаются всегда. Выбор применяется к обоим форматам.',
   exportFieldTitle: 'Заголовок',
   exportFieldPosted: 'Дата размещения на сайте',
-  exportFieldReaderDate: 'Дата содержимого и её точность',
+  exportFieldReaderDate: 'Дата, указанная в результатах',
 
   exportOpen: 'Скачать результаты',
   exportClose: 'Закрыть',
@@ -801,7 +801,7 @@ export const DEFAULT_LABELS = {
     'Record ID and URL are always included. These choices apply to both formats.',
   exportFieldTitle: 'Title',
   exportFieldPosted: 'Website posting date',
-  exportFieldReaderDate: 'Content date and its precision',
+  exportFieldReaderDate: 'Date shown in results',
 
   exportOpen: 'Download results',
   exportClose: 'Close',
