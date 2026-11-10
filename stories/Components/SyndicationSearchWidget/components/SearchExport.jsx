@@ -53,6 +53,8 @@ export default function SearchExport({ isStale = false }) {
   const titleId = useId();
   const fieldsHelpId = useId();
   const countId = useId();
+  const formatTitleId = useId();
+  const formatHelpId = useId();
   const defaultCount = normalizeExportDefaultCount(config.exportDefaultCount);
   const { query, facets, facetOperators, customFacets, sortBy } = state;
   const body = useMemo(
@@ -282,7 +284,7 @@ export default function SearchExport({ isStale = false }) {
             </h2>
             <button
               type="button"
-              className="mg-button mg-button-secondary mg-dialog__close"
+              className="mg-button mg-button-secondary mg-button-outline mg-dialog__close"
               onClick={closeModal}
             >
               {labels.exportClose}
@@ -295,6 +297,7 @@ export default function SearchExport({ isStale = false }) {
               })}
             </p>
             <TextInput
+              className="mg-search__export-count"
               id={countId}
               type="number"
               label={labels.exportCountLabel}
@@ -321,7 +324,9 @@ export default function SearchExport({ isStale = false }) {
                 disabled={busy}
                 aria-describedby={fieldsHelpId}
               >
-                <legend className="mg-u-sr-only">{labels.exportFields}</legend>
+                <legend>
+                  <span className="mg-u-sr-only">{labels.exportFields}</span>
+                </legend>
                 <p id={fieldsHelpId}>{labels.exportFieldsHelp}</p>
                 {EXPORT_FIELD_GROUPS.map(group => (
                   <Checkbox
@@ -343,11 +348,22 @@ export default function SearchExport({ isStale = false }) {
                 ))}
               </fieldset>
             </details>
+          </div>
+          <section
+            className="mg-search__export-footer"
+            aria-labelledby={formatTitleId}
+          >
+            <h3 id={formatTitleId} className="mg-search__export-format-title">
+              {labels.exportFormatTitle}
+            </h3>
+            <p id={formatHelpId} className="mg-form-help">
+              {labels.exportFormatHelp}
+            </p>
             <div className="mg-search__export-actions" aria-busy={busy}>
               <button
                 type="button"
                 className={`mg-button mg-button-secondary${unavailable || busy ? ' disabled' : ''}`}
-                aria-describedby={helpId}
+                aria-describedby={`${helpId} ${formatHelpId}`}
                 disabled={unavailable}
                 aria-disabled={busy || undefined}
                 onClick={event =>
@@ -359,7 +375,7 @@ export default function SearchExport({ isStale = false }) {
               <button
                 type="button"
                 className={`mg-button mg-button-secondary${unavailable || busy ? ' disabled' : ''}`}
-                aria-describedby={helpId}
+                aria-describedby={`${helpId} ${formatHelpId}`}
                 disabled={unavailable}
                 aria-disabled={busy || undefined}
                 onClick={event =>
@@ -369,17 +385,21 @@ export default function SearchExport({ isStale = false }) {
                 {labels.exportJson}
               </button>
             </div>
-            <p role="status" aria-live="polite">
+            <p
+              className="mg-search__export-status"
+              role="status"
+              aria-live="polite"
+            >
               {!currentStatus?.error && currentStatus?.message}
             </p>
             {currentStatus?.error && (
               <p role="alert">{currentStatus.message}</p>
             )}
-            <p>
+            <p className="mg-form-help mg-search__export-help">
               {labels.exportContact}{' '}
               <a href={contactUrl}>{labels.exportContactLink}</a>
             </p>
-          </div>
+          </section>
         </dialog>
       )}
     </div>

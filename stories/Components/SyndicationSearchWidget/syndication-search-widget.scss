@@ -1883,3 +1883,28 @@ $search-input-padding-x: mg-rem(44);
   padding: var(--mg-spacing-100) 0 0;
   margin: 0;
 }
+
+.mg-search__export-count input {
+  inline-size: 10ch;
+  max-inline-size: 100%;
+}
+
+.mg-search__export-footer {
+  padding: 0 var(--mg-spacing-200) var(--mg-spacing-200);
+  overflow-wrap: anywhere;
+
+  .mg-search__export-help {
+    margin-block: var(--mg-spacing-200) 0;
+  }
+
+  .mg-search__export-status:empty {
+    margin: 0;
+  }
+}
+
+.mg-search__export-format-title {
+  margin: 0 0 var(--mg-spacing-75);
+  font-family: var(--mg-font-family-ui);
+  font-size: var(--mg-font-size-300);
+  font-weight: 600;
+}

@@ -80,9 +80,9 @@ afterEach(() => {
 
 test('downloads the configured first records and reports truncation with a contact link', async () => {
   setup();
-  const button = screen.getByRole('button', { name: 'Download results (CSV)' });
+  const button = screen.getByRole('button', { name: 'Download CSV' });
   expect(button).toHaveAccessibleDescription(
-    expect.stringContaining('first matching result')
+    expect.stringContaining('current terms, filters and sort order')
   );
   button.focus();
   fireEvent.click(button);
@@ -112,16 +112,14 @@ test('supports JSON and keeps repeated clicks from making parallel requests', as
   );
   setup();
   const button = screen.getByRole('button', {
-    name: 'Download results (JSON)',
+    name: 'Download JSON',
   });
   fireEvent.click(button);
   expect(button).toHaveAttribute('aria-disabled', 'true');
   expect(button).not.toBeDisabled();
   expect(screen.getByRole('status')).toHaveTextContent('Preparing download');
   fireEvent.click(button);
-  fireEvent.click(
-    screen.getByRole('button', { name: 'Download results (CSV)' })
-  );
+  fireEvent.click(screen.getByRole('button', { name: 'Download CSV' }));
   expect(fetch).toHaveBeenCalledTimes(1);
   await act(async () => resolve({ ok: true, json: async () => response() }));
   expect(click.mock.instances[0].download).toMatch(/\.json$/);
@@ -138,9 +136,7 @@ test.each(['input', 'query', 'unmount'])(
       })
     );
     const view = setup();
-    fireEvent.click(
-      screen.getByRole('button', { name: 'Download results (CSV)' })
-    );
+    fireEvent.click(screen.getByRole('button', { name: 'Download CSV' }));
     const signal = fetch.mock.calls[0][1].signal;
     if (change === 'input') view.stale(true);
     if (change === 'query') act(() => dispatch(actions.setQuery('new query')));
@@ -153,7 +149,7 @@ test.each(['input', 'query', 'unmount'])(
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       fireEvent.click(screen.getByRole('button', { name: 'Download results' }));
       expect(
-        screen.getByRole('button', { name: 'Download results (CSV)' })
+        screen.getByRole('button', { name: 'Download CSV' })
       ).not.toHaveAttribute('aria-disabled');
       expect(screen.getByRole('status')).toBeEmptyDOMElement();
     }
@@ -171,15 +167,13 @@ test.each(['http', 'partial', 'network'])(
         json: async () => ({ ...response(), timed_out: true }),
       });
     if (failure === 'network') fetch.mockRejectedValue(new Error('offline'));
-    fireEvent.click(
-      screen.getByRole('button', { name: 'Download results (CSV)' })
-    );
+    fireEvent.click(screen.getByRole('button', { name: 'Download CSV' }));
     expect(await screen.findByRole('alert')).toHaveTextContent(
       'could not be completed'
     );
     expect(click).not.toHaveBeenCalled();
     expect(
-      screen.getByRole('button', { name: 'Download results (CSV)' })
+      screen.getByRole('button', { name: 'Download CSV' })
     ).not.toHaveAttribute('aria-disabled');
   }
 );
@@ -187,17 +181,13 @@ test.each(['http', 'partial', 'network'])(
 test('reports fresh empty results without creating a file and disables known empty searches', async () => {
   setup();
   fetch.mockResolvedValue({ ok: true, json: async () => response(0) });
-  fireEvent.click(
-    screen.getByRole('button', { name: 'Download results (CSV)' })
-  );
+  fireEvent.click(screen.getByRole('button', { name: 'Download CSV' }));
   await waitFor(() =>
     expect(screen.getByRole('status')).toHaveTextContent('No matching records')
   );
   expect(click).not.toHaveBeenCalled();
   act(() => dispatch(actions.setResults(response(0))));
-  expect(
-    screen.getByRole('button', { name: 'Download results (CSV)' })
-  ).toBeDisabled();
+  expect(screen.getByRole('button', { name: 'Download CSV' })).toBeDisabled();
 });
 
 test('has no accessibility violations and preserves language overrides', async () => {
@@ -223,27 +213,38 @@ test('offers one optional CTA that opens both formats in a labelled modal', () =
   setup(false);
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   expect(
-    screen.queryByRole('button', { name: 'Download results (CSV)' })
+    screen.queryByRole('button', { name: 'Download CSV' })
   ).not.toBeInTheDocument();
   const trigger = screen.getByRole('button', { name: 'Download results' });
   expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
   fireEvent.click(trigger);
   const dialog = screen.getByRole('dialog', {
-    name: 'Download search results',
+    name: 'Download results',
   });
   expect(dialog).toHaveAttribute('open');
   expect(dialog).toHaveAccessibleDescription(
-    expect.stringContaining('first matching result')
+    expect.stringContaining('current terms, filters and sort order')
   );
   expect(
-    screen.getByRole('heading', { name: 'Download search results' })
+    screen.getByRole('heading', { name: 'Download results' })
   ).toHaveFocus();
+  expect(screen.getByRole('button', { name: 'Download CSV' })).toBeVisible();
+  expect(screen.getByRole('button', { name: 'Download JSON' })).toBeVisible();
+  const quantity = screen.getByRole('spinbutton');
+  const fields = screen.getByText('Fields to include', { selector: 'summary' });
+  const format = screen.getByRole('region', { name: 'Download as' });
+  expect(quantity.compareDocumentPosition(fields)).toBe(
+    Node.DOCUMENT_POSITION_FOLLOWING
+  );
+  expect(fields.compareDocumentPosition(format)).toBe(
+    Node.DOCUMENT_POSITION_FOLLOWING
+  );
+  expect(format).toContainElement(screen.getByRole('status'));
   expect(
-    screen.getByRole('button', { name: 'Download results (CSV)' })
-  ).toBeVisible();
-  expect(
-    screen.getByRole('button', { name: 'Download results (JSON)' })
-  ).toBeVisible();
+    screen.getByRole('button', { name: 'Download CSV' })
+  ).toHaveAccessibleDescription(
+    expect.stringContaining('CSV for spreadsheets; JSON for software.')
+  );
   expect(document.documentElement.style.overflow).toBe('hidden');
   fireEvent.click(screen.getByRole('button', { name: 'Close' }));
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
@@ -259,9 +260,7 @@ test('Close cancels a pending export and reopening starts a fresh session', asyn
     })
   );
   setup();
-  fireEvent.click(
-    screen.getByRole('button', { name: 'Download results (CSV)' })
-  );
+  fireEvent.click(screen.getByRole('button', { name: 'Download CSV' }));
   const signal = fetch.mock.calls[0][1].signal;
   fireEvent.click(screen.getByRole('button', { name: 'Close' }));
   expect(signal.aborted).toBe(true);
@@ -273,7 +272,7 @@ test('Close cancels a pending export and reopening starts a fresh session', asyn
   expect(click).not.toHaveBeenCalled();
   expect(screen.getByRole('status')).toBeEmptyDOMElement();
   expect(
-    screen.getByRole('button', { name: 'Download results (CSV)' })
+    screen.getByRole('button', { name: 'Download CSV' })
   ).not.toHaveAttribute('aria-disabled');
 });
 
@@ -294,7 +293,7 @@ test('native cancellation and genuine backdrop presses close and restore focus',
     top: 10,
     bottom: 100,
   });
-  fireEvent.pointerDown(screen.getByRole('heading'), {
+  fireEvent.pointerDown(screen.getByRole('heading', { level: 2 }), {
     clientX: 20,
     clientY: 20,
   });
@@ -344,7 +343,7 @@ test('invalidating input focuses the connected results region when the CTA becom
   });
   fireEvent.click(screen.getByRole('button', { name: 'Download results' }));
   expect(
-    screen.getByRole('heading', { name: 'Download search results' })
+    screen.getByRole('heading', { name: 'Download results' })
   ).toHaveFocus();
   rerender(view(true));
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
@@ -389,15 +388,11 @@ test('optional fields have useful defaults, keep core fields and reset on reopen
 test('clearing all optional groups exports only ID and URL in both formats', async () => {
   setup();
   for (const checkbox of revealFields()) fireEvent.click(checkbox);
-  fireEvent.click(
-    screen.getByRole('button', { name: 'Download results (CSV)' })
-  );
+  fireEvent.click(screen.getByRole('button', { name: 'Download CSV' }));
   await waitFor(() => expect(URL.createObjectURL).toHaveBeenCalledTimes(1));
   const csv = await blobText(URL.createObjectURL.mock.calls[0][0]);
   expect(csv.split('\r\n')[0]).toBe('"id","url"');
-  fireEvent.click(
-    screen.getByRole('button', { name: 'Download results (JSON)' })
-  );
+  fireEvent.click(screen.getByRole('button', { name: 'Download JSON' }));
   await waitFor(() => expect(URL.createObjectURL).toHaveBeenCalledTimes(2));
   const data = JSON.parse(await blobText(URL.createObjectURL.mock.calls[1][0]));
   expect(data.scope.fields).toEqual(['id', 'url']);
@@ -414,9 +409,7 @@ test('field editing is unavailable during a pending download and the snapshot is
   setup();
   revealFields();
   fireEvent.click(screen.getByRole('checkbox', { name: 'Title' }));
-  fireEvent.click(
-    screen.getByRole('button', { name: 'Download results (JSON)' })
-  );
+  fireEvent.click(screen.getByRole('button', { name: 'Download JSON' }));
   for (const checkbox of screen.getAllByRole('checkbox'))
     expect(checkbox).toBeDisabled();
   expect(screen.getByRole('button', { name: 'Close' })).toBeEnabled();
@@ -458,9 +451,7 @@ test('quantity is modal-local, starts from configuration, and both formats reuse
   expect(screen.getByRole('dialog')).toBe(modal);
   expect(fetch).not.toHaveBeenCalled();
   fetch.mockResolvedValue({ ok: true, json: async () => countResponse(25, 3) });
-  fireEvent.click(
-    screen.getByRole('button', { name: 'Download results (CSV)' })
-  );
+  fireEvent.click(screen.getByRole('button', { name: 'Download CSV' }));
   await waitFor(() => expect(URL.createObjectURL).toHaveBeenCalledTimes(1));
   const csvBody = JSON.parse(fetch.mock.calls[0][1].body);
   expect(csvBody).toMatchObject({ size: 3, from: 0 });
@@ -470,9 +461,7 @@ test('quantity is modal-local, starts from configuration, and both formats reuse
     screen.getByText('Fields to include', { selector: 'summary' })
   );
   fireEvent.click(screen.getByRole('checkbox', { name: 'Title' }));
-  fireEvent.click(
-    screen.getByRole('button', { name: 'Download results (JSON)' })
-  );
+  fireEvent.click(screen.getByRole('button', { name: 'Download JSON' }));
   await waitFor(() => expect(URL.createObjectURL).toHaveBeenCalledTimes(2));
   const jsonBody = JSON.parse(fetch.mock.calls[1][1].body);
   expect(jsonBody).toEqual(csvBody);
@@ -488,9 +477,7 @@ test.each(['', 'abc', '0', '-1', '1.5', '1001'])(
     setup();
     const input = screen.getByRole('spinbutton', { name: 'Number of results' });
     fireEvent.change(input, { target: { value } });
-    fireEvent.click(
-      screen.getByRole('button', { name: 'Download results (CSV)' })
-    );
+    fireEvent.click(screen.getByRole('button', { name: 'Download CSV' }));
     expect(fetch).not.toHaveBeenCalled();
     expect(screen.getByRole('alert')).toHaveTextContent(
       'Enter a whole number from 1 to 1,000.'
@@ -523,9 +510,7 @@ test.each([
       ok: true,
       json: async () => countResponse(total, requested),
     });
-    fireEvent.click(
-      screen.getByRole('button', { name: 'Download results (JSON)' })
-    );
+    fireEvent.click(screen.getByRole('button', { name: 'Download JSON' }));
     await waitFor(() => expect(URL.createObjectURL).toHaveBeenCalledTimes(1));
     expect(JSON.parse(fetch.mock.calls[0][1].body).size).toBe(requested);
     const data = JSON.parse(
@@ -545,9 +530,7 @@ test('reopening resets quantity and validation to the configured initial count',
   setup();
   const input = screen.getByRole('spinbutton', { name: 'Number of results' });
   fireEvent.change(input, { target: { value: '0' } });
-  fireEvent.click(
-    screen.getByRole('button', { name: 'Download results (CSV)' })
-  );
+  fireEvent.click(screen.getByRole('button', { name: 'Download CSV' }));
   expect(screen.getByRole('alert')).toBeVisible();
   fireEvent.click(screen.getByRole('button', { name: 'Close' }));
   fireEvent.click(screen.getByRole('button', { name: 'Download results' }));
