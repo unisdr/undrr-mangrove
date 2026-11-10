@@ -77,9 +77,19 @@ test('AI discovery distinguishes archetypes, profiles, bindings and non-callable
     );
   }
   expect(catalog.families).toHaveLength(11);
-  const publication = catalog.families.find(
+  const publicationFamily = catalog.families.find(
     family => family.id === 'publication'
-  ).profiles.default;
+  );
+  expect(publicationFamily.presentations.fullPage).toMatchObject({
+    status: 'reference',
+    referenceUrl:
+      'https://example.org/mangrove/?path=/story/patterns-landing-pages--report-landing',
+  });
+  expect(publicationFamily.presentations.fullPage).not.toHaveProperty('import');
+  expect(publicationFamily.presentations.fullPage).not.toHaveProperty(
+    'component'
+  );
+  const publication = publicationFamily.profiles.default;
   expect(publication.presentations.card.projection.after).toEqual([]);
   expect(publication.presentations.teaser.projection.after).toContain(
     'summary'

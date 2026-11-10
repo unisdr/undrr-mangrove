@@ -1,3 +1,9 @@
+import SortOptions from './components/SortOptions';
+import { isTabFacet, tabSelections } from './utils/customFacetTabs';
+import { facetsFromDefaults } from './utils/hashState';
+import { withSharedControls } from './context/sharedControls';
+import { buildQuery } from './utils/queryBuilder';
+import CustomFacetTabs from './components/CustomFacetTabs';
 import { getLanguageProps } from '../../../src/i18n';
 /**
  * @file SyndicationSearchWidget.jsx
@@ -40,7 +46,11 @@ import {
 import { useSearch } from './hooks/useSearch';
 import { useHashSync } from './hooks/useHashSync';
 import { useExternalTarget } from './hooks/useExternalTarget';
-import { analyticsRegion, resolveFacetsLayout } from './utils/constants';
+import {
+  DEFAULT_CONFIG,
+  analyticsRegion,
+  resolveFacetsLayout,
+} from './utils/constants';
 import {
   WidgetRootContext,
   useWidgetRootRef,
@@ -53,6 +63,23 @@ import FacetsSidebar from './components/FacetsSidebar';
 import MobileFilterDrawer from './components/MobileFilterDrawer';
 
 export { getSyndicationSearchWidgetLabels } from './_labels';
+
+/** Deterministic default query for server snapshots; never reads live group state. */
+export function buildInitialSearchQuery(userConfig = {}) {
+  const config = withSharedControls({ ...DEFAULT_CONFIG, ...userConfig });
+  return buildQuery(
+    {
+      query: config.defaultQuery || '',
+      facets: facetsFromDefaults(config.defaultFilters),
+      facetOperators: {},
+      customFacets: tabSelections(config.customFacets),
+      sortBy: config.defaultSort,
+      page: 1,
+    },
+    config,
+    { highlight: false }
+  );
+}
 
 /**
  * SyndicationSearchWidget component.
@@ -69,7 +96,12 @@ export function SyndicationSearchWidget({ config, labels, lang, dir }) {
   // iframe rather than in the window its script runs in.
   const rootRef = useRef(null);
   return (
-    <SearchProvider config={config} labels={labels} lang={lang}>
+    <SearchProvider
+      config={config}
+      labels={labels}
+      lang={lang}
+      rootRef={rootRef}
+    >
       <WidgetRootContext value={rootRef}>
         <SyndicationSearchWidgetInner lang={lang} dir={dir} />
       </WidgetRootContext>
@@ -117,6 +149,8 @@ SyndicationSearchWidget.propTypes = {
       'eventDateAsc',
       'eventDateDesc',
     ]),
+    /** Indexed date used for the Year filter and counts; display_date also drives fallback dates. */
+    yearField: PropTypes.oneOf(['published_at', 'event_start', 'display_date']),
     /** Whether to display the search input box. */
     showSearchBox: PropTypes.bool,
     /** Whether to display the total results count. */
@@ -132,6 +166,8 @@ SyndicationSearchWidget.propTypes = {
     facets: PropTypes.oneOf([false, 'sidebar', 'horizontal']),
     /** @deprecated Use `facets` instead. Boolean shorthand: false hides, true → 'sidebar'. */
     showFacets: PropTypes.bool,
+    /** Whether visitors can see the sort selector. The configured order is retained when hidden. */
+    showSort: PropTypes.bool,
     /**
      * CSS selector for a DOM element outside the widget where the facets
      * UI should be rendered (via React portal). Useful when a consuming
@@ -186,6 +222,15 @@ SyndicationSearchWidget.propTypes = {
     customFilters: PropTypes.array,
     /** Custom facet definitions. */
     customFacets: PropTypes.array,
+    /** Explicit document-scoped search/filter group; omitted widgets remain independent. */
+    sharedControls: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      visibleFilters: PropTypes.object,
+      allowedTypes: PropTypes.object,
+      customFacets: PropTypes.array,
+      defaultFilters: PropTypes.array,
+      defaultQuery: PropTypes.string,
+    }),
     /** Result display mode. */
     displayMode: PropTypes.oneOf(['list', 'card', 'card-book']),
     /** Number of grid columns for card display modes. */
@@ -292,6 +337,17 @@ function SyndicationSearchWidgetInner({ lang, dir }) {
   const isInitializedRef = useRef(state.isInitialized);
   isInitializedRef.current = state.isInitialized;
 
+  // Editing scope options must not reapply ordinary filter/sort defaults.
+  useEffect(() => {
+    if (isInitializedRef.current) return;
+    dispatch(
+      actions.configureTabFacets(
+        config.customFacets,
+        initialHashState?.customFacets
+      )
+    );
+  }, [dispatch, config.customFacets, initialHashState]);
+
   // Initialize widget on mount. Facets and sort from the URL hash, if any,
   // take precedence over the configured defaults.
   useEffect(() => {
@@ -302,9 +358,10 @@ function SyndicationSearchWidgetInner({ lang, dir }) {
         defaultQuery: config.defaultQuery,
         initialQuery: fromHash?.initialQuery ?? null,
         defaultSort: config.defaultSort,
+        preserveSort: !!config.sharedControls?.id,
         initialFacets: fromHash?.facets || null,
         initialFacetOperators: fromHash?.facetOperators || null,
-        initialSort: fromHash?.sort || null,
+        initialSort: config.showSort === false ? null : fromHash?.sort || null,
       })
     );
   }, [
@@ -313,6 +370,24 @@ function SyndicationSearchWidgetInner({ lang, dir }) {
     config.defaultFilters,
     config.defaultQuery,
     config.defaultSort,
+    config.sharedControls?.id,
+  ]);
+
+  // Lock the configured order when an editor disables visitor sorting.
+  useEffect(() => {
+    if (
+      state.isInitialized &&
+      config.showSort === false &&
+      state.sortBy !== config.defaultSort
+    ) {
+      dispatch(actions.setSort(config.defaultSort));
+    }
+  }, [
+    dispatch,
+    config.showSort,
+    config.defaultSort,
+    state.sortBy,
+    state.isInitialized,
   ]);
 
   // Sync the input with query changes from elsewhere (URL hash, INITIALIZE,
@@ -379,20 +454,24 @@ function SyndicationSearchWidgetInner({ lang, dir }) {
   // editors. Until a target matches, the in-widget layout is used, with one
   // console warning per selector so editors and developers can see why the
   // portal didn't take effect.
-  const facetsTargetEl = useExternalTarget(
-    facetsTarget,
-    facetsActive,
-    rootRef,
-    warnFacetsTargetMissing
-  );
+  const { target: facetsTargetEl, isOwner: ownsFacetsTarget } =
+    useExternalTarget(
+      facetsTarget,
+      facetsActive,
+      rootRef,
+      warnFacetsTargetMissing,
+      !!config.sharedControls?.id
+    );
   const facetsPortaled = facetsActive && facetsTargetEl !== null;
 
-  const searchTargetEl = useExternalTarget(
-    searchTarget,
-    showSearchBox,
-    rootRef,
-    warnSearchTargetMissing
-  );
+  const { target: searchTargetEl, isOwner: ownsSearchTarget } =
+    useExternalTarget(
+      searchTarget,
+      showSearchBox,
+      rootRef,
+      warnSearchTargetMissing,
+      !!config.sharedControls?.id
+    );
   const searchPortaled = showSearchBox && searchTargetEl !== null;
 
   // With the facets sidebar, the search box and filter chips belong to the
@@ -442,6 +521,9 @@ function SyndicationSearchWidgetInner({ lang, dir }) {
           <FacetsSidebar widgetId={widgetId} />
         </div>
       )}
+
+      <CustomFacetTabs widgetId={widgetId} />
+      {config.sharedControls?.id && <SortOptions widgetId={widgetId} />}
 
       {/* Active filter chips */}
       {!inColumn && activeFilters}
@@ -496,6 +578,7 @@ function SyndicationSearchWidgetInner({ lang, dir }) {
           widget. The React tree spans the portal so SearchContext (and
           therefore live input state) still flows. */}
       {searchPortaled &&
+        ownsSearchTarget &&
         createPortal(
           <div
             {...getLanguageProps(lang, dir)}
@@ -517,6 +600,7 @@ function SyndicationSearchWidgetInner({ lang, dir }) {
           render the facets there instead of inside the widget. The React
           tree spans the portal so SearchContext still flows. */}
       {facetsPortaled &&
+        ownsFacetsTarget &&
         createPortal(
           <div
             {...getLanguageProps(lang, dir)}
@@ -621,7 +705,13 @@ function countActiveFilters(state) {
   }
 
   if (state.customFacets) {
-    for (const values of Object.values(state.customFacets)) {
+    for (const [id, values] of Object.entries(state.customFacets)) {
+      if (
+        state.tabFacetConfigs?.some(
+          facet => isTabFacet(facet) && facet.id === id
+        )
+      )
+        continue;
       if (Array.isArray(values)) {
         count += values.length;
       }

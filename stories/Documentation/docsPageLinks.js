@@ -49,6 +49,8 @@ export const DOC_PAGE_IDS = {
   'docs/LANDING-PAGE-GUIDE.md': 'patterns-building-landing-pages--docs',
   'docs/PROPOSAL-SCHEMA-PHASE-2.md':
     'design-decisions-schema-phase-2-proposal--docs',
+  'docs/PUBLICATION-RECORD-SPEC.md':
+    'patterns-content-publication-record-specification--docs',
   'docs/RELEASE-1.4.md': 'getting-started-release-notes-v1-4--docs',
   'docs/RELEASE-1.5.md': 'getting-started-release-notes-v1-5--docs',
   'docs/RELEASE-2.0.md': 'getting-started-release-notes-v2-0--docs',

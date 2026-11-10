@@ -26,6 +26,14 @@ export default function megaMenuFromElement(container) {
     hoverDelay: dataset.hoverDelay ? parseInt(dataset.hoverDelay, 10) : 180,
   };
 
+  if (dataset.enableFilter !== undefined) {
+    props.enableFilter = dataset.enableFilter !== 'false';
+  }
+  if (dataset.enableSiteSearch !== undefined) {
+    props.enableSiteSearch = dataset.enableSiteSearch !== 'false';
+  }
+  if (dataset.searchUrl) props.searchUrl = dataset.searchUrl;
+
   // Logo props (optional — Drupal wrapper also resolves logos via SITE_LOGOS body class lookup)
   if (dataset.logoSrc) props.logoSrc = dataset.logoSrc;
   if (dataset.logoAlt) props.logoAlt = dataset.logoAlt;

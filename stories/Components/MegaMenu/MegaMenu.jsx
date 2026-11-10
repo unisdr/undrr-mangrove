@@ -30,6 +30,9 @@ import { getMegaMenuLabels } from './_labels';
  * @param {string} [logoHref='/'] - Where the logo links to. Defaults to `/`; on multilingual sites, pass the language-prefixed root from the CMS (e.g. `/ar/`)
  * @param {number} [logoWidth] - Optional explicit width for CLS prevention
  * @param {number} [logoHeight] - Optional explicit height for CLS prevention
+ * @param {boolean} [enableFilter=false] - Whether to show quick filter input in desktop and mobile navigation
+ * @param {boolean} [enableSiteSearch=true] - Whether to offer full-site search option when filtering
+ * @param {string} [searchUrl='/search'] - Base URL for full-site search (defaults to syndicated search page /search)
  * @returns {JSX.Element} Rendered MegaMenu component
  *
  * @see schemas/navigation.schema.js — canonical field names and documented deviations.
@@ -52,6 +55,10 @@ const MegaMenu = ({
   logoWidth,
   logoHeight,
   ariaLabel,
+  enableFilter = false,
+  enableSiteSearch = true,
+  searchUrl = '/search',
+  onNavigate,
   lang,
   dir,
   labels,
@@ -145,6 +152,12 @@ const MegaMenu = ({
 
     // Set timeout to close the menu
     closeTimeoutRef.current = setTimeout(() => {
+      if (
+        wrapperRef.current?.ownerDocument.activeElement?.closest(
+          '.mg-mega-menu-finder'
+        )
+      )
+        return;
       releaseDesktopFocus();
       setActiveItem(null);
     }, delay);
@@ -191,7 +204,12 @@ const MegaMenu = ({
     const handleClickOutside = e => {
       // Check if click is outside the mega menu wrapper
       const megaWrapper = wrapperRef.current;
-      if (megaWrapper && !megaWrapper.contains(e.target)) {
+      // Mode changes can remove the clicked control before this document
+      // listener runs. Its original event path still identifies an inside click.
+      const clickedInside =
+        megaWrapper?.contains(e.target) ||
+        (e.composedPath?.() || []).includes(megaWrapper);
+      if (megaWrapper && !clickedInside) {
         releaseDesktopFocus();
         setActiveItem(null);
       }
@@ -251,6 +269,10 @@ const MegaMenu = ({
         logoHref={logoHref}
         logoWidth={logoWidth}
         logoHeight={logoHeight}
+        enableFilter={enableFilter}
+        enableSiteSearch={enableSiteSearch}
+        searchUrl={searchUrl}
+        onNavigate={onNavigate}
       />
 
       {/* Backdrop overlay – closes sidebar on click */}
@@ -273,6 +295,9 @@ const MegaMenu = ({
         present={present}
         open={showSidebar}
         sections={sections}
+        enableFilter={enableFilter}
+        enableSiteSearch={enableSiteSearch}
+        searchUrl={searchUrl}
       />
     </nav>
   );
@@ -320,6 +345,12 @@ MegaMenu.propTypes = {
   logoWidth: PropTypes.number,
   /** Explicit height for the logo (CLS prevention). */
   logoHeight: PropTypes.number,
+  /** Enable live filtering of navigation items in desktop and mobile menus. */
+  enableFilter: PropTypes.bool,
+  /** Offer full-site search fallback option when filtering (default: true). */
+  enableSiteSearch: PropTypes.bool,
+  /** Base URL for full-site search (default: '/search', which routes to syndicated search #query=). */
+  searchUrl: PropTypes.string,
   /** UI language tag; selects the built-in catalogue, with English fallback. */
   lang: PropTypes.string,
   /** Explicit text direction; otherwise known catalogue languages select their direction. */
@@ -334,6 +365,12 @@ MegaMenu.propTypes = {
     closeLabel: PropTypes.string,
     overviewLabel: PropTypes.string,
     toggleMobileNavLabel: PropTypes.string,
+    menuFilterLabel: PropTypes.string,
+    filterPlaceholder: PropTypes.string,
+    clearFilterLabel: PropTypes.string,
+    noFilterResultsLabel: PropTypes.string,
+    searchSiteLabel: PropTypes.string,
+    filterMatchesCount: PropTypes.string,
   }),
 };
 

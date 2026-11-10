@@ -1,4 +1,4 @@
-import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
 import * as MegaMenuStories from './MegaMenu.stories';
 
 # Mega menu
@@ -34,6 +34,18 @@ separate logo row between PageHeader and navigation. Use the **brand** control
 to switch logos.
 
 <Canvas of={MegaMenuStories.WithLogo} meta={MegaMenuStories} />
+
+## With quick filter
+
+Set `enableFilter` to search menu destinations from a desktop **Find in menu**
+dialog or the mobile drawer. The existing Search navigation item is unchanged.
+See [finder behaviour](#find-links-inside-navigation) for matching and shortcuts.
+
+<Canvas
+  of={MegaMenuStories.WithQuickFilter}
+  meta={MegaMenuStories}
+  story={{ inline: false, height: '700px' }}
+/>
 
 ## Usage
 
@@ -72,16 +84,20 @@ wrapper resolves `logoSrc` and `logoAlt` from body class; it does not infer
 
 The draft’s optional `ariaLabel` sets the navigation landmark name. When omitted, the existing runtime `labels.navLabel` is used, preserving translated defaults and explicit label overrides.
 
-| Prop       | Type   | Default | Description                                                                                                 |
-| ---------- | ------ | ------- | ----------------------------------------------------------------------------------------------------------- |
-| sections   | array  | []      | Array of menu sections to display                                                                           |
-| delay      | number | 300     | Delay in milliseconds before closing menu on mouse leave                                                    |
-| hoverDelay | number | 180     | Delay in milliseconds before opening menu (prevents accidental opens)                                       |
-| logoSrc    | string | —       | Image URL for the logo. When provided, enables the branded variant                                          |
-| logoAlt    | string | ''      | Alt text for the logo image                                                                                 |
-| logoHref   | string | '/'     | Where the logo links to. For multilingual sites, pass the language-prefixed root from the CMS (e.g. `/ar/`) |
-| logoWidth  | number | —       | Optional explicit width for CLS prevention                                                                  |
-| logoHeight | number | —       | Optional explicit height for CLS prevention                                                                 |
+| Prop             | Type    | Default   | Description                                                                                                 |
+| ---------------- | ------- | --------- | ----------------------------------------------------------------------------------------------------------- |
+| sections         | array   | []        | Array of menu sections to display                                                                           |
+| delay            | number  | 300       | Delay in milliseconds before closing menu on mouse leave                                                    |
+| hoverDelay       | number  | 180       | Delay in milliseconds before opening menu (prevents accidental opens)                                       |
+| logoSrc          | string  | —         | Image URL for the logo. When provided, enables the branded variant                                          |
+| logoAlt          | string  | ''        | Alt text for the logo image                                                                                 |
+| logoHref         | string  | '/'       | Where the logo links to. For multilingual sites, pass the language-prefixed root from the CMS (e.g. `/ar/`) |
+| logoWidth        | number  | —         | Optional explicit width for CLS prevention                                                                  |
+| logoHeight       | number  | —         | Optional explicit height for CLS prevention                                                                 |
+| enableFilter     | boolean | false     | Enable a contextual menu-finder dialog from desktop left columns and filtering in the mobile drawer         |
+| enableSiteSearch | boolean | true      | Offer full-site search option when filtering (default: true)                                                |
+| searchUrl        | string  | '/search' | Base URL for full-site search fallback (defaults to syndicated search page /search#query=)                  |
+| ariaLabel        | string  | —         | Optional navigation landmark name; otherwise uses the translated navLabel.                                  |
 
 ### Section object properties
 
@@ -96,21 +112,11 @@ The draft’s optional `ariaLabel` sets the navigation landmark name. When omitt
 
 ### Banner HTML trust contract
 
-`bannerDescription` is rendered as HTML, not as text. The desktop banner, the
-call-to-action panel a section with no child items renders, and the mobile
-sidebar all inject the string directly. Mangrove does not sanitise it.
-
-This is deliberate. Banner copy is authored, and it carries links and inline
-emphasis; in the no-items shape it carries a whole block of layout that the
-component has no equivalent prop for. Escaping it would print the tags.
-
-Sanitise it where you build the `sections` array. The value reaches Mangrove
-through the `sections` prop or the `data-sections` JSON attribute, so the
-boundary is your own code — usually the wrapper that maps a CMS or API response
-into sections. If your CMS already runs an output filter over the field, as
-Drupal's text formats do, that is where this is handled and there is nothing
-more to do. If you assemble the string yourself, run it through
-[DOMPurify](https://github.com/cure53/DOMPurify) first:
+`bannerDescription` accepts caller-sanitised HTML in desktop banners,
+no-items panels and the mobile sidebar. Sanitise it when building `sections`
+from CMS/API data, whether passed as a prop or through `data-sections`.
+Drupal's filtered text formats can provide this boundary; otherwise use a
+sanitiser such as [DOMPurify](https://github.com/cure53/DOMPurify):
 
 ```js
 import DOMPurify from 'dompurify';
@@ -121,57 +127,104 @@ const sections = apiSections.map(section => ({
 }));
 ```
 
-Some Mangrove components sanitise for you — `TextCta`, `Drawer` and the card
-components run DOMPurify internally. The mega menu does not, so do not carry an
-assumption across from those.
-
-Two related details worth knowing:
-
-- A `bannerDescription` with no `<` in it is wrapped in a `<p>` and rendered as
-  text at the desktop banner. That check picks a wrapper; it is not a filter,
-  and any string containing a `<` takes the HTML path.
-- `bannerHeading` is rendered as text and needs no such handling.
+Mangrove does not sanitise this field. The desktop check for `<` selects a
+text wrapper or HTML rendering; it is not a filter. `bannerHeading` is plain text.
 
 ## Accessibility
 
 ### Keyboard navigation
 
-- **Arrow Left / Arrow Right**: Moves focus between top-level menu items in the menu bar
-- **Arrow Down**: On desktop, moves focus from a top-level item into its open submenu section
-- **Tab / Shift+Tab**: Moves focus through focusable elements within an open submenu section
-- **Escape**: Closes the mobile dialog and returns focus to the opener; on desktop, closes the open submenu panel
-- Focus on a top-level item also triggers its submenu to open (via `onFocus`)
+- **← / →** move between top-level items; focusing an item opens its panel.
+- **↓** enters the desktop panel. **Tab / Shift+Tab** move through its controls.
+- **Escape** closes the current surface and restores its trigger. Inactive
+  panels are inert and hidden from assistive technology.
+- Mobile dialogs contain Tab focus; arrows retain native behaviour. Entering a
+  level focuses its heading; Back restores the previous row and scroll position.
+  See [mobile navigation](#mobile-progressive-navigation).
 
 ### ARIA attributes
 
-- The root `<nav>` element has `aria-label="Main Navigation"`
-- The top bar is a plain `<ul>` of links inside that labelled `<nav>`. It carries no `menubar` role: this is site navigation made of ordinary links, not an application menu, and `menubar` cannot legally contain the bar's hamburger button or its submenu panels
-- Top-level items are ordinary links (or buttons where no URL is authored). Where a panel exists, `aria-expanded` announces it as a disclosure in both states
-- Submenu panels use `role="region"` with `aria-live="polite"`, labelled by their own section title
-- Each panel's category and submenu areas are `<nav>` landmarks named after their section (e.g. "About categories", "About submenu"), so a landmark list stays navigable when several sections are present
-- Nested submenu lists use `role="menu"` with descriptive `aria-label` values (e.g., "Categories", "Submenu items")
-- Nested links use `role="menuitem"` and `aria-haspopup` when they contain further sub-items
-- Category links use `aria-current="page"` to indicate the currently highlighted category
+The root is a labelled `<nav>` containing a plain list, without a `menubar`
+role. Top-level links/buttons expose `aria-expanded` where a panel exists.
+Each panel is a labelled live region with section-specific category/submenu
+landmarks. Desktop nested lists retain `menu`/`menuitem` roles, and the selected
+category uses `aria-current="page"`.
 
-### Mobile menu
+The mobile opener exposes `aria-expanded`, `aria-controls` and
+`aria-haspopup="dialog"`. The dialog is labelled by its current-level heading;
+its links and drill-in buttons use native semantics. A branded logo's accessible
+name comes from `logoAlt`, falling back to “Home”.
 
-- The opening button exposes `aria-expanded`, `aria-controls` and `aria-haspopup="dialog"`, with translated open/close labels.
-- The bounded mobile menu uses `role="dialog"` and `aria-modal="true"`, labelled by the current level heading.
-- Links and drill-in buttons use native navigation semantics. Tab and Shift+Tab stay within the open dialog, including controls in banner content; arrow keys retain native browser behaviour.
-- Entering a level focuses its heading. Back restores the previous row and scroll position. Close and Escape restore the opener; resizing to desktop moves focus to a desktop navigation item.
-- The closed dialog is hidden. The topbar scrolls horizontally on mobile. Tapping a label opens that section; the hamburger opens all sections. The logo remains a separate home link.
+### Find links inside navigation
 
-### Branded variant
+Set `enableFilter` to search **all menu destinations**, regardless of the
+section used to open the finder. The site's Search navigation item is unchanged.
 
-- When `logoSrc` is provided, the logo link has `aria-label` set to `logoAlt` (falling back to "Home")
+**Desktop:** panels with a left introduction/categories column show **Find in
+menu** in a fixed footer. It opens a native modal with a focused input. Results
+scroll independently of the input, icon-only Close button and site-search footer.
+Close, Escape or a backdrop click restores the footer button while preserving the
+underlying category and scroll position. Clear stays in the dialog. Closing the
+parent, switching to mobile, disabling filtering or removing the utility clears
+the finder; it does not reopen automatically. If the utility disappears, focus
+returns to the surviving top-level control.
 
-### Known limitations
+**Mobile:** the drawer input searches across sections. Clearing restores the
+current drill-down level. Results scroll while the input and Close remain visible.
 
-- On desktop, when a submenu closes via Escape or mouse leave, focus is not programmatically returned to the triggering menu item
+#### Matching and controls
+
+- Every query word must match the title or breadcrumb, in any order. English
+  “and” and “&” are optional between other terms: “events news” finds
+  “News & Events”. Each matching word is highlighted.
+- Ranking favours exact titles and word prefixes, then exact acronyms, then
+  inside-word matches and other title matches, before breadcrumb/combined matches. Repeated URLs appear once; each breadcrumb row is one
+  link and wraps in RTL or narrow layouts.
+- Acronyms match automatically by word initials or internal capitals: “GAR”
+  finds “Global Assessment Report” and “PW” finds “PreventionWeb”. Matching is
+  case-insensitive and accepts “G-A-R”, “G.A.R.” or “G A R”. English connector
+  words such as “for” and “of” may be omitted; numeric years are ignored.
+  Whole-label acronyms of at least two letters match titles or individual
+  ancestors. Exact acronyms rank above incidental inside-word matches: “RO”
+  favours “Regional Offices” over “Conference Proceedings”. Acronym prefixes and invented
+  combinations across breadcrumb levels do not match. Displayed names and
+  site-search queries stay unchanged.
+- If there are no matches, a single word of at least four characters allows
+  one insertion, deletion, substitution or adjacent letter swap against whole
+  words: “carers” finds “Careers”. Phrases retain non-fuzzy word matching.
+- Counts use a hidden live region; no matches show **No matching pages in this
+  menu**. `enableSiteSearch` adds an outlined CTA with an RTL-aware arrow,
+  preserving the original query. Its default destination is `/search#query=…`;
+  provide that page or set `searchUrl`.
+- **⌘K / Ctrl K** opens the desktop finder only with focus in its owning panel,
+  outside editors. The hint follows the platform. **↑ / ↓** move between input
+  and results; **Enter** in the input follows the first result, or site search
+  if there are none. Tab retains native control order. IME composition keys do
+  not dismiss either surface. Finder focus prevents hover dismissal.
+
+Override `menuFilterLabel`, `filterPlaceholder`, `clearFilterLabel`,
+`noFilterResultsLabel`, `filterMatchesCount` (`{count}`), `searchSiteLabel`
+(`{query}`) or `closeLabel` through `labels`. See [runtime translations](#runtime-ui-translations).
+
+#### Theme styling and experience principles
+
+The finder reuses Dialog surfaces, native links, 44px targets and shared focus
+rings. Themes own surface expression; matches use neutral highlights and bold
+text, retained in forced colours. Behaviour is unchanged with `enableFilter={false}`.
+See [motion decisions](#motion-decisions) for hover feedback.
+
+| Property                          | Default                     | Purpose                        |
+| --------------------------------- | --------------------------- | ------------------------------ |
+| `--mg-mega-filter-font-size`      | `--mg-font-size-300` (16px) | Input and destination type     |
+| `--mg-mega-filter-meta-font-size` | `--mg-font-size-250` (14px) | Breadcrumbs, labels and status |
+
+Override these on `.mg-mega-wrapper`. The design follows the
+[experience principles](?path=/docs/design-decisions-experience-principles--docs);
+it has not been validated through user research.
 
 ## Server-rendered / CDN usage
 
-MegaMenu supports [layered hydration](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md). This is a complex-tier component: in most integrations the `sections` prop comes from an API or server-side builder, not from static HTML. The `fromElement` function extracts timing props and an optional inline JSON sections attribute. Consumer wrappers typically override `sections`.
+MegaMenu supports [layered hydration](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md). This is a complex-tier component: in most integrations the `sections` prop comes from an API or server-side builder, not from static HTML. The `fromElement` function extracts timing, logo, finder/search options, language, labels and an optional inline JSON sections attribute. Consumer wrappers typically override `sections`.
 
 ```html
 <div
@@ -196,10 +249,10 @@ MegaMenu supports [layered hydration](https://github.com/PreventionWeb/undrr-man
 > **Drupal note:** The Drupal wrapper reads prefixed attribute names (`data-mg-mega-menu-logo-src`, etc.) and falls back to a `SITE_LOGOS` body-class map when no logo attributes are set. CDN / vanilla HTML consumers use the short `data-logo-*` names above.
 
 ```js
-import createHydrator from 'https://assets.undrr.org/mangrove/2.3.0/components/hydrate.js';
+import createHydrator from 'https://assets.undrr.org/mangrove/2.4.0/components/hydrate.js';
 import MegaMenu, {
   fromElement,
-} from 'https://assets.undrr.org/mangrove/2.3.0/components/MegaMenu.js';
+} from 'https://assets.undrr.org/mangrove/2.4.0/components/MegaMenu.js';
 createHydrator({
   selector: '[data-mg-mega-menu]',
   component: MegaMenu,
@@ -231,30 +284,25 @@ is still accepted but no longer displayed.
 
 ## Motion decisions
 
-Follow [Motion and animation](?path=/docs/design-decisions-motion--docs) when extending this navigation.
+Follow [Motion and animation](?path=/docs/design-decisions-motion--docs).
+Pointer intent delays (`hoverDelay`, `delay`) are separate from visual timing.
 
-Navigation destinations and active category borders, underlines and tints appear
-immediately. Pointer intent delays (`hoverDelay` and `delay`) remain behavioural
-settings, independent of visual motion tokens.
+- Destinations, category changes and finder open/close/results update immediately;
+  there are no category pulses, panel flashes or staggered links. The public
+  `mg-mega-content__right--sliding` class remains a compatibility hook.
+- Mobile surfaces and newly entered levels use an 8px logical offset with the
+  fast (160ms) duration and standard easing. The backdrop uses a fast opacity
+  transition. `@starting-style` supplies entry; unsupported browsers open immediately.
+- Finder controls/result rows use reversible fast background-colour transitions
+  only for hover-capable devices with no motion preference, outside forced colours.
+  Keyboard and touch feedback stay immediate. Shared CTA styles own site-search
+  button feedback. Desktop reveals and legacy chevrons use the medium (300ms) token.
 
-| Previous animation          | Decision and purpose                                                                                                                                            |
-| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `mg-mega-tab-pulse`         | Removed: active border, underline and tint already identify the category.                                                                                       |
-| `mg-mega-content-swap`      | Removed: category contents update immediately, without a directional slide. The public `mg-mega-content__right--sliding` class remains as a compatibility hook. |
-| `mg-mega-right-flash`       | Removed: flashing the panel adds no navigation information.                                                                                                     |
-| `mg-mega-item-slide-in`     | Removed: every destination is visible immediately, including menus with more than 25 links.                                                                     |
-| `mg-mega-progressive-enter` | Kept: a small logical 8px entry identifies a newly opened mobile level; uses the fast duration and standard easing.                                             |
-| `mg-mega-surface-enter`     | Replaced with an interruptible fast transition for the bounded mobile surface, using an 8px logical offset.                                                     |
-| `mg-mega-backdrop-enter`    | Replaced with an interruptible fast opacity transition, connecting the surface to the page beneath.                                                             |
-
-The mobile entry transitions use `@starting-style`; browsers that do not support
-it open immediately. Exit retention reads the computed CSS duration, including
-theme overrides and delays. Focus and scroll are released immediately on close;
-the retained surface is inert and hidden from assistive technology. Reopening
-cancels pending removal. The mobile offset follows RTL. Desktop panel reveal and
-legacy sidebar/chevron transitions use the medium token. Reduced motion and
-forced colours disable these effects without hiding destinations or active states.
-Inactive desktop panels also become inert and hidden from assistive technology immediately, so fading links cannot retain keyboard focus. Escape returns focus to the top-level trigger before closing. Existing classes, Drupal attributes and hydration entry points remain supported.
+Reduced motion and forced colours remove movement without hiding content or
+active states. Mobile travel mirrors in RTL. Exit retention reads themed CSS
+durations/delays; closing releases focus and scroll immediately and makes retained
+content inert. Reopening cancels pending removal. Preference changes leave the
+current state usable; hydration and resting theme changes add no incidental motion.
 
 <Canvas of={MegaMenuStories.MotionReview} />
 
@@ -271,6 +319,12 @@ for consumers needing the same strings outside React.
 
 - **Unreleased, draft schema proposal:** Adopt the schema-aligned input documented in [the migration proposal](?path=/docs/design-decisions-schema-phase-2-proposal--docs), preserving current rendering, accessibility and language handling.
 
+- **1.6**, 2026-11-03 ([#1445](https://github.com/unisdr/undrr-mangrove/pull/1445)): Added opt-in navigation finding (`enableFilter`, `enableSiteSearch`, `searchUrl`), translated labels and hydration support.
+  - Desktop footer utility opens a menu-wide modal with contextual ⌘K/Ctrl K, preserved menu state and a fixed site-search footer. Mobile filters within the drawer; the existing Search item is unchanged.
+  - Ranked, deduplicated breadcrumb results support unordered words, optional English “and”/“&”, automatic word/CamelCase initials (GAR, PW, RO) ranked above inside-word matches and conservative one-typo fallback. Site search preserves the query and uses an outlined CTA with an RTL-aware arrow.
+  - Native focus handling, IME-safe Escape, responsive/configuration reset, 44px targets, themeable type and preference-aware hover feedback preserve accessible navigation.
+  - Reused menu indexes, rank buckets, query-local fuzzy caches and shared per-Tab visibility checks reduce repeated work. Mobile results use one separator before the site-search action.
+
 - **1.5**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance.
 
 - **1.4.8**, 2026-10-26 ([#1402](https://github.com/unisdr/undrr-mangrove/pull/1402)): Anchored the mobile hamburger vertically and kept it visible beside a horizontally scrollable navigation strip. The bottom divider stays visible beneath the opaque hamburger and logo surfaces. Mouse users can click and drag the rail to scroll without opening a section; ordinary clicks and touch taps open the selected section. Both branded and unbranded labels now open their section directly, with Back returning to all sections and Close restoring focus to the opener.
@@ -279,11 +333,12 @@ for consumers needing the same strings outside React.
 
 - **1.4.6**, 2026-10-15 ([#1359](https://github.com/unisdr/undrr-mangrove/issues/1359)): Removed decorative category pulses, panel flashes and delayed link entrances. Tokenised remaining navigation motion, made mobile transitions interruptible, aligned inert exit retention with computed CSS timing, and fixed desktop reduced-motion/forced-colours overrides. Public state classes and hydration contracts remain compatible.
 
-- **1.4.5**, 2026-09-18 ([#1247](https://github.com/unisdr/undrr-mangrove/pull/1247), [#1235](https://github.com/unisdr/undrr-mangrove/issues/1235)): The three section and top-bar ref callbacks are statement bodies instead of parenthesised assignments, so they no longer return the element they assign. React 19.3 does not reject that return value (it stores it as the ref cleanup, finds it is not a function and still calls `ref(null)` on detach), so these were correct as written; the hazard React 19 introduced is a ref callback returning a _function_, which silently replaces the detach call. Found by widening ESLint coverage to component `.jsx`, which had never been linted. No visual or behavioural change.
+- **1.4.5**, 2026-09-18 ([#1247](https://github.com/unisdr/undrr-mangrove/pull/1247), [#1235](https://github.com/unisdr/undrr-mangrove/issues/1235)): Fixed React 19 ref callbacks to avoid returning assigned DOM elements. No visual or behavioural change.
 
-- **1.4.4**, 2026-09-18 ([#1258](https://github.com/unisdr/undrr-mangrove/pull/1258)): Documented the banner HTML trust contract. `bannerDescription` is rendered as HTML at three places (the desktop banner, the call-to-action panel a section with no child items renders, and the mobile sidebar), and none of them sanitise it. That was already true and nothing about the rendering changed here; what was missing was any statement of it. The value arrives through the `sections` prop or the `data-sections` attribute, so the consumer that builds the sections array owns sanitising it, and several sibling components (`TextCta`, `Drawer`, the cards) do run DOMPurify internally, which made the silence easy to misread as an oversight. `Section.jsx` now carries the reasoning with a pointer at each render site, `Sidebar.jsx`'s existing one-line reference points at something that exists, the props table and the `sections` propType say so, the MDX has a "Banner HTML trust contract" section beside the section object properties, and the AI manifest entry carries it for agents wiring the menu up from `index.json`. Also notes that the `.includes('<')` check at the desktop banner picks between a `<p>` wrapper and raw markup and is not a filter.
+- **1.4.4**, 2026-09-18 ([#1258](https://github.com/unisdr/undrr-mangrove/pull/1258)): Documented caller-owned sanitisation of `bannerDescription` across desktop banners, no-items panels and mobile content. Added source annotations, prop documentation and AI metadata; the rendering contract is unchanged.
 
-- **1.4.3**, 2026-09-18 ([#1216](https://github.com/unisdr/undrr-mangrove/pull/1216), [#1200](https://github.com/unisdr/undrr-mangrove/issues/1200)): The top-bar nav list and the mobile sidebar list hide their markers with `list-style: none` followed by `list-style-type: ""` (the new `mg-list-unmarked` mixin), so Safari keeps the implicit `list` role and announces the item count. The treatment is applied to the list items as well as the lists: `.mg-mega-topbar__item`, `.mg-mega-topbar__mobile-trigger` and `.mg-mega-sidebar-section` each hid their own marker, and it is the item's marker Safari inspects, so a bare `list-style: none` there would have undone the fix on the list. Both top-bar shapes are covered: the default variant, where `.mg-mega-topbar` is the `<ul>`, and the branded variant, where it wraps `.mg-mega-topbar__nav`. The content panels are untouched: they carry `role="menu"` on purpose, which replaces list semantics. No markup or layout changes.
+- **1.4.3**, 2026-09-18 ([#1216](https://github.com/unisdr/undrr-mangrove/pull/1216), [#1200](https://github.com/unisdr/undrr-mangrove/issues/1200)): Preserved Safari list semantics with `mg-list-unmarked` on top-bar and mobile lists/items. Desktop lists with intentional menu roles are unchanged.
+
 - **1.4.2**, 2026-09-17 ([#1173](https://github.com/unisdr/undrr-mangrove/pull/1173)): Fixes #1171. Removed an unscoped `.mg-icon-button` rule from the MegaMenu stylesheet. The menu does not use that class (its controls use `.mg-mega-topbar-mobile__icon-button`), but the rule leaked into every icon button on the page and broke the primitive's layout and hover contrast. The menu itself renders the same.
 - **1.4.1**, 2026-09-15 ([#1153](https://github.com/unisdr/undrr-mangrove/pull/1153)): The desktop tab active-state underline now transitions in and out (grows from the centre, fades) instead of flipping instantly, so switching between neighbouring tabs no longer looks like an abrupt off/on flicker. Respects `prefers-reduced-motion`.
 - **1.4.0**, 2026-09-10 ([#1114](https://github.com/unisdr/undrr-mangrove/issues/1114)): Fixed desktop a11y semantics (landmarks, nav roles, and `aria-expanded`) and added a desktop-state axe assertion. Also fixed mobile overlay clipping in constrained containers by anchoring it to the top bar instead of `100vw`.
