@@ -4,6 +4,7 @@ import { chromium, webkit } from 'playwright-core';
 
 const base = process.env.SEARCH_STORYBOOK_URL || 'http://127.0.0.1:6099';
 const engine = process.env.SEARCH_BROWSER || 'chromium';
+const forcedColors = process.env.SEARCH_FORCED_COLORS || 'none';
 assert(['chromium', 'webkit'].includes(engine));
 const browser = await { chromium, webkit }[engine].launch();
 const themes = [
@@ -173,7 +174,12 @@ try {
     );
     await page.close();
     for (const mobile of [true, false]) {
-      for (const reducedMotion of ['no-preference', 'reduce']) {
+      for (const { reducedMotion, locale } of [
+        'no-preference',
+        'reduce',
+      ].flatMap(reducedMotion =>
+        ['english', 'arabic'].map(locale => ({ reducedMotion, locale }))
+      )) {
         const page = await browser.newPage({
           viewport: mobile
             ? { width: 390, height: 844 }
@@ -181,10 +187,15 @@ try {
           isMobile: mobile,
           hasTouch: mobile,
           reducedMotion,
+          forcedColors,
         });
         const input = locator => (mobile ? locator.tap() : locator.click());
         await page.goto(
-          `${base}/iframe.html?id=components-syndicated-search--filter-selection&viewMode=story&globals=${encodeURIComponent(`theme:${theme}`)}`
+          `${base}/iframe.html?id=components-syndicated-search--filter-selection&viewMode=story&globals=${encodeURIComponent(`theme:${theme};locale:${locale}`)}`
+        );
+        await page.waitForFunction(
+          expected => document.documentElement.dir === expected,
+          locale === 'arabic' ? 'rtl' : 'ltr'
         );
         if (mobile)
           await input(
@@ -193,6 +204,114 @@ try {
         const surface = page.locator(
           mobile ? '.mg-search__drawer' : '.mg-search__sidebar'
         );
+        const type = surface
+          .locator('[data-facet-key="type"]')
+          .getByRole('button');
+        // Parent and child selections must retain the same order in the real
+        // mobile drawer and desktop sidebar, across all themes and motion modes.
+        await input(type);
+        const optionLabels = () =>
+          page
+            .locator('[role="listbox"] .mg-select__option-label')
+            .allTextContents();
+        const original = await optionLabels();
+        assert.equal(original.length, 5);
+        await input(page.getByRole('option', { name: /^News 10$/ }));
+        assert.deepEqual(await optionLabels(), original);
+        const inherited = page.getByRole('option', { name: /Update 7$/ });
+        assert(
+          await inherited.evaluate(el =>
+            el.classList.contains('mg-select__option--inherited')
+          )
+        );
+        assert.equal(await inherited.getAttribute('aria-selected'), 'false');
+        assert.equal(
+          (await inherited.getAttribute('aria-describedby')) !== null,
+          true
+        );
+        assert(
+          await inherited.locator('svg').evaluate(el => {
+            const rect = el.getBoundingClientRect();
+            return (
+              rect.width > 0 &&
+              rect.height > 0 &&
+              getComputedStyle(el).color !== 'rgba(0, 0, 0, 0)'
+            );
+          })
+        );
+        await input(inherited);
+        const selectedLabels = await optionLabels();
+        assert.deepEqual(
+          selectedLabels,
+          original.map(label => (label === 'Update' ? 'News: Update' : label))
+        );
+        const subtype = page.getByRole('option', { name: /News: Update 7$/ });
+        assert.equal(await subtype.getAttribute('aria-selected'), 'true');
+        assert(
+          await subtype.evaluate(el =>
+            el.classList.contains('mg-select__option--subtype')
+          )
+        );
+        const indent = await subtype.evaluate(
+          el => getComputedStyle(el).paddingInlineStart
+        );
+        assert(parseFloat(indent) > 0);
+        if (theme === themes[0] && reducedMotion === 'no-preference') {
+          await page.screenshot({
+            path: `/tmp/mangrove-1468-${mobile ? 'mobile' : 'desktop'}-${locale}.png`,
+            fullPage: true,
+          });
+        }
+        assert.equal(
+          await type.evaluate(el => el === document.activeElement),
+          true
+        );
+        await page.keyboard.press('Escape');
+        assert.equal(await type.getAttribute('aria-expanded'), 'false');
+        if (mobile) assert.equal(await surface.isVisible(), true);
+        await input(type);
+        assert.deepEqual(await optionLabels(), selectedLabels);
+        await input(page.getByRole('option', { name: /^News 10$/ }));
+        const partialParent = page.getByRole('option', { name: /^News 10$/ });
+        assert(
+          await partialParent.evaluate(el =>
+            el.classList.contains('mg-select__option--partial')
+          )
+        );
+        assert.equal(
+          await partialParent.getAttribute('aria-selected'),
+          'false'
+        );
+        assert(
+          await partialParent.locator('svg').evaluate(el => {
+            const rect = el.getBoundingClientRect();
+            return (
+              rect.width > 0 &&
+              rect.height > 0 &&
+              getComputedStyle(el).color !== 'rgba(0, 0, 0, 0)'
+            );
+          })
+        );
+        assert.equal(
+          (await partialParent.getAttribute('aria-describedby')) !== null,
+          true
+        );
+        assert.equal(
+          await page
+            .getByRole('option', { name: /News: Update 7$/ })
+            .getAttribute('aria-selected'),
+          'true'
+        );
+        await input(page.getByRole('option', { name: /News: Update 7$/ }));
+        assert.deepEqual(await optionLabels(), original);
+        assert.equal(
+          await type.evaluate(el => el === document.activeElement),
+          true
+        );
+        await page.keyboard.press('Escape');
+        assert.equal(await type.getAttribute('aria-expanded'), 'false');
+        if (mobile) assert.equal(await surface.isVisible(), true);
+
         const region = surface.getByRole('button', {
           name: 'Region',
           exact: true,
@@ -207,7 +326,7 @@ try {
           exact: true,
         });
         await input(topics);
-        const search = page.getByRole('textbox', { name: 'Search Topics' });
+        const search = page.getByRole('combobox', { name: 'Search Topics' });
         await search.fill('Topic 12');
         const option = page.getByRole('option', {
           name: 'Topic 12',
@@ -249,7 +368,7 @@ try {
           assert.equal(await surface.count(), 0);
         }
         console.log(
-          `${engine}: ${theme}, ${mobile ? 'touch drawer' : 'desktop mouse'}, ${reducedMotion}: passed`
+          `${engine}: ${theme}, ${mobile ? 'touch drawer' : 'desktop mouse'}, ${reducedMotion}, ${locale}, forced colours ${forcedColors}: passed`
         );
         await page.close();
       }

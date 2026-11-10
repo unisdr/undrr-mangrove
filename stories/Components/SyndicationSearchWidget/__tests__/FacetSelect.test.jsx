@@ -13,6 +13,7 @@ import {
 } from '../context/SearchContext';
 import FacetSelect from '../components/FacetSelect';
 import { FACET_FIELDS } from '../utils/constants';
+import { getMergedTypeBuckets } from '../utils/facetUtils';
 
 // Render options as a plain list so the test can read them without opening
 // the custom dropdown.
@@ -191,5 +192,105 @@ describe('FacetSelect', () => {
       });
       expect(optionValues()).toEqual(['341', '342']);
     });
+  });
+});
+
+describe('Type hierarchy', () => {
+  const buckets = getMergedTypeBuckets({
+    type: {
+      buckets: [
+        { key: 'publication', doc_count: 20 },
+        { key: 'news', doc_count: 10 },
+      ],
+    },
+    field_publication_type: { buckets: [{ key: 'report', doc_count: 8 }] },
+    field_undrr_publication_types: { buckets: [{ key: '123', doc_count: 9 }] },
+    field_news_type: {
+      buckets: [
+        { key: '751', doc_count: 7 },
+        { key: '752', doc_count: 3 },
+      ],
+    },
+    vid: { buckets: [{ key: 'hazard', doc_count: 2 }] },
+  });
+  const order = buckets.map(bucket => String(bucket.key));
+
+  it.each([
+    ['news'],
+    ['field_news_type:751'],
+    ['publication', 'field_news_type:751', 'field_publication_type:report'],
+  ])('keeps aggregation hierarchy with selections %j', (...selectedValues) => {
+    renderFacet({ field: field('type'), buckets, selectedValues });
+    expect(optionValues()).toEqual(order);
+  });
+
+  it('keeps order through selection and deselection', () => {
+    const view = selectedValues => (
+      <SearchProvider config={{}}>
+        <FacetSelect
+          field={field('type')}
+          buckets={buckets}
+          selectedValues={selectedValues}
+          getLabel={getLabel}
+        />
+      </SearchProvider>
+    );
+    const { rerender } = render(view([]));
+    for (const selection of [
+      ['news'],
+      ['news', 'field_news_type:751'],
+      ['field_news_type:751'],
+      [],
+    ]) {
+      rerender(view(selection));
+      expect(optionValues()).toEqual(order);
+    }
+  });
+
+  it('inserts a retained missing subtype at the end of its available group', () => {
+    renderFacet({
+      field: field('type'),
+      buckets,
+      selectedValues: ['field_news_type:754'],
+    });
+    expect(optionValues()).toEqual([
+      ...order.slice(0, -1),
+      'field_news_type:754',
+      order.at(-1),
+    ]);
+    expect(screen.getByText('News: Feature')).toBeInTheDocument();
+  });
+
+  it('puts a retained missing parent before its available children', () => {
+    renderFacet({
+      field: field('type'),
+      buckets: buckets.filter(bucket => bucket.key !== 'news'),
+      selectedValues: ['news'],
+    });
+    expect(optionValues()).toEqual(order);
+  });
+
+  it('keeps orphan selections removable without inventing a parent', () => {
+    renderFacet({
+      field: field('type'),
+      buckets: [],
+      selectedValues: ['field_news_type:751'],
+    });
+    expect(optionValues()).toEqual(['field_news_type:751']);
+  });
+
+  it('retains an excluded selection beside its allowed parent', () => {
+    renderFacet({
+      field: field('type'),
+      buckets,
+      allowedTypes: { types: ['news'], newsTypes: ['752'] },
+      selectedValues: ['field_news_type:751'],
+    });
+    expect(optionValues()).toEqual([
+      'news',
+      'field_news_type:752',
+      'field_news_type:751',
+      'vid:hazard',
+    ]);
   });
 });

@@ -49,7 +49,7 @@ const EMPTY_VALUE = [];
  * @param {string} props.id - Unique ID for the select
  * @param {string} props.label - Label for the select
  * @param {string} props.placeholder - Placeholder text when nothing selected
- * @param {Array} props.options - Array of { value, label, count } objects
+ * @param {Array} props.options - Array of { value, label, count, selectionState, description } objects
  * @param {Array|string} props.value - Selected value(s)
  * @param {Function} props.onChange - Callback when selection changes
  * @param {boolean} props.multiple - Enable multi-select mode
@@ -68,8 +68,9 @@ export function SelectDropdown({
   noOptionsText = 'No options found',
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const [highlightedValue, setHighlightedValue] = useState(null);
 
   const containerRef = useRef(null);
   const triggerRef = useRef(null);
@@ -86,10 +87,6 @@ export function SelectDropdown({
     [selectId]
   );
 
-  // Current active descendant for screen readers
-  const activeDescendant =
-    isOpen && highlightedIndex >= 0 ? getOptionId(highlightedIndex) : undefined;
-
   // Normalize value to array for consistent handling
   const selectedValues = useMemo(() => {
     if (Array.isArray(value)) return value;
@@ -104,8 +101,22 @@ export function SelectDropdown({
     return options.filter(opt => opt.label.toLowerCase().includes(query));
   }, [options, searchQuery]);
 
-  // Show search input when we have many options
-  const showSearch = options.length > searchThreshold;
+  // Track keyboard identity by value so asynchronous count/order changes do
+  // not redirect Enter to another option. Removed options have no descendant.
+  const highlightedIndex = filteredOptions.findIndex(
+    option => option.value === highlightedValue
+  );
+
+  // Current active descendant for screen readers
+  const activeDescendant =
+    isOpen && highlightedIndex >= 0 ? getOptionId(highlightedIndex) : undefined;
+
+  // Decide search availability once per opening. Async aggregation changes
+  // must not remove a focused input or leave its query hidden from the user.
+  const openDropdown = useCallback(() => {
+    setShowSearch(options.length > searchThreshold);
+    setIsOpen(true);
+  }, [options.length, searchThreshold]);
 
   // Get display text for trigger button
   const displayText = useMemo(() => {
@@ -133,11 +144,6 @@ export function SelectDropdown({
     }
   }, [isOpen, showSearch]);
 
-  // Reset highlighted index when options change
-  useEffect(() => {
-    setHighlightedIndex(-1);
-  }, [filteredOptions.length]);
-
   // Handle option selection (declared before handleKeyDown which references it)
   const handleOptionClick = useCallback(
     optionValue => {
@@ -146,6 +152,9 @@ export function SelectDropdown({
           ? selectedValues.filter(v => v !== optionValue)
           : [...selectedValues, optionValue];
         onChange(newValues);
+        // Native pointer clicks on non-focusable options can leave focus on
+        // body. Keep subsequent keyboard navigation within this dropdown.
+        (searchInputRef.current || triggerRef.current)?.focus();
       } else {
         onChange(optionValue);
         setIsOpen(false);
@@ -162,7 +171,7 @@ export function SelectDropdown({
       if (!isOpen) {
         if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') {
           e.preventDefault();
-          setIsOpen(true);
+          openDropdown();
         }
         return;
       }
@@ -170,6 +179,8 @@ export function SelectDropdown({
       switch (e.key) {
         case 'Escape':
           e.preventDefault();
+          // Dismiss the innermost surface before an enclosing filter drawer.
+          e.stopPropagation();
           setIsOpen(false);
           setSearchQuery('');
           triggerRef.current?.focus();
@@ -177,20 +188,30 @@ export function SelectDropdown({
 
         case 'ArrowDown':
           e.preventDefault();
-          setHighlightedIndex(prev =>
-            prev < filteredOptions.length - 1 ? prev + 1 : 0
+          setHighlightedValue(
+            filteredOptions[
+              highlightedIndex < filteredOptions.length - 1
+                ? highlightedIndex + 1
+                : 0
+            ]?.value ?? null
           );
           break;
 
         case 'ArrowUp':
           e.preventDefault();
-          setHighlightedIndex(prev =>
-            prev > 0 ? prev - 1 : filteredOptions.length - 1
+          setHighlightedValue(
+            filteredOptions[
+              highlightedIndex > 0
+                ? highlightedIndex - 1
+                : filteredOptions.length - 1
+            ]?.value ?? null
           );
           break;
 
         case 'Enter':
         case ' ':
+          // Space edits the searchable input; Enter activates its option.
+          if (e.key === ' ' && e.target === searchInputRef.current) return;
           e.preventDefault();
           if (highlightedIndex >= 0 && filteredOptions[highlightedIndex]) {
             handleOptionClick(filteredOptions[highlightedIndex].value);
@@ -206,7 +227,7 @@ export function SelectDropdown({
           break;
       }
     },
-    [isOpen, highlightedIndex, filteredOptions, handleOptionClick]
+    [isOpen, highlightedIndex, filteredOptions, handleOptionClick, openDropdown]
   );
 
   // Scroll highlighted option into view
@@ -221,17 +242,26 @@ export function SelectDropdown({
 
   // Handle trigger click
   const handleTriggerClick = useCallback(() => {
-    setIsOpen(prev => !prev);
     if (isOpen) {
+      setIsOpen(false);
       setSearchQuery('');
+    } else {
+      openDropdown();
     }
-  }, [isOpen]);
+  }, [isOpen, openDropdown]);
 
   // Handle search input change
-  const handleSearchChange = useCallback(e => {
-    setSearchQuery(e.target.value);
-    setHighlightedIndex(0);
-  }, []);
+  const handleSearchChange = useCallback(
+    e => {
+      const query = e.target.value.toLowerCase();
+      setSearchQuery(e.target.value);
+      setHighlightedValue(
+        options.find(option => option.label.toLowerCase().includes(query))
+          ?.value ?? null
+      );
+    },
+    [options]
+  );
 
   // Check if option is selected
   const isSelected = useCallback(
@@ -255,7 +285,7 @@ export function SelectDropdown({
         aria-expanded={isOpen}
         aria-labelledby={`${selectId}-label`}
         aria-controls={listboxId}
-        aria-activedescendant={activeDescendant}
+        aria-activedescendant={showSearch ? undefined : activeDescendant}
         onClick={handleTriggerClick}
       >
         <span className="mg-select__trigger-text">{displayText}</span>
@@ -300,6 +330,11 @@ export function SelectDropdown({
               <input
                 ref={searchInputRef}
                 type="text"
+                role="combobox"
+                aria-autocomplete="list"
+                aria-expanded={isOpen}
+                aria-controls={listboxId}
+                aria-activedescendant={activeDescendant}
                 className="mg-select__search-input"
                 placeholder={searchInputPlaceholder}
                 value={searchQuery}
@@ -322,7 +357,7 @@ export function SelectDropdown({
             // keyboard highlight so two options don't both look current;
             // after that, pointer movement costs no renders.
             onPointerMove={() => {
-              if (highlightedIndex !== -1) setHighlightedIndex(-1);
+              if (highlightedIndex !== -1) setHighlightedValue(null);
             }}
           >
             {filteredOptions.length === 0 ? (
@@ -337,12 +372,15 @@ export function SelectDropdown({
                       ? 'mg-select__option--selected'
                       : ''
                   } ${index === highlightedIndex ? 'mg-select__option--highlighted' : ''} ${
-                    option.isSubtype && !isSelected(option.value)
-                      ? 'mg-select__option--subtype'
-                      : ''
-                  }`}
+                    option.isSubtype ? 'mg-select__option--subtype' : ''
+                  } ${option.selectionState === 'inherited' ? 'mg-select__option--inherited' : ''} ${option.selectionState === 'partial' ? 'mg-select__option--partial' : ''}`}
                   role="option"
                   aria-selected={isSelected(option.value)}
+                  aria-describedby={
+                    option.description
+                      ? `${getOptionId(index)}-description`
+                      : undefined
+                  }
                   onClick={() => handleOptionClick(option.value)}
                 >
                   {/* Checkbox/Radio indicator */}
@@ -354,6 +392,27 @@ export function SelectDropdown({
                     }`}
                     aria-hidden="true"
                   >
+                    {!isSelected(option.value) &&
+                      multiple &&
+                      option.selectionState && (
+                        <svg
+                          width="12"
+                          height="12"
+                          viewBox="0 0 12 12"
+                          fill="currentColor"
+                        >
+                          {option.selectionState === 'inherited' ? (
+                            <path
+                              d="M10 3L4.5 8.5L2 6"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              fill="none"
+                            />
+                          ) : (
+                            <path d="M2 5h8v2H2z" />
+                          )}
+                        </svg>
+                      )}
                     {isSelected(option.value) &&
                       (multiple ? (
                         <svg
@@ -378,6 +437,12 @@ export function SelectDropdown({
                   <span className="mg-select__option-label">
                     {option.label}
                   </span>
+
+                  {option.description && (
+                    <span id={`${getOptionId(index)}-description`} hidden>
+                      {option.description}
+                    </span>
+                  )}
 
                   {/* Count badge */}
                   {option.count !== undefined && (
