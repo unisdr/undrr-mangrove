@@ -146,3 +146,86 @@ it('exposes highlighted inclusion descriptions from the focused searchable combo
   expect(trigger).not.toHaveAttribute('aria-activedescendant');
   expect(await axe(container)).toHaveNoViolations();
 });
+
+it('keeps search and focus stable through count changes until the dropdown reopens', () => {
+  const options = Array.from({ length: 9 }, (_, i) => ({
+    value: String(i),
+    label: `Option ${i}`,
+  }));
+  const view = currentOptions => (
+    <SelectDropdown
+      id="threshold"
+      label="Type"
+      options={currentOptions}
+      value={[]}
+      multiple
+      onChange={() => {}}
+    />
+  );
+  const { rerender } = render(view(options));
+  const trigger = screen.getByRole('button');
+  fireEvent.click(trigger);
+  const search = screen.getByRole('combobox');
+  fireEvent.change(search, { target: { value: 'Option 2' } });
+  rerender(view(options.slice(0, 8)));
+  expect(search).toBeInTheDocument();
+  expect(search).toHaveFocus();
+  expect(search).toHaveValue('Option 2');
+  expect(screen.getAllByRole('option')).toHaveLength(1);
+  fireEvent.keyDown(search, { key: 'Escape' });
+  fireEvent.click(trigger);
+  expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
+  expect(screen.getAllByRole('option')).toHaveLength(8);
+  rerender(view(options));
+  expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
+  expect(trigger).toHaveFocus();
+  fireEvent.keyDown(trigger, { key: 'Escape' });
+  fireEvent.click(trigger);
+  expect(screen.getByRole('combobox')).toHaveFocus();
+});
+
+it.each([2, 9])(
+  'returns focus to the owning control after a pointer selection with %i options',
+  count => {
+    render(
+      <SelectDropdown
+        label="Type"
+        options={Array.from({ length: count }, (_, i) => ({
+          value: String(i),
+          label: `Option ${i}`,
+        }))}
+        multiple
+        value={[]}
+        onChange={() => {}}
+      />
+    );
+    fireEvent.click(screen.getByRole('button'));
+    const owner = screen.queryByRole('combobox') || screen.getByRole('button');
+    owner.focus();
+    owner.blur(); // Native pointer mousedown on the non-focusable option blurs it.
+    fireEvent.click(screen.getByRole('option', { name: 'Option 0' }));
+    expect(owner).toHaveFocus();
+  }
+);
+
+it('consumes Escape for the open dropdown before its enclosing drawer', () => {
+  const onDrawerKeyDown = jest.fn();
+  render(
+    <div onKeyDown={onDrawerKeyDown}>
+      <SelectDropdown
+        label="Type"
+        options={OPTIONS}
+        value={[]}
+        multiple
+        onChange={() => {}}
+      />
+    </div>
+  );
+  const trigger = screen.getByRole('button');
+  fireEvent.click(trigger);
+  fireEvent.keyDown(trigger, { key: 'Escape' });
+  expect(trigger).toHaveAttribute('aria-expanded', 'false');
+  expect(onDrawerKeyDown).not.toHaveBeenCalled();
+  fireEvent.keyDown(trigger, { key: 'Escape' });
+  expect(onDrawerKeyDown).toHaveBeenCalledTimes(1);
+});

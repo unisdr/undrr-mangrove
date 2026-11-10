@@ -68,6 +68,7 @@ export function SelectDropdown({
   noOptionsText = 'No options found',
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [highlightedValue, setHighlightedValue] = useState(null);
 
@@ -110,8 +111,12 @@ export function SelectDropdown({
   const activeDescendant =
     isOpen && highlightedIndex >= 0 ? getOptionId(highlightedIndex) : undefined;
 
-  // Show search input when we have many options
-  const showSearch = options.length > searchThreshold;
+  // Decide search availability once per opening. Async aggregation changes
+  // must not remove a focused input or leave its query hidden from the user.
+  const openDropdown = useCallback(() => {
+    setShowSearch(options.length > searchThreshold);
+    setIsOpen(true);
+  }, [options.length, searchThreshold]);
 
   // Get display text for trigger button
   const displayText = useMemo(() => {
@@ -147,6 +152,9 @@ export function SelectDropdown({
           ? selectedValues.filter(v => v !== optionValue)
           : [...selectedValues, optionValue];
         onChange(newValues);
+        // Native pointer clicks on non-focusable options can leave focus on
+        // body. Keep subsequent keyboard navigation within this dropdown.
+        (searchInputRef.current || triggerRef.current)?.focus();
       } else {
         onChange(optionValue);
         setIsOpen(false);
@@ -163,7 +171,7 @@ export function SelectDropdown({
       if (!isOpen) {
         if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') {
           e.preventDefault();
-          setIsOpen(true);
+          openDropdown();
         }
         return;
       }
@@ -171,6 +179,8 @@ export function SelectDropdown({
       switch (e.key) {
         case 'Escape':
           e.preventDefault();
+          // Dismiss the innermost surface before an enclosing filter drawer.
+          e.stopPropagation();
           setIsOpen(false);
           setSearchQuery('');
           triggerRef.current?.focus();
@@ -217,7 +227,7 @@ export function SelectDropdown({
           break;
       }
     },
-    [isOpen, highlightedIndex, filteredOptions, handleOptionClick]
+    [isOpen, highlightedIndex, filteredOptions, handleOptionClick, openDropdown]
   );
 
   // Scroll highlighted option into view
@@ -232,11 +242,13 @@ export function SelectDropdown({
 
   // Handle trigger click
   const handleTriggerClick = useCallback(() => {
-    setIsOpen(prev => !prev);
     if (isOpen) {
+      setIsOpen(false);
       setSearchQuery('');
+    } else {
+      openDropdown();
     }
-  }, [isOpen]);
+  }, [isOpen, openDropdown]);
 
   // Handle search input change
   const handleSearchChange = useCallback(

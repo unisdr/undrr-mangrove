@@ -262,13 +262,13 @@ try {
             fullPage: true,
           });
         }
-        await type.focus();
+        assert.equal(
+          await type.evaluate(el => el === document.activeElement),
+          true
+        );
         await page.keyboard.press('Escape');
-        // Escape also dismisses the enclosing mobile drawer.
-        if (mobile)
-          await input(
-            page.getByRole('button', { name: 'Filters', exact: true })
-          );
+        assert.equal(await type.getAttribute('aria-expanded'), 'false');
+        if (mobile) assert.equal(await surface.isVisible(), true);
         await input(type);
         assert.deepEqual(await optionLabels(), selectedLabels);
         await input(page.getByRole('option', { name: /^News 10$/ }));
@@ -304,13 +304,13 @@ try {
         );
         await input(page.getByRole('option', { name: /News: Update 7$/ }));
         assert.deepEqual(await optionLabels(), original);
-        await type.focus();
+        assert.equal(
+          await type.evaluate(el => el === document.activeElement),
+          true
+        );
         await page.keyboard.press('Escape');
-        // Escape also dismisses the enclosing mobile drawer.
-        if (mobile)
-          await input(
-            page.getByRole('button', { name: 'Filters', exact: true })
-          );
+        assert.equal(await type.getAttribute('aria-expanded'), 'false');
+        if (mobile) assert.equal(await surface.isVisible(), true);
 
         const region = surface.getByRole('button', {
           name: 'Region',
