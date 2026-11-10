@@ -54,6 +54,8 @@
 // ---------------------------------------------------------------------------
 
 export const REQUIRES_REACT = {
+  'patterns-publication-record':
+    'Story-only React composition, not a published renderer/import. Its included PageHeader/MegaMenu shell retains React/hydration requirements; the record content and native resource links can be emitted as static HTML without JavaScript. Consumers supply an approved host shell.',
   'design-decisions-language-boundaries':
     'Storybook integration demo measuring rendered font families across nested Arabic and Latin language boundaries. Requires React and browser layout APIs for live measurements; this is a documentation specimen, not a reusable production component.',
 
@@ -2142,6 +2144,64 @@ npm run build</code></pre>
     ],
   },
 
+  'components-dialog': {
+    description:
+      'Experimental native modal enhancement for authored disclosures, first shipped in 2.4.0 under js/dialog.js with matching CSS. Versioned CDN assets require npm publication and the shared-web-assets production deployment; verify matching paths before use. Short messages and long reading share focus return, Escape/backdrop dismissal, viewport scrolling and cleanup. Content stays available without JavaScript; server-rendered labels own translation. No shipped Gutenberg block or validated editor round trip.',
+    summary:
+      'Experimental native dialog, available from 2.4.0, for optional messages and long reading, with a disclosure fallback and no React dependency.',
+    cssClasses: [
+      'mg-dialog',
+      'mg-dialog--sticky-header',
+      'mg-dialog__header',
+      'mg-dialog__title',
+      'mg-dialog__body',
+      'mg-dialog__close',
+    ],
+    examples: [
+      {
+        name: 'Progressive disclosure',
+        html: `<div data-mg-dialog>
+  <button type="button" class="mg-button mg-button-primary" data-mg-dialog-trigger hidden>Read the case study</button>
+  <details data-mg-dialog-fallback><summary>Read the case study</summary>
+    <div data-mg-dialog-content>
+      <header class="mg-dialog__header">
+        <h2 id="case-study-title" class="mg-dialog__title" data-mg-dialog-title data-mg-dialog-initial-focus tabindex="-1">Community resilience</h2>
+        <button type="button" class="mg-button mg-button-secondary mg-dialog__close" data-mg-dialog-close hidden>Close</button>
+      </header>
+      <div class="mg-dialog__body mg-content"><p>The case study goes here.</p></div>
+    </div>
+  </details>
+</div>`,
+      },
+    ],
+    vanillaModule: {
+      note: 'First shipped in 2.4.0. Run yarn build and serve dist/assets as the local web root; the relative css/style.css and js/dialog.js paths in this example refer to that assembled build, not to the Storybook site. Versioned CDN paths require npm publication and the shared-web-assets production deployment; verify matching pinned CSS and JavaScript before use. Enhances authored markup; does not generate content or translate labels. Call mgDialog(scope) after inserting markup and mgDialogDestroy(scope) before replacing it. Uses native showModal; unsupported browsers retain the disclosure. Nested roots retain their disclosures without enhancement. The enhancer alone owns mg-dialog--sticky-header: it makes the header sticky only when ResizeObserver measurements leave at least half the dialog viewport for reading; otherwise it stays in normal flow with keyboard/Escape dismissal. Do not author that state class or combine overlay lifecycles.',
+      selector: '[data-mg-dialog]',
+      modules: { script: 'js/dialog.js' },
+      dataAttributes: {
+        'data-mg-dialog': 'Root; owns one authored disclosure and trigger.',
+        'data-mg-dialog-trigger': 'Initially hidden opening button.',
+        'data-mg-dialog-fallback':
+          'Authored details element available before enhancement.',
+        'data-mg-dialog-content':
+          'Content moved into the modal and restored on destroy.',
+        'data-mg-dialog-title': 'Required heading with an authored unique id.',
+        'data-mg-dialog-close':
+          'Initially hidden Close controls, translated in the page; every marked control dismisses the dialog.',
+        'data-mg-dialog-initial-focus':
+          'Optional focus target; a heading needs tabindex=-1. Otherwise Close receives focus.',
+      },
+      example: `<link rel="stylesheet" href="css/style.css">
+<div data-mg-dialog>
+  <button type="button" class="mg-button mg-button-primary" data-mg-dialog-trigger hidden>Read more</button>
+  <details data-mg-dialog-fallback><summary>Read more</summary><div data-mg-dialog-content>
+    <header class="mg-dialog__header"><h2 id="reading-title" class="mg-dialog__title" data-mg-dialog-title>Optional reading</h2><button type="button" class="mg-button mg-button-secondary mg-dialog__close" data-mg-dialog-close hidden>Close</button></header>
+    <div class="mg-dialog__body mg-content"><p>Supporting information.</p></div>
+  </div></details>
+</div>
+<script type="module" src="js/dialog.js"></script>`,
+    },
+  },
   'components-cite-this': {
     description:
       'Vanilla citation button and native dialog for detail pages. An empty data-mg-cite-this element uses the page title and URL; server-rendered disclosure markup preserves a no-JavaScript fallback. Prefer an approved citation, then configured metadata, a matching JSON-LD CreativeWork, or a page-title fallback. The script supplies copy feedback and bubbling analytics events; the host owns GA4 and consent. Event id is null for automatically URL-derived IDs containing a query: supply an approved data-mg-cite-this-id for per-work reporting without forwarding query values or merging distinct works.',
@@ -2371,11 +2431,30 @@ npm run build</code></pre>
       'Article full-page reference within the Article archetype: headline, hero image, reading body and related content. imageProminence controls the header treatment: bleeds full width (large), stays in the reading column (compact), or runs a two-column Hero split band (split). heroImage controls whether the header shows the same image used for teasers/social cards, a different one, or none. Composes VerticalCard, TableOfContents and mg-reading.',
   },
 
+  'patterns-publication-record': {
+    summary:
+      'Experimental story-only bibliographic publication record with early access links, optional complete cover and distinct metadata roles.',
+    description:
+      'Experimental story-only publication record using the news-entry shell and reading layout, with early primary/backup links, optional complete cover and bibliography. No published PublicationRecord import or production CMS adapter exists. Record content works as static HTML; PageHeader/MegaMenu navigation needs its documented hydration. Requires shared Mangrove CSS and consumer-owned publication-record.scss, which is not included in css/style.css. Use rendered-HTML Show code rather than private JSX fixtures. Citation and resource metadata are supplied, never inferred. Docs: https://mangrove.undrr.org/?path=/docs/patterns-publication-record--docs . Composition: https://raw.githubusercontent.com/PreventionWeb/undrr-mangrove/main/stories/Patterns/Content/Publication/PublicationRecord.jsx ; stylesheet: https://raw.githubusercontent.com/PreventionWeb/undrr-mangrove/main/stories/Patterns/Content/Publication/publication-record.scss . These moving-main discovery links must be matched to the loaded library build before adoption.',
+    cssClasses: [
+      'mg-publication-record',
+      'mg-publication-record__metadata',
+      'mg-publication-record__resources',
+      'mg-publication-record__reading',
+      'mg-publication-record__layout',
+      'mg-publication-record__header',
+      'mg-publication-record__identity',
+      'mg-publication-record__main',
+      'mg-publication-record__aside',
+      'mg-publication-record__cover',
+    ],
+  },
+
   'patterns-landing-pages': {
     summary:
       'Full-page references grouped by archetype: topic under Landing page, report under Publication, and collection index under Collection.',
     description:
-      'Full-page composition references: topic or initiative under Landing page, report under Publication and collection index under Collection. These demonstrate composition, not a one-to-one mapping from Drupal bundles to domain models.',
+      'Full-page composition references: topic or initiative under Landing page, curated report landing under Publication and collection index under Collection. The report examples do not implement an ordinary bibliographic publication record. An experimental story-only record composition is documented at https://mangrove.undrr.org/?path=/docs/patterns-publication-record--docs ; production integration and a published renderer remain unimplemented. Its provisional specification is at https://mangrove.undrr.org/?path=/docs/patterns-content-publication-record-specification--docs ; fetchable source: https://raw.githubusercontent.com/PreventionWeb/undrr-mangrove/main/docs/PUBLICATION-RECORD-SPEC.md . These demonstrate composition, not a one-to-one mapping from Drupal bundles to domain models. The publication branding examples are story-only compositions, not published component imports; their generated JSX snippets call a private renderPublication helper and are not standalone. Publication guide: https://mangrove.undrr.org/?path=/docs/patterns-content-publication-full-page--docs . Full example source: https://raw.githubusercontent.com/PreventionWeb/undrr-mangrove/main/stories/Patterns/LandingPages/PublicationPage.stories.jsx . Required consumer-owned stylesheet: https://raw.githubusercontent.com/PreventionWeb/undrr-mangrove/main/stories/Patterns/LandingPages/publication-example.scss . These moving-main source links are discovery aids; match the source and component contracts to the loaded library build before adapting them.',
   },
 
   'example-page-template-example': {
@@ -2816,10 +2895,15 @@ npm run build</code></pre>
     },
   },
   'components-syndicated-search': {
+    cssClasses: [
+      'mg-search__scope-tabs',
+      'mg-search__scope-options',
+      'mg-search__scope-option',
+    ],
     summary:
       'Search with facets, result lists, photo cards or publication catalogues. Book mode preserves artwork URLs; use publication filters and explicit grid columns.',
     description:
-      'Search interface over the UNDRR syndication API: query box, facets, active filters, result list or cards, pager and search metrics. Book grids preserve supplied artwork URLs and use a shared desktop media stage; choose publication filters, explicit columns and concise fields for a cover catalogue. Teaser HTML is inserted directly into the result article when metrics are disabled; the metrics-enabled view keeps a separate teaser container alongside the scoring panel. Loading uses the shared flush ProgressBar in the results region and inline Loader on refresh. Skeletons remain static; optional motion uses shared timing tokens, with a dashed progress strip under reduced motion and visible outlines in forced colours. lang selects the bundled UI catalogue, independently of content-language filters. labels and data-labels provide explicit overrides. Built-in plural functions are bundled and work through hydration; custom functions require a JavaScript labels prop. The widget renders the search response as unsanitised HTML so Elasticsearch highlight markup survives, which puts the configured searchEndpoint inside its trust boundary: point it only at a service trusted to return safe HTML.',
+      'Search interface over the UNDRR syndication API: query box, facets, active filters, result list or cards, pager and search metrics. Custom facets with display tabs provide required native radio scopes above results, preserving other filters and scoping facet counts. Unique URL-safe option values synchronize selections with browser history; Clear all retains the scope. Book grids preserve supplied artwork URLs and use a shared desktop media stage; choose publication filters, explicit columns and concise fields for a cover catalogue. Teaser HTML is inserted directly into the result article when metrics are disabled; the metrics-enabled view keeps a separate teaser container alongside the scoring panel. Loading uses the shared flush ProgressBar in the results region and inline Loader on refresh. Skeletons remain static; optional motion uses shared timing tokens, with a dashed progress strip under reduced motion and visible outlines in forced colours. lang selects the bundled UI catalogue, independently of content-language filters. labels and data-labels provide explicit overrides. Built-in plural functions are bundled and work through hydration; custom functions require a JavaScript labels prop. The widget renders the search response as unsanitised HTML so Elasticsearch highlight markup survives, which puts the configured searchEndpoint inside its trust boundary: point it only at a service trusted to return safe HTML.',
     hydration: {
       note: 'The widget queries an Elasticsearch-backed API and owns all of its state, so renderedHtml is only the empty initial shell — no results, facets or pager are in it. Render an empty data-mg-search-widget container and hydrate it. fromElement returns config plus optional lang, dir and labels, so forward the full extracted props to retain language selection. Only attributes you set are included in config, so every unset option keeps its default. Malformed JSON in any of the JSON attributes is ignored and that option falls back to its default.',
       selector: '[data-mg-search-widget]',
@@ -2837,6 +2921,10 @@ npm run build</code></pre>
         'data-min-search-length': 'Minimum query length before a search runs.',
         'data-default-query': 'Query the widget starts with.',
         'data-default-sort': 'Initial sort key.',
+        'data-show-sort':
+          '"false" hides the sort selector and keeps the configured order, including when restoring URL or history state.',
+        'data-year-field':
+          'Year filter date basis: published_at (default), event_start, or display_date. With display_date, fallback results use the reader-facing date and display_date_precision (year or day); the endpoint must index these fields before selection.',
         'data-display-mode':
           'Result layout: list, card or card-book. Book mode preserves supplied artwork URLs; use publication filters and explicit columns for a cover catalogue.',
         'data-grid-columns': 'Columns in the card grid.',
@@ -2863,7 +2951,8 @@ npm run build</code></pre>
           'JSON object of filters applied to every search.',
         'data-allowed-types': 'JSON array of content types to include.',
         'data-custom-filters': 'JSON array of extra filter definitions.',
-        'data-custom-facets': 'JSON array of extra facet definitions.',
+        'data-custom-facets':
+          'JSON array of custom facets. display: tabs creates a required native radio scope above results; defaultValue is an option index. Unique URL-safe option values enable t.<facetId> history links. Labels and queries are consumer supplied.',
         'data-visible-teaser-fields':
           'JSON array of teaser fields to show on each result.',
         'data-interestingness-tiers': 'JSON tier configuration for ranking.',
@@ -2917,9 +3006,33 @@ npm run build</code></pre>
     summary:
       'Site-wide mega menu: a desktop navigation strip with multi-column panels, and a bounded progressive overlay below 900px.',
     description:
-      'Site-wide mega menu: a desktop nav strip with multi-column panels and a bounded progressive mobile overlay below 900px. The menu structure comes from a sections array, normally built server-side or fetched from an API. Below 900px the overlay is bounded (minimum 400px where space permits, maximum min(700px, 90dvh)) with Back above the title, a separate Close control and outside-click dismissal, nested groups, and section headings linked to their landing pages. Optional label props are menuLabel, backLabel, allSectionsLabel, closeLabel, overviewLabel and toggleMobileNavLabel. mg-mega-wrapper--js-active is added on mount, so pointer-events restrictions apply only once the sidebar is available; plain HTML nav markup and failed-hydration states stay clickable on mobile.',
+      'Site-wide mega menu: a desktop nav strip with multi-column panels and a bounded progressive mobile overlay below 900px. The menu structure comes from a sections array, normally built server-side or fetched from an API. Below 900px the overlay is bounded (minimum 400px where space permits, maximum min(700px, 90dvh)) with Back above the title, a separate Close control and outside-click dismissal, nested groups, and section headings linked to their landing pages. Optional enableFilter adds a menu-wide native finder dialog opened by a fixed footer utility in desktop panels with left columns and a menu-wide mobile drawer finder. The existing Search navigation item is unchanged; no second top-level search entry or global shortcut is added. Results use wrapping breadcrumb rows, rank title matches first and combine duplicate URLs. Query words can appear in any order across titles and breadcrumb paths; all words are required, with English and/& treated as optional conjunctions between other terms. Matching words highlight separately. Word/CamelCase initials match automatically: GAR or G-A-R finds Global Assessment Report; PW finds PreventionWeb. Whole-label acronyms require at least two letters; English connector words and numeric years may be omitted. Exact titles and word prefixes rank first, then exact acronyms before incidental inside-word matches (RO favours Regional Offices over Conference Proceedings). Aliases do not combine separate breadcrumb levels. Acronym aliases are precomputed with the flattened menu. Full-site search uses shared outlined secondary button styles and a decorative mg-icon-arrow-right that mirrors in RTL, without underlining the arrow. If literal matching finds nothing, single-word queries of at least four characters tolerate one edit or adjacent transposition against title and breadcrumb words. Counts are screen-reader-only. Close or Escape restores the footer focus; underlying navigation and scroll positions remain mounted. Composing IME keys do not dismiss either menu. Responsive/configuration changes that remove the finder utility clear its state and focus its surviving top-level control, without reopening later. The platform-aware Cmd/Ctrl+K hint applies only with focus in the expanded menu outside editors; Clear stays in the dialog. Finder controls and result rows use fast token-timed pointer hover tints only with no motion preference and outside forced colours; keyboard focus, dialog open/close and result updates remain immediate. The desktop dialog has an icon-only localized Close button and keeps full-site search visible in a separate footer while results scroll. enableSiteSearch offers a contextual full-site fallback (searchUrl defaults to /search#query=). menuFilterLabel names the utility and dialog; closeLabel names dismissal; other finder labels retain runtime translations and consumer overrides. mg-mega-wrapper--js-active is added on mount, so pointer-events restrictions apply only once the sidebar is available; plain HTML nav markup and failed-hydration states stay clickable on mobile.',
+    cssClasses: [
+      'mg-mega-content--filterable',
+      'mg-mega-menu-finder',
+      'mg-mega-menu-finder__header',
+      'mg-mega-menu-finder__heading',
+      'mg-mega-menu-finder__action',
+      'mg-mega-content__left-scroll',
+      'mg-mega-content__left-contents',
+      'mg-mega-content__finder-footer',
+      'mg-mega-content__finder-trigger',
+      'mg-mega-content__finder-shortcut',
+      'mg-mega-menu-finder__label',
+      'mg-mega-menu-finder__results',
+      'mg-mega-menu-finder__footer',
+      'mg-mega-filter',
+      'mg-mega-mobile-sidebar--filtering',
+      'mg-mega-filter__input',
+      'mg-mega-filter__mobile-list',
+      'mg-mega-filter__mobile-link',
+      'mg-mega-filter__item-title',
+      'mg-mega-filter__trail',
+      'mg-mega-filter__trail-step',
+      'mg-mega-filter__highlight',
+    ],
     hydration: {
-      note: "MegaMenu needs React: open and close state, keyboard navigation and the mobile drill-down are all component behaviour, so renderedHtml is not a working menu. This is a complex-tier component — fromElement reads only timing, logo and an optional inline data-sections attribute, and most integrations pass sections from an API in a consumer wrapper instead. Security: a section's bannerDescription is injected as raw HTML at the desktop banner, the no-items call-to-action panel and the mobile sidebar, and is NOT sanitised — unlike TextCta, Drawer and the card components, MegaMenu does not run DOMPurify. Sanitise it in the wrapper that builds sections, and never build it from untrusted input. bannerHeading and every title are rendered as text. Plain nav markup stays clickable before hydration and if hydration fails; the mg-mega-wrapper--js-active class is added on mount, so pointer-events restrictions apply only once the sidebar exists.",
+      note: "MegaMenu needs React: open and close state, keyboard navigation and the mobile drill-down are all component behaviour, so renderedHtml is not a working menu. This is a complex-tier component — fromElement reads timing, logo, finder/search options, language, labels and an optional inline data-sections attribute, and most integrations pass sections from an API in a consumer wrapper instead. Security: a section's bannerDescription is injected as raw HTML at the desktop banner, the no-items call-to-action panel and the mobile sidebar, and is NOT sanitised — unlike TextCta, Drawer and the card components, MegaMenu does not run DOMPurify. Sanitise it in the wrapper that builds sections, and never build it from untrusted input. bannerHeading and every title are rendered as text. Plain nav markup stays clickable before hydration and if hydration fails; the mg-mega-wrapper--js-active class is added on mount, so pointer-events restrictions apply only once the sidebar exists.",
       selector: '[data-mg-mega-menu]',
       modules: hydrationModules('MegaMenu'),
       dataAttributes: {
@@ -2942,6 +3055,12 @@ npm run build</code></pre>
           'Where the logo links to, e.g. /ar/ for a language-prefixed root (default /).',
         'data-logo-width': 'Explicit logo width, to avoid layout shift.',
         'data-logo-height': 'Explicit logo height, to avoid layout shift.',
+        'data-enable-filter':
+          'Set to "true" for a menu-wide desktop dialog opened from the expanded left-column footer and the mobile drawer finder.',
+        'data-enable-site-search':
+          'Set to "false" to disable full-site search fallback (default "true").',
+        'data-search-url':
+          'Base URL for full-site search fallback (default /search, formatting to #query=).',
       },
       events: [],
       example: hydrationExample({

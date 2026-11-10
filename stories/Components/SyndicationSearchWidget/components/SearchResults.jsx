@@ -93,6 +93,7 @@ export function SearchResults({
     displayMode,
     visibleTeaserFields,
     gridColumns,
+    yearField,
   } = config;
 
   const isCardMode = displayMode === 'card' || displayMode === 'card-book';
@@ -394,6 +395,7 @@ export function SearchResults({
                 displayMode={displayMode}
                 showMetrics={showSearchMetrics}
                 visibleTeaserFields={visibleTeaserFields}
+                yearField={yearField}
               />
             </div>
           ))}
@@ -410,6 +412,7 @@ export function SearchResults({
                 hit={hit}
                 showMetrics={showSearchMetrics}
                 visibleTeaserFields={visibleTeaserFields}
+                yearField={yearField}
               />
             </div>
           ))}

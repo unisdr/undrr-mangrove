@@ -1,4 +1,17 @@
-import React, { useLayoutEffect, useRef, useState, useId } from 'react';
+import React, {
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  useId,
+} from 'react';
+import {
+  flattenMenuItems,
+  filterMenuItems,
+  formatLabel,
+  MenuResultTrail,
+  getSiteSearchUrl,
+} from '../filterUtils';
 
 const EMPTY_PATH = [];
 
@@ -12,8 +25,13 @@ export function Sidebar({
   onClose,
   labels,
   id,
+  enableFilter = false,
+  enableSiteSearch = true,
+  searchUrl = '/search',
 }) {
   const [path, setPath] = useState(EMPTY_PATH);
+  const [filterQuery, setFilterQuery] = useState('');
+  const mobileFilterInputRef = useRef(null);
   const openerRef = useRef(null);
   const dialogRef = useRef(null);
   const headingRef = useRef(null);
@@ -21,6 +39,19 @@ export function Sidebar({
   const historyRef = useRef([]);
   const returningRef = useRef(null);
   const titleId = useId();
+
+  const hasFilterQuery = enableFilter && Boolean(filterQuery.trim());
+  // The mobile controller stays mounted on desktop. Traverse the menu only
+  // once a query needs it, and reuse that list across subsequent keystrokes.
+  const allItems = useMemo(() => {
+    return hasFilterQuery ? flattenMenuItems(sections) : [];
+  }, [hasFilterQuery, sections]);
+
+  const filteredResults = useMemo(() => {
+    return enableFilter && filterQuery.trim()
+      ? filterMenuItems(allItems, filterQuery)
+      : [];
+  }, [enableFilter, allItems, filterQuery]);
   let current = null;
   let items = sections;
   let validPath = true;
@@ -42,6 +73,7 @@ export function Sidebar({
 
   useLayoutEffect(() => {
     if (!open) {
+      setFilterQuery('');
       const wrapper = dialogRef.current?.closest('.mg-mega-wrapper');
       const desktop = window.matchMedia?.('(min-width: 900px)').matches;
       const target = desktop
@@ -118,12 +150,19 @@ export function Sidebar({
     setPath(previous => previous.slice(0, -1));
   };
   const handleKeyDown = event => {
+    if (event.isComposing || event.nativeEvent?.isComposing) {
+      event.stopPropagation();
+      return;
+    }
     if (event.key === 'Escape') {
       event.stopPropagation();
       event.preventDefault();
       onClose();
     }
     if (event.key === 'Tab') {
+      // Shared ancestors occur in every candidate's visibility walk. Read each
+      // style once per Tab, but recheck on the next event after CSS/DOM changes.
+      const hiddenByStyle = new Map();
       const focusable = Array.from(
         dialogRef.current.querySelectorAll(
           'a[href], button, input, select, textarea, summary, iframe, [contenteditable="true"], [tabindex], audio[controls], video[controls]'
@@ -148,9 +187,14 @@ export function Sidebar({
           ancestor && ancestor !== dialogRef.current;
           ancestor = ancestor.parentElement
         ) {
-          const style = window.getComputedStyle(ancestor);
-          if (style.display === 'none' || style.visibility === 'hidden')
-            return false;
+          if (!hiddenByStyle.has(ancestor)) {
+            const style = window.getComputedStyle(ancestor);
+            hiddenByStyle.set(
+              ancestor,
+              style.display === 'none' || style.visibility === 'hidden'
+            );
+          }
+          if (hiddenByStyle.get(ancestor)) return false;
         }
         return true;
       });
@@ -175,10 +219,11 @@ export function Sidebar({
     <div
       id={id}
       ref={dialogRef}
-      className={`mg-mega-mobile-sidebar mg-mega-mobile-sidebar--progressive${open ? ' mg-mega-mobile-sidebar--open' : ''}`}
+      className={`mg-mega-mobile-sidebar mg-mega-mobile-sidebar--progressive${open ? ' mg-mega-mobile-sidebar--open' : ''}${enableFilter && filterQuery.trim() ? ' mg-mega-mobile-sidebar--filtering' : ''}`}
       role="dialog"
       aria-modal={open ? 'true' : undefined}
       aria-labelledby={titleId}
+      aria-label={labels.menuLabel || 'Menu'}
       hidden={!present}
       aria-hidden={!open}
       inert={!open ? true : undefined}
@@ -194,103 +239,223 @@ export function Sidebar({
           <span aria-hidden="true">×</span>
         </button>
       </div>
-      <div
-        className={`mg-mega-mobile-sidebar__page${path.length ? ' mg-mega-mobile-sidebar__page--section' : ''}`}
-        key={path.join('-')}
-      >
-        {path.length > 0 && (
-          <button className="mg-mega-mobile-sidebar__back" onClick={back}>
-            <span className="mg-mega-mobile-sidebar__arrow" aria-hidden="true">
-              ←
-            </span>
-            {labels.backLabel}
-          </button>
-        )}
-        <h2
-          id={titleId}
-          ref={headingRef}
-          tabIndex={-1}
-          className="mg-mega-mobile-sidebar__title"
-        >
-          {overviewUrl ? (
-            <a
-              className="mg-mega-mobile-sidebar__title-link"
-              href={overviewUrl}
-            >
-              {current.title}
-            </a>
-          ) : (
-            current?.title || labels.allSectionsLabel
-          )}
-        </h2>
-        {current?.url &&
-          current.bannerButton?.url &&
-          current.url !== current.bannerButton.url && (
-            <a
-              className="mg-mega-mobile-sidebar__overview"
-              href={current.bannerButton.url}
-            >
-              {current.bannerButton.label || labels.overviewLabel}
-            </a>
-          )}
-        {items?.length > 0 && (
-          <ul ref={listRef} className="mg-mega-sidebar__list">
-            {(items || []).map((item, index) => (
-              <li className="mg-mega-sidebar-section" key={index}>
-                {item.items?.length > 0 || item.bannerDescription ? (
-                  <button
-                    className="mg-mega-sidebar-section__item"
-                    data-mg-menu-entry
-                    onClick={() => enter(index)}
-                  >
-                    {item.title}
-                    <svg
-                      className="mg-mega-mobile-sidebar__chevron"
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      aria-hidden="true"
-                      focusable="false"
-                    >
-                      <path d="m9 6 6 6-6 6" />
-                    </svg>
-                  </button>
-                ) : (
-                  <a
-                    className="mg-mega-sidebar-section__item"
-                    data-mg-menu-entry
-                    href={item.url || item.bannerButton?.url || '#'}
-                  >
-                    {item.title}
-                  </a>
-                )}
-              </li>
-            ))}
-          </ul>
-        )}
-        {current?.bannerDescription && (
-          <div className="mg-mega-mobile-sidebar__intro">
-            {current.bannerHeading &&
-              current.bannerHeading !== current.title && (
-                <h3>{current.bannerHeading}</h3>
-              )}
-            {/* Same caller-sanitised HTML contract as the desktop banner:
-                `bannerDescription` is rendered unescaped so its links and
-                inline markup survive, and the consumer that builds `sections`
-                owns sanitising it. The reasoning is written out in the trust
-                boundary note at the top of Section/Section.jsx, and stated for
-                consumers under "Banner HTML trust contract" in MegaMenu.mdx. */}
-            <div
-              dangerouslySetInnerHTML={{ __html: current.bannerDescription }}
+      {enableFilter && (
+        <div className="mg-mega-mobile-sidebar__filter-container">
+          <div className="mg-mega-filter mg-mega-filter--mobile">
+            <span
+              className="mg-icon mg-icon-search mg-mega-filter__icon"
+              aria-hidden="true"
             />
+            <input
+              type="search"
+              className="mg-mega-filter__input"
+              value={filterQuery}
+              onChange={e => setFilterQuery(e.target.value)}
+              placeholder={labels.filterPlaceholder || 'Filter menu items...'}
+              aria-label={labels.filterPlaceholder || 'Filter menu items'}
+              ref={mobileFilterInputRef}
+            />
+            {filterQuery && (
+              <button
+                type="button"
+                className="mg-mega-filter__clear"
+                onClick={() => {
+                  setFilterQuery('');
+                  mobileFilterInputRef.current?.focus();
+                }}
+                aria-label={labels.clearFilterLabel || 'Clear filter'}
+              >
+                <span aria-hidden="true">×</span>
+              </button>
+            )}
           </div>
-        )}
-      </div>
+        </div>
+      )}
+      {enableFilter && filterQuery.trim() ? (
+        <div className="mg-mega-mobile-sidebar__filter-results">
+          <h2
+            id={titleId}
+            ref={headingRef}
+            tabIndex={-1}
+            className="mg-mega-mobile-sidebar__title mg-u-sr-only"
+          >
+            {labels.menuLabel || 'Menu'}
+          </h2>
+          <div
+            className={`mg-mega-filter__status${filteredResults.length > 0 ? ' mg-u-sr-only' : ''}`}
+            role="status"
+            aria-live="polite"
+          >
+            {filteredResults.length === 0
+              ? labels.noFilterResultsLabel
+              : formatLabel(labels.filterMatchesCount, {
+                  count: filteredResults.length,
+                })}
+          </div>
+          {filteredResults.length > 0 ? (
+            <ul className="mg-mega-filter__mobile-list">
+              {filteredResults.map((item, idx) => (
+                <li key={idx} className="mg-mega-filter__mobile-item">
+                  <a
+                    href={item.url}
+                    className="mg-mega-filter__mobile-link"
+                    onClick={onClose}
+                    aria-label={
+                      item.fullPath
+                        ? `${item.title} (${item.fullPath})`
+                        : item.title
+                    }
+                  >
+                    <MenuResultTrail item={item} query={filterQuery} />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="mg-mega-filter__empty-container">
+              {enableSiteSearch && filterQuery.trim() && (
+                <div className="mg-mega-filter__empty-actions">
+                  <a
+                    href={getSiteSearchUrl(searchUrl, filterQuery)}
+                    className="mg-button mg-button-secondary mg-button-outline mg-mega-filter__empty-search-btn"
+                    onClick={onClose}
+                  >
+                    <span>
+                      {formatLabel(labels.searchSiteLabel, {
+                        query: filterQuery.trim(),
+                      })}
+                    </span>
+                    <span
+                      className="mg-icon mg-icon-arrow-right mg-mega-filter__fallback-arrow"
+                      aria-hidden="true"
+                    />
+                  </a>
+                </div>
+              )}
+            </div>
+          )}
+          {enableSiteSearch && filteredResults.length > 0 && (
+            <div className="mg-mega-filter__fallback">
+              <a
+                href={getSiteSearchUrl(searchUrl, filterQuery)}
+                className="mg-button mg-button-secondary mg-button-outline mg-mega-filter__site-search-link"
+                onClick={onClose}
+              >
+                <span>
+                  {formatLabel(labels.searchSiteLabel, {
+                    query: filterQuery.trim(),
+                  })}
+                </span>
+                <span
+                  className="mg-icon mg-icon-arrow-right mg-mega-filter__fallback-arrow"
+                  aria-hidden="true"
+                />
+              </a>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div
+          className={`mg-mega-mobile-sidebar__page${path.length ? ' mg-mega-mobile-sidebar__page--section' : ''}`}
+          key={path.join('-')}
+        >
+          {path.length > 0 && (
+            <button className="mg-mega-mobile-sidebar__back" onClick={back}>
+              <span
+                className="mg-mega-mobile-sidebar__arrow"
+                aria-hidden="true"
+              >
+                ←
+              </span>
+              {labels.backLabel}
+            </button>
+          )}
+          <h2
+            id={titleId}
+            ref={headingRef}
+            tabIndex={-1}
+            className="mg-mega-mobile-sidebar__title"
+          >
+            {overviewUrl ? (
+              <a
+                className="mg-mega-mobile-sidebar__title-link"
+                href={overviewUrl}
+              >
+                {current.title}
+              </a>
+            ) : (
+              current?.title || labels.allSectionsLabel
+            )}
+          </h2>
+          {current?.url &&
+            current.bannerButton?.url &&
+            current.url !== current.bannerButton.url && (
+              <a
+                className="mg-mega-mobile-sidebar__overview"
+                href={current.bannerButton.url}
+              >
+                {current.bannerButton.label || labels.overviewLabel}
+              </a>
+            )}
+          {items?.length > 0 && (
+            <ul ref={listRef} className="mg-mega-sidebar__list">
+              {(items || []).map((item, index) => (
+                <li className="mg-mega-sidebar-section" key={index}>
+                  {item.items?.length > 0 || item.bannerDescription ? (
+                    <button
+                      className="mg-mega-sidebar-section__item"
+                      data-mg-menu-entry
+                      onClick={() => enter(index)}
+                    >
+                      {item.title}
+                      <svg
+                        className="mg-mega-mobile-sidebar__chevron"
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                        focusable="false"
+                      >
+                        <path d="m9 6 6 6-6 6" />
+                      </svg>
+                    </button>
+                  ) : (
+                    <a
+                      className="mg-mega-sidebar-section__item"
+                      data-mg-menu-entry
+                      href={item.url || item.bannerButton?.url || '#'}
+                    >
+                      {item.title}
+                    </a>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+          {current?.bannerDescription && (
+            <div className="mg-mega-mobile-sidebar__intro">
+              {current.bannerHeading &&
+                current.bannerHeading !== current.title && (
+                  <h3>{current.bannerHeading}</h3>
+                )}
+              {/* Same caller-sanitised HTML contract as the desktop banner:
+                  `bannerDescription` is rendered unescaped so its links and
+                  inline markup survive, and the consumer that builds `sections`
+                  owns sanitising it. The reasoning is written out in the trust
+                  boundary note at the top of Section/Section.jsx, and stated for
+                  consumers under "Banner HTML trust contract" in MegaMenu.mdx. */}
+              <div
+                dangerouslySetInnerHTML={{ __html: current.bannerDescription }}
+              />
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

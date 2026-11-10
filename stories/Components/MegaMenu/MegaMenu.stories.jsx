@@ -530,6 +530,29 @@ export const WithLogo = {
   },
 };
 
+export const WithQuickFilter = {
+  render: ({ brand, ...args }) => (
+    <MegaMenu {...args} {...(brand ? brandLogos[brand] : {})} />
+  ),
+  args: {
+    delay: 5000,
+    sections: sections,
+    enableFilter: true,
+    enableSiteSearch: true,
+    searchUrl: '/search',
+    brand: 'PreventionWeb',
+  },
+  argTypes: brandArgType,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Open Knowledge Hub or About Us, then choose Find in menu in the fixed left-column footer. The dialog searches all menu destinations, including other sections. Try news from Knowledge Hub. Close or Escape returns to the same panel and footer button. The displayed ⌘K / Ctrl K shortcut works only with focus in the expanded menu, outside text fields. The Search tab stays unchanged; mobile retains its drawer finder.',
+      },
+    },
+  },
+};
+
 // Sections with icons on top-level items
 const sectionsWithIcons = sections.map((section, i) => ({
   ...section,

@@ -437,7 +437,9 @@
   &__title {
     color: rgb(var(--mg-color-hero-title));
     min-width: 0;
+    margin-top: 0;
     margin-bottom: var(--mg-spacing-25);
+    letter-spacing: normal;
     display: inline-block;
     font-family: var(--mg-font-family-display);
     font-weight: bold;

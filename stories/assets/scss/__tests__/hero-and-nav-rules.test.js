@@ -22,6 +22,17 @@ const ruleFor = selector => {
   return match ? match[1] : '';
 };
 
+describe('hero title markup', () => {
+  test('keeps heading defaults from changing the wrapped title rhythm', () => {
+    const rule = [...css.matchAll(/(?:^|})\s*\.mg-hero__title\s*\{([^}]*)\}/g)]
+      .map(match => match[1])
+      .join('');
+    expect(rule).toMatch(/margin-top:\s*0/);
+    expect(rule).toMatch(/letter-spacing:\s*normal/);
+    expect(rule).toMatch(/margin-bottom:\s*var\(--mg-spacing-25\)/);
+  });
+});
+
 describe('neutral hero', () => {
   test('sizes away an inline background image in the background layout', () => {
     const rule = ruleFor('.mg-hero.mg-hero--neutral:not(.mg-hero--split)');

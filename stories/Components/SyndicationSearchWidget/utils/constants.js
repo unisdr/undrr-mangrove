@@ -581,6 +581,8 @@ export const SOURCE_FIELDS = [
   'vid',
   'field_domain_access',
   'published_at',
+  'display_date',
+  'display_date_precision',
   'event_start',
   'event_end',
   'field_meta_interestingness',
@@ -617,8 +619,10 @@ export const DEFAULT_CONFIG = {
   // Default search query and sort
   defaultQuery: '',
   defaultSort: 'relevance',
+  yearField: 'published_at',
 
   // UI element visibility
+  showSort: true,
   showSearchBox: true,
   showResultsCount: true,
   showSearchTimer: false,
