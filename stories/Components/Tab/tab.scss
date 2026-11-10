@@ -426,6 +426,39 @@
   }
 }
 
+// Sticky is additive: horizontal layout, semantics and overflow remain shared.
+// The root confines its rail; never pin the scrollport or duplicate controls.
+.mg-tabs {
+  // Internal runtime measurement; fallback keeps canonical no-JS markup usable.
+  --mg-tab-sticky-rail-size: 5rem;
+}
+
+@media (height > 400px) {
+  .mg-tabs--horizontal.mg-tabs--sticky {
+    > .mg-tabs__rail {
+      --mg-tab-rail-background: var(
+        --mg-tab-sticky-background,
+        rgb(var(--mg-color-neutral-0))
+      );
+
+      position: sticky;
+      top: var(--mg-tab-sticky-offset, 0);
+      z-index: calc(var(--mg-z-index-sticky) - 1);
+    }
+
+    // Focus and anchor targets must clear the measured rail, including after
+    // font loading or text reflow. Existing page scroll padding is preserved.
+    > .mg-tabs__panels > .mg-tabs-content > .mg-tabs__section,
+    > .mg-tabs__panels
+      > .mg-tabs-content
+      > .mg-tabs__section
+      :where([id], a, button, input, select, textarea, [tabindex], :focus) {
+      // prettier-ignore
+      scroll-margin-block-start: calc(var(--mg-tab-sticky-offset, 0px) + var(--mg-tab-sticky-rail-size) + var(--mg-spacing-75));
+    }
+  }
+}
+
 @mixin modern-stacked-tabs {
   > .mg-tabs__list,
   > .mg-tabs__panels {

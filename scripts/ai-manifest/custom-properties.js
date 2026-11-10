@@ -87,6 +87,8 @@ export const GLOBAL_PREFIXES = {
 // in the validate log, and in the count — rather than only shrinking a JSON
 // file nobody diffs.
 export const NOT_PUBLIC = {
+  '--mg-tab-sticky-rail-size':
+    'Internal rail height measured by tabs.js for sticky focus and anchor clearance. Restored on teardown; consumers set the docking offset instead.',
   '--mg-list-item-indent-rtl':
     'Internal hook between the RTL list rules in _foundational.scss and the mg-list-unmarked mixin: a list with no bullets sets it to 0 so its items lose the RTL bullet indent. Use the mixin rather than setting it.',
   '--mg-gutenberg-spacer':
@@ -123,7 +125,7 @@ export const MIN_PROPERTIES = {
   'components-reading-column': 1,
   'components-showmore': 1,
   'components-status-label': 15,
-  'components-tabs': 14,
+  'components-tabs': 16,
   'components-tag': 3,
   'patterns-content-hub': 11,
 };
@@ -378,6 +380,10 @@ export const PROPERTY_DOCS = {
     'Derived from --mg-status-label-indicator-border-width and carried into the inner polygons of the two clip-path shapes. Set the border width instead: setting this one alone leaves the ring on those two shapes disagreeing with the other five.',
 
   // Tabs
+  '--mg-tab-sticky-offset':
+    'Docking offset of the opt-in sticky horizontal rail, default 0px. Compose the site header and measured page-navigation height here; accepts a CSS length expression.',
+  '--mg-tab-sticky-background':
+    'Opaque complete colour for the sticky rail and its overflow fades; defaults to rgb(var(--mg-color-neutral-0)). Override with a surface that retains tab and focus contrast.',
   '--mg-tab-color': 'Label colour of a tab at rest.',
   '--mg-tab-color--hover': 'Label colour of a tab on hover.',
   '--mg-tab-color--active': 'Label colour of the active tab.',

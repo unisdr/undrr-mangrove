@@ -1,6 +1,8 @@
 import { withLanguage } from '../../../.storybook/withLanguage';
 // stories\Components\Tab\Tab.stories.jsx
 import { Tab } from './Tab';
+import OnThisPageNav from '../OnThisPageNav/OnThisPageNav';
+import './tab-stories.scss';
 import { expect, within } from 'storybook/test';
 
 // Tab content (tabdata) per locale — separate from UI labels.
@@ -352,6 +354,48 @@ export const RightToLeft = {
         );
         await expect(getComputedStyle(group).direction).toBe('rtl');
       })
+    );
+  },
+};
+
+// The component owns sticky geometry; the fixture composes the page offset.
+export const StickyWithinSection = {
+  name: 'Sticky within section',
+  args: { sticky: true },
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale).map((tab, index) => ({
+      ...tab,
+      text_id: `sticky-${index}`,
+      data: Array.from({ length: 12 }, () => `<p>${tab.data}</p>`).join(''),
+    }));
+    return (
+      <div className="mg-tabs-sticky-example">
+        <OnThisPageNav
+          lang={args.lang}
+          dir={args.dir}
+          items={[
+            { href: '#sticky-example-tabs', text: caption[0].text },
+            { href: '#sticky-example-after', text: caption[1].text },
+          ]}
+        />
+        <div className="mg-tabs-sticky-example__intro">
+          <h1>{caption[0].text}</h1>
+          <p>{caption[0].text}</p>
+        </div>
+        <section
+          id="sticky-example-tabs"
+          className="mg-tabs-sticky-example__tabs"
+        >
+          <h2>{caption[1].text}</h2>
+          <Tab {...args} tabdata={caption} />
+        </section>
+        <section
+          id="sticky-example-after"
+          className="mg-tabs-sticky-example__after"
+        >
+          <h2>{caption[2].text}</h2>
+        </section>
+      </div>
     );
   },
 };
