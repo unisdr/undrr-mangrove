@@ -636,7 +636,9 @@ Editors can configure a publication listing with newest-first ordering and an in
 
 ### Latest ten website teasers
 
-The **Latest 10 website teasers** example uses the ordinary pre-rendered `_source.teaser` path in `ResultItem`, rather than fallback cards or the separate `ssrResults` first-paint handoff. It shows the ten newest indexed PreventionWeb records in a local sanitized-index snapshot captured on 10 November 2026, mixing news, publications and a collection. This is captured sample data, not a continuously updated view of the live website. Original Drupal `teaser_3_9` markup is retained with theme-debug comments removed; the standard renderer resolves original thumbnail paths against the source website, so images depend on remote availability. The snapshot and provenance live in `stories/assets/fixtures/search-latest10/results.json`.
+The **Website teaser sample** example uses the ordinary pre-rendered `_source.teaser` path in `ResultItem`, rather than fallback cards or the separate `ssrResults` first-paint handoff. It shows the ten newest indexed PreventionWeb records in a local sanitized-index snapshot captured on 10 November 2026, mixing news, publications and a collection. This is captured sample data, not a continuously updated view of the live website. Original Drupal `teaser_3_9` markup is retained with theme-debug comments removed; the standard renderer resolves original thumbnail paths against the source website, so images depend on remote availability. The snapshot and provenance live in `stories/assets/fixtures/website-teaser-sample/results.json`.
+
+The separate **Latest website results (live)** example queries the normal UNDRR search endpoint with PreventionWeb and English filters, newest website posting order, and an initial page/download quantity of ten. It uses the standard published-content constraints and teaser renderer. Network and access failures remain visible; the example never substitutes sample data and is excluded from deterministic browser tests.
 
 <Canvas
   of={ExportStories.LatestWebsiteTeasers}
@@ -649,7 +651,7 @@ The example configures PreventionWeb/domain and English filters, `defaultSort: '
 
 The labelled native number input uses a concise maximum hint. Requests may contain fewer records when fewer results match. Empty, non-numeric, fractional, zero, negative and above-maximum requests show an associated inline error when Download is activated, keep the modal open and focus the input. Both formats use the same validated quantity and selected fields. Editing the quantity makes no network request and does not change the query identity that controls the modal. The quantity is captured when downloading, remains unavailable during preparation and resets to the configured default on reopening. Larger needs use the existing contact route.
 
-The [Choose number of results example](?path=/story/components-syndicated-search-downloads--choose-result-count) increases the initial quantity from three to five. The fictional fixture contains all 25 records it advertises; the latest-ten captured fixture contains ten, so requesting more correctly returns ten.
+The [Choose number of results example](?path=/story/components-syndicated-search-downloads--choose-result-count) increases the initial quantity from three to five. The fictional fixture contains all 25 records it advertises; the captured website-teaser sample contains ten, so requesting more correctly returns ten.
 
 ### Formats and fields
 

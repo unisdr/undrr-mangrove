@@ -1,7 +1,7 @@
 import { expect, within, userEvent, waitFor } from 'storybook/test';
 import { SyndicationSearchWidget } from './SyndicationSearchWidget';
-import { widgetMetaShared } from './_storyHelpers';
-import latestWebsiteResults from '../../assets/fixtures/search-latest10/results.json';
+import { defaultConfig, widgetMetaShared } from './_storyHelpers';
+import websiteTeaserSample from '../../assets/fixtures/website-teaser-sample/results.json';
 
 const endpoint = '/__mg-export-search';
 const records = [
@@ -79,8 +79,8 @@ function mockExportSearch({ args }) {
       });
     }
     if (args.fixtureError && body.track_total_hits) return { ok: false };
-    const sourceRecords = args.fixtureLatest
-      ? latestWebsiteResults.hits.hits
+    const sourceRecords = args.fixtureTeasers
+      ? websiteTeaserSample.hits.hits
       : previewRecords;
     const flood = JSON.stringify(body.query).toLowerCase().includes('flood');
     let matching = flood
@@ -88,7 +88,7 @@ function mockExportSearch({ args }) {
           String(hit._source.title).toLowerCase().includes('flood')
         )
       : sourceRecords;
-    if (args.fixtureLatest) {
+    if (args.fixtureTeasers) {
       const selectedTypes = [];
       const readTypes = value => {
         if (!value || typeof value !== 'object') return;
@@ -108,7 +108,7 @@ function mockExportSearch({ args }) {
         : matching;
     const total = args.fixtureEmpty
       ? 0
-      : args.fixtureLatest || flood
+      : args.fixtureTeasers || flood
         ? matching.length
         : 25;
     return {
@@ -318,10 +318,10 @@ export const DownloadWithoutPagination = {
 
 export const LatestWebsiteTeasers = {
   ...DownloadResults,
-  name: 'Latest 10 website teasers',
+  name: 'Website teaser sample',
   args: {
     ...DownloadResults.args,
-    fixtureLatest: true,
+    fixtureTeasers: true,
     config: {
       ...DownloadResults.args.config,
       resultsPerPage: 10,
@@ -349,7 +349,7 @@ export const LatestWebsiteTeasers = {
     await expect(
       canvasElement.querySelector('.mg-search__result-content')
     ).not.toBeInTheDocument();
-    const dates = latestWebsiteResults.hits.hits.map(
+    const dates = websiteTeaserSample.hits.hits.map(
       hit => hit._source.published_at[0]
     );
     await expect(dates).toEqual([...dates].sort((a, b) => b - a));
@@ -362,6 +362,35 @@ export const LatestWebsiteTeasers = {
       description: {
         story:
           'Actual pre-rendered Drupal teaser HTML for the ten newest indexed PreventionWeb records in a local sanitized-index snapshot captured on 10 November 2026. This is sample captured data, not the current live website. Mixed news, publications and a collection use the standard teaser renderer, with original public thumbnail URLs whose availability depends on the source website. Newest website posting order and an initial download quantity of ten are configured; exported metadata remains independent of visible teaser fields.',
+      },
+    },
+  },
+};
+
+export const LatestWebsiteResultsLive = {
+  name: 'Latest website results (live)',
+  tags: ['!test'],
+  args: {
+    config: {
+      ...defaultConfig,
+      enableHashSync: false,
+      showExport: true,
+      resultsPerPage: 10,
+      exportDefaultCount: 10,
+      defaultSort: 'newest',
+      displayMode: 'list',
+      visibleFilters: ['type'],
+      defaultFilters: [
+        { key: '_language', value: 'en' },
+        { key: 'field_domain_access', value: 'www_preventionweb_net' },
+      ],
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Live PreventionWeb results from the normal UNDRR search endpoint, ordered by newest website posting date. Shows ten results initially and starts downloads at ten. Uses the standard published-content constraints, English and PreventionWeb domain filters, and pre-rendered teasers when supplied by the endpoint. This example makes real network requests: endpoint or access errors are shown without substituting sample data. It is excluded from deterministic browser tests.',
       },
     },
   },
