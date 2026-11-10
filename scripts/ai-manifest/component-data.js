@@ -61,6 +61,8 @@ export const REQUIRES_REACT = {
 
   'components-syndicated-search':
     'SyndicationSearchWidget is a complex search interface querying an Elasticsearch API. Requires React 19. After each completed search it calls config.onResults({ total, query, page }) and dispatches a bubbling mg-search-widget:results event with the same detail, so a host can hide an empty section. Can be hydrated on a vanilla HTML page using the createHydrator pattern with data-mg-search-widget attributes. Supports full UI string translation via the labels prop (or data-labels JSON attribute in Drupal). Ships with label sets for ES, FR, JA, ZH (Simplified), AR, and RU. See the hydration documentation.',
+  'components-syndicated-search-downloads':
+    'SyndicationSearchWidget download examples grouped for discovery. Requires the same React search widget and hydration integration as the main component; these are not a separate export component.',
   'components-syndicated-search-translations':
     'SyndicationSearchWidget translation label sets for ES, FR, JA, ZH-Hans, AR, and RU. Pass via the labels prop (React) or data-labels JSON attribute (Drupal). String keys support {token} substitution; function keys handle Intl.PluralRules plural forms for Arabic (6-form) and Russian (3-form). Function keys cannot be serialized to JSON for data-labels.',
   'components-syndicated-search-display-modes':

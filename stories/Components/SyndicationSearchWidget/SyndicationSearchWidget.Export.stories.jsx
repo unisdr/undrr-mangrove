@@ -105,7 +105,7 @@ async function openExport({ canvasElement }) {
 }
 
 export default {
-  title: 'Components/Syndicated search',
+  title: 'Components/Syndicated search/Downloads',
   component: SyndicationSearchWidget,
   ...widgetMetaShared,
 };
