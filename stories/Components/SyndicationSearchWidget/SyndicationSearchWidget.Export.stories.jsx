@@ -80,20 +80,7 @@ function mockExportSearch({ args }) {
     }
     if (args.fixtureError && body.track_total_hits) return { ok: false };
     const sourceRecords = args.fixtureLatest
-      ? latestWebsiteResults.hits.hits.map(hit => ({
-          ...hit,
-          _source: {
-            ...hit._source,
-            teaser: Object.entries(latestWebsiteResults.assets).reduce(
-              (html, [source, asset]) =>
-                html.replaceAll(
-                  source,
-                  `${globalThis.location.origin}${asset}`
-                ),
-              hit._source.teaser
-            ),
-          },
-        }))
+      ? latestWebsiteResults.hits.hits
       : previewRecords;
     const flood = JSON.stringify(body.query).toLowerCase().includes('flood');
     let matching = flood
@@ -352,6 +339,13 @@ export const LatestWebsiteTeasers = {
       'article.mg-search__result > .teaser-3-9'
     );
     await expect(teasers.length).toBe(10);
+    const images = canvasElement.querySelectorAll('.teaser-3-9 img');
+    await expect(images.length).toBe(9);
+    await Promise.all(
+      [...images].map(image =>
+        expect(image.src).toMatch(/^https:\/\/www\.preventionweb\.net\//)
+      )
+    );
     await expect(
       canvasElement.querySelector('.mg-search__result-content')
     ).not.toBeInTheDocument();
@@ -367,7 +361,7 @@ export const LatestWebsiteTeasers = {
     docs: {
       description: {
         story:
-          'Actual pre-rendered Drupal teaser HTML for the ten newest indexed PreventionWeb records in a local sanitized-index snapshot captured on 10 November 2026. This is sample captured data, not the current live website. Mixed news, publications and a collection use the standard teaser renderer, with cached images for a reliable demo. Newest website posting order and an initial download quantity of ten are configured; exported metadata remains independent of visible teaser fields.',
+          'Actual pre-rendered Drupal teaser HTML for the ten newest indexed PreventionWeb records in a local sanitized-index snapshot captured on 10 November 2026. This is sample captured data, not the current live website. Mixed news, publications and a collection use the standard teaser renderer, with original public thumbnail URLs whose availability depends on the source website. Newest website posting order and an initial download quantity of ten are configured; exported metadata remains independent of visible teaser fields.',
       },
     },
   },

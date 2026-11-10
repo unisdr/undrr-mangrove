@@ -636,7 +636,7 @@ Editors can configure a publication listing with newest-first ordering and an in
 
 ### Latest ten website teasers
 
-The **Latest 10 website teasers** example uses the ordinary pre-rendered `_source.teaser` path in `ResultItem`, rather than fallback cards or the separate `ssrResults` first-paint handoff. It shows the ten newest indexed PreventionWeb records in a local sanitized-index snapshot captured on 10 November 2026, mixing news, publications and a collection. This is captured sample data, not a continuously updated view of the live website. Original Drupal `teaser_3_9` markup is retained with theme-debug comments removed; nine cached thumbnails make the example independent of remote image availability. The snapshot and provenance live in `stories/assets/fixtures/search-latest10/results.json`.
+The **Latest 10 website teasers** example uses the ordinary pre-rendered `_source.teaser` path in `ResultItem`, rather than fallback cards or the separate `ssrResults` first-paint handoff. It shows the ten newest indexed PreventionWeb records in a local sanitized-index snapshot captured on 10 November 2026, mixing news, publications and a collection. This is captured sample data, not a continuously updated view of the live website. Original Drupal `teaser_3_9` markup is retained with theme-debug comments removed; the standard renderer resolves original thumbnail paths against the source website, so images depend on remote availability. The snapshot and provenance live in `stories/assets/fixtures/search-latest10/results.json`.
 
 <Canvas
   of={ExportStories.LatestWebsiteTeasers}

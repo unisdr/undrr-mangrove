@@ -1,20 +1,9 @@
 {
   "provenance": {
-    "description": "Ten newest indexed PreventionWeb records captured from the local sanitized Drupal index, not live website content. Original pre-rendered teaser markup is retained after removing theme-debug comments. Image files are cached locally for the demo.",
+    "description": "Ten newest indexed PreventionWeb records captured from the local sanitized Drupal index, not live website content. Original pre-rendered teaser markup is retained after removing theme-debug comments. Original thumbnail paths are retained and resolved against the source website by the standard teaser renderer; image availability depends on that website.",
     "capturedAt": "2026-11-10",
     "domain": "www_preventionweb_net",
     "sort": "published_at descending"
-  },
-  "assets": {
-    "/sites/default/files/styles/por/public/document_thumbnails/107016.jpg?h=bbdb85db&amp;itok=oJkCjxdy": "/fixtures/search-latest10/105704-0.jpg",
-    "/sites/default/files/styles/por/public/document_thumbnails/107014.jpg?h=38a6ba79&amp;itok=A2S7aBza": "/fixtures/search-latest10/105703-0.jpg",
-    "/sites/default/files/styles/landscape_16_9/public/2026-11/kbha-sea-3589602_1280.jpg?h=1c9b88c9&amp;itok=MsBh3FAk": "/fixtures/search-latest10/105701-0.jpg",
-    "/sites/default/files/styles/landscape_16_9/public/2026-09/pexels-robertkso-36336154-1.jpg?h=0daa3ffa&amp;itok=z8_k2OvQ": "/fixtures/search-latest10/105700-0.jpg",
-    "/sites/default/files/styles/por/public/document_thumbnails/107011.jpg?h=4e48f224&amp;itok=46OQMIo9": "/fixtures/search-latest10/105699-0.jpg",
-    "/sites/default/files/styles/por/public/document_thumbnails/107004.jpg?h=6a9e38f6&amp;itok=TxRr6DG-": "/fixtures/search-latest10/105695-0.jpg",
-    "/sites/default/files/styles/landscape_16_9/public/2026-09/pexels-alex-rusin-1088968-5115332-1.jpg?h=92236464&amp;itok=pYgicIDp": "/fixtures/search-latest10/104771-0.jpg",
-    "/sites/default/files/styles/landscape_16_9/public/2026-08/pexels-domipie-27286879-1-1.jpg?h=7acd6694&amp;itok=CYWEu_nC": "/fixtures/search-latest10/105696-0.jpg",
-    "/sites/default/files/styles/por/public/document_thumbnails/107002.jpg?h=964edac7&amp;itok=RsNIkuA9": "/fixtures/search-latest10/105692-0.jpg"
   },
   "hits": {
     "total": {
