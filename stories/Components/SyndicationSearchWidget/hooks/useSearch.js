@@ -23,19 +23,8 @@ import {
   actions,
 } from '../context/SearchContext';
 import { buildQuery } from '../utils/queryBuilder';
+import { searchRequestKey } from '../utils/searchRequestKey';
 import { isQueryTooShortToSearch } from '../utils/constants';
-
-/**
- * Serialise a request so that two requests Elasticsearch would answer the
- * same way compare equal. The recency function's `now` parameter changes on
- * every build and is left out.
- * @private
- */
-function requestKey(endpoint, body) {
-  return JSON.stringify({ endpoint, body }, (key, value) =>
-    key === 'now' ? undefined : value
-  );
-}
 
 /**
  * Hook for executing searches against the Elasticsearch endpoint.
@@ -96,11 +85,11 @@ export function useSearch() {
     );
     return {
       body,
-      key: requestKey(searchEndpoint, { ...body, highlight: undefined }),
+      key: searchRequestKey(searchEndpoint, { ...body, highlight: undefined }),
       // Aggregations depend on the main query and the aggregation
       // definitions only: not on the page, the sort or the facet selections
       // (those are a post_filter, applied after aggregating).
-      aggregationsKey: requestKey(searchEndpoint, {
+      aggregationsKey: searchRequestKey(searchEndpoint, {
         query: body.query,
         aggs: body.aggs,
       }),

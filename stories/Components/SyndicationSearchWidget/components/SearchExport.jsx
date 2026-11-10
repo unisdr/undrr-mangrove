@@ -19,6 +19,8 @@ import {
   DEFAULT_LABELS,
 } from '../context/SearchContext';
 import { isQueryTooShortToSearch } from '../utils/constants';
+import { searchRequestKey } from '../utils/searchRequestKey';
+import { saveFile } from '../utils/saveFile';
 import {
   EXPORT_FIELD_GROUPS,
   DEFAULT_EXPORT_GROUPS,
@@ -66,10 +68,7 @@ export default function SearchExport({ isStale = false }) {
       ),
     [config, query, facets, facetOperators, customFacets, sortBy]
   );
-  const requestKey = JSON.stringify(
-    { endpoint: config.searchEndpoint, body },
-    (key, value) => (key === 'now' ? undefined : value)
-  );
+  const requestKey = searchRequestKey(config.searchEndpoint, body);
   const isOpen = openKey === requestKey && !isStale;
   const currentStatus =
     !isStale &&
@@ -177,31 +176,13 @@ export default function SearchExport({ isStale = false }) {
         setStatus({ key: requestKey, message: labels.exportEmpty });
         return;
       }
-      const view = document.defaultView;
-      const file = new view.Blob(
-        [
-          format === 'csv'
-            ? exportCsv(result.records, columns)
-            : exportJson(result, count, columns),
-        ],
-        {
-          type:
-            format === 'csv'
-              ? 'text/csv;charset=utf-8'
-              : 'application/json;charset=utf-8',
-        }
+      saveFile(
+        document,
+        format === 'csv'
+          ? exportCsv(result.records, columns)
+          : exportJson(result, count, columns),
+        format
       );
-      const url = view.URL.createObjectURL(file);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `search-results-${new Date().toISOString().slice(0, 10)}.${format}`;
-      document.body.appendChild(link);
-      try {
-        link.click();
-      } finally {
-        link.remove();
-        view.setTimeout(() => view.URL.revokeObjectURL(url), 1000);
-      }
       setStatus({
         key: requestKey,
         message: interpolateLabel(
