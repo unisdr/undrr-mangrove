@@ -705,9 +705,34 @@ function initContainer(container, activateDeepLinkOnLoad, options = {}) {
     list.setAttribute('aria-orientation', 'horizontal');
   }
 
+  // Reuse the rail's existing resize/font/overflow refresh for sticky focus
+  // clearance; no document-wide observer or extra scrolling behaviour.
+  const stickySize = '--mg-tab-sticky-rail-size';
+  const authoredStickySize = root.style.getPropertyValue(stickySize);
+  const authoredStickyPriority = root.style.getPropertyPriority(stickySize);
+  let measuredSticky = false;
+  const restoreStickySize = () => {
+    if (!measuredSticky) return;
+    if (authoredStickySize)
+      root.style.setProperty(
+        stickySize,
+        authoredStickySize,
+        authoredStickyPriority
+      );
+    else root.style.removeProperty(stickySize);
+    measuredSticky = false;
+  };
+  cleanups.push(restoreStickySize);
   const rtl = () => getComputedStyle(container).direction === 'rtl';
   const updateOverflow = () => {
     if (!scroller) return;
+    if (root.classList.contains('mg-tabs--sticky')) {
+      root.style.setProperty(
+        stickySize,
+        `${Math.ceil(rail.getBoundingClientRect().height)}px`
+      );
+      measuredSticky = true;
+    } else restoreStickySize();
     const view = scroller.getBoundingClientRect();
     const content = list.getBoundingClientRect();
     const overflows = scroller.scrollWidth > scroller.clientWidth + 1;
@@ -931,6 +956,7 @@ function initContainer(container, activateDeepLinkOnLoad, options = {}) {
         else if (alive && isLive(container)) updateOverflow();
         settle = false;
       });
+      observer.observe(rail);
       observer.observe(scroller);
       observer.observe(list);
       onRelease(() => observer.disconnect());

@@ -34,63 +34,82 @@ The tab rail scrolls independently of the content below. Faded edges indicate mo
 
 ### Sticky controls in long sections
 
-For long panels, keep the horizontal rail visible within its own tab set. This
-is a page composition, not a new Tab prop: add a class to a wrapper containing
-one direct-child tab set and apply the following consumer CSS. Keep the rail outside its
-horizontal scrollport; making `.mg-tabs__scroll` sticky does not pin the rail.
+Use `sticky` when long panels would otherwise scroll their controls out of view.
+The horizontal rail stays visible within its own tab set and releases at the
+section’s end. Normal flow remains the default; stacked disclosures and viewports
+at most 400px tall do not pin controls.
+
+> **Availability:** This opt-in variant is available in the current source build
+> and will ship in the next release. It is not included in the published 2.4.0
+> CSS or JavaScript. Use matching build assets for the example until that release.
+
+```jsx
+<Tab tabdata={tabdata} sticky />
+```
+
+For plain HTML or a CMS, add `mg-tabs--sticky` to the existing tab root. Keep the
+normal rail and panel markup, and initialize `tabs.js` as usual. No additional
+hydration attribute, wrapper or event handler is required.
+
+```html
+<article
+  class="mg-tabs mg-tabs--horizontal mg-tabs--sticky"
+  data-mg-js-tabs
+  data-mg-js-tabs-variant="horizontal"
+>
+  <!-- Existing horizontal rail and panels -->
+</article>
+```
+
+The rail docks at the top of its scroll container by default. Set
+`--mg-tab-sticky-offset` on the tab set or an ancestor when a site header or
+sticky navigation occupies that space. For Mangrove’s
+[On this page nav](?path=/docs/components-navigation-on-this-page-nav--docs),
+compose its published measured height and header offset:
 
 ```css
-.report-tabs > .mg-tabs--horizontal > .mg-tabs__rail {
-  position: sticky;
-  top: calc(
+.report-tabs {
+  --mg-tab-sticky-offset: calc(
     var(--mg-on-this-page-nav-offset, 0px) +
       var(--mg-on-this-page-nav-block-size, 0px) + var(--mg-spacing-75)
   );
-  z-index: calc(var(--mg-z-index-sticky) - 1);
-  background: rgb(var(--mg-color-neutral-0));
-}
-
-@media (max-height: 400px) {
-  .report-tabs > .mg-tabs--horizontal > .mg-tabs__rail {
-    position: relative;
-    top: auto;
-  }
 }
 ```
 
-[On this page nav](?path=/docs/components-navigation-on-this-page-nav--docs) publishes its
-measured sticky height through `--mg-on-this-page-nav-block-size`, including
-changes at narrow widths. Set `--mg-on-this-page-nav-offset` on `:root` for the
-site header (in Drupal, `var(--drupal-displace-offset-top, 0px)` can supply the
-admin-toolbar displacement). The nav and tab rail then share that offset. If the
-page has another navigation implementation, the consumer must publish its own
-measured height and substitute that variable; do not assume a fixed desktop
-height or write into Mangrove's measured variable.
+Set `--mg-on-this-page-nav-offset` on `:root` for the site header; in Drupal,
+`var(--drupal-displace-offset-top, 0px)` can supply the admin-toolbar displacement.
+The page-navigation runtime owns its measured height; do not write into that
+variable or assume a fixed desktop height. Other navigation implementations must
+publish their own measured height for this composition.
 
-Keep one rail and its panels inside the same `.mg-tabs` element: that element
-confines the sticky rail to the current section. Ancestor `overflow: auto`,
-`scroll` or `hidden` can change the sticky scroll container; inspect the actual
-CMS wrappers. Do not pin the whole panel, make a second copy of the controls, or
-apply this rule to stacked disclosures. The horizontal modifier is removed when
-`stackOnMobile` switches to disclosures, so the rule stops applying.
+| Property                     | Default                          | Purpose                                                                                                               |
+| ---------------------------- | -------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `--mg-tab-sticky-offset`     | `0px`                            | Docking offset, accepting a CSS length expression.                                                                    |
+| `--mg-tab-sticky-background` | `rgb(var(--mg-color-neutral-0))` | Opaque complete colour shared by the rail and its overflow fades. Retain label and focus contrast when overriding it. |
 
-The opaque surface prevents panel text showing through the rail. Its layer stays
-below page navigation; existing focus rings, arrow-key behaviour, RTL scrolling
-and tab selection remain unchanged. For short landscape viewports or zoom that
-leaves too little reading space, disable the extra sticky layer, as above.
+The rail sits below Mangrove’s sticky navigation layer. `tabs.js` reuses its
+existing resize/font refresh to measure rail height for anchor and focus
+clearance; it restores the internal measurement when destroyed. Existing page
+scroll padding also applies, so clearance may be larger than the docking offset. No additional
+scroll listener, duplicate controls or page-scroll behaviour is added. Keyboard
+selection, RTL scrolling and existing focus treatments stay shared with ordinary
+tabs. Switching to stacked disclosures removes the sticky treatment automatically.
 
-Test deep links, focusable panel content and switching from a long panel to a
-short one while scrolled. The page owns any additional scroll clearance for its
-rail and any deliberate return to the selected panel's start; Tab does not scroll
-the page vertically on selection. Include the rail's measured height in that
-clearance rather than hiding focused content behind the two navigation layers.
+Keep the rail and panels within the same `.mg-tabs` root, which confines the
+sticky rail. Ancestor `overflow: auto`, `scroll` or `hidden` can change the sticky
+scroll container; inspect actual CMS wrappers. Avoid nesting sticky tab sets.
+Without JavaScript, canonical markup retains all panel content and uses a
+fallback clearance; initialize the module for measured geometry and accessible
+tab selection. Test deep links, focusable content, zoom, and switching from long
+to short panels while scrolled. A deliberate return to the panel’s start is a
+consumer decision: selecting a tab does not scroll the page vertically.
 
 [Open the sticky controls example](?path=/story/components-tabs--sticky-within-section)
-in its dedicated Storybook canvas. It uses the real page-navigation runtime and
-the same CSS recipe. Scroll into the panel and past the section to check docking
-and release; use the locale, theme and viewport controls to inspect reflow.
-Keeping this scrolling example in its own canvas protects the documentation’s
-scroll position, focus and language toolbar state.
+in its dedicated Storybook canvas. It uses the component variant with the real
+page-navigation runtime. Its fixture stylesheet supplies only host offset and
+scrolling space. Use locale, theme, viewport and Controls to inspect reflow and
+toggle `sticky`, `stackOnMobile` or the layout variant without changing the docs
+page’s scroll position or focus.
 
 ### Optional mobile stacking
 
@@ -523,6 +542,7 @@ const tabdata = [
 | `tabdata`       | `Array`  | —                    | Array of tab objects (see below)                                                                                                                                                                             |
 | `variant`       | `string` | `"horizontal"`       | `"horizontal"` or `"stacked"`                                                                                                                                                                                |
 | `stackOnMobile` | `bool`   | `false`              | Horizontal only. Switch to stacked disclosures below 480px; restore the rail at 480px and above.                                                                                                             |
+| `sticky`        | `bool`   | `false`              | Keep the horizontal rail visible inside this tab set; normal flow in stacked layouts and viewports at most 400px tall. Configure docking with `--mg-tab-sticky-offset`.                                      |
 | `defaultOpen`   | `bool`   | `undefined`          | Stacked only. `true` opens all panels, `false` closes all, `undefined` opens first. Per-item `is_default` overrides.                                                                                         |
 | `singleOpen`    | `bool`   | `false`              | Stacked only. When `true`, only one panel can be open at a time. Only governs click behavior — does not enforce single-open on initial state. Use with `defaultOpen={false}` for typical accordion behavior. |
 | `filterable`    | `bool`   | `false`              | Stacked only. Renders a search input that filters sections by header and content text. Also available via `data-mg-js-tabs-filterable` in vanilla JS.                                                        |
@@ -608,7 +628,7 @@ The published bundle retains its browser DOM requirement at import time.
 
 ## Changelog
 
-- **2.12.1**, 2026-11-10 ([web-backlog#3161](https://gitlab.com/undrr/web-backlog/-/issues/3161)): Documents an opt-in sticky-rail composition beneath measured page navigation, with a dedicated scrolling example and CMS, focus and short-viewport checks. Component defaults and runtime are unchanged.
+- **2.13**, 2026-11-10 ([web-backlog#3161](https://gitlab.com/undrr/web-backlog/-/issues/3161)): Adds opt-in sticky horizontal controls for React and plain HTML, configurable docking offset and opaque surface, measured focus clearance and section confinement. Stacked layouts and short viewports retain normal flow.
 
 - **2.12**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance.
 

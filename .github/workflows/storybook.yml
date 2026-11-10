@@ -146,6 +146,7 @@ jobs:
           yarn test:storybook-themes
           yarn test:storybook-html
           yarn test:storybook-direction
+          yarn test:tabs-sticky-browser
           TEASER_STORYBOOK_URL=http://127.0.0.1:6099 yarn test:content-card-browser
           TEASER_STORYBOOK_URL=http://127.0.0.1:6099 yarn test:content-teaser-browser
           yarn test:search-selection-browser

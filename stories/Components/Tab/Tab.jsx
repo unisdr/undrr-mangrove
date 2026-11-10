@@ -34,6 +34,7 @@ export { DEFAULT_TAB_LABELS } from './_labels';
  * @param {Object} props - The component props.
  * @param {Array} props.tabdata - An array of tab objects containing text, text_id, and data.
  * @param {string} [props.variant='horizontal'] - The layout variant, either 'stacked' or 'horizontal'.
+ * @param {boolean} [props.sticky=false] - Opt in to a sticky horizontal rail, confined to this tab set.
  * @param {boolean} [props.defaultOpen] - Whether stacked panels start open (true), closed (false), or default (undefined = open first).
  * @param {boolean} [props.singleOpen=false] - When true, only one stacked panel can be open at a time.
  * @param {boolean} [props.filterable=false] - When true, renders a search input to filter stacked sections.
@@ -46,6 +47,7 @@ export function Tab({
   defaultOpen,
   singleOpen = false,
   stackOnMobile = false,
+  sticky = false,
   filterable = false,
   lang,
   dir,
@@ -73,6 +75,7 @@ export function Tab({
     defaultOpen,
     singleOpen,
     stackOnMobile,
+    sticky,
     filterable,
     filterPlaceholder,
     tabListLabel,
@@ -82,7 +85,7 @@ export function Tab({
     <article
       {...getLanguageProps(lang, dir)}
       ref={containerRef}
-      className={`mg-tabs ${variant === 'stacked' ? 'mg-tabs--stacked' : 'mg-tabs--horizontal'}`}
+      className={`mg-tabs ${variant === 'stacked' ? 'mg-tabs--stacked' : 'mg-tabs--horizontal'}${sticky ? ' mg-tabs--sticky' : ''}`}
       data-mg-js-tabs
       data-mg-js-tabs-label={tabListLabel}
       {...(stackOnMobile && variant !== 'stacked'
@@ -214,6 +217,8 @@ Tab.propTypes = {
   singleOpen: PropTypes.bool,
   /** Opt in to stacked disclosures below 480px for the horizontal variant. */
   stackOnMobile: PropTypes.bool,
+  /** Keep the horizontal rail visible within its tab set; ignored in stacked layouts and short viewports. */
+  sticky: PropTypes.bool,
   /** When true, renders a search input to filter stacked sections by text content. */
   filterable: PropTypes.bool,
   /** UI language tag; selects the built-in catalogue, with English fallback. */

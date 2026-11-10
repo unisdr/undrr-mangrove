@@ -52,6 +52,7 @@
     "test:search-selection-browser": "node scripts/test-search-selection-browser.mjs",
     "test:megamenu-mobile-browser": "node scripts/test-megamenu-mobile-browser.mjs",
     "test:motion-browser": "node scripts/test-motion-browser.mjs",
+    "test:tabs-sticky-browser": "node scripts/test-tabs-sticky-browser.mjs",
     "test:rich-content-browser": "node scripts/test-rich-content-browser.mjs",
     "test-storybook": "vitest run --project=storybook",
     "//serve-storybook": "Serves the production Storybook on 6099 for standalone search-selection, motion, rich-content and delivery checks. Port 6006 belongs to the Storybook development server.",

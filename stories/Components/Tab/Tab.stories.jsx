@@ -2,6 +2,7 @@ import { withLanguage } from '../../../.storybook/withLanguage';
 // stories\Components\Tab\Tab.stories.jsx
 import { Tab } from './Tab';
 import OnThisPageNav from '../OnThisPageNav/OnThisPageNav';
+import './tab-stories.scss';
 import { expect, within } from 'storybook/test';
 
 // Tab content (tabdata) per locale — separate from UI labels.
@@ -357,9 +358,10 @@ export const RightToLeft = {
   },
 };
 
-// Consumer-scoped composition: intentionally not part of Tab's default CSS/API.
+// The component owns sticky geometry; the fixture composes the page offset.
 export const StickyWithinSection = {
   name: 'Sticky within section',
+  args: { sticky: true },
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale).map((tab, index) => ({
       ...tab,
@@ -368,28 +370,6 @@ export const StickyWithinSection = {
     }));
     return (
       <div className="mg-tabs-sticky-example">
-        <style>{`
-          .mg-tabs-sticky-example__tabs > .mg-tabs--horizontal > .mg-tabs__rail {
-            position: sticky;
-            top: calc(var(--mg-on-this-page-nav-offset, 0px) + var(--mg-on-this-page-nav-block-size, 0px) + var(--mg-spacing-75));
-            z-index: calc(var(--mg-z-index-sticky) - 1);
-            background: rgb(var(--mg-color-neutral-0));
-          }
-          .mg-tabs-sticky-example__intro {
-            min-block-size: 70vh;
-            padding-block: var(--mg-spacing-300);
-          }
-          .mg-tabs-sticky-example__after {
-            min-block-size: 140vh;
-            padding-block: var(--mg-spacing-300);
-          }
-          @media (max-height: 400px) {
-            .mg-tabs-sticky-example__tabs > .mg-tabs--horizontal > .mg-tabs__rail {
-              position: relative;
-              top: auto;
-            }
-          }
-        `}</style>
         <OnThisPageNav
           lang={args.lang}
           dir={args.dir}
