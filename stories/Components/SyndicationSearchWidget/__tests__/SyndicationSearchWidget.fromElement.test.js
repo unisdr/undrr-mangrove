@@ -312,13 +312,13 @@ test('reads opt-in export settings without requiring a Drupal endpoint change', 
     syndicationSearchWidgetFromElement(
       makeContainer({
         'show-export': 'true',
-        'export-limit': '10',
+        'export-default-count': '10',
         'export-contact-url': '/contact',
       })
     ).config
   ).toEqual({
     showExport: true,
-    exportLimit: 10,
+    exportDefaultCount: 10,
     exportContactUrl: '/contact',
   });
   expect(

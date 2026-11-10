@@ -38,6 +38,21 @@ const records = [
   },
 }));
 
+const previewRecords = Array.from({ length: 25 }, (_, index) =>
+  index < records.length
+    ? records[index]
+    : {
+        _id: `sample:${1003 - index}:en`,
+        _source: {
+          ...records[0]._source,
+          nid: [1003 - index],
+          title: `Sample publication ${index + 1}`,
+          url: `/publication/sample-${index + 1}`,
+          published_at: [1762733803 - index],
+        },
+      }
+);
+
 const requests = [];
 function mockExportSearch({ args }) {
   requests.length = 0;
@@ -79,7 +94,7 @@ function mockExportSearch({ args }) {
             ),
           },
         }))
-      : records;
+      : previewRecords;
     const flood = JSON.stringify(body.query).toLowerCase().includes('flood');
     let matching = flood
       ? sourceRecords.filter(hit =>
@@ -164,7 +179,7 @@ export const DownloadResults = {
       searchEndpoint: endpoint,
       enableHashSync: false,
       showExport: true,
-      exportLimit: 3,
+      exportDefaultCount: 3,
       exportContactUrl: 'https://www.preventionweb.net/contact',
       resultsPerPage: 3,
       showSearchBox: true,
@@ -197,7 +212,7 @@ export const DownloadResults = {
     docs: {
       description: {
         story:
-          'Standard interactive search with an optional Download results action. The configured publication/language/domain filters combine with visitor input, filters and sort. Fictional fixture metadata represents 25 matches; a flood query narrows to one record. The modal always offers CSV and JSON with a three-record cap.',
+          'Standard interactive search with an optional Download results action. The configured publication/language/domain filters combine with visitor input, filters and sort. Fictional fixture metadata represents 25 matches; a flood query narrows to one record. The modal offers CSV and JSON with an initial quantity of three; visitors can choose 1–1,000 records.',
       },
     },
   },
@@ -323,7 +338,7 @@ export const LatestWebsiteTeasers = {
     config: {
       ...DownloadResults.args.config,
       resultsPerPage: 10,
-      exportLimit: 10,
+      exportDefaultCount: 10,
       defaultSort: 'newest',
       displayMode: 'list',
       visibleFilters: ['type'],
@@ -352,7 +367,7 @@ export const LatestWebsiteTeasers = {
     docs: {
       description: {
         story:
-          'Actual pre-rendered Drupal teaser HTML for the ten newest indexed PreventionWeb records in a local sanitized-index snapshot captured on 10 November 2026. This is sample captured data, not the current live website. Mixed news, publications and a collection use the standard teaser renderer, with cached images for a reliable demo. Newest website posting order and a ten-record export cap are configured; exported metadata remains independent of visible teaser fields.',
+          'Actual pre-rendered Drupal teaser HTML for the ten newest indexed PreventionWeb records in a local sanitized-index snapshot captured on 10 November 2026. This is sample captured data, not the current live website. Mixed news, publications and a collection use the standard teaser renderer, with cached images for a reliable demo. Newest website posting order and an initial download quantity of ten are configured; exported metadata remains independent of visible teaser fields.',
       },
     },
   },
@@ -371,5 +386,29 @@ export const ChooseFields = {
       )
     );
     await expect(modal.getAllByRole('checkbox')).toHaveLength(8);
+  },
+};
+
+export const ChooseResultCount = {
+  ...DownloadResults,
+  name: 'Choose number of results',
+  play: async context => {
+    await openExport(context);
+    const canvas = within(context.canvasElement);
+    const modal = dialog(canvas);
+    const controls = within(modal);
+    const count = controls.getByRole('spinbutton');
+    const before = requests.length;
+    await expect(count).toHaveValue(3);
+    await userEvent.clear(count);
+    await userEvent.type(count, '5');
+    await expect(dialog(canvas)).toBe(modal);
+    await expect(requests.length).toBe(before);
+    await userEvent.click(controls.getByRole('button', { name: /JSON/ }));
+    await waitFor(() => expect(requests[requests.length - 1].size).toBe(5));
+    await waitFor(() =>
+      expect(controls.queryByRole('alert')).not.toBeInTheDocument()
+    );
+    await expect(controls.getByRole('status')).toBeVisible();
   },
 };

@@ -8,7 +8,7 @@ import {
 import { toDate } from './dateUtils';
 
 export const MAX_EXPORT_LIMIT = 1000;
-export const DEFAULT_EXPORT_LIMIT = 100;
+export const DEFAULT_EXPORT_COUNT = 100;
 export const EXPORT_SOURCE_FIELDS = [
   'nid',
   'title',
@@ -81,10 +81,22 @@ const first = value => (Array.isArray(value) ? value[0] : value);
 const values = value => [].concat(value ?? []).map(String);
 const text = value => String(first(value) ?? '');
 
-export function exportLimit(value) {
+export function normalizeExportDefaultCount(value) {
   return Number.isFinite(value) && value >= 1
     ? Math.min(Math.floor(value), MAX_EXPORT_LIMIT)
-    : DEFAULT_EXPORT_LIMIT;
+    : DEFAULT_EXPORT_COUNT;
+}
+
+export function requestedExportCount(value) {
+  if (
+    !['string', 'number'].includes(typeof value) ||
+    String(value).trim() === ''
+  )
+    return null;
+  const count = Number(value);
+  return Number.isSafeInteger(count) && count >= 1 && count <= MAX_EXPORT_LIMIT
+    ? count
+    : null;
 }
 
 export function buildExportQuery(state, config) {
@@ -92,7 +104,7 @@ export function buildExportQuery(state, config) {
     { ...state, page: 1 },
     {
       ...config,
-      resultsPerPage: exportLimit(config.exportLimit),
+      resultsPerPage: normalizeExportDefaultCount(config.exportDefaultCount),
       sourceFields: EXPORT_SOURCE_FIELDS,
     },
     { highlight: false }

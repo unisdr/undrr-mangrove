@@ -609,7 +609,9 @@ them; the Drupal block's `auto` setting does this.
 
 Enable `config.showExport` to add an optional outlined **Download results** action beneath pagination, or directly beneath the results when pagination is hidden. It aligns to the start of the reading direction (left in LTR, right in RTL). It opens a modal with **Download results (CSV)** and **Download results (JSON)**. Both formats are always available; there is no per-format configuration. The understated outline treatment keeps this collection utility from competing with the primary Search action. Placement after the collection separates downloading from entering a search; it does not change the export scope to the current page. This opt-in feature addresses [undrr/web-backlog#3314](https://gitlab.com/undrr/web-backlog/-/work_items/3314). Existing widgets remain unchanged.
 
-Downloads contain up to the first `config.exportLimit` matching records across search pages, using the current query, filters, result scope and sort order. The default limit is 100, with a hard maximum of 1,000. It is an overall download cap, independent of `resultsPerPage`. Invalid or non-positive limits fall back to 100; positive fractional limits round down. The controls describe the cap before use, and the completion message reports the fresh matching total and whether the download was capped. A limited download is never presented as the full dataset.
+Visitors choose the **Number of results** in the modal, from 1 to the fixed maximum of 1,000. `config.exportDefaultCount` supplies the initial quantity (default 100), restored on reopening; visitors may choose any whole number in the fixed range. Invalid configured defaults normalize to 100, with positive values rounded down and capped at 1,000. Typed visitor input is validated as a whole number from 1 to 1,000 and is never silently clamped or replaced.
+
+Downloads start at the first match across search pages, using the current query, filters, scope and sort order. The requested quantity is independent of `resultsPerPage` and does not change the visible page size. If fewer records match, those available are downloaded. The completion message reports the actual matching total and whether more matches were left beyond the request. JSON `scope.limit` records the visitor's requested quantity, while `scope.count` records how many were returned.
 
 <Canvas
   of={ExportStories.DownloadResults}
@@ -622,7 +624,7 @@ The [without pagination](?path=/story/components-syndicated-search-downloads--do
 <SyndicationSearchWidget
   config={{
     showExport: true,
-    exportLimit: 100,
+    exportDefaultCount: 100,
     exportContactUrl: 'https://www.preventionweb.net/contact',
     customFilters: ['type:publication'],
     defaultSort: 'newest',
@@ -630,7 +632,7 @@ The [without pagination](?path=/story/components-syndicated-search-downloads--do
 />
 ```
 
-The same configuration can provide an editor-defined list, for example the latest ten publications, with `exportLimit: 10`, `defaultSort: 'newest'`, a publication filter and optional search controls hidden. The modal reuses the widget’s configured search and offers field choices from the documented safe metadata allowlist.
+Editors can configure a publication listing with newest-first ordering and an initial download quantity of ten using `exportDefaultCount: 10`, `defaultSort: 'newest'`, a publication filter and optional search controls hidden. Visitors can still choose another quantity within 1–1,000. The modal reuses the configured search and offers field choices from the documented safe metadata allowlist.
 
 ### Latest ten website teasers
 
@@ -641,7 +643,13 @@ The **Latest 10 website teasers** example uses the ordinary pre-rendered `_sourc
   story={{ inline: false, height: '850px' }}
 />
 
-The example configures PreventionWeb/domain and English filters, `defaultSort: 'newest'`, ten results and an export cap of ten, without a publication-only restriction. The captured set has ten records, so it needs no pager. Its modal and export use the same matching set and order. Teaser summaries, source labels and imagery remain presentation content; only the separately documented metadata can be exported. The [Choose fields example](?path=/story/components-syndicated-search-downloads--choose-fields) opens the optional field disclosure.
+The example configures PreventionWeb/domain and English filters, `defaultSort: 'newest'`, ten results and an initial download quantity of ten, without a publication-only restriction. The captured set has ten records, so it needs no pager. Its modal and export use the same matching set and order. Teaser summaries, source labels and imagery remain presentation content; only the separately documented metadata can be exported. The [Choose fields example](?path=/story/components-syndicated-search-downloads--choose-fields) opens the optional field disclosure.
+
+### Number of results
+
+The labelled native number input explains the 1–1,000 range and fewer-than-requested behaviour. Empty, non-numeric, fractional, zero, negative and above-maximum requests show an associated inline error when Download is activated, keep the modal open and focus the input. Both formats use the same validated quantity and selected fields. Editing the quantity makes no network request and does not change the query identity that controls the modal. The quantity is captured when downloading, remains unavailable during preparation and resets to the configured default on reopening. Larger needs use the existing contact route.
+
+The [Choose number of results example](?path=/story/components-syndicated-search-downloads--choose-result-count) increases the initial quantity from three to five. The fictional fixture contains all 25 records it advertises; the latest-ten captured fixture contains ten, so requesting more correctly returns ten.
 
 ### Formats and fields
 
@@ -669,9 +677,9 @@ The Download results action is unavailable while search is loading, the input is
 
 The contact prompt remains visible inside the modal for users needing more data or ongoing access. `exportContactUrl` selects the contact route; its default is the PreventionWeb contact page. The prompt offers help arranging an export or facilitating API access; it does not provision access. A dedicated backend export service, background jobs and API access arrangements are separate follow-up work. Drupal needs only release/configuration integration unless required metadata is missing from the index or editor controls are desired.
 
-All export UI copy is part of the existing runtime catalogue (`exportFields`, `exportFieldsHelp`, the `exportField*` labels, `exportOpen`, `exportClose`, `exportRegion`, `exportCsv`, `exportJson`, `exportScope`, `exportContact`, `exportContactLink`, `exportLoading`, `exportComplete`, `exportLimited`, `exportEmpty`, `exportError`), with the usual `lang` selection and `labels` overrides. New translations require native-speaker review. No motion is added; layout wraps across small screens and follows the existing theme and direction.
+All export UI copy is part of the existing runtime catalogue (`exportCountLabel`, `exportCountHelp`, `exportCountError`, `exportFields`, `exportFieldsHelp`, the `exportField*` labels, `exportOpen`, `exportClose`, `exportRegion`, `exportCsv`, `exportJson`, `exportScope`, `exportContact`, `exportContactLink`, `exportLoading`, `exportComplete`, `exportLimited`, `exportEmpty`, `exportError`), with the usual `lang` selection and `labels` overrides. New translations require native-speaker review. No motion is added; layout wraps across small screens and follows the existing theme and direction.
 
-Hydration accepts `data-show-export="true"`, `data-export-limit="100"` and `data-export-contact-url="/contact"` through the published `fromElement` adapter. Drupal wrappers that construct their own config must forward these options before editors can enable them.
+Hydration accepts `data-show-export="true"`, `data-export-default-count="100"` and `data-export-contact-url="/contact"` through the published `fromElement` adapter. Drupal wrappers that construct their own config must forward these options before editors can enable them.
 
 ## Props
 
@@ -681,6 +689,9 @@ Hydration accepts `data-show-export="true"`, `data-export-limit="100"` and `data
 | ----------------------- | -------------- | --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `searchEndpoint`        | string         | `https://www.undrr.org/search-endpoint` | API endpoint for Elasticsearch queries. Its HTML is rendered unsanitised — see [Endpoint trust contract](#endpoint-trust-contract)                                                                       |
 | `taxonomyEndpoint`      | string         | PreventionWeb v1 taxonomy URL           | Taxonomy API for country, hazard and theme facet labels. See [Taxonomy endpoint](#taxonomy-endpoint)                                                                                                     |
+| `showExport`            | boolean        | `false`                                 | Show the outlined Download results utility and native modal with CSV/JSON, visitor quantity and optional metadata fields.                                                                                |
+| `exportDefaultCount`    | number         | 100                                     | Initial requested download quantity, not a visitor maximum. Visitors may choose whole numbers 1–1,000 independently of page size; reopening restores this configured default.                            |
+| `exportContactUrl`      | string         | `https://www.preventionweb.net/contact` | Contact route for larger data requests or ongoing API-access discussions.                                                                                                                                |
 | `resultsPerPage`        | number         | 50                                      | Number of results to display per page                                                                                                                                                                    |
 | `debounceDelay`         | number         | 500                                     | Milliseconds to wait after typing before searching. Only typing is debounced: the first search, Enter, Clear, back/forward and filter, sort, page and config changes run at once                         |
 | `minSearchLength`       | number         | 3                                       | Minimum characters required to trigger search                                                                                                                                                            |
@@ -1047,7 +1058,7 @@ boundaries: a DOM portal cannot inherit direction from the widget's ancestors.
 
 ## Changelog
 
-- **1.9.0**, 2026-11-10 ([undrr/web-backlog#3314](https://gitlab.com/undrr/web-backlog/-/work_items/3314)): Add an opt-in Download results action opening a native modal with both bounded CSV/JSON metadata downloads, optional choices from a fixed field allowlist, an outlined utility action beneath pagination aligned to the reading direction, explicit scope and cap reporting, request cancellation, translated controls and status messages, hydration settings and a contact route for larger data needs. Existing widgets retain their current behaviour.
+- **1.9.0**, 2026-11-10 ([undrr/web-backlog#3314](https://gitlab.com/undrr/web-backlog/-/work_items/3314)): Add an opt-in Download results action opening a native modal with both bounded CSV/JSON metadata downloads, a visitor-selected quantity within 1–1,000, optional choices from a fixed field allowlist, an outlined utility action beneath pagination aligned to the reading direction, explicit scope and cap reporting, request cancellation, translated controls and status messages, hydration settings and a contact route for larger data needs. Existing widgets retain their current behaviour.
 
 - **1.8.1**, 2026-11-10 ([#1468](https://github.com/unisdr/undrr-mangrove/issues/1468)): Keep Type parents and subtypes together when selections change, including retained selections missing from current results. Selected subtypes retain their indentation and summary context. Keyboard highlighting follows the option value through asynchronous updates. Inherited children show a tint and pale checked indicator; parents with selected subtypes show a dash, with localized accessible descriptions. Search fields persist for the open dropdown session, pointer selection retains keyboard focus, and Escape dismisses the dropdown before its enclosing filter drawer.
 

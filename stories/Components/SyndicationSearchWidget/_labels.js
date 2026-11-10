@@ -2,6 +2,11 @@
 import { createLabelResolver } from '../../../src/i18n';
 
 export const LABELS_ES = {
+  exportCountLabel: 'Número de resultados',
+  exportCountHelp:
+    'Introduzca un número entero entre 1 y 1000. Si hay menos registros coincidentes, se descargarán los disponibles.',
+  exportCountError: 'Introduzca un número entero entre 1 y 1000.',
+
   exportFieldType: 'Tipo de contenido',
   exportFieldLanguage: 'Idioma',
   exportFieldCountry: 'Identificadores de país o región',
@@ -21,7 +26,7 @@ export const LABELS_ES = {
   exportCsv: 'Descargar resultados (CSV)',
   exportJson: 'Descargar resultados (JSON)',
   exportScope:
-    'Descargue hasta los primeros {limit} registros coincidentes según la configuración de esta búsqueda y sus términos, filtros y orden actuales. CSV para hojas de cálculo; JSON para programas.',
+    'La descarga comienza con el primer resultado coincidente y utiliza la configuración de esta búsqueda y sus términos, filtros y orden actuales. CSV para hojas de cálculo; JSON para programas.',
   exportContact:
     '¿Necesita más datos o acceso continuo? Podemos ayudarle a organizar una exportación adecuada o facilitar el acceso mediante API.',
   exportContactLink: 'Contáctenos',
@@ -29,7 +34,7 @@ export const LABELS_ES = {
   exportComplete:
     'Descarga preparada: {count} de {total} registros coincidentes.',
   exportLimited:
-    'Descarga preparada: los primeros {count} de {total} registros coincidentes. Contáctenos si necesita más.',
+    'Descarga preparada: los primeros {count} de {total} registros coincidentes.',
   exportEmpty: 'No hay registros coincidentes para descargar.',
   exportError:
     'No se pudo completar la descarga. Inténtelo de nuevo o contáctenos.',
@@ -113,6 +118,11 @@ export const LABELS_ES = {
 // French (fr) — standard international French, UN register
 // ---------------------------------------------------------------------------
 export const LABELS_FR = {
+  exportCountLabel: 'Nombre de résultats',
+  exportCountHelp:
+    'Saisissez un nombre entier de 1 à 1 000. Si moins d’enregistrements correspondent, seuls ceux disponibles seront téléchargés.',
+  exportCountError: 'Saisissez un nombre entier de 1 à 1 000.',
+
   exportFieldType: 'Type de contenu',
   exportFieldLanguage: 'Langue',
   exportFieldCountry: 'Identifiants de pays ou de région',
@@ -132,7 +142,7 @@ export const LABELS_FR = {
   exportCsv: 'Télécharger les résultats (CSV)',
   exportJson: 'Télécharger les résultats (JSON)',
   exportScope:
-    'Téléchargez les {limit} premiers enregistrements correspondants au maximum, selon la configuration de cette recherche et vos termes, filtres et tri actuels. CSV pour les tableurs ; JSON pour les logiciels.',
+    'Le téléchargement commence au premier résultat correspondant et utilise la configuration de cette recherche et vos termes, filtres et tri actuels. CSV pour les tableurs ; JSON pour les logiciels.',
   exportContact:
     'Besoin de plus de données ou d’un accès régulier ? Nous pouvons vous aider à organiser une exportation adaptée ou faciliter un accès par API.',
   exportContactLink: 'Contactez-nous',
@@ -140,7 +150,7 @@ export const LABELS_FR = {
   exportComplete:
     'Téléchargement préparé : {count} sur {total} enregistrements correspondants.',
   exportLimited:
-    'Téléchargement préparé : les {count} premiers sur {total} enregistrements correspondants. Contactez-nous pour en obtenir davantage.',
+    'Téléchargement préparé : les {count} premiers sur {total} enregistrements correspondants.',
   exportEmpty: 'Aucun enregistrement correspondant à télécharger.',
   exportError:
     'Le téléchargement n’a pas pu être effectué. Réessayez ou contactez-nous.',
@@ -224,6 +234,11 @@ export const LABELS_FR = {
 // Japanese (ja) — polite register (丁寧語); no singular/plural distinction
 // ---------------------------------------------------------------------------
 export const LABELS_JA = {
+  exportCountLabel: '結果の件数',
+  exportCountHelp:
+    '1から1,000までの整数を入力してください。一致するレコードが少ない場合は、該当する件数がダウンロードされます。',
+  exportCountError: '1から1,000までの整数を入力してください。',
+
   exportFieldType: 'コンテンツの種類',
   exportFieldLanguage: '言語',
   exportFieldCountry: '国・地域のID',
@@ -243,7 +258,7 @@ export const LABELS_JA = {
   exportCsv: '結果をダウンロード（CSV）',
   exportJson: '結果をダウンロード（JSON）',
   exportScope:
-    '検索の設定と現在の検索語、絞り込み、並び順に基づき、一致するレコードを先頭から最大{limit}件ダウンロードします。CSVは表計算用、JSONはソフトウェア用です。',
+    '検索の設定と現在の検索語、絞り込み、並び順に基づき、一致する最初の結果からダウンロードします。CSVは表計算用、JSONはソフトウェア用です。',
   exportContact:
     'より多くのデータや継続的なアクセスが必要ですか？適切なエクスポートやAPIアクセスについてご相談いただけます。',
   exportContactLink: 'お問い合わせ',
@@ -251,7 +266,7 @@ export const LABELS_JA = {
   exportComplete:
     'ダウンロードの準備ができました：一致する{total}件中{count}件。',
   exportLimited:
-    'ダウンロードの準備ができました：一致する{total}件の先頭{count}件。さらに必要な場合はお問い合わせください。',
+    'ダウンロードの準備ができました：一致する{total}件の先頭{count}件。',
   exportEmpty: 'ダウンロードできる一致するレコードはありません。',
   exportError:
     'ダウンロードを完了できませんでした。再試行するか、お問い合わせください。',
@@ -335,6 +350,11 @@ export const LABELS_JA = {
 // Simplified Chinese (zh-Hans) — no singular/plural distinction
 // ---------------------------------------------------------------------------
 export const LABELS_ZH = {
+  exportCountLabel: '结果数量',
+  exportCountHelp:
+    '请输入1到1,000之间的整数。如果匹配记录较少，将下载可用的匹配记录。',
+  exportCountError: '请输入1到1,000之间的整数。',
+
   exportFieldType: '内容类型',
   exportFieldLanguage: '语言',
   exportFieldCountry: '国家或地区ID',
@@ -353,14 +373,13 @@ export const LABELS_ZH = {
   exportCsv: '下载结果（CSV）',
   exportJson: '下载结果（JSON）',
   exportScope:
-    '按照此搜索的设置及当前搜索词、筛选条件和排序，下载前{limit}条匹配记录以内的数据。CSV用于电子表格，JSON用于软件。',
+    '下载从第一条匹配结果开始，使用此搜索的设置及当前搜索词、筛选条件和排序。CSV用于电子表格，JSON用于软件。',
   exportContact:
     '需要更多数据或持续访问？我们可以协助安排适当的数据导出或提供API访问方面的帮助。',
   exportContactLink: '联系我们',
   exportLoading: '正在准备下载…',
   exportComplete: '下载已准备好：共{total}条匹配记录中的{count}条。',
-  exportLimited:
-    '下载已准备好：共{total}条匹配记录中的前{count}条。如需更多，请联系我们。',
+  exportLimited: '下载已准备好：共{total}条匹配记录中的前{count}条。',
   exportEmpty: '没有可下载的匹配记录。',
   exportError: '无法完成下载。请重试或联系我们。',
 
@@ -469,6 +488,11 @@ const AR_FILTER_FORMS = {
 };
 
 export const LABELS_AR = {
+  exportCountLabel: 'عدد النتائج',
+  exportCountHelp:
+    'أدخل عددًا صحيحًا من 1 إلى 1000. إذا كان عدد السجلات المطابقة أقل، فسيشمل التنزيل السجلات المتاحة.',
+  exportCountError: 'أدخل عددًا صحيحًا من 1 إلى 1000.',
+
   exportFieldType: 'نوع المحتوى',
   exportFieldLanguage: 'اللغة',
   exportFieldCountry: 'معرّفات البلد أو المنطقة',
@@ -488,14 +512,13 @@ export const LABELS_AR = {
   exportCsv: 'تنزيل النتائج (CSV)',
   exportJson: 'تنزيل النتائج (JSON)',
   exportScope:
-    'نزّل ما يصل إلى أول {limit} سجل مطابق وفق إعدادات هذا البحث وكلمات البحث وعوامل التصفية والترتيب الحالية. CSV لجداول البيانات وJSON للبرامج.',
+    'يبدأ التنزيل بأول نتيجة مطابقة ويستخدم إعدادات هذا البحث وكلمات البحث وعوامل التصفية والترتيب الحالية. CSV لجداول البيانات وJSON للبرامج.',
   exportContact:
     'هل تحتاج إلى مزيد من البيانات أو الوصول المستمر؟ يمكننا المساعدة في ترتيب تصدير مناسب أو تسهيل الوصول عبر واجهة برمجة التطبيقات.',
   exportContactLink: 'اتصل بنا',
   exportLoading: 'جارٍ إعداد التنزيل…',
   exportComplete: 'تم إعداد التنزيل: {count} من {total} سجل مطابق.',
-  exportLimited:
-    'تم إعداد التنزيل: أول {count} من {total} سجل مطابق. اتصل بنا إذا كنت بحاجة إلى المزيد.',
+  exportLimited: 'تم إعداد التنزيل: أول {count} من {total} سجل مطابق.',
   exportEmpty: 'لا توجد سجلات مطابقة للتنزيل.',
   exportError: 'تعذّر إكمال التنزيل. يُرجى المحاولة مرة أخرى أو الاتصال بنا.',
 
@@ -624,6 +647,11 @@ const RU_ACTIVE_FORMS = {
 };
 
 export const LABELS_RU = {
+  exportCountLabel: 'Количество результатов',
+  exportCountHelp:
+    'Введите целое число от 1 до 1000. Если подходящих записей меньше, будут скачаны доступные записи.',
+  exportCountError: 'Введите целое число от 1 до 1000.',
+
   exportFieldType: 'Тип содержимого',
   exportFieldLanguage: 'Язык',
   exportFieldCountry: 'Идентификаторы стран или регионов',
@@ -643,7 +671,7 @@ export const LABELS_RU = {
   exportCsv: 'Скачать результаты (CSV)',
   exportJson: 'Скачать результаты (JSON)',
   exportScope:
-    'Скачайте до {limit} первых подходящих записей с настройками этого поиска и текущими поисковыми словами, фильтрами и порядком сортировки. CSV для электронных таблиц; JSON для программ.',
+    'Загрузка начинается с первой подходящей записи с настройками этого поиска и текущими поисковыми словами, фильтрами и порядком сортировки. CSV для электронных таблиц; JSON для программ.',
   exportContact:
     'Нужно больше данных или постоянный доступ? Мы можем помочь организовать подходящую выгрузку или доступ через API.',
   exportContactLink: 'Свяжитесь с нами',
@@ -651,7 +679,7 @@ export const LABELS_RU = {
   exportComplete:
     'Загрузка подготовлена: {count} из {total} подходящих записей.',
   exportLimited:
-    'Загрузка подготовлена: первые {count} из {total} подходящих записей. Свяжитесь с нами, если нужно больше.',
+    'Загрузка подготовлена: первые {count} из {total} подходящих записей.',
   exportEmpty: 'Нет подходящих записей для загрузки.',
   exportError:
     'Не удалось завершить загрузку. Повторите попытку или свяжитесь с нами.',
@@ -755,6 +783,11 @@ export const LABELS_RU = {
 };
 
 export const DEFAULT_LABELS = {
+  exportCountLabel: 'Number of results',
+  exportCountHelp:
+    'Enter a whole number from 1 to 1,000. If fewer records match, the download includes those available.',
+  exportCountError: 'Enter a whole number from 1 to 1,000.',
+
   exportFieldType: 'Content type',
   exportFieldLanguage: 'Language',
   exportFieldCountry: 'Country or region IDs',
@@ -774,14 +807,14 @@ export const DEFAULT_LABELS = {
   exportCsv: 'Download results (CSV)',
   exportJson: 'Download results (JSON)',
   exportScope:
-    'Download up to the first {limit} matching records using this search’s settings and your current search terms, filters and sort order. CSV is for spreadsheets; JSON is for software.',
+    'Downloads start with the first matching result and use this search’s settings and your current search terms, filters and sort order. CSV is for spreadsheets; JSON is for software.',
   exportContact:
     'Need more data or ongoing access? We can help arrange a suitable export or facilitate API access.',
   exportContactLink: 'Contact us',
   exportLoading: 'Preparing download…',
   exportComplete: 'Download prepared: {count} of {total} matching records.',
   exportLimited:
-    'Download prepared: first {count} of {total} matching records. Contact us if you need more.',
+    'Download prepared: first {count} of {total} matching records.',
   exportEmpty: 'No matching records to download.',
   exportError:
     'The download could not be completed. Please try again or contact us.',

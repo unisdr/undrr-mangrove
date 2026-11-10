@@ -8,6 +8,7 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 import { Checkbox } from '../../Forms/Checkbox/Checkbox';
+import { TextInput } from '../../Forms/TextInput/TextInput';
 import { lockDialogScroll } from '../../../assets/js/dialog-scroll-lock';
 import { useWidgetRootRef } from '../context/WidgetRootContext';
 import {
@@ -22,7 +23,9 @@ import {
   DEFAULT_EXPORT_GROUPS,
   columnsForExportGroups,
   buildExportQuery,
-  exportLimit,
+  normalizeExportDefaultCount,
+  requestedExportCount,
+  MAX_EXPORT_LIMIT,
   readExportResponse,
   exportCsv,
   exportJson,
@@ -42,10 +45,15 @@ export default function SearchExport({ isStale = false }) {
   const [openKey, setOpenKey] = useState(null);
   const [status, setStatus] = useState(null);
   const [selectedGroups, setSelectedGroups] = useState(DEFAULT_EXPORT_GROUPS);
+  const [countValue, setCountValue] = useState(() =>
+    String(normalizeExportDefaultCount(config.exportDefaultCount))
+  );
+  const [countError, setCountError] = useState(false);
   const helpId = useId();
   const titleId = useId();
   const fieldsHelpId = useId();
-  const limit = exportLimit(config.exportLimit);
+  const countId = useId();
+  const defaultCount = normalizeExportDefaultCount(config.exportDefaultCount);
   const { query, facets, facetOperators, customFacets, sortBy } = state;
   const body = useMemo(
     () =>
@@ -138,6 +146,12 @@ export default function SearchExport({ isStale = false }) {
       (requestRef.current && !requestRef.current.signal.aborted)
     )
       return;
+    const count = requestedExportCount(countValue);
+    if (count === null) {
+      setCountError(true);
+      document.getElementById(countId)?.focus();
+      return;
+    }
     const columns = columnsForExportGroups(selectedGroups);
     const controller = new AbortController();
     requestRef.current = controller;
@@ -150,11 +164,11 @@ export default function SearchExport({ isStale = false }) {
       const response = await fetch(config.searchEndpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
+        body: JSON.stringify({ ...body, size: count }),
         signal: controller.signal,
       });
       if (!response.ok) throw new Error('Export request failed');
-      const result = readExportResponse(await response.json(), limit);
+      const result = readExportResponse(await response.json(), count);
       if (controller.signal.aborted) return;
       if (!result.records.length) {
         setStatus({ key: requestKey, message: labels.exportEmpty });
@@ -165,7 +179,7 @@ export default function SearchExport({ isStale = false }) {
         [
           format === 'csv'
             ? exportCsv(result.records, columns)
-            : exportJson(result, limit, columns),
+            : exportJson(result, count, columns),
         ],
         {
           type:
@@ -221,6 +235,8 @@ export default function SearchExport({ isStale = false }) {
         onClick={() => {
           setStatus(null);
           setSelectedGroups(DEFAULT_EXPORT_GROUPS);
+          setCountValue(String(defaultCount));
+          setCountError(false);
           setOpenKey(requestKey);
         }}
       >
@@ -273,7 +289,31 @@ export default function SearchExport({ isStale = false }) {
             </button>
           </header>
           <div className="mg-dialog__body">
-            <p id={helpId}>{interpolateLabel(labels.exportScope, { limit })}</p>
+            <p id={helpId}>
+              {interpolateLabel(labels.exportScope, {
+                limit: requestedExportCount(countValue) ?? '…',
+              })}
+            </p>
+            <TextInput
+              id={countId}
+              type="number"
+              label={labels.exportCountLabel}
+              min={1}
+              max={MAX_EXPORT_LIMIT}
+              step={1}
+              inputMode="numeric"
+              required
+              value={countValue}
+              disabled={busy}
+              helpText={labels.exportCountHelp}
+              error={countError}
+              errorText={labels.exportCountError}
+              onChange={event => {
+                setCountValue(event.target.value);
+                setCountError(false);
+                setStatus(null);
+              }}
+            />
             <details className="mg-search__export-field-options">
               <summary>{labels.exportFields}</summary>
               <fieldset

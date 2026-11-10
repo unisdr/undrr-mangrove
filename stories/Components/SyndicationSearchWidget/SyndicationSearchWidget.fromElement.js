@@ -38,8 +38,8 @@ export default function syndicationSearchWidgetFromElement(container) {
 
   if (dataset.showExport !== undefined)
     config.showExport = dataset.showExport === 'true';
-  if (dataset.exportLimit !== undefined)
-    config.exportLimit = Number(dataset.exportLimit);
+  if (dataset.exportDefaultCount !== undefined)
+    config.exportDefaultCount = Number(dataset.exportDefaultCount);
   if (dataset.exportContactUrl)
     config.exportContactUrl = dataset.exportContactUrl;
 

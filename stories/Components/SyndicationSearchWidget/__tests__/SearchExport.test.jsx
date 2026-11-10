@@ -29,7 +29,7 @@ const response = (total = 1) => ({
   hits: { total: { value: total, relation: 'eq' }, hits: total ? [hit] : [] },
 });
 const config = {
-  exportLimit: 1,
+  exportDefaultCount: 1,
   exportContactUrl: '/contact',
   defaultFilters: [],
   enableHashSync: false,
@@ -82,7 +82,7 @@ test('downloads the configured first records and reports truncation with a conta
   setup();
   const button = screen.getByRole('button', { name: 'Download results (CSV)' });
   expect(button).toHaveAccessibleDescription(
-    expect.stringContaining('first 1 matching records')
+    expect.stringContaining('first matching result')
   );
   button.focus();
   fireEvent.click(button);
@@ -209,7 +209,10 @@ test('has no accessibility violations and preserves language overrides', async (
   expect(ar.exportCsv).toBe('Custom CSV');
   for (const lang of ['es', 'fr', 'ja', 'zh', 'ar', 'ru']) {
     const labels = getSyndicationSearchWidgetLabels(lang);
-    expect(labels.exportScope).toContain('{limit}');
+    expect(labels.exportCountLabel).not.toBe('Number of results');
+    expect(labels.exportCountError).not.toBe(
+      'Enter a whole number from 1 to 1,000.'
+    );
     expect(labels.exportLimited).toContain('{count}');
     expect(labels.exportLimited).toContain('{total}');
     expect(labels.exportContactLink).not.toBe('Contact us');
@@ -230,7 +233,7 @@ test('offers one optional CTA that opens both formats in a labelled modal', () =
   });
   expect(dialog).toHaveAttribute('open');
   expect(dialog).toHaveAccessibleDescription(
-    expect.stringContaining('first 1 matching records')
+    expect.stringContaining('first matching result')
   );
   expect(
     screen.getByRole('heading', { name: 'Download search results' })
@@ -417,6 +420,9 @@ test('field editing is unavailable during a pending download and the snapshot is
   for (const checkbox of screen.getAllByRole('checkbox'))
     expect(checkbox).toBeDisabled();
   expect(screen.getByRole('button', { name: 'Close' })).toBeEnabled();
+  expect(
+    screen.getByRole('spinbutton', { name: 'Number of results' })
+  ).toBeDisabled();
   await act(async () => resolve({ ok: true, json: async () => response() }));
   const data = JSON.parse(await blobText(URL.createObjectURL.mock.calls[0][0]));
   expect(data.records[0]).not.toHaveProperty('title');
@@ -428,4 +434,125 @@ test('expanded optional fields have no accessibility violations', async () => {
   const { container } = setup();
   revealFields();
   expect(await axe(container)).toHaveNoViolations();
+});
+
+const countResponse = (total, count) => ({
+  hits: {
+    total: { value: total, relation: 'eq' },
+    hits: Array.from({ length: Math.min(total, count) }, (_, index) => ({
+      _id: String(index + 1),
+      _source: { ...hit._source, nid: [index + 1] },
+    })),
+  },
+});
+
+test('quantity is modal-local, starts from configuration, and both formats reuse the same query', async () => {
+  setup();
+  const input = screen.getByRole('spinbutton', { name: 'Number of results' });
+  expect(input).toHaveValue(1);
+  expect(input).toHaveAttribute('min', '1');
+  expect(input).toHaveAttribute('max', '1000');
+  expect(input).toHaveAttribute('step', '1');
+  const modal = screen.getByRole('dialog');
+  fireEvent.change(input, { target: { value: '3' } });
+  expect(screen.getByRole('dialog')).toBe(modal);
+  expect(fetch).not.toHaveBeenCalled();
+  fetch.mockResolvedValue({ ok: true, json: async () => countResponse(25, 3) });
+  fireEvent.click(
+    screen.getByRole('button', { name: 'Download results (CSV)' })
+  );
+  await waitFor(() => expect(URL.createObjectURL).toHaveBeenCalledTimes(1));
+  const csvBody = JSON.parse(fetch.mock.calls[0][1].body);
+  expect(csvBody).toMatchObject({ size: 3, from: 0 });
+  const csv = await blobText(URL.createObjectURL.mock.calls[0][0]);
+  expect(csv.split('\r\n').filter(Boolean)).toHaveLength(4);
+  fireEvent.click(
+    screen.getByText('Fields to include', { selector: 'summary' })
+  );
+  fireEvent.click(screen.getByRole('checkbox', { name: 'Title' }));
+  fireEvent.click(
+    screen.getByRole('button', { name: 'Download results (JSON)' })
+  );
+  await waitFor(() => expect(URL.createObjectURL).toHaveBeenCalledTimes(2));
+  const jsonBody = JSON.parse(fetch.mock.calls[1][1].body);
+  expect(jsonBody).toEqual(csvBody);
+  const data = JSON.parse(await blobText(URL.createObjectURL.mock.calls[1][0]));
+  expect(data.scope.limit).toBe(3);
+  expect(data.records).toHaveLength(3);
+  expect(data.records[0]).not.toHaveProperty('title');
+});
+
+test.each(['', 'abc', '0', '-1', '1.5', '1001'])(
+  'invalid quantity %j keeps the modal and focuses a described inline error',
+  value => {
+    setup();
+    const input = screen.getByRole('spinbutton', { name: 'Number of results' });
+    fireEvent.change(input, { target: { value } });
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Download results (CSV)' })
+    );
+    expect(fetch).not.toHaveBeenCalled();
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      'Enter a whole number from 1 to 1,000.'
+    );
+    expect(input).toHaveFocus();
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+    expect(input).toHaveAccessibleDescription(
+      expect.stringContaining('Enter a whole number from 1 to 1,000.')
+    );
+    expect(screen.getByRole('dialog')).toHaveAttribute('open');
+    expect(input).toHaveValue(
+      value === '' || value === 'abc' ? null : Number(value)
+    );
+  }
+);
+
+test.each([
+  [1000, 1002, 1000],
+  [10, 2, 2],
+  [1, 25, 1],
+])(
+  'requested %s against total %s returns %s records with exact scope',
+  async (requested, total, returned) => {
+    setup();
+    fireEvent.change(
+      screen.getByRole('spinbutton', { name: 'Number of results' }),
+      { target: { value: String(requested) } }
+    );
+    fetch.mockResolvedValue({
+      ok: true,
+      json: async () => countResponse(total, requested),
+    });
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Download results (JSON)' })
+    );
+    await waitFor(() => expect(URL.createObjectURL).toHaveBeenCalledTimes(1));
+    expect(JSON.parse(fetch.mock.calls[0][1].body).size).toBe(requested);
+    const data = JSON.parse(
+      await blobText(URL.createObjectURL.mock.calls[0][0])
+    );
+    expect(data.scope).toMatchObject({
+      limit: requested,
+      total,
+      count: returned,
+      limited: total > requested,
+    });
+    expect(data.records).toHaveLength(returned);
+  }
+);
+
+test('reopening resets quantity and validation to the configured initial count', () => {
+  setup();
+  const input = screen.getByRole('spinbutton', { name: 'Number of results' });
+  fireEvent.change(input, { target: { value: '0' } });
+  fireEvent.click(
+    screen.getByRole('button', { name: 'Download results (CSV)' })
+  );
+  expect(screen.getByRole('alert')).toBeVisible();
+  fireEvent.click(screen.getByRole('button', { name: 'Close' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Download results' }));
+  expect(
+    screen.getByRole('spinbutton', { name: 'Number of results' })
+  ).toHaveValue(1);
+  expect(screen.queryByRole('alert')).not.toBeInTheDocument();
 });

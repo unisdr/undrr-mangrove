@@ -6,7 +6,8 @@ import {
   columnsForExportGroups,
   DEFAULT_EXPORT_GROUPS,
   buildExportQuery,
-  exportLimit,
+  normalizeExportDefaultCount,
+  requestedExportCount,
   exportRecord,
   exportCsv,
   exportJson,
@@ -44,7 +45,7 @@ test.each([
   [10.7, 10],
   [2000, 1000],
 ])('normalizes export limit %s', (input, expected) => {
-  expect(exportLimit(input)).toBe(expected);
+  expect(normalizeExportDefaultCount(input)).toBe(expected);
 });
 
 test('reuses query constraints, facet post_filter and sort, starting from the first result', () => {
@@ -63,7 +64,7 @@ test('reuses query constraints, facet post_filter and sort, starting from the fi
   const config = {
     ...DEFAULT_CONFIG,
     showFacets: false,
-    exportLimit: 10,
+    exportDefaultCount: 10,
     customFilters: ['type:publication'],
     customFacets: [
       {
@@ -223,3 +224,26 @@ test.each(
   expect(json.records[0]).not.toHaveProperty('body');
   expect(json.records[0]).not.toHaveProperty('teaser');
 });
+
+test.each([
+  '',
+  ' ',
+  'abc',
+  'NaN',
+  'Infinity',
+  '0',
+  '-1',
+  '1.5',
+  '1001',
+  undefined,
+  null,
+])('rejects invalid requested quantity %s without a fallback', value => {
+  expect(requestedExportCount(value)).toBeNull();
+});
+
+test.each([1, '1', '25', '1000', 1000])(
+  'accepts valid requested whole quantity %s',
+  value => {
+    expect(requestedExportCount(value)).toBe(Number(value));
+  }
+);

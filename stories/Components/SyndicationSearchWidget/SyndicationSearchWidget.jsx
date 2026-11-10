@@ -171,8 +171,8 @@ SyndicationSearchWidget.propTypes = {
     showSort: PropTypes.bool,
     /** Opt in to browser-generated CSV and JSON metadata downloads. */
     showExport: PropTypes.bool,
-    /** Maximum records per download: defaults to 100, capped at 1,000. */
-    exportLimit: PropTypes.number,
+    /** Initial download quantity: defaults to 100; visitors may choose 1–1,000. */
+    exportDefaultCount: PropTypes.number,
     /** Contact route for larger data requests or ongoing API access discussions. */
     exportContactUrl: PropTypes.string,
     /**
