@@ -16,14 +16,34 @@ Mangrove is the component library and design system of the United Nations Office
 
 ## Quick start
 
+The code is Apache-2.0 licensed; the UNDRR look and feel is proprietary.
+
 ### Use prebuilt CSS from CDN
 
+Save this as `index.html` and open it in a browser with an internet connection.
+You should see an “Organization” tag styled with the default UNDRR theme.
+
 ```html
-<link
-  rel="stylesheet"
-  href="https://assets.undrr.org/mangrove/2.4.0/css/style.css"
-/>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mangrove example</title>
+    <link
+      rel="stylesheet"
+      href="https://assets.undrr.org/mangrove/2.4.0/css/style.css"
+    />
+  </head>
+  <body>
+    <span class="mg-tag">Organization</span>
+  </body>
+</html>
 ```
+
+This tag needs only CSS. For interactive components, follow the component's
+Storybook instructions for its JavaScript or hydration setup. The
+[CDN reference](docs/CDN-REFERENCE.md) lists theme stylesheets and module paths.
 
 ### Use npm package
 
@@ -33,14 +53,9 @@ npm install @undrr/undrr-mangrove
 
 Upgrading from 1.x? Read the [v2.0 release notes](https://mangrove.undrr.org/?path=/docs/getting-started-release-notes-v2-0--docs).
 
-Package contents:
-
-- `components/` compiled React component ES modules
-- `css/` compiled theme stylesheets
-- `js/` vanilla JS utilities
-- `scss/` source Sass files
-- `fonts/` Mangrove icon font
-- `error-pages/` static error page templates
+For React, follow the [React integration guide](https://mangrove.undrr.org/?path=/docs/getting-started-integration-react-integration--docs)
+to load styles and import components by subpath. The published package has no
+root entry point.
 
 ## Choose an integration path
 
@@ -52,18 +67,9 @@ Package contents:
 
 ## Development
 
-For full setup and workflow details, use the development guide:
-[`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md)
-
-Common commands:
-
-```bash
-yarn install
-yarn storybook
-yarn test
-yarn lint
-yarn build
-```
+To work on Mangrove itself, follow the [development guide](docs/DEVELOPMENT.md)
+for Node.js and Yarn prerequisites, installation and running Storybook. See
+[Contributing](CONTRIBUTING.md) for contribution rules and checks.
 
 ## Releases
 
@@ -73,18 +79,13 @@ yarn build
 
 ## AI and MCP integration
 
-Mangrove publishes static metadata for coding agents after Storybook deploy:
+Coding agents consuming Mangrove can start with [llms.txt](https://mangrove.undrr.org/llms.txt)
+and the [component index](https://mangrove.undrr.org/ai-components/index.json).
+The [AI and MCP integration guide](docs/AI-MCP-INTEGRATION.md) explains component
+discovery, rendered markup, editorial and page-building guidance, and versioned
+copies on the CDN.
 
-- `llms.txt`: <https://mangrove.undrr.org/llms.txt>
-- `llms-editorial-manual.txt` (writing/style rules and terminology only): <https://mangrove.undrr.org/llms-editorial-manual.txt>
-- `llms-page-building.txt` (building UNDRR landing pages with Drupal Gutenberg, with current block markup): <https://mangrove.undrr.org/llms-page-building.txt>
-- `llms-search-widget.txt` (search widget configuration for editors): <https://mangrove.undrr.org/llms-search-widget.txt>
-- component index: <https://mangrove.undrr.org/ai-components/index.json>
-- per-component details: `ai-components/{id}.json`
-
-Guide: [`docs/AI-MCP-INTEGRATION.md`](docs/AI-MCP-INTEGRATION.md)
-
-The editorial manual and the `llms-*.txt` sub-manifests also ship in `dist/docs/` and in the npm package under `docs/`, so the UNDRR asset library serves them at stable URLs, for example <https://assets.undrr.org/mangrove/latest/docs/llms-editorial-manual.txt> and `https://assets.undrr.org/mangrove/{version}/docs/EDITORIAL-MANUAL.md` (from the release after 2.0.0). See the [CDN reference](docs/CDN-REFERENCE.md#documentation).
+Agents contributing to this repository should start with [AGENTS.md](AGENTS.md).
 
 ## Documentation index
 
