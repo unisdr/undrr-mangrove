@@ -14,6 +14,7 @@
 import React, { memo, useMemo, useCallback } from 'react';
 import {
   useSearchDispatch,
+  useSearchConfig,
   useSearchLabels,
   interpolateLabel,
   actions,
@@ -66,6 +67,7 @@ function FacetSelectComponent({
   operator = 'OR',
 }) {
   const dispatch = useSearchDispatch();
+  const shared = !!useSearchConfig().sharedControls?.id;
   const labels = useSearchLabels();
 
   const { key, label, vocabulary, type, labelSource } = field;
@@ -203,7 +205,7 @@ function FacetSelectComponent({
         return {
           value: bucketKey,
           label: optionLabel,
-          count: bucket.doc_count,
+          count: shared ? undefined : bucket.doc_count,
           isSelected,
           isSubtype: isSubtype || bucket.isSubtype || false,
           parentType,
@@ -242,7 +244,7 @@ function FacetSelectComponent({
         return {
           value,
           label: optionLabel,
-          count: 0, // Not in current results
+          count: shared ? undefined : 0, // Not in current results
           isSelected: true,
           isSubtype,
           parentType,
@@ -287,6 +289,7 @@ function FacetSelectComponent({
     allowedTypes,
     selectedValues,
     hideUnlabelled,
+    shared,
   ]);
 
   /**
