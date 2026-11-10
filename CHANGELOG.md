@@ -14,6 +14,53 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 - **Brand documentation expansion** ([#983](https://github.com/unisdr/undrr-mangrove/pull/983)) — added nine new Storybook MDX pages under `Brand/`: Where to start (canonical reading order), Layered identity (core UNDRR → sub-brand → campaign), Visual voice, Written voice and tone, Audience mapping, Sub-brand rationale (working hypothesis pending UNDRR Communications review), Anti-patterns, AI imagery policy, and AI imagery prompts. Reconciled the Arabic typography note in `BrandGuidelines.mdx` with the live Mangrove guidance (Noto Kufi Arabic + Noto Sans Arabic). The AI imagery page is explicit that it is derivative of UNDRR's in-development institutional AI guidance, not a one-to-one match. Also updated the `llms.txt` template in `scripts/ai-manifest/generate-ai-manifest.js` to surface the new pages to external AI agents.
 - **AI imagery hard-bans** ([#983](https://github.com/unisdr/undrr-mangrove/pull/983)) — explicit standing rules: no photorealistic AI of human beings (stylised illustration only); no AI imagery for named people or specific real events; no AI-generated images of children; no rendered text or standalone icons in AI outputs (text comes out as gibberish; icons drift from OCHA + Mangrove); named country required (no regional pastiche); within-country diversity must be named explicitly when single-country contexts would otherwise collapse into a single ethnic phenotype; disability inclusion required in every people-inclusive prompt; decolonial framing required; specific hex codes required when prompts mention colour.
 
+## 2.4.0, 2026-11-09
+
+See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.4.0) for full details.
+
+Mangrove 2.4 adds shared search controls, reader-facing date filters and an opt-in MegaMenu finder. It also improves narrow sharing layouts and sentence-case presentation, and introduces experimental native Dialog and publication-record examples.
+
+### Breaking and visible changes
+
+- **Labels preserve authored case.** Statistics labels, dense-table headings, code badges and search labels no longer force uppercase. Author acronyms in their intended case and remove consumer overrides that only compensated for the old transforms. Classes, tokens and query operators retain their contracts. ([#1434](https://github.com/unisdr/undrr-mangrove/pull/1434))
+- **Shared external search targets have one owner.** Existing independent widgets sharing a target render controls only for the first visible owner; ownership follows tabs, disclosures and responsive visibility. Use separate targets when simultaneous independent lists each need controls, or opt into `sharedControls` when the lists should share selections. ([#1454](https://github.com/unisdr/undrr-mangrove/pull/1454), [#1460](https://github.com/unisdr/undrr-mangrove/pull/1460))
+- **ShareButtons adapts to container width.** Six 40px actions fit a 256px sidebar; narrower containers use a deliberate grid. Wide spacing and action behaviour remain intact. Remove equivalent local narrow-sidebar workarounds after adopting the new CSS. ([#1449](https://github.com/unisdr/undrr-mangrove/pull/1449))
+
+### New features
+
+- **Shared search controls:** explicitly group independently scoped displays under one query and filter selection. Each display retains its content constraints, hidden contextual defaults, sort, page size and local required period controls. Options combine values from group members without misleading combined counts; hidden and late-mounted displays receive current selections. Grouped URL synchronization is off; standalone hash/history behaviour remains supported. ([#1460](https://github.com/unisdr/undrr-mangrove/pull/1460))
+- **Search scopes and sorting:** `display: 'tabs'` custom facets provide labelled native radio scopes, retaining the query and other filters while resetting pagination and refreshing scoped counts. Unique URL-safe option values support standalone links and history. `showSort: false` retains the configured order, including for old sort links, while `buildInitialSearchQuery(config)` builds server defaults without capturing a visitor's live group state. ([#1460](https://github.com/unisdr/undrr-mangrove/pull/1460))
+- **Public-date search:** opt into `yearField: 'display_date'` to align year selections, counts and fallback dates with editorial dates. `display_date_precision` supports year-only publications, and historical dates and event ranges retain their meaning. Consumers must index the new fields and align teaser HTML; Drupal adoption requires the companion integration and reindex. Existing `published_at` defaults, sorting and scoring remain supported. ([#1454](https://github.com/unisdr/undrr-mangrove/pull/1454))
+- **MegaMenu finder:** `enableFilter` adds a contextual desktop modal and mobile drawer input without replacing site search. It searches breadcrumb trails, deduplicates destinations, supports word-order-independent matches and acronyms such as GAR/PW, and offers limited typo tolerance when exact matching finds nothing. Keyboard shortcuts are scoped to the expanded menu; built-in labels follow the runtime language contract. ([#1445](https://github.com/unisdr/undrr-mangrove/pull/1445))
+- **Experimental Dialog:** dependency-free `js/dialog.js` enhances authored disclosures into native modal messages or long reading, with naming, focus return, Escape/backdrop dismissal, cleanup and a readable no-JavaScript fallback. Responsive headers use the shared scrim role. This is an experimental enhancement, with cross-browser, assistive-technology and real editor-integration review still required; it adds no public React API or Gutenberg block. ([#1435](https://github.com/unisdr/undrr-mangrove/pull/1435))
+- **Experimental publication record:** story-only compositions demonstrate bibliographic records with access links, author/source/year roles, optional covers and a bibliography rail, distinct from curated report landings. These examples are not a published renderer, canonical schema or production Drupal adapter; integration and editorial/accessibility review remain required. ([#1436](https://github.com/unisdr/undrr-mangrove/pull/1436), [#1437](https://github.com/unisdr/undrr-mangrove/pull/1437))
+
+### Bug fixes and hardening
+
+- **Search state:** shared-default edits preserve visitor sorting unless the configured order changes. Switching groups resets pagination even when revision numbers match. Period configuration edits preserve selections by value, and locked sorting retains bookmarked pages on initial load. Required controls retain visible keyboard focus, 44px targets and distinct forced-colours selection states. ([#1460](https://github.com/unisdr/undrr-mangrove/pull/1460))
+- **Menu interaction:** configuration/responsive changes dismiss stale finder state, IME composition does not accidentally dismiss the finder, and RTL breadcrumbs and site-search actions preserve their direction and focus behaviour. ([#1445](https://github.com/unisdr/undrr-mangrove/pull/1445))
+- **Tooling security:** update the direct glob dependency to its patched 14.0.3 line. This does not remove every older transitive glob/minimatch path or claim a clean dependency audit. ([#1446](https://github.com/unisdr/undrr-mangrove/pull/1446))
+
+### Documentation and discoverability
+
+- **AI guidance:** route tasks to focused references and explain how to validate CSS custom-property evidence across tokens, theme records, component metadata and matching-release global declarations. A name prefix or custom-property `CSS.supports()` check alone does not establish valid consuming CSS. ([#1433](https://github.com/unisdr/undrr-mangrove/pull/1433))
+- **Content and integration guides:** distinguish report landings from provisional publication records, preserve existing Storybook routes, and document search group/date/hydration contracts and Dialog's experimental availability. Canonical asset links use `assets.undrr.org/mangrove/`. ([#1436](https://github.com/unisdr/undrr-mangrove/pull/1436), [#1437](https://github.com/unisdr/undrr-mangrove/pull/1437), [#1444](https://github.com/unisdr/undrr-mangrove/pull/1444), [#1454](https://github.com/unisdr/undrr-mangrove/pull/1454), [#1460](https://github.com/unisdr/undrr-mangrove/pull/1460))
+
+### Dependencies
+
+- Storybook 10.6.6 across the package family, Vitest 5.0.5, Vite 8.3.5, Webpack 5.112.2, Babel core 8.0.10, ESLint 10.14.0, Sass 1.108.1, PostCSS 8.5.32 and Lucide 1.70.0, plus supporting tooling updates. CI and Docker use Node 26 with explicit Corepack installation; the consumer Node engine floor and React peer contract are unchanged. ([#1425](https://github.com/unisdr/undrr-mangrove/pull/1425), [#1426](https://github.com/unisdr/undrr-mangrove/pull/1426), [#1443](https://github.com/unisdr/undrr-mangrove/pull/1443), [#1446](https://github.com/unisdr/undrr-mangrove/pull/1446), [#1451](https://github.com/unisdr/undrr-mangrove/pull/1451), [#1456](https://github.com/unisdr/undrr-mangrove/pull/1456), [#1457](https://github.com/unisdr/undrr-mangrove/pull/1457))
+
+### CDN
+
+Use matching versioned CSS and JavaScript after the shared-web-assets production deployment. npm publication alone does not create the CDN folder.
+
+```html
+<link
+  rel="stylesheet"
+  href="https://assets.undrr.org/mangrove/2.4.0/css/style.css"
+/>
+```
+
 ## 2.3.0, 2026-10-27
 
 See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.3.0) for full details.

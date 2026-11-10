@@ -14,6 +14,12 @@ export const LABELS_ES = {
 
   navLabel: 'Navegación principal',
   closeMobileNavLabel: 'Cerrar navegación móvil',
+  menuFilterLabel: 'Buscar en el menú',
+  filterPlaceholder: 'Buscar una página en este menú',
+  clearFilterLabel: 'Borrar filtro',
+  noFilterResultsLabel: 'No hay páginas coincidentes en este menú',
+  searchSiteLabel: 'Buscar en todo el sitio "{query}"',
+  filterMatchesCount: '{count} elementos encontrados',
 };
 
 // ---------------------------------------------------------------------------
@@ -29,6 +35,12 @@ export const LABELS_FR = {
 
   navLabel: 'Navigation principale',
   closeMobileNavLabel: 'Fermer la navigation mobile',
+  menuFilterLabel: 'Rechercher dans le menu',
+  filterPlaceholder: 'Trouver une page dans ce menu',
+  clearFilterLabel: 'Effacer le filtre',
+  noFilterResultsLabel: 'Aucune page correspondante dans ce menu',
+  searchSiteLabel: 'Rechercher sur tout le site "{query}"',
+  filterMatchesCount: '{count} éléments trouvés',
 };
 
 // ---------------------------------------------------------------------------
@@ -44,6 +56,12 @@ export const LABELS_JA = {
 
   navLabel: 'メインナビゲーション',
   closeMobileNavLabel: 'モバイルナビゲーションを閉じる',
+  menuFilterLabel: 'メニュー内を探す',
+  filterPlaceholder: 'このメニューからページを探す',
+  clearFilterLabel: '絞り込みをクリア',
+  noFilterResultsLabel: 'このメニューに一致するページはありません',
+  searchSiteLabel: 'サイト全体で「{query}」を検索',
+  filterMatchesCount: '{count} 件の項目が見つかりました',
 };
 
 // ---------------------------------------------------------------------------
@@ -59,6 +77,12 @@ export const LABELS_ZH = {
 
   navLabel: '主导航',
   closeMobileNavLabel: '关闭移动导航',
+  menuFilterLabel: '在菜单中查找',
+  filterPlaceholder: '在此菜单中查找页面',
+  clearFilterLabel: '清除筛选',
+  noFilterResultsLabel: '此菜单中没有匹配的页面',
+  searchSiteLabel: '在全站搜索 "{query}"',
+  filterMatchesCount: '找到 {count} 个菜单项',
 };
 
 // ---------------------------------------------------------------------------
@@ -74,6 +98,12 @@ export const LABELS_AR = {
 
   navLabel: 'التنقل الرئيسي',
   closeMobileNavLabel: 'إغلاق قائمة التنقل للجوال',
+  menuFilterLabel: 'البحث في القائمة',
+  filterPlaceholder: 'العثور على صفحة في هذه القائمة',
+  clearFilterLabel: 'مسح التصفية',
+  noFilterResultsLabel: 'لا توجد صفحات مطابقة في هذه القائمة',
+  searchSiteLabel: 'البحث في كامل الموقع عن "{query}"',
+  filterMatchesCount: 'تم العثور على {count} عنصر',
 };
 
 // ---------------------------------------------------------------------------
@@ -89,6 +119,12 @@ export const LABELS_RU = {
 
   navLabel: 'Основная навигация',
   closeMobileNavLabel: 'Закрыть мобильную навигацию',
+  menuFilterLabel: 'Поиск в меню',
+  filterPlaceholder: 'Найти страницу в этом меню',
+  clearFilterLabel: 'Очистить фильтр',
+  noFilterResultsLabel: 'В этом меню нет подходящих страниц',
+  searchSiteLabel: 'Искать по всему сайту «{query}»',
+  filterMatchesCount: 'Найдено элементов: {count}',
 };
 
 export const DEFAULT_MEGAMENU_LABELS = {
@@ -100,6 +136,12 @@ export const DEFAULT_MEGAMENU_LABELS = {
   closeLabel: 'Close',
   overviewLabel: 'Overview',
   toggleMobileNavLabel: 'Open navigation menu',
+  menuFilterLabel: 'Find in menu',
+  filterPlaceholder: 'Find a page in this menu',
+  clearFilterLabel: 'Clear filter',
+  noFilterResultsLabel: 'No matching pages in this menu',
+  searchSiteLabel: 'Search entire site for "{query}"',
+  filterMatchesCount: '{count} menu items found',
 };
 
 export const getMegaMenuLabels = createLabelResolver(DEFAULT_MEGAMENU_LABELS, {

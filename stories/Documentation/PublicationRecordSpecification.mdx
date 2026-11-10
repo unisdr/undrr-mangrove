@@ -1,0 +1,15 @@
+import { Meta, Markdown } from '@storybook/addon-docs/blocks';
+import PublicationRecordSpec from '../../docs/PUBLICATION-RECORD-SPEC.md?raw';
+import { linkDocsPages } from './docsPageLinks';
+
+<Meta
+  title="Patterns/Content/Publication/Record specification"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: { canvas: { hidden: true } },
+  }}
+/>
+
+<Markdown>
+  {linkDocsPages(PublicationRecordSpec, 'docs/PUBLICATION-RECORD-SPEC.md')}
+</Markdown>

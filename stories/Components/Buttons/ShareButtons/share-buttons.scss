@@ -10,6 +10,7 @@
 @use "../../../assets/scss/config" as *;
 
 .mg-share {
+  container: mg-share / inline-size;
   max-inline-size: mg-rem(400);
   min-inline-size: 0;
   display: flex;
@@ -30,6 +31,23 @@
   flex-wrap: wrap;
   gap: var(--mg-spacing-50);
   align-items: center;
+}
+
+@container mg-share (inline-size < #{mg-rem(265)}) {
+  .mg-share__buttons {
+    column-gap: 0;
+    justify-content: space-between;
+  }
+}
+
+@container mg-share (inline-size < #{mg-rem(250)}) {
+  .mg-share__buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, #{mg-rem(40)});
+    max-inline-size: mg-rem(130);
+    gap: var(--mg-spacing-50);
+    justify-content: start;
+  }
 }
 
 .mg-share__button,
