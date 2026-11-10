@@ -350,3 +350,82 @@ test('invalidating input focuses the connected results region when the CTA becom
   expect(main).not.toHaveAttribute('tabindex');
   expect(document.documentElement.style.overflow).toBe('');
 });
+
+const blobText = blob =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsText(blob);
+  });
+
+function revealFields() {
+  fireEvent.click(
+    screen.getByText('Fields to include', { selector: 'summary' })
+  );
+  return screen.getAllByRole('checkbox');
+}
+
+test('optional fields have useful defaults, keep core fields and reset on reopening', () => {
+  setup();
+  const checkboxes = revealFields();
+  expect(checkboxes).toHaveLength(8);
+  for (const checkbox of checkboxes) expect(checkbox).toBeChecked();
+  expect(
+    screen.getByRole('group', { name: 'Fields to include' })
+  ).toHaveAccessibleDescription(
+    'Record ID and URL are always included. These choices apply to both formats.'
+  );
+  fireEvent.click(screen.getByRole('checkbox', { name: 'Title' }));
+  expect(screen.getByRole('checkbox', { name: 'Title' })).not.toBeChecked();
+  fireEvent.click(screen.getByRole('button', { name: 'Close' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Download results' }));
+  for (const checkbox of revealFields()) expect(checkbox).toBeChecked();
+});
+
+test('clearing all optional groups exports only ID and URL in both formats', async () => {
+  setup();
+  for (const checkbox of revealFields()) fireEvent.click(checkbox);
+  fireEvent.click(
+    screen.getByRole('button', { name: 'Download results (CSV)' })
+  );
+  await waitFor(() => expect(URL.createObjectURL).toHaveBeenCalledTimes(1));
+  const csv = await blobText(URL.createObjectURL.mock.calls[0][0]);
+  expect(csv.split('\r\n')[0]).toBe('"id","url"');
+  fireEvent.click(
+    screen.getByRole('button', { name: 'Download results (JSON)' })
+  );
+  await waitFor(() => expect(URL.createObjectURL).toHaveBeenCalledTimes(2));
+  const data = JSON.parse(await blobText(URL.createObjectURL.mock.calls[1][0]));
+  expect(data.scope.fields).toEqual(['id', 'url']);
+  expect(Object.keys(data.records[0])).toEqual(['id', 'url']);
+});
+
+test('field editing is unavailable during a pending download and the snapshot is retained', async () => {
+  let resolve;
+  fetch.mockReturnValue(
+    new Promise(done => {
+      resolve = done;
+    })
+  );
+  setup();
+  revealFields();
+  fireEvent.click(screen.getByRole('checkbox', { name: 'Title' }));
+  fireEvent.click(
+    screen.getByRole('button', { name: 'Download results (JSON)' })
+  );
+  for (const checkbox of screen.getAllByRole('checkbox'))
+    expect(checkbox).toBeDisabled();
+  expect(screen.getByRole('button', { name: 'Close' })).toBeEnabled();
+  await act(async () => resolve({ ok: true, json: async () => response() }));
+  const data = JSON.parse(await blobText(URL.createObjectURL.mock.calls[0][0]));
+  expect(data.records[0]).not.toHaveProperty('title');
+  expect(data.scope.fields).not.toContain('title');
+  expect(screen.getByRole('checkbox', { name: 'Title' })).not.toBeDisabled();
+});
+
+test('expanded optional fields have no accessibility violations', async () => {
+  const { container } = setup();
+  revealFields();
+  expect(await axe(container)).toHaveNoViolations();
+});

@@ -1,6 +1,7 @@
 import { expect, within, userEvent, waitFor } from 'storybook/test';
 import { SyndicationSearchWidget } from './SyndicationSearchWidget';
 import { widgetMetaShared } from './_storyHelpers';
+import latestWebsiteResults from '../../assets/fixtures/search-latest10/results.json';
 
 const endpoint = '/__mg-export-search';
 const records = [
@@ -63,24 +64,71 @@ function mockExportSearch({ args }) {
       });
     }
     if (args.fixtureError && body.track_total_hits) return { ok: false };
-    const flood = JSON.stringify(body.query).toLowerCase().includes('flood');
-    const matching = flood
-      ? records.filter(hit => hit._source.title.toLowerCase().includes('flood'))
+    const sourceRecords = args.fixtureLatest
+      ? latestWebsiteResults.hits.hits.map(hit => ({
+          ...hit,
+          _source: {
+            ...hit._source,
+            teaser: Object.entries(latestWebsiteResults.assets).reduce(
+              (html, [source, asset]) =>
+                html.replaceAll(
+                  source,
+                  `${globalThis.location.origin}${asset}`
+                ),
+              hit._source.teaser
+            ),
+          },
+        }))
       : records;
+    const flood = JSON.stringify(body.query).toLowerCase().includes('flood');
+    let matching = flood
+      ? sourceRecords.filter(hit =>
+          String(hit._source.title).toLowerCase().includes('flood')
+        )
+      : sourceRecords;
+    if (args.fixtureLatest) {
+      const selectedTypes = [];
+      const readTypes = value => {
+        if (!value || typeof value !== 'object') return;
+        if (value.term?.type) selectedTypes.push(value.term.type);
+        if (value.terms?.type) selectedTypes.push(...value.terms.type);
+        Object.values(value).forEach(readTypes);
+      };
+      readTypes(body.post_filter);
+      if (selectedTypes.length)
+        matching = matching.filter(hit =>
+          selectedTypes.includes([].concat(hit._source.type)[0])
+        );
+    }
     const ordered =
       body.sort?.[0]?.published_at?.order === 'asc'
         ? [...matching].reverse()
         : matching;
-    const total = args.fixtureEmpty ? 0 : flood ? matching.length : 25;
+    const total = args.fixtureEmpty
+      ? 0
+      : args.fixtureLatest || flood
+        ? matching.length
+        : 25;
     return {
       ok: true,
       json: async () => ({
         hits: {
           total: { value: total, relation: 'eq' },
-          hits: total ? ordered.slice(0, body.size) : [],
+          hits: total
+            ? ordered.slice(body.from || 0, (body.from || 0) + body.size)
+            : [],
         },
         aggregations: {
           field_theme: { buckets: [{ key: 7, doc_count: total }] },
+          type: {
+            buckets: Object.entries(
+              matching.reduce((counts, hit) => {
+                const type = [].concat(hit._source.type)[0];
+                counts[type] = (counts[type] || 0) + 1;
+                return counts;
+              }, {})
+            ).map(([key, doc_count]) => ({ key, doc_count })),
+          },
         },
         took: 1,
       }),
@@ -140,10 +188,9 @@ export const DownloadResults = {
     await waitFor(() => expect(cta(canvas)).toBeEnabled());
     await expect(canvas.queryByRole('dialog')).not.toBeInTheDocument();
     const pagination = canvas.getByRole('navigation');
-    await expect(
-      pagination.compareDocumentPosition(cta(canvas)) &
-        Node.DOCUMENT_POSITION_FOLLOWING
-    ).toBeTruthy();
+    await expect(pagination.compareDocumentPosition(cta(canvas))).toBe(
+      Node.DOCUMENT_POSITION_FOLLOWING
+    );
     await expect(cta(canvas)).toHaveClass('mg-button-outline');
   },
   parameters: {
@@ -260,10 +307,69 @@ export const DownloadWithoutPagination = {
     const results = canvasElement.querySelector(
       '.mg-search__results-list, .mg-search__results-grid'
     );
-    await expect(
-      results.compareDocumentPosition(cta(canvas)) &
-        Node.DOCUMENT_POSITION_FOLLOWING
-    ).toBeTruthy();
+    await expect(results.compareDocumentPosition(cta(canvas))).toBe(
+      Node.DOCUMENT_POSITION_FOLLOWING
+    );
     await expect(cta(canvas)).toHaveClass('mg-button-outline');
+  },
+};
+
+export const LatestWebsiteTeasers = {
+  ...DownloadResults,
+  name: 'Latest 10 website teasers',
+  args: {
+    ...DownloadResults.args,
+    fixtureLatest: true,
+    config: {
+      ...DownloadResults.args.config,
+      resultsPerPage: 10,
+      exportLimit: 10,
+      defaultSort: 'newest',
+      displayMode: 'list',
+      visibleFilters: ['type'],
+      customFilters: [],
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await waitFor(() => expect(cta(canvas)).toBeEnabled());
+    const teasers = canvasElement.querySelectorAll(
+      'article.mg-search__result > .teaser-3-9'
+    );
+    await expect(teasers.length).toBe(10);
+    await expect(
+      canvasElement.querySelector('.mg-search__result-content')
+    ).not.toBeInTheDocument();
+    const dates = latestWebsiteResults.hits.hits.map(
+      hit => hit._source.published_at[0]
+    );
+    await expect(dates).toEqual([...dates].sort((a, b) => b - a));
+    await expect(requests[requests.length - 1].sort).toEqual([
+      { published_at: { order: 'desc' } },
+    ]);
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Actual pre-rendered Drupal teaser HTML for the ten newest indexed PreventionWeb records in a local sanitized-index snapshot captured on 10 November 2026. This is sample captured data, not the current live website. Mixed news, publications and a collection use the standard teaser renderer, with cached images for a reliable demo. Newest website posting order and a ten-record export cap are configured; exported metadata remains independent of visible teaser fields.',
+      },
+    },
+  },
+};
+
+export const ChooseFields = {
+  ...DownloadResults,
+  name: 'Choose fields',
+  play: async context => {
+    await openExport(context);
+    const modal = within(dialog(within(context.canvasElement)));
+    await userEvent.click(
+      modal.getByText(
+        /Fields to include|Campos que se incluirán|Champs à inclure|含める項目|包含的字段|الحقول المراد تضمينها|Поля для включения/,
+        { selector: 'summary' }
+      )
+    );
+    await expect(modal.getAllByRole('checkbox')).toHaveLength(8);
   },
 };

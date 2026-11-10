@@ -1,0 +1,265 @@
+{
+  "provenance": {
+    "description": "Ten newest indexed PreventionWeb records captured from the local sanitized Drupal index, not live website content. Original pre-rendered teaser markup is retained after removing theme-debug comments. Image files are cached locally for the demo.",
+    "capturedAt": "2026-11-10",
+    "domain": "www_preventionweb_net",
+    "sort": "published_at descending"
+  },
+  "assets": {
+    "/sites/default/files/styles/por/public/document_thumbnails/107016.jpg?h=bbdb85db&amp;itok=oJkCjxdy": "/fixtures/search-latest10/105704-0.jpg",
+    "/sites/default/files/styles/por/public/document_thumbnails/107014.jpg?h=38a6ba79&amp;itok=A2S7aBza": "/fixtures/search-latest10/105703-0.jpg",
+    "/sites/default/files/styles/landscape_16_9/public/2026-11/kbha-sea-3589602_1280.jpg?h=1c9b88c9&amp;itok=MsBh3FAk": "/fixtures/search-latest10/105701-0.jpg",
+    "/sites/default/files/styles/landscape_16_9/public/2026-09/pexels-robertkso-36336154-1.jpg?h=0daa3ffa&amp;itok=z8_k2OvQ": "/fixtures/search-latest10/105700-0.jpg",
+    "/sites/default/files/styles/por/public/document_thumbnails/107011.jpg?h=4e48f224&amp;itok=46OQMIo9": "/fixtures/search-latest10/105699-0.jpg",
+    "/sites/default/files/styles/por/public/document_thumbnails/107004.jpg?h=6a9e38f6&amp;itok=TxRr6DG-": "/fixtures/search-latest10/105695-0.jpg",
+    "/sites/default/files/styles/landscape_16_9/public/2026-09/pexels-alex-rusin-1088968-5115332-1.jpg?h=92236464&amp;itok=pYgicIDp": "/fixtures/search-latest10/104771-0.jpg",
+    "/sites/default/files/styles/landscape_16_9/public/2026-08/pexels-domipie-27286879-1-1.jpg?h=7acd6694&amp;itok=CYWEu_nC": "/fixtures/search-latest10/105696-0.jpg",
+    "/sites/default/files/styles/por/public/document_thumbnails/107002.jpg?h=964edac7&amp;itok=RsNIkuA9": "/fixtures/search-latest10/105692-0.jpg"
+  },
+  "hits": {
+    "total": {
+      "value": 10,
+      "relation": "eq"
+    },
+    "hits": [
+      {
+        "_index": "drupal_multidomain_local",
+        "_id": "entity:node/105704:en",
+        "_ignored": [
+          "aggregated_field.keyword",
+          "body.keyword",
+          "teaser.keyword"
+        ],
+        "_source": {
+          "_language": "en",
+          "display_date": [1767268800],
+          "display_date_precision": ["year"],
+          "field_country_region": [71],
+          "teaser": "<div class=\"teaser-3-9 | mg-card mg-card__hc mg-card-book__hc\"  data-history-node-id=\"105704\">\n    <div class=\"mg-card__visual\">\n                        <div class=\"bc-gr full-w field field--name-field-image field--type-entity-reference field--label-hidden field--item term-taxonomy--\" data-term-id=\"\">\n<div class=\"custom-media media-1-column\">\n                        <div class=\"field field--name-field-media-image field--type-image field--label-hidden field--item term-taxonomy--\" data-term-id=\"\">\n<img loading=\"lazy\" src=\"/sites/default/files/styles/por/public/document_thumbnails/107016.jpg?h=bbdb85db&amp;itok=oJkCjxdy\" width=\"720\" height=\"960\" alt=\"Coastal flooding and wealth in Asia and the Pacific thumbnail\" />\n</div>\n</div>\n</div>\n  </div>\n    <div class=\"mg-card__content\">\n      <div  class=\"mg-card__label\">\n            <span >\n                  Documents and publications\n      </span>\n    </div>\n                        <div class=\"dp-ib mg-card__date field field--name-field-year-only field--type-yearonly field--label-hidden field--item term-taxonomy--\" data-term-id=\"\">2026</div>\n                        <div class=\"field field--name-node-title field--type-ds field--label-hidden field--item term-taxonomy--\" data-term-id=\"\"><header class=\"mg-card__title\">\n  <a href=\"/publication/documents-and-publications/coastal-flooding-and-wealth-asia-and-pacific\" hreflang=\"en\">Coastal flooding and wealth in Asia and the Pacific</a>\n</header>\n</div>\n      <p class=\"mg-card__description\">\n  This study examines how coastal development, wealth, and climate risk intersect across 10 countries in Asia and the Pacific.\n</p>\n      <div class=\"source-organizations mg-card__organization field field--name-field-organization field--type-entity-reference field--label-hidden field--items\">\n                                                                          <div class=\"field--item term-id--433 term-taxonomy--organization\" data-term-id=\"433\">Asian Development Bank (ADB)</div>\n          </div>\n  </div>\n</div>",
+          "field_domain_access": ["www_preventionweb_net"],
+          "field_hazard": [347],
+          "field_theme": [336],
+          "nid": [105704],
+          "published_at": [1793898444],
+          "title": ["Coastal flooding and wealth in Asia and the Pacific"],
+          "type": ["publication"]
+        },
+        "sort": [1793898444000]
+      },
+      {
+        "_index": "drupal_multidomain_local",
+        "_id": "entity:node/105703:en",
+        "_ignored": [
+          "aggregated_field.keyword",
+          "body.keyword",
+          "teaser.keyword"
+        ],
+        "_source": {
+          "_language": "en",
+          "display_date": [1767268800],
+          "display_date_precision": ["year"],
+          "field_country_region": [71],
+          "teaser": "<div class=\"teaser-3-9 | mg-card mg-card__hc mg-card-book__hc\"  data-history-node-id=\"105703\">\n    <div class=\"mg-card__visual\">\n                        <div class=\"bc-gr full-w field field--name-field-image field--type-entity-reference field--label-hidden field--item term-taxonomy--\" data-term-id=\"\">\n<div class=\"custom-media media-1-column\">\n                        <div class=\"field field--name-field-media-image field--type-image field--label-hidden field--item term-taxonomy--\" data-term-id=\"\">\n<img loading=\"lazy\" src=\"/sites/default/files/styles/por/public/document_thumbnails/107014.jpg?h=38a6ba79&amp;itok=A2S7aBza\" width=\"720\" height=\"960\" alt=\"Glaciers to farms: Climate risk and capacity assessment and recommendations thumbnail\" />\n</div>\n</div>\n</div>\n  </div>\n    <div class=\"mg-card__content\">\n      <div  class=\"mg-card__label\">\n            <span >\n                  Documents and publications\n      </span>\n    </div>\n                        <div class=\"dp-ib mg-card__date field field--name-field-year-only field--type-yearonly field--label-hidden field--item term-taxonomy--\" data-term-id=\"\">2026</div>\n                        <div class=\"field field--name-node-title field--type-ds field--label-hidden field--item term-taxonomy--\" data-term-id=\"\"><header class=\"mg-card__title\">\n  <a href=\"/publication/documents-and-publications/glaciers-farms-climate-risk-and-capacity-assessment-and\" hreflang=\"en\">Glaciers to farms: Climate risk and capacity assessment and recommendations</a>\n</header>\n</div>\n      <p class=\"mg-card__description\">\n  This report presents the findings of a climate risk and capacity needs assessment conducted under the Glaciers to Farms (G2F) program across the Kura, Naryn, Pyanj, and Swat watersheds.\n</p>\n      <div class=\"source-organizations mg-card__organization field field--name-field-organization field--type-entity-reference field--label-hidden field--items\">\n                                                                          <div class=\"field--item term-id--433 term-taxonomy--organization\" data-term-id=\"433\">Asian Development Bank (ADB)</div>\n          </div>\n  </div>\n</div>",
+          "field_domain_access": ["www_preventionweb_net"],
+          "field_theme": [311],
+          "nid": [105703],
+          "published_at": [1793897787],
+          "title": [
+            "Glaciers to farms: Climate risk and capacity assessment and recommendations"
+          ],
+          "type": ["publication"]
+        },
+        "sort": [1793897787000]
+      },
+      {
+        "_index": "drupal_multidomain_local",
+        "_id": "entity:node/105702:en",
+        "_ignored": [
+          "aggregated_field.keyword",
+          "body.keyword",
+          "teaser.keyword"
+        ],
+        "_source": {
+          "_language": "en",
+          "display_date": [1793880000],
+          "display_date_precision": ["day"],
+          "teaser": "<div class=\"teaser-3-9 | mg-card mg-card__hc mg-card-book__hc\"  data-history-node-id=\"105702\">\n    <div class=\"mg-card__content\">\n      <div  class=\"mg-card__label\">\n            <span >\n                  Update\n      </span>\n    </div>\n                        <div class=\"dp-ib mg-card__date field field--name-field-release-date field--type-datetime field--label-hidden field--item term-taxonomy--\" data-term-id=\"\">\n<time datetime=\"2026-11-05T12:00:00Z\">5 November 2026</time>\n</div>\n      <header class=\"mg-card__title\"><a href=\"https://undrr.ddev.site/news/how-can-we-check-if-simulated-heatwave-plausible\">How can we check if a simulated heatwave is plausible?</a></header>\n      <p class=\"mg-card__description\">\n  The analysis suggests that the CESM2 climate model generally can realistically simulate month-long heatwaves in Western Europe of unprecedented intensity, but tends to underestimate their persistence.\n</p>\n      <div class=\"source-organizations mg-card__organization field field--name-field-organization field--type-entity-reference field--label-hidden field--items\">\n                                                                          <div class=\"field--item term-id--1522 term-taxonomy--organization\" data-term-id=\"1522\">European Geosciences Union</div>\n          </div>\n  </div>\n</div>",
+          "field_domain_access": ["www_preventionweb_net"],
+          "nid": [105702],
+          "published_at": [1793897298],
+          "title": ["How can we check if a simulated heatwave is plausible?"],
+          "type": ["news"]
+        },
+        "sort": [1793897298000]
+      },
+      {
+        "_index": "drupal_multidomain_local",
+        "_id": "entity:node/105701:en",
+        "_ignored": [
+          "aggregated_field.keyword",
+          "body.keyword",
+          "teaser.keyword"
+        ],
+        "_source": {
+          "_language": "en",
+          "display_date": [1793707200],
+          "display_date_precision": ["day"],
+          "field_country_region": [227, 71],
+          "teaser": "<div class=\"teaser-3-9 | mg-card mg-card__hc mg-card-book__hc\"  data-history-node-id=\"105701\">\n    <div class=\"mg-card__visual\">\n      <div class=\"mg-card__image\">\n<div class=\"custom-media media-1-column\">\n                        <div class=\"field field--name-field-media-image field--type-image field--label-hidden field--item term-taxonomy--\" data-term-id=\"\">\n<img loading=\"lazy\" src=\"/sites/default/files/styles/landscape_16_9/public/2026-11/kbha-sea-3589602_1280.jpg?h=1c9b88c9&amp;itok=MsBh3FAk\" width=\"1000\" height=\"562\" alt=\"Small boat on a calm lake in Oman with reflections of desert mountains.\" />\n</div>\n</div>\n</div>\n  </div>\n    <div class=\"mg-card__content\">\n      <div  class=\"mg-card__label\">\n            <span >\n                  Research briefs\n      </span>\n    </div>\n                        <div class=\"dp-ib mg-card__date field field--name-field-release-date field--type-datetime field--label-hidden field--item term-taxonomy--\" data-term-id=\"\">\n<time datetime=\"2026-11-03T12:00:00Z\">3 November 2026</time>\n</div>\n      <header class=\"mg-card__title\"><a href=\"https://undrr.ddev.site/news/study-reveals-where-drought-and-extreme-heat-converge-across-oman\">Oman: Study reveals where drought and extreme heat converge </a></header>\n      <p class=\"mg-card__description\">\n  The interior and western parts of the country experienced the highest incidence of drought, while heat waves were more prominent along the northern and northeastern coasts.\n</p>\n      <div class=\"source-organizations mg-card__organization field field--name-field-organization field--type-entity-reference field--label-hidden field--items\">\n                                                                          <div class=\"field--item term-id--5825 term-taxonomy--organization\" data-term-id=\"5825\">PhysOrg, Omicron Technology Ltd</div>\n          </div>\n  </div>\n</div>",
+          "field_domain_access": ["www_preventionweb_net"],
+          "field_hazard": [344, 348],
+          "field_theme": [333],
+          "nid": [105701],
+          "published_at": [1793896605],
+          "title": [
+            "Study reveals where drought and extreme heat converge across Oman"
+          ],
+          "type": ["news"]
+        },
+        "sort": [1793896605000]
+      },
+      {
+        "_index": "drupal_multidomain_local",
+        "_id": "entity:node/105700:en",
+        "_ignored": [
+          "aggregated_field.keyword",
+          "body.keyword",
+          "teaser.keyword"
+        ],
+        "_source": {
+          "_language": "en",
+          "display_date": [1793793600],
+          "display_date_precision": ["day"],
+          "field_country_region": [168, 72],
+          "teaser": "<div class=\"teaser-3-9 | mg-card mg-card__hc mg-card-book__hc\"  data-history-node-id=\"105700\">\n    <div class=\"mg-card__visual\">\n      <div class=\"mg-card__image\">\n<div class=\"custom-media media-1-column\">\n                        <div class=\"field field--name-field-media-image field--type-image field--label-hidden field--item term-taxonomy--\" data-term-id=\"\">\n<img loading=\"lazy\" src=\"/sites/default/files/styles/landscape_16_9/public/2026-09/pexels-robertkso-36336154-1.jpg?h=0daa3ffa&amp;itok=z8_k2OvQ\" width=\"1000\" height=\"562\" alt=\"Close-up of a flood gauge in water, reflecting calm surroundings. Perfect for environmental themes.\" />\n</div>\n</div>\n</div>\n  </div>\n    <div class=\"mg-card__content\">\n      <div  class=\"mg-card__label\">\n            <span >\n                  Research briefs\n      </span>\n    </div>\n                        <div class=\"dp-ib mg-card__date field field--name-field-release-date field--type-datetime field--label-hidden field--item term-taxonomy--\" data-term-id=\"\">\n<time datetime=\"2026-11-04T12:00:00Z\">4 November 2026</time>\n</div>\n      <header class=\"mg-card__title\"><a href=\"https://undrr.ddev.site/news/mu-led-research-reveals-accelerating-sea-level-rise-around-ireland\">MU-led research reveals accelerating sea-level rise around Ireland</a></header>\n      <p class=\"mg-card__description\">\n  A new study led by the ICARUS Climate Research Centre at Maynooth University has reconstructed a century of sea-level change around Ireland, revealing a stark acceleration in sea-level rise.\n</p>\n      <div class=\"source-organizations mg-card__organization field field--name-field-organization field--type-entity-reference field--label-hidden field--items\">\n                                                                          <div class=\"field--item term-id--98765 term-taxonomy--organization\" data-term-id=\"98765\">Maynooth University</div>\n          </div>\n  </div>\n</div>",
+          "field_domain_access": ["www_preventionweb_net"],
+          "field_hazard": [1178],
+          "nid": [105700],
+          "published_at": [1793895605],
+          "title": [
+            "MU-led research reveals accelerating sea-level rise around Ireland"
+          ],
+          "type": ["news"]
+        },
+        "sort": [1793895605000]
+      },
+      {
+        "_index": "drupal_multidomain_local",
+        "_id": "entity:node/105699:en",
+        "_ignored": [
+          "aggregated_field.keyword",
+          "body.keyword",
+          "teaser.keyword"
+        ],
+        "_source": {
+          "_language": "en",
+          "display_date": [1767268800],
+          "display_date_precision": ["year"],
+          "teaser": "<div class=\"teaser-3-9 | mg-card mg-card__hc mg-card-book__hc\"  data-history-node-id=\"105699\">\n    <div class=\"mg-card__visual\">\n                        <div class=\"bc-gr full-w field field--name-field-image field--type-entity-reference field--label-hidden field--item term-taxonomy--\" data-term-id=\"\">\n<div class=\"custom-media media-1-column\">\n                        <div class=\"field field--name-field-media-image field--type-image field--label-hidden field--item term-taxonomy--\" data-term-id=\"\">\n<img loading=\"lazy\" src=\"/sites/default/files/styles/por/public/document_thumbnails/107011.jpg?h=4e48f224&amp;itok=46OQMIo9\" width=\"720\" height=\"960\" alt=\"Early warning system for non-seismic gravity driven tsunamis thumbnail\" />\n</div>\n</div>\n</div>\n  </div>\n    <div class=\"mg-card__content\">\n      <div  class=\"mg-card__label\">\n            <span >\n                  Documents and publications\n      </span>\n    </div>\n                        <div class=\"dp-ib mg-card__date field field--name-field-year-only field--type-yearonly field--label-hidden field--item term-taxonomy--\" data-term-id=\"\">2026</div>\n                        <div class=\"field field--name-node-title field--type-ds field--label-hidden field--item term-taxonomy--\" data-term-id=\"\"><header class=\"mg-card__title\">\n  <a href=\"/publication/documents-and-publications/early-warning-system-non-seismic-gravity-driven-tsunamis\" hreflang=\"en\">Early warning system for non-seismic gravity driven tsunamis</a>\n</header>\n</div>\n      <p class=\"mg-card__description\">\n  This study provides a comprehensive assessment of the performance and constraints of the tsunami early-warning system currently operating at Stromboli Volcano.\n</p>\n      <div class=\"source-organizations mg-card__organization field field--name-field-organization field--type-entity-reference field--label-hidden field--items\">\n                                                                          <div class=\"field--item term-id--15846 term-taxonomy--organization\" data-term-id=\"15846\">Springer Nature</div>\n          </div>\n  </div>\n</div>",
+          "field_domain_access": ["www_preventionweb_net"],
+          "field_hazard": [345, 355],
+          "field_theme": [316],
+          "nid": [105699],
+          "published_at": [1793895150],
+          "title": [
+            "Early warning system for non-seismic gravity driven tsunamis"
+          ],
+          "type": ["publication"]
+        },
+        "sort": [1793895150000]
+      },
+      {
+        "_index": "drupal_multidomain_local",
+        "_id": "entity:node/105695:en",
+        "_ignored": [
+          "aggregated_field.keyword",
+          "body.keyword",
+          "teaser.keyword"
+        ],
+        "_source": {
+          "_language": "en",
+          "display_date": [1767268800],
+          "display_date_precision": ["year"],
+          "teaser": "<div class=\"teaser-3-9 | mg-card mg-card__hc mg-card-book__hc\"  data-history-node-id=\"105695\">\n    <div class=\"mg-card__visual\">\n                        <div class=\"bc-gr full-w field field--name-field-image field--type-entity-reference field--label-hidden field--item term-taxonomy--\" data-term-id=\"\">\n<div class=\"custom-media media-1-column\">\n                        <div class=\"field field--name-field-media-image field--type-image field--label-hidden field--item term-taxonomy--\" data-term-id=\"\">\n<img loading=\"lazy\" src=\"/sites/default/files/styles/por/public/document_thumbnails/107004.jpg?h=6a9e38f6&amp;itok=TxRr6DG-\" width=\"720\" height=\"960\" alt=\"Adaptation Gap Report 2026 thumbnail\" />\n</div>\n</div>\n</div>\n  </div>\n    <div class=\"mg-card__content\">\n      <div  class=\"mg-card__label\">\n            <span >\n                  Documents and publications\n      </span>\n    </div>\n                        <div class=\"dp-ib mg-card__date field field--name-field-year-only field--type-yearonly field--label-hidden field--item term-taxonomy--\" data-term-id=\"\">2026</div>\n                        <div class=\"field field--name-node-title field--type-ds field--label-hidden field--item term-taxonomy--\" data-term-id=\"\"><header class=\"mg-card__title\">\n  <a href=\"/publication/documents-and-publications/adaptation-gap-report-2026\" hreflang=\"en\">Adaptation Gap Report 2026</a>\n</header>\n</div>\n      <p class=\"mg-card__description\">\n  Adaptation finance falls short, institutional barriers constrain implementation, and climate-related losses and damages are mounting. Effective, well-funded adaptation is vital to reduce risks, strengthen resilience and support inclusive development.\n</p>\n      <div class=\"source-organizations mg-card__organization field field--name-field-organization field--type-entity-reference field--label-hidden field--items\">\n                                                                          <div class=\"field--item term-id--359 term-taxonomy--organization\" data-term-id=\"359\">United Nations Environment Programme (UNEP)</div>\n          </div>\n  </div>\n</div>",
+          "field_domain_access": ["www_preventionweb_net"],
+          "field_theme": [311, 317, 324],
+          "nid": [105695],
+          "published_at": [1793892078],
+          "title": ["Adaptation Gap Report 2026"],
+          "type": ["publication"]
+        },
+        "sort": [1793892078000]
+      },
+      {
+        "_index": "drupal_multidomain_local",
+        "_id": "entity:node/104771:en",
+        "_ignored": [
+          "aggregated_field.keyword",
+          "body.keyword",
+          "teaser.keyword"
+        ],
+        "_source": {
+          "_language": "en",
+          "display_date": [1793892078],
+          "display_date_precision": ["day"],
+          "field_country_region": [281, 72],
+          "teaser": "<div class=\"teaser-3-9 | mg-card mg-card__hc mg-card-book__hc\"  data-history-node-id=\"104771\">\n    <div class=\"mg-card__visual\">\n      <div class=\"mg-card__image\">\n<div class=\"custom-media media-1-column\">\n                        <div class=\"field field--name-field-media-image field--type-image field--label-hidden field--item term-taxonomy--\" data-term-id=\"\">\n<img loading=\"lazy\" src=\"/sites/default/files/styles/landscape_16_9/public/2026-09/pexels-alex-rusin-1088968-5115332-1.jpg?h=92236464&amp;itok=pYgicIDp\" width=\"1000\" height=\"562\" alt=\"Aerial view of Antalya&#039;s harbor and cityscape with clear blue sea and historic sites.\" />\n</div>\n</div>\n</div>\n  </div>\n    <div class=\"mg-card__content\">\n                                                                  <div class=\"mg-card__label field field--name-field-collection-type field--type-entity-reference field--label-hidden field--item 858 term-taxonomy--collections\" data-term-id=\"858\"><a href=\"/collections/community-collection\" hreflang=\"en\">Community collection</a></div>\n<span class=\"collection-freshness mg-card__date\">Last updated 5 Nov 2026</span>\n                        <div class=\"field field--name-node-title field--type-ds field--label-hidden field--item term-taxonomy--\" data-term-id=\"\"><header class=\"mg-card__title\">\n  <a href=\"/collections/cop31\" hreflang=\"en\">COP31</a>\n</header>\n</div>\n                        <div class=\"mb-15 mg-card__description field field--name-body field--type-text-with-summary field--label-hidden field--item term-taxonomy--\" data-term-id=\"\">\n  The 2026 UN Climate Change Conference COP 31 will bring global climate decision-makers to the Pacific in Antalya, Türkiye, providing an opportunity to build momentum for negotiations while showcasing Pacific leadership, perspectives and climate action.\n</div>\n  </div>\n</div>",
+          "field_domain_access": ["www_preventionweb_net"],
+          "field_theme": [311],
+          "nid": [104771],
+          "published_at": [1793892078],
+          "title": ["COP31"],
+          "type": ["collections"]
+        },
+        "sort": [1793892078000]
+      },
+      {
+        "_index": "drupal_multidomain_local",
+        "_id": "entity:node/105696:en",
+        "_ignored": [
+          "aggregated_field.keyword",
+          "body.keyword",
+          "teaser.keyword"
+        ],
+        "_source": {
+          "_language": "en",
+          "display_date": [1793793600],
+          "display_date_precision": ["day"],
+          "teaser": "<div class=\"teaser-3-9 | mg-card mg-card__hc mg-card-book__hc\"  data-history-node-id=\"105696\">\n    <div class=\"mg-card__visual\">\n      <div class=\"mg-card__image\">\n<div class=\"custom-media media-1-column\">\n                        <div class=\"field field--name-field-media-image field--type-image field--label-hidden field--item term-taxonomy--\" data-term-id=\"\">\n<img loading=\"lazy\" src=\"/sites/default/files/styles/landscape_16_9/public/2026-08/pexels-domipie-27286879-1-1.jpg?h=7acd6694&amp;itok=CYWEu_nC\" width=\"1000\" height=\"562\" alt=\"A stark landscape of cracked dry earth beneath a clear blue sky, depicting arid climate and drought.\" />\n</div>\n</div>\n</div>\n  </div>\n    <div class=\"mg-card__content\">\n      <div  class=\"mg-card__label\">\n            <span >\n                  Update\n      </span>\n    </div>\n                        <div class=\"dp-ib mg-card__date field field--name-field-release-date field--type-datetime field--label-hidden field--item term-taxonomy--\" data-term-id=\"\">\n<time datetime=\"2026-11-04T12:00:00Z\">4 November 2026</time>\n</div>\n      <header class=\"mg-card__title\"><a href=\"https://undrr.ddev.site/news/world-heads-overshoot-15degc-adaptation-too-slow\">As world heads for overshoot of 1.5&deg;C, adaptation is too slow</a></header>\n      <p class=\"mg-card__description\">\n  With global warming set to exceed 1.5°C, adaptation finance falls far short of needs, implementation is constrained by institutional barriers, and losses and damages are mounting, according to new report from the United Nations Environment Programme.\n</p>\n      <div class=\"source-organizations mg-card__organization field field--name-field-organization field--type-entity-reference field--label-hidden field--items\">\n                                                                          <div class=\"field--item term-id--359 term-taxonomy--organization\" data-term-id=\"359\">United Nations Environment Programme (UNEP)</div>\n          </div>\n  </div>\n</div>",
+          "field_domain_access": ["www_preventionweb_net"],
+          "field_theme": [311, 317, 324],
+          "nid": [105696],
+          "published_at": [1793892035],
+          "title": [
+            "As world heads for overshoot of 1.5°C, adaptation is too slow"
+          ],
+          "type": ["news"]
+        },
+        "sort": [1793892035000]
+      },
+      {
+        "_index": "drupal_multidomain_local",
+        "_id": "entity:node/105692:en",
+        "_ignored": [
+          "aggregated_field.keyword",
+          "body.keyword",
+          "teaser.keyword"
+        ],
+        "_source": {
+          "_language": "en",
+          "display_date": [1767268800],
+          "display_date_precision": ["year"],
+          "teaser": "<div class=\"teaser-3-9 | mg-card mg-card__hc mg-card-book__hc\"  data-history-node-id=\"105692\">\n    <div class=\"mg-card__visual\">\n                        <div class=\"bc-gr full-w field field--name-field-image field--type-entity-reference field--label-hidden field--item term-taxonomy--\" data-term-id=\"\">\n<div class=\"custom-media media-1-column\">\n                        <div class=\"field field--name-field-media-image field--type-image field--label-hidden field--item term-taxonomy--\" data-term-id=\"\">\n<img loading=\"lazy\" src=\"/sites/default/files/styles/por/public/document_thumbnails/107002.jpg?h=964edac7&amp;itok=RsNIkuA9\" width=\"720\" height=\"960\" alt=\"The Climate Action Monitor 2026 thumbnail\" />\n</div>\n</div>\n</div>\n  </div>\n    <div class=\"mg-card__content\">\n      <div  class=\"mg-card__label\">\n            <span >\n                  Documents and publications\n      </span>\n    </div>\n                        <div class=\"dp-ib mg-card__date field field--name-field-year-only field--type-yearonly field--label-hidden field--item term-taxonomy--\" data-term-id=\"\">2026</div>\n                        <div class=\"field field--name-node-title field--type-ds field--label-hidden field--item term-taxonomy--\" data-term-id=\"\"><header class=\"mg-card__title\">\n  <a href=\"/publication/documents-and-publications/climate-action-monitor-2026\" hreflang=\"en\">The Climate Action Monitor 2026</a>\n</header>\n</div>\n      <p class=\"mg-card__description\">\n  This report assesses greenhouse gas emissions, climate hazards and policies across OECD and partner countries, finding emissions rising globally, many countries off track on NDCs, and calling for faster mitigation and stronger adaptation.\n</p>\n      <div class=\"source-organizations mg-card__organization field field--name-field-organization field--type-entity-reference field--label-hidden field--items\">\n                                                                          <div class=\"field--item term-id--497 term-taxonomy--organization\" data-term-id=\"497\">Organisation for Economic Co-operation and Development</div>\n          </div>\n  </div>\n</div>",
+          "field_domain_access": ["www_preventionweb_net"],
+          "field_hazard": [342, 343, 344, 347, 348, 357],
+          "field_theme": [311],
+          "nid": [105692],
+          "published_at": [1793891967],
+          "title": ["The Climate Action Monitor 2026"],
+          "type": ["publication"]
+        },
+        "sort": [1793891967000]
+      }
+    ]
+  }
+}

@@ -7,6 +7,7 @@ import React, {
   useCallback,
 } from 'react';
 import PropTypes from 'prop-types';
+import { Checkbox } from '../../Forms/Checkbox/Checkbox';
 import { lockDialogScroll } from '../../../assets/js/dialog-scroll-lock';
 import { useWidgetRootRef } from '../context/WidgetRootContext';
 import {
@@ -17,6 +18,9 @@ import {
 } from '../context/SearchContext';
 import { isQueryTooShortToSearch } from '../utils/constants';
 import {
+  EXPORT_FIELD_GROUPS,
+  DEFAULT_EXPORT_GROUPS,
+  columnsForExportGroups,
   buildExportQuery,
   exportLimit,
   readExportResponse,
@@ -37,8 +41,10 @@ export default function SearchExport({ isStale = false }) {
   const rootRef = useWidgetRootRef();
   const [openKey, setOpenKey] = useState(null);
   const [status, setStatus] = useState(null);
+  const [selectedGroups, setSelectedGroups] = useState(DEFAULT_EXPORT_GROUPS);
   const helpId = useId();
   const titleId = useId();
+  const fieldsHelpId = useId();
   const limit = exportLimit(config.exportLimit);
   const { query, facets, facetOperators, customFacets, sortBy } = state;
   const body = useMemo(
@@ -132,6 +138,7 @@ export default function SearchExport({ isStale = false }) {
       (requestRef.current && !requestRef.current.signal.aborted)
     )
       return;
+    const columns = columnsForExportGroups(selectedGroups);
     const controller = new AbortController();
     requestRef.current = controller;
     setStatus({
@@ -157,8 +164,8 @@ export default function SearchExport({ isStale = false }) {
       const file = new view.Blob(
         [
           format === 'csv'
-            ? exportCsv(result.records)
-            : exportJson(result, limit),
+            ? exportCsv(result.records, columns)
+            : exportJson(result, limit, columns),
         ],
         {
           type:
@@ -213,6 +220,7 @@ export default function SearchExport({ isStale = false }) {
         disabled={unavailable}
         onClick={() => {
           setStatus(null);
+          setSelectedGroups(DEFAULT_EXPORT_GROUPS);
           setOpenKey(requestKey);
         }}
       >
@@ -266,6 +274,35 @@ export default function SearchExport({ isStale = false }) {
           </header>
           <div className="mg-dialog__body">
             <p id={helpId}>{interpolateLabel(labels.exportScope, { limit })}</p>
+            <details className="mg-search__export-field-options">
+              <summary>{labels.exportFields}</summary>
+              <fieldset
+                className="mg-search__export-fields"
+                disabled={busy}
+                aria-describedby={fieldsHelpId}
+              >
+                <legend className="mg-u-sr-only">{labels.exportFields}</legend>
+                <p id={fieldsHelpId}>{labels.exportFieldsHelp}</p>
+                {EXPORT_FIELD_GROUPS.map(group => (
+                  <Checkbox
+                    key={group.id}
+                    label={labels[group.label]}
+                    value={group.id}
+                    checked={selectedGroups.includes(group.id)}
+                    disabled={busy}
+                    onChange={event => {
+                      const checked = event.target.checked;
+                      setStatus(null);
+                      setSelectedGroups(previous =>
+                        checked
+                          ? [...previous, group.id]
+                          : previous.filter(id => id !== group.id)
+                      );
+                    }}
+                  />
+                ))}
+              </fieldset>
+            </details>
             <div className="mg-search__export-actions" aria-busy={busy}>
               <button
                 type="button"

@@ -1,6 +1,10 @@
 import { DEFAULT_CONFIG } from '../utils/constants';
 import { buildQuery } from '../utils/queryBuilder';
 import {
+  EXPORT_COLUMNS,
+  exportColumns,
+  columnsForExportGroups,
+  DEFAULT_EXPORT_GROUPS,
   buildExportQuery,
   exportLimit,
   exportRecord,
@@ -139,7 +143,13 @@ test('JSON preserves data and explicitly records partial scope', () => {
   expect(JSON.parse(exportJson(data, 1))).toEqual({
     schemaVersion: 1,
     exportedAt: expect.any(String),
-    scope: { limit: 1, count: 1, total: 25, limited: true },
+    scope: {
+      limit: 1,
+      count: 1,
+      total: 25,
+      limited: true,
+      fields: EXPORT_COLUMNS,
+    },
     records: data.records,
   });
 });
@@ -171,3 +181,45 @@ test.each([
     );
   }
 );
+
+test('field choices are ordered, allowlisted and always retain record identity and URL', () => {
+  expect(exportColumns(['body', 'title', 'title', '__proto__'])).toEqual([
+    'id',
+    'title',
+    'url',
+  ]);
+  expect(exportColumns([])).toEqual(['id', 'url']);
+  expect(exportColumns(null)).toEqual(['id', 'url']);
+  expect(columnsForExportGroups([])).toEqual(['id', 'url']);
+  expect(columnsForExportGroups(DEFAULT_EXPORT_GROUPS)).toEqual(EXPORT_COLUMNS);
+});
+
+test.each(['display_date', 'display_date_precision'])(
+  'content date selection preserves precision when selecting %s',
+  field => {
+    expect(exportColumns([field])).toEqual([
+      'id',
+      'url',
+      'display_date',
+      'display_date_precision',
+    ]);
+  }
+);
+
+test.each(
+  [[], ['title'], ['display_date'], ['theme_ids', 'title']].map(fields => [
+    fields,
+  ])
+)('CSV and JSON use the same selected keys for %j', fields => {
+  const result = { records: [exportRecord(hit)], total: 1, limited: false };
+  const columns = exportColumns(fields);
+  const csv = exportCsv(result.records, fields);
+  const json = JSON.parse(exportJson(result, 100, fields));
+  expect(csv.split('\r\n')[0]).toBe(
+    '\ufeff' + columns.map(field => `"${field}"`).join(',')
+  );
+  expect(json.scope.fields).toEqual(columns);
+  expect(Object.keys(json.records[0])).toEqual(columns);
+  expect(json.records[0]).not.toHaveProperty('body');
+  expect(json.records[0]).not.toHaveProperty('teaser');
+});

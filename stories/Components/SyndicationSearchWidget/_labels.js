@@ -2,6 +2,19 @@
 import { createLabelResolver } from '../../../src/i18n';
 
 export const LABELS_ES = {
+  exportFieldType: 'Tipo de contenido',
+  exportFieldLanguage: 'Idioma',
+  exportFieldCountry: 'Identificadores de país o región',
+  exportFieldHazard: 'Identificadores de amenaza',
+  exportFieldTheme: 'Identificadores de tema',
+
+  exportFields: 'Campos que se incluirán',
+  exportFieldsHelp:
+    'El identificador del registro y la URL siempre se incluyen. Estas opciones se aplican a ambos formatos.',
+  exportFieldTitle: 'Título',
+  exportFieldPosted: 'Fecha de publicación en el sitio web',
+  exportFieldReaderDate: 'Fecha del contenido y su precisión',
+
   exportOpen: 'Descargar resultados',
   exportClose: 'Cerrar',
   exportRegion: 'Descargar resultados de búsqueda',
@@ -100,6 +113,19 @@ export const LABELS_ES = {
 // French (fr) — standard international French, UN register
 // ---------------------------------------------------------------------------
 export const LABELS_FR = {
+  exportFieldType: 'Type de contenu',
+  exportFieldLanguage: 'Langue',
+  exportFieldCountry: 'Identifiants de pays ou de région',
+  exportFieldHazard: 'Identifiants d’aléa',
+  exportFieldTheme: 'Identifiants de thème',
+
+  exportFields: 'Champs à inclure',
+  exportFieldsHelp:
+    'L’identifiant de l’enregistrement et l’URL sont toujours inclus. Ces choix s’appliquent aux deux formats.',
+  exportFieldTitle: 'Titre',
+  exportFieldPosted: 'Date de mise en ligne',
+  exportFieldReaderDate: 'Date du contenu et sa précision',
+
   exportOpen: 'Télécharger les résultats',
   exportClose: 'Fermer',
   exportRegion: 'Télécharger les résultats de recherche',
@@ -198,6 +224,19 @@ export const LABELS_FR = {
 // Japanese (ja) — polite register (丁寧語); no singular/plural distinction
 // ---------------------------------------------------------------------------
 export const LABELS_JA = {
+  exportFieldType: 'コンテンツの種類',
+  exportFieldLanguage: '言語',
+  exportFieldCountry: '国・地域のID',
+  exportFieldHazard: 'ハザードのID',
+  exportFieldTheme: 'テーマのID',
+
+  exportFields: '含める項目',
+  exportFieldsHelp:
+    'レコードIDとURLは常に含まれます。選択は両方の形式に適用されます。',
+  exportFieldTitle: 'タイトル',
+  exportFieldPosted: 'ウェブサイト掲載日',
+  exportFieldReaderDate: 'コンテンツの日付とその精度',
+
   exportOpen: '結果をダウンロード',
   exportClose: '閉じる',
   exportRegion: '検索結果をダウンロード',
@@ -296,6 +335,18 @@ export const LABELS_JA = {
 // Simplified Chinese (zh-Hans) — no singular/plural distinction
 // ---------------------------------------------------------------------------
 export const LABELS_ZH = {
+  exportFieldType: '内容类型',
+  exportFieldLanguage: '语言',
+  exportFieldCountry: '国家或地区ID',
+  exportFieldHazard: '灾害ID',
+  exportFieldTheme: '主题ID',
+
+  exportFields: '包含的字段',
+  exportFieldsHelp: '记录ID和URL始终包含在内。这些选择适用于两种格式。',
+  exportFieldTitle: '标题',
+  exportFieldPosted: '网站发布日期',
+  exportFieldReaderDate: '内容日期及其精度',
+
   exportOpen: '下载结果',
   exportClose: '关闭',
   exportRegion: '下载搜索结果',
@@ -418,6 +469,19 @@ const AR_FILTER_FORMS = {
 };
 
 export const LABELS_AR = {
+  exportFieldType: 'نوع المحتوى',
+  exportFieldLanguage: 'اللغة',
+  exportFieldCountry: 'معرّفات البلد أو المنطقة',
+  exportFieldHazard: 'معرّفات الأخطار',
+  exportFieldTheme: 'معرّفات المواضيع',
+
+  exportFields: 'الحقول المراد تضمينها',
+  exportFieldsHelp:
+    'يُضمَّن معرّف السجل والرابط دائمًا. تنطبق هذه الخيارات على كلا التنسيقين.',
+  exportFieldTitle: 'العنوان',
+  exportFieldPosted: 'تاريخ النشر على الموقع',
+  exportFieldReaderDate: 'تاريخ المحتوى ودقته',
+
   exportOpen: 'تنزيل النتائج',
   exportClose: 'إغلاق',
   exportRegion: 'تنزيل نتائج البحث',
@@ -560,6 +624,19 @@ const RU_ACTIVE_FORMS = {
 };
 
 export const LABELS_RU = {
+  exportFieldType: 'Тип содержимого',
+  exportFieldLanguage: 'Язык',
+  exportFieldCountry: 'Идентификаторы стран или регионов',
+  exportFieldHazard: 'Идентификаторы опасностей',
+  exportFieldTheme: 'Идентификаторы тем',
+
+  exportFields: 'Поля для включения',
+  exportFieldsHelp:
+    'Идентификатор записи и URL включаются всегда. Выбор применяется к обоим форматам.',
+  exportFieldTitle: 'Заголовок',
+  exportFieldPosted: 'Дата размещения на сайте',
+  exportFieldReaderDate: 'Дата содержимого и её точность',
+
   exportOpen: 'Скачать результаты',
   exportClose: 'Закрыть',
   exportRegion: 'Скачать результаты поиска',
@@ -678,6 +755,19 @@ export const LABELS_RU = {
 };
 
 export const DEFAULT_LABELS = {
+  exportFieldType: 'Content type',
+  exportFieldLanguage: 'Language',
+  exportFieldCountry: 'Country or region IDs',
+  exportFieldHazard: 'Hazard IDs',
+  exportFieldTheme: 'Theme IDs',
+
+  exportFields: 'Fields to include',
+  exportFieldsHelp:
+    'Record ID and URL are always included. These choices apply to both formats.',
+  exportFieldTitle: 'Title',
+  exportFieldPosted: 'Website posting date',
+  exportFieldReaderDate: 'Content date and its precision',
+
   exportOpen: 'Download results',
   exportClose: 'Close',
   exportRegion: 'Download search results',

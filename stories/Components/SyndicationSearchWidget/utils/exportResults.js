@@ -38,6 +38,45 @@ export const EXPORT_COLUMNS = [
   'theme_ids',
 ];
 
+export const EXPORT_FIELD_GROUPS = [
+  { id: 'title', label: 'exportFieldTitle', columns: ['title'] },
+  { id: 'type', label: 'exportFieldType', columns: ['type'] },
+  { id: 'language', label: 'exportFieldLanguage', columns: ['language'] },
+  { id: 'posted', label: 'exportFieldPosted', columns: ['posted_at'] },
+  {
+    id: 'readerDate',
+    label: 'exportFieldReaderDate',
+    columns: ['display_date', 'display_date_precision'],
+  },
+  {
+    id: 'country',
+    label: 'exportFieldCountry',
+    columns: ['country_region_ids'],
+  },
+  { id: 'hazard', label: 'exportFieldHazard', columns: ['hazard_ids'] },
+  { id: 'theme', label: 'exportFieldTheme', columns: ['theme_ids'] },
+];
+export const DEFAULT_EXPORT_GROUPS = EXPORT_FIELD_GROUPS.map(group => group.id);
+
+export function exportColumns(fields = EXPORT_COLUMNS) {
+  const selected = new Set(Array.isArray(fields) ? fields : []);
+  selected.add('id');
+  selected.add('url');
+  if (selected.has('display_date') || selected.has('display_date_precision')) {
+    selected.add('display_date');
+    selected.add('display_date_precision');
+  }
+  return EXPORT_COLUMNS.filter(key => selected.has(key));
+}
+
+export function columnsForExportGroups(groups) {
+  return exportColumns(
+    EXPORT_FIELD_GROUPS.filter(group => groups.includes(group.id)).flatMap(
+      group => group.columns
+    )
+  );
+}
+
 const first = value => (Array.isArray(value) ? value[0] : value);
 const values = value => [].concat(value ?? []).map(String);
 const text = value => String(first(value) ?? '');
@@ -139,20 +178,19 @@ function csvCell(value) {
   return `"${cell.replace(/"/g, '""')}"`;
 }
 
-export function exportCsv(records) {
+export function exportCsv(records, fields = EXPORT_COLUMNS) {
+  const columns = exportColumns(fields);
   return (
     '\ufeff' +
-    [
-      EXPORT_COLUMNS,
-      ...records.map(record => EXPORT_COLUMNS.map(key => record[key])),
-    ]
+    [columns, ...records.map(record => columns.map(key => record[key]))]
       .map(row => row.map(csvCell).join(','))
       .join('\r\n') +
     '\r\n'
   );
 }
 
-export function exportJson(result, limit) {
+export function exportJson(result, limit, fields = EXPORT_COLUMNS) {
+  const columns = exportColumns(fields);
   return (
     JSON.stringify(
       {
@@ -163,8 +201,11 @@ export function exportJson(result, limit) {
           count: result.records.length,
           total: result.total,
           limited: result.limited,
+          fields: columns,
         },
-        records: result.records,
+        records: result.records.map(record =>
+          Object.fromEntries(columns.map(key => [key, record[key]]))
+        ),
       },
       null,
       2

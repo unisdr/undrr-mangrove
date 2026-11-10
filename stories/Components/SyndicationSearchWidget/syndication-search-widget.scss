@@ -1864,3 +1864,22 @@ $search-input-padding-x: mg-rem(44);
   flex-wrap: wrap;
   gap: var(--mg-spacing-75);
 }
+
+.mg-search__export-field-options {
+  margin-block-end: var(--mg-spacing-100);
+
+  summary {
+    cursor: pointer;
+    font-weight: 600;
+
+    &:focus-visible {
+      @include mg-focus-ring;
+    }
+  }
+}
+
+.mg-search__export-fields {
+  border: 0;
+  padding: var(--mg-spacing-100) 0 0;
+  margin: 0;
+}
