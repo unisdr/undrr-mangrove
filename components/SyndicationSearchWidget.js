@@ -3,7 +3,7 @@
  * Storybook:    https://mangrove.undrr.org/
  * LLMs context: https://mangrove.undrr.org/llms.txt
  * Repository:   https://github.com/PreventionWeb/undrr-mangrove
- * Compiled on:  2026-11-10T07:08:13.727Z
+ * Compiled on:  2026-11-10T07:37:53.475Z
  */
 /*! For license information please see SyndicationSearchWidget.js.LICENSE.txt */
 import*as e from"react";import{createPortal as t}from"react-dom";var r={4639(e,t,r){r.d(t,{z:()=>l});var s=r(1649),a=/*#__PURE__*/r(5556),n=/*#__PURE__*/r.n(a),o=r(4848);function l({value:e,max:t=100,label:r,hideLabel:a=!1,helpText:i,showValue:c=!1,valueText:u,variant:d="default",className:m="",...p}){n().checkPropTypes(l.propTypes,{value:e,max:t,label:r,hideLabel:a,helpText:i,showValue:c,valueText:u,variant:d,className:m,...p},"prop","ProgressBar");const g=(0,s.useId)(),h=`${g}-label`,f=`${g}-help`,y="flush"===d,b="number"==typeof t&&t>0?t:100,v="number"==typeof e&&Number.isFinite(e),_=v?Math.min(Math.max(e,0),b):null,w=v?Math.round(_/b*100):null,x=u||`${w}%`,S=Boolean(r)&&!a&&!y,F=Boolean(i)&&!y,R={};p["aria-label"]||p["aria-labelledby"]||(S?R["aria-labelledby"]=h:r&&(R["aria-label"]=r));const j=[p["aria-describedby"],F&&f].filter(Boolean).join(" ");j&&(R["aria-describedby"]=j),v&&u&&(R["aria-valuetext"]=u);const N=["mg-progress-bar",y&&"mg-progress-bar--flush",m].filter(Boolean).join(" ");/*#__PURE__*/ /*#__PURE__*/
