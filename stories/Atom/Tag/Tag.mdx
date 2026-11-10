@@ -127,16 +127,16 @@ The `.mg-tag-container` class auto-styles direct child elements (`span`, `div`, 
 
 ## CSS class reference
 
-| Class                | Description                                      |
-| -------------------- | ------------------------------------------------ |
-| `.mg-tag`            | Base tag element (`<span>` or `<a>`)             |
-| `.mg-tag--secondary` | Neutral gray variant for de-emphasised tags      |
-| `.mg-tag--outline`   | Border-only variant with transparent background  |
-| `.mg-tag--accent`    | Theme-owned accent variant for featured content  |
-| `.mg-tag--subtle`    | Neutral subtle variant for non-interactive data  |
-| `.mg-badge`          | Compact non-interactive metadata badge pill      |
-| `.mg-badge--code`    | Monospace uppercase format badge (PDF, JSON)     |
-| `.mg-tag-container`  | Wrapper that auto-styles direct children as tags |
+| Class                | Description                                                 |
+| -------------------- | ----------------------------------------------------------- |
+| `.mg-tag`            | Base tag element (`<span>` or `<a>`)                        |
+| `.mg-tag--secondary` | Neutral gray variant for de-emphasised tags                 |
+| `.mg-tag--outline`   | Border-only variant with transparent background             |
+| `.mg-tag--accent`    | Theme-owned accent variant for featured content             |
+| `.mg-tag--subtle`    | Neutral subtle variant for non-interactive data             |
+| `.mg-badge`          | Compact non-interactive metadata badge pill                 |
+| `.mg-badge--code`    | Monospace format badge preserving authored case (PDF, JSON) |
+| `.mg-tag-container`  | Wrapper that auto-styles direct children as tags            |
 
 ## Design tokens
 
@@ -157,6 +157,8 @@ Container children and individually classed tags share the same styling. Explici
 <Canvas of={TagStories.ReflowAndLanguages} />
 
 ## Changelog
+
+- **1.4.1**, 2026-10-29 ([#1432](https://github.com/unisdr/undrr-mangrove/issues/1432)): Code tags and badges preserve authored case instead of forcing uppercase. Supply acronyms such as PDF and JSON in their correct case.
 
 - **1.4.0**, 2026-09-18 ([#1249](https://github.com/unisdr/undrr-mangrove/pull/1249)): Fixes [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196). `.mg-tag--accent` no longer sets a white label on the orange accent (2.95 resting, 2.65 on hover). The chip is `orange-50`, hover `orange-100`, with a `--mg-color-text` label at 15.7:1, and the Sendai orange moves to the border with a 4px leading edge. `--mg-color-tag-accent` keeps its value and now paints that border, held steady across states; `--mg-color-tag-accent--hover` is `orange-800`, lighter than the resting `orange-900`, so swapping it in on hover would have dropped the rule to 2.15 on the darker fill. The hover is the fill step and the label's underline. This is a visible change wherever `--accent` is used, in all five themes. A theme overriding `--tag-color-background-accent` with a dark fill should set `--mg-tag-foreground` too.
 - **1.3.1**, 2026-09-18 ([#1198](https://github.com/unisdr/undrr-mangrove/pull/1198)): Documented that `--accent` paints a white label on the orange accent, which no text colour clears at any size, and that the variant is decorative emphasis. No colour changed; removal is tracked in [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196).

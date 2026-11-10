@@ -149,10 +149,10 @@ StatsCard supports [layered hydration](https://github.com/PreventionWeb/undrr-ma
 | `data-class-name` | `''`        | Additional CSS class names                                 |
 
 ```js
-import createHydrator from 'https://assets.undrr.org/mangrove/2.3.0/components/hydrate.js';
+import createHydrator from 'https://assets.undrr.org/mangrove/2.4.0/components/hydrate.js';
 import StatsCard, {
   fromElement,
-} from 'https://assets.undrr.org/mangrove/2.3.0/components/StatsCard.js';
+} from 'https://assets.undrr.org/mangrove/2.4.0/components/StatsCard.js';
 createHydrator({
   selector: '[data-mg-stats-card]',
   component: StatsCard,
@@ -163,6 +163,8 @@ createHydrator({
 See the [hydration guide](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
 
 ## Changelog
+
+- **1.4.9**, 2026-10-29 ([#1432](https://github.com/unisdr/undrr-mangrove/issues/1432)): Labels preserve authored case instead of forcing uppercase. Write labels in sentence case and retain legitimate acronyms; consumer overrides correcting the old transform can be removed.
 
 - **1.4.8**, 2026-10-16: Reduce compact card padding and internal gaps; remove stacked value, icon, label and summary margins so compact statistics use a denser rhythm.
 
