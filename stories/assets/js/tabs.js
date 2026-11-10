@@ -747,6 +747,71 @@ function initContainer(container, activateDeepLinkOnLoad, options = {}) {
         (rtl() ? content.left < view.left - 1 : content.right > view.right + 1)
     );
   };
+  // Recover only user navigation that becomes obscured by this sticky rail.
+  // Native scrolling handles every actual scroll ancestor; ordinary tabs and
+  // consumer focus({ preventScroll: true }) retain their existing behaviour.
+  const revealStickyFocus = target => {
+    if (!rail) return;
+    const railStyle = getComputedStyle(rail);
+    if (railStyle.position !== 'sticky') return;
+    const bounds = { top: 0, bottom: window.innerHeight };
+    for (
+      let parent = target.parentElement;
+      parent;
+      parent = parent.parentElement
+    ) {
+      if (!/(auto|scroll|hidden|clip)/.test(getComputedStyle(parent).overflowY))
+        continue;
+      const box = parent.getBoundingClientRect();
+      bounds.top = Math.max(bounds.top, box.top + parent.clientTop);
+      bounds.bottom = Math.min(
+        bounds.bottom,
+        box.top + parent.clientTop + parent.clientHeight
+      );
+    }
+    let dock = parseFloat(railStyle.top) || 0;
+    for (
+      let parent = rail.parentElement;
+      parent;
+      parent = parent.parentElement
+    ) {
+      if (!/(auto|scroll|hidden)/.test(getComputedStyle(parent).overflowY))
+        continue;
+      dock += parent.getBoundingClientRect().top + parent.clientTop;
+      break;
+    }
+    const trigger = rail.contains(target);
+    const box = target.getBoundingClientRect();
+    const top = trigger
+      ? Math.max(bounds.top, dock)
+      : Math.max(bounds.top, rail.getBoundingClientRect().bottom);
+    if (box.top >= top && box.bottom <= bounds.bottom) return;
+    (trigger ? rail : target).scrollIntoView?.({
+      block: 'nearest',
+      inline: 'nearest',
+      behavior: 'instant',
+    });
+  };
+  let keyboardFocus = false;
+  let keyboardFocusTimer;
+  if (!stacked && root.classList.contains('mg-tabs--sticky')) {
+    listen(root, 'keydown', event => {
+      if (event.key !== 'Tab' || event.defaultPrevented) return;
+      keyboardFocus = true;
+      clearTimeout(keyboardFocusTimer);
+      keyboardFocusTimer = setTimeout(() => {
+        keyboardFocus = false;
+      }, 0);
+    });
+    listen(root, 'focusin', event => {
+      if (
+        keyboardFocus &&
+        event.target.closest('.mg-tabs--horizontal.mg-tabs--sticky') === root
+      )
+        revealStickyFocus(event.target);
+    });
+    cleanups.push(() => clearTimeout(keyboardFocusTimer));
+  }
   let activeTab;
   let lastInteracted;
   // The hash when the set was suspended, and, after a resume that deferred
@@ -809,7 +874,10 @@ function initContainer(container, activateDeepLinkOnLoad, options = {}) {
       });
       reveal(tab, animate);
     }
-    if (focus) tab.focus({ preventScroll: true });
+    if (focus) {
+      tab.focus({ preventScroll: true });
+      if (!stacked) revealStickyFocus(tab);
+    }
   };
 
   tabs.forEach((tab, i) => {

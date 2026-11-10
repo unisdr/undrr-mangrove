@@ -90,10 +90,15 @@ publish their own measured height for this composition.
 The rail sits below Mangrove’s sticky navigation layer. `tabs.js` reuses its
 existing resize/font refresh to measure rail height for anchor and focus
 clearance; it restores the internal measurement when destroyed. Existing page
-scroll padding also applies, so clearance may be larger than the docking offset. No additional
-scroll listener, duplicate controls or page-scroll behaviour is added. Keyboard
-selection, RTL scrolling and existing focus treatments stay shared with ordinary
-tabs. Switching to stacked disclosures removes the sticky treatment automatically.
+scroll padding also applies, so clearance may be larger than the docking offset.
+No scroll listener or duplicate controls are added. When user selection shrinks a
+panel enough to hide its focused sticky trigger, the runtime brings the rail
+back into view. Tab navigation within the set also recovers focus targets
+obscured by the rail, including native disclosures and editable content. Valid
+scroll positions, initialization and consumer `focus({ preventScroll: true })`
+remain unchanged. Keyboard selection, RTL scrolling and existing focus treatments
+stay shared with ordinary tabs. Switching to stacked disclosures removes the
+sticky treatment automatically.
 
 Keep the rail and panels within the same `.mg-tabs` root, which confines the
 sticky rail. Ancestor `overflow: auto`, `scroll` or `hidden` can change the sticky
@@ -102,7 +107,8 @@ Without JavaScript, canonical markup retains all panel content and uses a
 fallback clearance; initialize the module for measured geometry and accessible
 tab selection. Test deep links, focusable content, zoom, and switching from long
 to short panels while scrolled. A deliberate return to the panel’s start is a
-consumer decision: selecting a tab does not scroll the page vertically.
+consumer decision: the runtime only recovers obscured user focus, without
+resetting a valid reading position.
 
 [Open the sticky controls example](?path=/story/components-tabs--sticky-within-section)
 in its dedicated Storybook canvas. It uses the component variant with the real
@@ -628,7 +634,7 @@ The published bundle retains its browser DOM requirement at import time.
 
 ## Changelog
 
-- **2.13**, 2026-11-10 ([web-backlog#3161](https://gitlab.com/undrr/web-backlog/-/issues/3161)): Adds opt-in sticky horizontal controls for React and plain HTML, configurable docking offset and opaque surface, measured focus clearance and section confinement. Stacked layouts and short viewports retain normal flow.
+- **2.13**, 2026-11-10 ([web-backlog#3161](https://gitlab.com/undrr/web-backlog/-/issues/3161)): Adds opt-in sticky horizontal controls for React and plain HTML, configurable docking offset and opaque surface, measured focus clearance (including native disclosures and editable content) and section confinement. Stacked layouts and short viewports retain normal flow.
 
 - **2.12**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance.
 

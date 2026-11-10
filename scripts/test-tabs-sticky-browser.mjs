@@ -110,6 +110,64 @@ try {
         clear.target >= clear.rail - 1,
         `${theme}: obscured focus target`
       );
+      // Browser focus scrolls only when needed. An intrinsic focus target can
+      // already be below the page nav but still be obscured by the sticky rail.
+      // Do not give these targets ids/tabindex or call scrollIntoView: either
+      // would conceal a missing focus-selector case.
+      for (const kind of ['summary', 'contenteditable']) {
+        await page
+          .locator(`${rootSelector} [role=tabpanel]:not([hidden])`)
+          .evaluate((panel, kind) => {
+            const wrapper = document.createElement('div');
+            wrapper.style.cssText =
+              'margin-block-start:600px;margin-block-end:600px';
+            let target;
+            if (kind === 'summary') {
+              const details = document.createElement('details');
+              target = document.createElement('summary');
+              details.append(target);
+              wrapper.append(details);
+            } else {
+              target = document.createElement('div');
+              target.contentEditable = 'true';
+              wrapper.append(target);
+            }
+            target.dataset.stickyFocusTarget = kind;
+            target.textContent = 'Intrinsic focus target';
+            const after = document.createElement('button');
+            after.textContent = 'Following control';
+            after.style.marginBlockStart = '600px';
+            wrapper.append(after);
+            panel.append(wrapper);
+            after.focus({ preventScroll: true });
+            const rail = panel
+              .closest('.mg-tabs')
+              .querySelector('.mg-tabs__rail');
+            const hiddenTop = rail.getBoundingClientRect().top + 8;
+            window.scrollTo({
+              top: target.getBoundingClientRect().top + scrollY - hiddenTop,
+              behavior: 'instant',
+            });
+          }, kind);
+        await page.keyboard.press('Shift+Tab');
+        const focus = await page.evaluate(kind => {
+          const target = document.querySelector(
+            `[data-sticky-focus-target="${kind}"]`
+          );
+          return {
+            active: document.activeElement === target,
+            top: target.getBoundingClientRect().top,
+            railBottom: document
+              .querySelector('.mg-tabs__rail')
+              .getBoundingClientRect().bottom,
+          };
+        }, kind);
+        assert.equal(focus.active, true, `${theme}: ${kind} receives focus`);
+        assert.ok(
+          focus.top >= focus.railBottom - 1,
+          `${theme}: obscured native ${kind} focus target`
+        );
+      }
       await page.locator('#sticky-example-after').evaluate(after => {
         window.scrollTo({
           top: after.getBoundingClientRect().top + scrollY + 150,
@@ -134,6 +192,74 @@ try {
   const page = await browser.newPage({
     viewport: { width: 1280, height: 900 },
   });
+  // Selecting a short panel can move its focused sticky trigger above the
+  // viewport or underneath the site header. Recover that control only when
+  // needed; selecting a visible long panel must preserve the scroll position.
+  for (const [depth, keyboard] of [
+    [90, false],
+    [600, true],
+  ]) {
+    await open(page);
+    await page.locator(rootSelector).evaluate((root, depth) => {
+      const panels = root.querySelectorAll('[role=tabpanel]');
+      panels[0].innerHTML = '<p>Long panel.</p>'.repeat(60);
+      panels[1].innerHTML = '<p>Short panel.</p>';
+      root.querySelector('[role=tab]').click();
+      window.scrollTo({
+        top: root.getBoundingClientRect().top + scrollY + depth,
+        behavior: 'instant',
+      });
+    }, depth);
+    const tabs = page.locator(`${rootSelector} [role=tab]`);
+    const stable = await page.evaluate(() => scrollY);
+    await tabs.first().click();
+    assert.equal(await page.evaluate(() => scrollY), stable);
+    if (keyboard) await page.keyboard.press('ArrowRight');
+    else await tabs.nth(1).click();
+    const selected = await tabs.nth(1).evaluate(tab => ({
+      focused: tab === document.activeElement,
+      top: tab.getBoundingClientRect().top,
+      bottom: tab.getBoundingClientRect().bottom,
+      navBottom: document.querySelector('nav').getBoundingClientRect().bottom,
+      dock: parseFloat(getComputedStyle(tab.closest('.mg-tabs__rail')).top),
+    }));
+    assert.equal(selected.focused, true);
+    assert.ok(selected.top >= Math.max(selected.navBottom, selected.dock) - 1);
+    assert.ok(selected.bottom <= 900);
+  }
+
+  // The same recovery must scroll the component's actual scroll container,
+  // without jumping an already valid outer document position.
+  await open(page);
+  await page.locator(rootSelector).evaluate(root => {
+    const host = root.parentElement;
+    host.style.cssText = 'height:500px;overflow-y:auto';
+    root.style.setProperty('--mg-tab-sticky-offset', '0px');
+    const panels = root.querySelectorAll('[role=tabpanel]');
+    panels[0].innerHTML = '<p>Long panel.</p>'.repeat(60);
+    panels[1].innerHTML = '<p>Short panel.</p>';
+    const tail = document.createElement('div');
+    tail.style.height = '1000px';
+    host.append(tail);
+    root.querySelector('[role=tab]').click();
+    window.scrollTo({
+      top: host.getBoundingClientRect().top + scrollY - 150,
+      behavior: 'instant',
+    });
+    host.scrollTop = 600;
+  });
+  const outerScroll = await page.evaluate(() => scrollY);
+  await page.locator(`${rootSelector} [role=tab]`).nth(1).click();
+  const innerRecovery = await page.locator(rootSelector).evaluate(root => ({
+    scroll: root.parentElement.scrollTop,
+    top: document.activeElement.getBoundingClientRect().top,
+    hostTop: root.parentElement.getBoundingClientRect().top,
+    outer: scrollY,
+  }));
+  assert.ok(innerRecovery.scroll < 600);
+  assert.ok(innerRecovery.top >= innerRecovery.hostTop - 1);
+  assert.equal(innerRecovery.outer, outerScroll);
+
   await open(page);
   await page.locator(rootSelector).evaluate(root => {
     root.style.setProperty('--mg-tab-sticky-offset', '112px');
@@ -221,7 +347,7 @@ try {
   assert.equal(await page.locator('.mg-tabs__section:visible').count(), 2);
   await page.close();
   console.log(
-    'Sticky Tab gate passed: five themes, LTR/RTL, desktop/mobile, focus/anchors, section release, offset/surface overrides, short viewport, responsive stacking, opt-out and CMS lifecycle.'
+    'Sticky Tab gate passed: five themes, LTR/RTL, desktop/mobile, native keyboard focus/anchors, long-to-short recovery, nested scroll container, section release, offset/surface overrides, short viewport, responsive stacking, opt-out and CMS lifecycle.'
   );
 } finally {
   clearTimeout(deadline);

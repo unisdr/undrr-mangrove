@@ -452,7 +452,7 @@
     > .mg-tabs__panels
       > .mg-tabs-content
       > .mg-tabs__section
-      :where([id], a, button, input, select, textarea, [tabindex]) {
+      :where([id], a, button, input, select, textarea, [tabindex], :focus) {
       // prettier-ignore
       scroll-margin-block-start: calc(var(--mg-tab-sticky-offset, 0px) + var(--mg-tab-sticky-rail-size) + var(--mg-spacing-75));
     }

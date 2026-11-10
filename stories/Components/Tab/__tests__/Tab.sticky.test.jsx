@@ -113,6 +113,54 @@ describe('sticky Tab variant', () => {
     expect(await axe(result.container)).toHaveNoViolations();
   });
 
+  it('recovers user selection hidden by the docking offset, but preserves visible selection', () => {
+    const result = render(<Tab tabdata={data} sticky />);
+    const root = result.container.querySelector('.mg-tabs');
+    const rail = root.querySelector('.mg-tabs__rail');
+    rail.style.cssText = 'position:sticky;top:65px';
+    rail.scrollIntoView = jest.fn();
+    const tabs = within(root).getAllByRole('tab');
+    let top = 80;
+    tabs[1].getBoundingClientRect = () => ({ top, bottom: top + 40 });
+    fireEvent.click(tabs[1]);
+    expect(rail.scrollIntoView).not.toHaveBeenCalled();
+    top = 10; // Still in the viewport, but hidden by the configured header.
+    fireEvent.click(tabs[1]);
+    expect(rail.scrollIntoView).toHaveBeenCalledWith({
+      block: 'nearest',
+      inline: 'nearest',
+      behavior: 'instant',
+    });
+  });
+
+  it('recovers native Tab focus without overriding programmatic preventScroll or leaking listeners', () => {
+    jest.useFakeTimers();
+    const result = render(<Tab tabdata={data} sticky />);
+    const root = result.container.querySelector('.mg-tabs');
+    const rail = root.querySelector('.mg-tabs__rail');
+    rail.style.position = 'sticky';
+    rail.getBoundingClientRect = () => ({ top: 65, bottom: 125 });
+    const target = document.createElement('div');
+    target.contentEditable = 'true';
+    target.tabIndex = 0;
+    target.getBoundingClientRect = () => ({ top: 80, bottom: 100 });
+    target.scrollIntoView = jest.fn();
+    within(root).getByRole('tabpanel').append(target);
+    target.focus({ preventScroll: true });
+    expect(target.scrollIntoView).not.toHaveBeenCalled();
+    target.blur();
+    fireEvent.keyDown(root, { key: 'Tab' });
+    target.focus();
+    expect(target.scrollIntoView).toHaveBeenCalledTimes(1);
+    mgTabsDestroy(root);
+    expect(jest.getTimerCount()).toBe(0);
+    target.blur();
+    fireEvent.keyDown(root, { key: 'Tab' });
+    target.focus();
+    expect(target.scrollIntoView).toHaveBeenCalledTimes(1);
+    jest.useRealTimers();
+  });
+
   it('cleans up the measurement when the vanilla lifetime is aborted', () => {
     document.body.innerHTML = markup;
     const root = document.querySelector('.mg-tabs');
