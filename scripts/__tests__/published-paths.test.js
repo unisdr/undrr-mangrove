@@ -46,6 +46,7 @@ describe('the published-path model', () => {
       'error-pages',
       'fonts',
       'docs',
+      'schemas',
     ]) {
       expect([...paths].some(entry => entry.startsWith(`${dir}/`))).toBe(true);
     }
@@ -64,6 +65,7 @@ describe('the published-path model', () => {
       expect(assembleSource).toContain(line);
     }
     expect(assembleSource).toContain("'docs/**/*'");
+    expect(assembleSource).toContain("'schemas/*.schema.json'");
     // The scss copy is flattened from stories/, which is why the published
     // entry point is scss/assets/scss/style.scss.
     expect(assembleSource).toContain(
@@ -144,6 +146,18 @@ describe('the published-path model', () => {
     // scss/ is copied straight from the sources, not from dist/.
     for (const entry of publishedPaths()) {
       if (entry.startsWith('scss/')) inDist.add(entry);
+    }
+    // The assembler separately copies compiled schema JSON, not the schema
+    // sources and not dist/. Read the real build output so absent/extra JSON
+    // still fails the inventory comparison in either direction.
+    const schemaRoot = path.join(ROOT, 'schemas');
+    if (fs.existsSync(schemaRoot)) {
+      const schemaDist = path.join(schemaRoot, 'dist');
+      for (const file of fs.readdirSync(schemaDist, { withFileTypes: true })) {
+        if (file.isFile() && file.name.endsWith('.schema.json')) {
+          inDist.add(`schemas/${file.name}`);
+        }
+      }
     }
     inDist.add('README.md');
     inDist.add('LICENSE');

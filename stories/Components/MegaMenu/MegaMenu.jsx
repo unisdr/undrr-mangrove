@@ -34,6 +34,8 @@ import { getMegaMenuLabels } from './_labels';
  * @param {boolean} [enableSiteSearch=true] - Whether to offer full-site search option when filtering
  * @param {string} [searchUrl='/search'] - Base URL for full-site search (defaults to syndicated search page /search)
  * @returns {JSX.Element} Rendered MegaMenu component
+ *
+ * @see schemas/navigation.schema.js — canonical field names and documented deviations.
  */
 import React, { useState, useEffect, useRef, useId } from 'react';
 import PropTypes from 'prop-types';

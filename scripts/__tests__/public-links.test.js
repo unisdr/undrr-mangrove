@@ -125,12 +125,44 @@ describe('githubHeadingAnchor', () => {
 });
 
 describe('findPrivateLinks', () => {
-  it('allows only the canonical repository identity field', () => {
+  it('allows the canonical repository identity field', () => {
     const json = JSON.stringify({
       repository: 'https://github.com/unisdr/undrr-mangrove',
       publicRepository: 'https://github.com/PreventionWeb/undrr-mangrove',
     });
     expect(findPrivateLinks(json)).toEqual([]);
+  });
+
+  it('keeps canonical schema identities while readers fetch a public source', () => {
+    expect(
+      findPrivateLinks(
+        JSON.stringify({
+          contentSchema: {
+            $id: 'https://github.com/unisdr/undrr-mangrove/schemas/card',
+            sourceUrl:
+              'https://github.com/PreventionWeb/undrr-mangrove/blob/main/schemas/dist/card.schema.json',
+          },
+        })
+      )
+    ).toEqual([]);
+  });
+
+  it('does not exempt schema navigation links or unrelated $id values', () => {
+    expect(
+      findPrivateLinks(
+        JSON.stringify({
+          schemaUrl: 'https://github.com/unisdr/undrr-mangrove/schemas/card',
+          $id: 'https://github.com/unisdr/undrr-mangrove/issues/881',
+        })
+      )
+    ).toHaveLength(2);
+    expect(
+      findPrivateLinks(
+        JSON.stringify({
+          $id: 'https://github.com/unisdr/undrr-mangrove/schemas/card/nested',
+        })
+      )
+    ).toHaveLength(1);
   });
 
   it('reports any other unisdr URL', () => {

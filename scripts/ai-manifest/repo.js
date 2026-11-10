@@ -142,7 +142,8 @@ export function githubHeadingAnchor(heading) {
 /**
  * Every URL into the unisdr organization in a generated manifest, other than
  * the `"repository"` identity field (the canonical repository, as package.json
- * and npm provenance name it, not a link a reader is expected to open).
+ * and npm provenance name it, not a link a reader is expected to open), or
+ * a canonical component-schema `$id` (also an identity, not its source URL).
  *
  * Deliberately broader than the links toPublicMarkdown() rewrites: any scheme
  * or none, `www.`, any letter case (GitHub organization names are not case
@@ -156,7 +157,18 @@ export function findPrivateLinks(content) {
     `"repository":\\s*"${escapedRepo}(?:\\.git)?"`,
     'g'
   );
+  // The proposed schemas retain their canonical URI identities. Their public
+  // catalogue entries separately publish sourceUrl for readers to fetch.
+  const schemaIdentity = new RegExp(
+    `"\\$id":\\s*"${escapedRepo}/schemas/[a-z][a-z0-9-]*"`,
+    'g'
+  );
   const anyPrivateUrl =
     /(?:[a-z][\w+.-]*:(?:\/\/|%2F%2F))?(?:[\w-]+\.)*(?:github\.com|githubusercontent\.com)(?:\/|%2F)(?:repos(?:\/|%2F))?unisdr(?![\w.-])[^\s)>\]"'\\]*/gi;
-  return String(content).replace(identity, '').match(anyPrivateUrl) || [];
+  return (
+    String(content)
+      .replace(identity, '')
+      .replace(schemaIdentity, '')
+      .match(anyPrivateUrl) || []
+  );
 }

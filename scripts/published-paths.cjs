@@ -153,6 +153,16 @@ function publishedPaths() {
   // docs/ — the editorial manual and the llms-*.txt sub-manifests.
   for (const name of docsFileNames()) paths.add(`docs/${name}`);
 
+  // schemas/ — the schema build compiles each source to a JSON proposal.
+  const schemaRoot = path.join(ROOT, 'schemas');
+  if (fs.existsSync(schemaRoot)) {
+    for (const name of fs.readdirSync(schemaRoot)) {
+      if (name.endsWith('.schema.js')) {
+        paths.add(`schemas/${name.replace(/\.js$/, '.json')}`);
+      }
+    }
+  }
+
   return paths;
 }
 

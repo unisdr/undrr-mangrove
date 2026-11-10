@@ -5,6 +5,7 @@ import { CardTitle, resolveCardLink } from './cardParts';
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
+// Content contract: see schemas/card.schema.js for canonical field names and documented deviations.
 export function BookCard({ data, variant = 'primary', className }) {
   const variantClass =
     variant && variant !== 'primary' ? `mg-card--${variant}` : null;
