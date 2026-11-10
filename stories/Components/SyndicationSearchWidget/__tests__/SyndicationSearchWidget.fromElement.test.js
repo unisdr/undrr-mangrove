@@ -31,6 +31,7 @@ describe('syndicationSearchWidgetFromElement', () => {
         'min-search-length': '2',
         'default-query': 'climate',
         'default-sort': 'newest',
+        'year-field': 'display_date',
         'display-mode': 'card',
         'grid-columns': '3',
         'query-append': 'AND type:news',
@@ -43,6 +44,7 @@ describe('syndicationSearchWidgetFromElement', () => {
     expect(config.minSearchLength).toBe(2);
     expect(config.defaultQuery).toBe('climate');
     expect(config.defaultSort).toBe('newest');
+    expect(config.yearField).toBe('display_date');
     expect(config.displayMode).toBe('card');
     expect(config.gridColumns).toBe(3);
     expect(config.queryAppend).toBe('AND type:news');
@@ -51,6 +53,7 @@ describe('syndicationSearchWidgetFromElement', () => {
   it('extracts boolean props', () => {
     const { config } = syndicationSearchWidgetFromElement(
       makeContainer({
+        'show-sort': 'false',
         'show-search-box': 'false',
         'show-facets': 'true',
         'show-active-filters': 'false',
@@ -60,6 +63,7 @@ describe('syndicationSearchWidgetFromElement', () => {
         'enable-hash-sync': 'false',
       })
     );
+    expect(config.showSort).toBe(false);
     expect(config.showSearchBox).toBe(false);
     expect(config.showFacets).toBe(true);
     expect(config.showActiveFilters).toBe(false);
@@ -73,6 +77,7 @@ describe('syndicationSearchWidgetFromElement', () => {
     const { config } = syndicationSearchWidgetFromElement(makeContainer());
     expect(config).not.toHaveProperty('showSearchBox');
     expect(config).not.toHaveProperty('showFacets');
+    expect(config).not.toHaveProperty('showSort');
     expect(config).not.toHaveProperty('enableHashSync');
     expect(config).not.toHaveProperty('facets');
   });
@@ -281,4 +286,23 @@ describe('syndicationSearchWidgetFromElement', () => {
       expect(result).not.toHaveProperty('labels');
     });
   });
+});
+
+test('reads only an explicit valid shared-controls group from JSON', () => {
+  const element = document.createElement('div');
+  element.dataset.sharedControls = JSON.stringify({
+    id: '#shared-filters',
+    visibleFilters: { year: true },
+  });
+  expect(
+    syndicationSearchWidgetFromElement(element).config.sharedControls
+  ).toEqual({ id: '#shared-filters', visibleFilters: { year: true } });
+  element.dataset.sharedControls = '{invalid';
+  expect(syndicationSearchWidgetFromElement(element).config).not.toHaveProperty(
+    'sharedControls'
+  );
+  element.dataset.sharedControls = JSON.stringify({ id: 42 });
+  expect(syndicationSearchWidgetFromElement(element).config).not.toHaveProperty(
+    'sharedControls'
+  );
 });

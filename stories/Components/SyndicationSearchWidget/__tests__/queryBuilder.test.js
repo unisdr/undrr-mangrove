@@ -64,7 +64,14 @@ describe('queryBuilder', () => {
       expect(SOURCE_FIELDS).not.toContain('body');
       expect(SOURCE_FIELDS).not.toContain('aggregated_field');
       expect(SOURCE_FIELDS).toEqual(
-        expect.arrayContaining(['teaser', 'title', 'event_start', 'event_end'])
+        expect.arrayContaining([
+          'teaser',
+          'title',
+          'event_start',
+          'event_end',
+          'display_date',
+          'display_date_precision',
+        ])
       );
     });
 
@@ -363,6 +370,88 @@ describe('queryBuilder', () => {
       expect(result.post_filter).toEqual(yearRange(2024));
       expect(JSON.stringify(result.post_filter)).not.toContain('script');
     });
+
+    it('uses event start dates for both selected years and available year counts', () => {
+      const result = buildQuery(
+        { ...defaultState, facets: { year: ['2026'] } },
+        { ...DEFAULT_CONFIG, yearField: 'event_start' }
+      );
+
+      expect(result.post_filter).toEqual({
+        range: {
+          event_start: {
+            gte: '2026-01-01T00:00:00Z',
+            lt: '2027-01-01T00:00:00Z',
+          },
+        },
+      });
+      expect(result.aggs.year.date_histogram.field).toBe('event_start');
+      expect(JSON.stringify(result.post_filter)).not.toContain('published_at');
+    });
+
+    it("uses each result's reader-facing date for mixed-content year filtering and counts", () => {
+      const result = buildQuery(
+        { ...defaultState, facets: { year: ['1960', '2026'] } },
+        { ...DEFAULT_CONFIG, yearField: 'display_date' }
+      );
+      expect(result.aggs.year.date_histogram.field).toBe('display_date');
+      expect(result.post_filter.bool.should).toEqual([
+        {
+          range: {
+            display_date: {
+              gte: '1960-01-01T00:00:00Z',
+              lt: '1961-01-01T00:00:00Z',
+            },
+          },
+        },
+        {
+          range: {
+            display_date: {
+              gte: '2026-01-01T00:00:00Z',
+              lt: '2027-01-01T00:00:00Z',
+            },
+          },
+        },
+      ]);
+      expect(JSON.stringify(result.post_filter)).not.toContain('published_at');
+    });
+
+    it('keeps newest ordering on the CMS publication timestamp when filtering by public dates', () => {
+      const result = buildQuery(
+        { ...defaultState, sortBy: 'newest', facets: { year: ['2020'] } },
+        { ...DEFAULT_CONFIG, yearField: 'display_date' }
+      );
+      expect(result.sort).toEqual([{ published_at: { order: 'desc' } }]);
+      expect(result.post_filter.range).toHaveProperty('display_date');
+    });
+
+    it('combines several event start years without using publication dates', () => {
+      const result = buildQuery(
+        { ...defaultState, facets: { year: ['2025', '2026'] } },
+        { ...DEFAULT_CONFIG, yearField: 'event_start' }
+      );
+
+      expect(result.post_filter.bool.minimum_should_match).toBe(1);
+      expect(
+        result.post_filter.bool.should.map(clause => clause.range.event_start)
+      ).toEqual([
+        { gte: '2025-01-01T00:00:00Z', lt: '2026-01-01T00:00:00Z' },
+        { gte: '2026-01-01T00:00:00Z', lt: '2027-01-01T00:00:00Z' },
+      ]);
+    });
+
+    it.each([undefined, 'unrecognized_field'])(
+      'keeps publication years for an unset or unsupported date field (%s)',
+      yearField => {
+        const result = buildQuery(
+          { ...defaultState, facets: { year: ['2024'] } },
+          { ...DEFAULT_CONFIG, yearField }
+        );
+
+        expect(result.post_filter).toEqual(yearRange(2024));
+        expect(result.aggs.year.date_histogram.field).toBe('published_at');
+      }
+    );
 
     it('matches any of several years with OR', () => {
       const result = buildQuery(

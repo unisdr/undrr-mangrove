@@ -120,7 +120,7 @@ export const MIN_PROPERTIES = {
   'components-images-author-image': 3,
   'components-loader': 1,
   'components-navigation-drawer': 2,
-  'components-navigation-megamenu': 2,
+  'components-navigation-megamenu': 4,
   'components-navigation-on-this-page-nav': 1,
   'components-navigation-tree': 5,
   'components-notice-notice': 4,
@@ -291,6 +291,10 @@ export const PROPERTY_DOCS = {
     'Horizontal offset of the mobile filter drawer shadow. Flipped per text direction alongside the drawer itself, so the shadow always falls towards the page content.',
 
   // MegaMenu
+  '--mg-mega-filter-font-size':
+    'Input and destination title size in the section finder and mobile navigation finder. Defaults to font-size-300 (16px). Override on .mg-mega-wrapper.',
+  '--mg-mega-filter-meta-font-size':
+    'Breadcrumb, status and secondary control size in navigation finders. Defaults to font-size-250 (14px). Override on .mg-mega-wrapper.',
   '--mg-mega-enter-offset':
     'Inline distance the mobile sidebar slides in from. The component flips its sign in RTL.',
   '--mg-mega-mobile-viewport':

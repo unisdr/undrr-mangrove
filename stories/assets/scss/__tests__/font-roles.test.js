@@ -730,6 +730,8 @@ describe('every component names the role it is meant to', () => {
     ['.mg-content-teaser .mg-content-meta__before-title', 'ui'],
     ['.mg-content-teaser .mg-content-meta__metadata', 'ui'],
     ['.mg-copy-button__feedback', 'ui'],
+    ['.mg-dialog', 'text'],
+    ['.mg-dialog__title', 'ui'],
     ['.mg-drawer', 'text'],
     ['.mg-drawer__title', 'ui'],
     ['.mg-floating-panel', 'text'],
@@ -747,6 +749,11 @@ describe('every component names the role it is meant to', () => {
     ['.mg-hero__label', 'ui'],
     ['.mg-hero__title', 'display'],
     ['.mg-mega-content__banner header', 'ui'],
+    ['.mg-mega-filter__clear', 'text'],
+    ['.mg-mega-filter__input', 'text'],
+    ['.mg-mega-filter__mobile-link', 'ui'],
+    ['.mg-mega-menu-finder__label', 'ui'],
+    ['.mg-mega-menu-finder__action', 'text'],
     [
       '.mg-mega-mobile-sidebar--progressive .mg-mega-mobile-sidebar__back',
       'text',
@@ -788,6 +795,7 @@ describe('every component names the role it is meant to', () => {
     ['.mg-progress-bar__label', 'ui'],
     ['.mg-progress-bar__value', 'ui'],
     ['.mg-search__input', 'text'],
+    ['.mg-search__scope-option span', 'ui'],
     // A segment is a button wearing a label's class name: it takes the button
     // tokens, so it takes the button's role too, as every other button does.
     ['.mg-segmented-control__label', 'text'],

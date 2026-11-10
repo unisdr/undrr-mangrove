@@ -1,3 +1,4 @@
+import { isTabFacet } from '../utils/customFacetTabs';
 /**
  * @file ActiveFilters.jsx
  * @description Active filter chips component with removal functionality.
@@ -113,7 +114,7 @@ export function ActiveFilters() {
         if (!selectedIndices || selectedIndices.length === 0) continue;
 
         const customFacet = customFacetConfigs.find(f => f.id === facetId);
-        if (!customFacet) continue;
+        if (!customFacet || isTabFacet(customFacet)) continue;
 
         for (const indexStr of selectedIndices) {
           const index = parseInt(indexStr, 10);

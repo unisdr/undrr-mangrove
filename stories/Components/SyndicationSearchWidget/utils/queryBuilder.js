@@ -1,3 +1,4 @@
+import { isTabFacet, tabSelections } from './customFacetTabs';
 /**
  * @file queryBuilder.js
  * @description Elasticsearch query builder for the UNDRR Search Widget.
@@ -65,6 +66,13 @@ export function buildQuery(
 
   // Build the main query (excludes facet filters for disjunctive faceting)
   const mainQuery = buildMainQuery(query, scoring, config);
+  // Result tabs scope both hits and facet counts; dropdowns remain disjunctive.
+  mainQuery.function_score.query.bool.filter.push(
+    ...buildCustomFacetFilters(
+      tabSelections(config.customFacets, customFacets),
+      { customFacets: (config.customFacets || []).filter(isTabFacet) }
+    )
+  );
 
   // Build post_filter with all facet filters (applied after aggregations).
   // The facet UI being hidden only means no *user-driven* selections will
@@ -105,8 +113,8 @@ export function buildQuery(
 
   // Skip aggregations when facets are hidden: avoids unnecessary server work
   // and response payload for syndication embeds that only show result cards.
-  if (facetsActive) {
-    result.aggs = buildAggregations(facetFields, facetCountToShow);
+  if (facetsActive || config.sharedControls?.id) {
+    result.aggs = buildAggregations(facetFields, facetCountToShow, config);
   }
 
   // Only add post_filter if there are active facet filters
@@ -254,15 +262,28 @@ function buildBaseFilters(config) {
 }
 
 /**
- * Range clause matching one calendar year (UTC) of published_at.
+ * Accept only supported indexed date fields, keeping query and counts aligned.
+ * @param {Object} config
+ * @returns {string}
+ * @private
+ */
+function resolveYearField(config) {
+  return ['event_start', 'display_date'].includes(config.yearField)
+    ? config.yearField
+    : 'published_at';
+}
+
+/**
+ * Range clause matching one calendar year (UTC) of the configured date field.
  * @param {number} year
+ * @param {string} yearField
  * @returns {Object}
  * @private
  */
-function buildYearRange(year) {
+function buildYearRange(year, yearField) {
   return {
     range: {
-      published_at: {
+      [yearField]: {
         gte: `${String(year).padStart(4, '0')}-01-01T00:00:00Z`,
         lt: `${String(year + 1).padStart(4, '0')}-01-01T00:00:00Z`,
       },
@@ -279,7 +300,12 @@ function buildPostFilter(facets, facetOperators, customFacets, config) {
   const filters = [];
 
   // Add custom facet filters (editor-defined dropdowns)
-  const customFacetFilters = buildCustomFacetFilters(customFacets, config);
+  const customFacetFilters = buildCustomFacetFilters(customFacets, {
+    ...config,
+    customFacets: (config.customFacets || []).filter(
+      facet => !isTabFacet(facet)
+    ),
+  });
   filters.push(...customFacetFilters);
 
   // Get custom facet IDs to skip them in regular facet processing
@@ -293,19 +319,19 @@ function buildPostFilter(facets, facetOperators, customFacets, config) {
 
     const operator = facetOperators[key] || 'OR';
 
-    // Year: a calendar-year range on published_at per selected year (UTC,
+    // Year: a calendar-year range on the configured date field (UTC,
     // as the index stores it). Plain ranges, so server rendering accepts
     // them, and much cheaper than the painless script they replace.
     if (key === 'year') {
       const ranges = values
         .map(y => parseInt(y, 10))
         .filter(Number.isFinite)
-        .map(buildYearRange);
+        .map(year => buildYearRange(year, resolveYearField(config)));
       if (ranges.length === 0) continue;
       if (ranges.length === 1) {
         filters.push(ranges[0]);
       } else if (operator === 'AND') {
-        // AND across years can't match (a document has one publication
+        // AND across years can't match (a document has one date
         // year); kept for completeness, it returns no results.
         filters.push({ bool: { must: ranges } });
       } else {
@@ -899,7 +925,7 @@ function buildHighlight(highlight) {
  * Selected values are preserved in dropdowns via the UI component.
  * @private
  */
-function buildAggregations(facetFields, facetCount) {
+function buildAggregations(facetFields, facetCount, config) {
   const aggs = {};
 
   // Standard field aggregations
@@ -926,12 +952,12 @@ function buildAggregations(facetFields, facetCount) {
     };
   }
 
-  // Year aggregation: one bucket per calendar year (UTC) of published_at.
+  // Year aggregation: one bucket per calendar year (UTC) of the configured date field.
   // `yyyy` puts the year in key_as_string; normaliseAggregations in
   // SearchContext makes it the bucket key.
   aggs.year = {
     date_histogram: {
-      field: 'published_at',
+      field: resolveYearField(config),
       calendar_interval: 'year',
       format: 'yyyy',
       min_doc_count: 1,

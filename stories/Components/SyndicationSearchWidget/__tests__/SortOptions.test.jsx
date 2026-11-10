@@ -44,6 +44,12 @@ const offered = () =>
   );
 
 describe('SortOptions', () => {
+  it('hides the selector when visitor sorting is disabled', () => {
+    renderSort({ defaultSort: 'eventDateAsc', showSort: false });
+    expect(offered()).toEqual([]);
+    expect(document.querySelector('.mg-search__sort')).toBeNull();
+  });
+
   it('offers relevance, newest and oldest by default', () => {
     renderSort({ defaultSort: 'relevance' });
     expect(offered()).toEqual(['relevance', 'newest', 'oldest']);

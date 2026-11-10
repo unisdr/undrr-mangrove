@@ -29,7 +29,7 @@ import { SelectDropdown } from './SelectDropdown';
  */
 export function SortOptions({ widgetId = 'search' }) {
   const { sortBy, hasEventSorts } = useSearchState();
-  const { defaultSort } = useSearchConfig();
+  const { defaultSort, showSort } = useSearchConfig();
   const dispatch = useSearchDispatch();
   const labels = useSearchLabels();
 
@@ -73,6 +73,8 @@ export function SortOptions({ widgetId = 'search' }) {
     },
     [dispatch]
   );
+
+  if (showSort === false) return null;
 
   return (
     <SortSelect
