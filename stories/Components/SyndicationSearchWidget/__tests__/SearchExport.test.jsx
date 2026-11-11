@@ -59,7 +59,7 @@ function setup(
     );
   return { ...rendered, stale: value => rendered.rerender(view(value)) };
 }
-const quantityInput = () => screen.getAllByRole('spinbutton')[1];
+const quantityInput = () => screen.getAllByRole('spinbutton').at(-1);
 let click;
 const originalFetch = global.fetch;
 beforeAll(() => {
@@ -431,7 +431,7 @@ test('field editing is unavailable during a pending download and the snapshot is
       resolve = done;
     })
   );
-  setup();
+  setup(true, {}, response(1000));
   revealFields();
   fireEvent.click(screen.getByRole('checkbox', { name: 'Title' }));
   fireEvent.click(screen.getByRole('button', { name: 'Download JSON' }));
@@ -521,7 +521,7 @@ test.each(['', 'abc', '0', '-1', '1.5', '1001'])(
 );
 
 test.each([
-  [1000, 1002, 1000],
+  [1000, 1000, 1000],
   [10, 2, 2],
   [1, 25, 1],
 ])(
@@ -636,7 +636,8 @@ test.each(['en', 'es', 'fr', 'ja', 'zh', 'ar', 'ru'])(
   }
 );
 
-const startInput = () => screen.getAllByRole('spinbutton')[0];
+const startInput = () =>
+  screen.getByRole('spinbutton', { name: 'Start at result' });
 const offsetResponse = (total, from, count) => ({
   hits: {
     total: { value: total, relation: 'eq' },
@@ -650,14 +651,14 @@ const offsetResponse = (total, from, count) => ({
   },
 });
 test('opening bounds the default; start edits expose the reduced maximum without changing quantity', () => {
-  setup(true, {}, response(25), { exportDefaultCount: 100 });
+  setup(true, {}, response(1000), { exportDefaultCount: 100 });
   const modal = screen.getByRole('dialog');
   expect(startInput()).toHaveValue(1);
-  expect(quantityInput()).toHaveValue(25);
-  expect(quantityInput()).toHaveAttribute('max', '25');
-  fireEvent.change(startInput(), { target: { value: '21' } });
+  expect(quantityInput()).toHaveValue(100);
+  expect(quantityInput()).toHaveAttribute('max', '1000');
+  fireEvent.change(startInput(), { target: { value: '996' } });
   expect(screen.getByRole('dialog')).toBe(modal);
-  expect(quantityInput()).toHaveValue(25);
+  expect(quantityInput()).toHaveValue(100);
   expect(quantityInput()).toHaveAttribute('max', '5');
   expect(quantityInput()).toHaveAttribute('aria-invalid', 'true');
   expect(quantityInput()).toHaveAccessibleDescription(
@@ -670,20 +671,20 @@ test('opening bounds the default; start edits expose the reduced maximum without
   fireEvent.click(screen.getByRole('button', { name: 'Close' }));
   fireEvent.click(screen.getByRole('button', { name: 'Download results' }));
   expect(startInput()).toHaveValue(1);
-  expect(quantityInput()).toHaveValue(25);
+  expect(quantityInput()).toHaveValue(100);
   expect(screen.queryByRole('alert')).not.toBeInTheDocument();
 });
-test.each(['', 'abc', '0', '-1', '1.5', '26', '10001'])(
+test.each(['', 'abc', '0', '-1', '1.5', '1001', '10001'])(
   'invalid start %j focuses its associated error first',
   value => {
-    setup();
+    setup(true, {}, response(1000));
     const input = startInput();
     fireEvent.change(input, { target: { value } });
     fireEvent.click(screen.getByRole('button', { name: 'Download CSV' }));
     expect(input).toHaveFocus();
     expect(input).toHaveAttribute('aria-invalid', 'true');
     expect(input).toHaveAccessibleDescription(
-      expect.stringContaining('Enter a whole number from 1 to 25.')
+      expect.stringContaining('Enter a whole number from 1 to 1,000.')
     );
     expect(fetch).not.toHaveBeenCalled();
     expect(quantityInput()).not.toHaveAttribute('aria-invalid');
@@ -691,7 +692,7 @@ test.each(['', 'abc', '0', '-1', '1.5', '26', '10001'])(
   }
 );
 test('both formats snapshot offset, quantity, fields and search constraints', async () => {
-  setup(true, {}, response(25), {
+  setup(true, {}, response(1000), {
     defaultFilters: [
       { key: '_language', value: 'en' },
       { key: 'field_domain_access', value: 'www_preventionweb_net' },
@@ -699,19 +700,19 @@ test('both formats snapshot offset, quantity, fields and search constraints', as
     customFilters: ['type:publication'],
     defaultSort: 'newest',
   });
-  fireEvent.change(startInput(), { target: { value: '21' } });
+  fireEvent.change(startInput(), { target: { value: '996' } });
   fireEvent.change(quantityInput(), { target: { value: '5' } });
   fireEvent.click(screen.getByRole('checkbox', { name: 'Title' }));
   expect(fetch).not.toHaveBeenCalled();
   fetch.mockResolvedValue({
     ok: true,
-    json: async () => offsetResponse(25, 20, 5),
+    json: async () => offsetResponse(1000, 995, 5),
   });
   fireEvent.click(screen.getByRole('button', { name: 'Download CSV' }));
   await waitFor(() => expect(URL.createObjectURL).toHaveBeenCalledTimes(1));
   const body = JSON.parse(fetch.mock.calls[0][1].body);
   expect(body).toMatchObject({
-    from: 20,
+    from: 995,
     size: 5,
     sort: [{ published_at: { order: 'desc' } }],
   });
@@ -725,22 +726,24 @@ test('both formats snapshot offset, quantity, fields and search constraints', as
   const json = JSON.parse(await blobText(URL.createObjectURL.mock.calls[1][0]));
   expect(csv.split('\r\n')[0]).not.toContain('title');
   expect(json.records.map(record => record.id)).toEqual([
-    '21',
-    '22',
-    '23',
-    '24',
-    '25',
+    '996',
+    '997',
+    '998',
+    '999',
+    '1000',
   ]);
   expect(json.records[0]).not.toHaveProperty('title');
   expect(json.scope).toMatchObject({
-    from: 20,
-    start: 21,
-    end: 25,
+    from: 995,
+    start: 996,
+    end: 1000,
     count: 5,
-    total: 25,
+    total: 1000,
     limit: 5,
   });
-  expect(screen.getByRole('status')).toHaveTextContent('results 21–25 of 25');
+  expect(screen.getByRole('status')).toHaveTextContent(
+    'results 996–1,000 of 1,000'
+  );
 });
 test('large sets retain per-download and result-window limits', async () => {
   setup(true, {}, response(80000));
@@ -765,7 +768,7 @@ test('large sets retain per-download and result-window limits', async () => {
   });
 });
 test('fresh shrink within a slice reports the actual shorter range', async () => {
-  setup();
+  setup(true, {}, response(1000));
   fireEvent.change(startInput(), { target: { value: '21' } });
   fireEvent.change(quantityInput(), { target: { value: '5' } });
   fetch.mockResolvedValue({
@@ -786,17 +789,17 @@ test('fresh shrink within a slice reports the actual shorter range', async () =>
   expect(screen.getByRole('status')).toHaveTextContent('results 21–22 of 22');
 });
 test('lower bounds allow a window-bounded start; fresh end-of-set creates no file', async () => {
-  const result = response(25);
+  const result = response(1000);
   result.hits.total.relation = 'gte';
   setup(true, {}, result);
-  fireEvent.change(startInput(), { target: { value: '26' } });
+  fireEvent.change(startInput(), { target: { value: '1001' } });
   expect(quantityInput()).toHaveAttribute('max', '1000');
   expect(quantityInput()).toHaveAccessibleDescription(
-    expect.stringContaining('At least 25 results available')
+    expect.stringContaining('At least 1,000 results available')
   );
   fetch.mockResolvedValue({
     ok: true,
-    json: async () => offsetResponse(25, 25, 1),
+    json: async () => offsetResponse(1000, 1000, 1),
   });
   fireEvent.click(screen.getByRole('button', { name: 'Download CSV' }));
   await waitFor(() =>
@@ -805,4 +808,106 @@ test('lower bounds allow a window-bounded start; fresh end-of-set creates no fil
     )
   );
   expect(URL.createObjectURL).not.toHaveBeenCalled();
+});
+
+test.each([
+  [25, 'eq', false],
+  [999, 'eq', false],
+  [1000, 'eq', true],
+  [1001, 'eq', true],
+  [80000, 'eq', true],
+  [999, 'gte', false],
+  [1000, 'gte', true],
+  [1001, 'gte', true],
+])(
+  'offset follows matched total%s/%s, not quantity',
+  (total, relation, visible) => {
+    const result = response(total);
+    result.hits.total.relation = relation;
+    setup(true, {}, result);
+    expect(
+      !!screen.queryByRole('spinbutton', { name: 'Start at result' })
+    ).toBe(visible);
+    expect(screen.getAllByRole('spinbutton')).toHaveLength(visible ? 2 : 1);
+    fireEvent.change(quantityInput(), { target: { value: '1' } });
+    expect(
+      !!screen.queryByRole('spinbutton', { name: 'Start at result' })
+    ).toBe(visible);
+    if (!visible)
+      expect(
+        quantityInput().closest('.mg-search__export-range')
+      ).not.toHaveClass('mg-search__export-range--paged');
+  }
+);
+test('small matched sets bound the default and always download from result1', async () => {
+  setup(true, {}, response(25), { exportDefaultCount: 100 });
+  expect(
+    screen.queryByRole('spinbutton', { name: 'Start at result' })
+  ).not.toBeInTheDocument();
+  expect(quantityInput()).toHaveValue(25);
+  expect(quantityInput()).toHaveAttribute('max', '25');
+  fireEvent.change(quantityInput(), { target: { value: '1000' } });
+  expect(
+    screen.queryByRole('spinbutton', { name: 'Start at result' })
+  ).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Download JSON' }));
+  expect(fetch).not.toHaveBeenCalled();
+  fireEvent.change(quantityInput(), { target: { value: '25' } });
+  fetch.mockResolvedValue({
+    ok: true,
+    json: async () => offsetResponse(25, 0, 25),
+  });
+  fireEvent.click(screen.getByRole('button', { name: 'Download JSON' }));
+  await waitFor(() => expect(URL.createObjectURL).toHaveBeenCalledTimes(1));
+  expect(JSON.parse(fetch.mock.calls[0][1].body)).toMatchObject({
+    from: 0,
+    size: 25,
+  });
+  const json = JSON.parse(await blobText(URL.createObjectURL.mock.calls[0][0]));
+  expect(json.scope).toMatchObject({ from: 0, start: 1, end: 25 });
+});
+test('a shrinking matched set clears a hidden offset and cancels its pending file', async () => {
+  let resolve;
+  setup(true, {}, response(1000));
+  fireEvent.change(startInput(), { target: { value: '21' } });
+  fetch.mockReturnValueOnce(
+    new Promise(done => {
+      resolve = done;
+    })
+  );
+  fireEvent.click(screen.getByRole('button', { name: 'Download JSON' }));
+  const signal = fetch.mock.calls[0][1].signal;
+  act(() => dispatch(actions.setResults(response(25))));
+  expect(signal.aborted).toBe(true);
+  expect(
+    screen.queryByRole('spinbutton', { name: 'Start at result' })
+  ).not.toBeInTheDocument();
+  await act(async () =>
+    resolve({ ok: true, json: async () => offsetResponse(1000, 20, 1) })
+  );
+  expect(URL.createObjectURL).not.toHaveBeenCalled();
+  fetch.mockResolvedValue({
+    ok: true,
+    json: async () => offsetResponse(25, 0, 1),
+  });
+  fireEvent.click(screen.getByRole('button', { name: 'Download JSON' }));
+  await waitFor(() => expect(URL.createObjectURL).toHaveBeenCalledTimes(1));
+  expect(JSON.parse(fetch.mock.calls[1][1].body)).toMatchObject({
+    from: 0,
+    size: 1,
+  });
+  const json = JSON.parse(await blobText(URL.createObjectURL.mock.calls[0][0]));
+  expect(json.scope).toMatchObject({ from: 0, start: 1, end: 1 });
+  act(() => dispatch(actions.setResults(response(1000))));
+  expect(startInput()).toHaveValue(1);
+});
+
+test('hiding the focused start control moves focus to quantity', () => {
+  setup(true, {}, response(1000));
+  startInput().focus();
+  act(() => dispatch(actions.setResults(response(999))));
+  expect(
+    screen.queryByRole('spinbutton', { name: 'Start at result' })
+  ).not.toBeInTheDocument();
+  expect(quantityInput()).toHaveFocus();
 });

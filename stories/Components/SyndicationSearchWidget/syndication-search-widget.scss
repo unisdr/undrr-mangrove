@@ -1971,7 +1971,7 @@ $search-input-padding-x: mg-rem(44);
 }
 
 @media (width >= 48rem) {
-  .mg-search__export-range {
+  .mg-search__export-range--paged {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 

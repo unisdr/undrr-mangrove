@@ -38,20 +38,23 @@ const records = [
   },
 }));
 
-const previewRecords = Array.from({ length: 25 }, (_, index) =>
-  index < records.length
-    ? records[index]
-    : {
-        _id: `sample:${1003 - index}:en`,
-        _source: {
-          ...records[0]._source,
-          nid: [1003 - index],
-          title: `Sample publication ${index + 1}`,
-          url: `/publication/sample-${index + 1}`,
-          published_at: [1762733803 - index],
-        },
-      }
-);
+const generatedRecords = count =>
+  Array.from({ length: count }, (_, index) =>
+    index < records.length
+      ? records[index]
+      : {
+          _id: `sample:${1003 - index}:en`,
+          _source: {
+            ...records[0]._source,
+            nid: [1003 - index],
+            title: `Sample publication ${index + 1}`,
+            url: `/publication/sample-${index + 1}`,
+            published_at: [1762733803 - index],
+          },
+        }
+  );
+
+const previewRecords = generatedRecords(25);
 
 const requests = [];
 function mockExportSearch({ args }) {
@@ -81,7 +84,9 @@ function mockExportSearch({ args }) {
     if (args.fixtureError && body.track_total_hits) return { ok: false };
     const sourceRecords = args.fixtureTeasers
       ? websiteTeaserSample.hits.hits
-      : previewRecords;
+      : args.fixtureTotal
+        ? generatedRecords(args.fixtureTotal)
+        : previewRecords;
     const flood = JSON.stringify(body.query).toLowerCase().includes('flood');
     let matching = flood
       ? sourceRecords.filter(hit =>
@@ -106,11 +111,7 @@ function mockExportSearch({ args }) {
       body.sort?.[0]?.published_at?.order === 'asc'
         ? [...matching].reverse()
         : matching;
-    const total = args.fixtureEmpty
-      ? 0
-      : args.fixtureTeasers || flood
-        ? matching.length
-        : 25;
+    const total = args.fixtureEmpty ? 0 : matching.length;
     return {
       ok: true,
       json: async () => ({
@@ -238,6 +239,7 @@ export const DownloadModal = {
 export const DownloadRange = {
   ...DownloadResults,
   name: 'Download a result range',
+  args: { ...DownloadResults.args, fixtureTotal: 1000 },
   play: async context => {
     await openExport(context);
     const controls = within(dialog(within(context.canvasElement)));
@@ -247,7 +249,7 @@ export const DownloadRange = {
     await userEvent.type(start, '11');
     await userEvent.clear(count);
     await userEvent.type(count, '10');
-    await expect(count).toHaveAttribute('max', '15');
+    await expect(count).toHaveAttribute('max', '990');
     await expect(requests.length).toBe(before);
     await userEvent.click(controls.getByRole('button', { name: /JSON/ }));
     await waitFor(() =>
@@ -263,7 +265,7 @@ export const DownloadRange = {
     docs: {
       description: {
         story:
-          'Choose results 11–20 from a 25-match sample. Editing start and quantity makes no request; both formats use the same active search and selected fields. Manual chunks are separate searches, not a fixed snapshot.',
+          'Choose results 11–20 from a generated 1,000-match sample. Smaller matched sets show quantity only. Editing start and quantity makes no request; both formats use the same active search and selected fields. Manual chunks are separate searches, not a fixed snapshot.',
       },
     },
   },
@@ -448,7 +450,7 @@ export const ChooseResultCount = {
     const canvas = within(context.canvasElement);
     const modal = dialog(canvas);
     const controls = within(modal);
-    const count = controls.getAllByRole('spinbutton')[1];
+    const count = controls.getAllByRole('spinbutton').at(-1);
     const before = requests.length;
     await expect(count).toHaveValue(3);
     await userEvent.clear(count);

@@ -93,10 +93,11 @@ export default function SearchExport({ isStale = false }) {
     state.totalResults === 0 ||
     isQueryTooShortToSearch(state, config.minSearchLength);
 
+  const offerOffset = state.totalResults >= MAX_EXPORT_LIMIT;
   const range = exportRangeLimits(
     state.totalResults,
     state.totalResultsRelation,
-    startValue
+    offerOffset ? startValue : '1'
   );
   const initialMaximum = exportRangeLimits(
     state.totalResults,
@@ -120,6 +121,21 @@ export default function SearchExport({ isStale = false }) {
         { count: state.totalResults }
       )
     : null;
+
+  useEffect(() => {
+    if (offerOffset) return;
+    if (startValue !== '1') {
+      requestRef.current?.abort();
+      setStartValue('1');
+      setStartError(false);
+      setCountError(false);
+      setStatus(null);
+    }
+    const doc = dialogRef.current?.ownerDocument;
+    if (doc && modalHadFocusRef.current && doc.activeElement === doc.body) {
+      doc.getElementById(countId)?.focus({ preventScroll: true });
+    }
+  }, [offerOffset, startValue, countId]);
 
   const closeModal = useCallback(() => {
     requestRef.current?.abort();
@@ -329,47 +345,51 @@ export default function SearchExport({ isStale = false }) {
             </p>
           </header>
           <div className="mg-dialog__body">
-            <div className="mg-search__export-range">
-              <TextInput
-                className="mg-search__export-start"
-                id={startId}
-                type="number"
-                label={labels.exportStartLabel}
-                min={1}
-                max={range.maxStart}
-                step={1}
-                inputMode="numeric"
-                required
-                value={startValue}
-                disabled={busy}
-                helpText={
-                  !unavailable
-                    ? interpolateLabel(labels.exportStartHelp, {
-                        max: range.maxStart,
-                      })
-                    : undefined
-                }
-                error={startError}
-                errorText={interpolateLabel(labels.exportStartError, {
-                  max: range.maxStart,
-                })}
-                onChange={event => {
-                  const value = event.target.value;
-                  const nextRange = exportRangeLimits(
-                    state.totalResults,
-                    state.totalResultsRelation,
-                    value
-                  );
-                  setStartValue(value);
-                  setStartError(false);
-                  setCountError(
-                    nextRange.maxCount > 0 &&
-                      requestedExportCount(countValue, nextRange.maxCount) ===
-                        null
-                  );
-                  setStatus(null);
-                }}
-              />
+            <div
+              className={`mg-search__export-range${offerOffset ? ' mg-search__export-range--paged' : ''}`}
+            >
+              {offerOffset && (
+                <TextInput
+                  className="mg-search__export-start"
+                  id={startId}
+                  type="number"
+                  label={labels.exportStartLabel}
+                  min={1}
+                  max={range.maxStart}
+                  step={1}
+                  inputMode="numeric"
+                  required
+                  value={startValue}
+                  disabled={busy}
+                  helpText={
+                    !unavailable
+                      ? interpolateLabel(labels.exportStartHelp, {
+                          max: range.maxStart,
+                        })
+                      : undefined
+                  }
+                  error={startError}
+                  errorText={interpolateLabel(labels.exportStartError, {
+                    max: range.maxStart,
+                  })}
+                  onChange={event => {
+                    const value = event.target.value;
+                    const nextRange = exportRangeLimits(
+                      state.totalResults,
+                      state.totalResultsRelation,
+                      value
+                    );
+                    setStartValue(value);
+                    setStartError(false);
+                    setCountError(
+                      nextRange.maxCount > 0 &&
+                        requestedExportCount(countValue, nextRange.maxCount) ===
+                          null
+                    );
+                    setStatus(null);
+                  }}
+                />
+              )}
               <TextInput
                 className="mg-search__export-count"
                 id={countId}
