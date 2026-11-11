@@ -24,7 +24,7 @@ export default {
   tags: ['!test'],
 };
 export const DownloadResults = {
-  args: { config },
+  args: { config: { ...config, defaultQuery: 'drr news' } },
   parameters: {
     docs: {
       description: {
