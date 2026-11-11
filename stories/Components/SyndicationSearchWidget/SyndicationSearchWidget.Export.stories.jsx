@@ -49,7 +49,7 @@ export const DownloadRange = {
   parameters: {
     docs: {
       description: {
-        story: `${sourceDescription} With at least 1,000 matches, try start 900 and quantity 1,000. Smaller sets always start at result 1. Per-file and result-window limits remain enforced; separate downloads are not a fixed snapshot.`,
+        story: `${sourceDescription} With at least 1,899 matches, try start 900 and quantity 1,000. Smaller sets always start at result 1. Per-file and result-window limits remain enforced; separate downloads are not a fixed snapshot.`,
       },
     },
   },
@@ -88,7 +88,7 @@ export const LocalDrupalApi = {
     docs: {
       description: {
         story:
-          'Explicit local development opt-in. Requires the running sanitized DDEV Drupal/Elasticsearch deployment and the Storybook dev server with the opt-in taxonomy proxy; see the README startup command. Search requests go directly to https://undrr.ddev.site/search-endpoint. This is local API integration testing, not production content or an automatic fallback. No download starts automatically.',
+          'Explicit local development opt-in. Requires the running sanitized DDEV Drupal/Elasticsearch deployment and the Storybook dev server with the opt-in taxonomy proxy; see docs/DEVELOPMENT.md, API-backed download examples. Search requests go directly to https://undrr.ddev.site/search-endpoint. This is local API integration testing, not production content or an automatic fallback. No download starts automatically.',
       },
     },
   },

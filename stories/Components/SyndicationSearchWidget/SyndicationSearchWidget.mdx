@@ -608,20 +608,9 @@ them; the Drupal block's `auto` setting does this.
 
 ## Download search metadata
 
-Enable `config.showExport` to add an optional outlined **Download results** action beneath pagination, or directly beneath the results when pagination is hidden. It aligns to the start of the reading direction (left in LTR, right in RTL). It opens a modal with **Download CSV** and **Download JSON**. Both formats are always available; there is no per-format configuration. The understated outline treatment keeps this collection utility from competing with the primary Search action. Placement after the collection separates downloading from entering a search; it does not change the export scope to the current page. This opt-in feature addresses [undrr/web-backlog#3314](https://gitlab.com/undrr/web-backlog/-/work_items/3314). Existing widgets remain unchanged.
+Let visitors download matching content metadata as CSV for spreadsheets or JSON for software. Downloads use the configured search and the visitor’s current terms, filters and sort, independently of the visible page. They contain metadata, not publication files or a complete bibliographic record.
 
-Visitors choose **Number of results**. **Start at result** (one-based, initially 1) appears only when the matched total is at least 1,000. Smaller totals, including lower bounds below 1,000, always start at result 1; quantity edits do not affect this threshold. Quantity is bounded by 1,000 per download, remaining exact matches and the remaining positions in the existing 10,000-result window. With 25 exact matches only quantity is shown, with maximum 25. For 1,000 matches, start 996 permits five. Lower-bound totals remain marked “At least”. `config.exportDefaultCount` (default 100) is bounded by availability on opening; reopening restores start 1 and that bounded default. Each numeric edit immediately caps both inputs to the supported range, so changing start can reduce quantity. Blank inputs remain editable until blur or Download, when start resets to one and quantity uses the bounded configured default. The range preview reflects the corrected selection, and corrections are announced to assistive technology.
-
-Downloads preserve query, filters, scope and sort. Start and quantity are independent of visible pagination and `resultsPerPage`; edits make no request. JSON `scope.limit` records requested quantity, `scope.from` the zero-based offset, `scope.start`/`scope.end` the actual one-based returned range, and `scope.count`/`scope.total` the returned count and fresh exact total. Separate chunks are independent searches: index changes and equal sort values can cause overlaps or gaps. They are not a snapshot or a bulk-download protocol; larger or stable datasets should use the contact/API route.
-
-<Canvas
-  of={ExportStories.DownloadResults}
-  story={{ inline: false, height: '850px' }}
-/>
-
-The primary Downloads examples always use the normal public APIs, regardless of preview hostname. Access/network failures remain visible, with no automatic DDEV or fixture fallback. The separate [Local Drupal API example](?path=/story/components-syndicated-search-downloads--local-drupal-api) explicitly targets the sanitized local deployment. It requires DDEV and the opt-in Storybook development taxonomy proxy; see the [development guide’s trusted-CA startup command](https://github.com/unisdr/undrr-mangrove/blob/main/docs/DEVELOPMENT.md#api-backed-download-examples). A static server has no proxy. Endpoint configuration remains editable in Controls. All network-dependent examples are excluded from deterministic CI and do not download automatically.
-
-Deterministic [preparing](?path=/story/components-syndicated-search-downloads-fixtures--download-preparing), [empty](?path=/story/components-syndicated-search-downloads-fixtures--download-empty), [failure](?path=/story/components-syndicated-search-downloads-fixtures--download-failure) and other simulated cases are grouped under **Downloads / Fixtures**.
+Enable the optional **Download results** action with `config.showExport`:
 
 ```jsx
 <SyndicationSearchWidget
@@ -635,62 +624,103 @@ Deterministic [preparing](?path=/story/components-syndicated-search-downloads-fi
 />
 ```
 
-Editors can configure a publication listing with newest-first ordering and an initial download quantity of ten using `exportDefaultCount: 10`, `defaultSort: 'newest'`, a publication filter and optional search controls hidden. Visitors can still choose another quantity within 1–1,000. The modal reuses the configured search and offers field choices from the documented safe metadata allowlist.
+The action appears beneath pagination, or beneath the results when pagination is hidden. Its modal offers both **Download CSV** and **Download JSON**. Set `exportDefaultCount: 10` for an initial quantity of ten; visitors can change it within the available range. `exportContactUrl` supplies the contact route for larger exports or API-access enquiries.
 
-### Website teaser sample and live results
+<Canvas
+  of={ExportStories.DownloadResults}
+  story={{ inline: false, height: '850px' }}
+/>
 
-The **Website teaser sample** example uses the ordinary pre-rendered `_source.teaser` path in `ResultItem`, rather than fallback cards or the separate `ssrResults` first-paint handoff. It shows the ten newest indexed PreventionWeb records in a local sanitized-index snapshot captured on 10 November 2026, mixing news, publications and a collection. This is captured sample data, not a continuously updated view of the live website. Original Drupal `teaser_3_9` markup is retained with theme-debug comments removed; the standard renderer resolves original thumbnail paths against the source website, so images depend on remote availability. The snapshot and provenance live in `stories/assets/fixtures/website-teaser-sample/results.json`.
+<span id="number-of-results" />
 
-Like the other primary examples, **Latest website results (live)** queries the selected actual Drupal search endpoint with PreventionWeb and English filters, newest website posting order, and an initial page/download quantity of ten. It uses the standard published-content constraints and teaser renderer. Network and access failures remain visible; the example never substitutes sample data and is excluded from deterministic browser tests.
+### Choose a range
+
+Visitors choose **Number of results**, then **Start at result** when at least 1,000 matches are known. Start is one-based and initially 1. Smaller sets always start at result 1. Downloads are limited to 1,000 records per file and the first 10,000 matching positions:
+
+- With 25 exact matches, quantity is at most 25 and there is no start control.
+- With 1,000 exact matches, start 996 allows five records.
+- With at least 1,899 matches, start 900 and quantity 1,000 select results 900–1,899.
+
+Availability appears once above the inputs. Lower-bound totals say “At least”. The read-only strip shows the selected range; it is not a slider. Exact totals scale the whole matching set. For lower bounds, a continuation cue and screen-reader description identify the 1–10,000 preview window.
+
+Numeric edits immediately cap start and quantity together, so a later start can reduce quantity. Keyboard and paste entry block letters and exponent notation. A blank input remains editable until blur or Download: start then resets to 1 and quantity uses the bounded configured default. Corrections are announced to assistive technology. Editing makes no request; Download uses the corrected values.
+
+Separate downloads are independent searches. Index changes and equal sort values can cause overlaps or gaps between chunks. Use the contact/API route for larger or stable datasets; these downloads do not provide a snapshot or bulk-export protocol.
+
+Try the [result range example](?path=/story/components-syndicated-search-downloads--download-range) with a query that has enough matches.
+
+<span id="formats-and-fields" />
+
+### Choose fields and format
+
+**Fields to include** opens with every optional field selected. Record ID and URL are always included. The eight checkbox choices cover title, content type, language, website posting date, date shown in results, country/region IDs, hazard IDs and theme IDs. The date shown in results and its precision metadata stay paired. Choices apply to both formats and reset when the modal reopens.
+
+| Field                                           | Meaning                                                                                                                        |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `id`                                            | Search document identifier, falling back to the node ID.                                                                       |
+| `title`                                         | Indexed title with character entities decoded.                                                                                 |
+| `url`                                           | Absolute HTTP(S) content URL, resolved using the result’s domain.                                                              |
+| `type`                                          | Content type, or vocabulary for taxonomy results.                                                                              |
+| `language`                                      | Content language, independent of the interface language.                                                                       |
+| `posted_at`                                     | Indexed `published_at` as a UTC ISO timestamp: the website posting date, not necessarily the publication’s bibliographic date. |
+| `display_date`                                  | Reader-facing date as `YYYY-MM-DD`, or `YYYY` for year precision. No posting-date fallback.                                    |
+| `display_date_precision`                        | Precision of the reader-facing date.                                                                                           |
+| `country_region_ids`, `hazard_ids`, `theme_ids` | Taxonomy identifiers, not translated labels.                                                                                   |
+
+Missing scalar values are empty strings; missing multi-value fields are empty arrays. Columns and keys keep the order above. Teaser/body HTML, scoring fields and other index internals are excluded.
+
+CSV uses a UTF-8 byte order mark, quoted cells and CRLF record endings. Taxonomy cells contain JSON arrays of string IDs. Cells that could be spreadsheet formulas receive a leading apostrophe; JSON preserves the original text.
+
+JSON contains `schemaVersion`, `exportedAt` (UTC), `records` and `scope`:
+
+| Scope key        | Meaning                                                         |
+| ---------------- | --------------------------------------------------------------- |
+| `limit`          | Requested quantity.                                             |
+| `from`           | Zero-based requested offset.                                    |
+| `start`, `end`   | Actual one-based returned range.                                |
+| `count`, `total` | Returned count and fresh exact matching total.                  |
+| `limited`        | Whether the slice excludes matching records before or after it. |
+| `fields`         | Included record keys.                                           |
+
+A shorter slice caused by fewer remaining matches is valid. An empty response creates no file. Timed-out, failed-shard, malformed or unexpectedly incomplete responses produce an error instead of a partial download. “Download prepared” confirms that the browser was asked to download, not that the file was saved.
+
+<span id="website-teaser-sample-and-live-results" />
+
+### Use the examples
+
+The primary **Downloads** examples call the public APIs. Choose **Download results** to open the modal; no download starts automatically. Endpoint configuration is editable in Controls, and access or network errors remain visible.
+
+- [Latest website results (live)](?path=/story/components-syndicated-search-downloads--latest-website-results-live) queries English PreventionWeb content, newest first, with an initial page and download quantity of ten.
+- **Website teaser sample**, below, uses ten records captured from a sanitized local index on 10 November 2026. It exercises the standard pre-rendered teaser path. Its images use source-site URLs and depend on remote availability.
+- [Preparing](?path=/story/components-syndicated-search-downloads-fixtures--download-preparing), [empty](?path=/story/components-syndicated-search-downloads-fixtures--download-empty) and [failure](?path=/story/components-syndicated-search-downloads-fixtures--download-failure) states use deterministic data under **Downloads / Fixtures**.
+- [Local Drupal API](?path=/story/components-syndicated-search-downloads--local-drupal-api) requires a running local Drupal deployment and the [development guide’s trusted-CA setup](https://github.com/unisdr/undrr-mangrove/blob/main/docs/DEVELOPMENT.md#api-backed-download-examples).
 
 <Canvas
   of={ExportFixtureStories.LatestWebsiteTeasers}
   story={{ inline: false, height: '850px' }}
 />
 
-The example configures PreventionWeb/domain and English filters, `defaultSort: 'newest'`, ten results and an initial download quantity of ten, without a publication-only restriction. The captured set has ten records, so it needs no pager. Its modal and export use the same matching set and order. Teaser summaries, source labels and imagery remain presentation content; only the separately documented metadata can be exported. The [Choose fields example](?path=/story/components-syndicated-search-downloads--choose-fields) opens the optional field disclosure.
+The sample is a fixed fixture, not a current website listing. Its provenance is recorded in `stories/assets/fixtures/website-teaser-sample/results.json`. Network-dependent stories are excluded from deterministic CI and do not substitute fixtures when requests fail.
 
-### Number of results
+### Integrate and localize
 
-The range fieldset names the settled matching total once. Below 1,000 matches no maximum helper is needed. Larger sets show the useful dynamic maximum beneath quantity, without a bullet or middle dot. A start helper shows the 10,000-position maximum only when the known total exceeds that window. Lower bounds are marked “At least”; availability is hidden during refresh. Whole-number keyboard and paste entry blocks letters and exponent notation. Each numeric edit immediately caps both inputs to the supported range. Blank drafts remain editable; on blur or Download, both inputs normalize together: blank starts reset to one, blank quantities use the bounded configured default, fractions round down, and values are capped to the available range. A later start can therefore reduce the quantity. Editing and normalization make no request; Download uses the corrected snapshot immediately. Pending downloads disable both. Both formats capture the same start, quantity and fields. A shorter end-of-set slice is valid, an empty slice creates no file, and an unexpectedly incomplete slice fails.
+Hydration accepts `data-show-export="true"`, `data-export-default-count="100"` and `data-export-contact-url="/contact"`. Drupal wrappers that construct their own config must forward these options before editors can enable downloads. No backend export service is required for the indexed metadata above; release/configuration integration and any editor controls belong to the consumer.
 
-The [Result range example](?path=/story/components-syndicated-search-downloads--download-range) lets you choose a range from actual matching content; start 900 and quantity 1,000 are valid when at least 1,899 records match and the result window is respected. A generated range fixture remains under Fixtures for deterministic tests. The captured ten-record website-teaser sample shows quantity only, with maximum ten.
+Export labels use the existing `lang` and `labels` override contract. The component’s `_labels.js` catalogue defines the `export*` keys, including function-valued range and status messages. New translations require native-speaker review.
 
-A compact read-only strip below the inputs captions only the selected start–end range; the matching total remains in the fieldset legend. For exact totals its scale is the complete matching set, including records beyond the supported download window. For lower-bound totals the legend says “at least”, a continuation cue marks the unknown remainder, and a screen-reader description labels the track’s 1–10,000 preview window instead of implying a known global proportion. Blank drafts hide the preview until a valid value is entered or restored. The numeric inputs remain the only controls; the decorative track has no slider or progress semantics and its caption provides the full range in text.
+<span id="interaction-and-limits" />
 
-### Formats and fields
+### Interaction and implementation
 
-CSV is intended for spreadsheets and has a UTF-8 byte order mark, quoted cells and CRLF record endings. Multi-value taxonomy fields contain JSON arrays of string IDs inside their CSV cells. Cells that could be interpreted as spreadsheet formulas receive a leading apostrophe; JSON retains the original text values. JSON includes `schemaVersion`, `exportedAt` (UTC), `scope` (`limit`, zero-based `from`, actual one-based `start`/`end`, `count`, exact `total`, `limited`, selected `fields`) and `records`.
+> **Implementation note (for contributors):** Export state belongs to the modal session. The shared query builder retains search constraints; metadata projection, range bounds, request identity and file saving use separate utilities.
 
-Both formats use the following fixed metadata allowlist. All fields are selected by default. The native **Fields to include** disclosure opens by default and can be collapsed. Its responsive grid offers eight optional checkbox choices: title, content type, language, website posting date, date shown in results, country/region IDs, hazard IDs and theme IDs. Record ID and URL are always included, so clearing every optional choice produces a useful two-column export. The date shown in results and its precision metadata remain paired. CSV columns and JSON record keys use the same stable documented order; JSON also lists the chosen keys in `scope.fields`. Field choices reset to all defaults and the disclosure opens on each new modal session. Choices are unavailable while a download is preparing. The request source allowlist does not expand when choices change; projection is applied only to the safe metadata after retrieval. Missing scalar values are empty strings; missing multi-value fields are empty arrays. The export excludes teaser/body HTML, scoring fields and other index internals. This is a search metadata export rather than a complete bibliographic record or a download of publication files.
+The action is unavailable during loading, unsettled input, a failed search or when no matches are known. Opening the native dialog focuses its heading and makes the background inert. Close, Escape and a backdrop press followed by release outside dismiss it. Closing or changing the search cancels pending work and restores focus to the action, or the connected results area if the action is unavailable. Pagination alone does not change the chosen range. Reopening restores start 1, the bounded configured quantity and all default fields.
 
-| Field                                           | Meaning                                                                                                                        |
-| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `id`                                            | Search document identifier, falling back to the node ID when absent.                                                           |
-| `title`                                         | Indexed title with character entities decoded.                                                                                 |
-| `url`                                           | Absolute HTTP(S) content URL resolved using the result's domain, matching the search result domain rules.                      |
-| `type`                                          | Indexed content type, or vocabulary for taxonomy results.                                                                      |
-| `language`                                      | Indexed content language; independent of the UI language.                                                                      |
-| `posted_at`                                     | Indexed `published_at` as a UTC ISO timestamp: the website posting date, not necessarily the publication's bibliographic date. |
-| `display_date`                                  | Indexed reader-facing date as `YYYY-MM-DD`, or `YYYY` for year precision. No posting-date fallback.                            |
-| `display_date_precision`                        | Indexed precision describing the reader-facing date.                                                                           |
-| `country_region_ids`, `hazard_ids`, `theme_ids` | Indexed taxonomy identifiers, not translated labels. Resolving labels or adding publisher metadata is follow-up scope.         |
+During preparation, range and field controls are disabled. Format buttons remain focusable with `aria-disabled`; repeated activation is ignored. Progress and failures are announced beside the actions. Success leaves the modal open for confirmation or another format; failures allow retry. Scroll locking is shared with other Mangrove dialogs and respects the widget’s owner document.
 
-### Interaction and limits
+The request asks for exact totals and only the allowlisted metadata, without facets or highlights. Field choices project that metadata after retrieval. Client-side limits are not access control; endpoint owners must enforce server-side access and resource limits.
 
-The modal follows the task order: number of results and conditional start, optional fields, then a separate **Download as** section. A short scope sentence describes the configured and active search; format guidance sits beside **Download CSV** and **Download JSON**. Progress and failures remain beside those actions. Larger-data/API contact help is a quieter paragraph after the task controls, and Close uses the shared quiet icon-button contract. The compact count input keeps its availability helper adjacent. Export-owned spacing provides hierarchy without adding a shared Dialog footer API or another interaction step.
-
-The widget makes one bounded request through its existing search endpoint, starting at the chosen offset, retaining publication/domain/language constraints and active facet filters. It requests only the metadata above, without facet aggregations or highlights. Export requests ask for exact totals and reject timed-out, failed-shard, malformed or incomplete responses instead of producing a misleading partial file. The cap is not an access-control boundary; endpoint owners remain responsible for server-side access and resource limits.
-
-The Download results action is unavailable while search is loading, the input is unsettled, a search has failed or no matches are known. Opening the native modal focuses its heading, contains keyboard navigation and makes background content inert. Close, Escape and a backdrop press followed by release outside dismiss it; dragging from inside to outside does not. Closing cancels any pending export and returns focus to the action, or the connected results area if that action has become unavailable. Scroll locking preserves existing declarations and is coordinated with other Mangrove dialogs. During preparation the buttons remain focusable with `aria-disabled`, repeat activation is ignored, and a nearby status announces progress. Changes to the configured search, query, filters, sort or raw input close the modal and cancel an in-flight export; unmount also cancels it. Changing the page alone does not affect a download that starts at the first match. Successful downloads leave the modal open so the confirmation and alternative format remain available. Reopening starts a fresh session. Empty responses and failures announce clear messages, and failures allow retry. A dated filename identifies the generated format; “download prepared” means the browser was asked to download, not that the file was saved successfully.
-
-The contact prompt remains visible inside the modal for users needing more data or ongoing access. `exportContactUrl` selects the contact route; its default is the PreventionWeb contact page. The prompt offers help arranging an export or facilitating API access; it does not provision access. A dedicated backend export service, background jobs and API access arrangements are separate follow-up work. Drupal needs only release/configuration integration unless required metadata is missing from the index or editor controls are desired.
-
-The download modal presents quantity first and the conditional start position second in one responsive panel and optional fields in a bordered panel. Its quiet icon Close, primary CSV action and outlined JSON alternative use existing Mangrove button and icon contracts; support help remains readable below the task. Decorative icons carry no accessible name. Typography comes from the shared Dialog title, foundational section heading, form help and button contracts; the export does not override font sizes, weights or families. The wider 48rem surface accommodates two field columns, while 44px format targets and narrow-screen wrapping preserve comfortable activation and verified large-text reflow.
-
-All export UI copy is part of the existing runtime catalogue (`exportFormatTitle`, `exportFormatHelp`, `exportStartLabel`, `exportStartHelp`, `exportCountLabel`, `exportCountHelp`, `exportAvailable`, `exportAvailableAtLeast`, `exportPreview`, `exportPreviewWindow`, `exportFields`, `exportFieldsHelp`, the `exportField*` labels, `exportOpen`, `exportClose`, `exportRegion`, `exportCsv`, `exportJson`, `exportScope`, `exportContact`, `exportContactLink`, `exportLoading`, `exportComplete`, `exportLimited`, `exportEmpty`, `exportError`), with the usual `lang` selection and `labels` overrides. New translations require native-speaker review. No motion is added; layout wraps across small screens and follows the existing theme and direction.
-
-Hydration accepts `data-show-export="true"`, `data-export-default-count="100"` and `data-export-contact-url="/contact"` through the published `fromElement` adapter. Drupal wrappers that construct their own config must forward these options before editors can enable them.
+The outline action, native controls and shared Dialog/button typography follow Mangrove conventions. Layout wraps for small screens and RTL; no motion or component-specific type overrides are added. The CSV action is primary, JSON is outlined, and contact help follows the controls. The contact prompt offers assistance with exports or API access; it does not provision access.
 
 ## Props
 
