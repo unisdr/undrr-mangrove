@@ -10,16 +10,18 @@ export const LABELS_ES = {
   exportStartLabel: 'Empezar en el resultado',
   exportStartHelp: ({ max }) =>
     `Dentro de los primeros ${formatCount(max, 'es')} resultados`,
-  exportStartError: ({ max }) =>
-    `Introduzca un número entero entre 1 y ${formatCount(max, 'es')}.`,
   exportCountHelp: ({ max, fromStart, perDownload }) =>
     `Máx. ${formatCount(max, 'es')}${perDownload ? ' por descarga' : fromStart ? ' desde esta posición' : ''}`,
   exportAvailable: ({ count }) =>
     `${formatCount(count, 'es')} ${count === 1 ? 'resultado disponible' : 'resultados disponibles'}`,
   exportAvailableAtLeast: ({ count }) =>
     `Al menos ${formatCount(count, 'es')} ${count === 1 ? 'resultado disponible' : 'resultados disponibles'}`,
-  exportCountError: ({ max }) =>
-    `Introduzca un número entero entre 1 y ${formatCount(max, 'es')}.`,
+  exportPreview: ({ start, end, count, total }) =>
+    `Resultados ${formatCount(start, 'es')}–${formatCount(end, 'es')} de ${formatCount(total, 'es')} (selección: ${formatCount(count, 'es')})`,
+  exportPreviewAtLeast: ({ start, end, count, total }) =>
+    `Resultados solicitados ${formatCount(start, 'es')}–${formatCount(end, 'es')} de al menos ${formatCount(total, 'es')} (selección: ${formatCount(count, 'es')})`,
+  exportPreviewWindow: ({ window }) =>
+    `Ventana de vista previa: ${formatCount(1, 'es')}–${formatCount(window, 'es')}`,
 
   exportFieldType: 'Tipo de contenido',
   exportFieldLanguage: 'Idioma',
@@ -138,16 +140,18 @@ export const LABELS_FR = {
   exportStartLabel: 'Commencer au résultat',
   exportStartHelp: ({ max }) =>
     `Dans les ${formatCount(max, 'fr')} premiers résultats`,
-  exportStartError: ({ max }) =>
-    `Saisissez un nombre entier de 1 à ${formatCount(max, 'fr')}.`,
   exportCountHelp: ({ max, fromStart, perDownload }) =>
     `Max. ${formatCount(max, 'fr')}${perDownload ? ' par téléchargement' : fromStart ? ' à partir de ce résultat' : ''}`,
   exportAvailable: ({ count }) =>
     `${formatCount(count, 'fr')} ${count === 1 ? 'résultat disponible' : 'résultats disponibles'}`,
   exportAvailableAtLeast: ({ count }) =>
     `Au moins ${formatCount(count, 'fr')} ${count === 1 ? 'résultat disponible' : 'résultats disponibles'}`,
-  exportCountError: ({ max }) =>
-    `Saisissez un nombre entier de 1 à ${formatCount(max, 'fr')}.`,
+  exportPreview: ({ start, end, count, total }) =>
+    `Résultats ${formatCount(start, 'fr')}–${formatCount(end, 'fr')} sur ${formatCount(total, 'fr')} (sélection : ${formatCount(count, 'fr')})`,
+  exportPreviewAtLeast: ({ start, end, count, total }) =>
+    `Résultats demandés ${formatCount(start, 'fr')}–${formatCount(end, 'fr')} sur au moins ${formatCount(total, 'fr')} (sélection : ${formatCount(count, 'fr')})`,
+  exportPreviewWindow: ({ window }) =>
+    `Fenêtre d’aperçu : ${formatCount(1, 'fr')}–${formatCount(window, 'fr')}`,
 
   exportFieldType: 'Type de contenu',
   exportFieldLanguage: 'Langue',
@@ -265,16 +269,18 @@ export const LABELS_JA = {
   exportCountLabel: '結果の件数',
   exportStartLabel: '開始する結果',
   exportStartHelp: ({ max }) => `先頭${formatCount(max, 'ja')}件以内`,
-  exportStartError: ({ max }) =>
-    `1から${formatCount(max, 'ja')}までの整数を入力してください。`,
   exportCountHelp: ({ max, fromStart, perDownload }) =>
     `最大${formatCount(max, 'ja')}${perDownload ? '件／ダウンロード' : fromStart ? '件（この開始位置から）' : '件'}`,
   exportAvailable: ({ count }) =>
     `利用可能な結果：${formatCount(count, 'ja')}件`,
   exportAvailableAtLeast: ({ count }) =>
     `少なくとも${formatCount(count, 'ja')}件の結果を利用できます`,
-  exportCountError: ({ max }) =>
-    `1から${formatCount(max, 'ja')}までの整数を入力してください。`,
+  exportPreview: ({ start, end, count, total }) =>
+    `全${formatCount(total, 'ja')}件中${formatCount(start, 'ja')}～${formatCount(end, 'ja')}件目（選択${formatCount(count, 'ja')}件）`,
+  exportPreviewAtLeast: ({ start, end, count, total }) =>
+    `要求する結果${formatCount(start, 'ja')}～${formatCount(end, 'ja')}件目（選択${formatCount(count, 'ja')}件、全体は少なくとも${formatCount(total, 'ja')}件）`,
+  exportPreviewWindow: ({ window }) =>
+    `プレビュー範囲：${formatCount(1, 'ja')}–${formatCount(window, 'ja')}`,
 
   exportFieldType: 'コンテンツの種類',
   exportFieldLanguage: '言語',
@@ -391,15 +397,17 @@ export const LABELS_ZH = {
   exportCountLabel: '结果数量',
   exportStartLabel: '从第几条结果开始',
   exportStartHelp: ({ max }) => `限前${formatCount(max, 'zh')}条匹配结果`,
-  exportStartError: ({ max }) =>
-    `请输入1到${formatCount(max, 'zh')}之间的整数。`,
   exportCountHelp: ({ max, fromStart, perDownload }) =>
     `最多${formatCount(max, 'zh')}${perDownload ? '条／次下载' : fromStart ? '条（从此位置开始）' : '条'}`,
   exportAvailable: ({ count }) => `有${formatCount(count, 'zh')}条结果可用`,
   exportAvailableAtLeast: ({ count }) =>
     `至少有${formatCount(count, 'zh')}条结果可用`,
-  exportCountError: ({ max }) =>
-    `请输入1到${formatCount(max, 'zh')}之间的整数。`,
+  exportPreview: ({ start, end, count, total }) =>
+    `第${formatCount(start, 'zh')}–${formatCount(end, 'zh')}条，共${formatCount(total, 'zh')}条（已选${formatCount(count, 'zh')}条）`,
+  exportPreviewAtLeast: ({ start, end, count, total }) =>
+    `请求第${formatCount(start, 'zh')}–${formatCount(end, 'zh')}条（已选${formatCount(count, 'zh')}条，至少有${formatCount(total, 'zh')}条匹配结果）`,
+  exportPreviewWindow: ({ window }) =>
+    `预览窗口：${formatCount(1, 'zh')}–${formatCount(window, 'zh')}`,
 
   exportFieldType: '内容类型',
   exportFieldLanguage: '语言',
@@ -539,16 +547,18 @@ export const LABELS_AR = {
   exportCountLabel: 'عدد النتائج',
   exportStartLabel: 'البدء من النتيجة',
   exportStartHelp: ({ max }) => `ضمن أول ${formatCount(max, 'ar')} نتيجة`,
-  exportStartError: ({ max }) =>
-    `أدخل عددًا صحيحًا من 1 إلى ${formatCount(max, 'ar')}.`,
   exportCountHelp: ({ max, fromStart, perDownload }) =>
     `الحد الأقصى ${formatCount(max, 'ar')}${perDownload ? ' لكل تنزيل' : fromStart ? ' من هذا الموضع' : ''}`,
   exportAvailable: ({ count }) =>
     `النتائج المتاحة: ${formatCount(count, 'ar')}`,
   exportAvailableAtLeast: ({ count }) =>
     `النتائج المتاحة: ${formatCount(count, 'ar')} على الأقل`,
-  exportCountError: ({ max }) =>
-    `أدخل عددًا صحيحًا من 1 إلى ${formatCount(max, 'ar')}.`,
+  exportPreview: ({ start, end, count, total }) =>
+    `النتائج ${formatCount(start, 'ar')}–${formatCount(end, 'ar')} من ${formatCount(total, 'ar')} (المحدد: ${formatCount(count, 'ar')})`,
+  exportPreviewAtLeast: ({ start, end, count, total }) =>
+    `النتائج المطلوبة ${formatCount(start, 'ar')}–${formatCount(end, 'ar')} من ${formatCount(total, 'ar')} على الأقل (المحدد: ${formatCount(count, 'ar')})`,
+  exportPreviewWindow: ({ window }) =>
+    `نطاق المعاينة: ${formatCount(1, 'ar')}–${formatCount(window, 'ar')}`,
 
   exportFieldType: 'نوع المحتوى',
   exportFieldLanguage: 'اللغة',
@@ -711,16 +721,18 @@ export const LABELS_RU = {
   exportStartLabel: 'Начать с результата',
   exportStartHelp: ({ max }) =>
     `Первые совпадения (до ${formatCount(max, 'ru')})`,
-  exportStartError: ({ max }) =>
-    `Введите целое число от 1 до ${formatCount(max, 'ru')}.`,
   exportCountHelp: ({ max, fromStart, perDownload }) =>
     `Макс. ${formatCount(max, 'ru')}${perDownload ? ' за загрузку' : fromStart ? ' с этой позиции' : ''}`,
   exportAvailable: ({ count }) =>
     `Доступно: ${formatCount(count, 'ru')} ${RU_RESULT_FORMS[ruResults.select(count)] ?? RU_RESULT_FORMS.other}`,
   exportAvailableAtLeast: ({ count }) =>
     `Доступно как минимум: ${formatCount(count, 'ru')} ${RU_RESULT_FORMS[ruResults.select(count)] ?? RU_RESULT_FORMS.other}`,
-  exportCountError: ({ max }) =>
-    `Введите целое число от 1 до ${formatCount(max, 'ru')}.`,
+  exportPreview: ({ start, end, count, total }) =>
+    `Результаты ${formatCount(start, 'ru')}–${formatCount(end, 'ru')} из ${formatCount(total, 'ru')} (выбрано: ${formatCount(count, 'ru')})`,
+  exportPreviewAtLeast: ({ start, end, count, total }) =>
+    `Запрошены результаты ${formatCount(start, 'ru')}–${formatCount(end, 'ru')} из как минимум ${formatCount(total, 'ru')} (выбрано: ${formatCount(count, 'ru')})`,
+  exportPreviewWindow: ({ window }) =>
+    `Окно предпросмотра: ${formatCount(1, 'ru')}–${formatCount(window, 'ru')}`,
 
   exportFieldType: 'Тип содержимого',
   exportFieldLanguage: 'Язык',
@@ -858,16 +870,18 @@ export const DEFAULT_LABELS = {
   exportStartLabel: 'Start at result',
   exportStartHelp: ({ max }) =>
     `Within the first ${formatCount(max, 'en')} matches`,
-  exportStartError: ({ max }) =>
-    `Enter a whole number from 1 to ${formatCount(max, 'en')}.`,
   exportCountHelp: ({ max, fromStart, perDownload }) =>
     `Max ${formatCount(max, 'en')}${perDownload ? ' per download' : fromStart ? ' from this start' : ''}`,
   exportAvailable: ({ count }) =>
     `${formatCount(count, 'en')} ${count === 1 ? 'result' : 'results'} available`,
   exportAvailableAtLeast: ({ count }) =>
     `At least ${formatCount(count, 'en')} ${count === 1 ? 'result' : 'results'} available`,
-  exportCountError: ({ max }) =>
-    `Enter a whole number from 1 to ${formatCount(max, 'en')}.`,
+  exportPreview: ({ start, end, count, total }) =>
+    `Results ${formatCount(start, 'en')}–${formatCount(end, 'en')} of ${formatCount(total, 'en')} (${formatCount(count, 'en')} selected)`,
+  exportPreviewAtLeast: ({ start, end, count, total }) =>
+    `Requested results ${formatCount(start, 'en')}–${formatCount(end, 'en')} of at least ${formatCount(total, 'en')} (${formatCount(count, 'en')} selected)`,
+  exportPreviewWindow: ({ window }) =>
+    `Preview window: ${formatCount(1, 'en')}–${formatCount(window, 'en')}`,
 
   exportFieldType: 'Content type',
   exportFieldLanguage: 'Language',

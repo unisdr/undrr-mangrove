@@ -213,9 +213,6 @@ test('has no accessibility violations and preserves language overrides', async (
   for (const lang of ['es', 'fr', 'ja', 'zh', 'ar', 'ru']) {
     const labels = getSyndicationSearchWidgetLabels(lang);
     expect(labels.exportCountLabel).not.toBe('Number of results');
-    expect(labels.exportCountError).not.toBe(
-      'Enter a whole number from 1 to 25.'
-    );
     expect(labels.exportLimited({ start: 1, end: 3, total: 25 })).toContain(
       '25'
     );
@@ -501,26 +498,22 @@ test('quantity is modal-local, starts from configuration, and both formats reuse
   expect(data.records[0]).not.toHaveProperty('title');
 });
 
-test.each(['', 'abc', '0', '-1', '1.5', '1001'])(
-  'invalid quantity %j keeps the modal and focuses a described inline error',
-  value => {
+test.each([
+  ['', 1],
+  ['abc', 1],
+  ['0', 1],
+  ['-1', 1],
+  ['1.5', 1],
+  ['1001', 25],
+])(
+  'quantity %j normalizes on blur to %i without fetching',
+  (value, expected) => {
     setup();
-    const input = screen.getByRole('spinbutton', { name: 'Number of results' });
-    fireEvent.change(input, { target: { value } });
-    fireEvent.click(screen.getByRole('button', { name: 'Download CSV' }));
+    fireEvent.change(quantityInput(), { target: { value } });
+    fireEvent.blur(quantityInput());
+    expect(quantityInput()).toHaveValue(expected);
+    expect(quantityInput()).not.toHaveAttribute('aria-invalid');
     expect(fetch).not.toHaveBeenCalled();
-    expect(screen.getByRole('alert')).toHaveTextContent(
-      'Enter a whole number from 1 to 25.'
-    );
-    expect(input).toHaveFocus();
-    expect(input).toHaveAttribute('aria-invalid', 'true');
-    expect(input).toHaveAccessibleDescription(
-      expect.stringContaining('Enter a whole number from 1 to 25.')
-    );
-    expect(screen.getByRole('dialog')).toHaveAttribute('open');
-    expect(input).toHaveValue(
-      value === '' || value === 'abc' ? null : Number(value)
-    );
   }
 );
 
@@ -560,8 +553,8 @@ test('reopening resets quantity and validation to the configured initial count',
   setup();
   const input = screen.getByRole('spinbutton', { name: 'Number of results' });
   fireEvent.change(input, { target: { value: '0' } });
-  fireEvent.click(screen.getByRole('button', { name: 'Download CSV' }));
-  expect(screen.getByRole('alert')).toBeVisible();
+  fireEvent.blur(input);
+  expect(input).toHaveValue(1);
   fireEvent.click(screen.getByRole('button', { name: 'Close' }));
   fireEvent.click(screen.getByRole('button', { name: 'Download results' }));
   expect(
@@ -662,13 +655,12 @@ test('opening bounds the default; start edits expose the reduced maximum without
   expect(screen.getByRole('dialog')).toBe(modal);
   expect(quantityInput()).toHaveValue(100);
   expect(quantityInput()).toHaveAttribute('max', '5');
-  expect(quantityInput()).toHaveAttribute('aria-invalid', 'true');
+  expect(quantityInput()).not.toHaveAttribute('aria-invalid');
   expect(quantityInput()).toHaveAccessibleDescription(
     expect.stringContaining('Max 5 from this start')
   );
-  expect(screen.getByRole('alert')).toHaveTextContent(
-    'Enter a whole number from 1 to 5.'
-  );
+  fireEvent.blur(startInput());
+  expect(quantityInput()).toHaveValue(5);
   expect(fetch).not.toHaveBeenCalled();
   fireEvent.click(screen.getByRole('button', { name: 'Close' }));
   fireEvent.click(screen.getByRole('button', { name: 'Download results' }));
@@ -676,23 +668,22 @@ test('opening bounds the default; start edits expose the reduced maximum without
   expect(quantityInput()).toHaveValue(100);
   expect(screen.queryByRole('alert')).not.toBeInTheDocument();
 });
-test.each(['', 'abc', '0', '-1', '1.5', '1001', '10001'])(
-  'invalid start %j focuses its associated error first',
-  value => {
-    setup(true, {}, response(1000));
-    const input = startInput();
-    fireEvent.change(input, { target: { value } });
-    fireEvent.click(screen.getByRole('button', { name: 'Download CSV' }));
-    expect(input).toHaveFocus();
-    expect(input).toHaveAttribute('aria-invalid', 'true');
-    expect(input).toHaveAccessibleDescription(
-      expect.stringContaining('Enter a whole number from 1 to 1,000.')
-    );
-    expect(fetch).not.toHaveBeenCalled();
-    expect(quantityInput()).not.toHaveAttribute('aria-invalid');
-    expect(document.body.textContent).not.toContain('Max 0');
-  }
-);
+test.each([
+  ['', 1],
+  ['abc', 1],
+  ['0', 1],
+  ['-1', 1],
+  ['1.5', 1],
+  ['1001', 1000],
+  ['10001', 1000],
+])('start %j normalizes to %i on blur', (value, expected) => {
+  setup(true, {}, response(1000));
+  fireEvent.change(startInput(), { target: { value } });
+  fireEvent.blur(startInput());
+  expect(startInput()).toHaveValue(expected);
+  expect(quantityInput()).toHaveValue(1);
+  expect(fetch).not.toHaveBeenCalled();
+});
 test('both formats snapshot offset, quantity, fields and search constraints', async () => {
   setup(true, {}, response(1000), {
     defaultFilters: [
@@ -754,10 +745,9 @@ test('large sets retain per-download and result-window limits', async () => {
   fireEvent.change(startInput(), { target: { value: '10000' } });
   expect(quantityInput()).toHaveAttribute('max', '1');
   fireEvent.change(quantityInput(), { target: { value: '2' } });
-  fireEvent.click(screen.getByRole('button', { name: 'Download JSON' }));
-  expect(quantityInput()).toHaveFocus();
+  fireEvent.blur(quantityInput());
+  expect(quantityInput()).toHaveValue(1);
   expect(fetch).not.toHaveBeenCalled();
-  fireEvent.change(quantityInput(), { target: { value: '1' } });
   fetch.mockResolvedValue({
     ok: true,
     json: async () => offsetResponse(80000, 9999, 1),
@@ -852,9 +842,9 @@ test('small matched sets bound the default and always download from result1', as
   expect(
     screen.queryByRole('spinbutton', { name: 'Start at result' })
   ).not.toBeInTheDocument();
-  fireEvent.click(screen.getByRole('button', { name: 'Download JSON' }));
+  fireEvent.blur(quantityInput());
+  expect(quantityInput()).toHaveValue(25);
   expect(fetch).not.toHaveBeenCalled();
-  fireEvent.change(quantityInput(), { target: { value: '25' } });
   fetch.mockResolvedValue({
     ok: true,
     json: async () => offsetResponse(25, 0, 25),
@@ -944,3 +934,128 @@ test.each([
     }
   }
 );
+
+test('read-only overview maps the selected slice against the full exact total', () => {
+  setup(true, {}, response(7876), { exportDefaultCount: 100 });
+  expect(screen.getByRole('figure')).toHaveAccessibleName(
+    'Results 1–100 of 7,876 (100 selected)'
+  );
+  fireEvent.change(quantityInput(), { target: { value: '1000' } });
+  fireEvent.change(startInput(), { target: { value: '900' } });
+  const figure = screen.getByRole('figure');
+  expect(figure).toHaveAccessibleName(
+    'Results 900–1,899 of 7,876 (1,000 selected)'
+  );
+  const graphic = figure.querySelector('[aria-hidden="true"]');
+  const selected = graphic.firstElementChild;
+  expect(parseFloat(selected.style.inlineSize)).toBeCloseTo(
+    (1000 / 7876) * 100
+  );
+  expect(
+    Number(selected.style.insetInlineStart.match(/[\d.]+/)[0])
+  ).toBeCloseTo((899 / 7876) * 100);
+  expect(graphic).not.toHaveAttribute('tabindex');
+  expect(figure.querySelector('[aria-live]')).toBeNull();
+  expect(screen.queryByRole('slider')).not.toBeInTheDocument();
+  expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
+  expect(fetch).not.toHaveBeenCalled();
+});
+
+test('download immediately uses corrected start and count without a prior blur', async () => {
+  setup(true, {}, response(7876));
+  fireEvent.change(startInput(), { target: { value: '10000' } });
+  fireEvent.change(quantityInput(), { target: { value: '1000' } });
+  fetch.mockResolvedValue({
+    ok: true,
+    json: async () => offsetResponse(7876, 7875, 1),
+  });
+  fireEvent.click(screen.getByRole('button', { name: 'Download JSON' }));
+  await waitFor(() => expect(URL.createObjectURL).toHaveBeenCalledTimes(1));
+  expect(JSON.parse(fetch.mock.calls[0][1].body)).toMatchObject({
+    from: 7875,
+    size: 1,
+  });
+  expect(startInput()).toHaveValue(7876);
+  expect(quantityInput()).toHaveValue(1);
+});
+
+test('whole-number entry blocks letters, exponent syntax and unsafe paste but preserves editing shortcuts', () => {
+  setup();
+  const input = quantityInput();
+  for (const key of ['e', 'E', 's', '+', '-', '.'])
+    expect(fireEvent.keyDown(input, { key })).toBe(false);
+  for (const key of ['1', 'ArrowLeft', 'Backspace', 'Tab'])
+    expect(fireEvent.keyDown(input, { key })).toBe(true);
+  expect(fireEvent.keyDown(input, { key: 'a', ctrlKey: true })).toBe(true);
+  expect(fireEvent.keyDown(input, { key: 's', isComposing: true })).toBe(true);
+  for (const text of ['9,999ss', '1e3', '12.5'])
+    expect(
+      fireEvent.paste(input, { clipboardData: { getData: () => text } })
+    ).toBe(false);
+  expect(
+    fireEvent.paste(input, { clipboardData: { getData: () => '10000' } })
+  ).toBe(true);
+  expect(fetch).not.toHaveBeenCalled();
+});
+
+test('unknown totals use an explicitly labelled preview window and invalid edits suppress it', () => {
+  const result = response(2500);
+  result.hits.total.relation = 'gte';
+  setup(true, {}, result, { exportDefaultCount: 100 });
+  const figure = screen.getByRole('figure');
+  expect(figure).toHaveTextContent(
+    'Requested results 1–100 of at least 2,500 (100 selected)'
+  );
+  expect(figure).toHaveTextContent('Preview window: 1–10,000');
+  expect(figure.querySelector('span').style.inlineSize).toBe('1%');
+  fireEvent.change(quantityInput(), { target: { value: '' } });
+  expect(screen.queryByRole('figure')).not.toBeInTheDocument();
+  fireEvent.blur(quantityInput());
+  expect(screen.getByRole('figure')).toBeInTheDocument();
+  expect(fetch).not.toHaveBeenCalled();
+});
+
+test('exact totals beyond the supported window retain the full-set visual scale', () => {
+  setup(true, {}, response(80000), { exportDefaultCount: 1000 });
+  expect(screen.getByRole('figure')).toHaveTextContent(
+    'Results 1–1,000 of 80,000 (1,000 selected)'
+  );
+  expect(
+    screen.getByRole('figure').querySelector('span').style.inlineSize
+  ).toBe('1.25%');
+});
+
+test('lower bounds below the window are not depicted as known global totals', () => {
+  const result = response(25);
+  result.hits.total.relation = 'gte';
+  setup(true, {}, result, { exportDefaultCount: 100 });
+  expect(screen.getByRole('figure')).toHaveTextContent('of at least 25');
+  expect(screen.getByRole('figure')).toHaveTextContent(
+    'Preview window: 1–10,000'
+  );
+  expect(
+    screen.getByRole('figure').querySelector('span').style.inlineSize
+  ).toBe('1%');
+});
+
+test('preview labels use the runtime override contract and locale number formatting', () => {
+  setup(
+    true,
+    {
+      exportPreview: ({ start, end, count, total }) =>
+        `${start}/${end}/${count}/${total}`,
+    },
+    response(7876),
+    { exportDefaultCount: 100 }
+  );
+  expect(screen.getByRole('figure')).toHaveTextContent('1/100/100/7876');
+  for (const lang of ['en', 'es', 'fr', 'ja', 'zh', 'ar', 'ru']) {
+    const labels = getSyndicationSearchWidgetLabels(lang);
+    expect(
+      labels.exportPreview({ start: 1, end: 1000, count: 1000, total: 80000 })
+    ).toContain(new Intl.NumberFormat(lang).format(80000));
+    expect(labels.exportPreviewWindow({ window: 10000 })).toContain(
+      new Intl.NumberFormat(lang).format(10000)
+    );
+  }
+});

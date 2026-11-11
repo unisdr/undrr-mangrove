@@ -1899,6 +1899,48 @@ $search-input-padding-x: mg-rem(44);
   }
 }
 
+.mg-search__export-preview {
+  grid-column: 1 / -1;
+  min-inline-size: 0;
+  margin: 0;
+}
+
+.mg-search__export-preview-track {
+  position: relative;
+  block-size: var(--mg-spacing-100);
+  overflow: hidden;
+  border: 1px solid rgb(var(--mg-color-neutral-500));
+  border-radius: var(--mg-radius-form-input);
+  background: rgb(var(--mg-color-neutral-50));
+
+  &--window {
+    border-style: dashed;
+  }
+}
+
+.mg-search__export-preview-selection {
+  position: absolute;
+  inset-block: 0;
+  min-inline-size: 1px;
+  color: rgb(var(--mg-color-interactive));
+  background: currentColor;
+  outline: 1px solid currentColor;
+}
+
+@media (forced-colors: active) {
+  .mg-search__export-preview-track {
+    background: Canvas;
+    border-color: CanvasText;
+  }
+
+  .mg-search__export-preview-selection {
+    color: Highlight;
+    background: Highlight;
+    outline-color: Highlight;
+    forced-color-adjust: none;
+  }
+}
+
 .mg-search__export-count,
 .mg-search__export-start {
   input {

@@ -18,7 +18,7 @@ import {
   interpolateLabel,
   DEFAULT_LABELS,
 } from '../context/SearchContext';
-import { isQueryTooShortToSearch } from '../utils/constants';
+import { isQueryTooShortToSearch, MAX_RESULT_WINDOW } from '../utils/constants';
 import { searchRequestKey } from '../utils/searchRequestKey';
 import { saveFile } from '../utils/saveFile';
 import {
@@ -52,9 +52,7 @@ export default function SearchExport({ isStale = false }) {
   const [countValue, setCountValue] = useState(() =>
     String(normalizeExportDefaultCount(config.exportDefaultCount))
   );
-  const [countError, setCountError] = useState(false);
   const [startValue, setStartValue] = useState('1');
-  const [startError, setStartError] = useState(false);
   const helpId = useId();
   const titleId = useId();
   const fieldsHelpId = useId();
@@ -62,6 +60,7 @@ export default function SearchExport({ isStale = false }) {
   const startId = useId();
   const formatTitleId = useId();
   const formatHelpId = useId();
+  const previewId = useId();
   const defaultCount = normalizeExportDefaultCount(config.exportDefaultCount);
   const { query, facets, facetOperators, customFacets, sortBy } = state;
   const body = useMemo(
@@ -122,13 +121,19 @@ export default function SearchExport({ isStale = false }) {
       )
     : null;
 
+  const previewCount =
+    !unavailable && range.start !== null
+      ? requestedExportCount(countValue, range.maxCount)
+      : null;
+  const previewWindow = state.totalResultsRelation === 'gte';
+  const previewScale = previewWindow ? MAX_RESULT_WINDOW : state.totalResults;
+
   useEffect(() => {
     if (offerOffset) return;
     if (startValue !== '1') {
       requestRef.current?.abort();
       setStartValue('1');
-      setStartError(false);
-      setCountError(false);
+
       setStatus(null);
     }
     const doc = dialogRef.current?.ownerDocument;
@@ -189,6 +194,56 @@ export default function SearchExport({ isStale = false }) {
     );
   }
 
+  function commitRange() {
+    const whole = (value, fallback, maximum) => {
+      const number = String(value).trim() === '' ? NaN : Number(value);
+      return Math.min(
+        maximum,
+        Math.max(1, Number.isFinite(number) ? Math.floor(number) : fallback)
+      );
+    };
+    const start = offerOffset ? whole(startValue, 1, range.maxStart) : 1;
+    const maximum = exportRangeLimits(
+      state.totalResults,
+      state.totalResultsRelation,
+      String(start)
+    ).maxCount;
+    const count = whole(countValue, defaultCount, Math.max(1, maximum));
+    if (
+      !unavailable &&
+      (String(start) !== startValue || String(count) !== countValue)
+    ) {
+      setStatus({
+        key: requestKey,
+        message: interpolateLabel(
+          previewWindow ? labels.exportPreviewAtLeast : labels.exportPreview,
+          { start, end: start + count - 1, count, total: state.totalResults }
+        ),
+      });
+    }
+    setStartValue(String(start));
+    setCountValue(String(count));
+
+    return { start, count };
+  }
+
+  function wholeNumberKey(event) {
+    if (
+      event.nativeEvent.isComposing ||
+      event.ctrlKey ||
+      event.metaKey ||
+      event.altKey
+    )
+      return;
+    if (event.key.length === 1 && !/^[0-9]$/.test(event.key))
+      event.preventDefault();
+  }
+
+  function wholeNumberPaste(event) {
+    if (!/^[0-9]+$/.test(event.clipboardData.getData('text').trim()))
+      event.preventDefault();
+  }
+
   async function download(format, document) {
     if (
       !isOpen ||
@@ -196,18 +251,9 @@ export default function SearchExport({ isStale = false }) {
       (requestRef.current && !requestRef.current.signal.aborted)
     )
       return;
-    if (range.start === null) {
-      setStartError(true);
-      document.getElementById(startId)?.focus();
-      return;
-    }
-    const from = range.start - 1;
-    const count = requestedExportCount(countValue, range.maxCount);
-    if (count === null) {
-      setCountError(true);
-      document.getElementById(countId)?.focus();
-      return;
-    }
+    const corrected = commitRange();
+    const from = corrected.start - 1;
+    const { count } = corrected;
     const columns = columnsForExportGroups(selectedGroups);
     const controller = new AbortController();
     requestRef.current = controller;
@@ -279,9 +325,9 @@ export default function SearchExport({ isStale = false }) {
           setStatus(null);
           setSelectedGroups(DEFAULT_EXPORT_GROUPS);
           setStartValue('1');
-          setStartError(false);
+
           setCountValue(String(Math.min(defaultCount, initialMaximum)));
-          setCountError(false);
+
           setOpenKey(requestKey);
         }}
       >
@@ -358,16 +404,15 @@ export default function SearchExport({ isStale = false }) {
                 step={1}
                 inputMode="numeric"
                 required
+                onBlur={commitRange}
+                onKeyDown={wholeNumberKey}
+                onPaste={wholeNumberPaste}
                 value={countValue}
                 disabled={busy}
                 helpText={[availability, countHelp].filter(Boolean).join('\n')}
-                error={countError}
-                errorText={interpolateLabel(labels.exportCountError, {
-                  max: Math.max(1, range.maxCount ?? MAX_EXPORT_LIMIT),
-                })}
                 onChange={event => {
                   setCountValue(event.target.value);
-                  setCountError(false);
+
                   setStatus(null);
                 }}
               />
@@ -382,6 +427,9 @@ export default function SearchExport({ isStale = false }) {
                   step={1}
                   inputMode="numeric"
                   required
+                  onBlur={commitRange}
+                  onKeyDown={wholeNumberKey}
+                  onPaste={wholeNumberPaste}
                   value={startValue}
                   disabled={busy}
                   helpText={
@@ -391,27 +439,53 @@ export default function SearchExport({ isStale = false }) {
                         })
                       : undefined
                   }
-                  error={startError}
-                  errorText={interpolateLabel(labels.exportStartError, {
-                    max: range.maxStart,
-                  })}
                   onChange={event => {
                     const value = event.target.value;
-                    const nextRange = exportRangeLimits(
-                      state.totalResults,
-                      state.totalResultsRelation,
-                      value
-                    );
                     setStartValue(value);
-                    setStartError(false);
-                    setCountError(
-                      nextRange.maxCount > 0 &&
-                        requestedExportCount(countValue, nextRange.maxCount) ===
-                          null
-                    );
+
                     setStatus(null);
                   }}
                 />
+              )}
+              {previewCount !== null && (
+                <figure
+                  className="mg-search__export-preview"
+                  aria-labelledby={previewId}
+                >
+                  <div
+                    className={`mg-search__export-preview-track${previewWindow ? ' mg-search__export-preview-track--window' : ''}`}
+                    aria-hidden="true"
+                  >
+                    <span
+                      className="mg-search__export-preview-selection"
+                      style={{
+                        insetInlineStart: `min(${((range.start - 1) / previewScale) * 100}%, calc(100% - 1px))`,
+                        inlineSize: `${(previewCount / previewScale) * 100}%`,
+                      }}
+                    />
+                  </div>
+                  <figcaption id={previewId} className="mg-form-help">
+                    {interpolateLabel(
+                      previewWindow
+                        ? labels.exportPreviewAtLeast
+                        : labels.exportPreview,
+                      {
+                        start: range.start,
+                        end: range.start + previewCount - 1,
+                        count: previewCount,
+                        total: state.totalResults,
+                      }
+                    )}
+                    {previewWindow && (
+                      <>
+                        <br />
+                        {interpolateLabel(labels.exportPreviewWindow, {
+                          window: MAX_RESULT_WINDOW,
+                        })}
+                      </>
+                    )}
+                  </figcaption>
+                </figure>
               )}
             </div>
             <details className="mg-search__export-field-options" open>

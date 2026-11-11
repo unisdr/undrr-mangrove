@@ -244,7 +244,7 @@ export const DownloadRange = {
   play: async context => {
     await openExport(context);
     const controls = within(dialog(within(context.canvasElement)));
-    const [start, count] = controls.getAllByRole('spinbutton');
+    const [count, start] = controls.getAllByRole('spinbutton');
     const before = requests.length;
     await userEvent.clear(start);
     await userEvent.type(start, '11');
