@@ -65,6 +65,16 @@ yarn lint
 yarn build
 ```
 
+### API-backed download examples
+
+The Downloads stories use the running local Drupal/Elasticsearch deployment on localhost previews, and public endpoints when hosted. Start DDEV first. For local taxonomy labels, enable the narrow development proxy with the trusted mkcert root certificate:
+
+```bash
+NODE_EXTRA_CA_CERTS="$(mkcert -CAROOT)/rootCA.pem" MANGROVE_LOCAL_API_ORIGIN=https://undrr.ddev.site ./node_modules/.bin/storybook dev --port 6104 --host 127.0.0.1 --exact-port --ci --no-open
+```
+
+Open `http://localhost:6104/?path=/story/components-syndicated-search-downloads--download-results`. Search requests go directly to the configured Drupal endpoint; only the local taxonomy GET route uses the opt-in dev proxy. A static Storybook server has no such proxy. The endpoint settings remain editable in Controls. Network-dependent examples never substitute fixtures or start downloads automatically; deterministic states are grouped separately under Downloads / Fixtures.
+
 ## Releases
 
 - Release process: [`docs/RELEASES.md`](docs/RELEASES.md)
