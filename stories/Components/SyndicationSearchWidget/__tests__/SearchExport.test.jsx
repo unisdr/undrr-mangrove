@@ -90,9 +90,7 @@ afterEach(() => {
 
 test('downloads the configured first records and reports truncation with a contact link', async () => {
   setup();
-  expect(quantityInput()).toHaveAccessibleDescription(
-    '25 results available · Max 25'
-  );
+  expect(quantityInput()).toHaveAccessibleDescription('25 results available');
   const button = screen.getByRole('button', { name: 'Download CSV' });
   expect(button).toHaveAccessibleDescription(
     expect.stringContaining('current terms, filters and sort order')
@@ -578,9 +576,9 @@ test('availability describes the full matching set across pages, independently o
   setup(true, {}, response(73));
   act(() => dispatch(actions.setPage(3)));
   const input = quantityInput();
-  expect(input).toHaveAccessibleDescription('73 results available · Max 73');
+  expect(input).toHaveAccessibleDescription('73 results available');
   fireEvent.change(input, { target: { value: '5' } });
-  expect(input).toHaveAccessibleDescription('73 results available · Max 73');
+  expect(input).toHaveAccessibleDescription('73 results available');
   expect(fetch).not.toHaveBeenCalled();
 });
 
@@ -589,11 +587,11 @@ test('availability distinguishes a formatted lower bound from an exact total', (
   result.hits.total.relation = 'gte';
   setup(true, {}, result);
   expect(quantityInput()).toHaveAccessibleDescription(
-    'At least 10,000 results available · Max 1,000 per download'
+    'At least 10,000 results available\nMax 1,000 per download'
   );
   act(() => dispatch(actions.setResults(response(12345))));
   expect(quantityInput()).toHaveAccessibleDescription(
-    '12,345 results available · Max 1,000 per download'
+    '12,345 results available\nMax 1,000 per download'
   );
 });
 
@@ -614,15 +612,13 @@ test('availability supports string and function overrides with numeric counts', 
     },
     response(73)
   );
-  expect(quantityInput()).toHaveAccessibleDescription(
-    '73 matching items · Max 73'
-  );
+  expect(quantityInput()).toHaveAccessibleDescription('73 matching items');
   const result = response(10000);
   result.hits.total.relation = 'gte';
   act(() => dispatch(actions.setResults(result)));
   expect(lower).toHaveBeenCalledWith({ count: 10000 });
   expect(quantityInput()).toHaveAccessibleDescription(
-    'Matching at least: 10000 · Max 1,000 per download'
+    'Matching at least: 10000\nMax 1,000 per download'
   );
 });
 
@@ -911,3 +907,34 @@ test('hiding the focused start control moves focus to quantity', () => {
   ).not.toBeInTheDocument();
   expect(quantityInput()).toHaveFocus();
 });
+
+test.each([
+  [25, 'eq'],
+  [999, 'eq'],
+  [999, 'gte'],
+  [1000, 'eq'],
+  [80000, 'eq'],
+])(
+  'quantity help for %s/%s shows a separate maximum only for large sets',
+  (total, relation) => {
+    const result = response(total);
+    result.hits.total.relation = relation;
+    setup(true, {}, result);
+    const input = quantityInput();
+    const helper = document.getElementById(
+      input.getAttribute('aria-describedby')
+    );
+    expect(helper.textContent).not.toMatch(/[•·]/);
+    expect(input).toHaveAttribute(
+      'max',
+      String(relation === 'eq' ? Math.min(total, 1000) : 1000)
+    );
+    if (total < 1000) {
+      expect(helper.textContent).not.toContain('Max');
+      expect(helper.textContent.split('\n')).toHaveLength(1);
+    } else {
+      expect(helper.textContent.split('\n')).toHaveLength(2);
+      expect(helper.textContent.split('\n')[1]).toBe('Max 1,000 per download');
+    }
+  }
+);

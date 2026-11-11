@@ -1907,6 +1907,10 @@ $search-input-padding-x: mg-rem(44);
   }
 }
 
+.mg-search__export-count .mg-form-help {
+  white-space: pre-line;
+}
+
 .mg-search__export-field-options {
   margin-block-end: var(--mg-spacing-100);
   border: 1px solid rgb(var(--mg-color-neutral-100));

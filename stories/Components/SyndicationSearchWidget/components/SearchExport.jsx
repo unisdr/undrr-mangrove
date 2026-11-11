@@ -105,7 +105,7 @@ export default function SearchExport({ isStale = false }) {
     '1'
   ).maxCount;
   const countHelp =
-    !unavailable && range.maxCount > 0
+    !unavailable && offerOffset && range.maxCount > 0
       ? interpolateLabel(labels.exportCountHelp, {
           max: range.maxCount,
           fromStart: range.start > 1,
@@ -402,7 +402,7 @@ export default function SearchExport({ isStale = false }) {
                 required
                 value={countValue}
                 disabled={busy}
-                helpText={[availability, countHelp].filter(Boolean).join(' · ')}
+                helpText={[availability, countHelp].filter(Boolean).join('\n')}
                 error={countError}
                 errorText={interpolateLabel(labels.exportCountError, {
                   max: Math.max(1, range.maxCount ?? MAX_EXPORT_LIMIT),
