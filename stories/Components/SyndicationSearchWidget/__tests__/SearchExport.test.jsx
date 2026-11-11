@@ -59,6 +59,7 @@ function setup(
     );
   return { ...rendered, stale: value => rendered.rerender(view(value)) };
 }
+const rangeGroup = () => screen.getAllByRole('group')[0];
 const quantityInput = () => screen.getAllByRole('spinbutton').at(0);
 let click;
 const originalFetch = global.fetch;
@@ -90,7 +91,7 @@ afterEach(() => {
 
 test('downloads the configured first records and reports truncation with a contact link', async () => {
   setup();
-  expect(quantityInput()).toHaveAccessibleDescription('25 results available');
+  expect(rangeGroup()).toHaveAccessibleName('25 results available');
   const button = screen.getByRole('button', { name: 'Download CSV' });
   expect(button).toHaveAccessibleDescription(
     expect.stringContaining('current terms, filters and sort order')
@@ -575,9 +576,9 @@ test('availability describes the full matching set across pages, independently o
   setup(true, {}, response(73));
   act(() => dispatch(actions.setPage(3)));
   const input = quantityInput();
-  expect(input).toHaveAccessibleDescription('73 results available');
+  expect(rangeGroup()).toHaveAccessibleName('73 results available');
   fireEvent.change(input, { target: { value: '5' } });
-  expect(input).toHaveAccessibleDescription('73 results available');
+  expect(rangeGroup()).toHaveAccessibleName('73 results available');
   expect(fetch).not.toHaveBeenCalled();
 });
 
@@ -585,13 +586,13 @@ test('availability distinguishes a formatted lower bound from an exact total', (
   const result = response(10000);
   result.hits.total.relation = 'gte';
   setup(true, {}, result);
-  expect(quantityInput()).toHaveAccessibleDescription(
-    'At least 10,000 results available\nMax 1,000 per download'
+  expect(rangeGroup()).toHaveAccessibleName(
+    'At least 10,000 results available'
   );
+  expect(quantityInput()).toHaveAccessibleDescription('Max 1,000 per download');
   act(() => dispatch(actions.setResults(response(12345))));
-  expect(quantityInput()).toHaveAccessibleDescription(
-    '12,345 results available\nMax 1,000 per download'
-  );
+  expect(rangeGroup()).toHaveAccessibleName('12,345 results available');
+  expect(quantityInput()).toHaveAccessibleDescription('Max 1,000 per download');
 });
 
 test('availability is hidden during a search refresh', () => {
@@ -611,21 +612,20 @@ test('availability supports string and function overrides with numeric counts', 
     },
     response(73)
   );
-  expect(quantityInput()).toHaveAccessibleDescription('73 matching items');
+  expect(rangeGroup()).toHaveAccessibleName('73 matching items');
   const result = response(10000);
   result.hits.total.relation = 'gte';
   act(() => dispatch(actions.setResults(result)));
   expect(lower).toHaveBeenCalledWith({ count: 10000 });
-  expect(quantityInput()).toHaveAccessibleDescription(
-    'Matching at least: 10000\nMax 1,000 per download'
-  );
+  expect(rangeGroup()).toHaveAccessibleName('Matching at least: 10000');
+  expect(quantityInput()).toHaveAccessibleDescription('Max 1,000 per download');
 });
 
 test.each(['en', 'es', 'fr', 'ja', 'zh', 'ar', 'ru'])(
   'availability uses catalogue number formatting for %s',
   lang => {
     setup(true, getSyndicationSearchWidgetLabels(lang), response(12345));
-    expect(quantityInput()).toHaveAccessibleDescription(
+    expect(rangeGroup()).toHaveAccessibleName(
       expect.stringContaining(new Intl.NumberFormat(lang).format(12345))
     );
   }
@@ -653,7 +653,7 @@ test('opening bounds the default; start edits expose the reduced maximum without
   expect(quantityInput()).toHaveAttribute('max', '1000');
   fireEvent.change(startInput(), { target: { value: '996' } });
   expect(screen.getByRole('dialog')).toBe(modal);
-  expect(quantityInput()).toHaveValue(100);
+  expect(quantityInput()).toHaveValue(5);
   expect(quantityInput()).toHaveAttribute('max', '5');
   expect(quantityInput()).not.toHaveAttribute('aria-invalid');
   expect(quantityInput()).toHaveAccessibleDescription(
@@ -786,7 +786,7 @@ test('lower bounds allow a window-bounded start; fresh end-of-set creates no fil
   setup(true, {}, result);
   fireEvent.change(startInput(), { target: { value: '1001' } });
   expect(quantityInput()).toHaveAttribute('max', '1000');
-  expect(quantityInput()).toHaveAccessibleDescription(
+  expect(rangeGroup()).toHaveAccessibleName(
     expect.stringContaining('At least 1,000 results available')
   );
   fetch.mockResolvedValue({
@@ -920,32 +920,26 @@ test.each([
     const helper = document.getElementById(
       input.getAttribute('aria-describedby')
     );
-    expect(helper.textContent).not.toMatch(/[•·]/);
+    expect(helper?.textContent || '').not.toMatch(/[•·]/);
     expect(input).toHaveAttribute(
       'max',
       String(relation === 'eq' ? Math.min(total, 1000) : 1000)
     );
     if (total < 1000) {
-      expect(helper.textContent).not.toContain('Max');
-      expect(helper.textContent.split('\n')).toHaveLength(1);
+      expect(helper).toBeNull();
     } else {
-      expect(helper.textContent.split('\n')).toHaveLength(2);
-      expect(helper.textContent.split('\n')[1]).toBe('Max 1,000 per download');
+      expect(helper.textContent).toBe('Max 1,000 per download');
     }
   }
 );
 
 test('read-only overview maps the selected slice against the full exact total', () => {
   setup(true, {}, response(7876), { exportDefaultCount: 100 });
-  expect(screen.getByRole('figure')).toHaveAccessibleName(
-    'Results 1–100 of 7,876 (100 selected)'
-  );
+  expect(screen.getByRole('figure')).toHaveAccessibleName('Results 1–100');
   fireEvent.change(quantityInput(), { target: { value: '1000' } });
   fireEvent.change(startInput(), { target: { value: '900' } });
   const figure = screen.getByRole('figure');
-  expect(figure).toHaveAccessibleName(
-    'Results 900–1,899 of 7,876 (1,000 selected)'
-  );
+  expect(figure).toHaveAccessibleName('Results 900–1,899');
   const graphic = figure.querySelector('[aria-hidden="true"]');
   const selected = graphic.firstElementChild;
   expect(parseFloat(selected.style.inlineSize)).toBeCloseTo(
@@ -1003,9 +997,7 @@ test('unknown totals use an explicitly labelled preview window and invalid edits
   result.hits.total.relation = 'gte';
   setup(true, {}, result, { exportDefaultCount: 100 });
   const figure = screen.getByRole('figure');
-  expect(figure).toHaveTextContent(
-    'Requested results 1–100 of at least 2,500 (100 selected)'
-  );
+  expect(figure).toHaveTextContent('Results 1–100');
   expect(figure).toHaveTextContent('Preview window: 1–10,000');
   expect(figure.querySelector('span').style.inlineSize).toBe('1%');
   fireEvent.change(quantityInput(), { target: { value: '' } });
@@ -1017,9 +1009,7 @@ test('unknown totals use an explicitly labelled preview window and invalid edits
 
 test('exact totals beyond the supported window retain the full-set visual scale', () => {
   setup(true, {}, response(80000), { exportDefaultCount: 1000 });
-  expect(screen.getByRole('figure')).toHaveTextContent(
-    'Results 1–1,000 of 80,000 (1,000 selected)'
-  );
+  expect(screen.getByRole('figure')).toHaveTextContent('Results 1–1,000');
   expect(
     screen.getByRole('figure').querySelector('span').style.inlineSize
   ).toBe('1.25%');
@@ -1029,7 +1019,7 @@ test('lower bounds below the window are not depicted as known global totals', ()
   const result = response(25);
   result.hits.total.relation = 'gte';
   setup(true, {}, result, { exportDefaultCount: 100 });
-  expect(screen.getByRole('figure')).toHaveTextContent('of at least 25');
+  expect(rangeGroup()).toHaveAccessibleName('At least 25 results available');
   expect(screen.getByRole('figure')).toHaveTextContent(
     'Preview window: 1–10,000'
   );
@@ -1053,9 +1043,48 @@ test('preview labels use the runtime override contract and locale number formatt
     const labels = getSyndicationSearchWidgetLabels(lang);
     expect(
       labels.exportPreview({ start: 1, end: 1000, count: 1000, total: 80000 })
-    ).toContain(new Intl.NumberFormat(lang).format(80000));
+    ).toContain(new Intl.NumberFormat(lang).format(1000));
     expect(labels.exportPreviewWindow({ window: 10000 })).toContain(
       new Intl.NumberFormat(lang).format(10000)
     );
   }
 });
+
+test('each numeric change immediately caps both inputs without requesting data', () => {
+  setup(true, {}, response(7876), { exportDefaultCount: 1000 });
+  fireEvent.change(startInput(), { target: { value: '10000' } });
+  expect(startInput()).toHaveValue(7876);
+  expect(quantityInput()).toHaveValue(1);
+  expect(screen.getByRole('figure')).toHaveAccessibleName(
+    'Results 7,876–7,876'
+  );
+  fireEvent.change(quantityInput(), { target: { value: '1000' } });
+  expect(quantityInput()).toHaveValue(1);
+  expect(screen.getByRole('status')).toHaveClass('mg-u-sr-only');
+  fireEvent.change(startInput(), { target: { value: '' } });
+  expect(startInput()).toHaveValue(null);
+  expect(screen.queryByRole('figure')).not.toBeInTheDocument();
+  fireEvent.change(startInput(), { target: { value: '900' } });
+  fireEvent.change(quantityInput(), { target: { value: '10000' } });
+  expect(quantityInput()).toHaveValue(1000);
+  expect(screen.getByRole('figure')).toHaveAccessibleName('Results 900–1,899');
+  expect(fetch).not.toHaveBeenCalled();
+});
+
+test('availability appears once as the group name, not in helpers or preview', () => {
+  setup(true, {}, response(25), { exportDefaultCount: 10 });
+  expect(screen.getAllByText('25 results available')).toHaveLength(1);
+  expect(rangeGroup()).toHaveAccessibleName('25 results available');
+  expect(quantityInput()).not.toHaveAttribute('aria-describedby');
+  expect(screen.getByRole('figure')).toHaveAccessibleName('Results 1–10');
+});
+
+test.each([1000, 10000, 80000])(
+  'start only explains the service window when total %i exceeds it',
+  total => {
+    setup(true, {}, response(total));
+    if (total > 10000)
+      expect(startInput()).toHaveAccessibleDescription('Max 10,000');
+    else expect(startInput()).not.toHaveAttribute('aria-describedby');
+  }
+);

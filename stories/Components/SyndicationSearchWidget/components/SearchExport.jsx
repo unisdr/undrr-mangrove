@@ -194,37 +194,45 @@ export default function SearchExport({ isStale = false }) {
     );
   }
 
-  function commitRange() {
+  function updateRange(nextStart, nextCount, commit = false) {
     const whole = (value, fallback, maximum) => {
+      if (value === '' && !commit) return '';
       const number = String(value).trim() === '' ? NaN : Number(value);
       return Math.min(
         maximum,
         Math.max(1, Number.isFinite(number) ? Math.floor(number) : fallback)
       );
     };
-    const start = offerOffset ? whole(startValue, 1, range.maxStart) : 1;
+    const start = offerOffset ? whole(nextStart, 1, range.maxStart) : 1;
     const maximum = exportRangeLimits(
       state.totalResults,
       state.totalResultsRelation,
-      String(start)
+      String(start || 1)
     ).maxCount;
-    const count = whole(countValue, defaultCount, Math.max(1, maximum));
-    if (
-      !unavailable &&
-      (String(start) !== startValue || String(count) !== countValue)
-    ) {
-      setStatus({
-        key: requestKey,
-        message: interpolateLabel(
-          previewWindow ? labels.exportPreviewAtLeast : labels.exportPreview,
-          { start, end: start + count - 1, count, total: state.totalResults }
-        ),
-      });
-    }
+    const count = whole(nextCount, defaultCount, Math.max(1, maximum));
+    const corrected =
+      String(start) !== nextStart || String(count) !== nextCount;
+    setStatus(
+      !unavailable && corrected && start !== '' && count !== ''
+        ? {
+            key: requestKey,
+            correction: true,
+            message: interpolateLabel(labels.exportPreview, {
+              start,
+              end: start + count - 1,
+              count,
+              total: state.totalResults,
+            }),
+          }
+        : null
+    );
     setStartValue(String(start));
     setCountValue(String(count));
-
     return { start, count };
+  }
+
+  function commitRange() {
+    return updateRange(startValue, countValue, true);
   }
 
   function wholeNumberKey(event) {
@@ -391,9 +399,12 @@ export default function SearchExport({ isStale = false }) {
             </p>
           </header>
           <div className="mg-dialog__body">
-            <div
+            <fieldset
               className={`mg-search__export-range${offerOffset ? ' mg-search__export-range--paged' : ''}`}
             >
+              <legend className="mg-form-group__legend">
+                <span>{availability || labels.exportCountLabel}</span>
+              </legend>
               <TextInput
                 className="mg-search__export-count"
                 id={countId}
@@ -409,12 +420,8 @@ export default function SearchExport({ isStale = false }) {
                 onPaste={wholeNumberPaste}
                 value={countValue}
                 disabled={busy}
-                helpText={[availability, countHelp].filter(Boolean).join('\n')}
-                onChange={event => {
-                  setCountValue(event.target.value);
-
-                  setStatus(null);
-                }}
+                helpText={countHelp}
+                onChange={event => updateRange(startValue, event.target.value)}
               />
               {offerOffset && (
                 <TextInput
@@ -433,18 +440,15 @@ export default function SearchExport({ isStale = false }) {
                   value={startValue}
                   disabled={busy}
                   helpText={
-                    !unavailable
+                    state.totalResults > MAX_RESULT_WINDOW
                       ? interpolateLabel(labels.exportStartHelp, {
-                          max: range.maxStart,
+                          max: MAX_RESULT_WINDOW,
                         })
                       : undefined
                   }
-                  onChange={event => {
-                    const value = event.target.value;
-                    setStartValue(value);
-
-                    setStatus(null);
-                  }}
+                  onChange={event =>
+                    updateRange(event.target.value, countValue)
+                  }
                 />
               )}
               {previewCount !== null && (
@@ -465,29 +469,24 @@ export default function SearchExport({ isStale = false }) {
                     />
                   </div>
                   <figcaption id={previewId} className="mg-form-help">
-                    {interpolateLabel(
-                      previewWindow
-                        ? labels.exportPreviewAtLeast
-                        : labels.exportPreview,
-                      {
-                        start: range.start,
-                        end: range.start + previewCount - 1,
-                        count: previewCount,
-                        total: state.totalResults,
-                      }
-                    )}
+                    {interpolateLabel(labels.exportPreview, {
+                      start: range.start,
+                      end: range.start + previewCount - 1,
+                      count: previewCount,
+                      total: state.totalResults,
+                    })}
                     {previewWindow && (
-                      <>
-                        <br />
+                      <span className="mg-u-sr-only">
+                        {' '}
                         {interpolateLabel(labels.exportPreviewWindow, {
                           window: MAX_RESULT_WINDOW,
                         })}
-                      </>
+                      </span>
                     )}
                   </figcaption>
                 </figure>
               )}
-            </div>
+            </fieldset>
             <details className="mg-search__export-field-options" open>
               <summary>{labels.exportFields}</summary>
               <fieldset
@@ -561,7 +560,7 @@ export default function SearchExport({ isStale = false }) {
               </button>
             </div>
             <p
-              className="mg-search__export-status"
+              className={`mg-search__export-status${currentStatus?.correction ? ' mg-u-sr-only' : ''}`}
               role="status"
               aria-live="polite"
             >
