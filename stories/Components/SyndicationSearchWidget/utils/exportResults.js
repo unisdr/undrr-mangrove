@@ -2,6 +2,7 @@ import { decodeEntities } from './decodeEntities';
 import { buildQuery } from './queryBuilder';
 import {
   DOMAIN_MAP,
+  MAX_RESULT_WINDOW,
   getTaxonomyVocabulary,
   isTaxonomyTermResult,
 } from './constants';
@@ -87,16 +88,36 @@ export function normalizeExportDefaultCount(value) {
     : DEFAULT_EXPORT_COUNT;
 }
 
-export function requestedExportCount(value) {
+export function requestedExportCount(value, maximum = MAX_EXPORT_LIMIT) {
   if (
     !['string', 'number'].includes(typeof value) ||
     String(value).trim() === ''
   )
     return null;
   const count = Number(value);
-  return Number.isSafeInteger(count) && count >= 1 && count <= MAX_EXPORT_LIMIT
+  return Number.isSafeInteger(count) && count >= 1 && count <= maximum
     ? count
     : null;
+}
+
+export function exportRangeLimits(total, relation, value) {
+  const maxStart = Math.max(
+    1,
+    Math.min(MAX_RESULT_WINDOW, relation === 'eq' ? total : MAX_RESULT_WINDOW)
+  );
+  const start = requestedExportCount(value, maxStart);
+  const maxCount =
+    start === null
+      ? null
+      : Math.max(
+          0,
+          Math.min(
+            MAX_EXPORT_LIMIT,
+            MAX_RESULT_WINDOW - start + 1,
+            relation === 'eq' ? total - start + 1 : MAX_RESULT_WINDOW
+          )
+        );
+  return { start, maxStart, maxCount };
 }
 
 export function buildExportQuery(state, config) {
@@ -155,17 +176,21 @@ export function exportRecord(hit) {
   };
 }
 
-export function readExportResponse(data, limit) {
+export function readExportResponse(data, limit, from = 0) {
   const hits = data?.hits?.hits;
   const total = data?.hits?.total;
   if (
+    requestedExportCount(limit) === null ||
+    !Number.isSafeInteger(from) ||
+    from < 0 ||
+    from + limit > MAX_RESULT_WINDOW ||
     data?.timed_out ||
     data?._shards?.failed > 0 ||
     !Array.isArray(hits) ||
     total?.relation !== 'eq' ||
     !Number.isSafeInteger(total.value) ||
     total.value < 0 ||
-    hits.length !== Math.min(total.value, limit) ||
+    hits.length !== Math.min(Math.max(total.value - from, 0), limit) ||
     hits.some(
       hit => !hit || typeof hit._source !== 'object' || hit._source === null
     )
@@ -175,7 +200,8 @@ export function readExportResponse(data, limit) {
   return {
     records: hits.map(exportRecord),
     total: total.value,
-    limited: total.value > limit,
+    from,
+    limited: from > 0 || total.value > limit,
   };
 }
 
@@ -203,6 +229,7 @@ export function exportCsv(records, fields = EXPORT_COLUMNS) {
 
 export function exportJson(result, limit, fields = EXPORT_COLUMNS) {
   const columns = exportColumns(fields);
+  const from = result.from ?? 0;
   return (
     JSON.stringify(
       {
@@ -210,6 +237,9 @@ export function exportJson(result, limit, fields = EXPORT_COLUMNS) {
         exportedAt: new Date().toISOString(),
         scope: {
           limit,
+          from,
+          start: result.records.length ? from + 1 : null,
+          end: result.records.length ? from + result.records.length : null,
           count: result.records.length,
           total: result.total,
           limited: result.limited,

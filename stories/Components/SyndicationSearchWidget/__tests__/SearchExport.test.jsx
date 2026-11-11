@@ -34,16 +34,21 @@ const config = {
   defaultFilters: [],
   enableHashSync: false,
 };
-function setup(open = true, labels = {}, searchResult = response()) {
+function setup(
+  open = true,
+  labels = {},
+  searchResult = response(25),
+  configOverrides = {}
+) {
   const view = isStale => (
-    <SearchProvider config={config} labels={labels}>
+    <SearchProvider config={{ ...config, ...configOverrides }} labels={labels}>
       <Capture />
       <SearchExport isStale={isStale} />
     </SearchProvider>
   );
   const rendered = render(view(false));
   act(() => {
-    dispatch(actions.initialize({}));
+    dispatch(actions.initialize({ ...config, ...configOverrides }));
     dispatch(actions.setResults(searchResult));
   });
   if (open)
@@ -54,6 +59,7 @@ function setup(open = true, labels = {}, searchResult = response()) {
     );
   return { ...rendered, stale: value => rendered.rerender(view(value)) };
 }
+const quantityInput = () => screen.getAllByRole('spinbutton')[1];
 let click;
 const originalFetch = global.fetch;
 beforeAll(() => {
@@ -84,8 +90,8 @@ afterEach(() => {
 
 test('downloads the configured first records and reports truncation with a contact link', async () => {
   setup();
-  expect(screen.getByRole('spinbutton')).toHaveAccessibleDescription(
-    '1 result available · Max 1,000'
+  expect(quantityInput()).toHaveAccessibleDescription(
+    '25 results available · Max 25'
   );
   const button = screen.getByRole('button', { name: 'Download CSV' });
   expect(button).toHaveAccessibleDescription(
@@ -98,7 +104,7 @@ test('downloads the configured first records and reports truncation with a conta
   expect(click.mock.instances[0].download).toMatch(
     /^search-results-\d{4}-\d{2}-\d{2}\.csv$/
   );
-  expect(screen.getByRole('status')).toHaveTextContent('first 1 of 25');
+  expect(screen.getByRole('status')).toHaveTextContent('results 1–1 of 25');
   expect(screen.getByRole('link', { name: 'Contact us' })).toHaveAttribute(
     'href',
     '/contact'
@@ -190,7 +196,9 @@ test('reports fresh empty results without creating a file and disables known emp
   fetch.mockResolvedValue({ ok: true, json: async () => response(0) });
   fireEvent.click(screen.getByRole('button', { name: 'Download CSV' }));
   await waitFor(() =>
-    expect(screen.getByRole('status')).toHaveTextContent('No matching records')
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'No results are available from this position'
+    )
   );
   expect(click).not.toHaveBeenCalled();
   act(() => dispatch(actions.setResults(response(0))));
@@ -208,10 +216,11 @@ test('has no accessibility violations and preserves language overrides', async (
     const labels = getSyndicationSearchWidgetLabels(lang);
     expect(labels.exportCountLabel).not.toBe('Number of results');
     expect(labels.exportCountError).not.toBe(
-      'Enter a whole number from 1 to 1,000.'
+      'Enter a whole number from 1 to 25.'
     );
-    expect(labels.exportLimited).toContain('{count}');
-    expect(labels.exportLimited).toContain('{total}');
+    expect(labels.exportLimited({ start: 1, end: 3, total: 25 })).toContain(
+      '25'
+    );
     expect(labels.exportContactLink).not.toBe('Contact us');
   }
 });
@@ -237,7 +246,7 @@ test('offers one optional CTA that opens both formats in a labelled modal', () =
   ).toHaveFocus();
   expect(screen.getByRole('button', { name: 'Download CSV' })).toBeVisible();
   expect(screen.getByRole('button', { name: 'Download JSON' })).toBeVisible();
-  const quantity = screen.getByRole('spinbutton');
+  const quantity = quantityInput();
   const fields = screen
     .getByText('Fields to include', { selector: 'summary' })
     .closest('summary');
@@ -430,6 +439,9 @@ test('field editing is unavailable during a pending download and the snapshot is
     expect(checkbox).toBeDisabled();
   expect(screen.getByRole('button', { name: 'Close' })).toBeEnabled();
   expect(
+    screen.getByRole('spinbutton', { name: 'Start at result' })
+  ).toBeDisabled();
+  expect(
     screen.getByRole('spinbutton', { name: 'Number of results' })
   ).toBeDisabled();
   await act(async () => resolve({ ok: true, json: async () => response() }));
@@ -460,7 +472,7 @@ test('quantity is modal-local, starts from configuration, and both formats reuse
   const input = screen.getByRole('spinbutton', { name: 'Number of results' });
   expect(input).toHaveValue(1);
   expect(input).toHaveAttribute('min', '1');
-  expect(input).toHaveAttribute('max', '1000');
+  expect(input).toHaveAttribute('max', '25');
   expect(input).toHaveAttribute('step', '1');
   const modal = screen.getByRole('dialog');
   fireEvent.change(input, { target: { value: '3' } });
@@ -494,12 +506,12 @@ test.each(['', 'abc', '0', '-1', '1.5', '1001'])(
     fireEvent.click(screen.getByRole('button', { name: 'Download CSV' }));
     expect(fetch).not.toHaveBeenCalled();
     expect(screen.getByRole('alert')).toHaveTextContent(
-      'Enter a whole number from 1 to 1,000.'
+      'Enter a whole number from 1 to 25.'
     );
     expect(input).toHaveFocus();
     expect(input).toHaveAttribute('aria-invalid', 'true');
     expect(input).toHaveAccessibleDescription(
-      expect.stringContaining('Enter a whole number from 1 to 1,000.')
+      expect.stringContaining('Enter a whole number from 1 to 25.')
     );
     expect(screen.getByRole('dialog')).toHaveAttribute('open');
     expect(input).toHaveValue(
@@ -515,7 +527,7 @@ test.each([
 ])(
   'requested %s against total %s returns %s records with exact scope',
   async (requested, total, returned) => {
-    setup();
+    setup(true, {}, response(Math.max(requested, total)));
     fireEvent.change(
       screen.getByRole('spinbutton', { name: 'Number of results' }),
       { target: { value: String(requested) } }
@@ -565,10 +577,10 @@ test.each(['', '   '])(
 test('availability describes the full matching set across pages, independently of quantity', () => {
   setup(true, {}, response(73));
   act(() => dispatch(actions.setPage(3)));
-  const input = screen.getByRole('spinbutton');
-  expect(input).toHaveAccessibleDescription('73 results available · Max 1,000');
+  const input = quantityInput();
+  expect(input).toHaveAccessibleDescription('73 results available · Max 73');
   fireEvent.change(input, { target: { value: '5' } });
-  expect(input).toHaveAccessibleDescription('73 results available · Max 1,000');
+  expect(input).toHaveAccessibleDescription('73 results available · Max 73');
   expect(fetch).not.toHaveBeenCalled();
 });
 
@@ -576,21 +588,19 @@ test('availability distinguishes a formatted lower bound from an exact total', (
   const result = response(10000);
   result.hits.total.relation = 'gte';
   setup(true, {}, result);
-  expect(screen.getByRole('spinbutton')).toHaveAccessibleDescription(
-    'At least 10,000 results available · Max 1,000'
+  expect(quantityInput()).toHaveAccessibleDescription(
+    'At least 10,000 results available · Max 1,000 per download'
   );
   act(() => dispatch(actions.setResults(response(12345))));
-  expect(screen.getByRole('spinbutton')).toHaveAccessibleDescription(
-    '12,345 results available · Max 1,000'
+  expect(quantityInput()).toHaveAccessibleDescription(
+    '12,345 results available · Max 1,000 per download'
   );
 });
 
 test('availability is hidden during a search refresh', () => {
   setup(true, {}, response(73));
   act(() => dispatch(actions.setLoading(true)));
-  expect(screen.getByRole('spinbutton')).toHaveAccessibleDescription(
-    'Max 1,000'
-  );
+  expect(quantityInput()).toHaveAccessibleDescription('');
   expect(screen.queryByText(/73 results available/)).not.toBeInTheDocument();
 });
 
@@ -604,15 +614,15 @@ test('availability supports string and function overrides with numeric counts', 
     },
     response(73)
   );
-  expect(screen.getByRole('spinbutton')).toHaveAccessibleDescription(
-    '73 matching items · Max 1,000'
+  expect(quantityInput()).toHaveAccessibleDescription(
+    '73 matching items · Max 73'
   );
   const result = response(10000);
   result.hits.total.relation = 'gte';
   act(() => dispatch(actions.setResults(result)));
   expect(lower).toHaveBeenCalledWith({ count: 10000 });
-  expect(screen.getByRole('spinbutton')).toHaveAccessibleDescription(
-    'Matching at least: 10000 · Max 1,000'
+  expect(quantityInput()).toHaveAccessibleDescription(
+    'Matching at least: 10000 · Max 1,000 per download'
   );
 });
 
@@ -620,8 +630,179 @@ test.each(['en', 'es', 'fr', 'ja', 'zh', 'ar', 'ru'])(
   'availability uses catalogue number formatting for %s',
   lang => {
     setup(true, getSyndicationSearchWidgetLabels(lang), response(12345));
-    expect(screen.getByRole('spinbutton')).toHaveAccessibleDescription(
+    expect(quantityInput()).toHaveAccessibleDescription(
       expect.stringContaining(new Intl.NumberFormat(lang).format(12345))
     );
   }
 );
+
+const startInput = () => screen.getAllByRole('spinbutton')[0];
+const offsetResponse = (total, from, count) => ({
+  hits: {
+    total: { value: total, relation: 'eq' },
+    hits: Array.from(
+      { length: Math.min(count, Math.max(0, total - from)) },
+      (_, index) => ({
+        _id: String(from + index + 1),
+        _source: { ...hit._source, nid: [from + index + 1] },
+      })
+    ),
+  },
+});
+test('opening bounds the default; start edits expose the reduced maximum without changing quantity', () => {
+  setup(true, {}, response(25), { exportDefaultCount: 100 });
+  const modal = screen.getByRole('dialog');
+  expect(startInput()).toHaveValue(1);
+  expect(quantityInput()).toHaveValue(25);
+  expect(quantityInput()).toHaveAttribute('max', '25');
+  fireEvent.change(startInput(), { target: { value: '21' } });
+  expect(screen.getByRole('dialog')).toBe(modal);
+  expect(quantityInput()).toHaveValue(25);
+  expect(quantityInput()).toHaveAttribute('max', '5');
+  expect(quantityInput()).toHaveAttribute('aria-invalid', 'true');
+  expect(quantityInput()).toHaveAccessibleDescription(
+    expect.stringContaining('Max 5 from this start')
+  );
+  expect(screen.getByRole('alert')).toHaveTextContent(
+    'Enter a whole number from 1 to 5.'
+  );
+  expect(fetch).not.toHaveBeenCalled();
+  fireEvent.click(screen.getByRole('button', { name: 'Close' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Download results' }));
+  expect(startInput()).toHaveValue(1);
+  expect(quantityInput()).toHaveValue(25);
+  expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+});
+test.each(['', 'abc', '0', '-1', '1.5', '26', '10001'])(
+  'invalid start %j focuses its associated error first',
+  value => {
+    setup();
+    const input = startInput();
+    fireEvent.change(input, { target: { value } });
+    fireEvent.click(screen.getByRole('button', { name: 'Download CSV' }));
+    expect(input).toHaveFocus();
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+    expect(input).toHaveAccessibleDescription(
+      expect.stringContaining('Enter a whole number from 1 to 25.')
+    );
+    expect(fetch).not.toHaveBeenCalled();
+    expect(quantityInput()).not.toHaveAttribute('aria-invalid');
+    expect(document.body.textContent).not.toContain('Max 0');
+  }
+);
+test('both formats snapshot offset, quantity, fields and search constraints', async () => {
+  setup(true, {}, response(25), {
+    defaultFilters: [
+      { key: '_language', value: 'en' },
+      { key: 'field_domain_access', value: 'www_preventionweb_net' },
+    ],
+    customFilters: ['type:publication'],
+    defaultSort: 'newest',
+  });
+  fireEvent.change(startInput(), { target: { value: '21' } });
+  fireEvent.change(quantityInput(), { target: { value: '5' } });
+  fireEvent.click(screen.getByRole('checkbox', { name: 'Title' }));
+  expect(fetch).not.toHaveBeenCalled();
+  fetch.mockResolvedValue({
+    ok: true,
+    json: async () => offsetResponse(25, 20, 5),
+  });
+  fireEvent.click(screen.getByRole('button', { name: 'Download CSV' }));
+  await waitFor(() => expect(URL.createObjectURL).toHaveBeenCalledTimes(1));
+  const body = JSON.parse(fetch.mock.calls[0][1].body);
+  expect(body).toMatchObject({
+    from: 20,
+    size: 5,
+    sort: [{ published_at: { order: 'desc' } }],
+  });
+  expect(JSON.stringify(body)).toContain('publication');
+  expect(JSON.stringify(body)).toContain('www_preventionweb_net');
+  expect(JSON.stringify(body)).toContain('status');
+  fireEvent.click(screen.getByRole('button', { name: 'Download JSON' }));
+  await waitFor(() => expect(URL.createObjectURL).toHaveBeenCalledTimes(2));
+  expect(JSON.parse(fetch.mock.calls[1][1].body)).toEqual(body);
+  const csv = await blobText(URL.createObjectURL.mock.calls[0][0]);
+  const json = JSON.parse(await blobText(URL.createObjectURL.mock.calls[1][0]));
+  expect(csv.split('\r\n')[0]).not.toContain('title');
+  expect(json.records.map(record => record.id)).toEqual([
+    '21',
+    '22',
+    '23',
+    '24',
+    '25',
+  ]);
+  expect(json.records[0]).not.toHaveProperty('title');
+  expect(json.scope).toMatchObject({
+    from: 20,
+    start: 21,
+    end: 25,
+    count: 5,
+    total: 25,
+    limit: 5,
+  });
+  expect(screen.getByRole('status')).toHaveTextContent('results 21–25 of 25');
+});
+test('large sets retain per-download and result-window limits', async () => {
+  setup(true, {}, response(80000));
+  expect(startInput()).toHaveAttribute('max', '10000');
+  expect(quantityInput()).toHaveAttribute('max', '1000');
+  fireEvent.change(startInput(), { target: { value: '10000' } });
+  expect(quantityInput()).toHaveAttribute('max', '1');
+  fireEvent.change(quantityInput(), { target: { value: '2' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Download JSON' }));
+  expect(quantityInput()).toHaveFocus();
+  expect(fetch).not.toHaveBeenCalled();
+  fireEvent.change(quantityInput(), { target: { value: '1' } });
+  fetch.mockResolvedValue({
+    ok: true,
+    json: async () => offsetResponse(80000, 9999, 1),
+  });
+  fireEvent.click(screen.getByRole('button', { name: 'Download JSON' }));
+  await waitFor(() => expect(URL.createObjectURL).toHaveBeenCalledTimes(1));
+  expect(JSON.parse(fetch.mock.calls[0][1].body)).toMatchObject({
+    from: 9999,
+    size: 1,
+  });
+});
+test('fresh shrink within a slice reports the actual shorter range', async () => {
+  setup();
+  fireEvent.change(startInput(), { target: { value: '21' } });
+  fireEvent.change(quantityInput(), { target: { value: '5' } });
+  fetch.mockResolvedValue({
+    ok: true,
+    json: async () => offsetResponse(22, 20, 5),
+  });
+  fireEvent.click(screen.getByRole('button', { name: 'Download JSON' }));
+  await waitFor(() => expect(URL.createObjectURL).toHaveBeenCalledTimes(1));
+  const json = JSON.parse(await blobText(URL.createObjectURL.mock.calls[0][0]));
+  expect(json.scope).toMatchObject({
+    start: 21,
+    end: 22,
+    from: 20,
+    count: 2,
+    limit: 5,
+    total: 22,
+  });
+  expect(screen.getByRole('status')).toHaveTextContent('results 21–22 of 22');
+});
+test('lower bounds allow a window-bounded start; fresh end-of-set creates no file', async () => {
+  const result = response(25);
+  result.hits.total.relation = 'gte';
+  setup(true, {}, result);
+  fireEvent.change(startInput(), { target: { value: '26' } });
+  expect(quantityInput()).toHaveAttribute('max', '1000');
+  expect(quantityInput()).toHaveAccessibleDescription(
+    expect.stringContaining('At least 25 results available')
+  );
+  fetch.mockResolvedValue({
+    ok: true,
+    json: async () => offsetResponse(25, 25, 1),
+  });
+  fireEvent.click(screen.getByRole('button', { name: 'Download CSV' }));
+  await waitFor(() =>
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'No results are available from this position'
+    )
+  );
+  expect(URL.createObjectURL).not.toHaveBeenCalled();
+});

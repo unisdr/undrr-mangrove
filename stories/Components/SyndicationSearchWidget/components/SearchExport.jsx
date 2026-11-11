@@ -28,6 +28,7 @@ import {
   buildExportQuery,
   normalizeExportDefaultCount,
   requestedExportCount,
+  exportRangeLimits,
   MAX_EXPORT_LIMIT,
   readExportResponse,
   exportCsv,
@@ -52,10 +53,13 @@ export default function SearchExport({ isStale = false }) {
     String(normalizeExportDefaultCount(config.exportDefaultCount))
   );
   const [countError, setCountError] = useState(false);
+  const [startValue, setStartValue] = useState('1');
+  const [startError, setStartError] = useState(false);
   const helpId = useId();
   const titleId = useId();
   const fieldsHelpId = useId();
   const countId = useId();
+  const startId = useId();
   const formatTitleId = useId();
   const formatHelpId = useId();
   const defaultCount = normalizeExportDefaultCount(config.exportDefaultCount);
@@ -88,6 +92,25 @@ export default function SearchExport({ isStale = false }) {
     !!state.error ||
     state.totalResults === 0 ||
     isQueryTooShortToSearch(state, config.minSearchLength);
+
+  const range = exportRangeLimits(
+    state.totalResults,
+    state.totalResultsRelation,
+    startValue
+  );
+  const initialMaximum = exportRangeLimits(
+    state.totalResults,
+    state.totalResultsRelation,
+    '1'
+  ).maxCount;
+  const countHelp =
+    !unavailable && range.maxCount > 0
+      ? interpolateLabel(labels.exportCountHelp, {
+          max: range.maxCount,
+          fromStart: range.start > 1,
+          perDownload: range.maxCount === MAX_EXPORT_LIMIT,
+        })
+      : null;
 
   const availability = !unavailable
     ? interpolateLabel(
@@ -157,7 +180,13 @@ export default function SearchExport({ isStale = false }) {
       (requestRef.current && !requestRef.current.signal.aborted)
     )
       return;
-    const count = requestedExportCount(countValue);
+    if (range.start === null) {
+      setStartError(true);
+      document.getElementById(startId)?.focus();
+      return;
+    }
+    const from = range.start - 1;
+    const count = requestedExportCount(countValue, range.maxCount);
     if (count === null) {
       setCountError(true);
       document.getElementById(countId)?.focus();
@@ -175,11 +204,11 @@ export default function SearchExport({ isStale = false }) {
       const response = await fetch(config.searchEndpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...body, size: count }),
+        body: JSON.stringify({ ...body, from, size: count }),
         signal: controller.signal,
       });
       if (!response.ok) throw new Error('Export request failed');
-      const result = readExportResponse(await response.json(), count);
+      const result = readExportResponse(await response.json(), count, from);
       if (controller.signal.aborted) return;
       if (!result.records.length) {
         setStatus({ key: requestKey, message: labels.exportEmpty });
@@ -196,7 +225,12 @@ export default function SearchExport({ isStale = false }) {
         key: requestKey,
         message: interpolateLabel(
           result.limited ? labels.exportLimited : labels.exportComplete,
-          { count: result.records.length, total: result.total }
+          {
+            start: from + 1,
+            end: from + result.records.length,
+            count: result.records.length,
+            total: result.total,
+          }
         ),
       });
     } catch (error) {
@@ -228,7 +262,9 @@ export default function SearchExport({ isStale = false }) {
         onClick={() => {
           setStatus(null);
           setSelectedGroups(DEFAULT_EXPORT_GROUPS);
-          setCountValue(String(defaultCount));
+          setStartValue('1');
+          setStartError(false);
+          setCountValue(String(Math.min(defaultCount, initialMaximum)));
           setCountError(false);
           setOpenKey(requestKey);
         }}
@@ -293,29 +329,71 @@ export default function SearchExport({ isStale = false }) {
             </p>
           </header>
           <div className="mg-dialog__body">
-            <TextInput
-              className="mg-search__export-count"
-              id={countId}
-              type="number"
-              label={labels.exportCountLabel}
-              min={1}
-              max={MAX_EXPORT_LIMIT}
-              step={1}
-              inputMode="numeric"
-              required
-              value={countValue}
-              disabled={busy}
-              helpText={[availability, labels.exportCountHelp]
-                .filter(Boolean)
-                .join(' · ')}
-              error={countError}
-              errorText={labels.exportCountError}
-              onChange={event => {
-                setCountValue(event.target.value);
-                setCountError(false);
-                setStatus(null);
-              }}
-            />
+            <div className="mg-search__export-range">
+              <TextInput
+                className="mg-search__export-start"
+                id={startId}
+                type="number"
+                label={labels.exportStartLabel}
+                min={1}
+                max={range.maxStart}
+                step={1}
+                inputMode="numeric"
+                required
+                value={startValue}
+                disabled={busy}
+                helpText={
+                  !unavailable
+                    ? interpolateLabel(labels.exportStartHelp, {
+                        max: range.maxStart,
+                      })
+                    : undefined
+                }
+                error={startError}
+                errorText={interpolateLabel(labels.exportStartError, {
+                  max: range.maxStart,
+                })}
+                onChange={event => {
+                  const value = event.target.value;
+                  const nextRange = exportRangeLimits(
+                    state.totalResults,
+                    state.totalResultsRelation,
+                    value
+                  );
+                  setStartValue(value);
+                  setStartError(false);
+                  setCountError(
+                    nextRange.maxCount > 0 &&
+                      requestedExportCount(countValue, nextRange.maxCount) ===
+                        null
+                  );
+                  setStatus(null);
+                }}
+              />
+              <TextInput
+                className="mg-search__export-count"
+                id={countId}
+                type="number"
+                label={labels.exportCountLabel}
+                min={1}
+                max={range.maxCount || undefined}
+                step={1}
+                inputMode="numeric"
+                required
+                value={countValue}
+                disabled={busy}
+                helpText={[availability, countHelp].filter(Boolean).join(' · ')}
+                error={countError}
+                errorText={interpolateLabel(labels.exportCountError, {
+                  max: Math.max(1, range.maxCount ?? MAX_EXPORT_LIMIT),
+                })}
+                onChange={event => {
+                  setCountValue(event.target.value);
+                  setCountError(false);
+                  setStatus(null);
+                }}
+              />
+            </div>
             <details className="mg-search__export-field-options" open>
               <summary>{labels.exportFields}</summary>
               <fieldset

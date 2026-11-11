@@ -7,12 +7,19 @@ export const LABELS_ES = {
   exportFormatHelp: 'CSV para hojas de cálculo; JSON para programas.',
   exportFormatTitle: 'Descargar como',
   exportCountLabel: 'Número de resultados',
-  exportCountHelp: 'Máx. 1000',
+  exportStartLabel: 'Empezar en el resultado',
+  exportStartHelp: ({ max }) =>
+    `Dentro de los primeros ${formatCount(max, 'es')} resultados`,
+  exportStartError: ({ max }) =>
+    `Introduzca un número entero entre 1 y ${formatCount(max, 'es')}.`,
+  exportCountHelp: ({ max, fromStart, perDownload }) =>
+    `Máx. ${formatCount(max, 'es')}${perDownload ? ' por descarga' : fromStart ? ' desde esta posición' : ''}`,
   exportAvailable: ({ count }) =>
     `${formatCount(count, 'es')} ${count === 1 ? 'resultado disponible' : 'resultados disponibles'}`,
   exportAvailableAtLeast: ({ count }) =>
     `Al menos ${formatCount(count, 'es')} ${count === 1 ? 'resultado disponible' : 'resultados disponibles'}`,
-  exportCountError: 'Introduzca un número entero entre 1 y 1000.',
+  exportCountError: ({ max }) =>
+    `Introduzca un número entero entre 1 y ${formatCount(max, 'es')}.`,
 
   exportFieldType: 'Tipo de contenido',
   exportFieldLanguage: 'Idioma',
@@ -33,15 +40,16 @@ export const LABELS_ES = {
   exportCsv: 'Descargar CSV',
   exportJson: 'Descargar JSON',
   exportScope:
-    'Exporte las primeras coincidencias según la configuración de esta búsqueda y sus términos, filtros y orden actuales.',
-  exportContact: '¿Necesita más de 1000 resultados o acceso mediante API?',
+    'Usa la configuración de esta búsqueda y sus términos, filtros y orden actuales.',
+  exportContact: '¿Necesita una exportación mayor o acceso a la API?',
   exportContactLink: 'Contáctenos',
   exportLoading: 'Preparando descarga…',
-  exportComplete:
-    'Descarga preparada: {count} de {total} registros coincidentes.',
-  exportLimited:
-    'Descarga preparada: los primeros {count} de {total} registros coincidentes.',
-  exportEmpty: 'No hay registros coincidentes para descargar.',
+  exportComplete: ({ start, end, total }) =>
+    `Descarga preparada: resultados ${formatCount(start, 'es')}–${formatCount(end, 'es')} de ${formatCount(total, 'es')}.`,
+  exportLimited: ({ start, end, total }) =>
+    `Descarga preparada: resultados ${formatCount(start, 'es')}–${formatCount(end, 'es')} de ${formatCount(total, 'es')}.`,
+  exportEmpty:
+    'No hay resultados desde esta posición. Pruebe un inicio anterior.',
   exportError:
     'No se pudo completar la descarga. Inténtelo de nuevo o contáctenos.',
 
@@ -127,12 +135,19 @@ export const LABELS_FR = {
   exportFormatHelp: 'CSV pour les tableurs ; JSON pour les logiciels.',
   exportFormatTitle: 'Télécharger au format',
   exportCountLabel: 'Nombre de résultats',
-  exportCountHelp: 'Max. 1 000',
+  exportStartLabel: 'Commencer au résultat',
+  exportStartHelp: ({ max }) =>
+    `Dans les ${formatCount(max, 'fr')} premiers résultats`,
+  exportStartError: ({ max }) =>
+    `Saisissez un nombre entier de 1 à ${formatCount(max, 'fr')}.`,
+  exportCountHelp: ({ max, fromStart, perDownload }) =>
+    `Max. ${formatCount(max, 'fr')}${perDownload ? ' par téléchargement' : fromStart ? ' à partir de ce résultat' : ''}`,
   exportAvailable: ({ count }) =>
     `${formatCount(count, 'fr')} ${count === 1 ? 'résultat disponible' : 'résultats disponibles'}`,
   exportAvailableAtLeast: ({ count }) =>
     `Au moins ${formatCount(count, 'fr')} ${count === 1 ? 'résultat disponible' : 'résultats disponibles'}`,
-  exportCountError: 'Saisissez un nombre entier de 1 à 1 000.',
+  exportCountError: ({ max }) =>
+    `Saisissez un nombre entier de 1 à ${formatCount(max, 'fr')}.`,
 
   exportFieldType: 'Type de contenu',
   exportFieldLanguage: 'Langue',
@@ -153,15 +168,16 @@ export const LABELS_FR = {
   exportCsv: 'Télécharger CSV',
   exportJson: 'Télécharger JSON',
   exportScope:
-    'Exportez les premières correspondances selon la configuration de cette recherche et vos termes, filtres et tri actuels.',
-  exportContact: 'Besoin de plus de 1 000 résultats ou d’un accès par API ?',
+    'Utilise les réglages de cette recherche ainsi que vos termes, filtres et ordre de tri actuels.',
+  exportContact: 'Besoin d’un export plus volumineux ou d’un accès à l’API ?',
   exportContactLink: 'Contactez-nous',
   exportLoading: 'Préparation du téléchargement…',
-  exportComplete:
-    'Téléchargement préparé : {count} sur {total} enregistrements correspondants.',
-  exportLimited:
-    'Téléchargement préparé : les {count} premiers sur {total} enregistrements correspondants.',
-  exportEmpty: 'Aucun enregistrement correspondant à télécharger.',
+  exportComplete: ({ start, end, total }) =>
+    `Téléchargement prêt : résultats ${formatCount(start, 'fr')}–${formatCount(end, 'fr')} sur ${formatCount(total, 'fr')}.`,
+  exportLimited: ({ start, end, total }) =>
+    `Téléchargement prêt : résultats ${formatCount(start, 'fr')}–${formatCount(end, 'fr')} sur ${formatCount(total, 'fr')}.`,
+  exportEmpty:
+    'Aucun résultat à partir de cette position. Essayez un résultat précédent.',
   exportError:
     'Le téléchargement n’a pas pu être effectué. Réessayez ou contactez-nous.',
 
@@ -247,12 +263,18 @@ export const LABELS_JA = {
   exportFormatHelp: 'CSVは表計算用、JSONはソフトウェア用です。',
   exportFormatTitle: 'ダウンロード形式',
   exportCountLabel: '結果の件数',
-  exportCountHelp: '最大1,000件',
+  exportStartLabel: '開始する結果',
+  exportStartHelp: ({ max }) => `先頭${formatCount(max, 'ja')}件以内`,
+  exportStartError: ({ max }) =>
+    `1から${formatCount(max, 'ja')}までの整数を入力してください。`,
+  exportCountHelp: ({ max, fromStart, perDownload }) =>
+    `最大${formatCount(max, 'ja')}${perDownload ? '件／ダウンロード' : fromStart ? '件（この開始位置から）' : '件'}`,
   exportAvailable: ({ count }) =>
     `利用可能な結果：${formatCount(count, 'ja')}件`,
   exportAvailableAtLeast: ({ count }) =>
     `少なくとも${formatCount(count, 'ja')}件の結果を利用できます`,
-  exportCountError: '1から1,000までの整数を入力してください。',
+  exportCountError: ({ max }) =>
+    `1から${formatCount(max, 'ja')}までの整数を入力してください。`,
 
   exportFieldType: 'コンテンツの種類',
   exportFieldLanguage: '言語',
@@ -272,16 +294,16 @@ export const LABELS_JA = {
   exportRegion: '結果をダウンロード',
   exportCsv: 'CSVをダウンロード',
   exportJson: 'JSONをダウンロード',
-  exportScope:
-    'この検索の設定と現在の検索語、絞り込み、並び順で、一致する先頭の結果をエクスポートします。',
-  exportContact: '1,000件を超える結果やAPIアクセスが必要ですか？',
+  exportScope: 'この検索の設定と現在の検索語、フィルター、並び順を使用します。',
+  exportContact: '大規模なエクスポートやAPIアクセスが必要ですか？',
   exportContactLink: 'お問い合わせ',
   exportLoading: 'ダウンロードを準備中…',
-  exportComplete:
-    'ダウンロードの準備ができました：一致する{total}件中{count}件。',
-  exportLimited:
-    'ダウンロードの準備ができました：一致する{total}件の先頭{count}件。',
-  exportEmpty: 'ダウンロードできる一致するレコードはありません。',
+  exportComplete: ({ start, end, total }) =>
+    `ダウンロードの準備ができました：全${formatCount(total, 'ja')}件中${formatCount(start, 'ja')}～${formatCount(end, 'ja')}件目。`,
+  exportLimited: ({ start, end, total }) =>
+    `ダウンロードの準備ができました：全${formatCount(total, 'ja')}件中${formatCount(start, 'ja')}～${formatCount(end, 'ja')}件目。`,
+  exportEmpty:
+    'この開始位置から取得できる結果はありません。前の位置からお試しください。',
   exportError:
     'ダウンロードを完了できませんでした。再試行するか、お問い合わせください。',
 
@@ -367,11 +389,17 @@ export const LABELS_ZH = {
   exportFormatHelp: 'CSV用于电子表格，JSON用于软件。',
   exportFormatTitle: '下载格式',
   exportCountLabel: '结果数量',
-  exportCountHelp: '最多1,000条',
+  exportStartLabel: '从第几条结果开始',
+  exportStartHelp: ({ max }) => `限前${formatCount(max, 'zh')}条匹配结果`,
+  exportStartError: ({ max }) =>
+    `请输入1到${formatCount(max, 'zh')}之间的整数。`,
+  exportCountHelp: ({ max, fromStart, perDownload }) =>
+    `最多${formatCount(max, 'zh')}${perDownload ? '条／次下载' : fromStart ? '条（从此位置开始）' : '条'}`,
   exportAvailable: ({ count }) => `有${formatCount(count, 'zh')}条结果可用`,
   exportAvailableAtLeast: ({ count }) =>
     `至少有${formatCount(count, 'zh')}条结果可用`,
-  exportCountError: '请输入1到1,000之间的整数。',
+  exportCountError: ({ max }) =>
+    `请输入1到${formatCount(max, 'zh')}之间的整数。`,
 
   exportFieldType: '内容类型',
   exportFieldLanguage: '语言',
@@ -390,14 +418,15 @@ export const LABELS_ZH = {
   exportRegion: '下载结果',
   exportCsv: '下载CSV',
   exportJson: '下载JSON',
-  exportScope:
-    '按照此搜索的设置及当前搜索词、筛选条件和排序，导出最先匹配的结果。',
-  exportContact: '需要超过1,000条结果或API访问？',
+  exportScope: '使用此搜索的设置以及当前搜索词、筛选条件和排序。',
+  exportContact: '需要更大的导出或API访问权限？',
   exportContactLink: '联系我们',
   exportLoading: '正在准备下载…',
-  exportComplete: '下载已准备好：共{total}条匹配记录中的{count}条。',
-  exportLimited: '下载已准备好：共{total}条匹配记录中的前{count}条。',
-  exportEmpty: '没有可下载的匹配记录。',
+  exportComplete: ({ start, end, total }) =>
+    `下载已准备好：第${formatCount(start, 'zh')}–${formatCount(end, 'zh')}条，共${formatCount(total, 'zh')}条。`,
+  exportLimited: ({ start, end, total }) =>
+    `下载已准备好：第${formatCount(start, 'zh')}–${formatCount(end, 'zh')}条，共${formatCount(total, 'zh')}条。`,
+  exportEmpty: '此起始位置没有结果。请尝试更早的位置。',
   exportError: '无法完成下载。请重试或联系我们。',
 
   searchFormLabel: '搜索内容',
@@ -508,12 +537,18 @@ export const LABELS_AR = {
   exportFormatHelp: 'CSV لجداول البيانات وJSON للبرامج.',
   exportFormatTitle: 'التنزيل بصيغة',
   exportCountLabel: 'عدد النتائج',
-  exportCountHelp: 'الحد الأقصى 1000',
+  exportStartLabel: 'البدء من النتيجة',
+  exportStartHelp: ({ max }) => `ضمن أول ${formatCount(max, 'ar')} نتيجة`,
+  exportStartError: ({ max }) =>
+    `أدخل عددًا صحيحًا من 1 إلى ${formatCount(max, 'ar')}.`,
+  exportCountHelp: ({ max, fromStart, perDownload }) =>
+    `الحد الأقصى ${formatCount(max, 'ar')}${perDownload ? ' لكل تنزيل' : fromStart ? ' من هذا الموضع' : ''}`,
   exportAvailable: ({ count }) =>
     `النتائج المتاحة: ${formatCount(count, 'ar')}`,
   exportAvailableAtLeast: ({ count }) =>
     `النتائج المتاحة: ${formatCount(count, 'ar')} على الأقل`,
-  exportCountError: 'أدخل عددًا صحيحًا من 1 إلى 1000.',
+  exportCountError: ({ max }) =>
+    `أدخل عددًا صحيحًا من 1 إلى ${formatCount(max, 'ar')}.`,
 
   exportFieldType: 'نوع المحتوى',
   exportFieldLanguage: 'اللغة',
@@ -534,14 +569,15 @@ export const LABELS_AR = {
   exportCsv: 'تنزيل CSV',
   exportJson: 'تنزيل JSON',
   exportScope:
-    'صدّر أولى النتائج المطابقة وفق إعدادات هذا البحث وكلمات البحث وعوامل التصفية والترتيب الحالية.',
-  exportContact:
-    'هل تحتاج إلى أكثر من 1000 نتيجة أو الوصول عبر واجهة برمجة التطبيقات؟',
+    'يستخدم إعدادات هذا البحث وكلمات البحث وعوامل التصفية وترتيب الفرز الحالية.',
+  exportContact: 'هل تحتاج إلى تصدير أكبر أو الوصول إلى واجهة برمجة التطبيقات؟',
   exportContactLink: 'اتصل بنا',
   exportLoading: 'جارٍ إعداد التنزيل…',
-  exportComplete: 'تم إعداد التنزيل: {count} من {total} سجل مطابق.',
-  exportLimited: 'تم إعداد التنزيل: أول {count} من {total} سجل مطابق.',
-  exportEmpty: 'لا توجد سجلات مطابقة للتنزيل.',
+  exportComplete: ({ start, end, total }) =>
+    `تم إعداد التنزيل: النتائج ${formatCount(start, 'ar')}–${formatCount(end, 'ar')} من ${formatCount(total, 'ar')}.`,
+  exportLimited: ({ start, end, total }) =>
+    `تم إعداد التنزيل: النتائج ${formatCount(start, 'ar')}–${formatCount(end, 'ar')} من ${formatCount(total, 'ar')}.`,
+  exportEmpty: 'لا توجد نتائج من هذا الموضع. جرّب موضع بدء أسبق.',
   exportError: 'تعذّر إكمال التنزيل. يُرجى المحاولة مرة أخرى أو الاتصال بنا.',
 
   searchFormLabel: 'البحث في المحتوى',
@@ -672,12 +708,19 @@ export const LABELS_RU = {
   exportFormatHelp: 'CSV для электронных таблиц; JSON для программ.',
   exportFormatTitle: 'Скачать в формате',
   exportCountLabel: 'Количество результатов',
-  exportCountHelp: 'Макс. 1000',
+  exportStartLabel: 'Начать с результата',
+  exportStartHelp: ({ max }) =>
+    `Первые совпадения (до ${formatCount(max, 'ru')})`,
+  exportStartError: ({ max }) =>
+    `Введите целое число от 1 до ${formatCount(max, 'ru')}.`,
+  exportCountHelp: ({ max, fromStart, perDownload }) =>
+    `Макс. ${formatCount(max, 'ru')}${perDownload ? ' за загрузку' : fromStart ? ' с этой позиции' : ''}`,
   exportAvailable: ({ count }) =>
     `Доступно: ${formatCount(count, 'ru')} ${RU_RESULT_FORMS[ruResults.select(count)] ?? RU_RESULT_FORMS.other}`,
   exportAvailableAtLeast: ({ count }) =>
     `Доступно как минимум: ${formatCount(count, 'ru')} ${RU_RESULT_FORMS[ruResults.select(count)] ?? RU_RESULT_FORMS.other}`,
-  exportCountError: 'Введите целое число от 1 до 1000.',
+  exportCountError: ({ max }) =>
+    `Введите целое число от 1 до ${formatCount(max, 'ru')}.`,
 
   exportFieldType: 'Тип содержимого',
   exportFieldLanguage: 'Язык',
@@ -698,15 +741,15 @@ export const LABELS_RU = {
   exportCsv: 'Скачать CSV',
   exportJson: 'Скачать JSON',
   exportScope:
-    'Экспортируйте первые совпадения с настройками этого поиска и текущими словами, фильтрами и порядком сортировки.',
-  exportContact: 'Нужно более 1000 результатов или доступ через API?',
+    'Используются настройки поиска, текущий запрос, фильтры и порядок сортировки.',
+  exportContact: 'Нужен больший экспорт или доступ к API?',
   exportContactLink: 'Свяжитесь с нами',
   exportLoading: 'Подготовка загрузки…',
-  exportComplete:
-    'Загрузка подготовлена: {count} из {total} подходящих записей.',
-  exportLimited:
-    'Загрузка подготовлена: первые {count} из {total} подходящих записей.',
-  exportEmpty: 'Нет подходящих записей для загрузки.',
+  exportComplete: ({ start, end, total }) =>
+    `Загрузка подготовлена: результаты ${formatCount(start, 'ru')}–${formatCount(end, 'ru')} из ${formatCount(total, 'ru')}.`,
+  exportLimited: ({ start, end, total }) =>
+    `Загрузка подготовлена: результаты ${formatCount(start, 'ru')}–${formatCount(end, 'ru')} из ${formatCount(total, 'ru')}.`,
+  exportEmpty: 'С этой позиции результатов нет. Выберите более раннее начало.',
   exportError:
     'Не удалось завершить загрузку. Повторите попытку или свяжитесь с нами.',
 
@@ -812,12 +855,19 @@ export const DEFAULT_LABELS = {
   exportFormatHelp: 'CSV for spreadsheets; JSON for software.',
   exportFormatTitle: 'Download as',
   exportCountLabel: 'Number of results',
-  exportCountHelp: 'Max 1,000',
+  exportStartLabel: 'Start at result',
+  exportStartHelp: ({ max }) =>
+    `Within the first ${formatCount(max, 'en')} matches`,
+  exportStartError: ({ max }) =>
+    `Enter a whole number from 1 to ${formatCount(max, 'en')}.`,
+  exportCountHelp: ({ max, fromStart, perDownload }) =>
+    `Max ${formatCount(max, 'en')}${perDownload ? ' per download' : fromStart ? ' from this start' : ''}`,
   exportAvailable: ({ count }) =>
     `${formatCount(count, 'en')} ${count === 1 ? 'result' : 'results'} available`,
   exportAvailableAtLeast: ({ count }) =>
     `At least ${formatCount(count, 'en')} ${count === 1 ? 'result' : 'results'} available`,
-  exportCountError: 'Enter a whole number from 1 to 1,000.',
+  exportCountError: ({ max }) =>
+    `Enter a whole number from 1 to ${formatCount(max, 'en')}.`,
 
   exportFieldType: 'Content type',
   exportFieldLanguage: 'Language',
@@ -838,14 +888,16 @@ export const DEFAULT_LABELS = {
   exportCsv: 'Download CSV',
   exportJson: 'Download JSON',
   exportScope:
-    'Export the first matches using this search’s settings and your current terms, filters and sort order.',
-  exportContact: 'Need more than 1,000 results or API access?',
+    'Uses this search’s settings and your current terms, filters and sort order.',
+  exportContact: 'Need a larger export or API access?',
   exportContactLink: 'Contact us',
   exportLoading: 'Preparing download…',
-  exportComplete: 'Download prepared: {count} of {total} matching records.',
-  exportLimited:
-    'Download prepared: first {count} of {total} matching records.',
-  exportEmpty: 'No matching records to download.',
+  exportComplete: ({ start, end, total }) =>
+    `Download prepared: results ${formatCount(start, 'en')}–${formatCount(end, 'en')} of ${formatCount(total, 'en')}.`,
+  exportLimited: ({ start, end, total }) =>
+    `Download prepared: results ${formatCount(start, 'en')}–${formatCount(end, 'en')} of ${formatCount(total, 'en')}.`,
+  exportEmpty:
+    'No results are available from this position. Try an earlier start.',
   exportError:
     'The download could not be completed. Please try again or contact us.',
 

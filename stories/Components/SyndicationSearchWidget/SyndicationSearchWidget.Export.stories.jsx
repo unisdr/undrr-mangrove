@@ -235,6 +235,40 @@ export const DownloadModal = {
   play: openExport,
 };
 
+export const DownloadRange = {
+  ...DownloadResults,
+  name: 'Download a result range',
+  play: async context => {
+    await openExport(context);
+    const controls = within(dialog(within(context.canvasElement)));
+    const [start, count] = controls.getAllByRole('spinbutton');
+    const before = requests.length;
+    await userEvent.clear(start);
+    await userEvent.type(start, '11');
+    await userEvent.clear(count);
+    await userEvent.type(count, '10');
+    await expect(count).toHaveAttribute('max', '15');
+    await expect(requests.length).toBe(before);
+    await userEvent.click(controls.getByRole('button', { name: /JSON/ }));
+    await waitFor(() =>
+      expect(requests[requests.length - 1]).toMatchObject({
+        from: 10,
+        size: 10,
+      })
+    );
+    await expect(controls.getByRole('status')).toBeVisible();
+    await expect(controls.queryByRole('alert')).not.toBeInTheDocument();
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Choose results 11–20 from a 25-match sample. Editing start and quantity makes no request; both formats use the same active search and selected fields. Manual chunks are separate searches, not a fixed snapshot.',
+      },
+    },
+  },
+};
+
 export const DownloadPreparing = {
   ...DownloadResults,
   args: { ...DownloadResults.args, fixtureDelay: 10000 },
@@ -414,7 +448,7 @@ export const ChooseResultCount = {
     const canvas = within(context.canvasElement);
     const modal = dialog(canvas);
     const controls = within(modal);
-    const count = controls.getByRole('spinbutton');
+    const count = controls.getAllByRole('spinbutton')[1];
     const before = requests.length;
     await expect(count).toHaveValue(3);
     await userEvent.clear(count);

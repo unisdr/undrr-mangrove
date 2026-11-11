@@ -6,6 +6,7 @@ import {
   columnsForExportGroups,
   DEFAULT_EXPORT_GROUPS,
   buildExportQuery,
+  exportRangeLimits,
   normalizeExportDefaultCount,
   requestedExportCount,
   exportRecord,
@@ -146,6 +147,9 @@ test('JSON preserves data and explicitly records partial scope', () => {
     exportedAt: expect.any(String),
     scope: {
       limit: 1,
+      from: 0,
+      start: 1,
+      end: 1,
       count: 1,
       total: 25,
       limited: true,
@@ -162,6 +166,7 @@ test('detects the agreed cap using the fresh export response', () => {
   });
   expect(readExportResponse(result(0), 100)).toEqual({
     total: 0,
+    from: 0,
     limited: false,
     records: [],
   });
@@ -247,3 +252,77 @@ test.each([1, '1', '25', '1000', 1000])(
     expect(requestedExportCount(value)).toBe(Number(value));
   }
 );
+
+test.each([
+  [25, 'eq', '1', 25, 25],
+  [25, 'eq', '21', 25, 5],
+  [80000, 'eq', '1', 10000, 1000],
+  [80000, 'eq', '9501', 10000, 500],
+  [80000, 'eq', '10000', 10000, 1],
+  [10000, 'gte', '1', 10000, 1000],
+  [25, 'gte', '26', 10000, 1000],
+])(
+  'range bounds total%s/%s/start%s to window and exact remainder',
+  (total, relation, value, maxStart, maxCount) => {
+    expect(exportRangeLimits(total, relation, value)).toEqual({
+      start: Number(value),
+      maxStart,
+      maxCount,
+    });
+  }
+);
+test.each(['', 'abc', '0', '-1', '1.5', '26', '10001'])(
+  'rejects unavailable exact start %j without clamping',
+  value => {
+    expect(exportRangeLimits(25, 'eq', value)).toEqual({
+      start: null,
+      maxStart: 25,
+      maxCount: null,
+    });
+  }
+);
+const rangeResponse = (total, from, count) => ({
+  hits: {
+    total: { value: total, relation: 'eq' },
+    hits: Array.from(
+      { length: Math.min(count, Math.max(0, total - from)) },
+      (_, index) => ({ ...hit, _id: String(from + index + 1) })
+    ),
+  },
+});
+test.each([
+  [25, 20, 5, 5],
+  [22, 20, 5, 2],
+  [20, 20, 5, 0],
+  [0, 20, 5, 0],
+  [80000, 9999, 1, 1],
+])(
+  'checks fresh total%s from%s count%s without mistaking end-of-set for failure',
+  (total, from, count, returned) => {
+    const result = readExportResponse(
+      rangeResponse(total, from, count),
+      count,
+      from
+    );
+    expect(result.records).toHaveLength(returned);
+    expect(JSON.parse(exportJson(result, count)).scope).toMatchObject({
+      from,
+      start: returned ? from + 1 : null,
+      end: returned ? from + returned : null,
+      limit: count,
+      count: returned,
+      total,
+    });
+  }
+);
+test('rejects partial slices and requests outside the result window', () => {
+  const partial = rangeResponse(25, 20, 5);
+  partial.hits.hits.pop();
+  expect(() => readExportResponse(partial, 5, 20)).toThrow();
+  expect(() =>
+    readExportResponse(rangeResponse(80000, 9999, 2), 2, 9999)
+  ).toThrow();
+  expect(() =>
+    readExportResponse(rangeResponse(80000, 10000, 1), 1, 10000)
+  ).toThrow();
+});
