@@ -675,7 +675,7 @@ Countries/regions, hazards and themes each export paired ID and name arrays in t
 
 Missing scalar values are empty strings; missing multi-value fields are empty arrays. Columns and keys keep the order above. Raw teaser/body HTML, scoring fields and other index internals are excluded.
 
-CSV uses a UTF-8 byte order mark, quoted cells and CRLF record endings. Taxonomy cells contain JSON arrays of string IDs. Cells that could be spreadsheet formulas receive a leading apostrophe; JSON preserves the original text.
+CSV uses a UTF-8 byte order mark, quoted cells and CRLF record endings. Taxonomy ID and name cells contain JSON arrays of strings. Cells that could be spreadsheet formulas receive a leading apostrophe; JSON preserves the original text.
 
 JSON contains `schemaVersion`, `exportedAt` (UTC), `records` and `scope`:
 
