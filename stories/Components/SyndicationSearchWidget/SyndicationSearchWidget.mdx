@@ -653,21 +653,27 @@ Try the [result range example](?path=/story/components-syndicated-search-downloa
 
 ### Choose fields and format
 
-**Fields to include** opens with every optional field selected. Record ID and URL are always included. The eight checkbox choices cover title, content type, language, website posting date, date shown in results, country/region IDs, hazard IDs and theme IDs. The date shown in results and its precision metadata stay paired. Choices apply to both formats and reset when the modal reopens.
+**Fields to include** offers nine choices: title, summary, content type, language, website posting date, date shown in results, countries/regions, hazards and themes. Summary starts unchecked; the other choices start selected. Record ID and URL are always included. The date shown in results and its precision metadata stay paired. Choices apply to both formats and reset when the modal reopens.
 
-| Field                                           | Meaning                                                                                                                        |
-| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `id`                                            | Search document identifier, falling back to the node ID.                                                                       |
-| `title`                                         | Indexed title with character entities decoded.                                                                                 |
-| `url`                                           | Absolute HTTP(S) content URL, resolved using the result’s domain.                                                              |
-| `type`                                          | Content type, or vocabulary for taxonomy results.                                                                              |
-| `language`                                      | Content language, independent of the interface language.                                                                       |
-| `posted_at`                                     | Indexed `published_at` as a UTC ISO timestamp: the website posting date, not necessarily the publication’s bibliographic date. |
-| `display_date`                                  | Reader-facing date as `YYYY-MM-DD`, or `YYYY` for year precision. No posting-date fallback.                                    |
-| `display_date_precision`                        | Precision of the reader-facing date.                                                                                           |
-| `country_region_ids`, `hazard_ids`, `theme_ids` | Taxonomy identifiers, not translated labels.                                                                                   |
+**Summary** is the plain-text description shown in the indexed search teaser. It may be shortened and is not a full abstract. It excludes query-specific highlights, surrounding teaser metadata and the full body. Records without a teaser description have an empty summary. Teaser HTML is requested only when Summary is selected.
 
-Missing scalar values are empty strings; missing multi-value fields are empty arrays. Columns and keys keep the order above. Teaser/body HTML, scoring fields and other index internals are excluded.
+Countries/regions, hazards and themes each export paired ID and name arrays in the same order. Names use the configured taxonomy endpoint’s language, independently of the record’s content language. The lookup loads all pages, including terms outside the visible facets. An unresolved ID triggers one shared refresh to recover from an older cached list. If the term still cannot be resolved or the lookup fails, no file is produced: retry or clear the affected taxonomy choices.
+
+| Field                                                 | Meaning                                                                                                                        |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `id`                                                  | Search document identifier, falling back to the node ID.                                                                       |
+| `title`                                               | Indexed title with character entities decoded.                                                                                 |
+| `summary`                                             | Plain-text indexed teaser description; optional and empty when unavailable.                                                    |
+| `url`                                                 | Absolute HTTP(S) content URL, resolved using the result’s domain.                                                              |
+| `type`                                                | Content type, or vocabulary for taxonomy results.                                                                              |
+| `language`                                            | Content language, independent of the interface language.                                                                       |
+| `posted_at`                                           | Indexed `published_at` as a UTC ISO timestamp: the website posting date, not necessarily the publication’s bibliographic date. |
+| `display_date`                                        | Reader-facing date as `YYYY-MM-DD`, or `YYYY` for year precision. No posting-date fallback.                                    |
+| `display_date_precision`                              | Precision of the reader-facing date.                                                                                           |
+| `country_region_ids`, `hazard_ids`, `theme_ids`       | Taxonomy identifier arrays.                                                                                                    |
+| `country_region_names`, `hazard_names`, `theme_names` | Corresponding name arrays, in ID order.                                                                                        |
+
+Missing scalar values are empty strings; missing multi-value fields are empty arrays. Columns and keys keep the order above. Raw teaser/body HTML, scoring fields and other index internals are excluded.
 
 CSV uses a UTF-8 byte order mark, quoted cells and CRLF record endings. Taxonomy cells contain JSON arrays of string IDs. Cells that could be spreadsheet formulas receive a leading apostrophe; JSON preserves the original text.
 
@@ -714,11 +720,11 @@ Export labels use the existing `lang` and `labels` override contract. The compon
 
 > **Implementation note (for contributors):** Export state belongs to the modal session. The shared query builder retains search constraints; metadata projection, range bounds, request identity and file saving use separate utilities.
 
-The action is unavailable during loading, unsettled input, a failed search or when no matches are known. Opening the native dialog focuses its heading and makes the background inert. Close, Escape and a backdrop press followed by release outside dismiss it. Closing or changing the search cancels pending work and restores focus to the action, or the connected results area if the action is unavailable. Pagination alone does not change the chosen range. Reopening restores start 1, the bounded configured quantity and all default fields.
+The action is unavailable during loading, unsettled input, a failed search or when no matches are known. Opening the native dialog focuses its heading and makes the background inert. Close, Escape and a backdrop press followed by release outside dismiss it. Closing or changing the search cancels pending work and restores focus to the action, or the connected results area if the action is unavailable. Pagination alone does not change the chosen range. Reopening restores start 1, the bounded configured quantity and the default field choices, with Summary unchecked.
 
 During preparation, range and field controls are disabled. Format buttons remain focusable with `aria-disabled`; repeated activation is ignored. Progress and failures are announced beside the actions. Success leaves the modal open for confirmation or another format; failures allow retry. Scroll locking is shared with other Mangrove dialogs and respects the widget’s owner document.
 
-The request asks for exact totals and only the allowlisted metadata, without facets or highlights. Field choices project that metadata after retrieval. Client-side limits are not access control; endpoint owners must enforce server-side access and resource limits.
+The request asks for exact totals and allowlisted metadata, without facets or highlights. Selecting Summary also requests the indexed teaser; an inert template extracts only its description as plain text. Taxonomy names reuse the shared paginated lookup and cache. Closing while that shared lookup is pending prevents a late file without cancelling other consumers’ lookup. Field choices project the result after retrieval. Client-side limits are not access control; endpoint owners must enforce server-side access and resource limits.
 
 The outline action, native controls and shared Dialog/button typography follow Mangrove conventions. Layout wraps for small screens and RTL; no motion or component-specific type overrides are added. The CSV action is primary, JSON is outlined, and contact help follows the controls. The contact prompt offers assistance with exports or API access; it does not provision access.
 
@@ -1100,6 +1106,8 @@ boundaries: a DOM portal cannot inherit direction from the widget's ancestors.
 ## Changelog
 
 - **1.9.0**, 2026-11-10 ([undrr/web-backlog#3314](https://gitlab.com/undrr/web-backlog/-/work_items/3314)): Add an opt-in Download results action opening a native modal with both bounded CSV/JSON metadata downloads, a conditional one-based start for matched sets of at least 1,000 and dynamically bounded quantity, a grouped quantity row with a read-only range preview and jointly corrected whole-number inputs, open-by-default field panel, primary CSV/outlined JSON actions and quiet icon Close, optional choices from a fixed field allowlist, an outlined utility action beneath pagination aligned to the reading direction, explicit scope and cap reporting, request cancellation, translated controls and status messages, hydration settings and a contact route for larger data needs. Existing widgets retain their current behaviour.
+
+  - Export readable taxonomy names alongside IDs and an optional plain-text teaser summary ([undrr/web-backlog#3314](https://gitlab.com/undrr/web-backlog/-/work_items/3314)). Summary is initially unchecked; unresolved selected taxonomy names block the file with retry guidance.
 
 - **1.8.1**, 2026-11-10 ([#1468](https://github.com/unisdr/undrr-mangrove/issues/1468)): Keep Type parents and subtypes together when selections change, including retained selections missing from current results. Selected subtypes retain their indentation and summary context. Keyboard highlighting follows the option value through asynchronous updates. Inherited children show a tint and pale checked indicator; parents with selected subtypes show a dash, with localized accessible descriptions. Search fields persist for the open dropdown session, pointer selection retains keyboard focus, and Escape dismisses the dropdown before its enclosing filter drawer.
 

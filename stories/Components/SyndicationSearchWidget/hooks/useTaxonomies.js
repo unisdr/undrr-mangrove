@@ -203,11 +203,13 @@ function getStore(url) {
  * Failed or empty loads are not kept, so a later call retries.
  *
  * @param {string} url - Taxonomy endpoint URL
+ * @param {Object} [options] - Shared lookup options
+ * @param {boolean} [options.force=false] - Refresh a previously successful load
  * @returns {Promise<Object>} Resolves to the store snapshot once settled
  */
-export function loadTaxonomies(url) {
+export function loadTaxonomies(url, { force = false } = {}) {
   const store = getStore(url);
-  return store.load().then(() => store.snapshot);
+  return store.load(force).then(() => store.snapshot);
 }
 
 /**

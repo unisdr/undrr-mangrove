@@ -1,3 +1,4 @@
+import { exportSummary } from './exportMetadata';
 import { decodeEntities } from './decodeEntities';
 import { buildQuery } from './queryBuilder';
 import {
@@ -28,6 +29,7 @@ export const EXPORT_SOURCE_FIELDS = [
 export const EXPORT_COLUMNS = [
   'id',
   'title',
+  'summary',
   'url',
   'type',
   'language',
@@ -35,12 +37,16 @@ export const EXPORT_COLUMNS = [
   'display_date',
   'display_date_precision',
   'country_region_ids',
+  'country_region_names',
   'hazard_ids',
+  'hazard_names',
   'theme_ids',
+  'theme_names',
 ];
 
 export const EXPORT_FIELD_GROUPS = [
   { id: 'title', label: 'exportFieldTitle', columns: ['title'] },
+  { id: 'summary', label: 'exportFieldSummary', columns: ['summary'] },
   { id: 'type', label: 'exportFieldType', columns: ['type'] },
   { id: 'language', label: 'exportFieldLanguage', columns: ['language'] },
   { id: 'posted', label: 'exportFieldPosted', columns: ['posted_at'] },
@@ -52,12 +58,22 @@ export const EXPORT_FIELD_GROUPS = [
   {
     id: 'country',
     label: 'exportFieldCountry',
-    columns: ['country_region_ids'],
+    columns: ['country_region_ids', 'country_region_names'],
   },
-  { id: 'hazard', label: 'exportFieldHazard', columns: ['hazard_ids'] },
-  { id: 'theme', label: 'exportFieldTheme', columns: ['theme_ids'] },
+  {
+    id: 'hazard',
+    label: 'exportFieldHazard',
+    columns: ['hazard_ids', 'hazard_names'],
+  },
+  {
+    id: 'theme',
+    label: 'exportFieldTheme',
+    columns: ['theme_ids', 'theme_names'],
+  },
 ];
-export const DEFAULT_EXPORT_GROUPS = EXPORT_FIELD_GROUPS.map(group => group.id);
+export const DEFAULT_EXPORT_GROUPS = EXPORT_FIELD_GROUPS.filter(
+  group => group.id !== 'summary'
+).map(group => group.id);
 
 export function exportColumns(fields = EXPORT_COLUMNS) {
   const selected = new Set(Array.isArray(fields) ? fields : []);
@@ -66,6 +82,12 @@ export function exportColumns(fields = EXPORT_COLUMNS) {
   if (selected.has('display_date') || selected.has('display_date_precision')) {
     selected.add('display_date');
     selected.add('display_date_precision');
+  }
+  for (const key of ['country_region', 'hazard', 'theme']) {
+    if (selected.has(`${key}_ids`) || selected.has(`${key}_names`)) {
+      selected.add(`${key}_ids`);
+      selected.add(`${key}_names`);
+    }
   }
   return EXPORT_COLUMNS.filter(key => selected.has(key));
 }
@@ -155,13 +177,14 @@ function recordUrl(source) {
   }
 }
 
-export function exportRecord(hit) {
+export function exportRecord(hit, document) {
   const source = hit._source || {};
   const precision = text(source.display_date_precision);
   const displayDate = toDate(source.display_date, { allowBeforeEpoch: true });
   return {
     id: String(hit._id ?? first(source.nid) ?? ''),
     title: decodeEntities(text(source.title)),
+    summary: exportSummary(source.teaser, document),
     url: recordUrl(source),
     type: text(source.type) || text(source.vid),
     language: text(source._language),
@@ -171,12 +194,15 @@ export function exportRecord(hit) {
       : '',
     display_date_precision: precision,
     country_region_ids: values(source.field_country_region),
+    country_region_names: [],
     hazard_ids: values(source.field_hazard),
+    hazard_names: [],
     theme_ids: values(source.field_theme),
+    theme_names: [],
   };
 }
 
-export function readExportResponse(data, limit, from = 0) {
+export function readExportResponse(data, limit, from = 0, document) {
   const hits = data?.hits?.hits;
   const total = data?.hits?.total;
   if (
@@ -198,7 +224,7 @@ export function readExportResponse(data, limit, from = 0) {
     throw new Error('Incomplete export response');
   }
   return {
-    records: hits.map(exportRecord),
+    records: hits.map(hit => exportRecord(hit, document)),
     total: total.value,
     from,
     limited: from > 0 || total.value > limit,

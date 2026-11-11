@@ -8,6 +8,7 @@ import {
 } from '@testing-library/react';
 import { axe } from 'jest-axe';
 import SearchExport from '../components/SearchExport';
+import { clearTaxonomyCache, loadTaxonomies } from '../hooks/useTaxonomies';
 import { WidgetRootContext } from '../context/WidgetRootContext';
 import {
   SearchProvider,
@@ -75,6 +76,7 @@ beforeAll(() => {
 });
 
 beforeEach(() => {
+  clearTaxonomyCache();
   global.fetch = jest
     .fn()
     .mockResolvedValue({ ok: true, json: async () => response(25) });
@@ -395,8 +397,11 @@ test('optional fields have useful defaults, keep core fields and reset on reopen
     screen.getByRole('group', { name: 'Fields to include' }).closest('details')
   ).toHaveAttribute('open');
   const checkboxes = revealFields();
-  expect(checkboxes).toHaveLength(8);
-  for (const checkbox of checkboxes) expect(checkbox).toBeChecked();
+  expect(checkboxes).toHaveLength(9);
+  for (const checkbox of checkboxes)
+    expect(checkbox.checked).toBe(
+      checkbox !== screen.getByRole('checkbox', { name: 'Summary' })
+    );
   expect(
     screen.getByRole('group', { name: 'Fields to include' })
   ).toHaveAccessibleDescription(
@@ -409,12 +414,16 @@ test('optional fields have useful defaults, keep core fields and reset on reopen
   expect(
     screen.getByRole('group', { name: 'Fields to include' }).closest('details')
   ).toHaveAttribute('open');
-  for (const checkbox of revealFields()) expect(checkbox).toBeChecked();
+  for (const checkbox of revealFields())
+    expect(checkbox.checked).toBe(
+      checkbox !== screen.getByRole('checkbox', { name: 'Summary' })
+    );
 });
 
 test('clearing all optional groups exports only ID and URL in both formats', async () => {
   setup();
-  for (const checkbox of revealFields()) fireEvent.click(checkbox);
+  for (const checkbox of revealFields())
+    if (checkbox.checked) fireEvent.click(checkbox);
   fireEvent.click(screen.getByRole('button', { name: 'Download CSV' }));
   await waitFor(() => expect(URL.createObjectURL).toHaveBeenCalledTimes(1));
   const csv = await blobText(URL.createObjectURL.mock.calls[0][0]);
@@ -1088,3 +1097,176 @@ test.each([1000, 10000, 80000])(
     else expect(startInput()).not.toHaveAttribute('aria-describedby');
   }
 );
+
+test('summary is opt-in and exports only the plain-text teaser description', async () => {
+  const data = response(25);
+  data.hits.hits = [
+    {
+      ...hit,
+      _source: {
+        ...hit._source,
+        teaser:
+          '<h2>Not summary</h2><div class="mg-card__description"><p>Coastal &amp; flood risk.</p><p>Read more.</p></div>',
+        body: 'Do not export full body',
+      },
+      highlight: { body: ['Query-specific snippet'] },
+    },
+  ];
+  fetch.mockResolvedValue({ ok: true, json: async () => data });
+  setup();
+  expect(screen.getByRole('checkbox', { name: 'Summary' })).not.toBeChecked();
+  fireEvent.click(screen.getByRole('button', { name: 'Download JSON' }));
+  await waitFor(() => expect(click).toHaveBeenCalledTimes(1));
+  expect(
+    JSON.parse(fetch.mock.calls[0][1].body)._source.includes
+  ).not.toContain('teaser');
+  fireEvent.click(screen.getByRole('checkbox', { name: 'Summary' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Download JSON' }));
+  await waitFor(() => expect(click).toHaveBeenCalledTimes(2));
+  expect(JSON.parse(fetch.mock.calls[1][1].body)._source.includes).toContain(
+    'teaser'
+  );
+  const saved = JSON.parse(
+    await blobText(URL.createObjectURL.mock.calls[1][0])
+  );
+  expect(saved.records[0].summary).toBe('Coastal & flood risk. Read more.');
+  expect(saved.records[0]).not.toHaveProperty('teaser');
+  expect(saved.records[0]).not.toHaveProperty('body');
+});
+
+test('download resolves names beyond visible facets through every taxonomy page and shares the lookup', async () => {
+  const data = response(25);
+  data.hits.hits = [
+    {
+      ...hit,
+      _source: {
+        ...hit._source,
+        field_hazard: [2, 1],
+        field_country_region: [3],
+        field_theme: [4],
+      },
+    },
+  ];
+  fetch.mockImplementation(async (url, options) => ({
+    ok: true,
+    json: async () =>
+      options?.method === 'POST'
+        ? data
+        : new URL(url, 'http://localhost').searchParams.get('page') === '1'
+          ? {
+              results: [
+                { id: 2, name: 'Flood' },
+                { id: 3, name: 'Côte d&#039;Ivoire' },
+                { id: 4, name: 'Risk &amp; resilience' },
+              ],
+            }
+          : { results: [{ id: 1, name: 'Drought' }], pager: { pages: 2 } },
+  }));
+  setup(true, {}, response(25), {
+    taxonomyEndpoint: '/export-taxonomy?items_per_page=1',
+  });
+  fireEvent.click(screen.getByRole('button', { name: 'Download JSON' }));
+  await waitFor(() => expect(click).toHaveBeenCalledTimes(1));
+  const saved = JSON.parse(
+    await blobText(URL.createObjectURL.mock.calls[0][0])
+  );
+  expect(saved.records[0]).toMatchObject({
+    hazard_ids: ['2', '1'],
+    hazard_names: ['Flood', 'Drought'],
+    country_region_ids: ['3'],
+    country_region_names: ["Côte d'Ivoire"],
+    theme_ids: ['4'],
+    theme_names: ['Risk & resilience'],
+  });
+  fireEvent.click(screen.getByRole('button', { name: 'Download CSV' }));
+  await waitFor(() => expect(click).toHaveBeenCalledTimes(2));
+  expect(
+    fetch.mock.calls.filter(([, options]) => options?.method !== 'POST')
+  ).toHaveLength(2);
+  const csv = await blobText(URL.createObjectURL.mock.calls[1][0]);
+  expect(csv).toContain('Flood');
+  expect(csv).toContain("Côte d'Ivoire");
+});
+
+test('unresolved names block the file and clearing that taxonomy field allows retry', async () => {
+  const data = response(25);
+  data.hits.hits = [{ ...hit, _source: { ...hit._source, field_hazard: [2] } }];
+  fetch.mockImplementation(async (url, options) => ({
+    ok: true,
+    json: async () =>
+      options?.method === 'POST'
+        ? data
+        : { results: [{ id: 1, name: 'Drought' }] },
+  }));
+  setup(true, {}, response(25), {
+    taxonomyEndpoint: '/export-taxonomy-missing',
+  });
+  fireEvent.click(screen.getByRole('button', { name: 'Download JSON' }));
+  await screen.findByText(
+    'Names for countries, hazards or themes could not be resolved. Try again or clear those fields.'
+  );
+  expect(click).not.toHaveBeenCalled();
+  fireEvent.click(screen.getByRole('checkbox', { name: 'Hazards' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Download JSON' }));
+  await waitFor(() => expect(click).toHaveBeenCalledTimes(1));
+  const saved = JSON.parse(
+    await blobText(URL.createObjectURL.mock.calls[0][0])
+  );
+  expect(saved.records[0]).not.toHaveProperty('hazard_ids');
+  expect(saved.records[0]).not.toHaveProperty('hazard_names');
+});
+
+test('closing during a shared taxonomy lookup prevents a late download', async () => {
+  let resolveTerms;
+  const data = response(25);
+  data.hits.hits = [{ ...hit, _source: { ...hit._source, field_hazard: [2] } }];
+  fetch.mockImplementation((url, options) =>
+    options?.method === 'POST'
+      ? Promise.resolve({ ok: true, json: async () => data })
+      : new Promise(resolve => {
+          resolveTerms = resolve;
+        })
+  );
+  setup(true, {}, response(25), {
+    taxonomyEndpoint: '/export-taxonomy-pending',
+  });
+  fireEvent.click(screen.getByRole('button', { name: 'Download JSON' }));
+  await waitFor(() => expect(resolveTerms).toBeDefined());
+  fireEvent.click(screen.getByRole('button', { name: 'Close' }));
+  await act(async () =>
+    resolveTerms({
+      ok: true,
+      json: async () => ({ results: [{ id: 2, name: 'Flood' }] }),
+    })
+  );
+  expect(click).not.toHaveBeenCalled();
+});
+
+test('an unresolved name refreshes an earlier shared cache once before saving', async () => {
+  const endpoint = '/export-taxonomy-stale';
+  fetch.mockResolvedValue({
+    ok: true,
+    json: async () => ({ results: [{ id: 1, name: 'Drought' }] }),
+  });
+  await loadTaxonomies(endpoint);
+  fetch.mockClear();
+  const data = response(25);
+  data.hits.hits = [{ ...hit, _source: { ...hit._source, field_hazard: [2] } }];
+  fetch.mockImplementation(async (url, options) => ({
+    ok: true,
+    json: async () =>
+      options?.method === 'POST'
+        ? data
+        : { results: [{ id: 2, name: 'Flood' }] },
+  }));
+  setup(true, {}, response(25), { taxonomyEndpoint: endpoint });
+  fireEvent.click(screen.getByRole('button', { name: 'Download JSON' }));
+  await waitFor(() => expect(click).toHaveBeenCalledTimes(1));
+  const saved = JSON.parse(
+    await blobText(URL.createObjectURL.mock.calls[0][0])
+  );
+  expect(saved.records[0].hazard_names).toEqual(['Flood']);
+  expect(
+    fetch.mock.calls.filter(([, options]) => options?.method !== 'POST')
+  ).toHaveLength(1);
+});

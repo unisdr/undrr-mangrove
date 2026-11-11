@@ -20,6 +20,12 @@ import {
 } from '../context/SearchContext';
 import { isQueryTooShortToSearch, MAX_RESULT_WINDOW } from '../utils/constants';
 import { searchRequestKey } from '../utils/searchRequestKey';
+import { loadTaxonomies } from '../hooks/useTaxonomies';
+import {
+  ExportTaxonomyError,
+  needsExportTaxonomies,
+  withExportTaxonomyNames,
+} from '../utils/exportMetadata';
 import { saveFile } from '../utils/saveFile';
 import {
   EXPORT_FIELD_GROUPS,
@@ -274,16 +280,54 @@ export default function SearchExport({ isStale = false }) {
       const response = await fetch(config.searchEndpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...body, from, size: count }),
+        body: JSON.stringify({
+          ...body,
+          from,
+          size: count,
+          ...(columns.includes('summary') && {
+            _source: { includes: [...body._source.includes, 'teaser'] },
+          }),
+        }),
         signal: controller.signal,
       });
       if (!response.ok) throw new Error('Export request failed');
-      const result = readExportResponse(await response.json(), count, from);
+      const result = readExportResponse(
+        await response.json(),
+        count,
+        from,
+        columns.includes('summary') ? document : undefined
+      );
       if (controller.signal.aborted) return;
       if (!result.records.length) {
         setStatus({ key: requestKey, message: labels.exportEmpty });
         return;
       }
+      if (needsExportTaxonomies(result.records, columns)) {
+        const taxonomy = await loadTaxonomies(config.taxonomyEndpoint);
+        if (controller.signal.aborted) return;
+        if (taxonomy.error || !taxonomy.termMap)
+          throw new ExportTaxonomyError('Export taxonomy lookup failed');
+        try {
+          result.records = withExportTaxonomyNames(
+            result.records,
+            columns,
+            taxonomy.termMap
+          );
+        } catch (error) {
+          if (!(error instanceof ExportTaxonomyError)) throw error;
+          const refreshed = await loadTaxonomies(config.taxonomyEndpoint, {
+            force: true,
+          });
+          if (controller.signal.aborted) return;
+          if (refreshed.error) throw error;
+          result.records = withExportTaxonomyNames(
+            result.records,
+            columns,
+            refreshed.termMap
+          );
+        }
+      }
+      if (controller.signal.aborted) return;
       saveFile(
         document,
         format === 'csv'
@@ -308,7 +352,10 @@ export default function SearchExport({ isStale = false }) {
         setStatus({
           key: requestKey,
           error: true,
-          message: labels.exportError,
+          message:
+            error instanceof ExportTaxonomyError
+              ? labels.exportTaxonomyError
+              : labels.exportError,
         });
     } finally {
       if (requestRef.current === controller) requestRef.current = null;
