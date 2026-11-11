@@ -410,7 +410,7 @@ export const ChooseFields = {
   play: async context => {
     await openExport(context);
     const modal = within(dialog(within(context.canvasElement)));
-    await expect(modal.getAllByRole('checkbox')).toHaveLength(8);
+    await expect(modal.getAllByRole('checkbox')).toHaveLength(9);
   },
 };
 

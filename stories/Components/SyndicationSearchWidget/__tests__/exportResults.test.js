@@ -96,6 +96,7 @@ test('projects only fixed metadata, with absolute URL, separate dates and taxono
   expect(exportRecord(hit)).toEqual({
     id: 'entity:node/42:en',
     title: 'Risk & resilience',
+    summary: '',
     url: 'https://www.preventionweb.net/publication/risk',
     type: 'publication',
     language: 'en',
@@ -103,8 +104,11 @@ test('projects only fixed metadata, with absolute URL, separate dates and taxono
     display_date: '2024',
     display_date_precision: 'year',
     country_region_ids: [],
+    country_region_names: [],
     hazard_ids: ['1', '2'],
+    hazard_names: [],
     theme_ids: ['7'],
+    theme_names: [],
   });
 });
 
@@ -197,7 +201,9 @@ test('field choices are ordered, allowlisted and always retain record identity a
   expect(exportColumns([])).toEqual(['id', 'url']);
   expect(exportColumns(null)).toEqual(['id', 'url']);
   expect(columnsForExportGroups([])).toEqual(['id', 'url']);
-  expect(columnsForExportGroups(DEFAULT_EXPORT_GROUPS)).toEqual(EXPORT_COLUMNS);
+  expect(columnsForExportGroups(DEFAULT_EXPORT_GROUPS)).toEqual(
+    EXPORT_COLUMNS.filter(column => column !== 'summary')
+  );
 });
 
 test.each(['display_date', 'display_date_precision'])(

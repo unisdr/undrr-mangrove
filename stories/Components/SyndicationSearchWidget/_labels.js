@@ -22,14 +22,17 @@ export const LABELS_ES = {
 
   exportFieldType: 'Tipo de contenido',
   exportFieldLanguage: 'Idioma',
-  exportFieldCountry: 'Identificadores de país o región',
-  exportFieldHazard: 'Identificadores de amenaza',
-  exportFieldTheme: 'Identificadores de tema',
+  exportFieldCountry: 'Países o regiones',
+  exportFieldHazard: 'Amenazas',
+  exportFieldTheme: 'Temas',
 
   exportFields: 'Campos que se incluirán',
   exportFieldsHelp:
     'El identificador del registro y la URL siempre se incluyen. Estas opciones se aplican a ambos formatos.',
   exportFieldTitle: 'Título',
+  exportFieldSummary: 'Resumen',
+  exportTaxonomyError:
+    'No se pudieron resolver los nombres de países, amenazas o temas. Inténtelo de nuevo o desmarque esos campos.',
   exportFieldPosted: 'Fecha de publicación en el sitio web',
   exportFieldReaderDate: 'Fecha mostrada en los resultados',
 
@@ -149,14 +152,17 @@ export const LABELS_FR = {
 
   exportFieldType: 'Type de contenu',
   exportFieldLanguage: 'Langue',
-  exportFieldCountry: 'Identifiants de pays ou de région',
-  exportFieldHazard: 'Identifiants d’aléa',
-  exportFieldTheme: 'Identifiants de thème',
+  exportFieldCountry: 'Pays ou régions',
+  exportFieldHazard: 'Aléas',
+  exportFieldTheme: 'Thèmes',
 
   exportFields: 'Champs à inclure',
   exportFieldsHelp:
     'L’identifiant de l’enregistrement et l’URL sont toujours inclus. Ces choix s’appliquent aux deux formats.',
   exportFieldTitle: 'Titre',
+  exportFieldSummary: 'Résumé',
+  exportTaxonomyError:
+    'Les noms des pays, aléas ou thèmes n’ont pas pu être déterminés. Réessayez ou désélectionnez ces champs.',
   exportFieldPosted: 'Date de mise en ligne',
   exportFieldReaderDate: 'Date affichée dans les résultats',
 
@@ -276,14 +282,17 @@ export const LABELS_JA = {
 
   exportFieldType: 'コンテンツの種類',
   exportFieldLanguage: '言語',
-  exportFieldCountry: '国・地域のID',
-  exportFieldHazard: 'ハザードのID',
-  exportFieldTheme: 'テーマのID',
+  exportFieldCountry: '国・地域',
+  exportFieldHazard: 'ハザード',
+  exportFieldTheme: 'テーマ',
 
   exportFields: '含める項目',
   exportFieldsHelp:
     'レコードIDとURLは常に含まれます。選択は両方の形式に適用されます。',
   exportFieldTitle: 'タイトル',
+  exportFieldSummary: '概要',
+  exportTaxonomyError:
+    '国、ハザード、テーマの名称を取得できませんでした。もう一度試すか、これらの項目の選択を解除してください。',
   exportFieldPosted: 'ウェブサイト掲載日',
   exportFieldReaderDate: '検索結果に表示される日付',
 
@@ -401,13 +410,16 @@ export const LABELS_ZH = {
 
   exportFieldType: '内容类型',
   exportFieldLanguage: '语言',
-  exportFieldCountry: '国家或地区ID',
-  exportFieldHazard: '灾害ID',
-  exportFieldTheme: '主题ID',
+  exportFieldCountry: '国家或地区',
+  exportFieldHazard: '灾害',
+  exportFieldTheme: '主题',
 
   exportFields: '包含的字段',
   exportFieldsHelp: '记录ID和URL始终包含在内。这些选择适用于两种格式。',
   exportFieldTitle: '标题',
+  exportFieldSummary: '摘要',
+  exportTaxonomyError:
+    '无法获取国家、灾害或主题名称。请重试或取消选择这些字段。',
   exportFieldPosted: '网站发布日期',
   exportFieldReaderDate: '结果中显示的日期',
 
@@ -550,14 +562,17 @@ export const LABELS_AR = {
 
   exportFieldType: 'نوع المحتوى',
   exportFieldLanguage: 'اللغة',
-  exportFieldCountry: 'معرّفات البلد أو المنطقة',
-  exportFieldHazard: 'معرّفات الأخطار',
-  exportFieldTheme: 'معرّفات المواضيع',
+  exportFieldCountry: 'البلدان أو المناطق',
+  exportFieldHazard: 'الأخطار',
+  exportFieldTheme: 'المواضيع',
 
   exportFields: 'الحقول المراد تضمينها',
   exportFieldsHelp:
     'يُضمَّن معرّف السجل والرابط دائمًا. تنطبق هذه الخيارات على كلا التنسيقين.',
   exportFieldTitle: 'العنوان',
+  exportFieldSummary: 'الملخص',
+  exportTaxonomyError:
+    'تعذّر تحديد أسماء البلدان أو الأخطار أو المواضيع. حاول مجددًا أو ألغِ تحديد هذه الحقول.',
   exportFieldPosted: 'تاريخ النشر على الموقع',
   exportFieldReaderDate: 'التاريخ المعروض في النتائج',
 
@@ -721,14 +736,17 @@ export const LABELS_RU = {
 
   exportFieldType: 'Тип содержимого',
   exportFieldLanguage: 'Язык',
-  exportFieldCountry: 'Идентификаторы стран или регионов',
-  exportFieldHazard: 'Идентификаторы опасностей',
-  exportFieldTheme: 'Идентификаторы тем',
+  exportFieldCountry: 'Страны или регионы',
+  exportFieldHazard: 'Опасности',
+  exportFieldTheme: 'Темы',
 
   exportFields: 'Поля для включения',
   exportFieldsHelp:
     'Идентификатор записи и URL включаются всегда. Выбор применяется к обоим форматам.',
   exportFieldTitle: 'Заголовок',
+  exportFieldSummary: 'Краткое описание',
+  exportTaxonomyError:
+    'Не удалось определить названия стран, опасностей или тем. Повторите попытку или снимите выбор этих полей.',
   exportFieldPosted: 'Дата размещения на сайте',
   exportFieldReaderDate: 'Дата, указанная в результатах',
 
@@ -867,14 +885,17 @@ export const DEFAULT_LABELS = {
 
   exportFieldType: 'Content type',
   exportFieldLanguage: 'Language',
-  exportFieldCountry: 'Country or region IDs',
-  exportFieldHazard: 'Hazard IDs',
-  exportFieldTheme: 'Theme IDs',
+  exportFieldCountry: 'Countries or regions',
+  exportFieldHazard: 'Hazards',
+  exportFieldTheme: 'Themes',
 
   exportFields: 'Fields to include',
   exportFieldsHelp:
     'Record ID and URL are always included. These choices apply to both formats.',
   exportFieldTitle: 'Title',
+  exportFieldSummary: 'Summary',
+  exportTaxonomyError:
+    'Names for countries, hazards or themes could not be resolved. Try again or clear those fields.',
   exportFieldPosted: 'Website posting date',
   exportFieldReaderDate: 'Date shown in results',
 
