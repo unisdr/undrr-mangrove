@@ -1,16 +1,8 @@
 import { SyndicationSearchWidget } from './SyndicationSearchWidget';
 import { defaultConfig, widgetMetaShared } from './_storyHelpers';
 
-const localPreview = ['localhost', '127.0.0.1', '::1', '[::1]'].includes(
-  globalThis.location?.hostname
-);
-const origin = localPreview
-  ? 'https://undrr.ddev.site'
-  : 'https://www.undrr.org';
 const config = {
   ...defaultConfig,
-  searchEndpoint: `${origin}/search-endpoint`,
-  taxonomyEndpoint: `${localPreview ? '/__mg-local-taxonomy' : 'https://www.preventionweb.net/api/v1/taxonomy'}?vid=prevention_web_regions,hazard,theme&items_per_page=1000&langcode=en`,
   enableHashSync: false,
   showExport: true,
   resultsPerPage: 10,
@@ -23,9 +15,8 @@ const config = {
     { key: 'field_domain_access', value: 'www_preventionweb_net' },
   ],
 };
-const sourceDescription = localPreview
-  ? `Default real data source: the running local Drupal/Elasticsearch service at ${origin}. Results use its sanitized index, not a fixed fixture.`
-  : `Default real data source: ${origin}. Access and network errors remain visible; no fixture data is substituted.`;
+const sourceDescription =
+  'Real requests to the normal public UNDRR search endpoint. Access and network errors remain visible; there is no automatic local or fixture fallback.';
 export default {
   title: 'Components/Syndicated search/Downloads',
   component: SyndicationSearchWidget,
@@ -80,4 +71,25 @@ export const LatestWebsiteResultsLive = {
   ...DownloadResults,
   name: 'Latest website results (live)',
   args: { config: { ...config, exportDefaultCount: 10 } },
+};
+
+export const LocalDrupalApi = {
+  ...DownloadResults,
+  name: 'Local Drupal API',
+  args: {
+    config: {
+      ...config,
+      searchEndpoint: 'https://undrr.ddev.site/search-endpoint',
+      taxonomyEndpoint:
+        '/__mg-local-taxonomy?vid=prevention_web_regions,hazard,theme&items_per_page=1000&langcode=en',
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Explicit local development opt-in. Requires the running sanitized DDEV Drupal/Elasticsearch deployment and the Storybook dev server with the opt-in taxonomy proxy; see the README startup command. Search requests go directly to https://undrr.ddev.site/search-endpoint. This is local API integration testing, not production content or an automatic fallback. No download starts automatically.',
+      },
+    },
+  },
 };
