@@ -65,16 +65,6 @@ yarn lint
 yarn build
 ```
 
-### API-backed download examples
-
-The main Downloads stories always use the normal public APIs, including on localhost. The separate **Local Drupal API** story is an explicit opt-in for the running sanitized DDEV deployment. To use that local story, start DDEV and enable its taxonomy proxy with the trusted mkcert root certificate:
-
-```bash
-NODE_EXTRA_CA_CERTS="$(mkcert -CAROOT)/rootCA.pem" MANGROVE_LOCAL_API_ORIGIN=https://undrr.ddev.site ./node_modules/.bin/storybook dev --port 6104 --host 127.0.0.1 --exact-port --ci --no-open
-```
-
-Open `http://localhost:6104/?path=/story/components-syndicated-search-downloads--local-drupal-api` for explicit local integration testing. Public examples do not automatically switch to DDEV or fixture data. Search requests go directly to the configured Drupal endpoint; only the local taxonomy GET route uses the opt-in dev proxy. A static Storybook server has no such proxy. The endpoint settings remain editable in Controls. Network-dependent examples never substitute fixtures or start downloads automatically; deterministic states are grouped separately under Downloads / Fixtures.
-
 ## Releases
 
 - Release process: [`docs/RELEASES.md`](docs/RELEASES.md)
