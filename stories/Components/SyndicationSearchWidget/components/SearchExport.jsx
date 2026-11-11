@@ -348,6 +348,29 @@ export default function SearchExport({ isStale = false }) {
             <div
               className={`mg-search__export-range${offerOffset ? ' mg-search__export-range--paged' : ''}`}
             >
+              <TextInput
+                className="mg-search__export-count"
+                id={countId}
+                type="number"
+                label={labels.exportCountLabel}
+                min={1}
+                max={range.maxCount || undefined}
+                step={1}
+                inputMode="numeric"
+                required
+                value={countValue}
+                disabled={busy}
+                helpText={[availability, countHelp].filter(Boolean).join('\n')}
+                error={countError}
+                errorText={interpolateLabel(labels.exportCountError, {
+                  max: Math.max(1, range.maxCount ?? MAX_EXPORT_LIMIT),
+                })}
+                onChange={event => {
+                  setCountValue(event.target.value);
+                  setCountError(false);
+                  setStatus(null);
+                }}
+              />
               {offerOffset && (
                 <TextInput
                   className="mg-search__export-start"
@@ -390,29 +413,6 @@ export default function SearchExport({ isStale = false }) {
                   }}
                 />
               )}
-              <TextInput
-                className="mg-search__export-count"
-                id={countId}
-                type="number"
-                label={labels.exportCountLabel}
-                min={1}
-                max={range.maxCount || undefined}
-                step={1}
-                inputMode="numeric"
-                required
-                value={countValue}
-                disabled={busy}
-                helpText={[availability, countHelp].filter(Boolean).join('\n')}
-                error={countError}
-                errorText={interpolateLabel(labels.exportCountError, {
-                  max: Math.max(1, range.maxCount ?? MAX_EXPORT_LIMIT),
-                })}
-                onChange={event => {
-                  setCountValue(event.target.value);
-                  setCountError(false);
-                  setStatus(null);
-                }}
-              />
             </div>
             <details className="mg-search__export-field-options" open>
               <summary>{labels.exportFields}</summary>

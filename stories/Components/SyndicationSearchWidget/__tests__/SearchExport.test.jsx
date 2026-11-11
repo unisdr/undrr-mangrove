@@ -59,7 +59,7 @@ function setup(
     );
   return { ...rendered, stale: value => rendered.rerender(view(value)) };
 }
-const quantityInput = () => screen.getAllByRole('spinbutton').at(-1);
+const quantityInput = () => screen.getAllByRole('spinbutton').at(0);
 let click;
 const originalFetch = global.fetch;
 beforeAll(() => {
@@ -224,7 +224,7 @@ test('has no accessibility violations and preserves language overrides', async (
 });
 
 test('offers one optional CTA that opens both formats in a labelled modal', () => {
-  setup(false);
+  setup(false, {}, response(1000));
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   expect(
     screen.queryByRole('button', { name: 'Download CSV' })
@@ -245,6 +245,12 @@ test('offers one optional CTA that opens both formats in a labelled modal', () =
   expect(screen.getByRole('button', { name: 'Download CSV' })).toBeVisible();
   expect(screen.getByRole('button', { name: 'Download JSON' })).toBeVisible();
   const quantity = quantityInput();
+  expect(quantity).toHaveAccessibleName('Number of results');
+  expect(
+    quantity.compareDocumentPosition(
+      screen.getByRole('spinbutton', { name: 'Start at result' })
+    )
+  ).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
   const fields = screen
     .getByText('Fields to include', { selector: 'summary' })
     .closest('summary');
