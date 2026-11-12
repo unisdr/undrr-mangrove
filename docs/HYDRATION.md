@@ -136,6 +136,8 @@ Returns: `{ roots, update, unmountAll }`
 | IconCard | Medium | `[data-mg-icon-card]` | `data-items` (JSON), `data-centered`, `data-variant` |
 | StatsCard | Medium | `[data-mg-stats-card]` | `data-stats` (JSON), `data-title`, `data-variant` |
 | UserFeedback | Simple | `[data-mg-user-feedback]` | `data-question`, `data-yes-label`, `data-no-label`, `data-report-issue-label`, `data-feedback-url`, `data-confirmation-before-link`, `data-confirmation-separator`, `data-confirmation-link`, `data-confirmation-after-link`. There is no submission endpoint: Mangrove itself records nothing |
+| QuizQuestion | Medium | `[data-mg-quiz-question]` | `data-question` (JSON, with the answer key), `data-labels` (JSON), `data-number`, `data-total`, `data-show-number`. Add `data-mg-ssr` and render a no-JavaScript fallback inside the container; engagement only, the key is readable in the page |
+| QuizScore | Simple | `[data-mg-quiz-score]` | `data-labels` (JSON), `data-show-progress`, `data-show-reset`. `ensureQuizScoreHost()` from the same module adds the container after the last question |
 | MegaMenu | Complex | `[data-mg-mega-menu]` | `data-delay`, `data-hover-delay`, `data-sections` (JSON, optional) |
 | SyndicationSearchWidget | Complex | `[data-mg-search-widget]` | `data-search-endpoint`, `data-results-per-page`, `data-default-filters` (JSON) |
 | Pager | Medium | `[data-mg-pager]` | `data-page`, `data-total-pages`, `data-show-jump-to`, `data-aria-label` |

@@ -1,0 +1,264 @@
+/**
+ * Quiz question (QuizQuestion)
+ *
+ * One self-checking question in the page flow: multiple choice, true/false, short answer or fill in the blank.
+ * Composes the Forms controls, the primary button and Notice; this file adds the question surface,
+ * the option rows, inline blanks and the answered states.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Quiz/QuizQuestion/QuizQuestion.mdx
+ */
+@use "../../../assets/scss/mixins" as *;
+@use "../../../assets/scss/config" as *;
+
+%mg-quiz-question-prompt {
+  color: rgb(var(--mg-color-neutral-900));
+  display: block;
+  font-size: var(--mg-font-size-400);
+  font-weight: 700;
+  line-height: 1.35;
+  margin: 0 0 var(--mg-spacing-150);
+  max-inline-size: 70ch;
+  padding: 0;
+
+  // Editors separate paragraphs of a prompt with line breaks.
+  white-space: pre-line;
+}
+
+%mg-quiz-question-hint {
+  color: rgb(var(--mg-color-neutral-700));
+  font-size: var(--mg-font-size-250);
+  font-weight: 400;
+  line-height: 1.4;
+  margin: 0 0 var(--mg-spacing-150);
+  padding: 0;
+}
+
+.mg-quiz-question {
+  background-color: rgb(var(--mg-color-neutral-0));
+  border: 1px solid rgb(var(--mg-color-neutral-600) / 0.18);
+  border-radius: var(--mg-radius-form-input);
+  box-sizing: border-box;
+  color: rgb(var(--mg-color-neutral-900));
+  margin-block: var(--mg-spacing-300);
+  padding: var(--mg-spacing-200);
+
+  @media (min-width: $mg-breakpoint-tablet) {
+    padding: var(--mg-spacing-250) var(--mg-spacing-300);
+  }
+
+  // The status in the header names the state; the edge only echoes it.
+  &--correct {
+    border-color: rgb(var(--mg-color-accent-400) / 0.5);
+  }
+
+  &__header {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--mg-spacing-50) var(--mg-spacing-150);
+    justify-content: space-between;
+    margin-block-end: var(--mg-spacing-100);
+  }
+
+  &__number,
+  &__status {
+    font-family: var(--mg-font-family-ui);
+    font-size: var(--mg-font-size-250);
+    font-weight: 600;
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  &__number {
+    color: rgb(var(--mg-color-neutral-700));
+  }
+
+  &__status {
+    align-items: center;
+    display: inline-flex;
+    gap: var(--mg-spacing-50);
+
+    // Keeps the status at the inline end when the question is not numbered.
+    margin-inline-start: auto;
+
+    svg {
+      block-size: 1.25em;
+      fill: currentColor;
+      flex-shrink: 0;
+      inline-size: 1.25em;
+    }
+
+    &--correct svg {
+      color: rgb(var(--mg-color-accent-400));
+    }
+
+    &--incorrect svg {
+      color: rgb(var(--mg-color-red-900));
+    }
+  }
+
+  // FormGroup supplies the fieldset and legend; the question is already the
+  // surface, so the group's own box is removed.
+  &__group,
+  &__group.mg-form-group {
+    background: none;
+    border: 0;
+    margin: 0;
+    min-inline-size: 0;
+    padding: 0;
+  }
+
+  &__prompt,
+  &__group > .mg-form-group__legend {
+    @extend %mg-quiz-question-prompt;
+  }
+
+  &__hint,
+  &__group--sentence > .mg-form-group__legend {
+    @extend %mg-quiz-question-hint;
+  }
+
+  &__media {
+    margin-block-end: var(--mg-spacing-200);
+
+    figure {
+      margin: 0;
+    }
+
+    img,
+    picture,
+    video {
+      border-radius: var(--mg-radius-form-input);
+      display: block;
+      height: auto;
+      max-inline-size: 100%;
+    }
+
+    figcaption {
+      color: rgb(var(--mg-color-neutral-700));
+      font-size: var(--mg-font-size-200);
+      margin-block-start: var(--mg-spacing-50);
+    }
+  }
+
+  &__options {
+    display: grid;
+    gap: var(--mg-spacing-75);
+  }
+
+  // Each option is one row-sized target. The radio or checkbox keeps its own
+  // 3:1 boundary and focus ring; the row edge is supporting structure.
+  &__option.mg-form-check {
+    align-items: flex-start;
+    background-color: rgb(var(--mg-color-neutral-0));
+    border: 1px solid rgb(var(--mg-color-neutral-600) / 0.35);
+    border-radius: var(--mg-radius-form-input);
+    min-block-size: mg-rem(48);
+    padding: var(--mg-spacing-75) var(--mg-spacing-100);
+
+    @media (hover: hover) {
+      &:hover {
+        border-color: rgb(var(--mg-color-interactive));
+      }
+    }
+
+    &:has(.mg-form-check__input:checked) {
+      background-color: rgb(var(--mg-color-interactive) / 0.06);
+      border-color: rgb(var(--mg-color-interactive));
+      box-shadow: inset 0 0 0 1px rgb(var(--mg-color-interactive));
+    }
+
+    .mg-form-check__input {
+      flex-shrink: 0;
+
+      // Lines the control up with the first line of a wrapping label.
+      margin-block: var(--mg-spacing-25);
+    }
+
+    .mg-form-check__label {
+      flex: 1;
+      line-height: 1.4;
+      overflow-wrap: anywhere;
+      padding-block: var(--mg-spacing-25);
+      padding-inline: var(--mg-spacing-100) 0;
+
+      // Stretches the label over the row, so the whole row selects.
+      &::after {
+        content: "";
+        inset: 0;
+        position: absolute;
+      }
+    }
+  }
+
+  &__sentence {
+    @extend %mg-quiz-question-prompt;
+
+    font-weight: 400;
+    line-height: 1.6;
+    margin-block-end: 0;
+
+    // Blanks need the full width to stay on the line they belong to.
+    max-inline-size: none;
+
+    // Server templates put each blank on its own source line.
+    white-space: normal;
+  }
+
+  // An inline blank sits in the sentence at a fixed width, so its size gives
+  // no hint about the length of the answer.
+  &__blank.mg-form-input {
+    display: inline-block;
+    inline-size: 9em;
+    margin-block: var(--mg-spacing-25);
+    margin-inline: var(--mg-spacing-25);
+    max-inline-size: 100%;
+    vertical-align: baseline;
+  }
+
+  &__fields {
+    display: grid;
+    gap: var(--mg-spacing-100);
+    margin-block-start: var(--mg-spacing-150);
+  }
+
+  &__field {
+    max-inline-size: mg-rem(384);
+  }
+
+  &__actions {
+    margin-block-start: var(--mg-spacing-200);
+  }
+
+  &__check.mg-button {
+    min-block-size: mg-rem(44);
+
+    // Mangrove's button sets `display` after normalize's [hidden] rule.
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  &__feedback:not(:empty) {
+    margin-block-start: var(--mg-spacing-200);
+  }
+
+  &__feedback-title,
+  &__explanation {
+    margin: 0;
+  }
+
+  &__explanation {
+    max-inline-size: 70ch;
+    white-space: pre-line;
+  }
+
+  @media print {
+    break-inside: avoid;
+
+    &__actions {
+      display: none;
+    }
+  }
+}

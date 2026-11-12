@@ -1,0 +1,389 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
+import * as QuizQuestionStories from './QuizQuestion.stories';
+
+<Meta of={QuizQuestionStories} />
+
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
+
+# Quiz question
+
+One self-checking question that sits in the page flow between ordinary content. The visitor answers, selects "Check answer" and gets immediate feedback. It is for engagement: answers are checked in the browser, nothing is stored, and the answer key is readable in the page.
+
+Use it with <LinkTo kind="components-quiz-quiz-score" story="docs">Quiz score</LinkTo> to show a running score for the page.
+
+<Canvas of={QuizQuestionStories.MultipleChoice} meta={QuizQuestionStories} />
+
+## When to use
+
+- A knowledge check inside an article, explainer or landing page, where trying again is part of the point.
+- Several independent questions on one page, with or without a score.
+
+Do not use it for anything that must be trustworthy: assessed quizzes, certificates, or any result that is stored or reported. The key is in the page. See [Later growth](#8-later-growth).
+
+## Question types
+
+### Multiple choice
+
+One correct option uses radio buttons. Each option is a full-width row, at least 48 pixels tall, and the whole row selects.
+
+<Canvas of={QuizQuestionStories.AnsweredCorrect} meta={QuizQuestionStories} />
+
+With `multiple`, the options are checkboxes and the question says "Select all that apply". The answer is correct only when exactly the right set is selected.
+
+<Canvas of={QuizQuestionStories.MultipleAnswers} meta={QuizQuestionStories} />
+
+### True or false
+
+Pass `answer`. The True and False labels come from the component's language catalogue.
+
+<Canvas of={QuizQuestionStories.TrueFalse} meta={QuizQuestionStories} />
+
+### Short answer
+
+One text input and a list of accepted answers. Matching trims and collapses whitespace, normalizes Unicode to NFC and ignores case unless `caseSensitive` is set. Enter checks the answer.
+
+<Canvas of={QuizQuestionStories.ShortAnswer} meta={QuizQuestionStories} />
+
+### Fill in the blank
+
+Write `[1]`, `[2]` in the prompt where each blank belongs. Each reference becomes an input in the sentence. Every blank has its own accepted answers and case setting.
+
+<Canvas of={QuizQuestionStories.FillInTheBlank} meta={QuizQuestionStories} />
+
+A blank that the prompt does not refer to is listed under the sentence as a labelled field. With no references at all, the prompt becomes the legend and every blank is a labelled field, which keeps existing content working.
+
+<Canvas
+  of={QuizQuestionStories.FillInTheBlankFieldsBelow}
+  meta={QuizQuestionStories}
+/>
+
+## Optional parts
+
+These go beyond what the earlier Drupal blocks did. Each can be left out.
+
+| Part                                       | How                                                                               | Default                                           |
+| ------------------------------------------ | --------------------------------------------------------------------------------- | ------------------------------------------------- |
+| Explanation after a correct answer         | `explanation` (plain text)                                                        | None                                              |
+| Image or figure inside the question        | `media`, or a `.mg-quiz-question__media` element in server markup                 | None                                              |
+| "Question 2 of 5"                          | Counted automatically; `number` and `total` set it; `showNumber={false}` hides it | Shown when more than one question shares the page |
+| Running score, progress bar, "Start again" | Add <LinkTo kind="components-quiz-quiz-score" story="docs">Quiz score</LinkTo>    | Not shown without it                              |
+
+<Canvas of={QuizQuestionStories.WithImage} meta={QuizQuestionStories} />
+
+## A page of questions
+
+Questions need no wrapper. Each one counts the questions that share its scope, numbers itself and reports its state. The scope is the nearest ancestor with a `data-mg-quiz` attribute, or the whole page without one. Add the attribute to any element to run two separate quizzes on one page.
+
+<Canvas of={QuizQuestionStories.QuizPage} meta={QuizQuestionStories} />
+
+## React
+
+```jsx
+import QuizQuestion from '@undrr/undrr-mangrove/components/QuizQuestion.js';
+import QuizScore from '@undrr/undrr-mangrove/components/QuizScore.js';
+
+<QuizQuestion
+  lang="en"
+  type="multiple_choice"
+  prompt="Which hazard does this image show?"
+  media={<img src="/algae.jpg" alt="Green algae spreading across a lake shore" />}
+  options={[
+    { value: 'hab', label: 'Harmful algal blooms', correct: true },
+    { value: 'oil', label: 'Oil pollution' },
+  ]}
+  explanation="Warm, nutrient-rich water lets algae multiply quickly."
+  onCheck={({ correct }) => analytics.track('quiz_check', { correct })}
+/>
+<QuizQuestion lang="en" type="true_false" prompt="A storm tide is a tsunami." answer={false} />
+<QuizQuestion lang="en" type="text" prompt="Which framework runs to 2030?" expected={['Sendai Framework']} />
+<QuizQuestion
+  lang="en"
+  type="fill_blank"
+  prompt="Adopted in [1], Japan, in the year [2]."
+  blanks={[
+    { label: 'City', expected: ['Sendai'] },
+    { label: 'Year', expected: ['2015'] },
+  ]}
+/>
+<QuizScore lang="en" />
+```
+
+<Controls of={QuizQuestionStories.MultipleChoice} />
+
+The type names (`multiple_choice`, `true_false`, `text`, `fill_blank`) match the Drupal grader types, so the same question definition works in both places.
+
+## Languages and label overrides
+
+Pass `lang` to select the built-in English, Arabic, Spanish, French, Japanese, Russian or Simplified Chinese labels. Regional tags such as `fr-CA` select their base language, and Arabic selects right-to-left unless `dir` is set. Unsupported languages keep their `lang` and show English labels. Use the Storybook locale toolbar to preview them.
+
+The catalogue covers the interface only: the check button, feedback, "Select all that apply", numbering, True and False, and the names of blanks. Prompts, options, explanations and blank labels are content and are translated by whoever writes the question.
+
+Override individual labels with `labels`. The rest still come from the selected language.
+
+```jsx
+<QuizQuestion lang="fr" labels={{ checkAnswer: 'Valider' }} {...question} />
+```
+
+| Key                | English                          | Placeholders          |
+| ------------------ | -------------------------------- | --------------------- |
+| `checkAnswer`      | Check answer                     |                       |
+| `correct`          | Correct                          |                       |
+| `incorrect`        | Not quite                        |                       |
+| `incorrectMessage` | Not quite. Try again.            |                       |
+| `emptyChoice`      | Choose an answer first.          |                       |
+| `emptyText`        | Type an answer first.            |                       |
+| `questionNumber`   | Question `{number}` of `{total}` | `{number}`, `{total}` |
+| `selectAll`        | Select all that apply.           |                       |
+| `fillBlankLegend`  | Complete the sentence            |                       |
+| `blankLabel`       | Blank `{number}` of `{total}`    | `{number}`, `{total}` |
+| `trueLabel`        | True                             |                       |
+| `falseLabel`       | False                            |                       |
+
+> **Note:** the translations are drafts and have not had native-speaker review.
+
+## Behaviours
+
+- **Check.** The button grades the current answer. An empty attempt (nothing selected, or only whitespace typed) asks for an answer and is neither graded nor counted. Visitors can change the answer and check again as often as they like.
+- **Feedback.** A Notice appears under the button: `positive` for correct, with the explanation if there is one; `negative` for "Not quite. Try again."; `info` for an empty attempt. A wrong answer never shows the explanation or marks the right option, because the visitor can try again.
+- **State.** Once graded, the header shows "Correct" or "Not quite" with an icon, and the root carries `data-mg-quiz-state` (`unanswered`, `correct` or `incorrect`). The latest graded result stands until the next graded attempt.
+- **Focus.** Focus stays on the button after checking. Nothing moves, so a keyboard user can adjust the answer and check again.
+- **Motion.** None. Feedback appears immediately; there is nothing to disable under reduced motion.
+- **Print.** The check button is hidden. The question, the answer the visitor entered and any feedback print as shown, and a question is not split across pages where the printer allows.
+
+<Canvas of={QuizQuestionStories.AnsweredIncorrect} meta={QuizQuestionStories} />
+
+<Canvas of={QuizQuestionStories.LongLabels} meta={QuizQuestionStories} />
+
+## Accessibility
+
+- Choice and fill-in-the-blank questions are a `fieldset` whose `legend` is the prompt (or "Complete the sentence" when the blanks are inline). "Select all that apply" is the group's description.
+- The short-answer input is labelled by the prompt. Each inline blank has an accessible name: the blank's label, or "Blank 1 of 2".
+- Feedback is a polite live region that is in the page from the start. The Notice inside it has no role of its own, so a result is announced once. Checking the same answer twice replaces the message element, so it can be announced again.
+- State is never colour alone: the header status and the Notice both carry text and an icon.
+- Radios, checkboxes, inputs and the button are the Mangrove Forms and button classes, with their focus rings. Option rows are at least 48 pixels tall and the button at least 44.
+- Layout uses logical properties and mirrors under `dir="rtl"`.
+
+## Server-rendered usage
+
+Drupal and other server-rendered consumers render a container per question and let Mangrove mount the component on it. The server supplies data; grading, feedback, numbering, score and translated labels all come from Mangrove.
+
+### Markup and data contract
+
+```html
+<div
+  data-mg-quiz-question
+  data-mg-ssr
+  data-question='{"type":"multiple_choice","prompt":"Which hazard does this image show?","options":[{"value":"hab","label":"Harmful algal blooms","correct":true},{"value":"oil","label":"Oil pollution","correct":false}],"explanation":"Warm, nutrient-rich water lets algae multiply quickly."}'
+>
+  <!-- No-JavaScript state. Replaced when the component mounts. -->
+  <div class="mg-quiz-question mg-quiz-question--multiple-choice">
+    <fieldset class="mg-form-group mg-quiz-question__group">
+      <legend class="mg-form-group__legend">
+        Which hazard does this image show?
+      </legend>
+      <div class="mg-quiz-question__media">
+        <img src="/algae.jpg" alt="Green algae spreading across a lake shore" />
+      </div>
+      <div class="mg-quiz-question__options">
+        <label class="mg-form-check mg-quiz-question__option">
+          <input
+            class="mg-form-check__input mg-form-check__input--radio"
+            type="radio"
+            value="hab"
+          />
+          <span class="mg-form-check__label">Harmful algal blooms</span>
+        </label>
+        <label class="mg-form-check mg-quiz-question__option">
+          <input
+            class="mg-form-check__input mg-form-check__input--radio"
+            type="radio"
+            value="oil"
+          />
+          <span class="mg-form-check__label">Oil pollution</span>
+        </label>
+      </div>
+    </fieldset>
+  </div>
+</div>
+```
+
+| Attribute                   | Purpose                                                                                                              |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `data-mg-quiz-question`     | Marks the container to hydrate. Required.                                                                            |
+| `data-question`             | The question as one JSON object, including its answer key. Required.                                                 |
+| `data-mg-ssr`               | Keeps the inner markup on screen until the component replaces it, so the page never shows an empty box. Recommended. |
+| `data-lang`                 | Language of the interface labels. Defaults to the nearest `lang` attribute, then English.                            |
+| `dir`                       | Explicit direction on the container.                                                                                 |
+| `data-labels`               | JSON object of label overrides.                                                                                      |
+| `data-number`, `data-total` | Set the position instead of counting it.                                                                             |
+| `data-show-number="false"`  | Leaves numbering out.                                                                                                |
+
+`data-question` by type:
+
+| Type              | Fields                                                                                                                         |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| All               | `type`, `prompt` (plain text; line breaks as `\n`), optional `explanation` (plain text)                                        |
+| `multiple_choice` | `options`: list of `value`, `label`, `correct`; optional `multiple`                                                            |
+| `true_false`      | `answer`: `true` or `false`. The legacy pair of `options` with values `"true"` and `"false"` and a `correct` flag is also read |
+| `text`            | `expected`: list of accepted answers; optional `caseSensitive`                                                                 |
+| `fill_blank`      | `prompt` with `[1]`, `[2]`; `blanks`: list of optional `label`, `expected`, optional `caseSensitive`                           |
+
+The JSON is the single source for the question. The inner markup is only what the visitor sees before or without JavaScript, with one exception: the contents of `.mg-quiz-question__media` are carried into the mounted component, so the server can render any image markup it likes (responsive `picture`, `figure` with a caption). That HTML is inserted as written, so it must come from the server's own sanitized rendering.
+
+Escape the JSON for an HTML attribute. In Twig, `{{ question|json_encode }}` inside a double-quoted attribute is escaped by autoescaping.
+
+### Mounting
+
+```js
+import createHydrator from '@undrr/undrr-mangrove/components/hydrate.js';
+import QuizQuestion, {
+  fromElement,
+} from '@undrr/undrr-mangrove/components/QuizQuestion.js';
+import QuizScore, {
+  fromElement as scoreFromElement,
+  ensureQuizScoreHost,
+} from '@undrr/undrr-mangrove/components/QuizScore.js';
+
+const questions = createHydrator({
+  selector: '[data-mg-quiz-question]',
+  component: QuizQuestion,
+  fromElement,
+});
+ensureQuizScoreHost(document);
+const score = createHydrator({
+  selector: '[data-mg-quiz-score]',
+  component: QuizScore,
+  fromElement: scoreFromElement,
+});
+
+Drupal.behaviors.mangroveQuiz = {
+  attach(context) {
+    questions.update(context);
+    ensureQuizScoreHost(document);
+    score.update(document);
+  },
+};
+```
+
+`ensureQuizScoreHost` adds a `data-mg-quiz-score` container after the last question, for consumers whose questions are independent blocks with no template that knows which one is last. It keeps that container after the last question when more arrive, and leaves alone a container the server rendered itself.
+
+### Without JavaScript
+
+The inner markup is the whole no-JavaScript state: a readable question with working native controls and no check button, so nothing on the page is dead. The server renders no button, feedback or score; the component adds them when it mounts. If `data-question` is missing or unreadable the component does not mount and the same markup stays.
+
+<Canvas of={QuizQuestionStories.NoJavaScript} meta={QuizQuestionStories} />
+
+The same markup once mounted:
+
+<Canvas of={QuizQuestionStories.ServerRendered} meta={QuizQuestionStories} />
+
+### The same question twice
+
+The markup contract has no `id` and no `name`. The mounted component generates both, unique to each mount, so two copies of one question (a cached block, an embed) have independent radio groups, labels, feedback and score entries.
+
+## Design decisions
+
+This section answers the design questions in [#1481](https://github.com/unisdr/undrr-mangrove/issues/1481). It is for maintainers and reviewers.
+
+### 1. Structure
+
+Two components: `QuizQuestion`, with a `type`, and `QuizScore`. There is no wrapper component.
+
+One question component with a type, not four, because the frame (number, prompt, media, check, feedback, state) is identical and only the answer control differs. Four components would repeat the frame and its contract four times.
+
+The score is a separate component because it is page-level, appears once, and a page of questions is valid without it. Folding it into the question would make one question responsible for its siblings.
+
+No wrapper is required because the first consumer cannot supply one: Drupal's questions are independent blocks separated by ordinary content, and no template surrounds them. Questions and the score find each other through the document instead. A `data-mg-quiz` attribute on any ancestor narrows the scope when a page needs two quizzes.
+
+### 2. Ownership of behaviour
+
+Mangrove owns grading, feedback, numbering, score and interface labels. The consumer supplies data: one JSON object per question in `data-question`, the same shape as the React props.
+
+It is a hydrated React component, not a separate vanilla script, so the React and server-rendered paths are one implementation with one set of tests, and it reuses the Forms, Notice and ProgressBar components directly. The cost is that the server's inner markup is replaced on mount and not enhanced in place, which is why the JSON, not the markup, is the source of truth.
+
+Questions do not share React state, since each may be its own root. Each publishes `data-mg-quiz-state` on its root and dispatches a `mg-quiz:change` event on the document; the score and the numbering count from the DOM when they hear it. This keeps working when questions arrive or leave in batches (AJAX, BigPipe) and when two copies of the bundle are on a page.
+
+The grading rules live in one pure module with no DOM or React dependency (`gradeAnswer`), exported for consumers that need the same rules elsewhere.
+
+### 3. Feedback
+
+Notice variants, inline, directly under the check button: `positive`, `negative` and `info`. This replaces the borrowed HighlightBox and the hand-picked green, and gives every result an icon and text.
+
+The feedback container is a polite live region. Negative Notices default to `role="alert"`; here the role is removed, because a wrong quiz answer is not an emergency and the wrapper already announces it. Focus does not move. Moving it to the feedback would force a keyboard user to travel back to the answer for every retry.
+
+The optional explanation is shown only with a correct answer. Showing it with a wrong answer would give the answer away while the visitor can still try again. Whether to offer "Show answer" after several attempts is left open; see [Open questions](#open-questions).
+
+The Notice title is a paragraph, not a heading, so a page of answered questions does not add a heading per question to the document outline.
+
+### 4. Progress and score
+
+Questions number themselves ("Question 2 of 5") by counting their scope, because the server does not know the order either. A question on its own is not numbered. `number`, `total` and `showNumber` override this.
+
+Progress and score live in `QuizScore`, placed by the consumer or added after the last question by `ensureQuizScoreHost`. It stays empty until the first answer is checked, then shows the running score and a ProgressBar of questions answered. When every question is answered it shows the final score and "Start again", which clears every question in the scope and moves focus to the first one. Progress and reset are both optional.
+
+The score is deliberately not sticky and not repeated in each question. The per-question status and the numbering already say where the visitor is; a floating score would compete with the content the questions sit in.
+
+### 5. Fill in the blank
+
+Blanks sit in the sentence. The sentence is the natural reading order for everyone, and the literal `[1]` no longer appears.
+
+The group's legend is "Complete the sentence", and each input's accessible name is its blank label or "Blank 1 of 2". A screen-reader user moving through the sentence hears the words, then the named input, in order. The prompt cannot be the legend here, because interactive controls inside a legend are not announced reliably.
+
+Inline inputs are a fixed width so their size does not hint at the answer. Blanks that the prompt does not refer to fall back to labelled fields under the sentence, so no content is lost when an editor forgets a reference.
+
+### 6. States
+
+| State         | What the visitor sees                                                                                            |
+| ------------- | ---------------------------------------------------------------------------------------------------------------- |
+| Unanswered    | Number (if any), prompt, controls, check button                                                                  |
+| Empty attempt | `info` Notice: "Choose an answer first." or "Type an answer first." Not graded, not counted, earlier result kept |
+| Correct       | "Correct" status in the header, `positive` Notice with the explanation, a slightly stronger edge                 |
+| Incorrect     | "Not quite" status, `negative` Notice "Not quite. Try again."                                                    |
+| No JavaScript | Server markup: prompt, media and native controls, no button                                                      |
+| Print         | As on screen, without the button                                                                                 |
+
+### 7. Media
+
+An image or figure belongs inside the question, between the prompt and the answer controls, so a question about a picture reads as one unit and is not split from it by the page layout. In React it is the `media` node. In server markup it is whatever the server puts in `.mg-quiz-question__media`. The image's `alt` text is content and stays with the consumer; it should describe the image without giving the answer.
+
+### 8. Later growth
+
+Nothing here should be reused for assessed quizzes as it stands: the key is in the page. The following were kept open so a server-graded mode can be added without a new component:
+
+- **Grading is one function behind one call.** `handleCheck` collects a serializable answer (a string, or a list of strings) and asks `gradeAnswer` for a boolean. A future `grader` prop returning a promise can replace that call, and `data-question` already works without `correct` or `expected` fields for rendering.
+- **The state attribute can take more values.** `data-mg-quiz-state` and the score read named states, so `checking` or `submitted` can be added. Nothing assumes two outcomes beyond the score's count of `correct` and `incorrect`.
+- **Feedback text is not tied to the key.** The explanation is a prop today and could come back from the server with the result.
+- **The score counts the DOM, not a store.** A server-held score could replace the count behind the same component.
+
+Not addressed and needing design before any assessed use: sign-in, stored attempts, attempt limits, hiding the result until submission, timing, question pools and certificates.
+
+### Open questions
+
+- Whether a wrong answer should eventually reveal the answer or a hint, and after how many attempts.
+- Whether the question surface needs public `--mg-quiz-*` custom properties for themes. This version uses shared tokens only and adds no new public properties.
+- Whether "Start again" should also be offered before the last question is answered.
+
+## CSS classes
+
+| Class                                                                         | Purpose                                                                                        |
+| ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `mg-quiz-question`                                                            | Root surface. Carries `data-mg-quiz-state`                                                     |
+| `mg-quiz-question--multiple-choice`, `--true-false`, `--text`, `--fill-blank` | Question type                                                                                  |
+| `mg-quiz-question--correct`, `--incorrect`                                    | Latest graded result. Only `--correct` is styled; `--incorrect` and the type classes are hooks |
+| `mg-quiz-question__header`, `__number`, `__status`                            | Numbering and result status                                                                    |
+| `mg-quiz-question__group`                                                     | Fieldset (with `mg-form-group`) or short-answer wrapper                                        |
+| `mg-quiz-question__group--sentence`                                           | Fill in the blank with inline blanks                                                           |
+| `mg-quiz-question__prompt`, `__hint`                                          | Short-answer prompt label; "Select all that apply"                                             |
+| `mg-quiz-question__media`                                                     | Image or figure                                                                                |
+| `mg-quiz-question__options`, `__option`                                       | Option list and row (with `mg-form-check`)                                                     |
+| `mg-quiz-question__sentence`, `__blank`                                       | Sentence and inline input (with `mg-form-input`)                                               |
+| `mg-quiz-question__fields`, `__field`                                         | Labelled text fields                                                                           |
+| `mg-quiz-question__actions`, `__check`                                        | Button row and check button (with `mg-button mg-button-primary`)                               |
+| `mg-quiz-question__feedback`, `__feedback-title`, `__explanation`             | Live region, Notice title and explanation                                                      |
+
+## Changelog
+
+- **1.0**, 2026-11-12 ([#1481](https://github.com/unisdr/undrr-mangrove/issues/1481)): Initial component.
+  - Multiple choice (one or several answers), true/false, short answer and fill in the blank, checked in the browser with the grading rules of the Drupal `undrr_training` blocks ([web-backlog#3129](https://gitlab.com/undrr/web-backlog/-/work_items/3129)).
+  - Feedback through Notice, optional explanation, optional media, automatic numbering, inline blanks, built-in translations with overrides, and hydration from server-rendered markup.

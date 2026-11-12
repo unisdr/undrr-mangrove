@@ -83,6 +83,8 @@ Runtime: `/components/hydrate.js`
 | IconCard | `/components/IconCard.js` |
 | Gallery | `/components/Gallery.js` |
 | UserFeedback | `/components/UserFeedback.js` |
+| QuizQuestion | `/components/QuizQuestion.js` |
+| QuizScore | `/components/QuizScore.js` |
 | StatsCard | `/components/StatsCard.js` |
 | Pager | `/components/Pager.js` |
 

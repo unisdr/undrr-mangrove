@@ -9,7 +9,7 @@ and in the components' React hydration adapters.
 
 The runtime catalogue contract covers CopyButton, ShareButtons, ServiceNotice,
 Snackbar, Drawer, Gallery, ScrollContainer, Tab, MegaMenu, OnThisPageNav and
-SyndicationSearchWidget, together with UserFeedback.
+SyndicationSearchWidget, together with UserFeedback, QuizQuestion and QuizScore.
 
 Publication remains component-specific. Snackbar has no standalone published
 webpack bundle, and OnThisPageNav's React wrapper is used by Storybook; its

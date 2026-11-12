@@ -60,6 +60,17 @@ export {
 } from '../stories/Components/Notice/Notice';
 export { SkipLink } from '../stories/Utilities/SkipLink/SkipLink';
 export { default as ProgressBar } from '../stories/Components/ProgressBar/ProgressBar';
+export {
+  default as QuizQuestion,
+  DEFAULT_QUIZ_QUESTION_LABELS,
+  getQuizQuestionLabels,
+  gradeAnswer as gradeQuizAnswer,
+} from '../stories/Components/Quiz/QuizQuestion/QuizQuestion';
+export {
+  default as QuizScore,
+  DEFAULT_QUIZ_SCORE_LABELS,
+  getQuizScoreLabels,
+} from '../stories/Components/Quiz/QuizScore/QuizScore';
 
 export { ContentTeaser } from '../stories/Patterns/ContentTeaser/ContentTeaser';
 export { ContentCard } from '../stories/Patterns/ContentCard/ContentCard';

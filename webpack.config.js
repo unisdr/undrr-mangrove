@@ -127,6 +127,9 @@ export default [
       ScrollContainer:
         './stories/Components/ScrollContainer/ScrollContainer.hydrate.js',
       UserFeedback: './stories/Components/UserFeedback/UserFeedback.hydrate.js',
+      QuizQuestion:
+        './stories/Components/Quiz/QuizQuestion/QuizQuestion.hydrate.js',
+      QuizScore: './stories/Components/Quiz/QuizScore/QuizScore.hydrate.js',
       QuoteHighlight:
         './stories/Components/QuoteHighlight/QuoteHighlight.hydrate.js',
       SyndicationSearchWidget:

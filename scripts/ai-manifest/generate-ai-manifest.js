@@ -327,6 +327,8 @@ const COMPONENT_IDS = {
   Pager: 'components-navigation-pager',
   ShareButtons: 'components-buttons-sharebuttons',
   UserFeedback: 'components-user-feedback',
+  QuizQuestion: 'components-quiz-quiz-question',
+  QuizScore: 'components-quiz-quiz-score',
   CopyButton: 'components-buttons-copybutton',
   Drawer: 'components-navigation-drawer',
   Tree: 'components-navigation-tree',
@@ -729,6 +731,17 @@ function buildSampleProps(React) {
       ],
     },
     UserFeedback: {},
+    QuizQuestion: {
+      type: 'multiple_choice',
+      prompt: 'Which of these hazards is water-related?',
+      options: [
+        { value: 'flood', label: 'Flood', correct: true },
+        { value: 'earthquake', label: 'Earthquake' },
+      ],
+      number: 1,
+      total: 3,
+    },
+    QuizScore: {},
     Gallery: {
       media: [
         {

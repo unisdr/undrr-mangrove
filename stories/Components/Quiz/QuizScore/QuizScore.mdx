@@ -1,0 +1,106 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
+import * as QuizScoreStories from './QuizScore.stories';
+
+<Meta of={QuizScoreStories} />
+
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
+
+# Quiz score
+
+The running score and end summary for the <LinkTo kind="components-quiz-quiz-question" story="docs">quiz questions</LinkTo> on a page. It is a count for the visitor only: nothing is stored or sent.
+
+<Canvas of={QuizScoreStories.Complete} meta={QuizScoreStories} />
+
+## When to use
+
+- After the last question of a page with several questions.
+- Once per quiz. To run two quizzes on one page, put each in an element with a `data-mg-quiz` attribute and give each its own score.
+
+Leave it out for a single question; the question's own feedback is enough.
+
+## Behaviours
+
+- **Empty at first.** Nothing shows until the first answer is checked. An empty attempt does not count.
+- **In progress.** "Score so far: 1 of 5 correct (answered: 2)." with a ProgressBar of questions answered.
+- **Complete.** "You got 4 of 5 correct." and a "Start again" button. The visitor can still change and recheck any answer, and the score follows.
+- **Start again.** Clears every question in the scope and moves focus to the first one. Scrolling there is smooth only when the visitor has not asked for reduced motion.
+- **Scope.** It counts the questions in the nearest `data-mg-quiz` ancestor, or every question on the page that is not inside one. Questions added or removed later are counted as they come and go.
+
+<Canvas of={QuizScoreStories.InProgress} meta={QuizScoreStories} />
+
+The progress bar and "Start again" are additions to the earlier Drupal behaviour and can be turned off with `showProgress={false}` and `showReset={false}`.
+
+<Canvas of={QuizScoreStories.WithoutProgressOrReset} meta={QuizScoreStories} />
+
+## React
+
+```jsx
+import QuizScore from '@undrr/undrr-mangrove/components/QuizScore.js';
+
+<QuizScore lang="en" />;
+```
+
+<Controls of={QuizScoreStories.Default} />
+
+## Languages and label overrides
+
+`lang` selects the built-in English, Arabic, Spanish, French, Japanese, Russian or Simplified Chinese labels, in the same way as Quiz question. Override individual labels with `labels`.
+
+| Key             | English                                                                  | Placeholders                         |
+| --------------- | ------------------------------------------------------------------------ | ------------------------------------ |
+| `scoreSoFar`    | Score so far: `{correct}` of `{total}` correct (answered: `{answered}`). | `{correct}`, `{total}`, `{answered}` |
+| `scoreFinal`    | You got `{correct}` of `{total}` correct.                                | `{correct}`, `{total}`, `{answered}` |
+| `progressLabel` | Questions answered                                                       |                                      |
+| `progressValue` | `{answered}` of `{total}`                                                | `{answered}`, `{total}`              |
+| `reset`         | Start again                                                              |                                      |
+
+The sentences keep numbers out of grammatical agreement, so no plural forms are needed. Keep that property in an override.
+
+> **Note:** the translations are drafts and have not had native-speaker review.
+
+## Accessibility
+
+- The score sentence is a `role="status"` element that is in the page from the start, so each change is announced politely, after the question's own feedback.
+- The progress bar is the native `progress` element through ProgressBar, named "Questions answered", with "2 of 5" as its value text. It is outside the status element, so it is not read out on every change.
+- "Start again" removes itself, so it moves focus to the first question's first control before it goes.
+
+## Server-rendered usage
+
+Render an empty container where the score belongs, or let Mangrove add one after the last question.
+
+```html
+<div data-mg-quiz-score></div>
+```
+
+| Attribute                    | Purpose                                                                         |
+| ---------------------------- | ------------------------------------------------------------------------------- |
+| `data-mg-quiz-score`         | Marks the container to hydrate. Required.                                       |
+| `data-lang`                  | Language of the labels. Defaults to the nearest `lang` attribute, then English. |
+| `dir`                        | Explicit direction on the container.                                            |
+| `data-labels`                | JSON object of label overrides.                                                 |
+| `data-show-progress="false"` | Leaves the progress bar out.                                                    |
+| `data-show-reset="false"`    | Leaves "Start again" out.                                                       |
+
+`ensureQuizScoreHost(context)`, exported with the component, creates the container after the last `data-mg-quiz-question` in each scope that has none, and keeps a container it created after the last question when more arrive. See the mounting example in <LinkTo kind="components-quiz-quiz-question" story="docs">Quiz question</LinkTo>.
+
+Without JavaScript there is no score, which is correct: nothing can be checked.
+
+## Implementation notes
+
+> **Implementation note (for contributors):** The score holds no state of its own. It listens for `mg-quiz:change` on the document and counts `data-mg-quiz-state` on the question roots in its scope. "Start again" dispatches `mg-quiz:reset` on the scope, and each question in that scope clears itself. The reasons are in the design decisions of the Quiz question documentation.
+
+## CSS classes
+
+| Class                               | Purpose                                                             |
+| ----------------------------------- | ------------------------------------------------------------------- |
+| `mg-quiz-score`                     | Root. Has no box until the quiz has started                         |
+| `mg-quiz-score--active`             | At least one answer checked: tinted surface                         |
+| `mg-quiz-score--complete`           | Every question answered                                             |
+| `mg-quiz-score__summary`            | Score sentence (`role="status"`)                                    |
+| `mg-quiz-score__progress`           | ProgressBar wrapper                                                 |
+| `mg-quiz-score__actions`, `__reset` | Button row and "Start again" (with `mg-button mg-button-secondary`) |
+
+## Changelog
+
+- **1.0**, 2026-11-12 ([#1481](https://github.com/unisdr/undrr-mangrove/issues/1481)): Initial component. Running and final score for the quiz questions in a scope, optional progress bar and "Start again", built-in translations with overrides, and hydration with `ensureQuizScoreHost`.
