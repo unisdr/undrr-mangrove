@@ -1,6 +1,6 @@
 /** Native modal enhancement for authored disclosures. See Dialog.mdx. */
 const KEY = Symbol.for('@undrr/mangrove/dialog');
-const LOCK = Symbol.for('@undrr/mangrove/dialog-scroll');
+import { lockDialogScroll } from './dialog-scroll-lock.js';
 const SELECTOR = '[data-mg-dialog]';
 
 function elements(scope) {
@@ -8,32 +8,6 @@ function elements(scope) {
     ...(scope.matches?.(SELECTOR) ? [scope] : []),
     ...scope.querySelectorAll(SELECTOR),
   ];
-}
-
-function lock(doc) {
-  const root = doc.documentElement;
-  const state = (doc[LOCK] ||= {
-    count: 0,
-    // A shorthand can serialize to an empty string when axes have different
-    // priorities. Save the actual declarations, without touching other styles.
-    properties: Array.from(root.style)
-      .filter(name => ['overflow', 'overflow-x', 'overflow-y'].includes(name))
-      .map(name => [
-        name,
-        root.style.getPropertyValue(name),
-        root.style.getPropertyPriority(name),
-      ]),
-  });
-  state.count += 1;
-  root.style.setProperty('overflow', 'hidden', 'important');
-  return () => {
-    if (--state.count) return;
-    for (const name of ['overflow', 'overflow-x', 'overflow-y'])
-      root.style.removeProperty(name);
-    for (const [name, value, priority] of state.properties)
-      root.style.setProperty(name, value, priority);
-    delete doc[LOCK];
-  };
 }
 
 /** Enhance a document, element or Drupal behaviour scope. Idempotent. */
@@ -125,7 +99,7 @@ export function mgDialog(scope = document) {
         fallback.open = true;
         return;
       }
-      release = lock(doc);
+      release = lockDialogScroll(doc);
       dialog.scrollTop = 0;
       updateHeader();
       const initial = dialog.querySelector('[data-mg-dialog-initial-focus]');
