@@ -624,7 +624,7 @@ Enable the optional **Download results** action with `config.showExport`:
 />
 ```
 
-The action appears beneath pagination, or beneath the results when pagination is hidden. Its modal offers both **Download CSV** and **Download JSON**. Set `exportDefaultCount: 10` for an initial quantity of ten; visitors can change it within the available range. `exportContactUrl` supplies the contact route for larger exports or API-access enquiries.
+The action appears beneath pagination, or beneath the results when pagination is hidden. Its modal offers both **Download CSV** and **Download JSON**. Set `exportDefaultCount: 10` for an initial quantity of ten; visitors can change it within the available range. `exportContactUrl` supplies the contact route for larger exports or API-access enquiries. Downloads use `searchEndpoint` unless `exportEndpoint` is set; hydrated widgets accept `data-export-endpoint`.
 
 <Canvas
   of={ExportStories.DownloadResults}
@@ -742,6 +742,7 @@ The outline action, native controls and shared Dialog/button typography follow M
 | `exportDefaultCount`    | number         | 100                                     | Initial requested download quantity, not a visitor maximum. Opening bounds the default by exact availability; ranges stay within 1,000 per file and the 10,000-result window.                            |
 | `exportFields`          | array or null  | `null` (all supported fields)           | Available optional output keys. Date/precision and taxonomy IDs/names stay paired. `[]` permits only mandatory ID and URL. Does not change backend access.                                               |
 | `exportContactUrl`      | string         | `https://www.preventionweb.net/contact` | Contact route for larger data requests or ongoing API-access discussions.                                                                                                                                |
+| `exportEndpoint`        | string         | `searchEndpoint`                        | Endpoint for download requests. Omit to use `searchEndpoint`. A consumer can give downloads a distinct URL, for example to tell them apart from browsing requests.                                       |
 | `resultsPerPage`        | number         | 50                                      | Number of results to display per page                                                                                                                                                                    |
 | `debounceDelay`         | number         | 500                                     | Milliseconds to wait after typing before searching. Only typing is debounced: the first search, Enter, Clear, back/forward and filter, sort, page and config changes run at once                         |
 | `minSearchLength`       | number         | 3                                       | Minimum characters required to trigger search                                                                                                                                                            |

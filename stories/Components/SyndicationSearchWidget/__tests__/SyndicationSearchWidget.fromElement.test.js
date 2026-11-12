@@ -314,12 +314,14 @@ test('reads opt-in export settings without requiring a Drupal endpoint change', 
         'show-export': 'true',
         'export-default-count': '10',
         'export-contact-url': '/contact',
+        'export-endpoint': '/search-endpoint',
       })
     ).config
   ).toEqual({
     showExport: true,
     exportDefaultCount: 10,
     exportContactUrl: '/contact',
+    exportEndpoint: '/search-endpoint',
   });
   expect(
     syndicationSearchWidgetFromElement(

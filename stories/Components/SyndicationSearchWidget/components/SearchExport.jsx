@@ -75,6 +75,7 @@ export default function SearchExport({ isStale = false }) {
   const formatHelpId = useId();
   const previewId = useId();
   const defaultCount = normalizeExportDefaultCount(config.exportDefaultCount);
+  const exportEndpoint = config.exportEndpoint || config.searchEndpoint;
   const { query, facets, facetOperators, customFacets, sortBy } = state;
   const body = useMemo(
     () =>
@@ -85,7 +86,7 @@ export default function SearchExport({ isStale = false }) {
     [config, query, facets, facetOperators, customFacets, sortBy]
   );
   const requestKey = JSON.stringify([
-    searchRequestKey(config.searchEndpoint, body),
+    searchRequestKey(exportEndpoint, body),
     availableGroupIds,
   ]);
   const isOpen = openKey === requestKey && !isStale;
@@ -289,7 +290,7 @@ export default function SearchExport({ isStale = false }) {
       message: labels.exportLoading,
     });
     try {
-      const response = await fetch(config.searchEndpoint, {
+      const response = await fetch(exportEndpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -117,6 +117,46 @@ test('downloads the configured first records and reports truncation with a conta
   });
 });
 
+test('downloads use exportEndpoint when set and searchEndpoint otherwise', async () => {
+  setup(true, {}, response(25), {
+    searchEndpoint: '/search?tag=1',
+    exportEndpoint: '/search',
+  });
+  fireEvent.click(screen.getByRole('button', { name: 'Download CSV' }));
+  await waitFor(() => expect(click).toHaveBeenCalledTimes(1));
+  expect(fetch.mock.calls[0][0]).toBe('/search');
+});
+
+test('changing exportEndpoint closes the modal and cancels a pending download', () => {
+  fetch.mockReturnValue(new Promise(() => {}));
+  const view = exportEndpoint => (
+    <SearchProvider config={{ ...config, exportEndpoint }} labels={{}}>
+      <Capture />
+      <SearchExport isStale={false} />
+    </SearchProvider>
+  );
+  const { rerender } = render(view('/first'));
+  act(() => {
+    dispatch(actions.initialize({ ...config, exportEndpoint: '/first' }));
+    dispatch(actions.setResults(response(25)));
+  });
+  fireEvent.click(screen.getByRole('button', { name: 'Download results' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Download CSV' }));
+  const { signal } = fetch.mock.calls[0][1];
+  rerender(view('/second'));
+  expect(signal.aborted).toBe(true);
+  expect(
+    screen.queryByRole('button', { name: 'Download CSV' })
+  ).not.toBeInTheDocument();
+});
+
+test('downloads fall back to searchEndpoint without exportEndpoint', async () => {
+  setup(true, {}, response(25), { searchEndpoint: '/search?tag=1' });
+  fireEvent.click(screen.getByRole('button', { name: 'Download CSV' }));
+  await waitFor(() => expect(click).toHaveBeenCalledTimes(1));
+  expect(fetch.mock.calls[0][0]).toBe('/search?tag=1');
+});
+
 test('supports JSON and keeps repeated clicks from making parallel requests', async () => {
   let resolve;
   fetch.mockReturnValue(

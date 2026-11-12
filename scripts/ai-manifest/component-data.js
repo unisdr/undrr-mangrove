@@ -2921,6 +2921,8 @@ npm run build</code></pre>
           'Optional JSON array of output keys restricting available metadata fields. Omit to inherit all supported fields; [] permits only mandatory ID/URL. Paired date/precision and taxonomy IDs/names stay together. Invalid policies allow only ID/URL.',
         'data-export-contact-url':
           'Contact route for larger data requests or API access discussions; defaults to the PreventionWeb contact page.',
+        'data-export-endpoint':
+          'Endpoint for download requests; omit to use data-search-endpoint. Lets a consumer tell downloads apart from browsing requests.',
         'data-show-search-box': '"false" to hide the search box.',
         'data-show-results-count': '"false" to hide the result count.',
         'data-show-facets': '"false" to hide the facets.',
