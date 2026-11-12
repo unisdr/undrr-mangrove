@@ -27,6 +27,7 @@ import PropTypes from 'prop-types';
  * @param {boolean} [props.error=false]    Whether the input is in an error state
  * @param {string} [props.errorText]       Error message displayed below the input
  * @param {string} [props.className]       Additional CSS class for the wrapper
+ * @param {string} [props.analyticsLabel]  Fixed `data-vf-analytics-label` for the input and its label, so click tracking does not report the visible text or a generated id
  */
 export function TextInput({
   id,
@@ -44,6 +45,7 @@ export function TextInput({
   error = false,
   errorText,
   className,
+  analyticsLabel,
   ...rest
 }) {
   const autoId = useId();
@@ -72,7 +74,11 @@ export function TextInput({
   return (
     <div className={['mg-form-field', className].filter(Boolean).join(' ')}>
       {label && (
-        <label className={labelClassName} htmlFor={inputId}>
+        <label
+          className={labelClassName}
+          htmlFor={inputId}
+          data-vf-analytics-label={analyticsLabel}
+        >
           {label}
         </label>
       )}
@@ -91,6 +97,7 @@ export function TextInput({
         aria-describedby={describedBy}
         aria-invalid={error || undefined}
         {...(!label ? { 'aria-label': placeholder } : {})}
+        data-vf-analytics-label={analyticsLabel}
         {...rest}
       />
 
@@ -134,6 +141,8 @@ TextInput.propTypes = {
   error: PropTypes.bool,
   errorText: PropTypes.string,
   className: PropTypes.string,
+  /** Fixed `data-vf-analytics-label` for the input and its label. */
+  analyticsLabel: PropTypes.string,
 };
 
 export default TextInput;

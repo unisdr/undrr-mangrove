@@ -613,7 +613,7 @@ export const DEFAULT_CONFIG = {
   // URL Hash Sync
   enableHashSync: 'auto',
 
-  // Analytics: regions are `${analyticsRegionPrefix}-form|results|facets`
+  // Analytics: regions are `${analyticsRegionPrefix}-form|results|facets|download`
   analyticsRegionPrefix: 'undrr-search',
 
   // Default search query and sort
@@ -1039,7 +1039,7 @@ export function buildTierFilter(field, tierNames, tierRanges) {
  * with two widgets gives each its own prefix to tell their clicks apart.
  *
  * @param {Object} config - Widget config
- * @param {'form'|'results'|'facets'} part - Part of the widget
+ * @param {'form'|'results'|'facets'|'download'} part - Part of the widget
  * @returns {string} For example `undrr-search-results`
  */
 export function analyticsRegion(config, part) {

@@ -316,3 +316,30 @@ describe('Switch error state markup', () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 });
+
+describe('Checkbox analytics label', () => {
+  it('labels the input and its label for click tracking', () => {
+    render(
+      <Checkbox label="Titre" analyticsLabel="Search download: Field title" />
+    );
+    const input = screen.getByRole('checkbox', { name: 'Titre' });
+    expect(input).toHaveAttribute(
+      'data-vf-analytics-label',
+      'Search download: Field title'
+    );
+    expect(screen.getByText('Titre')).toHaveAttribute(
+      'data-vf-analytics-label',
+      'Search download: Field title'
+    );
+  });
+
+  it('adds no attribute when unset', () => {
+    render(<Checkbox label="Title" />);
+    expect(screen.getByRole('checkbox')).not.toHaveAttribute(
+      'data-vf-analytics-label'
+    );
+    expect(screen.getByText('Title')).not.toHaveAttribute(
+      'data-vf-analytics-label'
+    );
+  });
+});

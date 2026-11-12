@@ -314,6 +314,161 @@ test('offers one optional CTA that opens both formats in a labelled modal', () =
   expect(document.documentElement.style.overflow).toBe('');
 });
 
+function captureExportEvents() {
+  const events = [];
+  const actions = ['open', 'download', 'empty', 'error'];
+  const listener = event =>
+    events.push({ type: event.type, detail: event.detail });
+  actions.forEach(action =>
+    document.addEventListener(`mg-search-export:${action}`, listener)
+  );
+  return {
+    events,
+    stop: () =>
+      actions.forEach(action =>
+        document.removeEventListener(`mg-search-export:${action}`, listener)
+      ),
+  };
+}
+
+test('controls carry fixed analytics labels in their own region', () => {
+  setup(false, { exportOpen: 'Télécharger' }, response(25), {
+    analyticsRegionPrefix: 'collection-related',
+  });
+  const open = screen.getByRole('button', { name: 'Télécharger' });
+  expect(open).toHaveAttribute(
+    'data-vf-analytics-label',
+    'Search download: Open'
+  );
+  expect(open.closest('[data-vf-google-analytics-region]')).toHaveAttribute(
+    'data-vf-google-analytics-region',
+    'collection-related-download'
+  );
+  fireEvent.click(open);
+  const labelled = name =>
+    screen
+      .getByRole('button', { name })
+      .getAttribute('data-vf-analytics-label');
+  expect(labelled('Download CSV')).toBe('Search download: CSV');
+  expect(labelled('Download JSON')).toBe('Search download: JSON');
+  expect(labelled('Close')).toBe('Search download: Close');
+  expect(screen.getByRole('link', { name: 'Contact us' })).toHaveAttribute(
+    'data-vf-analytics-label',
+    'Search download: Contact'
+  );
+  expect(quantityInput()).toHaveAttribute(
+    'data-vf-analytics-label',
+    'Search download: Quantity'
+  );
+  expect(
+    document.querySelector(`label[for="${quantityInput().id}"]`)
+  ).toHaveAttribute('data-vf-analytics-label', 'Search download: Quantity');
+  expect(
+    document.querySelector('.mg-search__export-field-options')
+  ).toHaveAttribute('data-vf-analytics-label', 'Search download: Fields');
+  const title = screen.getByRole('checkbox', { name: 'Title' });
+  expect(title).toHaveAttribute(
+    'data-vf-analytics-label',
+    'Search download: Field title'
+  );
+  expect(document.querySelector(`label[for="${title.id}"]`)).toHaveAttribute(
+    'data-vf-analytics-label',
+    'Search download: Field title'
+  );
+});
+
+test('emits open and download events describing the file, not the search', async () => {
+  const { events, stop } = captureExportEvents();
+  try {
+    const order = [];
+    click.mockImplementation(() => order.push('saved'));
+    document.addEventListener('mg-search-export:download', () =>
+      order.push('event')
+    );
+    setup(true, {}, response(25), { defaultQuery: 'private words' });
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Title' }));
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Title' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Download JSON' }));
+    await waitFor(() => expect(click).toHaveBeenCalledTimes(1));
+    expect(order).toEqual(['saved', 'event']);
+    expect(events.map(event => event.type)).toEqual([
+      'mg-search-export:open',
+      'mg-search-export:download',
+    ]);
+    expect(events[0].detail).toEqual({
+      region: 'undrr-search-download',
+      total: 25,
+      totalRelation: 'eq',
+    });
+    expect(events[1].detail).toEqual({
+      region: 'undrr-search-download',
+      format: 'json',
+      start: 1,
+      count: 1,
+      fields: [
+        'title',
+        'type',
+        'language',
+        'posted',
+        'readerDate',
+        'country',
+        'hazard',
+        'theme',
+      ],
+      returned: 1,
+      total: 25,
+      limited: true,
+    });
+    expect(events[1].detail.fields).not.toContain('summary');
+    expect(JSON.stringify(events)).not.toContain('private words');
+  } finally {
+    stop();
+  }
+});
+
+test('emits empty and error outcomes, and nothing for a cancelled download', async () => {
+  const { events, stop } = captureExportEvents();
+  try {
+    setup();
+    fetch.mockResolvedValueOnce({ ok: true, json: async () => response(0) });
+    fireEvent.click(screen.getByRole('button', { name: 'Download CSV' }));
+    await waitFor(() =>
+      expect(events.map(event => event.type)).toContain(
+        'mg-search-export:empty'
+      )
+    );
+    expect(events.at(-1).detail).toEqual({
+      region: 'undrr-search-download',
+      format: 'csv',
+      start: 1,
+      count: 1,
+      fields: expect.arrayContaining(['title']),
+      total: 0,
+    });
+    fetch.mockResolvedValueOnce({ ok: false });
+    fireEvent.click(screen.getByRole('button', { name: 'Download CSV' }));
+    await waitFor(() =>
+      expect(events.at(-1)).toMatchObject({
+        type: 'mg-search-export:error',
+        detail: { format: 'csv', reason: 'request' },
+      })
+    );
+    const before = events.length;
+    let resolve;
+    fetch.mockReturnValueOnce(
+      new Promise(done => {
+        resolve = done;
+      })
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Download CSV' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Close' }));
+    await act(async () => resolve({ ok: true, json: async () => response() }));
+    expect(events).toHaveLength(before);
+  } finally {
+    stop();
+  }
+});
+
 test('Close cancels a pending export and reopening starts a fresh session', async () => {
   let resolve;
   fetch.mockReturnValue(

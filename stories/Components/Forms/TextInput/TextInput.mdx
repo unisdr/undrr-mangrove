@@ -68,6 +68,7 @@ The text input component supports `text`, `email`, `password`, `number`, `tel`, 
 - Help text and error text are linked to the input via `aria-describedby`.
 - Error state sets `aria-invalid="true"` and wraps the error message in `role="alert"`.
 - If no label is provided, `aria-label` falls back to the `placeholder` value.
+- UNDRR's shared click tracker names a click on an input after its `name` and a click on the label after its `for` id, which is generated when no `id` is passed. Set `analyticsLabel` to give the input and its label a fixed `data-vf-analytics-label` instead.
 
 ## See also
 
@@ -75,6 +76,7 @@ The text input component supports `text`, `email`, `password`, `number`, `tel`, 
 
 ## Changelog
 
+- **2.2**, 2026-11-12 ([undrr/web-backlog#3320](https://gitlab.com/undrr/web-backlog/-/work_items/3320)): Added an optional `analyticsLabel` prop, which sets the same `data-vf-analytics-label` on the input and its label. Inputs without it render as before.
 - **2.1.1**, 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a text input whose own language is not Arabic.
 - **2.1**, 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Replaced the stark black outline with a subtle neutral border, light filled surface, small shared radius and clearer token-driven focus ring.
 - **2.0**, 2026-02-24: **Breaking:** Rewritten with BEM classes, accessibility, and PropTypes (replaces InputFields)
