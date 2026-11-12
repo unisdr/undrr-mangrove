@@ -37,7 +37,7 @@ try {
           el.dir = 'rtl';
         });
       const cards = page.locator('.mg-content-teaser');
-      assert.equal(await cards.count(), 15);
+      assert.equal(await cards.count(), 16);
       await page.locator('.mg-card__image').evaluateAll(images =>
         Promise.all(
           images.map(img => {

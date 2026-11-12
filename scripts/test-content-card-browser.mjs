@@ -33,7 +33,7 @@ try {
           await page.locator('body').evaluate(el => {
             el.dir = 'rtl';
           });
-        assert.equal(await page.locator('.mg-content-card').count(), 15);
+        assert.equal(await page.locator('.mg-content-card').count(), 16);
         await page.locator('.mg-card__image').evaluateAll(images =>
           Promise.all(
             images.map(img => {
@@ -264,7 +264,7 @@ try {
     await page.close();
   }
   console.log(
-    'Content cards passed: 15 profiles, vertical/book, five themes, covers/logos, missing media, field omissions, surface overrides and mixed directions.'
+    'Content cards passed: 16 profiles, vertical/book, five themes, covers/logos, missing media, field omissions, surface overrides and mixed directions.'
   );
 } finally {
   await browser.close();
