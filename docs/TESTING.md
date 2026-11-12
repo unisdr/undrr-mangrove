@@ -2,52 +2,59 @@
 
 > Edits to this file show up on both [GitHub](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/TESTING.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-testing--docs).
 
-This guide covers testing practices for the Mangrove component library. For development setup and commands, see [DEVELOPMENT.md](./DEVELOPMENT.md).
+Choose checks for the behaviour you changed. Complete [development setup](DEVELOPMENT.md)
+first; [Contributing](../CONTRIBUTING.md#submitting-changes) lists the submission
+checks.
 
 ## Testing strategy
 
-We use multiple testing approaches to ensure component quality:
+| Change or question | Check | What it establishes |
+|---|---|---|
+| Component logic, props or DOM output | `yarn test path/to/file` | Jest assertions in jsdom |
+| Story interactions, focus or layout | `yarn scss`, then `yarn test-storybook` | Render and play assertions in Chromium |
+| Published assets or iframe integration | [Production-build gates](#checks-against-the-production-build) | Behaviour of the built Storybook |
+| Visual appearance | [Chromatic](#visual-testing-with-chromatic) | Screenshots for review |
+| Accessibility | [Automated and manual checks](#accessibility-testing) | Automated findings plus keyboard and assistive-technology review |
 
-1. **Unit tests** - Jest for component logic and behavior
-2. **Visual tests** - Chromatic for visual regression testing
-3. **Accessibility tests** - Built into our test suite
-4. **Manual testing** - Storybook for interactive testing
+Jest does not load external SCSS. Passing unit tests cannot establish spacing,
+contrast, overflow or visible focus; use a real browser for those checks.
 
 ## Unit testing with Jest
 
 ### Writing tests
 
-Test files should be placed in `__tests__` directories within component folders:
+Place tests in a component's `__tests__` directory. For example:
 
-```
-stories/Components/Button/
-  ├── Button.jsx
-  ├── Button.stories.jsx
-  └── __tests__/
-      └── Button.test.jsx
+```text
+stories/Components/Buttons/CtaButton/
+├── CtaButton.jsx
+├── CtaButton.stories.jsx
+└── __tests__/
+    └── CtaButton.test.jsx
 ```
 
 ### Basic test structure
 
-```javascript
-import { render, screen, fireEvent } from '@testing-library/react';
-import { Button } from '../Button';
+This example uses the existing `CtaButton` API. Save it in that component's
+`__tests__` directory so the relative import resolves:
 
-describe('Button', () => {
-  it('renders with text', () => {
-    render(<Button>Click me</Button>);
-    expect(screen.getByText('Click me')).toBeInTheDocument();
-  });
+```jsx
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import { CtaButton } from '../CtaButton';
 
-  it('handles click events', () => {
-    const handleClick = jest.fn();
-    render(<Button onClick={handleClick}>Click me</Button>);
+it('uses the supplied destination when enabled', () => {
+  render(<CtaButton label="Read the report" href="/report" />);
 
-    fireEvent.click(screen.getByText('Click me'));
-    expect(handleClick).toHaveBeenCalledTimes(1);
-  });
+  expect(screen.getByRole('link', { name: 'Read the report' })).toHaveAttribute(
+    'href',
+    '/report'
+  );
 });
 ```
+
+The [maintained CtaButton suite](https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Buttons/CtaButton/__tests__/CtaButton.test.jsx)
+also covers disabled links, class composition and automated accessibility.
 
 ### Running tests
 
@@ -59,7 +66,7 @@ yarn test
 yarn test:watch
 
 # Run tests for a specific file
-yarn test Button.test.jsx
+yarn test stories/Components/Buttons/CtaButton/__tests__/CtaButton.test.jsx
 
 # Generate coverage report
 yarn test:coverage
@@ -79,38 +86,25 @@ yarn test --verbose
 
 #### Testing props
 
-```javascript
-it('applies custom className', () => {
-  render(<Button className="custom-class">Test</Button>);
-  expect(screen.getByRole('button')).toHaveClass('custom-class');
-});
-```
+Assert a consumer-visible result of the prop. The
+[CtaButton suite](https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Buttons/CtaButton/__tests__/CtaButton.test.jsx)
+checks that a supplied `href` becomes the link destination and that a disabled
+link has no destination.
 
 #### Testing state changes
 
-```javascript
-it('shows tab content when clicked', () => {
-  render(<Tab tabdata={tabdata} />);
-  const tab = screen.getByText('Tab title 2');
-
-  fireEvent.click(tab);
-  expect(screen.getByText(/Sendai Framework/)).toBeInTheDocument();
-});
-```
+Exercise the control and assert the resulting output. The
+[Tab suite](https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Tab/__tests__/Tab.test.jsx) shows the runtime
+initialization needed before asserting panel changes. Use browser play functions
+when the outcome depends on geometry or focus visibility.
 
 #### Testing async behavior
 
-```javascript
-it('loads data on mount', async () => {
-  render(<DataComponent />);
-
-  expect(screen.getByText('Loading...')).toBeInTheDocument();
-
-  await waitFor(() => {
-    expect(screen.getByText('Data loaded')).toBeInTheDocument();
-  });
-});
-```
+Await the visible outcome rather than adding a fixed delay. The
+[ShareButtons dialog suite](https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Buttons/ShareButtons/__tests__/ShareButtons.dialog.test.jsx)
+uses `findByRole` and `waitFor` for dialog and asynchronous sharing behaviour.
+Keep service responses deterministic unless the purpose is a live integration
+check, such as the consent-banner story described below.
 
 ## Play functions with Vitest Browser Mode
 
@@ -210,13 +204,15 @@ Visual testing is handled automatically through our CI/CD pipeline.
 
 ### Automated testing
 
-We use jest-axe for automated accessibility testing. The `toHaveNoViolations` matcher is globally configured in `jest.setup.js`, so you only need to import `axe`:
+We use jest-axe for automated accessibility testing. The `toHaveNoViolations` matcher is globally configured in `jest.setup.js`, so add `axe` to the imports in the CtaButton example above:
 
 ```javascript
 import { axe } from 'jest-axe';
 
 it('has no accessibility violations', async () => {
-  const { container } = render(<Button>Click me</Button>);
+  const { container } = render(
+    <CtaButton label="Read the report" href="/report" />
+  );
   const results = await axe(container);
   expect(results).toHaveNoViolations();
 });
@@ -225,41 +221,31 @@ it('has no accessibility violations', async () => {
 ### Manual testing
 
 1. **Keyboard navigation:** tab through interactive elements and verify visible focus.
-2. **Screen reader testing:** check announcements and form labeling in NVDA or VoiceOver.
-3. **Color contrast:** verify WCAG AA using browser tooling.
+2. **Screen reader testing:** check announcements and form labelling in NVDA or VoiceOver.
+3. **Colour contrast:** verify WCAG AA using browser tooling.
 
 ## Testing components with external dependencies
 
 ### Mocking modules
 
-```javascript
-// Mock an external library
-jest.mock('react-leaflet', () => ({
-  MapContainer: ({ children }) => <div>{children}</div>,
-  TileLayer: () => <div>Tile Layer</div>,
-}));
-```
+Mock the boundary the test does not exercise. The
+[Tab suite](https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Tab/__tests__/Tab.test.jsx)
+mocks automatic initialization, then calls the real runtime to control when it
+runs. Preserve real behaviour when it is the subject of the assertion.
 
 ### Mocking API calls
 
-```javascript
-import { rest } from 'msw';
-import { setupServer } from 'msw/node';
-
-const server = setupServer(
-  rest.get('/api/data', (req, res, ctx) => {
-    return res(ctx.json({ data: 'test' }));
-  })
-);
-
-beforeAll(() => server.listen());
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
-```
+Use Jest fetch mocks for isolated unit tests. Start with the [ShareButtons dialog suite](https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Buttons/ShareButtons/__tests__/ShareButtons.dialog.test.jsx)
+for a scoped mock that restores the original `global.fetch`, or the
+[search sorting suite](https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/SyndicationSearchWidget/__tests__/sorting.test.jsx)
+for deterministic responses and request assertions. Cover failure and empty
+responses as well as success, and restore global replacements after the test.
 
 ## Coverage requirements
 
-While we don't enforce strict coverage thresholds, aim for:
+`jest.config.js` enforces a global floor of 10% for statements, branches,
+functions and lines. That floor is a regression gate, not a component-quality
+target. For new and changed code, aim for:
 
 - 80% statement coverage
 - 70% branch coverage
@@ -314,41 +300,23 @@ Failed tests will block merging and deployment.
 
 ### Test structure
 
-```javascript
-describe('ComponentName', () => {
-  describe('rendering', () => {
-    it('renders without crashing', () => {});
-    it('displays correct content', () => {});
-  });
-
-  describe('interactions', () => {
-    it('handles user input', () => {});
-    it('responds to events', () => {});
-  });
-
-  describe('edge cases', () => {
-    it('handles empty data', () => {});
-    it('shows error state', () => {});
-  });
-});
-```
+Group tests by behaviour when the suite needs it. Keep setup close to the tests
+that depend on it; use the
+[CtaButton suite](https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Buttons/CtaButton/__tests__/CtaButton.test.jsx)
+as a small example and the
+[Tab suite](https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Tab/__tests__/Tab.test.jsx)
+for a larger suite with runtime setup.
 
 ## Performance testing
 
-For performance-sensitive components:
+Reproduce the slow interaction in a browser and record the component, fixture,
+viewport and measurement method. Profile the render or interaction before and
+after the change using the same conditions. A jsdom render time is not evidence
+of browser layout or interaction performance.
 
-```javascript
-import { render } from '@testing-library/react';
-import { measureRender } from './test-utils';
-
-it('renders efficiently', () => {
-  const renderTime = measureRender(() => {
-    render(<LargeList items={manyItems} />);
-  });
-
-  expect(renderTime).toBeLessThan(100); // ms
-});
-```
+For an automated performance gate, define the measured operation, environment
+and threshold explicitly. Keep the measurement repeatable enough to distinguish
+a regression from run-to-run variation.
 
 ## Related documentation
 

@@ -243,6 +243,13 @@ If your component uses browser APIs or the example is a multi-component composit
 **React-only component:**
 1. Add an entry to `REQUIRES_REACT` in `scripts/ai-manifest/component-data.js` with a note explaining why React is needed
 
+For a new public CSS-property prefix, add its owner in `OWNERS`, its property
+count in `MIN_PROPERTIES` and descriptions in
+`scripts/ai-manifest/custom-properties.js`. Names and defaults come from compiled
+CSS; the descriptions are maintained by hand. Follow the
+[manifest review checklist](REVIEW-CHECKLIST.md#ai-discoverability-and-manifests)
+when adding or changing markup, utilities or public properties.
+
 Run `yarn validate-manifest` to verify your entries.
 
 ## Step 9: Verify
