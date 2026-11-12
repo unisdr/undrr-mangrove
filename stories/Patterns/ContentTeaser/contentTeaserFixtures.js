@@ -17,6 +17,17 @@ export const teaserFixtures = {
       'Local knowledge and shared planning help communities prepare for changing risks.',
     sources: ['UNDRR'],
   },
+  'short-update': {
+    type: 'article',
+    profile: 'news',
+    typeLabel: 'Short update',
+    title: 'Volunteers map evacuation routes in coastal villages',
+    link: 'https://www.preventionweb.net/short-update',
+    published: { dateTime: '2026-11-05', text: '5 November 2026' },
+    summary:
+      'A community network surveyed routes with residents and shared the maps with local authorities.',
+    sources: ['Coastal Resilience Network'],
+  },
   publication: {
     type: 'publication',
     profile: 'default',

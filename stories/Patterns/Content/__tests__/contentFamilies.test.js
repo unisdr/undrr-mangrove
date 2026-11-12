@@ -25,7 +25,7 @@ test('archetypes and profiles resolve independently of CMS bundles', () => {
       );
     }
   }
-  expect(Object.keys(DRUPAL_CONTENT_PATTERNS)).toHaveLength(15);
+  expect(Object.keys(DRUPAL_CONTENT_PATTERNS)).toHaveLength(16);
   for (const binding of Object.values(DRUPAL_CONTENT_PATTERNS)) {
     expect(resolveTeaserPattern(binding.type, binding.profile)).not.toBeNull();
   }
@@ -132,7 +132,7 @@ test('AI discovery distinguishes archetypes, profiles, bindings and non-callable
 test('adapter documentation keeps actual bundle keys distinct from archetype/profile selections', () => {
   render(React.createElement(DrupalPatternTable));
   const rows = screen.getAllByRole('row').slice(1);
-  expect(rows).toHaveLength(15);
+  expect(rows).toHaveLength(16);
   for (const [bundle, type, profile] of [
     ['news', 'article', 'news'],
     ['blog', 'article', 'commentary'],
