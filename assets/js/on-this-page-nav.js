@@ -56,6 +56,8 @@ function scrollLinkToCenter(link, list) {
   });
 }
 
+const ANALYTICS_REGION = 'data-vf-google-analytics-region';
+
 /**
  * Initializes "On this page" sticky navigation bars.
  *
@@ -86,6 +88,12 @@ export function mgOnThisPageNav(scope) {
         'aria-label',
         container.dataset.mgOnThisPageNavLabel || 'On this page'
       );
+    }
+
+    // Give the UNDRR click tracker a region of its own, unless the host set one.
+    if (!container.hasAttribute(ANALYTICS_REGION)) {
+      container.setAttribute(ANALYTICS_REGION, 'on-this-page');
+      container._mgOnThisPageNavRegionSet = true;
     }
 
     // Detect mode: explicit if container already has a <ul>, otherwise auto-detect
@@ -145,6 +153,14 @@ export function mgOnThisPageNavDestroy(container) {
     'mg-on-this-page-nav--has-left-overflow',
     'mg-on-this-page-nav--has-right-overflow'
   );
+  // A region the host set after init is theirs to keep.
+  if (
+    container._mgOnThisPageNavRegionSet &&
+    container.getAttribute(ANALYTICS_REGION) === 'on-this-page'
+  ) {
+    container.removeAttribute(ANALYTICS_REGION);
+  }
+  delete container._mgOnThisPageNavRegionSet;
   delete container.dataset.mgOnThisPageNavInitialized;
 }
 
@@ -485,6 +501,7 @@ function setupScrollButtons(container, signal) {
     container.dataset.mgOnThisPageNavScrollPrevLabel ||
       'Previous navigation items'
   );
+  prevBtn.dataset.vfAnalyticsLabel = 'On this page: Previous';
   prevBtn.hidden = true;
   prevBtn.innerHTML = CHEVRON_LEFT_SVG;
 
@@ -497,6 +514,7 @@ function setupScrollButtons(container, signal) {
     'aria-label',
     container.dataset.mgOnThisPageNavScrollNextLabel || 'Next navigation items'
   );
+  nextBtn.dataset.vfAnalyticsLabel = 'On this page: Next';
   nextBtn.hidden = true;
   nextBtn.innerHTML = CHEVRON_RIGHT_SVG;
 
