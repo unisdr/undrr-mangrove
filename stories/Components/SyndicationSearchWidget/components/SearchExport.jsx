@@ -301,7 +301,7 @@ export default function SearchExport({ isStale = false }) {
     const corrected = commitRange();
     const from = corrected.start - 1;
     const { count } = corrected;
-    const fields = selectedGroups.filter(id => availableGroupSet.has(id));
+    const fields = availableGroupIds.filter(id => selectedGroupSet.has(id));
     const columns = columnsForExportGroups(fields);
     const tracked = { format, start: from + 1, count, fields };
     const controller = new AbortController();
@@ -528,7 +528,7 @@ export default function SearchExport({ isStale = false }) {
                 disabled={busy}
                 helpText={countHelp}
                 onChange={event => updateRange(startValue, event.target.value)}
-                data-vf-analytics-label="Search download: Quantity"
+                analyticsLabel="Search download: Quantity"
               />
               {offerOffset && (
                 <TextInput
@@ -556,7 +556,7 @@ export default function SearchExport({ isStale = false }) {
                   onChange={event =>
                     updateRange(event.target.value, countValue)
                   }
-                  data-vf-analytics-label="Search download: Start"
+                  analyticsLabel="Search download: Start"
                 />
               )}
               {previewCount !== null && (
@@ -595,7 +595,11 @@ export default function SearchExport({ isStale = false }) {
                 </figure>
               )}
             </fieldset>
-            <details className="mg-search__export-field-options" open>
+            <details
+              className="mg-search__export-field-options"
+              open
+              data-vf-analytics-label="Search download: Fields"
+            >
               <summary>{labels.exportFields}</summary>
               <fieldset
                 className="mg-search__export-fields"

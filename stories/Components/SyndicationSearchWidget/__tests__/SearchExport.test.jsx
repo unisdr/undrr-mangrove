@@ -360,6 +360,12 @@ test('controls carry fixed analytics labels in their own region', () => {
     'data-vf-analytics-label',
     'Search download: Quantity'
   );
+  expect(
+    document.querySelector(`label[for="${quantityInput().id}"]`)
+  ).toHaveAttribute('data-vf-analytics-label', 'Search download: Quantity');
+  expect(
+    document.querySelector('.mg-search__export-field-options')
+  ).toHaveAttribute('data-vf-analytics-label', 'Search download: Fields');
   const title = screen.getByRole('checkbox', { name: 'Title' });
   expect(title).toHaveAttribute(
     'data-vf-analytics-label',
@@ -374,9 +380,17 @@ test('controls carry fixed analytics labels in their own region', () => {
 test('emits open and download events describing the file, not the search', async () => {
   const { events, stop } = captureExportEvents();
   try {
+    const order = [];
+    click.mockImplementation(() => order.push('saved'));
+    document.addEventListener('mg-search-export:download', () =>
+      order.push('event')
+    );
     setup(true, {}, response(25), { defaultQuery: 'private words' });
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Title' }));
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Title' }));
     fireEvent.click(screen.getByRole('button', { name: 'Download JSON' }));
     await waitFor(() => expect(click).toHaveBeenCalledTimes(1));
+    expect(order).toEqual(['saved', 'event']);
     expect(events.map(event => event.type)).toEqual([
       'mg-search-export:open',
       'mg-search-export:download',
@@ -391,7 +405,16 @@ test('emits open and download events describing the file, not the search', async
       format: 'json',
       start: 1,
       count: 1,
-      fields: expect.arrayContaining(['title', 'hazard']),
+      fields: [
+        'title',
+        'type',
+        'language',
+        'posted',
+        'readerDate',
+        'country',
+        'hazard',
+        'theme',
+      ],
       returned: 1,
       total: 25,
       limited: true,
@@ -414,6 +437,14 @@ test('emits empty and error outcomes, and nothing for a cancelled download', asy
         'mg-search-export:empty'
       )
     );
+    expect(events.at(-1).detail).toEqual({
+      region: 'undrr-search-download',
+      format: 'csv',
+      start: 1,
+      count: 1,
+      fields: expect.arrayContaining(['title']),
+      total: 0,
+    });
     fetch.mockResolvedValueOnce({ ok: false });
     fireEvent.click(screen.getByRole('button', { name: 'Download CSV' }));
     await waitFor(() =>
