@@ -16,6 +16,9 @@ export default {
   ],
 };
 export const News = { args: { content: teaserFixtures.news } };
+export const ShortUpdate = {
+  args: { content: teaserFixtures['short-update'] },
+};
 export const Publication = { args: { content: teaserFixtures.publication } };
 export const Resource = { args: { content: teaserFixtures.resource } };
 export const Event = { args: { content: teaserFixtures.event } };

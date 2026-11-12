@@ -205,7 +205,7 @@ describe('Content teaser contract', () => {
 });
 
 describe('Complete indexed content coverage', () => {
-  test('explicit bundle mapping covers the fifteen configured node types', () => {
+  test('explicit bundle mapping covers the sixteen configured node types', () => {
     expect(Object.keys(DRUPAL_CONTENT_PATTERNS).sort()).toEqual(
       [
         'blog',
@@ -221,6 +221,7 @@ describe('Complete indexed content coverage', () => {
         'people',
         'publication',
         'resource',
+        'short_update',
         'terminology',
         'vacancy',
       ].sort()

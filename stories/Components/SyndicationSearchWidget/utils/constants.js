@@ -104,6 +104,7 @@ export const CONTENT_TYPES = [
   { id: 'hazard_information_profile', name: 'Hazard information profile' },
   { id: 'conference', name: 'Conference' },
   { id: 'commitment', name: 'Commitment' },
+  { id: 'short_update', name: 'Short update' },
   { id: 'focal_point', name: 'Focal point' },
   { id: 'people', name: 'People' },
 ];

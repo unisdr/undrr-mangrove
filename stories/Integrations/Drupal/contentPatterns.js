@@ -64,4 +64,8 @@ export const DRUPAL_CONTENT_PATTERNS = {
     type: 'person',
     profile: 'default',
   },
+  short_update: {
+    type: 'article',
+    profile: 'news',
+  },
 };
