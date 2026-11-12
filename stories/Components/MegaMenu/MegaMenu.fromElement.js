@@ -34,6 +34,12 @@ export default function megaMenuFromElement(container) {
   }
   if (dataset.searchUrl) props.searchUrl = dataset.searchUrl;
 
+  // A region on the host wins over the component default, so the nav reports
+  // under the host's name rather than shadowing it with `mega-menu`.
+  if (container.hasAttribute('data-vf-google-analytics-region')) {
+    props.analyticsRegion = dataset.vfGoogleAnalyticsRegion;
+  }
+
   // Logo props (optional — Drupal wrapper also resolves logos via SITE_LOGOS body class lookup)
   if (dataset.logoSrc) props.logoSrc = dataset.logoSrc;
   if (dataset.logoAlt) props.logoAlt = dataset.logoAlt;

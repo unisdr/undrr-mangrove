@@ -43,6 +43,7 @@ function GalleryComponent({
   lang,
   dir,
   labels,
+  analyticsRegion = 'gallery',
 }) {
   const { galleryAriaLabel, prevLabel, nextLabel, loadingLabel } =
     getGalleryLabels(lang, labels);
@@ -204,6 +205,7 @@ function GalleryComponent({
       className={galleryClasses}
       role="region"
       aria-label={galleryAriaLabel}
+      data-vf-google-analytics-region={analyticsRegion || undefined}
       tabIndex={enableKeyboard ? 0 : undefined}
       onKeyDown={handleKeyDown}
     >
@@ -289,6 +291,7 @@ function GalleryComponent({
               onClick={handlePrevious}
               disabled={!loop && activeIndex === 0}
               aria-label={prevLabel}
+              data-vf-analytics-label="Gallery: Previous"
               type="button"
             >
               ‹
@@ -298,6 +301,7 @@ function GalleryComponent({
               onClick={handleNext}
               disabled={!loop && activeIndex === media.length - 1}
               aria-label={nextLabel}
+              data-vf-analytics-label="Gallery: Next"
               type="button"
             >
               ›
@@ -311,6 +315,7 @@ function GalleryComponent({
               onClick={handlePrevious}
               disabled={!loop && activeIndex === 0}
               aria-label={prevLabel}
+              data-vf-analytics-label="Gallery: Previous"
               type="button"
             >
               ‹
@@ -320,6 +325,7 @@ function GalleryComponent({
               onClick={handleNext}
               disabled={!loop && activeIndex === media.length - 1}
               aria-label={nextLabel}
+              data-vf-analytics-label="Gallery: Next"
               type="button"
             >
               ›
@@ -366,6 +372,7 @@ function GalleryComponent({
               aria-selected={index === activeIndex}
               aria-current={index === activeIndex ? 'true' : undefined}
               aria-label={`View ${item.title || item.alt || 'content'}`}
+              data-vf-analytics-label="Gallery: Thumbnail"
               type="button"
             >
               {item.type === 'html' && !item.thumbnail && item.html ? (
@@ -454,6 +461,8 @@ GalleryComponent.propTypes = {
     nextLabel: PropTypes.string,
     loadingLabel: PropTypes.string,
   }),
+  /** `data-vf-google-analytics-region` on the root; pass an empty string to omit it. */
+  analyticsRegion: PropTypes.string,
 };
 
 export const Gallery = React.memo(GalleryComponent);

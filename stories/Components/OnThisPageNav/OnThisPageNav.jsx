@@ -22,6 +22,7 @@ export { DEFAULT_ON_THIS_PAGE_LABELS } from './_labels';
  * @param {Array<{href: string, text: string}>} [props.items] Explicit nav items (skips auto-detect)
  * @param {string} [props.ctaHref]          CTA link URL
  * @param {string} [props.ctaText]          CTA link text
+ * @param {string} [props.analyticsRegion]  Click-tracking region; defaults to "on-this-page"
  */
 export default function OnThisPageNav({
   depth = '2',
@@ -32,6 +33,7 @@ export default function OnThisPageNav({
   items = null,
   ctaHref = null,
   ctaText = null,
+  analyticsRegion,
 }) {
   const { label } = getOnThisPageNavLabels(lang, labels);
   const navRef = useRef(null);
@@ -58,6 +60,7 @@ export default function OnThisPageNav({
       })}
       data-mg-on-this-page-nav-label={label}
       aria-label={label}
+      data-vf-google-analytics-region={analyticsRegion}
       className="mg-on-this-page-nav"
     >
       {items && (
@@ -104,4 +107,6 @@ OnThisPageNav.propTypes = {
   ctaHref: PropTypes.string,
   /** CTA button text */
   ctaText: PropTypes.string,
+  /** `data-vf-google-analytics-region`; the script sets "on-this-page" when omitted. */
+  analyticsRegion: PropTypes.string,
 };

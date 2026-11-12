@@ -54,6 +54,8 @@ const EMPTY_VALUE = [];
  * @param {Function} props.onChange - Callback when selection changes
  * @param {boolean} props.multiple - Enable multi-select mode
  * @param {number} props.searchThreshold - Show search when options exceed this (default: 8)
+ * @param {string} [props.analyticsLabel] - Fixed English `data-vf-analytics-label`
+ *   for the trigger; the in-panel search input gets `<analyticsLabel>: Search`
  */
 export function SelectDropdown({
   id,
@@ -66,6 +68,7 @@ export function SelectDropdown({
   searchThreshold = 8,
   searchInputPlaceholder = 'Search...',
   noOptionsText = 'No options found',
+  analyticsLabel,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
@@ -287,6 +290,7 @@ export function SelectDropdown({
         aria-controls={listboxId}
         aria-activedescendant={showSearch ? undefined : activeDescendant}
         onClick={handleTriggerClick}
+        data-vf-analytics-label={analyticsLabel || undefined}
       >
         <span className="mg-select__trigger-text">{displayText}</span>
         <span className="mg-select__trigger-icon" aria-hidden="true">
@@ -340,6 +344,9 @@ export function SelectDropdown({
                 value={searchQuery}
                 onChange={handleSearchChange}
                 aria-label={`Search ${label}`}
+                data-vf-analytics-label={
+                  analyticsLabel ? `${analyticsLabel}: Search` : undefined
+                }
                 autoComplete="off"
               />
             </div>

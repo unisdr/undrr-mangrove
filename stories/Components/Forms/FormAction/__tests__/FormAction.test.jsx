@@ -71,3 +71,47 @@ describe('FormAction', () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 });
+
+describe('FormAction analytics label', () => {
+  it('labels the control and its label for click tracking', () => {
+    renderFormAction({
+      label: 'Adresse e-mail',
+      analyticsLabel: 'Subscribe: Email',
+    });
+    expect(screen.getByLabelText('Adresse e-mail')).toHaveAttribute(
+      'data-vf-analytics-label',
+      'Subscribe: Email'
+    );
+    expect(screen.getByText('Adresse e-mail')).toHaveAttribute(
+      'data-vf-analytics-label',
+      'Subscribe: Email'
+    );
+  });
+
+  it("keeps the control's own attribute", () => {
+    renderFormAction({
+      analyticsLabel: 'Subscribe: Email',
+      control: (
+        <input
+          className="mg-form-input"
+          type="email"
+          data-vf-analytics-label="Custom"
+        />
+      ),
+    });
+    expect(screen.getByLabelText('Email address')).toHaveAttribute(
+      'data-vf-analytics-label',
+      'Custom'
+    );
+  });
+
+  it('adds no attribute when unset', () => {
+    renderFormAction();
+    expect(screen.getByLabelText('Email address')).not.toHaveAttribute(
+      'data-vf-analytics-label'
+    );
+    expect(screen.getByText('Email address')).not.toHaveAttribute(
+      'data-vf-analytics-label'
+    );
+  });
+});

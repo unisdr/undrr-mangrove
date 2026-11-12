@@ -51,6 +51,7 @@ The radio component allows users to select exactly one option from a group. Radi
 - The label is programmatically associated with the radio button via `htmlFor`/`id`.
 - For groups, wrap radios in a `<FormGroup>` (renders `<fieldset>` with `<legend>`).
 - Keyboard users can navigate between radio buttons with arrow keys.
+- UNDRR's shared click tracker names a click on a radio after its `name`, which every radio in the group shares, and a click on the label after its `for` id, which is generated when no `id` is passed. Set `analyticsLabel` to give the input and its label a fixed `data-vf-analytics-label` instead. Each radio is labelled on its own, so include the option's stable `value` (for example `Subscribe frequency: monthly`), never its translated label text.
 
 ## See also
 
@@ -58,5 +59,6 @@ The radio component allows users to select exactly one option from a group. Radi
 
 ## Changelog
 
+- **2.1**, 2026-11-12 ([undrr/web-backlog#3320](https://gitlab.com/undrr/web-backlog/-/work_items/3320)): Added an optional `analyticsLabel` prop, which sets the same `data-vf-analytics-label` on the input and its label. Radios without it render as before.
 - **2.0**, 2026-02-24: **Breaking:** Rewritten with BEM classes, PropTypes, and accessibility
 - **1.0**, 2022-12-12: Initial release

@@ -348,6 +348,7 @@ export function SearchResults({
             type="button"
             className="mg-search__filter-btn"
             onClick={onOpenFilters}
+            data-vf-analytics-label="Search: Open filters"
             aria-label={
               activeFilterCount > 0
                 ? interpolateLabel(labels.filtersButtonActive, {

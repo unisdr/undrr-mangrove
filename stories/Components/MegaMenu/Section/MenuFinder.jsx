@@ -139,6 +139,7 @@ export default function MenuFinder({
             id={`${inputId}-title`}
             className="mg-mega-menu-finder__label"
             htmlFor={inputId}
+            data-vf-analytics-label="Mega menu: Filter"
           >
             {labels.menuFilterLabel}
           </label>
@@ -146,6 +147,7 @@ export default function MenuFinder({
             type="button"
             className="mg-mega-menu-finder__action"
             aria-label={labels.closeLabel}
+            data-vf-analytics-label="Mega menu: Close finder"
             onClick={onBack}
           >
             <span className="mg-icon mg-icon-close" aria-hidden="true" />
@@ -161,6 +163,7 @@ export default function MenuFinder({
             ref={inputRef}
             type="search"
             className="mg-mega-filter__input"
+            data-vf-analytics-label="Mega menu: Filter"
             value={query}
             onChange={event => onQueryChange(event.target.value)}
           />
@@ -169,6 +172,7 @@ export default function MenuFinder({
               type="button"
               className="mg-mega-filter__clear"
               aria-label={labels.clearFilterLabel}
+              data-vf-analytics-label="Mega menu: Clear filter"
               onClick={() => {
                 onQueryChange('');
                 inputRef.current?.focus();
@@ -221,6 +225,7 @@ export default function MenuFinder({
           <a
             href={getSiteSearchUrl(searchUrl, query)}
             className="mg-button mg-button-secondary mg-button-outline mg-mega-filter__site-search-link"
+            data-vf-analytics-label="Mega menu: Site search"
             onClick={handleLinkClick}
           >
             <span>

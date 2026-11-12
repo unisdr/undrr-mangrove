@@ -17,6 +17,7 @@ export function FormAction({
   errorText,
   stackOnMobile = false,
   className,
+  analyticsLabel,
 }) {
   const generatedId = useId();
   const controlId = control.props.id || generatedId;
@@ -36,6 +37,8 @@ export function FormAction({
     ),
     'aria-describedby': describedBy,
     'aria-invalid': errorText ? 'true' : control.props['aria-invalid'],
+    'data-vf-analytics-label':
+      control.props['data-vf-analytics-label'] ?? analyticsLabel,
   });
   const actionElement = cloneElement(action, {
     key: action.key || 'action',
@@ -51,6 +54,7 @@ export function FormAction({
         <label
           className={hideLabel ? 'mg-u-sr-only' : 'mg-form-label'}
           htmlFor={controlId}
+          data-vf-analytics-label={analyticsLabel}
         >
           {label}
         </label>
@@ -91,6 +95,8 @@ FormAction.propTypes = {
   errorText: PropTypes.string,
   stackOnMobile: PropTypes.bool,
   className: PropTypes.string,
+  /** Fixed `data-vf-analytics-label` for the label and the control, unless the control sets its own. */
+  analyticsLabel: PropTypes.string,
 };
 
 export default FormAction;

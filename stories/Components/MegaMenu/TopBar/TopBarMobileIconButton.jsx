@@ -11,6 +11,7 @@ export function TopBarMobileIconButton({ onClick, isOpen, sidebarId, labels }) {
       aria-expanded={isOpen}
       aria-controls={sidebarId}
       aria-haspopup="dialog"
+      data-vf-analytics-label={isOpen ? 'Mega menu: Close' : 'Mega menu: Open'}
     >
       <span
         className={`mg-icon ${isOpen ? 'mg-icon-angle-circled-left' : 'mg-icon-menu'}`}

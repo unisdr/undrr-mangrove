@@ -96,3 +96,29 @@ describe('Textarea', () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 });
+
+describe('Textarea analytics label', () => {
+  it('labels the textarea and its label for click tracking', () => {
+    render(
+      <Textarea label="Commentaires" analyticsLabel="Feedback: Comments" />
+    );
+    expect(screen.getByLabelText('Commentaires')).toHaveAttribute(
+      'data-vf-analytics-label',
+      'Feedback: Comments'
+    );
+    expect(screen.getByText('Commentaires')).toHaveAttribute(
+      'data-vf-analytics-label',
+      'Feedback: Comments'
+    );
+  });
+
+  it('adds no attribute when unset', () => {
+    render(<Textarea label="Comments" />);
+    expect(screen.getByLabelText('Comments')).not.toHaveAttribute(
+      'data-vf-analytics-label'
+    );
+    expect(screen.getByText('Comments')).not.toHaveAttribute(
+      'data-vf-analytics-label'
+    );
+  });
+});

@@ -30,6 +30,7 @@ import PropTypes from 'prop-types';
  * @param {boolean} [props.fullWidth=false]     Stretch segments to share the full width
  * @param {string} [props.size='default']       'default' (44px) or 'small' (36px)
  * @param {string} [props.className]            Additional CSS class for the fieldset
+ * @param {string} [props.analyticsLabel]       Fixed `data-vf-analytics-label` prefix for every segment's input and label, sent as `<analyticsLabel>: <option value>` so click tracking reports the stable value rather than the visible text or a generated id
  */
 export function SegmentedControl({
   legend,
@@ -42,6 +43,7 @@ export function SegmentedControl({
   fullWidth = false,
   size = 'default',
   className,
+  analyticsLabel,
   ...rest
 }) {
   const autoId = useId();
@@ -72,6 +74,9 @@ export function SegmentedControl({
           const selection = isControlled
             ? { checked: value === option.value }
             : { defaultChecked: defaultValue === option.value };
+          const optionAnalyticsLabel = analyticsLabel
+            ? `${analyticsLabel}: ${option.value}`
+            : undefined;
 
           return (
             // The label must stay the input's next sibling: the whole
@@ -85,9 +90,14 @@ export function SegmentedControl({
                 value={option.value}
                 disabled={option.disabled}
                 onChange={onChange}
+                data-vf-analytics-label={optionAnalyticsLabel}
                 {...selection}
               />
-              <label className="mg-segmented-control__label" htmlFor={optionId}>
+              <label
+                className="mg-segmented-control__label"
+                htmlFor={optionId}
+                data-vf-analytics-label={optionAnalyticsLabel}
+              >
                 {option.label}
               </label>
             </React.Fragment>
@@ -115,6 +125,8 @@ SegmentedControl.propTypes = {
   fullWidth: PropTypes.bool,
   size: PropTypes.oneOf(['default', 'small']),
   className: PropTypes.string,
+  /** Fixed `data-vf-analytics-label` prefix for each segment; the option value is appended. */
+  analyticsLabel: PropTypes.string,
 };
 
 export default SegmentedControl;

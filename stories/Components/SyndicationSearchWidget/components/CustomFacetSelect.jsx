@@ -104,6 +104,7 @@ export function CustomFacetSelect({ facet, widgetId = 'search' }) {
         searchThreshold={FACET_SEARCH_THRESHOLD}
         searchInputPlaceholder={labels.dropdownSearchPlaceholder}
         noOptionsText={labels.dropdownNoOptions}
+        analyticsLabel={`Search filter: ${id}`}
       />
     </fieldset>
   );

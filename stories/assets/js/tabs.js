@@ -1198,6 +1198,7 @@ function mgTabsInitFilter(container, tabs, panels, initialFilter) {
   input.className = 'mg-form-input mg-tabs__filter-input';
   input.placeholder = placeholder;
   input.setAttribute('aria-label', ariaLabel);
+  input.dataset.vfAnalyticsLabel = 'Tabs: Filter';
 
   const hintId =
     'mg-tabs-filter-hint-' + Math.random().toString(36).slice(2, 8);

@@ -302,4 +302,48 @@ describe('Pager', () => {
     );
     expect(await axe(container)).toHaveNoViolations();
   });
+
+  it('sets fixed analytics labels on every control', () => {
+    render(
+      <Pager
+        page={3}
+        totalPages={20}
+        onPageChange={onPageChange}
+        layout="bar"
+        showJumpTo
+      />
+    );
+    const label = el => el.getAttribute('data-vf-analytics-label');
+    expect(label(screen.getByLabelText('Go to previous page'))).toBe(
+      'Pager: Previous'
+    );
+    expect(label(screen.getByLabelText('Go to next page'))).toBe('Pager: Next');
+    document
+      .querySelectorAll('.mg-pager__link--number')
+      .forEach(button => expect(label(button)).toBe('Pager: Page'));
+    expect(label(document.querySelector('.mg-pager__jump-label'))).toBe(
+      'Pager: Jump to page'
+    );
+    expect(label(document.querySelector('.mg-pager__jump-input'))).toBe(
+      'Pager: Jump to page'
+    );
+    expect(label(document.querySelector('.mg-pager__jump-btn'))).toBe(
+      'Pager: Jump'
+    );
+  });
+
+  it('labels the notice action', () => {
+    render(
+      <Pager
+        page={1}
+        onPageChange={onPageChange}
+        emptyState="No more results."
+        emptyAction={{ label: 'Back', onClick: () => {} }}
+      />
+    );
+    expect(screen.getByRole('button', { name: 'Back' })).toHaveAttribute(
+      'data-vf-analytics-label',
+      'Pager: Notice action'
+    );
+  });
 });

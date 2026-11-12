@@ -14,6 +14,7 @@ export const Range = ({
   onChange,
   className,
   ticks,
+  analyticsLabel,
   ...props
 }) => {
   const isStepped = ticks && ticks.length > 0;
@@ -42,6 +43,7 @@ export const Range = ({
         })}
         list={isStepped ? `${id}-ticks` : undefined}
         aria-valuetext={currentTick?.label}
+        data-vf-analytics-label={analyticsLabel}
         {...props}
       />
 
@@ -86,4 +88,6 @@ Range.propTypes = {
       label: PropTypes.string,
     })
   ),
+  /** Fixed `data-vf-analytics-label` for the input. */
+  analyticsLabel: PropTypes.string,
 };

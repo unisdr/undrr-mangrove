@@ -142,6 +142,7 @@ export function PagerList({
           disabled={!hasPrevious || isLoading}
           aria-label={goPrevLabel}
           aria-disabled={!hasPrevious}
+          data-vf-analytics-label="Pager: Previous"
         >
           <svg
             className="mg-pager__icon"
@@ -189,6 +190,7 @@ export function PagerList({
                 isCurrentPage ? currentPageLabel : pageLabel
               ).replace(/\{page\}/g, item.number)}
               aria-current={isCurrentPage ? 'page' : undefined}
+              data-vf-analytics-label="Pager: Page"
             >
               {item.number}
             </button>
@@ -206,6 +208,7 @@ export function PagerList({
           disabled={!hasNext || isLoading}
           aria-label={goNextLabel}
           aria-disabled={!hasNext}
+          data-vf-analytics-label="Pager: Next"
         >
           <span className="mg-pager__text">{nextLabel}</span>
           <svg

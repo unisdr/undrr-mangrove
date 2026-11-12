@@ -39,6 +39,7 @@ export { DEFAULT_TAB_LABELS } from './_labels';
  * @param {boolean} [props.singleOpen=false] - When true, only one stacked panel can be open at a time.
  * @param {boolean} [props.filterable=false] - When true, renders a search input to filter stacked sections.
  * @param {object} [props.labels] - UI label overrides.
+ * @param {string} [props.analyticsRegion] - Optional click-tracking region on the whole tab set, including its panels.
  * @returns {JSX.Element} A React component representing the tab structure.
  */
 export function Tab({
@@ -52,6 +53,7 @@ export function Tab({
   lang,
   dir,
   labels,
+  analyticsRegion,
 }) {
   const { filterPlaceholder, tabListLabel } = getTabLabels(lang, labels);
   const containerRef = useRef(null);
@@ -88,6 +90,7 @@ export function Tab({
       className={`mg-tabs ${variant === 'stacked' ? 'mg-tabs--stacked' : 'mg-tabs--horizontal'}${sticky ? ' mg-tabs--sticky' : ''}`}
       data-mg-js-tabs
       data-mg-js-tabs-label={tabListLabel}
+      data-vf-google-analytics-region={analyticsRegion}
       {...(stackOnMobile && variant !== 'stacked'
         ? { 'data-mg-js-tabs-stack-on-mobile': '' }
         : {})}
@@ -230,4 +233,6 @@ Tab.propTypes = {
     filterPlaceholder: PropTypes.string,
     tabListLabel: PropTypes.string,
   }),
+  /** Optional `data-vf-google-analytics-region` on the whole tab set, including its panels. */
+  analyticsRegion: PropTypes.string,
 };

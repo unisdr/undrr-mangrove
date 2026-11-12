@@ -89,3 +89,50 @@ describe('Gallery motion and loading', () => {
     expect(screen.queryByRole('status')).not.toBeInTheDocument();
   });
 });
+
+describe('Gallery analytics attributes', () => {
+  const IMAGES = HTML_MEDIA.slice(1).concat({
+    id: 'photo-2',
+    type: 'image',
+    src: 'https://picsum.photos/id/1016/800/600',
+    alt: 'Second photo',
+  });
+
+  it.each(['overlay', 'corner'])(
+    'labels %s arrows and thumbnails with fixed names',
+    arrowStyle => {
+      render(<Gallery media={IMAGES} arrowStyle={arrowStyle} loop />);
+      const [prev, next] = [
+        screen.getByRole('button', { name: /previous/i }),
+        screen.getByRole('button', { name: /next/i }),
+      ];
+      expect(prev).toHaveAttribute(
+        'data-vf-analytics-label',
+        'Gallery: Previous'
+      );
+      expect(next).toHaveAttribute('data-vf-analytics-label', 'Gallery: Next');
+      screen.getAllByRole('tab').forEach(tab => {
+        expect(tab).toHaveAttribute(
+          'data-vf-analytics-label',
+          'Gallery: Thumbnail'
+        );
+      });
+    }
+  );
+
+  it('sets a default region that the host can override or omit', () => {
+    const { container, rerender } = render(<Gallery media={IMAGES} />);
+    const root = () => container.querySelector('.mg-gallery');
+    expect(root()).toHaveAttribute(
+      'data-vf-google-analytics-region',
+      'gallery'
+    );
+    rerender(<Gallery media={IMAGES} analyticsRegion="photo-essay" />);
+    expect(root()).toHaveAttribute(
+      'data-vf-google-analytics-region',
+      'photo-essay'
+    );
+    rerender(<Gallery media={IMAGES} analyticsRegion="" />);
+    expect(root()).not.toHaveAttribute('data-vf-google-analytics-region');
+  });
+});

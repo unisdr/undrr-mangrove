@@ -234,6 +234,7 @@ export function Sidebar({
           className="mg-mega-mobile-sidebar__close"
           onClick={onClose}
           aria-label={labels.closeMobileNavLabel}
+          data-vf-analytics-label="Mega menu: Close"
         >
           {labels.closeLabel}
           <span aria-hidden="true">×</span>
@@ -253,6 +254,7 @@ export function Sidebar({
               onChange={e => setFilterQuery(e.target.value)}
               placeholder={labels.filterPlaceholder || 'Filter menu items...'}
               aria-label={labels.filterPlaceholder || 'Filter menu items'}
+              data-vf-analytics-label="Mega menu: Filter"
               ref={mobileFilterInputRef}
             />
             {filterQuery && (
@@ -264,6 +266,7 @@ export function Sidebar({
                   mobileFilterInputRef.current?.focus();
                 }}
                 aria-label={labels.clearFilterLabel || 'Clear filter'}
+                data-vf-analytics-label="Mega menu: Clear filter"
               >
                 <span aria-hidden="true">×</span>
               </button>
@@ -318,6 +321,7 @@ export function Sidebar({
                   <a
                     href={getSiteSearchUrl(searchUrl, filterQuery)}
                     className="mg-button mg-button-secondary mg-button-outline mg-mega-filter__empty-search-btn"
+                    data-vf-analytics-label="Mega menu: Site search"
                     onClick={onClose}
                   >
                     <span>
@@ -339,6 +343,7 @@ export function Sidebar({
               <a
                 href={getSiteSearchUrl(searchUrl, filterQuery)}
                 className="mg-button mg-button-secondary mg-button-outline mg-mega-filter__site-search-link"
+                data-vf-analytics-label="Mega menu: Site search"
                 onClick={onClose}
               >
                 <span>
@@ -360,7 +365,11 @@ export function Sidebar({
           key={path.join('-')}
         >
           {path.length > 0 && (
-            <button className="mg-mega-mobile-sidebar__back" onClick={back}>
+            <button
+              className="mg-mega-mobile-sidebar__back"
+              data-vf-analytics-label="Mega menu: Back"
+              onClick={back}
+            >
               <span
                 className="mg-mega-mobile-sidebar__arrow"
                 aria-hidden="true"
@@ -405,6 +414,7 @@ export function Sidebar({
                     <button
                       className="mg-mega-sidebar-section__item"
                       data-mg-menu-entry
+                      data-vf-analytics-label="Mega menu: Section"
                       onClick={() => enter(index)}
                     >
                       {item.title}

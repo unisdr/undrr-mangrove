@@ -33,6 +33,7 @@ import { getMegaMenuLabels } from './_labels';
  * @param {boolean} [enableFilter=false] - Whether to show quick filter input in desktop and mobile navigation
  * @param {boolean} [enableSiteSearch=true] - Whether to offer full-site search option when filtering
  * @param {string} [searchUrl='/search'] - Base URL for full-site search (defaults to syndicated search page /search)
+ * @param {string|null} [analyticsRegion='mega-menu'] - `data-vf-google-analytics-region` on the root `<nav>`; pass `null` or `''` to inherit the host's region
  * @returns {JSX.Element} Rendered MegaMenu component
  */
 import React, { useState, useEffect, useRef, useId } from 'react';
@@ -59,6 +60,7 @@ const MegaMenu = ({
   lang,
   dir,
   labels,
+  analyticsRegion = 'mega-menu',
 }) => {
   const resolvedLabels = getMegaMenuLabels(lang, labels);
   const { navLabel, closeMobileNavLabel } = resolvedLabels;
@@ -241,6 +243,7 @@ const MegaMenu = ({
       onMouseLeave={handleMouseLeave}
       onKeyDown={handleEscape}
       aria-label={navLabel}
+      data-vf-google-analytics-region={analyticsRegion || undefined}
     >
       <TopBar
         isMobile={isMobile}
@@ -279,6 +282,7 @@ const MegaMenu = ({
           aria-hidden={!showSidebar}
           aria-label={closeMobileNavLabel}
           tabIndex={-1}
+          data-vf-analytics-label="Mega menu: Close"
           onClick={() => setShowSidebar(false)}
         />
       )}
@@ -367,6 +371,11 @@ MegaMenu.propTypes = {
     searchSiteLabel: PropTypes.string,
     filterMatchesCount: PropTypes.string,
   }),
+  /**
+   * Click-tracker region (`data-vf-google-analytics-region`) on the root nav.
+   * Pass `null` or an empty string to inherit the host's region.
+   */
+  analyticsRegion: PropTypes.string,
 };
 
 export default MegaMenu;

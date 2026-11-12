@@ -229,6 +229,7 @@ export const Notice = ({
               className="mg-icon-button mg-icon-button--small mg-notice__dismiss"
               onClick={handleDismiss}
               aria-label={dismissLabel}
+              data-vf-analytics-label="Notice: Dismiss"
             >
               <span className="mg-icon mg-icon-close" aria-hidden="true" />
             </button>

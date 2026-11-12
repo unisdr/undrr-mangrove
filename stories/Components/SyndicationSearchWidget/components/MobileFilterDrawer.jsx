@@ -168,6 +168,7 @@ export function MobileFilterDrawer({ isOpen, onClose, widgetId = 'search' }) {
             className="mg-search__drawer-close"
             onClick={onClose}
             aria-label={labels.closeFilters}
+            data-vf-analytics-label="Search: Close filters"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -198,6 +199,7 @@ export function MobileFilterDrawer({ isOpen, onClose, widgetId = 'search' }) {
             type="button"
             className="mg-search__drawer-apply"
             onClick={onClose}
+            data-vf-analytics-label="Search: View results"
           >
             {labels.viewResults}
             {activeFilterCount > 0 && (

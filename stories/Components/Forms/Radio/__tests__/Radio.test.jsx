@@ -189,3 +189,34 @@ describe('Radio', () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 });
+
+describe('Radio analytics label', () => {
+  it('labels the input and its label for click tracking', () => {
+    render(
+      <Radio
+        label="Mensuel"
+        value="monthly"
+        name="frequency"
+        analyticsLabel="Subscribe frequency: monthly"
+      />
+    );
+    expect(screen.getByRole('radio', { name: 'Mensuel' })).toHaveAttribute(
+      'data-vf-analytics-label',
+      'Subscribe frequency: monthly'
+    );
+    expect(screen.getByText('Mensuel')).toHaveAttribute(
+      'data-vf-analytics-label',
+      'Subscribe frequency: monthly'
+    );
+  });
+
+  it('adds no attribute when unset', () => {
+    render(<Radio label="Monthly" value="monthly" name="frequency" />);
+    expect(screen.getByRole('radio')).not.toHaveAttribute(
+      'data-vf-analytics-label'
+    );
+    expect(screen.getByText('Monthly')).not.toHaveAttribute(
+      'data-vf-analytics-label'
+    );
+  });
+});

@@ -80,19 +80,20 @@ wrapper resolves `logoSrc` and `logoAlt` from body class; it does not infer
 
 ## Props
 
-| Prop             | Type    | Default   | Description                                                                                                 |
-| ---------------- | ------- | --------- | ----------------------------------------------------------------------------------------------------------- |
-| sections         | array   | []        | Array of menu sections to display                                                                           |
-| delay            | number  | 300       | Delay in milliseconds before closing menu on mouse leave                                                    |
-| hoverDelay       | number  | 180       | Delay in milliseconds before opening menu (prevents accidental opens)                                       |
-| logoSrc          | string  | —         | Image URL for the logo. When provided, enables the branded variant                                          |
-| logoAlt          | string  | ''        | Alt text for the logo image                                                                                 |
-| logoHref         | string  | '/'       | Where the logo links to. For multilingual sites, pass the language-prefixed root from the CMS (e.g. `/ar/`) |
-| logoWidth        | number  | —         | Optional explicit width for CLS prevention                                                                  |
-| logoHeight       | number  | —         | Optional explicit height for CLS prevention                                                                 |
-| enableFilter     | boolean | false     | Enable a contextual menu-finder dialog from desktop left columns and filtering in the mobile drawer         |
-| enableSiteSearch | boolean | true      | Offer full-site search option when filtering (default: true)                                                |
-| searchUrl        | string  | '/search' | Base URL for full-site search fallback (defaults to syndicated search page /search#query=)                  |
+| Prop             | Type    | Default     | Description                                                                                                             |
+| ---------------- | ------- | ----------- | ----------------------------------------------------------------------------------------------------------------------- |
+| sections         | array   | []          | Array of menu sections to display                                                                                       |
+| delay            | number  | 300         | Delay in milliseconds before closing menu on mouse leave                                                                |
+| hoverDelay       | number  | 180         | Delay in milliseconds before opening menu (prevents accidental opens)                                                   |
+| logoSrc          | string  | —           | Image URL for the logo. When provided, enables the branded variant                                                      |
+| logoAlt          | string  | ''          | Alt text for the logo image                                                                                             |
+| logoHref         | string  | '/'         | Where the logo links to. For multilingual sites, pass the language-prefixed root from the CMS (e.g. `/ar/`)             |
+| logoWidth        | number  | —           | Optional explicit width for CLS prevention                                                                              |
+| logoHeight       | number  | —           | Optional explicit height for CLS prevention                                                                             |
+| enableFilter     | boolean | false       | Enable a contextual menu-finder dialog from desktop left columns and filtering in the mobile drawer                     |
+| enableSiteSearch | boolean | true        | Offer full-site search option when filtering (default: true)                                                            |
+| searchUrl        | string  | '/search'   | Base URL for full-site search fallback (defaults to syndicated search page /search#query=)                              |
+| analyticsRegion  | string  | 'mega-menu' | Click-tracker region on the root `<nav>`. Pass `null` or `''` to inherit the host's region. See [Analytics](#analytics) |
 
 ### Section object properties
 
@@ -230,16 +231,17 @@ MegaMenu supports [layered hydration](https://github.com/PreventionWeb/undrr-man
 ></div>
 ```
 
-| Attribute          | Default | Description                                                                 |
-| ------------------ | ------- | --------------------------------------------------------------------------- |
-| `data-delay`       | `300`   | Delay in ms before closing the menu on mouse leave                          |
-| `data-hover-delay` | `180`   | Delay in ms before opening the menu on hover                                |
-| `data-sections`    | —       | JSON array of menu sections (optional; most consumers provide this via API) |
-| `data-logo-src`    | —       | Logo image URL                                                              |
-| `data-logo-alt`    | `''`    | Alt text for the logo image                                                 |
-| `data-logo-href`   | `'/'`   | Where the logo links to (e.g., `/ar/` for language-prefixed root)           |
-| `data-logo-width`  | —       | Explicit width for CLS prevention                                           |
-| `data-logo-height` | —       | Explicit height for CLS prevention                                          |
+| Attribute                         | Default     | Description                                                                                     |
+| --------------------------------- | ----------- | ----------------------------------------------------------------------------------------------- |
+| `data-delay`                      | `300`       | Delay in ms before closing the menu on mouse leave                                              |
+| `data-hover-delay`                | `180`       | Delay in ms before opening the menu on hover                                                    |
+| `data-sections`                   | —           | JSON array of menu sections (optional; most consumers provide this via API)                     |
+| `data-logo-src`                   | —           | Logo image URL                                                                                  |
+| `data-logo-alt`                   | `''`        | Alt text for the logo image                                                                     |
+| `data-logo-href`                  | `'/'`       | Where the logo links to (e.g., `/ar/` for language-prefixed root)                               |
+| `data-logo-width`                 | —           | Explicit width for CLS prevention                                                               |
+| `data-logo-height`                | —           | Explicit height for CLS prevention                                                              |
+| `data-vf-google-analytics-region` | `mega-menu` | Click-tracker region for the menu; when set on the host, the nav uses it instead of the default |
 
 > **Drupal note:** The Drupal wrapper reads prefixed attribute names (`data-mg-mega-menu-logo-src`, etc.) and falls back to a `SITE_LOGOS` body-class map when no logo attributes are set. CDN / vanilla HTML consumers use the short `data-logo-*` names above.
 
@@ -301,6 +303,12 @@ current state usable; hydration and resting theme changes add no incidental moti
 
 <Canvas of={MegaMenuStories.MotionReview} />
 
+## Analytics
+
+UNDRR sites load a shared GA4 click tracker that names each click after the element's visible text unless `data-vf-analytics-label` is set. MegaMenu sets fixed English labels on its controls so reports do not split by language or record what visitors type: `Mega menu: Open` (hamburger), `Mega menu: Close` (hamburger while open, drawer Close and backdrop), `Mega menu: Back`, `Mega menu: Section` (section buttons in the nav strip and drawer; the section name is not included), `Mega menu: Finder` (the ⌘K/Ctrl K finder action), `Mega menu: Filter` (finder and drawer filter inputs, and the finder's label), `Mega menu: Clear filter`, `Mega menu: Close finder` and `Mega menu: Site search` (the site-search link, whose visible text contains the typed query). Navigation links keep their visible text. The site-search link's URL still carries the query, and the tracker reports link URLs.
+
+The root `<nav>` gets `data-vf-google-analytics-region="mega-menu"`, so menu clicks are reported separately from the rest of a site header. Set the `analyticsRegion` prop to use another name, or `null`/`''` to inherit an ancestor's region. When hydrating, the menu uses the host's region if the host element has its own `data-vf-google-analytics-region` (an empty value inherits from further up).
+
 ## Runtime UI translations
 
 Use `lang` for built-in copy and `labels` for individual overrides. The
@@ -311,6 +319,8 @@ explains language matching, fallback, direction and hydration precedence.
 for consumers needing the same strings outside React.
 
 ## Changelog
+
+- **1.7**, 2026-11-12 ([undrr/web-backlog#3320](https://gitlab.com/undrr/web-backlog/-/work_items/3320)): Controls carry fixed `data-vf-analytics-label` values for the UNDRR click tracker, and the site-search link no longer reports the typed query as its label. The nav reports under `data-vf-google-analytics-region="mega-menu"` unless the host has set its own region, overridable with the new `analyticsRegion` prop. No behaviour or visual change.
 
 - **1.6**, 2026-11-03 ([#1445](https://github.com/unisdr/undrr-mangrove/pull/1445)): Added opt-in navigation finding (`enableFilter`, `enableSiteSearch`, `searchUrl`), translated labels and hydration support.
   - Desktop footer utility opens a menu-wide modal with contextual ⌘K/Ctrl K, preserved menu state and a fixed site-search footer. Mobile filters within the drawer; the existing Search item is unchanged.

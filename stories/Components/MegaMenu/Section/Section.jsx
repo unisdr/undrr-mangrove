@@ -84,6 +84,7 @@ export default function Section({
       className="mg-mega-menu-finder__action mg-mega-content__finder-trigger"
       aria-haspopup="dialog"
       aria-keyshortcuts="Meta+k Control+k"
+      data-vf-analytics-label="Mega menu: Finder"
       onClick={() => setFinderOpen(true)}
     >
       <span>{labels.menuFilterLabel}</span>

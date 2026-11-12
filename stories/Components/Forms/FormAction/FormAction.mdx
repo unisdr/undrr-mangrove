@@ -75,7 +75,9 @@ For vanilla HTML, apply `.mg-form-action` to the joined row, `.mg-form-action__c
 - Error text sets `aria-invalid` and uses `role="alert"`.
 - The field and action retain separate focus rings and keyboard stops.
 - Both controls retain at least a 44px interaction target.
+- UNDRR's shared click tracker names a click on the label after its `for` id, which is generated when the control has no `id`. Set `analyticsLabel` to give the label and the control a fixed `data-vf-analytics-label` instead; a `data-vf-analytics-label` already on the control is kept.
 
 ## Changelog
 
+- **1.1**, 2026-11-12 ([undrr/web-backlog#3320](https://gitlab.com/undrr/web-backlog/-/work_items/3320)): Added an optional `analyticsLabel` prop, which sets `data-vf-analytics-label` on the label and the control. Fields without it render as before.
 - **1.0**, 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Added the generic joined field-and-action composition with logical RTL corners, accessible labels and descriptions, optional mobile stacking, React and vanilla HTML usage, and search, subscribe and select examples.
