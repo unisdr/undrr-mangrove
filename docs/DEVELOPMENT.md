@@ -55,6 +55,22 @@ see the component sidebar and live examples. For ongoing Sass/token edits, use
 `yarn dev` instead; it starts the Sass watcher alongside Storybook. Stop the
 foreground command with Ctrl+C and check that the watcher has stopped too.
 
+### API-backed download examples
+
+The **Downloads** stories use the public UNDRR APIs. For local integration testing, the separate **Local Drupal API** story targets `https://undrr.ddev.site`.
+
+First start the sanitized Drupal DDEV deployment in its own checkout. This example requires mkcert and a locally trusted certificate for that hostname. From the Mangrove repository root, start Storybook with the mkcert root certificate and local taxonomy proxy enabled:
+
+```bash
+NODE_EXTRA_CA_CERTS="$(mkcert -CAROOT)/rootCA.pem" \
+MANGROVE_LOCAL_API_ORIGIN=https://undrr.ddev.site \
+./node_modules/.bin/storybook dev --port 6104 --host 127.0.0.1 --exact-port --ci --no-open
+```
+
+Open [Local Drupal API](http://localhost:6104/?path=/story/components-syndicated-search-downloads--local-drupal-api), then choose **Download results**. Search requests go directly to the configured Drupal endpoint; the development server proxies only taxonomy GET requests. A static Storybook server cannot provide that proxy. Endpoint settings are editable in Controls.
+
+Use **Downloads / Fixtures** for deterministic preparing, empty and failure states. The public and local API examples show request errors and leave downloads to manual activation.
+
 ### Docker development
 
 For consistent environments or Windows development:

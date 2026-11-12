@@ -1,7 +1,60 @@
 /** Runtime UI labels for SyndicationSearchWidget; shared by production and Storybook. */
 import { createLabelResolver } from '../../../src/i18n';
 
+const formatCount = (count, lang) => new Intl.NumberFormat(lang).format(count);
+
 export const LABELS_ES = {
+  exportFormatHelp: 'CSV para hojas de cálculo; JSON para programas.',
+  exportFormatTitle: 'Descargar como',
+  exportCountLabel: 'Número de resultados',
+  exportStartLabel: 'Empezar en el resultado',
+  exportStartHelp: ({ max }) => `Máx. ${formatCount(max, 'es')}`,
+  exportCountHelp: ({ max, fromStart, perDownload }) =>
+    `Máx. ${formatCount(max, 'es')}${perDownload ? ' por descarga' : fromStart ? ' desde esta posición' : ''}`,
+  exportAvailable: ({ count }) =>
+    `${formatCount(count, 'es')} ${count === 1 ? 'resultado disponible' : 'resultados disponibles'}`,
+  exportAvailableAtLeast: ({ count }) =>
+    `Al menos ${formatCount(count, 'es')} ${count === 1 ? 'resultado disponible' : 'resultados disponibles'}`,
+  exportPreview: ({ start, end }) =>
+    `Resultados ${formatCount(start, 'es')}–${formatCount(end, 'es')}`,
+  exportPreviewWindow: ({ window }) =>
+    `Ventana de vista previa: ${formatCount(1, 'es')}–${formatCount(window, 'es')}`,
+
+  exportFieldType: 'Tipo de contenido',
+  exportFieldLanguage: 'Idioma',
+  exportFieldCountry: 'Países o regiones',
+  exportFieldHazard: 'Amenazas',
+  exportFieldTheme: 'Temas',
+
+  exportFields: 'Campos que se incluirán',
+  exportFieldsHelp:
+    'El identificador del registro y la URL siempre se incluyen. Estas opciones se aplican a ambos formatos.',
+  exportFieldTitle: 'Título',
+  exportFieldSummary: 'Resumen',
+  exportTaxonomyError:
+    'No se pudieron resolver los nombres de países, amenazas o temas. Inténtelo de nuevo o desmarque esos campos.',
+  exportFieldPosted: 'Fecha de publicación en el sitio web',
+  exportFieldReaderDate: 'Fecha mostrada en los resultados',
+
+  exportOpen: 'Descargar resultados',
+  exportClose: 'Cerrar',
+  exportRegion: 'Descargar resultados',
+  exportCsv: 'Descargar CSV',
+  exportJson: 'Descargar JSON',
+  exportScope:
+    'Usa la configuración de esta búsqueda y sus términos, filtros y orden actuales.',
+  exportContact: '¿Necesita una exportación mayor o acceso a la API?',
+  exportContactLink: 'Contáctenos',
+  exportLoading: 'Preparando descarga…',
+  exportComplete: ({ start, end, total }) =>
+    `Descarga preparada: resultados ${formatCount(start, 'es')}–${formatCount(end, 'es')} de ${formatCount(total, 'es')}.`,
+  exportLimited: ({ start, end, total }) =>
+    `Descarga preparada: resultados ${formatCount(start, 'es')}–${formatCount(end, 'es')} de ${formatCount(total, 'es')}.`,
+  exportEmpty:
+    'No hay resultados desde esta posición. Pruebe un inicio anterior.',
+  exportError:
+    'No se pudo completar la descarga. Inténtelo de nuevo o contáctenos.',
+
   searchFormLabel: 'Buscar contenido',
   searchLabel: 'Buscar',
   searchPlaceholder: 'Buscar…',
@@ -81,6 +134,57 @@ export const LABELS_ES = {
 // French (fr) — standard international French, UN register
 // ---------------------------------------------------------------------------
 export const LABELS_FR = {
+  exportFormatHelp: 'CSV pour les tableurs ; JSON pour les logiciels.',
+  exportFormatTitle: 'Télécharger au format',
+  exportCountLabel: 'Nombre de résultats',
+  exportStartLabel: 'Commencer au résultat',
+  exportStartHelp: ({ max }) => `Max. ${formatCount(max, 'fr')}`,
+  exportCountHelp: ({ max, fromStart, perDownload }) =>
+    `Max. ${formatCount(max, 'fr')}${perDownload ? ' par téléchargement' : fromStart ? ' à partir de ce résultat' : ''}`,
+  exportAvailable: ({ count }) =>
+    `${formatCount(count, 'fr')} ${count === 1 ? 'résultat disponible' : 'résultats disponibles'}`,
+  exportAvailableAtLeast: ({ count }) =>
+    `Au moins ${formatCount(count, 'fr')} ${count === 1 ? 'résultat disponible' : 'résultats disponibles'}`,
+  exportPreview: ({ start, end }) =>
+    `Résultats ${formatCount(start, 'fr')}–${formatCount(end, 'fr')}`,
+  exportPreviewWindow: ({ window }) =>
+    `Fenêtre d’aperçu : ${formatCount(1, 'fr')}–${formatCount(window, 'fr')}`,
+
+  exportFieldType: 'Type de contenu',
+  exportFieldLanguage: 'Langue',
+  exportFieldCountry: 'Pays ou régions',
+  exportFieldHazard: 'Aléas',
+  exportFieldTheme: 'Thèmes',
+
+  exportFields: 'Champs à inclure',
+  exportFieldsHelp:
+    'L’identifiant de l’enregistrement et l’URL sont toujours inclus. Ces choix s’appliquent aux deux formats.',
+  exportFieldTitle: 'Titre',
+  exportFieldSummary: 'Résumé',
+  exportTaxonomyError:
+    'Les noms des pays, aléas ou thèmes n’ont pas pu être déterminés. Réessayez ou désélectionnez ces champs.',
+  exportFieldPosted: 'Date de mise en ligne',
+  exportFieldReaderDate: 'Date affichée dans les résultats',
+
+  exportOpen: 'Télécharger les résultats',
+  exportClose: 'Fermer',
+  exportRegion: 'Télécharger les résultats',
+  exportCsv: 'Télécharger CSV',
+  exportJson: 'Télécharger JSON',
+  exportScope:
+    'Utilise les réglages de cette recherche ainsi que vos termes, filtres et ordre de tri actuels.',
+  exportContact: 'Besoin d’un export plus volumineux ou d’un accès à l’API ?',
+  exportContactLink: 'Contactez-nous',
+  exportLoading: 'Préparation du téléchargement…',
+  exportComplete: ({ start, end, total }) =>
+    `Téléchargement prêt : résultats ${formatCount(start, 'fr')}–${formatCount(end, 'fr')} sur ${formatCount(total, 'fr')}.`,
+  exportLimited: ({ start, end, total }) =>
+    `Téléchargement prêt : résultats ${formatCount(start, 'fr')}–${formatCount(end, 'fr')} sur ${formatCount(total, 'fr')}.`,
+  exportEmpty:
+    'Aucun résultat à partir de cette position. Essayez un résultat précédent.',
+  exportError:
+    'Le téléchargement n’a pas pu être effectué. Réessayez ou contactez-nous.',
+
   searchFormLabel: 'Rechercher du contenu',
   searchLabel: 'Rechercher',
   searchPlaceholder: 'Rechercher…',
@@ -160,6 +264,56 @@ export const LABELS_FR = {
 // Japanese (ja) — polite register (丁寧語); no singular/plural distinction
 // ---------------------------------------------------------------------------
 export const LABELS_JA = {
+  exportFormatHelp: 'CSVは表計算用、JSONはソフトウェア用です。',
+  exportFormatTitle: 'ダウンロード形式',
+  exportCountLabel: '結果の件数',
+  exportStartLabel: '開始する結果',
+  exportStartHelp: ({ max }) => `最大 ${formatCount(max, 'ja')}`,
+  exportCountHelp: ({ max, fromStart, perDownload }) =>
+    `最大${formatCount(max, 'ja')}${perDownload ? '件／ダウンロード' : fromStart ? '件（この開始位置から）' : '件'}`,
+  exportAvailable: ({ count }) =>
+    `利用可能な結果：${formatCount(count, 'ja')}件`,
+  exportAvailableAtLeast: ({ count }) =>
+    `少なくとも${formatCount(count, 'ja')}件の結果を利用できます`,
+  exportPreview: ({ start, end }) =>
+    `結果 ${formatCount(start, 'ja')}–${formatCount(end, 'ja')}`,
+  exportPreviewWindow: ({ window }) =>
+    `プレビュー範囲：${formatCount(1, 'ja')}–${formatCount(window, 'ja')}`,
+
+  exportFieldType: 'コンテンツの種類',
+  exportFieldLanguage: '言語',
+  exportFieldCountry: '国・地域',
+  exportFieldHazard: 'ハザード',
+  exportFieldTheme: 'テーマ',
+
+  exportFields: '含める項目',
+  exportFieldsHelp:
+    'レコードIDとURLは常に含まれます。選択は両方の形式に適用されます。',
+  exportFieldTitle: 'タイトル',
+  exportFieldSummary: '概要',
+  exportTaxonomyError:
+    '国、ハザード、テーマの名称を取得できませんでした。もう一度試すか、これらの項目の選択を解除してください。',
+  exportFieldPosted: 'ウェブサイト掲載日',
+  exportFieldReaderDate: '検索結果に表示される日付',
+
+  exportOpen: '結果をダウンロード',
+  exportClose: '閉じる',
+  exportRegion: '結果をダウンロード',
+  exportCsv: 'CSVをダウンロード',
+  exportJson: 'JSONをダウンロード',
+  exportScope: 'この検索の設定と現在の検索語、フィルター、並び順を使用します。',
+  exportContact: '大規模なエクスポートやAPIアクセスが必要ですか？',
+  exportContactLink: 'お問い合わせ',
+  exportLoading: 'ダウンロードを準備中…',
+  exportComplete: ({ start, end, total }) =>
+    `ダウンロードの準備ができました：全${formatCount(total, 'ja')}件中${formatCount(start, 'ja')}～${formatCount(end, 'ja')}件目。`,
+  exportLimited: ({ start, end, total }) =>
+    `ダウンロードの準備ができました：全${formatCount(total, 'ja')}件中${formatCount(start, 'ja')}～${formatCount(end, 'ja')}件目。`,
+  exportEmpty:
+    'この開始位置から取得できる結果はありません。前の位置からお試しください。',
+  exportError:
+    'ダウンロードを完了できませんでした。再試行するか、お問い合わせください。',
+
   searchFormLabel: 'コンテンツを検索',
   searchLabel: '検索',
   searchPlaceholder: '検索…',
@@ -239,6 +393,52 @@ export const LABELS_JA = {
 // Simplified Chinese (zh-Hans) — no singular/plural distinction
 // ---------------------------------------------------------------------------
 export const LABELS_ZH = {
+  exportFormatHelp: 'CSV用于电子表格，JSON用于软件。',
+  exportFormatTitle: '下载格式',
+  exportCountLabel: '结果数量',
+  exportStartLabel: '从第几条结果开始',
+  exportStartHelp: ({ max }) => `最多 ${formatCount(max, 'zh')}`,
+  exportCountHelp: ({ max, fromStart, perDownload }) =>
+    `最多${formatCount(max, 'zh')}${perDownload ? '条／次下载' : fromStart ? '条（从此位置开始）' : '条'}`,
+  exportAvailable: ({ count }) => `有${formatCount(count, 'zh')}条结果可用`,
+  exportAvailableAtLeast: ({ count }) =>
+    `至少有${formatCount(count, 'zh')}条结果可用`,
+  exportPreview: ({ start, end }) =>
+    `结果 ${formatCount(start, 'zh')}–${formatCount(end, 'zh')}`,
+  exportPreviewWindow: ({ window }) =>
+    `预览窗口：${formatCount(1, 'zh')}–${formatCount(window, 'zh')}`,
+
+  exportFieldType: '内容类型',
+  exportFieldLanguage: '语言',
+  exportFieldCountry: '国家或地区',
+  exportFieldHazard: '灾害',
+  exportFieldTheme: '主题',
+
+  exportFields: '包含的字段',
+  exportFieldsHelp: '记录ID和URL始终包含在内。这些选择适用于两种格式。',
+  exportFieldTitle: '标题',
+  exportFieldSummary: '摘要',
+  exportTaxonomyError:
+    '无法获取国家、灾害或主题名称。请重试或取消选择这些字段。',
+  exportFieldPosted: '网站发布日期',
+  exportFieldReaderDate: '结果中显示的日期',
+
+  exportOpen: '下载结果',
+  exportClose: '关闭',
+  exportRegion: '下载结果',
+  exportCsv: '下载CSV',
+  exportJson: '下载JSON',
+  exportScope: '使用此搜索的设置以及当前搜索词、筛选条件和排序。',
+  exportContact: '需要更大的导出或API访问权限？',
+  exportContactLink: '联系我们',
+  exportLoading: '正在准备下载…',
+  exportComplete: ({ start, end, total }) =>
+    `下载已准备好：第${formatCount(start, 'zh')}–${formatCount(end, 'zh')}条，共${formatCount(total, 'zh')}条。`,
+  exportLimited: ({ start, end, total }) =>
+    `下载已准备好：第${formatCount(start, 'zh')}–${formatCount(end, 'zh')}条，共${formatCount(total, 'zh')}条。`,
+  exportEmpty: '此起始位置没有结果。请尝试更早的位置。',
+  exportError: '无法完成下载。请重试或联系我们。',
+
   searchFormLabel: '搜索内容',
   searchLabel: '搜索',
   searchPlaceholder: '搜索…',
@@ -344,6 +544,55 @@ const AR_FILTER_FORMS = {
 };
 
 export const LABELS_AR = {
+  exportFormatHelp: 'CSV لجداول البيانات وJSON للبرامج.',
+  exportFormatTitle: 'التنزيل بصيغة',
+  exportCountLabel: 'عدد النتائج',
+  exportStartLabel: 'البدء من النتيجة',
+  exportStartHelp: ({ max }) => `الحد الأقصى ${formatCount(max, 'ar')}`,
+  exportCountHelp: ({ max, fromStart, perDownload }) =>
+    `الحد الأقصى ${formatCount(max, 'ar')}${perDownload ? ' لكل تنزيل' : fromStart ? ' من هذا الموضع' : ''}`,
+  exportAvailable: ({ count }) =>
+    `النتائج المتاحة: ${formatCount(count, 'ar')}`,
+  exportAvailableAtLeast: ({ count }) =>
+    `النتائج المتاحة: ${formatCount(count, 'ar')} على الأقل`,
+  exportPreview: ({ start, end }) =>
+    `النتائج ${formatCount(start, 'ar')}–${formatCount(end, 'ar')}`,
+  exportPreviewWindow: ({ window }) =>
+    `نطاق المعاينة: ${formatCount(1, 'ar')}–${formatCount(window, 'ar')}`,
+
+  exportFieldType: 'نوع المحتوى',
+  exportFieldLanguage: 'اللغة',
+  exportFieldCountry: 'البلدان أو المناطق',
+  exportFieldHazard: 'الأخطار',
+  exportFieldTheme: 'المواضيع',
+
+  exportFields: 'الحقول المراد تضمينها',
+  exportFieldsHelp:
+    'يُضمَّن معرّف السجل والرابط دائمًا. تنطبق هذه الخيارات على كلا التنسيقين.',
+  exportFieldTitle: 'العنوان',
+  exportFieldSummary: 'الملخص',
+  exportTaxonomyError:
+    'تعذّر تحديد أسماء البلدان أو الأخطار أو المواضيع. حاول مجددًا أو ألغِ تحديد هذه الحقول.',
+  exportFieldPosted: 'تاريخ النشر على الموقع',
+  exportFieldReaderDate: 'التاريخ المعروض في النتائج',
+
+  exportOpen: 'تنزيل النتائج',
+  exportClose: 'إغلاق',
+  exportRegion: 'تنزيل النتائج',
+  exportCsv: 'تنزيل CSV',
+  exportJson: 'تنزيل JSON',
+  exportScope:
+    'يستخدم إعدادات هذا البحث وكلمات البحث وعوامل التصفية وترتيب الفرز الحالية.',
+  exportContact: 'هل تحتاج إلى تصدير أكبر أو الوصول إلى واجهة برمجة التطبيقات؟',
+  exportContactLink: 'اتصل بنا',
+  exportLoading: 'جارٍ إعداد التنزيل…',
+  exportComplete: ({ start, end, total }) =>
+    `تم إعداد التنزيل: النتائج ${formatCount(start, 'ar')}–${formatCount(end, 'ar')} من ${formatCount(total, 'ar')}.`,
+  exportLimited: ({ start, end, total }) =>
+    `تم إعداد التنزيل: النتائج ${formatCount(start, 'ar')}–${formatCount(end, 'ar')} من ${formatCount(total, 'ar')}.`,
+  exportEmpty: 'لا توجد نتائج من هذا الموضع. جرّب موضع بدء أسبق.',
+  exportError: 'تعذّر إكمال التنزيل. يُرجى المحاولة مرة أخرى أو الاتصال بنا.',
+
   searchFormLabel: 'البحث في المحتوى',
   searchLabel: 'بحث',
   searchPlaceholder: 'بحث…',
@@ -469,6 +718,56 @@ const RU_ACTIVE_FORMS = {
 };
 
 export const LABELS_RU = {
+  exportFormatHelp: 'CSV для электронных таблиц; JSON для программ.',
+  exportFormatTitle: 'Скачать в формате',
+  exportCountLabel: 'Количество результатов',
+  exportStartLabel: 'Начать с результата',
+  exportStartHelp: ({ max }) => `Макс. ${formatCount(max, 'ru')}`,
+  exportCountHelp: ({ max, fromStart, perDownload }) =>
+    `Макс. ${formatCount(max, 'ru')}${perDownload ? ' за загрузку' : fromStart ? ' с этой позиции' : ''}`,
+  exportAvailable: ({ count }) =>
+    `Доступно: ${formatCount(count, 'ru')} ${RU_RESULT_FORMS[ruResults.select(count)] ?? RU_RESULT_FORMS.other}`,
+  exportAvailableAtLeast: ({ count }) =>
+    `Доступно как минимум: ${formatCount(count, 'ru')} ${RU_RESULT_FORMS[ruResults.select(count)] ?? RU_RESULT_FORMS.other}`,
+  exportPreview: ({ start, end }) =>
+    `Результаты ${formatCount(start, 'ru')}–${formatCount(end, 'ru')}`,
+  exportPreviewWindow: ({ window }) =>
+    `Окно предпросмотра: ${formatCount(1, 'ru')}–${formatCount(window, 'ru')}`,
+
+  exportFieldType: 'Тип содержимого',
+  exportFieldLanguage: 'Язык',
+  exportFieldCountry: 'Страны или регионы',
+  exportFieldHazard: 'Опасности',
+  exportFieldTheme: 'Темы',
+
+  exportFields: 'Поля для включения',
+  exportFieldsHelp:
+    'Идентификатор записи и URL включаются всегда. Выбор применяется к обоим форматам.',
+  exportFieldTitle: 'Заголовок',
+  exportFieldSummary: 'Краткое описание',
+  exportTaxonomyError:
+    'Не удалось определить названия стран, опасностей или тем. Повторите попытку или снимите выбор этих полей.',
+  exportFieldPosted: 'Дата размещения на сайте',
+  exportFieldReaderDate: 'Дата, указанная в результатах',
+
+  exportOpen: 'Скачать результаты',
+  exportClose: 'Закрыть',
+  exportRegion: 'Скачать результаты',
+  exportCsv: 'Скачать CSV',
+  exportJson: 'Скачать JSON',
+  exportScope:
+    'Используются настройки поиска, текущий запрос, фильтры и порядок сортировки.',
+  exportContact: 'Нужен больший экспорт или доступ к API?',
+  exportContactLink: 'Свяжитесь с нами',
+  exportLoading: 'Подготовка загрузки…',
+  exportComplete: ({ start, end, total }) =>
+    `Загрузка подготовлена: результаты ${formatCount(start, 'ru')}–${formatCount(end, 'ru')} из ${formatCount(total, 'ru')}.`,
+  exportLimited: ({ start, end, total }) =>
+    `Загрузка подготовлена: результаты ${formatCount(start, 'ru')}–${formatCount(end, 'ru')} из ${formatCount(total, 'ru')}.`,
+  exportEmpty: 'С этой позиции результатов нет. Выберите более раннее начало.',
+  exportError:
+    'Не удалось завершить загрузку. Повторите попытку или свяжитесь с нами.',
+
   searchFormLabel: 'Поиск по содержимому',
   searchLabel: 'Поиск',
   searchPlaceholder: 'Поиск…',
@@ -568,6 +867,57 @@ export const LABELS_RU = {
 };
 
 export const DEFAULT_LABELS = {
+  exportFormatHelp: 'CSV for spreadsheets; JSON for software.',
+  exportFormatTitle: 'Download as',
+  exportCountLabel: 'Number of results',
+  exportStartLabel: 'Start at result',
+  exportStartHelp: ({ max }) => `Max ${formatCount(max, 'en')}`,
+  exportCountHelp: ({ max, fromStart, perDownload }) =>
+    `Max ${formatCount(max, 'en')}${perDownload ? ' per download' : fromStart ? ' from this start' : ''}`,
+  exportAvailable: ({ count }) =>
+    `${formatCount(count, 'en')} ${count === 1 ? 'result' : 'results'} available`,
+  exportAvailableAtLeast: ({ count }) =>
+    `At least ${formatCount(count, 'en')} ${count === 1 ? 'result' : 'results'} available`,
+  exportPreview: ({ start, end }) =>
+    `Results ${formatCount(start, 'en')}–${formatCount(end, 'en')}`,
+  exportPreviewWindow: ({ window }) =>
+    `Preview window: ${formatCount(1, 'en')}–${formatCount(window, 'en')}`,
+
+  exportFieldType: 'Content type',
+  exportFieldLanguage: 'Language',
+  exportFieldCountry: 'Countries or regions',
+  exportFieldHazard: 'Hazards',
+  exportFieldTheme: 'Themes',
+
+  exportFields: 'Fields to include',
+  exportFieldsHelp:
+    'Record ID and URL are always included. These choices apply to both formats.',
+  exportFieldTitle: 'Title',
+  exportFieldSummary: 'Summary',
+  exportTaxonomyError:
+    'Names for countries, hazards or themes could not be resolved. Try again or clear those fields.',
+  exportFieldPosted: 'Website posting date',
+  exportFieldReaderDate: 'Date shown in results',
+
+  exportOpen: 'Download results',
+  exportClose: 'Close',
+  exportRegion: 'Download results',
+  exportCsv: 'Download CSV',
+  exportJson: 'Download JSON',
+  exportScope:
+    'Uses this search’s settings and your current terms, filters and sort order.',
+  exportContact: 'Need a larger export or API access?',
+  exportContactLink: 'Contact us',
+  exportLoading: 'Preparing download…',
+  exportComplete: ({ start, end, total }) =>
+    `Download prepared: results ${formatCount(start, 'en')}–${formatCount(end, 'en')} of ${formatCount(total, 'en')}.`,
+  exportLimited: ({ start, end, total }) =>
+    `Download prepared: results ${formatCount(start, 'en')}–${formatCount(end, 'en')} of ${formatCount(total, 'en')}.`,
+  exportEmpty:
+    'No results are available from this position. Try an earlier start.',
+  exportError:
+    'The download could not be completed. Please try again or contact us.',
+
   // SearchForm
   searchFormLabel: 'Search content',
   searchLabel: 'Search',

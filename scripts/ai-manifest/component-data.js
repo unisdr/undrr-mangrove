@@ -61,6 +61,8 @@ export const REQUIRES_REACT = {
 
   'components-syndicated-search':
     'SyndicationSearchWidget is a complex search interface querying an Elasticsearch API. Requires React 19. After each completed search it calls config.onResults({ total, query, page }) and dispatches a bubbling mg-search-widget:results event with the same detail, so a host can hide an empty section. Can be hydrated on a vanilla HTML page using the createHydrator pattern with data-mg-search-widget attributes. Supports full UI string translation via the labels prop (or data-labels JSON attribute in Drupal). Ships with label sets for ES, FR, JA, ZH (Simplified), AR, and RU. See the hydration documentation.',
+  'components-syndicated-search-downloads':
+    'SyndicationSearchWidget download examples grouped for discovery. Requires the same React search widget and hydration integration as the main component; these are not a separate export component.',
   'components-syndicated-search-translations':
     'SyndicationSearchWidget translation label sets for ES, FR, JA, ZH-Hans, AR, and RU. Pass via the labels prop (React) or data-labels JSON attribute (Drupal). String keys support {token} substitution; function keys handle Intl.PluralRules plural forms for Arabic (6-form) and Russian (3-form). Function keys cannot be serialized to JSON for data-labels.',
   'components-syndicated-search-display-modes':
@@ -2847,6 +2849,27 @@ npm run build</code></pre>
   },
   'components-syndicated-search': {
     cssClasses: [
+      'mg-search__export',
+      'mg-search__export-actions',
+      'mg-search__export-dialog',
+      'mg-search__export-field-options',
+      'mg-search__export-fields',
+      'mg-search__export-header',
+      'mg-search__export-header-icon',
+      'mg-search__export-scope',
+      'mg-search__export-field-grid',
+      'mg-search__export-count',
+      'mg-search__export-range',
+      'mg-search__export-range--paged',
+      'mg-search__export-preview',
+      'mg-search__export-preview-track',
+      'mg-search__export-preview-track--window',
+      'mg-search__export-preview-selection',
+      'mg-search__export-start',
+      'mg-search__export-footer',
+      'mg-search__export-format-title',
+      'mg-search__export-help',
+      'mg-search__export-status',
       'mg-select__option--inherited',
       'mg-select__option--partial',
       'mg-search__scope-tabs',
@@ -2856,9 +2879,9 @@ npm run build</code></pre>
     summary:
       'Search with facets, result lists, photo cards or publication catalogues. Book mode preserves artwork URLs; use publication filters and explicit grid columns.',
     description:
-      'Search interface over the UNDRR syndication API: query box, facets, active filters, result list or cards, pager and search metrics. Type selections retain parent/subtype grouping and indentation; selected subtypes keep parent context in the collapsed summary. Unselected children included through a selected parent show a pale checked indicator; an unselected parent with selected subtypes shows a dash. These states describe inclusion without changing explicit selections or Type OR semantics. Search availability stays stable while a facet dropdown is open; selection retains keyboard focus, and Escape closes the dropdown before its enclosing mobile drawer. Custom facets with display tabs provide required native radio scopes above results, preserving other filters and scoping facet counts. Unique URL-safe option values synchronize selections with browser history; Clear all retains the scope. Book grids preserve supplied artwork URLs and use a shared desktop media stage; choose publication filters, explicit columns and concise fields for a cover catalogue. Teaser HTML is inserted directly into the result article when metrics are disabled; the metrics-enabled view keeps a separate teaser container alongside the scoring panel. Loading uses the shared flush ProgressBar in the results region and inline Loader on refresh. Skeletons remain static; optional motion uses shared timing tokens, with a dashed progress strip under reduced motion and visible outlines in forced colours. lang selects the bundled UI catalogue, independently of content-language filters. labels and data-labels provide explicit overrides. Built-in plural functions are bundled and work through hydration; custom functions require a JavaScript labels prop. The widget renders the search response as unsanitised HTML so Elasticsearch highlight markup survives, which puts the configured searchEndpoint inside its trust boundary: point it only at a service trusted to return safe HTML.',
+      'Search interface over the UNDRR syndication API: query box, facets, active filters, result list or cards, pager and search metrics. Opt-in showExport adds an outlined Download results utility at inline start beneath pagination (or results when pagination is hidden), opening a native modal with a one-based start only for matched totals of at least 1,000, quantity and optional fields followed by a distinct Download as section for CSV/JSON actions and status, then quieter larger-data help. Close uses the shared quiet icon-button contract. Fields open by default in a responsive grid. CSV is the primary action and JSON uses the outline variant. Both downloads are generated in the browser, with a range bounded by 1,000 per file, exact remaining matches and the 10,000-result window; opening bounds config.exportDefaultCount or 100 by availability; numeric edits immediately cap together, with blank drafts resolved on blur or Download and nonnumeric keyboard/paste entry blocked; availability names the range fieldset once, and a read-only range strip uses the exact full total or a continuation cue plus screen-reader window description for lower bounds, and localized settled-search availability that distinguishes exact totals from lower bounds, preserving filters and sort, with actual returned-range messages and exportContactUrl for larger data requests. config.exportFields inherits all supported optional columns when omitted or null; an explicit array restricts the available choices and both files, with ID/URL always mandatory, paired date/precision and taxonomy ID/name columns, and [] or malformed policies allowing core columns only. Policy changes close the modal and abort pending downloads. This is a file/UI policy, not backend authorization. A native Fields to include disclosure offers up to nine optional metadata choices, including an initially unchecked plain-text teaser summary. Taxonomy choices pair IDs with names from the complete paginated taxonomy lookup; failed or unresolved names block the file with retry guidance. Raw teaser HTML and full body are excluded from files. ID and URL are always included, date precision is paired, the same stable selected keys in CSV and JSON, and fresh defaults on reopening. Primary Downloads examples always use the normal public APIs. A separate Local Drupal API story explicitly opts into the sanitized local deployment; there is no hostname-based switching, automatic fallback or download. Endpoint configuration remains editable. Deterministic states and the captured Website teaser sample are grouped separately under Fixtures. Type selections retain parent/subtype grouping and indentation; selected subtypes keep parent context in the collapsed summary. Unselected children included through a selected parent show a pale checked indicator; an unselected parent with selected subtypes shows a dash. These states describe inclusion without changing explicit selections or Type OR semantics. Search availability stays stable while a facet dropdown is open; selection retains keyboard focus, and Escape closes the dropdown before its enclosing mobile drawer. Custom facets with display tabs provide required native radio scopes above results, preserving other filters and scoping facet counts. Unique URL-safe option values synchronize selections with browser history; Clear all retains the scope. Book grids preserve supplied artwork URLs and use a shared desktop media stage; choose publication filters, explicit columns and concise fields for a cover catalogue. Teaser HTML is inserted directly into the result article when metrics are disabled; the metrics-enabled view keeps a separate teaser container alongside the scoring panel. Loading uses the shared flush ProgressBar in the results region and inline Loader on refresh. Skeletons remain static; optional motion uses shared timing tokens, with a dashed progress strip under reduced motion and visible outlines in forced colours. lang selects the bundled UI catalogue, independently of content-language filters. labels and data-labels provide explicit overrides. Built-in plural functions are bundled and work through hydration; custom functions require a JavaScript labels prop. The widget renders the search response as unsanitised HTML so Elasticsearch highlight markup survives, which puts the configured searchEndpoint inside its trust boundary: point it only at a service trusted to return safe HTML.',
     hydration: {
-      note: 'The widget queries an Elasticsearch-backed API and owns all of its state, so renderedHtml is only the empty initial shell — no results, facets or pager are in it. Render an empty data-mg-search-widget container and hydrate it. fromElement returns config plus optional lang, dir and labels, so forward the full extracted props to retain language selection. Only attributes you set are included in config, so every unset option keeps its default. Malformed JSON in any of the JSON attributes is ignored and that option falls back to its default.',
+      note: 'The widget queries an Elasticsearch-backed API and owns all of its state, so renderedHtml is only the empty initial shell — no results, facets or pager are in it. Render an empty data-mg-search-widget container and hydrate it. fromElement returns config plus optional lang, dir and labels, so forward the full extracted props to retain language selection. Only attributes you set are included in config, so every unset option keeps its default. Malformed JSON falls back to the attribute default, except data-export-fields: invalid JSON or a non-array value permits only mandatory ID/URL columns. Omit data-export-fields to inherit all supported fields.',
       selector: '[data-mg-search-widget]',
       modules: hydrationModules('SyndicationSearchWidget'),
       dataAttributes: {
@@ -2890,6 +2913,16 @@ npm run build</code></pre>
           'CSS selector of an element to portal the search box into.',
         'data-analytics-region-prefix':
           'Stem for the analytics regions (<prefix>-form, -results, -facets). Defaults to undrr-search. Give each widget on a page its own prefix, because the analytics script reports only the innermost region.',
+        'data-show-export':
+          '"true" to show Download results, opening a native modal that always offers CSV and JSON metadata downloads; disabled by default.',
+        'data-export-default-count':
+          'Initial requested quantity: default 100, normalized to 1–1,000. Visitors may choose 1–1,000 independently of page size.',
+        'data-export-fields':
+          'Optional JSON array of output keys restricting available metadata fields. Omit to inherit all supported fields; [] permits only mandatory ID/URL. Paired date/precision and taxonomy IDs/names stay together. Invalid policies allow only ID/URL.',
+        'data-export-contact-url':
+          'Contact route for larger data requests or API access discussions; defaults to the PreventionWeb contact page.',
+        'data-export-endpoint':
+          'Endpoint for download requests; omit to use data-search-endpoint. Lets a consumer tell downloads apart from browsing requests.',
         'data-show-search-box': '"false" to hide the search box.',
         'data-show-results-count': '"false" to hide the result count.',
         'data-show-facets': '"false" to hide the facets.',

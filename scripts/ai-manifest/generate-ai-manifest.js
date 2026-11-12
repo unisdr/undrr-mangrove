@@ -166,6 +166,13 @@ const VANILLA_SCRIPTS = [
       'First shipped experimentally in 2.4.0. The relative URL is for the local dist/assets web root after yarn build; versioned CDN URLs require npm publication and the shared-web-assets production deployment. Enhances authored disclosures into native modal dialogs. Call mgDialog(scope) for inserted content and mgDialogDestroy(scope) before removing it. Labels and content stay in the authored HTML; unsupported browsers keep the disclosure.',
   },
   {
+    name: 'Dialog scroll lock support',
+    file: 'js/dialog-scroll-lock.js',
+    url: 'js/dialog-scroll-lock.js',
+    description:
+      'Internal support imported by the native Dialog enhancer and React search export modal. lockDialogScroll(document) coordinates reference-counted scroll locks and returns an idempotent release function that restores existing overflow declarations and priorities. It is not a standalone enhancer and does not auto-initialize.',
+  },
+  {
     name: 'Tabs',
     file: 'js/tabs.js',
     url: `${CDN_BASE}/js/tabs.js`,

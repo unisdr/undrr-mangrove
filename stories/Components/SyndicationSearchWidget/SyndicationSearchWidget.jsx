@@ -57,6 +57,7 @@ import {
 } from './context/WidgetRootContext';
 import SearchForm from './components/SearchForm';
 import SearchResults from './components/SearchResults';
+import SearchExport from './components/SearchExport';
 import SearchProgress from './components/SearchProgress';
 import ActiveFilters from './components/ActiveFilters';
 import FacetsSidebar from './components/FacetsSidebar';
@@ -168,6 +169,16 @@ SyndicationSearchWidget.propTypes = {
     showFacets: PropTypes.bool,
     /** Whether visitors can see the sort selector. The configured order is retained when hidden. */
     showSort: PropTypes.bool,
+    /** Opt in to browser-generated CSV and JSON metadata downloads. */
+    showExport: PropTypes.bool,
+    /** Initial download quantity: defaults to 100; visitors may choose 1–1,000. */
+    exportDefaultCount: PropTypes.number,
+    /** Contact route for larger data requests or ongoing API access discussions. */
+    exportContactUrl: PropTypes.string,
+    /** Available export columns; null inherits all supported fields. ID/URL and paired metadata remain required. */
+    exportFields: PropTypes.arrayOf(PropTypes.string),
+    /** Endpoint for download requests; defaults to searchEndpoint. Lets consumers distinguish downloads from browsing requests. */
+    exportEndpoint: PropTypes.string,
     /**
      * CSS selector for a DOM element outside the widget where the facets
      * UI should be rendered (via React portal). Useful when a consuming
@@ -542,6 +553,7 @@ function SyndicationSearchWidgetInner({ lang, dir }) {
             aria-busy={isLoading || isPending}
           >
             {(isLoading || isPending) && <SearchProgress />}
+
             <Suspense
               fallback={
                 <SearchResultsSkeleton
@@ -559,6 +571,9 @@ function SyndicationSearchWidgetInner({ lang, dir }) {
                 activeFilterCount={activeFilterCount}
               />
             </Suspense>
+            {config.showExport && (
+              <SearchExport isStale={isPending || inputValue !== state.query} />
+            )}
           </div>
         </div>
 

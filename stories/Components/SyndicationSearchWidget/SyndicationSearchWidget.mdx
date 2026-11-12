@@ -5,6 +5,8 @@ import * as DisplayModesStories from './SyndicationSearchWidget.DisplayModes.sto
 import * as FiltersStories from './SyndicationSearchWidget.Filters.stories';
 import * as IntegrationsStories from './SyndicationSearchWidget.Integrations.stories';
 import * as TogglesStories from './SyndicationSearchWidget.Toggles.stories';
+import * as ExportStories from './SyndicationSearchWidget.Export.stories';
+import * as ExportFixtureStories from './SyndicationSearchWidget.Export.fixtures.stories';
 import * as MotionStories from './SyndicationSearchWidget.Motion.stories';
 
 <Meta of={SyndicationSearchWidgetStories} />
@@ -604,6 +606,130 @@ Rules:
 Pages with more than one widget should leave hash sync on for at most one of
 them; the Drupal block's `auto` setting does this.
 
+## Download search metadata
+
+Let visitors download matching content metadata as CSV for spreadsheets or JSON for software. Downloads use the configured search and the visitor’s current terms, filters and sort, independently of the visible page. They contain metadata, not publication files or a complete bibliographic record.
+
+Enable the optional **Download results** action with `config.showExport`:
+
+```jsx
+<SyndicationSearchWidget
+  config={{
+    showExport: true,
+    exportDefaultCount: 100,
+    exportContactUrl: 'https://www.preventionweb.net/contact',
+    customFilters: ['type:publication'],
+    defaultSort: 'newest',
+  }}
+/>
+```
+
+The action appears beneath pagination, or beneath the results when pagination is hidden. Its modal offers both **Download CSV** and **Download JSON**. Set `exportDefaultCount: 10` for an initial quantity of ten; visitors can change it within the available range. `exportContactUrl` supplies the contact route for larger exports or API-access enquiries. Downloads use `searchEndpoint` unless `exportEndpoint` is set; hydrated widgets accept `data-export-endpoint`.
+
+<Canvas
+  of={ExportStories.DownloadResults}
+  story={{ inline: false, height: '850px' }}
+/>
+
+<span id="number-of-results" />
+
+### Choose a range
+
+Visitors choose **Number of results**, then **Start at result** when at least 1,000 matches are known. Start is one-based and initially 1. Smaller sets always start at result 1. Downloads are limited to 1,000 records per file and the first 10,000 matching positions:
+
+- With 25 exact matches, quantity is at most 25 and there is no start control.
+- With 1,000 exact matches, start 996 allows five records.
+- With at least 1,899 matches, start 900 and quantity 1,000 select results 900–1,899.
+
+Availability appears once above the inputs. Lower-bound totals say “At least”. The read-only strip shows the selected range; it is not a slider. Exact totals scale the whole matching set. For lower bounds, a continuation cue and screen-reader description identify the 1–10,000 preview window.
+
+Numeric edits immediately cap start and quantity together, so a later start can reduce quantity. Keyboard and paste entry block letters and exponent notation. A blank input remains editable until blur or Download: start then resets to 1 and quantity uses the bounded configured default. Corrections are announced to assistive technology. Editing makes no request; Download uses the corrected values.
+
+Separate downloads are independent searches. Index changes and equal sort values can cause overlaps or gaps between chunks. Use the contact/API route for larger or stable datasets; these downloads do not provide a snapshot or bulk-export protocol.
+
+Try the [result range example](?path=/story/components-syndicated-search-downloads--download-range) with a query that has enough matches.
+
+<span id="formats-and-fields" />
+
+### Choose fields and format
+
+**Fields to include** offers up to nine choices: title, summary, content type, language, website posting date, date shown in results, countries/regions, hazards and themes. Summary starts unchecked; the other choices start selected. Record ID and URL are always included. The date shown in results and its precision metadata stay paired. Choices apply to both formats and reset when the modal reopens.
+
+Omit `exportFields` (or use `null`) to make every supported optional field available. Supply an array of output keys to restrict the choices, for example `exportFields: ['title', 'summary', 'theme_ids']`. An empty array allows only the mandatory record ID and URL. Date/precision and taxonomy ID/name pairs stay together when either key is allowed. Restrictions apply to the modal and both downloaded formats; they do not restrict backend access. Changing the policy closes the modal and cancels any pending download.
+
+**Summary** is the plain-text description shown in the indexed search teaser. It may be shortened and is not a full abstract. It excludes query-specific highlights, surrounding teaser metadata and the full body. Records without a teaser description have an empty summary. Teaser HTML is requested only when Summary is selected.
+
+Countries/regions, hazards and themes each export paired ID and name arrays in the same order. Names use the configured taxonomy endpoint’s language, independently of the record’s content language. The lookup loads all pages, including terms outside the visible facets. An unresolved ID triggers one shared refresh to recover from an older cached list. If the term still cannot be resolved or the lookup fails, no file is produced: retry or clear the affected taxonomy choices.
+
+| Field                                                 | Meaning                                                                                                                        |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `id`                                                  | Search document identifier, falling back to the node ID.                                                                       |
+| `title`                                               | Indexed title with character entities decoded.                                                                                 |
+| `summary`                                             | Plain-text indexed teaser description; optional and empty when unavailable.                                                    |
+| `url`                                                 | Absolute HTTP(S) content URL, resolved using the result’s domain.                                                              |
+| `type`                                                | Content type, or vocabulary for taxonomy results.                                                                              |
+| `language`                                            | Content language, independent of the interface language.                                                                       |
+| `posted_at`                                           | Indexed `published_at` as a UTC ISO timestamp: the website posting date, not necessarily the publication’s bibliographic date. |
+| `display_date`                                        | Reader-facing date as `YYYY-MM-DD`, or `YYYY` for year precision. No posting-date fallback.                                    |
+| `display_date_precision`                              | Precision of the reader-facing date.                                                                                           |
+| `country_region_ids`, `hazard_ids`, `theme_ids`       | Taxonomy identifier arrays.                                                                                                    |
+| `country_region_names`, `hazard_names`, `theme_names` | Corresponding name arrays, in ID order.                                                                                        |
+
+Missing scalar values are empty strings; missing multi-value fields are empty arrays. Columns and keys keep the order above. Raw teaser/body HTML, scoring fields and other index internals are excluded.
+
+CSV uses a UTF-8 byte order mark, quoted cells and CRLF record endings. Taxonomy ID and name cells contain JSON arrays of strings. Cells that could be spreadsheet formulas receive a leading apostrophe; JSON preserves the original text.
+
+JSON contains `schemaVersion`, `exportedAt` (UTC), `records` and `scope`:
+
+| Scope key        | Meaning                                                         |
+| ---------------- | --------------------------------------------------------------- |
+| `limit`          | Requested quantity.                                             |
+| `from`           | Zero-based requested offset.                                    |
+| `start`, `end`   | Actual one-based returned range.                                |
+| `count`, `total` | Returned count and fresh exact matching total.                  |
+| `limited`        | Whether the slice excludes matching records before or after it. |
+| `fields`         | Included record keys.                                           |
+
+A shorter slice caused by fewer remaining matches is valid. An empty response creates no file. Timed-out, failed-shard, malformed or unexpectedly incomplete responses produce an error instead of a partial download. “Download prepared” confirms that the browser was asked to download, not that the file was saved.
+
+<span id="website-teaser-sample-and-live-results" />
+
+### Use the examples
+
+The primary **Downloads** examples call the public APIs. Choose **Download results** to open the modal; no download starts automatically. Endpoint configuration is editable in Controls, and access or network errors remain visible.
+
+- [Latest website results (live)](?path=/story/components-syndicated-search-downloads--latest-website-results-live) queries English PreventionWeb content, newest first, with an initial page and download quantity of ten.
+- **Website teaser sample**, below, uses ten records captured from a sanitized local index on 10 November 2026. It exercises the standard pre-rendered teaser path. Its images use source-site URLs and depend on remote availability.
+- [Preparing](?path=/story/components-syndicated-search-downloads-fixtures--download-preparing), [empty](?path=/story/components-syndicated-search-downloads-fixtures--download-empty) and [failure](?path=/story/components-syndicated-search-downloads-fixtures--download-failure) states use deterministic data under **Downloads / Fixtures**.
+- [Local Drupal API](?path=/story/components-syndicated-search-downloads--local-drupal-api) requires a running local Drupal deployment and the [development guide’s trusted-CA setup](https://github.com/unisdr/undrr-mangrove/blob/main/docs/DEVELOPMENT.md#api-backed-download-examples).
+
+<Canvas
+  of={ExportFixtureStories.LatestWebsiteTeasers}
+  story={{ inline: false, height: '850px' }}
+/>
+
+The sample is a fixed fixture, not a current website listing. Its provenance is recorded in `stories/assets/fixtures/website-teaser-sample/results.json`. Network-dependent stories are excluded from deterministic CI and do not substitute fixtures when requests fail.
+
+### Integrate and localize
+
+Hydration accepts `data-show-export="true"`, `data-export-default-count="100"`, `data-export-contact-url="/contact"` and JSON `data-export-fields='["title","summary","theme_ids"]'`. Omit individual attributes to inherit shared defaults. An explicit empty field array permits ID and URL only; invalid field policies also fall back to those mandatory columns. Drupal wrappers that construct their own config must forward these options before editors can enable downloads. No backend export service is required for the indexed metadata above; release/configuration integration and any editor controls belong to the consumer.
+
+Export labels use the existing `lang` and `labels` override contract. The component’s `_labels.js` catalogue defines the `export*` keys, including function-valued range and status messages. New translations require native-speaker review.
+
+<span id="interaction-and-limits" />
+
+### Interaction and implementation
+
+> **Implementation note (for contributors):** Export state belongs to the modal session. The shared query builder retains search constraints; metadata projection, range bounds, request identity and file saving use separate utilities.
+
+The action is unavailable during loading, unsettled input, a failed search or when no matches are known. Opening the native dialog focuses its heading and makes the background inert. Close, Escape and a backdrop press followed by release outside dismiss it. Closing or changing the search cancels pending work and restores focus to the action, or the connected results area if the action is unavailable. Pagination alone does not change the chosen range. Reopening restores start 1, the bounded configured quantity and the default field choices, with Summary unchecked.
+
+During preparation, range and field controls are disabled. Format buttons remain focusable with `aria-disabled`; repeated activation is ignored. Progress and failures are announced beside the actions. Success leaves the modal open for confirmation or another format; failures allow retry. Scroll locking is shared with other Mangrove dialogs and respects the widget’s owner document.
+
+The request asks for exact totals and allowlisted metadata, without facets or highlights. Selecting Summary also requests the indexed teaser; an inert template extracts only its description as plain text. Taxonomy names reuse the shared paginated lookup and cache. Closing while that shared lookup is pending prevents a late file without cancelling other consumers’ lookup. Field choices project the result after retrieval. Client-side limits are not access control; endpoint owners must enforce server-side access and resource limits.
+
+The outline action, native controls and shared Dialog/button typography follow Mangrove conventions. Layout wraps for small screens and RTL; no motion or component-specific type overrides are added. The CSV action is primary, JSON is outlined, and contact help follows the controls. The contact prompt offers assistance with exports or API access; it does not provision access.
+
 ## Props
 
 ### Config object
@@ -612,6 +738,11 @@ them; the Drupal block's `auto` setting does this.
 | ----------------------- | -------------- | --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `searchEndpoint`        | string         | `https://www.undrr.org/search-endpoint` | API endpoint for Elasticsearch queries. Its HTML is rendered unsanitised — see [Endpoint trust contract](#endpoint-trust-contract)                                                                       |
 | `taxonomyEndpoint`      | string         | PreventionWeb v1 taxonomy URL           | Taxonomy API for country, hazard and theme facet labels. See [Taxonomy endpoint](#taxonomy-endpoint)                                                                                                     |
+| `showExport`            | boolean        | `false`                                 | Show the outlined Download results utility and native modal with CSV/JSON, visitor quantity and optional metadata fields.                                                                                |
+| `exportDefaultCount`    | number         | 100                                     | Initial requested download quantity, not a visitor maximum. Opening bounds the default by exact availability; ranges stay within 1,000 per file and the 10,000-result window.                            |
+| `exportFields`          | array or null  | `null` (all supported fields)           | Available optional output keys. Date/precision and taxonomy IDs/names stay paired. `[]` permits only mandatory ID and URL. Does not change backend access.                                               |
+| `exportContactUrl`      | string         | `https://www.preventionweb.net/contact` | Contact route for larger data requests or ongoing API-access discussions.                                                                                                                                |
+| `exportEndpoint`        | string         | `searchEndpoint`                        | Endpoint for download requests. Omit to use `searchEndpoint`. A consumer can give downloads a distinct URL, for example to tell them apart from browsing requests.                                       |
 | `resultsPerPage`        | number         | 50                                      | Number of results to display per page                                                                                                                                                                    |
 | `debounceDelay`         | number         | 500                                     | Milliseconds to wait after typing before searching. Only typing is debounced: the first search, Enter, Clear, back/forward and filter, sort, page and config changes run at once                         |
 | `minSearchLength`       | number         | 3                                       | Minimum characters required to trigger search                                                                                                                                                            |
@@ -977,6 +1108,10 @@ pass `dir` explicitly when external search or facet portals cross direction
 boundaries: a DOM portal cannot inherit direction from the widget's ancestors.
 
 ## Changelog
+
+- **1.9.0**, 2026-11-10 ([undrr/web-backlog#3314](https://gitlab.com/undrr/web-backlog/-/work_items/3314)): Add an opt-in Download results action opening a native modal with both bounded CSV/JSON metadata downloads, a conditional one-based start for matched sets of at least 1,000 and dynamically bounded quantity, a grouped quantity row with a read-only range preview and jointly corrected whole-number inputs, open-by-default field panel, primary CSV/outlined JSON actions and quiet icon Close, optional choices from a fixed field allowlist with an inheritable consumer field policy, an outlined utility action beneath pagination aligned to the reading direction, explicit scope and cap reporting, request cancellation, translated controls and status messages, hydration settings and a contact route for larger data needs. Existing widgets retain their current behaviour.
+
+  - Export readable taxonomy names alongside IDs and an optional plain-text teaser summary ([undrr/web-backlog#3314](https://gitlab.com/undrr/web-backlog/-/work_items/3314)). Summary is initially unchecked; unresolved selected taxonomy names block the file with retry guidance.
 
 - **1.8.1**, 2026-11-10 ([#1468](https://github.com/unisdr/undrr-mangrove/issues/1468)): Keep Type parents and subtypes together when selections change, including retained selections missing from current results. Selected subtypes retain their indentation and summary context. Keyboard highlighting follows the option value through asynchronous updates. Inherited children show a tint and pale checked indicator; parents with selected subtypes show a dash, with localized accessible descriptions. Search fields persist for the open dropdown session, pointer selection retains keyboard focus, and Escape dismisses the dropdown before its enclosing filter drawer.
 
