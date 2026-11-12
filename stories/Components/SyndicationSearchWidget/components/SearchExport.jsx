@@ -28,7 +28,7 @@ import {
 } from '../utils/exportMetadata';
 import { saveFile } from '../utils/saveFile';
 import {
-  EXPORT_FIELD_GROUPS,
+  availableExportGroups,
   DEFAULT_EXPORT_GROUPS,
   columnsForExportGroups,
   buildExportQuery,
@@ -45,6 +45,12 @@ export default function SearchExport({ isStale = false }) {
   const config = useSearchConfig();
   const state = useSearchState();
   const labels = useSearchLabels();
+  const fieldGroups = useMemo(
+    () => availableExportGroups(config.exportFields),
+    [config.exportFields]
+  );
+  const availableGroupIds = fieldGroups.map(group => group.id);
+  const availableGroupSet = new Set(availableGroupIds);
   const requestRef = useRef(null);
   const triggerRef = useRef(null);
   const dialogRef = useRef(null);
@@ -55,6 +61,7 @@ export default function SearchExport({ isStale = false }) {
   const [openKey, setOpenKey] = useState(null);
   const [status, setStatus] = useState(null);
   const [selectedGroups, setSelectedGroups] = useState(DEFAULT_EXPORT_GROUPS);
+  const selectedGroupSet = new Set(selectedGroups);
   const [countValue, setCountValue] = useState(() =>
     String(normalizeExportDefaultCount(config.exportDefaultCount))
   );
@@ -77,7 +84,10 @@ export default function SearchExport({ isStale = false }) {
       ),
     [config, query, facets, facetOperators, customFacets, sortBy]
   );
-  const requestKey = searchRequestKey(config.searchEndpoint, body);
+  const requestKey = JSON.stringify([
+    searchRequestKey(config.searchEndpoint, body),
+    availableGroupIds,
+  ]);
   const isOpen = openKey === requestKey && !isStale;
   const currentStatus =
     !isStale &&
@@ -268,7 +278,9 @@ export default function SearchExport({ isStale = false }) {
     const corrected = commitRange();
     const from = corrected.start - 1;
     const { count } = corrected;
-    const columns = columnsForExportGroups(selectedGroups);
+    const columns = columnsForExportGroups(
+      selectedGroups.filter(id => availableGroupSet.has(id))
+    );
     const controller = new AbortController();
     requestRef.current = controller;
     setStatus({
@@ -378,7 +390,9 @@ export default function SearchExport({ isStale = false }) {
         disabled={unavailable}
         onClick={() => {
           setStatus(null);
-          setSelectedGroups(DEFAULT_EXPORT_GROUPS);
+          setSelectedGroups(
+            DEFAULT_EXPORT_GROUPS.filter(id => availableGroupSet.has(id))
+          );
           setStartValue('1');
 
           setCountValue(String(Math.min(defaultCount, initialMaximum)));
@@ -546,12 +560,12 @@ export default function SearchExport({ isStale = false }) {
                 </legend>
                 <p id={fieldsHelpId}>{labels.exportFieldsHelp}</p>
                 <div className="mg-search__export-field-grid">
-                  {EXPORT_FIELD_GROUPS.map(group => (
+                  {fieldGroups.map(group => (
                     <Checkbox
                       key={group.id}
                       label={labels[group.label]}
                       value={group.id}
-                      checked={selectedGroups.includes(group.id)}
+                      checked={selectedGroupSet.has(group.id)}
                       disabled={busy}
                       onChange={event => {
                         const checked = event.target.checked;

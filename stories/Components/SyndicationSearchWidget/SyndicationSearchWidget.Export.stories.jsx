@@ -93,3 +93,11 @@ export const LocalDrupalApi = {
     },
   },
 };
+
+export const RestrictedFields = {
+  ...DownloadResults,
+  name: 'Restricted available fields',
+  args: {
+    config: { ...config, exportFields: ['title', 'summary', 'theme_ids'] },
+  },
+};

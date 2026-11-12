@@ -175,6 +175,8 @@ SyndicationSearchWidget.propTypes = {
     exportDefaultCount: PropTypes.number,
     /** Contact route for larger data requests or ongoing API access discussions. */
     exportContactUrl: PropTypes.string,
+    /** Available export columns; null inherits all supported fields. ID/URL and paired metadata remain required. */
+    exportFields: PropTypes.arrayOf(PropTypes.string),
     /**
      * CSS selector for a DOM element outside the widget where the facets
      * UI should be rendered (via React portal). Useful when a consuming

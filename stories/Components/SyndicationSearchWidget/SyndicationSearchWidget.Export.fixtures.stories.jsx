@@ -437,3 +437,26 @@ export const ChooseResultCount = {
     await expect(controls.getByRole('status')).toBeVisible();
   },
 };
+
+export const RestrictedFields = {
+  ...DownloadResults,
+  name: 'Restricted available fields',
+  args: {
+    config: {
+      ...DownloadResults.args.config,
+      exportFields: ['title', 'summary', 'theme_ids'],
+    },
+  },
+  play: async context => {
+    await openExport(context);
+    const modal = within(dialog(within(context.canvasElement)));
+    await expect(modal.getAllByRole('checkbox')).toHaveLength(3);
+    await expect(modal.getByRole('checkbox', { name: 'Title' })).toBeChecked();
+    await expect(
+      modal.getByRole('checkbox', { name: 'Summary' })
+    ).not.toBeChecked();
+    await expect(
+      modal.queryByRole('checkbox', { name: 'Language' })
+    ).not.toBeInTheDocument();
+  },
+};
