@@ -373,6 +373,7 @@ function FacetSelectComponent({
         searchThreshold={FACET_SEARCH_THRESHOLD}
         searchInputPlaceholder={labels.dropdownSearchPlaceholder}
         noOptionsText={labels.dropdownNoOptions}
+        analyticsLabel={`Search filter: ${key}`}
       />
       {showOperatorToggle && (
         <div className="mg-search__facet-operator">
@@ -391,11 +392,13 @@ function FacetSelectComponent({
                     ? 'mg-search__facet-operator-option--active'
                     : ''
                 }`}
+                data-vf-analytics-label="Search: Match any"
               >
                 <input
                   type="radio"
                   name={`${key}-operator`}
                   value="OR"
+                  data-vf-analytics-label="Search: Match any"
                   checked={currentOperator === 'OR'}
                   onChange={() => handleOperatorChange('OR')}
                 />
@@ -407,11 +410,13 @@ function FacetSelectComponent({
                     ? 'mg-search__facet-operator-option--active'
                     : ''
                 }`}
+                data-vf-analytics-label="Search: Match all"
               >
                 <input
                   type="radio"
                   name={`${key}-operator`}
                   value="AND"
+                  data-vf-analytics-label="Search: Match all"
                   checked={currentOperator === 'AND'}
                   onChange={() => handleOperatorChange('AND')}
                 />

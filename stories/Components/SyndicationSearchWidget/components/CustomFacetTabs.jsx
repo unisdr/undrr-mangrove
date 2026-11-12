@@ -28,12 +28,14 @@ export default function CustomFacetTabs({ widgetId }) {
           <label
             className="mg-search__scope-option"
             key={tabOptionValue(facet, index) ?? index}
+            data-vf-analytics-label={`Search tab: ${facet.id}: ${tabOptionValue(facet, index) ?? index}`}
           >
             <input
               type="radio"
               required
               name={`${widgetId}-${facet.id}`}
               value={String(index)}
+              data-vf-analytics-label={`Search tab: ${facet.id}: ${tabOptionValue(facet, index) ?? index}`}
               disabled={!isValidTabOption(option)}
               checked={selected[facet.id][0] === String(index)}
               onChange={() =>

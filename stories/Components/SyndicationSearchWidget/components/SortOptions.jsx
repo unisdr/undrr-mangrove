@@ -114,6 +114,7 @@ const SortSelect = memo(function SortSelect({
         value={value}
         onChange={onChange}
         multiple={false}
+        analyticsLabel="Search: Sort"
       />
     </fieldset>
   );

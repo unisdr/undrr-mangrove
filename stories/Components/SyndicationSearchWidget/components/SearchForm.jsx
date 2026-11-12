@@ -83,7 +83,11 @@ export function SearchForm({
       data-vf-google-analytics-region={analyticsRegion(config, 'form')}
     >
       <div className="mg-search__input-wrapper">
-        <label htmlFor={inputId} className="mg-u-sr-only">
+        <label
+          htmlFor={inputId}
+          className="mg-u-sr-only"
+          data-vf-analytics-label="Search: Query"
+        >
           {labels.searchLabel}
         </label>
         <input
@@ -94,6 +98,7 @@ export function SearchForm({
           value={value}
           onChange={handleChange}
           aria-describedby={`${inputId}-hint`}
+          data-vf-analytics-label="Search: Query"
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
@@ -112,6 +117,7 @@ export function SearchForm({
             className="mg-search__clear"
             onClick={handleClear}
             aria-label={labels.clearSearch}
+            data-vf-analytics-label="Search: Clear"
           >
             <span className="mg-icon mg-icon-close" aria-hidden="true" />
           </button>
@@ -126,6 +132,7 @@ export function SearchForm({
         className="mg-button mg-button-primary mg-search__submit mg-form-action__action"
         aria-label={labels.submitSearch}
         aria-busy={isLoading || isStale}
+        data-vf-analytics-label="Search: Submit"
       >
         <span className="mg-search__submit-icon" aria-hidden="true">
           <span className="mg-icon mg-icon-search" />

@@ -362,7 +362,13 @@ OnThisPageNav's repository wrapper follows this contract; there is no published
 `components/OnThisPageNav.js` entry or React hydration adapter. Production vanilla
 markup keeps its documented authored labels and data attributes.
 
+## Analytics
+
+UNDRR sites load a shared GA4 click tracker that names each click after the element's visible text unless `data-vf-analytics-label` is set, and reports the innermost `data-vf-google-analytics-region`. The icon-only scroll buttons carry `On this page: Previous` and `On this page: Next`; section links keep their heading text. On init the script sets `data-vf-google-analytics-region="on-this-page"` on the nav unless it already has a region, and removes its default on destroy. The repository React wrapper accepts an `analyticsRegion` prop to set a different one.
+
 ## Changelog
+
+- **1.8**, 2026-11-12 ([undrr/web-backlog#3320](https://gitlab.com/undrr/web-backlog/-/work_items/3320)): The scroll buttons carry fixed `data-vf-analytics-label` values for the UNDRR click tracker, and the script gives the nav a default `on-this-page` analytics region when the host has not set one (the React wrapper takes an `analyticsRegion` prop). No visual or behavioural change.
 
 - **1.7**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance. The React wrapper updates its accessible name when language changes.
 

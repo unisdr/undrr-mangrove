@@ -214,7 +214,13 @@ for consumers needing the same strings outside React.
 is the arrow-navigation name template, with `{label}` replaced by that region
 name. Give each rail a distinct content-specific name.
 
+## Analytics
+
+UNDRR sites load a shared GA4 click tracker that names each click after the element's visible text unless `data-vf-analytics-label` is set, and reports the innermost `data-vf-google-analytics-region`. The arrow buttons carry `Scroll: Left` and `Scroll: Right`, matching their accessible names, instead of the arrow glyphs. ScrollContainer sets no region of its own, so clicks report the host's region.
+
 ## Changelog
+
+- **1.4.1**, 2026-11-12 ([undrr/web-backlog#3320](https://gitlab.com/undrr/web-backlog/-/work_items/3320)): The arrow buttons carry fixed `data-vf-analytics-label` values (`Scroll: Left`, `Scroll: Right`) for the UNDRR click tracker. No visual or behavioural change.
 
 - **1.4**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance. Translates the default region and arrow-navigation names, including the `{label}` navigation template.
 

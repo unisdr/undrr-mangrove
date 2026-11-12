@@ -11,6 +11,7 @@ import {
   formatLabel,
   MenuResultTrail,
   getSiteSearchUrl,
+  followSiteSearchLink,
 } from '../filterUtils';
 
 const EMPTY_PATH = [];
@@ -234,6 +235,7 @@ export function Sidebar({
           className="mg-mega-mobile-sidebar__close"
           onClick={onClose}
           aria-label={labels.closeMobileNavLabel}
+          data-vf-analytics-label="Mega menu: Close"
         >
           {labels.closeLabel}
           <span aria-hidden="true">×</span>
@@ -253,6 +255,7 @@ export function Sidebar({
               onChange={e => setFilterQuery(e.target.value)}
               placeholder={labels.filterPlaceholder || 'Filter menu items...'}
               aria-label={labels.filterPlaceholder || 'Filter menu items'}
+              data-vf-analytics-label="Mega menu: Filter"
               ref={mobileFilterInputRef}
             />
             {filterQuery && (
@@ -264,6 +267,7 @@ export function Sidebar({
                   mobileFilterInputRef.current?.focus();
                 }}
                 aria-label={labels.clearFilterLabel || 'Clear filter'}
+                data-vf-analytics-label="Mega menu: Clear filter"
               >
                 <span aria-hidden="true">×</span>
               </button>
@@ -316,9 +320,22 @@ export function Sidebar({
               {enableSiteSearch && filterQuery.trim() && (
                 <div className="mg-mega-filter__empty-actions">
                   <a
-                    href={getSiteSearchUrl(searchUrl, filterQuery)}
+                    href={getSiteSearchUrl(searchUrl)}
                     className="mg-button mg-button-secondary mg-button-outline mg-mega-filter__empty-search-btn"
-                    onClick={onClose}
+                    data-vf-analytics-label="Mega menu: Site search"
+                    onClick={event => {
+                      followSiteSearchLink(
+                        event,
+                        getSiteSearchUrl(searchUrl, filterQuery)
+                      );
+                      onClose();
+                    }}
+                    onAuxClick={event =>
+                      followSiteSearchLink(
+                        event,
+                        getSiteSearchUrl(searchUrl, filterQuery)
+                      )
+                    }
                   >
                     <span>
                       {formatLabel(labels.searchSiteLabel, {
@@ -337,9 +354,22 @@ export function Sidebar({
           {enableSiteSearch && filteredResults.length > 0 && (
             <div className="mg-mega-filter__fallback">
               <a
-                href={getSiteSearchUrl(searchUrl, filterQuery)}
+                href={getSiteSearchUrl(searchUrl)}
                 className="mg-button mg-button-secondary mg-button-outline mg-mega-filter__site-search-link"
-                onClick={onClose}
+                data-vf-analytics-label="Mega menu: Site search"
+                onClick={event => {
+                  followSiteSearchLink(
+                    event,
+                    getSiteSearchUrl(searchUrl, filterQuery)
+                  );
+                  onClose();
+                }}
+                onAuxClick={event =>
+                  followSiteSearchLink(
+                    event,
+                    getSiteSearchUrl(searchUrl, filterQuery)
+                  )
+                }
               >
                 <span>
                   {formatLabel(labels.searchSiteLabel, {
@@ -360,7 +390,11 @@ export function Sidebar({
           key={path.join('-')}
         >
           {path.length > 0 && (
-            <button className="mg-mega-mobile-sidebar__back" onClick={back}>
+            <button
+              className="mg-mega-mobile-sidebar__back"
+              data-vf-analytics-label="Mega menu: Back"
+              onClick={back}
+            >
               <span
                 className="mg-mega-mobile-sidebar__arrow"
                 aria-hidden="true"
@@ -405,6 +439,7 @@ export function Sidebar({
                     <button
                       className="mg-mega-sidebar-section__item"
                       data-mg-menu-entry
+                      data-vf-analytics-label="Mega menu: Section"
                       onClick={() => enter(index)}
                     >
                       {item.title}

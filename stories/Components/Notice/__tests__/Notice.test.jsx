@@ -90,6 +90,14 @@ describe('Notice', () => {
     expect(screen.queryByText('Dismissible notice')).not.toBeInTheDocument();
   });
 
+  it('gives the icon-only dismiss button a fixed analytics label', () => {
+    render(<Notice title="Dismissible notice" isDismissible />);
+    expect(document.querySelector('.mg-notice__dismiss')).toHaveAttribute(
+      'data-vf-analytics-label',
+      'Notice: Dismiss'
+    );
+  });
+
   it('shows a working dismiss button without onDismiss', () => {
     render(<Notice title="Self-managed" isDismissible />);
 

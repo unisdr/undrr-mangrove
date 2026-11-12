@@ -15,6 +15,12 @@ export default function galleryFromElement(container) {
     loop: dataset.loop === 'true',
   };
 
+  // A host region on the container would be shadowed by the default one on
+  // the gallery root, so carry it over instead.
+  if (dataset.vfGoogleAnalyticsRegion) {
+    props.analyticsRegion = dataset.vfGoogleAnalyticsRegion;
+  }
+
   // Media array is required — parse from JSON data attribute
   try {
     props.media = dataset.media ? JSON.parse(dataset.media) : [];

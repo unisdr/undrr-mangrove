@@ -50,6 +50,7 @@ The textarea component is a resizable multi-line input with label, help text, an
 - Help text and error text are linked via `aria-describedby`.
 - Error state sets `aria-invalid="true"` and wraps the error message in `role="alert"`.
 - The textarea is resizable vertically by default.
+- UNDRR's shared click tracker names a click on a textarea after its `name` and a click on the label after its `for` id, which is generated when no `id` is passed. Set `analyticsLabel` to give the textarea and its label a fixed `data-vf-analytics-label` instead.
 
 ## See also
 
@@ -57,6 +58,7 @@ The textarea component is a resizable multi-line input with label, help text, an
 
 ## Changelog
 
+- **2.2**, 2026-11-12 ([undrr/web-backlog#3320](https://gitlab.com/undrr/web-backlog/-/work_items/3320)): Added an optional `analyticsLabel` prop, which sets the same `data-vf-analytics-label` on the textarea and its label. Textareas without it render as before.
 - **2.1.1**, 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a textarea whose own language is not Arabic.
 - **2.1**, 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Adopted the shared light filled field surface, subtle neutral border, small radius and token-driven focus ring.
 - **2.0**, 2026-02-24: **Breaking:** Rewritten with BEM classes, accessibility, and PropTypes

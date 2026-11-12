@@ -86,6 +86,7 @@ export function TopBarItem({
           onClick={onMobileClick}
           aria-haspopup="dialog"
           aria-controls={sidebarId}
+          data-vf-analytics-label="Mega menu: Section"
         >
           {label}
         </button>
@@ -103,6 +104,7 @@ export function TopBarItem({
           className="mg-mega-topbar__item-link"
           ref={ref}
           aria-expanded={hasPanel ? String(isActive) : undefined}
+          data-vf-analytics-label="Mega menu: Section"
         >
           {label}
         </button>

@@ -78,6 +78,14 @@ describe('ScrollContainer Component', () => {
     expect(screen.getByTestId('scroll-item-0')).toBeInTheDocument();
   });
 
+  it('gives the arrow buttons fixed analytics labels', () => {
+    renderScrollContainer({ lang: 'fr' });
+
+    const [left, right] = document.querySelectorAll('.mg-scroll__nav-button');
+    expect(left).toHaveAttribute('data-vf-analytics-label', 'Scroll: Left');
+    expect(right).toHaveAttribute('data-vf-analytics-label', 'Scroll: Right');
+  });
+
   it('makes the overflow region keyboard-focusable and names its navigation', () => {
     renderScrollContainer({ ariaLabel: 'Featured publications' });
 

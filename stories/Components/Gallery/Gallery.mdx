@@ -91,6 +91,7 @@ The gallery handles landscape, portrait, square, and panoramic images gracefully
 | `loop`              | boolean  | `false`     | Enable infinite loop navigation                         |
 | `arrowStyle`        | string   | `'overlay'` | Arrow style: `'overlay'` or `'corner'`                  |
 | `onMediaChange`     | function | `undefined` | Callback when media item changes: `(index, item) => {}` |
+| `analyticsRegion`   | string   | `'gallery'` | Click-tracking region on the root; `''` omits it        |
 
 ### Media item object
 
@@ -286,7 +287,13 @@ explains language matching, fallback, direction and hydration precedence.
 `components/Gallery.js` exports `getGalleryLabels(lang, labels)`
 for consumers needing the same strings outside React.
 
+## Analytics
+
+UNDRR sites load a shared GA4 click tracker that names each click after the element's visible text unless `data-vf-analytics-label` is set, and reports the innermost `data-vf-google-analytics-region`. The arrows carry `Gallery: Previous` and `Gallery: Next` (both arrow styles) and each thumbnail carries `Gallery: Thumbnail`, so reports do not split by arrow glyph or image. The root gets `data-vf-google-analytics-region="gallery"`; set `analyticsRegion` to rename it. When hydrating, a non-empty `data-vf-google-analytics-region` on the container is carried over to the root. Because the region covers the whole gallery, links inside HTML slides report under it rather than the page's region. Swipe and keyboard navigation are not tracked.
+
 ## Changelog
+
+- **1.6**, 2026-11-12 ([undrr/web-backlog#3320](https://gitlab.com/undrr/web-backlog/-/work_items/3320)): Arrows and thumbnails carry fixed `data-vf-analytics-label` values for the UNDRR click tracker, and the root gets a default `gallery` analytics region, overridable with the new `analyticsRegion` prop or a region on the hydration container. No visual or behavioural change.
 
 - **1.5**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance.
 

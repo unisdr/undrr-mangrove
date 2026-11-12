@@ -202,6 +202,7 @@ export function ActiveFilters() {
                 field: chip.fieldLabel,
                 value: chip.label,
               })}
+              data-vf-analytics-label="Search: Remove filter"
             >
               <span className="mg-search__filter-chip-label">{chip.label}</span>
               <span
@@ -223,6 +224,7 @@ export function ActiveFilters() {
           aria-label={interpolateLabel(labels.clearAllFiltersLabel, {
             count: chips.length,
           })}
+          data-vf-analytics-label="Search: Clear all filters"
         >
           {labels.clearAllFilters}
         </button>

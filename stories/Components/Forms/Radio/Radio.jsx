@@ -24,6 +24,7 @@ import PropTypes from 'prop-types';
  * @param {string} [props.errorText]           Error message displayed below the radio button
  * @param {string} [props.labelPosition='after'] Label position: 'before' or 'after'
  * @param {string} [props.className]           Additional CSS class for the wrapper
+ * @param {string} [props.analyticsLabel]      Fixed `data-vf-analytics-label` for the input and its label, so click tracking does not report the visible text or a generated id
  */
 export function Radio({
   id,
@@ -38,6 +39,7 @@ export function Radio({
   errorText,
   labelPosition = 'after',
   className,
+  analyticsLabel,
   ...rest
 }) {
   const autoId = useId();
@@ -54,7 +56,11 @@ export function Radio({
     .join(' ');
 
   const labelElement = label && (
-    <label className="mg-form-check__label" htmlFor={radioId}>
+    <label
+      className="mg-form-check__label"
+      htmlFor={radioId}
+      data-vf-analytics-label={analyticsLabel}
+    >
       {label}
     </label>
   );
@@ -76,6 +82,7 @@ export function Radio({
         aria-invalid={error || undefined}
         aria-describedby={errorId}
         {...(!label ? { 'aria-label': value } : {})}
+        data-vf-analytics-label={analyticsLabel}
         {...rest}
       />
 
@@ -103,6 +110,8 @@ Radio.propTypes = {
   errorText: PropTypes.string,
   labelPosition: PropTypes.oneOf(['before', 'after']),
   className: PropTypes.string,
+  /** Fixed `data-vf-analytics-label` for the input and its label. */
+  analyticsLabel: PropTypes.string,
 };
 
 export default Radio;

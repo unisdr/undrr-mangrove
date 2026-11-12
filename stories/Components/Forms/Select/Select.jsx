@@ -29,6 +29,7 @@ const EMPTY_OPTIONS = [];
  * @param {boolean} [props.error=false]    Whether the select is in an error state
  * @param {string} [props.errorText]       Error message displayed below the select
  * @param {string} [props.className]       Additional CSS class for the wrapper
+ * @param {string} [props.analyticsLabel]  Fixed `data-vf-analytics-label` for the select and its label, so click tracking does not report the visible text or a generated id
  */
 export function Select({
   id,
@@ -46,6 +47,7 @@ export function Select({
   error = false,
   errorText,
   className,
+  analyticsLabel,
   ...rest
 }) {
   const autoId = useId();
@@ -74,7 +76,11 @@ export function Select({
   return (
     <div className={['mg-form-field', className].filter(Boolean).join(' ')}>
       {label && (
-        <label className={labelClassName} htmlFor={selectId}>
+        <label
+          className={labelClassName}
+          htmlFor={selectId}
+          data-vf-analytics-label={analyticsLabel}
+        >
           {label}
         </label>
       )}
@@ -91,6 +97,7 @@ export function Select({
         aria-describedby={describedBy}
         aria-invalid={error || undefined}
         {...(!label ? { 'aria-label': placeholder || 'Select' } : {})}
+        data-vf-analytics-label={analyticsLabel}
         {...rest}
       >
         {placeholder && (
@@ -146,6 +153,8 @@ Select.propTypes = {
   error: PropTypes.bool,
   errorText: PropTypes.string,
   className: PropTypes.string,
+  /** Fixed `data-vf-analytics-label` for the select and its label. */
+  analyticsLabel: PropTypes.string,
 };
 
 export default Select;

@@ -22,6 +22,7 @@ const ArrowButtons = React.memo(
           className="mg-scroll__nav-button"
           onClick={() => onScroll('left')}
           aria-label={scrollLeftLabel}
+          data-vf-analytics-label="Scroll: Left"
         >
           ←
         </button>
@@ -30,6 +31,7 @@ const ArrowButtons = React.memo(
           className="mg-scroll__nav-button"
           onClick={() => onScroll('right')}
           aria-label={scrollRightLabel}
+          data-vf-analytics-label="Scroll: Right"
         >
           →
         </button>
