@@ -327,3 +327,18 @@ test('reads opt-in export settings without requiring a Drupal endpoint change', 
     ).config.showExport
   ).toBe(false);
 });
+
+test.each(['[]', '["title","theme_names"]', '{bad', 'null', '{}'])(
+  'explicit export field attributes stay distinct from inheritance: %s',
+  value => {
+    const parsed = syndicationSearchWidgetFromElement(
+      makeContainer({ 'export-fields': value })
+    ).config;
+    expect(parsed.exportFields).toEqual(
+      value === '["title","theme_names"]' ? ['title', 'theme_names'] : []
+    );
+    expect(
+      syndicationSearchWidgetFromElement(makeContainer()).config
+    ).not.toHaveProperty('exportFields');
+  }
+);

@@ -1270,3 +1270,70 @@ test('an unresolved name refreshes an earlier shared cache once before saving', 
     fetch.mock.calls.filter(([, options]) => options?.method !== 'POST')
   ).toHaveLength(1);
 });
+
+test('configured field availability restricts visitor choices and both output formats', async () => {
+  setup(true, {}, response(25), {
+    exportFields: ['title', 'posted_at', 'hazard_ids'],
+  });
+  expect(screen.getAllByRole('checkbox')).toHaveLength(3);
+  expect(
+    screen.queryByRole('checkbox', { name: 'Summary' })
+  ).not.toBeInTheDocument();
+  expect(
+    screen.queryByRole('checkbox', { name: 'Themes' })
+  ).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Download JSON' }));
+  await waitFor(() => expect(click).toHaveBeenCalledTimes(1));
+  const json = JSON.parse(await blobText(URL.createObjectURL.mock.calls[0][0]));
+  expect(json.scope.fields).toEqual([
+    'id',
+    'title',
+    'url',
+    'posted_at',
+    'hazard_ids',
+    'hazard_names',
+  ]);
+  expect(Object.keys(json.records[0])).toEqual(json.scope.fields);
+  fireEvent.click(screen.getByRole('button', { name: 'Download CSV' }));
+  await waitFor(() => expect(click).toHaveBeenCalledTimes(2));
+  expect(
+    (await blobText(URL.createObjectURL.mock.calls[1][0])).split('\r\n')[0]
+  ).toBe('"id","title","url","posted_at","hazard_ids","hazard_names"');
+  expect(
+    JSON.parse(fetch.mock.calls[0][1].body)._source.includes
+  ).not.toContain('teaser');
+});
+
+test('an explicit empty field policy permits only mandatory identity columns', async () => {
+  setup(true, {}, response(25), { exportFields: [] });
+  expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Download JSON' }));
+  await waitFor(() => expect(click).toHaveBeenCalledTimes(1));
+  const json = JSON.parse(await blobText(URL.createObjectURL.mock.calls[0][0]));
+  expect(json.scope.fields).toEqual(['id', 'url']);
+  expect(Object.keys(json.records[0])).toEqual(['id', 'url']);
+});
+
+test('field policy changes cancel pending files and reset the next modal to allowed choices', async () => {
+  const policy = { exportFields: null };
+  const { stale } = setup(true, {}, response(25), policy);
+  let resolve;
+  fetch.mockImplementation(
+    () =>
+      new Promise(done => {
+        resolve = done;
+      })
+  );
+  fireEvent.click(screen.getByRole('checkbox', { name: 'Summary' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Download JSON' }));
+  const signal = fetch.mock.calls[0][1].signal;
+  policy.exportFields = ['title'];
+  stale(false);
+  expect(signal.aborted).toBe(true);
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  await act(async () => resolve({ ok: true, json: async () => response(25) }));
+  expect(click).not.toHaveBeenCalled();
+  fireEvent.click(screen.getByRole('button', { name: 'Download results' }));
+  expect(screen.getAllByRole('checkbox')).toHaveLength(1);
+  expect(screen.getByRole('checkbox', { name: 'Title' })).toBeChecked();
+});

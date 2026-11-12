@@ -2,6 +2,7 @@ import { DEFAULT_CONFIG } from '../utils/constants';
 import { buildQuery } from '../utils/queryBuilder';
 import {
   EXPORT_COLUMNS,
+  availableExportGroups,
   exportColumns,
   columnsForExportGroups,
   DEFAULT_EXPORT_GROUPS,
@@ -331,4 +332,20 @@ test('rejects partial slices and requests outside the result window', () => {
   expect(() =>
     readExportResponse(rangeResponse(80000, 10000, 1), 1, 10000)
   ).toThrow();
+});
+
+test('field availability inherits supported groups or applies a paired allowlist', () => {
+  expect(availableExportGroups(null).map(group => group.id)).toHaveLength(9);
+  expect(availableExportGroups(undefined).map(group => group.id)).toHaveLength(
+    9
+  );
+  expect(availableExportGroups([])).toEqual([]);
+  expect(
+    availableExportGroups([
+      'display_date_precision',
+      'theme_names',
+      'body',
+    ]).map(group => group.id)
+  ).toEqual(['readerDate', 'theme']);
+  expect(availableExportGroups('title')).toEqual([]);
 });

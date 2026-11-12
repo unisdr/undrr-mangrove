@@ -42,6 +42,14 @@ export default function syndicationSearchWidgetFromElement(container) {
     config.exportDefaultCount = Number(dataset.exportDefaultCount);
   if (dataset.exportContactUrl)
     config.exportContactUrl = dataset.exportContactUrl;
+  if (dataset.exportFields !== undefined) {
+    try {
+      const fields = JSON.parse(dataset.exportFields);
+      config.exportFields = Array.isArray(fields) ? fields : [];
+    } catch {
+      config.exportFields = [];
+    }
+  }
 
   // Boolean props (only set if explicitly present)
   if (dataset.showSort !== undefined)

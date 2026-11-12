@@ -92,6 +92,13 @@ export function exportColumns(fields = EXPORT_COLUMNS) {
   return EXPORT_COLUMNS.filter(key => selected.has(key));
 }
 
+export function availableExportGroups(fields) {
+  const columns = fields == null ? EXPORT_COLUMNS : exportColumns(fields);
+  return EXPORT_FIELD_GROUPS.filter(group =>
+    group.columns.every(column => columns.includes(column))
+  );
+}
+
 export function columnsForExportGroups(groups) {
   return exportColumns(
     EXPORT_FIELD_GROUPS.filter(group => groups.includes(group.id)).flatMap(
