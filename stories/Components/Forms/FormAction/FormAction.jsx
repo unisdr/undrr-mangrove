@@ -37,8 +37,10 @@ export function FormAction({
     ),
     'aria-describedby': describedBy,
     'aria-invalid': errorText ? 'true' : control.props['aria-invalid'],
-    'data-vf-analytics-label':
-      control.props['data-vf-analytics-label'] ?? analyticsLabel,
+    ...(control.props['data-vf-analytics-label'] === undefined &&
+      analyticsLabel !== undefined && {
+        'data-vf-analytics-label': analyticsLabel,
+      }),
   });
   const actionElement = cloneElement(action, {
     key: action.key || 'action',

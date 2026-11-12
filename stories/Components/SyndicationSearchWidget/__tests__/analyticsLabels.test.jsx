@@ -149,7 +149,7 @@ it('labels the drawer close and apply buttons and the sort trigger', () => {
   ).toHaveAttribute(LABEL, 'Search: Sort');
 });
 
-it('labels result tabs by facet id', () => {
+it('labels each result tab by facet id and stable value', () => {
   const facet = {
     id: 'event-status',
     title: 'Event period',
@@ -165,11 +165,12 @@ it('labels result tabs by facet id', () => {
       <CustomFacetTabs widgetId="w" />
     </SearchProvider>
   );
-  screen.getAllByRole('radio').forEach(radio => {
-    expect(radio).toHaveAttribute(LABEL, 'Search tab: event-status');
-    expect(radio.closest('label')).toHaveAttribute(
-      LABEL,
-      'Search tab: event-status'
-    );
+  const expected = [
+    'Search tab: event-status: upcoming',
+    'Search tab: event-status: past',
+  ];
+  screen.getAllByRole('radio').forEach((radio, index) => {
+    expect(radio).toHaveAttribute(LABEL, expected[index]);
+    expect(radio.closest('label')).toHaveAttribute(LABEL, expected[index]);
   });
 });

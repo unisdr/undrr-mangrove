@@ -47,7 +47,7 @@ export default function OnThisPageNav({
     return () => {
       if (nav) mgOnThisPageNavDestroy(nav);
     };
-  }, [depth, contentSelector, label, items, ctaHref, ctaText]);
+  }, [depth, contentSelector, label, items, ctaHref, ctaText, analyticsRegion]);
 
   return (
     <nav

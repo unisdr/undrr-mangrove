@@ -36,7 +36,7 @@ export default function megaMenuFromElement(container) {
 
   // A region on the host wins over the component default, so the nav reports
   // under the host's name rather than shadowing it with `mega-menu`.
-  if (container.hasAttribute('data-vf-google-analytics-region')) {
+  if (dataset.vfGoogleAnalyticsRegion) {
     props.analyticsRegion = dataset.vfGoogleAnalyticsRegion;
   }
 

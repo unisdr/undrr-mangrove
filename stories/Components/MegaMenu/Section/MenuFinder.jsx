@@ -5,6 +5,7 @@ import {
   filterMenuItems,
   formatLabel,
   getSiteSearchUrl,
+  followSiteSearchLink,
   MenuResultTrail,
 } from '../filterUtils';
 
@@ -223,10 +224,16 @@ export default function MenuFinder({
       {query.trim() && enableSiteSearch && (
         <div className="mg-mega-menu-finder__footer">
           <a
-            href={getSiteSearchUrl(searchUrl, query)}
+            href={getSiteSearchUrl(searchUrl)}
             className="mg-button mg-button-secondary mg-button-outline mg-mega-filter__site-search-link"
             data-vf-analytics-label="Mega menu: Site search"
-            onClick={handleLinkClick}
+            onClick={event => {
+              followSiteSearchLink(event, getSiteSearchUrl(searchUrl, query));
+              handleLinkClick(event);
+            }}
+            onAuxClick={event =>
+              followSiteSearchLink(event, getSiteSearchUrl(searchUrl, query))
+            }
           >
             <span>
               {formatLabel(labels.searchSiteLabel, { query: query.trim() })}

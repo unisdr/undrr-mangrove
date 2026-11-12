@@ -502,7 +502,34 @@ describe('MegaMenu Mobile Filter UI', () => {
     const searchLink = within(dialog).getByRole('link', {
       name: /Search entire site for "doc"/i,
     });
-    expect(searchLink).toHaveAttribute('href', '/search?q=doc');
+    // The rendered href leaves out the query, so click tracking never reports
+    // what the visitor typed; the query is added only while the link is
+    // followed, then removed again.
+    expect(searchLink).toHaveAttribute('href', '/search?q=');
+    jest.useFakeTimers();
+    try {
+      // A right click must not put the query into the context menu's link.
+      fireEvent(
+        searchLink,
+        new MouseEvent('auxclick', { bubbles: true, button: 2 })
+      );
+      expect(searchLink).toHaveAttribute('href', '/search?q=');
+      // A middle click opens a new tab and leaves the drawer open.
+      fireEvent(
+        searchLink,
+        new MouseEvent('auxclick', { bubbles: true, button: 1 })
+      );
+      expect(searchLink).toHaveAttribute('href', '/search?q=doc');
+      jest.runOnlyPendingTimers();
+      expect(searchLink).toHaveAttribute('href', '/search?q=');
+      // A click follows the link and closes the drawer.
+      fireEvent.click(searchLink);
+      expect(searchLink).toHaveAttribute('href', '/search?q=doc');
+      jest.runOnlyPendingTimers();
+      expect(searchLink).toHaveAttribute('href', '/search?q=');
+    } finally {
+      jest.useRealTimers();
+    }
   });
 
   it('clears mobile filter and restores normal navigation on clear button click', () => {
@@ -557,7 +584,19 @@ describe('MegaMenu Mobile Filter UI', () => {
     const siteSearchBtn = within(dialog).getByRole('link', {
       name: /Search entire site for "nonexistent"/i,
     });
-    expect(siteSearchBtn).toHaveAttribute('href', '/search#query=nonexistent');
+    expect(siteSearchBtn).toHaveAttribute('href', '/search#query=');
+    jest.useFakeTimers();
+    try {
+      fireEvent.click(siteSearchBtn);
+      expect(siteSearchBtn).toHaveAttribute(
+        'href',
+        '/search#query=nonexistent'
+      );
+      jest.runOnlyPendingTimers();
+      expect(siteSearchBtn).toHaveAttribute('href', '/search#query=');
+    } finally {
+      jest.useRealTimers();
+    }
   });
 
   it('hides site search on mobile when enableSiteSearch is false', () => {

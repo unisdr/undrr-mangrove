@@ -11,6 +11,7 @@ import {
   formatLabel,
   MenuResultTrail,
   getSiteSearchUrl,
+  followSiteSearchLink,
 } from '../filterUtils';
 
 const EMPTY_PATH = [];
@@ -319,10 +320,22 @@ export function Sidebar({
               {enableSiteSearch && filterQuery.trim() && (
                 <div className="mg-mega-filter__empty-actions">
                   <a
-                    href={getSiteSearchUrl(searchUrl, filterQuery)}
+                    href={getSiteSearchUrl(searchUrl)}
                     className="mg-button mg-button-secondary mg-button-outline mg-mega-filter__empty-search-btn"
                     data-vf-analytics-label="Mega menu: Site search"
-                    onClick={onClose}
+                    onClick={event => {
+                      followSiteSearchLink(
+                        event,
+                        getSiteSearchUrl(searchUrl, filterQuery)
+                      );
+                      onClose();
+                    }}
+                    onAuxClick={event =>
+                      followSiteSearchLink(
+                        event,
+                        getSiteSearchUrl(searchUrl, filterQuery)
+                      )
+                    }
                   >
                     <span>
                       {formatLabel(labels.searchSiteLabel, {
@@ -341,10 +354,22 @@ export function Sidebar({
           {enableSiteSearch && filteredResults.length > 0 && (
             <div className="mg-mega-filter__fallback">
               <a
-                href={getSiteSearchUrl(searchUrl, filterQuery)}
+                href={getSiteSearchUrl(searchUrl)}
                 className="mg-button mg-button-secondary mg-button-outline mg-mega-filter__site-search-link"
                 data-vf-analytics-label="Mega menu: Site search"
-                onClick={onClose}
+                onClick={event => {
+                  followSiteSearchLink(
+                    event,
+                    getSiteSearchUrl(searchUrl, filterQuery)
+                  );
+                  onClose();
+                }}
+                onAuxClick={event =>
+                  followSiteSearchLink(
+                    event,
+                    getSiteSearchUrl(searchUrl, filterQuery)
+                  )
+                }
               >
                 <span>
                   {formatLabel(labels.searchSiteLabel, {

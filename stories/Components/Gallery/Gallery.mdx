@@ -289,7 +289,7 @@ for consumers needing the same strings outside React.
 
 ## Analytics
 
-UNDRR sites load a shared GA4 click tracker that names each click after the element's visible text unless `data-vf-analytics-label` is set, and reports the innermost `data-vf-google-analytics-region`. The arrows carry `Gallery: Previous` and `Gallery: Next` (both arrow styles) and each thumbnail carries `Gallery: Thumbnail`, so reports do not split by arrow glyph or image. The root gets `data-vf-google-analytics-region="gallery"`; set `analyticsRegion` to rename it. When hydrating, a `data-vf-google-analytics-region` on the container is carried over to the root. Swipe and keyboard navigation are not tracked.
+UNDRR sites load a shared GA4 click tracker that names each click after the element's visible text unless `data-vf-analytics-label` is set, and reports the innermost `data-vf-google-analytics-region`. The arrows carry `Gallery: Previous` and `Gallery: Next` (both arrow styles) and each thumbnail carries `Gallery: Thumbnail`, so reports do not split by arrow glyph or image. The root gets `data-vf-google-analytics-region="gallery"`; set `analyticsRegion` to rename it. When hydrating, a non-empty `data-vf-google-analytics-region` on the container is carried over to the root. Because the region covers the whole gallery, links inside HTML slides report under it rather than the page's region. Swipe and keyboard navigation are not tracked.
 
 ## Changelog
 

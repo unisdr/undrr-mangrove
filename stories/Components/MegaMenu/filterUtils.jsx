@@ -268,6 +268,31 @@ export function getSiteSearchUrl(searchUrl = '/search', query = '') {
 }
 
 /**
+ * Puts the query into a site-search link only while it is being followed.
+ *
+ * The link renders without the query, so the UNDRR click tracker, which reads
+ * `href` on mousedown, never reports what the visitor typed. On click or
+ * auxclick the full URL is set before the browser follows the link, then the
+ * query-free `href` is restored for later clicks (for example after opening it
+ * in a new tab).
+ *
+ * @param {Event} event - The click or auxclick event on the link.
+ * @param {string} fullUrl - The destination including the query.
+ */
+export function followSiteSearchLink(event, fullUrl) {
+  // auxclick also fires for the secondary button; only a middle click follows
+  // the link, and a right click must keep the query out of the context menu.
+  if (event.type === 'auxclick' && event.button !== 1) return;
+  const link = event.currentTarget;
+  const base = link.getAttribute('href');
+  link.setAttribute('href', fullUrl);
+  const view = link.ownerDocument?.defaultView || window;
+  view.setTimeout(() => {
+    if (link.getAttribute('href') === fullUrl) link.setAttribute('href', base);
+  }, 0);
+}
+
+/**
  * Replaces `{var}` placeholders in a template string with provided variables.
  *
  * @param {string} template - The template string.

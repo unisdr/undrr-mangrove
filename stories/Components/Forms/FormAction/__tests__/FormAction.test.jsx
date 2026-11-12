@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { axe } from 'jest-axe';
 import { FormAction } from '../FormAction';
+import { TextInput } from '../../TextInput/TextInput';
 
 const renderFormAction = props =>
   render(
@@ -102,6 +103,16 @@ describe('FormAction analytics label', () => {
     expect(screen.getByLabelText('Email address')).toHaveAttribute(
       'data-vf-analytics-label',
       'Custom'
+    );
+  });
+
+  it("does not wipe a wrapped component's own analytics label", () => {
+    const { container } = renderFormAction({
+      control: <TextInput type="email" analyticsLabel="Inner: Email" />,
+    });
+    expect(container.querySelector('input')).toHaveAttribute(
+      'data-vf-analytics-label',
+      'Inner: Email'
     );
   });
 
