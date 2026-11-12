@@ -18,7 +18,11 @@ import {
   interpolateLabel,
   DEFAULT_LABELS,
 } from '../context/SearchContext';
-import { isQueryTooShortToSearch, MAX_RESULT_WINDOW } from '../utils/constants';
+import {
+  analyticsRegion,
+  isQueryTooShortToSearch,
+  MAX_RESULT_WINDOW,
+} from '../utils/constants';
 import { searchRequestKey } from '../utils/searchRequestKey';
 import { loadTaxonomies } from '../hooks/useTaxonomies';
 import {
@@ -52,6 +56,7 @@ export default function SearchExport({ isStale = false }) {
   const availableGroupIds = fieldGroups.map(group => group.id);
   const availableGroupSet = new Set(availableGroupIds);
   const requestRef = useRef(null);
+  const exportRef = useRef(null);
   const triggerRef = useRef(null);
   const dialogRef = useRef(null);
   const titleRef = useRef(null);
@@ -76,6 +81,23 @@ export default function SearchExport({ isStale = false }) {
   const previewId = useId();
   const defaultCount = normalizeExportDefaultCount(config.exportDefaultCount);
   const exportEndpoint = config.exportEndpoint || config.searchEndpoint;
+  const region = analyticsRegion(config, 'download');
+
+  // Bubbling events for site analytics. They carry the download's shape, never
+  // the visitor's search text or filter values.
+  function emit(action, detail) {
+    const target = exportRef.current;
+    if (!target) return;
+    const EventClass =
+      target.ownerDocument?.defaultView?.CustomEvent || CustomEvent;
+    target.dispatchEvent(
+      new EventClass(`mg-search-export:${action}`, {
+        bubbles: true,
+        composed: true,
+        detail: { region, ...detail },
+      })
+    );
+  }
   const { query, facets, facetOperators, customFacets, sortBy } = state;
   const body = useMemo(
     () =>
@@ -279,9 +301,9 @@ export default function SearchExport({ isStale = false }) {
     const corrected = commitRange();
     const from = corrected.start - 1;
     const { count } = corrected;
-    const columns = columnsForExportGroups(
-      selectedGroups.filter(id => availableGroupSet.has(id))
-    );
+    const fields = selectedGroups.filter(id => availableGroupSet.has(id));
+    const columns = columnsForExportGroups(fields);
+    const tracked = { format, start: from + 1, count, fields };
     const controller = new AbortController();
     requestRef.current = controller;
     setStatus({
@@ -313,6 +335,7 @@ export default function SearchExport({ isStale = false }) {
       if (controller.signal.aborted) return;
       if (!result.records.length) {
         setStatus({ key: requestKey, message: labels.exportEmpty });
+        emit('empty', { ...tracked, total: result.total });
         return;
       }
       if (needsExportTaxonomies(result.records, columns)) {
@@ -348,6 +371,12 @@ export default function SearchExport({ isStale = false }) {
           : exportJson(result, count, columns),
         format
       );
+      emit('download', {
+        ...tracked,
+        returned: result.records.length,
+        total: result.total,
+        limited: result.limited,
+      });
       setStatus({
         key: requestKey,
         message: interpolateLabel(
@@ -361,15 +390,20 @@ export default function SearchExport({ isStale = false }) {
         ),
       });
     } catch (error) {
-      if (!controller.signal.aborted)
+      if (!controller.signal.aborted) {
+        const taxonomyError = error instanceof ExportTaxonomyError;
         setStatus({
           key: requestKey,
           error: true,
-          message:
-            error instanceof ExportTaxonomyError
-              ? labels.exportTaxonomyError
-              : labels.exportError,
+          message: taxonomyError
+            ? labels.exportTaxonomyError
+            : labels.exportError,
         });
+        emit('error', {
+          ...tracked,
+          reason: taxonomyError ? 'taxonomy' : 'request',
+        });
+      }
     } finally {
       if (requestRef.current === controller) requestRef.current = null;
     }
@@ -382,7 +416,11 @@ export default function SearchExport({ isStale = false }) {
     : 'https://www.preventionweb.net/contact';
 
   return (
-    <div className="mg-search__export">
+    <div
+      ref={exportRef}
+      className="mg-search__export"
+      data-vf-google-analytics-region={region}
+    >
       <button
         ref={triggerRef}
         type="button"
@@ -399,7 +437,12 @@ export default function SearchExport({ isStale = false }) {
           setCountValue(String(Math.min(defaultCount, initialMaximum)));
 
           setOpenKey(requestKey);
+          emit('open', {
+            total: state.totalResults,
+            totalRelation: state.totalResultsRelation,
+          });
         }}
+        data-vf-analytics-label="Search download: Open"
       >
         {labels.exportOpen}
       </button>
@@ -451,6 +494,7 @@ export default function SearchExport({ isStale = false }) {
                 labels.exportClose?.trim() || DEFAULT_LABELS.exportClose
               }
               onClick={closeModal}
+              data-vf-analytics-label="Search download: Close"
             >
               <span className="mg-icon mg-icon-close" aria-hidden="true" />
             </button>
@@ -484,6 +528,7 @@ export default function SearchExport({ isStale = false }) {
                 disabled={busy}
                 helpText={countHelp}
                 onChange={event => updateRange(startValue, event.target.value)}
+                data-vf-analytics-label="Search download: Quantity"
               />
               {offerOffset && (
                 <TextInput
@@ -511,6 +556,7 @@ export default function SearchExport({ isStale = false }) {
                   onChange={event =>
                     updateRange(event.target.value, countValue)
                   }
+                  data-vf-analytics-label="Search download: Start"
                 />
               )}
               {previewCount !== null && (
@@ -566,6 +612,7 @@ export default function SearchExport({ isStale = false }) {
                       key={group.id}
                       label={labels[group.label]}
                       value={group.id}
+                      analyticsLabel={`Search download: Field ${group.id}`}
                       checked={selectedGroupSet.has(group.id)}
                       disabled={busy}
                       onChange={event => {
@@ -603,6 +650,7 @@ export default function SearchExport({ isStale = false }) {
                 onClick={event =>
                   download('csv', event.currentTarget.ownerDocument)
                 }
+                data-vf-analytics-label="Search download: CSV"
               >
                 <span className="mg-icon mg-icon-download" aria-hidden="true" />
                 {labels.exportCsv}
@@ -616,6 +664,7 @@ export default function SearchExport({ isStale = false }) {
                 onClick={event =>
                   download('json', event.currentTarget.ownerDocument)
                 }
+                data-vf-analytics-label="Search download: JSON"
               >
                 <span className="mg-icon mg-icon-download" aria-hidden="true" />
                 {labels.exportJson}
@@ -633,7 +682,12 @@ export default function SearchExport({ isStale = false }) {
             )}
             <p className="mg-form-help mg-search__export-help">
               {labels.exportContact}{' '}
-              <a href={contactUrl}>{labels.exportContactLink}</a>
+              <a
+                href={contactUrl}
+                data-vf-analytics-label="Search download: Contact"
+              >
+                {labels.exportContactLink}
+              </a>
             </p>
           </section>
         </dialog>

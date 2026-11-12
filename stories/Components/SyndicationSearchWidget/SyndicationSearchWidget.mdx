@@ -782,14 +782,14 @@ Compatibility: earlier versions rendered controls from every widget sharing a ta
 
 ## Analytics regions
 
-The widget marks its search form, results and facets with `data-vf-google-analytics-region`: `undrr-search-form`, `undrr-search-results` and `undrr-search-facets`. The shared UNDRR analytics script reports each click with the innermost region around it, so a region set on a section around the widget is never reported for clicks inside it.
+The widget marks its search form, results and facets with `data-vf-google-analytics-region`: `undrr-search-form`, `undrr-search-results` and `undrr-search-facets`. With downloads on, the Download results action and its dialog are `undrr-search-download`. The shared UNDRR analytics script reports each click with the innermost region around it, so a region set on a section around the widget is never reported for clicks inside it.
 
-When a page has more than one widget, give each its own `analyticsRegionPrefix` (data attribute `data-analytics-region-prefix`). The prefix replaces `undrr-search` in all three names:
+When a page has more than one widget, give each its own `analyticsRegionPrefix` (data attribute `data-analytics-region-prefix`). The prefix replaces `undrr-search` in every name:
 
 ```js
 const config = { analyticsRegionPrefix: 'collection-related' };
-// Regions: collection-related-form, collection-related-results and
-// collection-related-facets
+// Regions: collection-related-form, collection-related-results,
+// collection-related-facets and collection-related-download
 ```
 
 ```html
@@ -800,6 +800,30 @@ const config = { analyticsRegionPrefix: 'collection-related' };
 ```
 
 Without it, nothing changes. A Drupal block wrapper that builds the config itself needs to pass the setting through.
+
+### Download analytics
+
+The shared click tracker names a click after the element's visible text unless `data-vf-analytics-label` is set. Like ShareButtons and Cite this, the download controls set fixed English labels, so reports do not split by language: `Search download: Open`, `Search download: Close`, `Search download: Quantity`, `Search download: Start`, `Search download: Field <field>` (for example `Search download: Field title`, on the checkbox and its label), `Search download: CSV`, `Search download: JSON` and `Search download: Contact`. These clicks count attempts.
+
+Outcomes are bubbling events dispatched from the download area, so they reach `document`:
+
+| Event                       | When                                                                |
+| --------------------------- | ------------------------------------------------------------------- |
+| `mg-search-export:open`     | The dialog opens.                                                   |
+| `mg-search-export:download` | A file is generated.                                                |
+| `mg-search-export:empty`    | The selected range returned no records; no file is generated.       |
+| `mg-search-export:error`    | The request or a taxonomy-name lookup failed; no file is generated. |
+
+Every event's `detail` has `region`, the widget's download analytics region (`undrr-search-download` unless `analyticsRegionPrefix` is set). `open` adds `total` and `totalRelation` (`eq` for an exact count, `gte` for a lower bound). The other three add `format` (`csv` or `json`), the requested `start` and `count`, and `fields`, the selected optional field groups (for example `['title', 'hazard']`; record ID and URL are always included). `download` adds `returned`, `total` and `limited` (more matches exist than the file holds); `empty` adds `total`; `error` adds `reason` (`request` or `taxonomy`). A download cancelled by closing the dialog or changing the search dispatches nothing.
+
+The details never include the visitor's search text or filter values. The consuming site maps these events to its consent-aware analytics; Mangrove sends nothing to Google.
+
+```js
+document.addEventListener('mg-search-export:download', event => {
+  const { format, returned, region } = event.detail;
+  analytics.track('search_download', { format, records: returned, region });
+});
+```
 
 ## Results notification
 
@@ -1112,6 +1136,7 @@ boundaries: a DOM portal cannot inherit direction from the widget's ancestors.
 - **1.9.0**, 2026-11-10 ([undrr/web-backlog#3314](https://gitlab.com/undrr/web-backlog/-/work_items/3314)): Add an opt-in Download results action opening a native modal with both bounded CSV/JSON metadata downloads, a conditional one-based start for matched sets of at least 1,000 and dynamically bounded quantity, a grouped quantity row with a read-only range preview and jointly corrected whole-number inputs, open-by-default field panel, primary CSV/outlined JSON actions and quiet icon Close, optional choices from a fixed field allowlist with an inheritable consumer field policy, an outlined utility action beneath pagination aligned to the reading direction, explicit scope and cap reporting, request cancellation, translated controls and status messages, hydration settings and a contact route for larger data needs. Existing widgets retain their current behaviour.
 
   - Export readable taxonomy names alongside IDs and an optional plain-text teaser summary ([undrr/web-backlog#3314](https://gitlab.com/undrr/web-backlog/-/work_items/3314)). Summary is initially unchecked; unresolved selected taxonomy names block the file with retry guidance.
+  - Add download analytics ([undrr/web-backlog#3320](https://gitlab.com/undrr/web-backlog/-/work_items/3320)): an `undrr-search-download` region, fixed `data-vf-analytics-label` values on the download controls, and bubbling `mg-search-export:open`, `download`, `empty` and `error` events describing the file but never the search text.
 
 - **1.8.1**, 2026-11-10 ([#1468](https://github.com/unisdr/undrr-mangrove/issues/1468)): Keep Type parents and subtypes together when selections change, including retained selections missing from current results. Selected subtypes retain their indentation and summary context. Keyboard highlighting follows the option value through asynchronous updates. Inherited children show a tint and pale checked indicator; parents with selected subtypes show a dash, with localized accessible descriptions. Search fields persist for the open dropdown session, pointer selection retains keyboard focus, and Escape dismisses the dropdown before its enclosing filter drawer.
 

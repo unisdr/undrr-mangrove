@@ -537,6 +537,7 @@ Keep the ring at 3:1 or more against the thumb, and the thumb at 3:1 or more aga
 - The label is programmatically associated with the checkbox via `htmlFor`/`id`.
 - For groups of checkboxes, wrap them in a `<FormGroup>` (renders `<fieldset>` with `<legend>`).
 - Keyboard users can toggle the checkbox with Space.
+- UNDRR's shared click tracker names a click after the element's visible text, and a click on the label after its `for` id. Set `analyticsLabel` to give the input and its label a fixed `data-vf-analytics-label` instead, so reports do not split by language or show generated ids.
 
 ## See also
 
@@ -544,6 +545,7 @@ Keep the ring at 3:1 or more against the thumb, and the thumb at 3:1 or more aga
 
 ## Changelog
 
+- **2.5**, 2026-11-12 ([undrr/web-backlog#3320](https://gitlab.com/undrr/web-backlog/-/work_items/3320)): Added an optional `analyticsLabel` prop, which sets the same `data-vf-analytics-label` on the input and its label. Checkboxes without it render as before.
 - **2.4**, 2026-09-18 ([#1214](https://github.com/unisdr/undrr-mangrove/pull/1214)): Gave `.mg-switch` an error state and size hooks. A default switch renders exactly as before.
   - Error state ([#1187](https://github.com/unisdr/undrr-mangrove/issues/1187)): `aria-invalid="true"` on the input, `.mg-switch__input--error`, or `.mg-switch--error` on the label, each giving the track a red boundary, with a `.mg-form-error` message joined by `aria-describedby`: the same pattern, class naming and error summary relationship as the text input, select, radio and checkbox. Unlike the pending state it does not move the thumb, so a controller whose latest intent wins does not contradict the user. `--mg-switch-track-border-color--error` sets the colour.
   - The track's inset around the thumb is now a transparent border rather than padding. The box, the thumb and the travel are unchanged; the error state has a `border-color` to set, so it cannot displace the focus ring's outline and separator band the way a consumer `box-shadow` did. In forced colours, where the track opts out of colour forcing, the error is `CanvasText` and a dashed edge instead of an author red.
