@@ -45,6 +45,27 @@ describe('quiz labels', () => {
     );
   });
 
+  it('keeps the short running score free of the answered count', () => {
+    ['en', ...LANGUAGES].forEach(lang => {
+      const labels = getQuizScoreLabels(lang);
+      expect(placeholders(labels.scoreSoFar)).toEqual(['{correct}', '{total}']);
+      expect(placeholders(labels.scoreSoFarWithAnswered)).toEqual([
+        '{answered}',
+        '{correct}',
+        '{total}',
+      ]);
+      expect(labels.scoreSoFar.length).toBeLessThan(
+        labels.scoreSoFarWithAnswered.length
+      );
+    });
+  });
+
+  it('has no label for the removed header status', () => {
+    ['en', ...LANGUAGES].forEach(lang => {
+      expect(getQuizQuestionLabels(lang)).not.toHaveProperty('incorrect');
+    });
+  });
+
   it('fills placeholders and leaves unknown ones as written', () => {
     expect(
       formatQuizLabel('Question {number} of {total} {other}', {

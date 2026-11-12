@@ -22,9 +22,9 @@ Leave it out for a single question; the question's own feedback is enough.
 ## Behaviours
 
 - **Empty at first.** Nothing shows until the first answer is checked. An empty attempt does not count.
-- **In progress.** "Score so far: 1 of 5 correct (answered: 2)." with a ProgressBar of questions answered.
-- **Complete.** "You got 4 of 5 correct." and a "Start again" button. The visitor can still change and recheck any answer, and the score follows.
-- **Start again.** Clears every question in the scope and moves focus to the first one. Scrolling there is smooth only when the visitor has not asked for reduced motion.
+- **In progress.** "1 of 5 correct so far." with a ProgressBar of questions answered. The bar says how many are answered, so the sentence does not repeat it. With `showProgress={false}` the sentence is the longer "Score so far: 1 of 5 correct (answered: 2)."
+- **Complete.** "You got 4 of 5 correct." and a "Start again" button. Correct answers are locked. A wrong answer can still be changed; changing it returns that question to unanswered, so the score goes back to in progress until it is checked again.
+- **Start again.** Unlocks and clears every question in the scope and moves focus to the first one. Scrolling there is smooth only when the visitor has not asked for reduced motion.
 - **Scope.** It counts the questions in the nearest `data-mg-quiz` ancestor, or every question on the page that is not inside one. Questions added or removed later are counted as they come and go.
 
 <Canvas of={QuizScoreStories.InProgress} meta={QuizScoreStories} />
@@ -47,13 +47,16 @@ import QuizScore from '@undrr/undrr-mangrove/components/QuizScore.js';
 
 `lang` selects the built-in English, Arabic, Spanish, French, Japanese, Russian or Simplified Chinese labels, in the same way as Quiz question. Override individual labels with `labels`.
 
-| Key             | English                                                                  | Placeholders                         |
-| --------------- | ------------------------------------------------------------------------ | ------------------------------------ |
-| `scoreSoFar`    | Score so far: `{correct}` of `{total}` correct (answered: `{answered}`). | `{correct}`, `{total}`, `{answered}` |
-| `scoreFinal`    | You got `{correct}` of `{total}` correct.                                | `{correct}`, `{total}`, `{answered}` |
-| `progressLabel` | Questions answered                                                       |                                      |
-| `progressValue` | `{answered}` of `{total}`                                                | `{answered}`, `{total}`              |
-| `reset`         | Start again                                                              |                                      |
+| Key                      | English                                                                  | Placeholders                         |
+| ------------------------ | ------------------------------------------------------------------------ | ------------------------------------ |
+| `scoreSoFar`             | `{correct}` of `{total}` correct so far.                                 | `{correct}`, `{total}`               |
+| `scoreSoFarWithAnswered` | Score so far: `{correct}` of `{total}` correct (answered: `{answered}`). | `{correct}`, `{total}`, `{answered}` |
+| `scoreFinal`             | You got `{correct}` of `{total}` correct.                                | `{correct}`, `{total}`, `{answered}` |
+| `progressLabel`          | Questions answered                                                       |                                      |
+| `progressValue`          | `{answered}` of `{total}`                                                | `{answered}`, `{total}`              |
+| `reset`                  | Start again                                                              |                                      |
+
+`scoreSoFar` is used while the progress bar is shown and `scoreSoFarWithAnswered` when it is switched off. Override both if you override one and use `showProgress={false}`.
 
 The sentences keep numbers out of grammatical agreement, so no plural forms are needed. Keep that property in an override.
 
@@ -104,3 +107,4 @@ Without JavaScript there is no score, which is correct: nothing can be checked.
 ## Changelog
 
 - **1.0**, 2026-11-12 ([#1481](https://github.com/unisdr/undrr-mangrove/issues/1481)): Initial component. Running and final score for the quiz questions in a scope, optional progress bar and "Start again", built-in translations with overrides, and hydration with `ensureQuizScoreHost`.
+  - Design review: the running score is the short "1 of 5 correct so far." beside the progress bar, and the longer form with the answered count (`scoreSoFarWithAnswered`) only when the bar is off; "Start again" unlocks questions locked by a correct answer.

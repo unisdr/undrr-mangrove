@@ -51,7 +51,7 @@ export const InProgress = {
       canvas.getAllByRole('button', { name: 'Check answer' })[0]
     );
     await expect(canvas.getByRole('status')).toHaveTextContent(
-      'Score so far: 1 of 2 correct (answered: 1).'
+      '1 of 2 correct so far.'
     );
     await expect(canvas.getByRole('progressbar')).toHaveAttribute('value', '1');
   },
@@ -62,11 +62,12 @@ export const Complete = {
   render: renderQuiz,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const buttons = canvas.getAllByRole('button', { name: 'Check answer' });
+    const check = () => canvas.getAllByRole('button', { name: 'Check answer' });
     await userEvent.click(canvas.getByLabelText('False'));
-    await userEvent.click(buttons[0]);
+    await userEvent.click(check()[0]);
+    // The first question is now locked, so one check button is left.
     await userEvent.click(canvas.getByLabelText('Flood'));
-    await userEvent.click(buttons[1]);
+    await userEvent.click(check()[0]);
     await expect(canvas.getByRole('status')).toHaveTextContent(
       'You got 1 of 2 correct.'
     );
@@ -83,7 +84,7 @@ export const WithoutProgressOrReset = {
     docs: {
       description: {
         story:
-          'The progress bar and the "Start again" action are optional. Without them the score matches the earlier Drupal behaviour: one sentence that updates as answers are checked.',
+          'The progress bar and the "Start again" action are optional. Without the progress bar the running score uses its longer form, which also says how many questions are answered.',
       },
     },
   },

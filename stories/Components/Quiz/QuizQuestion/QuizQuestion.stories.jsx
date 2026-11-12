@@ -158,14 +158,31 @@ export const AnsweredCorrect = {
   args: { ...QUESTIONS.multipleChoice, lang: 'en' },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await userEvent.click(canvas.getByLabelText('Ultraviolet radiation'));
-    const button = canvas.getByRole('button', { name: 'Check answer' });
-    await userEvent.click(button);
-    await expect(button).toHaveFocus();
+    const answer = canvas.getByLabelText('Ultraviolet radiation');
+    await userEvent.click(answer);
+    await userEvent.click(canvas.getByRole('button', { name: 'Check answer' }));
     await expect(canvas.getByText(/Overexposure can cause/)).toBeVisible();
     await expect(
       canvasElement.querySelector('.mg-quiz-question')
     ).toHaveAttribute('data-mg-quiz-state', 'correct');
+    // Locked: the button has gone, focus is on the feedback and the answer
+    // can no longer be changed.
+    await expect(
+      canvas.queryByRole('button', { name: 'Check answer' })
+    ).toBeNull();
+    await expect(
+      canvasElement.querySelector('.mg-quiz-question__feedback')
+    ).toHaveFocus();
+    await userEvent.click(canvas.getByLabelText('Chlorine'));
+    await expect(answer).toBeChecked();
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'A correct answer locks the question. The controls become read-only, the check button leaves and the feedback takes its focus.',
+      },
+    },
   },
 };
 
@@ -175,14 +192,17 @@ export const AnsweredIncorrect = {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByLabelText('Chlorine'));
     await userEvent.click(canvas.getByRole('button', { name: 'Check answer' }));
-    await expect(canvas.getByText('Not quite. Try again.')).toBeVisible();
+    await expect(canvas.getByText('Not correct yet. Try again.')).toBeVisible();
     await expect(canvas.queryByText(/Overexposure can cause/)).toBeNull();
+    await expect(
+      canvasElement.querySelector('.mg-quiz-question')
+    ).toHaveAttribute('data-mg-quiz-state', 'incorrect');
   },
   parameters: {
     docs: {
       description: {
         story:
-          'A wrong answer never shows the explanation or marks the right option, because the visitor can try again.',
+          'A wrong answer never shows the explanation or marks the right option, because the visitor can try again. Changing the answer clears the message.',
       },
     },
   },
@@ -249,30 +269,34 @@ export const QuizPage = {
   ),
 };
 
+const NO_SCRIPT_NOTE =
+  '<noscript><p class="mg-quiz-question__note">Checking your answers needs JavaScript.</p></noscript>';
+
 const SERVER_MARKUP = `
 <div data-mg-quiz-question data-mg-ssr
-  data-question='{"type":"multiple_choice","prompt":"Which hazard does this image show?","options":[{"value":"amr","label":"Antimicrobial resistant microorganisms","correct":false},{"value":"hab","label":"Harmful algal blooms","correct":true},{"value":"toxins","label":"Marine toxins","correct":false}],"explanation":"Warm, nutrient-rich water lets algae multiply quickly."}'>
+  data-question='{"type":"multiple_choice","prompt":"Which hazard most directly threatens a rain-fed crop like the one in this photo?","options":[{"value":"surge","label":"Storm surge","correct":false},{"value":"drought","label":"Drought","correct":true},{"value":"avalanche","label":"Avalanche","correct":false}],"explanation":"A rain-fed crop depends on seasonal rainfall, so a prolonged shortfall can cut the harvest or destroy it."}'>
   <div class="mg-quiz-question mg-quiz-question--multiple-choice">
     <fieldset class="mg-form-group mg-quiz-question__group">
-      <legend class="mg-form-group__legend">Which hazard does this image show?</legend>
+      <legend class="mg-form-group__legend">Which hazard most directly threatens a rain-fed crop like the one in this photo?</legend>
       <div class="mg-quiz-question__media">
-        <img src="${sampleImage}" alt="Aerial view of green algae spreading across a lake shore" width="640" height="360">
+        <img src="${sampleImage}" alt="A farmer sits at the edge of a wheat field during harvest, with cut sheaves beside him" width="640" height="360">
       </div>
       <div class="mg-quiz-question__options">
         <label class="mg-form-check mg-quiz-question__option">
-          <input class="mg-form-check__input mg-form-check__input--radio" type="radio" value="amr">
-          <span class="mg-form-check__label">Antimicrobial resistant microorganisms</span>
+          <input class="mg-form-check__input mg-form-check__input--radio" type="radio" value="surge">
+          <span class="mg-form-check__label">Storm surge</span>
         </label>
         <label class="mg-form-check mg-quiz-question__option">
-          <input class="mg-form-check__input mg-form-check__input--radio" type="radio" value="hab">
-          <span class="mg-form-check__label">Harmful algal blooms</span>
+          <input class="mg-form-check__input mg-form-check__input--radio" type="radio" value="drought">
+          <span class="mg-form-check__label">Drought</span>
         </label>
         <label class="mg-form-check mg-quiz-question__option">
-          <input class="mg-form-check__input mg-form-check__input--radio" type="radio" value="toxins">
-          <span class="mg-form-check__label">Marine toxins</span>
+          <input class="mg-form-check__input mg-form-check__input--radio" type="radio" value="avalanche">
+          <span class="mg-form-check__label">Avalanche</span>
         </label>
       </div>
     </fieldset>
+    ${NO_SCRIPT_NOTE}
   </div>
 </div>
 <div data-mg-quiz-question data-mg-ssr
@@ -291,6 +315,7 @@ const SERVER_MARKUP = `
         </label>
       </div>
     </fieldset>
+    ${NO_SCRIPT_NOTE}
   </div>
 </div>
 <div data-mg-quiz-question data-mg-ssr
@@ -300,14 +325,20 @@ const SERVER_MARKUP = `
       <legend class="mg-form-group__legend">Complete the sentence</legend>
       <p class="mg-quiz-question__sentence">
         The Sendai Framework was adopted in
-        <input class="mg-form-input mg-quiz-question__blank" type="text" aria-label="City">, Japan, in the year
-        <input class="mg-form-input mg-quiz-question__blank" type="text" aria-label="Year">.
+        <span class="mg-quiz-question__blank-unit"><input class="mg-form-input mg-quiz-question__blank" type="text" aria-label="City">,</span> Japan, in the year
+        <span class="mg-quiz-question__blank-unit"><input class="mg-form-input mg-quiz-question__blank" type="text" aria-label="Year">.</span>
       </p>
     </fieldset>
+    ${NO_SCRIPT_NOTE}
   </div>
 </div>`;
 
+// Storybook always runs scripts, so a browser here never shows what is inside
+// <noscript>. The no-JavaScript story unwraps the note to show that state.
+const NO_SCRIPT_MARKUP = SERVER_MARKUP.replace(/<\/?noscript>/g, '');
+
 function ServerMarkup({ hydrate, lang, dir }) {
+  const markup = hydrate ? SERVER_MARKUP : NO_SCRIPT_MARKUP;
   const ref = useRef(null);
   useEffect(() => {
     if (!hydrate) return undefined;
@@ -336,7 +367,7 @@ function ServerMarkup({ hydrate, lang, dir }) {
       dir={dir}
       data-mg-quiz=""
       // eslint-disable-next-line react/no-danger -- static story fixture standing in for server-rendered markup
-      dangerouslySetInnerHTML={{ __html: SERVER_MARKUP }}
+      dangerouslySetInnerHTML={{ __html: markup }}
     />
   );
 }
@@ -348,7 +379,7 @@ export const NoJavaScript = {
       source: { code: SERVER_MARKUP, language: 'html' },
       description: {
         story:
-          'The markup a server renders, before or without Mangrove’s script: a readable question with working controls and no check button, so nothing on the page is dead.',
+          'The markup a server renders, as a browser without JavaScript shows it: a readable question with working controls, no check button, and a note from `<noscript>` that checking answers needs JavaScript. The note is the consumer’s text, in the page’s language.',
       },
     },
   },

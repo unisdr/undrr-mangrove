@@ -53,7 +53,7 @@ describe('QuizScore', () => {
     const [first, second] = questions(container);
     answer(first, 'True');
     expect(screen.getByRole('status')).toHaveTextContent(
-      'Score so far: 1 of 2 correct (answered: 1).'
+      /^1 of 2 correct so far\.$/
     );
     const progress = screen.getByRole('progressbar', {
       name: 'Questions answered',
@@ -93,6 +93,65 @@ describe('QuizScore', () => {
     expect(within(question).getByLabelText('True')).toHaveFocus();
   });
 
+  it('starts again: unlocks every locked question', () => {
+    const { container } = render(
+      <>
+        <QuizQuestion {...TRUE} />
+        <QuizQuestion {...TEXT} />
+        <QuizScore />
+      </>
+    );
+    const [choice, text] = questions(container);
+    answer(choice, 'True');
+    const input = within(text).getByRole('textbox');
+    fireEvent.change(input, { target: { value: 'Sendai' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    expect(within(choice).queryByRole('button')).toBeNull();
+    expect(input).toHaveAttribute('readonly');
+
+    fireEvent.click(screen.getByRole('button', { name: 'Start again' }));
+
+    [choice, text].forEach(question => {
+      expect(question).toHaveAttribute('data-mg-quiz-state', 'unanswered');
+      expect(question).not.toHaveClass('mg-quiz-question--correct');
+      expect(
+        within(question).getByRole('button', { name: 'Check answer' })
+      ).toBeInTheDocument();
+    });
+    expect(input).not.toHaveAttribute('readonly');
+    expect(input).toHaveValue('');
+    within(choice)
+      .getAllByRole('radio')
+      .forEach(radio => expect(radio).not.toHaveAttribute('aria-disabled'));
+
+    // Unlocked for real: a different answer can be given and graded.
+    answer(choice, 'False');
+    expect(choice).toHaveAttribute('data-mg-quiz-state', 'incorrect');
+  });
+
+  it('drops a stale result from the count when the answer changes', () => {
+    const { container } = render(
+      <>
+        <QuizQuestion {...TRUE} />
+        <QuizQuestion {...TRUE} prompt="Fire is cold." answer={false} />
+        <QuizScore />
+      </>
+    );
+    const [first, second] = questions(container);
+    answer(first, 'True');
+    answer(second, 'True');
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'You got 1 of 2 correct.'
+    );
+    fireEvent.click(within(second).getByLabelText('False'));
+    expect(second).toHaveAttribute('data-mg-quiz-state', 'unanswered');
+    expect(screen.getByRole('status')).toHaveTextContent(
+      '1 of 2 correct so far.'
+    );
+    expect(screen.getByRole('progressbar')).toHaveAttribute('value', '1');
+    expect(screen.queryByRole('button', { name: 'Start again' })).toBeNull();
+  });
+
   it('follows questions that arrive or leave later', async () => {
     // Keys keep the same QuizScore mounted while questions come and go.
     const page = list => (
@@ -109,9 +168,7 @@ describe('QuizScore', () => {
     expect(status).toHaveTextContent('You got 1 of 1 correct.');
 
     rerender(page([TRUE, TEXT]));
-    expect(status).toHaveTextContent(
-      'Score so far: 1 of 2 correct (answered: 1).'
-    );
+    expect(status).toHaveTextContent('1 of 2 correct so far.');
 
     rerender(page([]));
     await act(async () => {
@@ -146,6 +203,45 @@ describe('QuizScore', () => {
     expect(
       container.querySelectorAll('.mg-quiz-question__number')
     ).toHaveLength(2);
+  });
+
+  it('uses the longer running score only without the progress bar', () => {
+    const { container } = render(
+      <>
+        <QuizQuestion {...TRUE} />
+        <QuizQuestion {...TEXT} />
+        <QuizScore
+          showProgress={false}
+          labels={{ scoreSoFar: 'Short {correct}/{total}' }}
+        />
+      </>
+    );
+    answer(questions(container)[0], 'True');
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'Score so far: 1 of 2 correct (answered: 1).'
+    );
+    expect(screen.queryByRole('progressbar')).toBeNull();
+  });
+
+  it('applies overrides to both forms of the running score', () => {
+    const page = showProgress => (
+      <>
+        <QuizQuestion {...TRUE} />
+        <QuizQuestion {...TEXT} />
+        <QuizScore
+          showProgress={showProgress}
+          labels={{
+            scoreSoFar: 'Short {correct}/{total}',
+            scoreSoFarWithAnswered: 'Long {correct}/{total}/{answered}',
+          }}
+        />
+      </>
+    );
+    const { container, rerender } = render(page(true));
+    answer(questions(container)[0], 'True');
+    expect(screen.getByRole('status')).toHaveTextContent('Short 1/2');
+    rerender(page(false));
+    expect(screen.getByRole('status')).toHaveTextContent('Long 1/2/1');
   });
 
   it('translates the score and hides optional parts', () => {
@@ -240,7 +336,7 @@ describe('quiz hydration from server-rendered markup', () => {
     expect(first).toHaveAttribute('data-mg-quiz-state', 'correct');
     expect(second).toHaveAttribute('data-mg-quiz-state', 'unanswered');
     expect(screen.getByRole('status')).toHaveTextContent(
-      'Puntuación hasta ahora: 1 de 2 correctas (respondidas: 1).'
+      '1 de 2 correctas hasta ahora.'
     );
 
     act(() => {

@@ -86,13 +86,13 @@ import QuizScore from '@undrr/undrr-mangrove/components/QuizScore.js';
 <QuizQuestion
   lang="en"
   type="multiple_choice"
-  prompt="Which hazard does this image show?"
-  media={<img src="/algae.jpg" alt="Green algae spreading across a lake shore" />}
+  prompt="Which hazard most directly threatens a rain-fed crop like the one in this photo?"
+  media={<img src="/wheat.jpg" alt="A farmer sits at the edge of a wheat field during harvest" />}
   options={[
-    { value: 'hab', label: 'Harmful algal blooms', correct: true },
-    { value: 'oil', label: 'Oil pollution' },
+    { value: 'drought', label: 'Drought', correct: true },
+    { value: 'surge', label: 'Storm surge' },
   ]}
-  explanation="Warm, nutrient-rich water lets algae multiply quickly."
+  explanation="A rain-fed crop depends on seasonal rainfall."
   onCheck={({ correct }) => analytics.track('quiz_check', { correct })}
 />
 <QuizQuestion lang="en" type="true_false" prompt="A storm tide is a tsunami." answer={false} />
@@ -129,8 +129,7 @@ Override individual labels with `labels`. The rest still come from the selected 
 | ------------------ | -------------------------------- | --------------------- |
 | `checkAnswer`      | Check answer                     |                       |
 | `correct`          | Correct                          |                       |
-| `incorrect`        | Not quite                        |                       |
-| `incorrectMessage` | Not quite. Try again.            |                       |
+| `incorrectMessage` | Not correct yet. Try again.      |                       |
 | `emptyChoice`      | Choose an answer first.          |                       |
 | `emptyText`        | Type an answer first.            |                       |
 | `questionNumber`   | Question `{number}` of `{total}` | `{number}`, `{total}` |
@@ -144,10 +143,12 @@ Override individual labels with `labels`. The rest still come from the selected 
 
 ## Behaviours
 
-- **Check.** The button grades the current answer. An empty attempt (nothing selected, or only whitespace typed) asks for an answer and is neither graded nor counted. Visitors can change the answer and check again as often as they like.
-- **Feedback.** A Notice appears under the button: `positive` for correct, with the explanation if there is one; `negative` for "Not quite. Try again."; `info` for an empty attempt. A wrong answer never shows the explanation or marks the right option, because the visitor can try again.
-- **State.** Once graded, the header shows "Correct" or "Not quite" with an icon, and the root carries `data-mg-quiz-state` (`unanswered`, `correct` or `incorrect`). The latest graded result stands until the next graded attempt.
-- **Focus.** Focus stays on the button after checking. Nothing moves, so a keyboard user can adjust the answer and check again.
+- **Check.** The button grades the current answer. An empty attempt (nothing selected, or only whitespace typed) asks for an answer and is neither graded nor counted. After a wrong answer the visitor can change the answer and check again as often as they like.
+- **Feedback.** A Notice appears under the button: `positive` for correct, with the explanation if there is one, and `info` for the other two. "Not correct yet. Try again." is a wrong answer; "Choose an answer first." or "Type an answer first." is an empty attempt. The two share a variant because neither is an error, and the wording tells them apart. A wrong answer never shows the explanation or marks the right option, because the visitor can try again.
+- **A correct answer locks the question.** The controls become read-only and the check button leaves, so the result always belongs to the answer on screen. Radios and checkboxes carry `aria-disabled="true"` and text fields `readonly`: they stay in the tab order and keep their full contrast, and they no longer change. The options that were not chosen are toned down. "Start again" on Quiz score unlocks every question.
+- **Changing an answer clears the result.** After a wrong answer or an empty attempt, the first change to the answer removes the feedback and returns the question to unanswered. The score counts it as unanswered until it is checked again.
+- **State.** The root carries `data-mg-quiz-state` (`unanswered`, `correct` or `incorrect`) and a `mg-quiz:change` event is dispatched on the document whenever it changes. The Notice is the only visible statement of the result.
+- **Focus.** After a wrong answer or an empty attempt focus stays on the button, so a keyboard user can adjust the answer and check again. After a correct answer the button is removed, so focus moves to the feedback, which shows the focus ring for keyboard users; the next Tab goes to whatever follows the question. When Enter in a text field gives the correct answer, focus stays in that field, which is now read-only.
 - **Motion.** None. Feedback appears immediately; there is nothing to disable under reduced motion.
 - **Print.** The check button is hidden. The question, the answer the visitor entered and any feedback print as shown, and a question is not split across pages where the printer allows.
 
@@ -160,7 +161,9 @@ Override individual labels with `labels`. The rest still come from the selected 
 - Choice and fill-in-the-blank questions are a `fieldset` whose `legend` is the prompt (or "Complete the sentence" when the blanks are inline). "Select all that apply" is the group's description.
 - The short-answer input is labelled by the prompt. Each inline blank has an accessible name: the blank's label, or "Blank 1 of 2".
 - Feedback is a polite live region that is in the page from the start. The Notice inside it has no role of its own, so a result is announced once. Checking the same answer twice replaces the message element, so it can be announced again.
-- State is never colour alone: the header status and the Notice both carry text and an icon.
+- State is never colour alone: the Notice carries text and an icon. An incorrect result and an empty attempt look alike on purpose and differ in their words: "Not correct yet. Try again." against "Choose an answer first.".
+- A locked question says so to assistive technology: `aria-disabled="true"` on its radios or checkboxes and `readonly` on its text fields. Neither is `disabled`, so the chosen answer can still be reached and read.
+- The feedback container has `tabindex="-1"` so that it can take focus when a correct answer removes the check button. It is not a tab stop.
 - Radios, checkboxes, inputs and the button are the Mangrove Forms and button classes, with their focus rings. Option rows are at least 48 pixels tall and the button at least 44.
 - Layout uses logical properties and mirrors under `dir="rtl"`.
 
@@ -174,38 +177,64 @@ Drupal and other server-rendered consumers render a container per question and l
 <div
   data-mg-quiz-question
   data-mg-ssr
-  data-question='{"type":"multiple_choice","prompt":"Which hazard does this image show?","options":[{"value":"hab","label":"Harmful algal blooms","correct":true},{"value":"oil","label":"Oil pollution","correct":false}],"explanation":"Warm, nutrient-rich water lets algae multiply quickly."}'
+  data-question='{"type":"multiple_choice","prompt":"Which hazard most directly threatens a rain-fed crop like the one in this photo?","options":[{"value":"drought","label":"Drought","correct":true},{"value":"surge","label":"Storm surge","correct":false}],"explanation":"A rain-fed crop depends on seasonal rainfall."}'
 >
   <!-- No-JavaScript state. Replaced when the component mounts. -->
   <div class="mg-quiz-question mg-quiz-question--multiple-choice">
     <fieldset class="mg-form-group mg-quiz-question__group">
       <legend class="mg-form-group__legend">
-        Which hazard does this image show?
+        Which hazard most directly threatens a rain-fed crop like the one in
+        this photo?
       </legend>
       <div class="mg-quiz-question__media">
-        <img src="/algae.jpg" alt="Green algae spreading across a lake shore" />
+        <img
+          src="/wheat.jpg"
+          alt="A farmer sits at the edge of a wheat field during harvest"
+        />
       </div>
       <div class="mg-quiz-question__options">
         <label class="mg-form-check mg-quiz-question__option">
           <input
             class="mg-form-check__input mg-form-check__input--radio"
             type="radio"
-            value="hab"
+            value="drought"
           />
-          <span class="mg-form-check__label">Harmful algal blooms</span>
+          <span class="mg-form-check__label">Drought</span>
         </label>
         <label class="mg-form-check mg-quiz-question__option">
           <input
             class="mg-form-check__input mg-form-check__input--radio"
             type="radio"
-            value="oil"
+            value="surge"
           />
-          <span class="mg-form-check__label">Oil pollution</span>
+          <span class="mg-form-check__label">Storm surge</span>
         </label>
       </div>
     </fieldset>
+    <noscript>
+      <p class="mg-quiz-question__note">
+        Checking your answers needs JavaScript.
+      </p>
+    </noscript>
   </div>
 </div>
+```
+
+In a fill-in-the-blank fallback, wrap each blank and the punctuation that follows it in `mg-quiz-question__blank-unit`, as the mounted component does, so the two wrap together:
+
+```html
+<p class="mg-quiz-question__sentence">
+  The Sendai Framework was adopted in
+  <span class="mg-quiz-question__blank-unit">
+    <input
+      class="mg-form-input mg-quiz-question__blank"
+      type="text"
+      aria-label="City"
+    />
+    ,
+  </span>
+  Japan.
+</p>
 ```
 
 | Attribute                   | Purpose                                                                                                              |
@@ -272,6 +301,10 @@ Drupal.behaviors.mangroveQuiz = {
 
 The inner markup is the whole no-JavaScript state: a readable question with working native controls and no check button, so nothing on the page is dead. The server renders no button, feedback or score; the component adds them when it mounts. If `data-question` is missing or unreadable the component does not mount and the same markup stays.
 
+Add a short note in `<noscript>` so a visitor without JavaScript knows why nothing checks the answer: a paragraph with the class `mg-quiz-question__note` as the last child of `.mg-quiz-question`. The text is the consumer's and is translated by the consumer; it is not in the component's label catalogue, because the component is not running when it shows. `<noscript>` keeps the note out of sight while the script is loading. It does not cover a script that is allowed but fails to load; that visitor sees the same question without the note.
+
+The story below unwraps the note, because Storybook cannot turn JavaScript off.
+
 <Canvas of={QuizQuestionStories.NoJavaScript} meta={QuizQuestionStories} />
 
 The same markup once mounted:
@@ -308,9 +341,13 @@ The grading rules live in one pure module with no DOM or React dependency (`grad
 
 ### 3. Feedback
 
-Notice variants, inline, directly under the check button: `positive`, `negative` and `info`. This replaces the borrowed HighlightBox and the hand-picked green, and gives every result an icon and text.
+Notice variants, inline, directly under the check button: `positive` for a correct answer and `info` for everything else. This replaces the borrowed HighlightBox and the hand-picked green, and gives every result an icon and text.
 
-The feedback container is a polite live region. Negative Notices default to `role="alert"`; here the role is removed, because a wrong quiz answer is not an emergency and the wrapper already announces it. Focus does not move. Moving it to the feedback would force a keyboard user to travel back to the answer for every retry.
+A wrong answer is `info`, not `negative`. Trying again is the point of the component, and a red error panel reads as a reprimand. The words carry the result: "Not correct yet. Try again." The empty attempt uses the same variant with different words.
+
+The Notice is the only place the result is stated. An earlier draft repeated it as a status in the question header and as a coloured edge on the card; both were removed because they said the same thing three times, and in the PreventionWeb theme the edge was the same teal as a selected option.
+
+The feedback container is a polite live region, and the Notice inside it has no role of its own, so a result is announced once. Focus does not move after a wrong answer: moving it to the feedback would force a keyboard user to travel back to the answer for every retry. After a correct answer the check button is removed, and focus moves to the feedback so that it is not dropped on the page body.
 
 The optional explanation is shown only with a correct answer. Showing it with a wrong answer would give the answer away while the visitor can still try again. Whether to offer "Show answer" after several attempts is left open; see [Open questions](#open-questions).
 
@@ -320,9 +357,9 @@ The Notice title is a paragraph, not a heading, so a page of answered questions 
 
 Questions number themselves ("Question 2 of 5") by counting their scope, because the server does not know the order either. A question on its own is not numbered. `number`, `total` and `showNumber` override this.
 
-Progress and score live in `QuizScore`, placed by the consumer or added after the last question by `ensureQuizScoreHost`. It stays empty until the first answer is checked, then shows the running score and a ProgressBar of questions answered. When every question is answered it shows the final score and "Start again", which clears every question in the scope and moves focus to the first one. Progress and reset are both optional.
+Progress and score live in `QuizScore`, placed by the consumer or added after the last question by `ensureQuizScoreHost`. It stays empty until the first answer is checked, then shows the running score and a ProgressBar of questions answered. When every question is answered it shows the final score and "Start again", which unlocks and clears every question in the scope and moves focus to the first one. While the progress bar is shown the running score is short ("1 of 5 correct so far."), because the bar already says how many are answered. Progress and reset are both optional.
 
-The score is deliberately not sticky and not repeated in each question. The per-question status and the numbering already say where the visitor is; a floating score would compete with the content the questions sit in.
+The score is deliberately not sticky and not repeated in each question. The feedback in each question and the numbering already say where the visitor is; a floating score would compete with the content the questions sit in.
 
 ### 5. Fill in the blank
 
@@ -330,18 +367,22 @@ Blanks sit in the sentence. The sentence is the natural reading order for everyo
 
 The group's legend is "Complete the sentence", and each input's accessible name is its blank label or "Blank 1 of 2". A screen-reader user moving through the sentence hears the words, then the named input, in order. The prompt cannot be the legend here, because interactive controls inside a legend are not announced reliably.
 
-Inline inputs are a fixed width so their size does not hint at the answer. Blanks that the prompt does not refer to fall back to labelled fields under the sentence, so no content is lost when an editor forgets a reference.
+Inline inputs are a fixed width so their size does not hint at the answer, and narrower on small screens. Each blank and the punctuation after it wrap as one unit, and every row of the sentence is as tall as a blank, so a sentence that wraps keeps even rows. Blanks that the prompt does not refer to fall back to labelled fields under the sentence, so no content is lost when an editor forgets a reference.
 
 ### 6. States
 
-| State         | What the visitor sees                                                                                            |
-| ------------- | ---------------------------------------------------------------------------------------------------------------- |
-| Unanswered    | Number (if any), prompt, controls, check button                                                                  |
-| Empty attempt | `info` Notice: "Choose an answer first." or "Type an answer first." Not graded, not counted, earlier result kept |
-| Correct       | "Correct" status in the header, `positive` Notice with the explanation, a slightly stronger edge                 |
-| Incorrect     | "Not quite" status, `negative` Notice "Not quite. Try again."                                                    |
-| No JavaScript | Server markup: prompt, media and native controls, no button                                                      |
-| Print         | As on screen, without the button                                                                                 |
+| State         | What the visitor sees                                                                                                                    |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Unanswered    | Number (if any), prompt, controls, check button                                                                                          |
+| Empty attempt | `info` Notice: "Choose an answer first." or "Type an answer first." Not graded, not counted                                              |
+| Correct       | `positive` Notice with the explanation. The question is locked: read-only controls, no check button                                      |
+| Incorrect     | `info` Notice "Not correct yet. Try again." The check button stays. Changing the answer clears the Notice and the question is unanswered |
+| No JavaScript | Server markup: prompt, media, native controls and a note that checking needs JavaScript; no button                                       |
+| Print         | As on screen, without the button                                                                                                         |
+
+A correct answer locks because a result that stays on screen while the answer under it changes is wrong, and the score would count it. Read-only was chosen over `disabled` for the locked controls: Mangrove's disabled text colour (`neutral-400`) is too faint for an answer the visitor still wants to read, and a disabled control leaves the tab order.
+
+Option rows have no border at rest. The radio or checkbox is the control and keeps its own boundary; the row edge appears on hover, on keyboard focus and when selected, so a question is not a stack of outlined boxes.
 
 ### 7. Media
 
@@ -361,29 +402,32 @@ Not addressed and needing design before any assessed use: sign-in, stored attemp
 ### Open questions
 
 - Whether a wrong answer should eventually reveal the answer or a hint, and after how many attempts.
+- Whether a locked question should offer its own "Try again", for a page with no Quiz score. Today only "Start again" unlocks.
 - Whether the question surface needs public `--mg-quiz-*` custom properties for themes. This version uses shared tokens only and adds no new public properties.
 - Whether "Start again" should also be offered before the last question is answered.
 
 ## CSS classes
 
-| Class                                                                         | Purpose                                                                                        |
-| ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| `mg-quiz-question`                                                            | Root surface. Carries `data-mg-quiz-state`                                                     |
-| `mg-quiz-question--multiple-choice`, `--true-false`, `--text`, `--fill-blank` | Question type                                                                                  |
-| `mg-quiz-question--correct`, `--incorrect`                                    | Latest graded result. Only `--correct` is styled; `--incorrect` and the type classes are hooks |
-| `mg-quiz-question__header`, `__number`, `__status`                            | Numbering and result status                                                                    |
-| `mg-quiz-question__group`                                                     | Fieldset (with `mg-form-group`) or short-answer wrapper                                        |
-| `mg-quiz-question__group--sentence`                                           | Fill in the blank with inline blanks                                                           |
-| `mg-quiz-question__prompt`, `__hint`                                          | Short-answer prompt label; "Select all that apply"                                             |
-| `mg-quiz-question__media`                                                     | Image or figure                                                                                |
-| `mg-quiz-question__options`, `__option`                                       | Option list and row (with `mg-form-check`)                                                     |
-| `mg-quiz-question__sentence`, `__blank`                                       | Sentence and inline input (with `mg-form-input`)                                               |
-| `mg-quiz-question__fields`, `__field`                                         | Labelled text fields                                                                           |
-| `mg-quiz-question__actions`, `__check`                                        | Button row and check button (with `mg-button mg-button-primary`)                               |
-| `mg-quiz-question__feedback`, `__feedback-title`, `__explanation`             | Live region, Notice title and explanation                                                      |
+| Class                                                                         | Purpose                                                                                                    |
+| ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `mg-quiz-question`                                                            | Root surface. Carries `data-mg-quiz-state`                                                                 |
+| `mg-quiz-question--multiple-choice`, `--true-false`, `--text`, `--fill-blank` | Question type                                                                                              |
+| `mg-quiz-question--correct`, `--incorrect`                                    | Latest graded result. `--correct` styles the locked controls; `--incorrect` and the type classes are hooks |
+| `mg-quiz-question__header`, `__number`                                        | Numbering                                                                                                  |
+| `mg-quiz-question__group`                                                     | Fieldset (with `mg-form-group`) or short-answer wrapper                                                    |
+| `mg-quiz-question__group--sentence`                                           | Fill in the blank with inline blanks                                                                       |
+| `mg-quiz-question__prompt`, `__hint`                                          | Short-answer prompt label; "Select all that apply"                                                         |
+| `mg-quiz-question__media`                                                     | Image or figure                                                                                            |
+| `mg-quiz-question__options`, `__option`                                       | Option list and row (with `mg-form-check`)                                                                 |
+| `mg-quiz-question__sentence`, `__blank-unit`, `__blank`                       | Sentence, the no-wrap unit of a blank and its punctuation, and the inline input (with `mg-form-input`)     |
+| `mg-quiz-question__note`                                                      | Server markup only: the `<noscript>` note that checking needs JavaScript                                   |
+| `mg-quiz-question__fields`, `__field`                                         | Labelled text fields                                                                                       |
+| `mg-quiz-question__actions`, `__check`                                        | Button row and check button (with `mg-button mg-button-primary`)                                           |
+| `mg-quiz-question__feedback`, `__feedback-title`, `__explanation`             | Live region (focusable from script), Notice title and explanation                                          |
 
 ## Changelog
 
 - **1.0**, 2026-11-12 ([#1481](https://github.com/unisdr/undrr-mangrove/issues/1481)): Initial component.
   - Multiple choice (one or several answers), true/false, short answer and fill in the blank, checked in the browser with the grading rules of the Drupal `undrr_training` blocks ([web-backlog#3129](https://gitlab.com/undrr/web-backlog/-/work_items/3129)).
   - Feedback through Notice, optional explanation, optional media, automatic numbering, inline blanks, built-in translations with overrides, and hydration from server-rendered markup.
+  - Design review: a correct answer locks the question and removes the check button, with focus moved to the feedback; changing an answer after a wrong or empty attempt returns the question to unanswered; the Notice is the only statement of the result (no header status, no coloured edge); a wrong answer uses the `info` variant with "Not correct yet. Try again."; option rows have no resting border and respond to keyboard focus; the options, sentence and feedback share the prompt's reading width; inline blanks wrap with their punctuation in even rows; the explanation is body size; and the server markup gains a `<noscript>` note.

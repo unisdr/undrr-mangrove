@@ -33,6 +33,7 @@ const joinClasses = (...classes) => classes.filter(Boolean).join(' ');
  * `data-mg-quiz` ancestor, or the whole page. It stays empty until the first
  * answer is checked, then shows the running score with a progress bar, and the
  * final score with a "Start again" action once every question is answered.
+ * "Start again" unlocks and clears every question in the scope.
  *
  * The score is a count for the visitor only. Nothing is stored or sent.
  */
@@ -91,7 +92,11 @@ export function QuizScore({
   if (complete) {
     message = formatQuizLabel(text.scoreFinal, summary);
   } else if (started) {
-    message = formatQuizLabel(text.scoreSoFar, summary);
+    // The progress bar already shows how many are answered.
+    message = formatQuizLabel(
+      showProgress ? text.scoreSoFar : text.scoreSoFarWithAnswered,
+      summary
+    );
   }
 
   return (
@@ -139,15 +144,16 @@ export function QuizScore({
 QuizScore.propTypes = {
   /** Show a progress bar of questions answered while the quiz is under way. */
   showProgress: PropTypes.bool,
-  /** Offer "Start again" once every question is answered. It clears every question in the scope. */
+  /** Offer "Start again" once every question is answered. It unlocks and clears every question in the scope. */
   showReset: PropTypes.bool,
   /** Language of the built-in labels (en, ar, es, fr, ja, ru, zh), including regional tags. */
   lang: PropTypes.string,
   /** Explicit text direction. Arabic selects right-to-left without it. */
   dir: PropTypes.oneOf(['ltr', 'rtl', 'auto']),
-  /** Overrides for individual built-in labels. Placeholders: `{correct}`, `{total}`, `{answered}`. */
+  /** Overrides for individual built-in labels. Placeholders: `{correct}`, `{total}`, `{answered}`. `scoreSoFar` is the running score beside the progress bar; `scoreSoFarWithAnswered` replaces it when `showProgress` is off. */
   labels: PropTypes.shape({
     scoreSoFar: PropTypes.string,
+    scoreSoFarWithAnswered: PropTypes.string,
     scoreFinal: PropTypes.string,
     progressLabel: PropTypes.string,
     progressValue: PropTypes.string,

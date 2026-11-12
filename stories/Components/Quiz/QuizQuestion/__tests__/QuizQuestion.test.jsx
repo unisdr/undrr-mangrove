@@ -74,9 +74,9 @@ describe('QuizQuestion', () => {
     expect(notice).toHaveTextContent('Floods are hydrological.');
     expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'correct');
     expect(root(container)).toHaveClass('mg-quiz-question--correct');
-    expect(
-      container.querySelector('.mg-quiz-question__status')
-    ).toHaveTextContent('Correct');
+    // The Notice is the only statement of the result.
+    expect(container.querySelector('.mg-quiz-question__status')).toBeNull();
+    expect(screen.getAllByText('Correct')).toHaveLength(1);
     expect(onCheck).toHaveBeenCalledWith({ correct: true, answer: 'flood' });
   });
 
@@ -86,12 +86,13 @@ describe('QuizQuestion', () => {
     );
     fireEvent.click(screen.getByLabelText('Earthquake'));
     check();
-    expect(container.querySelector('.mg-notice')).toHaveClass(
-      'mg-notice--negative'
-    );
-    expect(screen.getByText('Not quite. Try again.')).toBeInTheDocument();
+    const notice = container.querySelector('.mg-notice');
+    expect(notice).toHaveClass('mg-notice--info');
+    expect(notice).not.toHaveAttribute('role');
+    expect(screen.getByText('Not correct yet. Try again.')).toBeInTheDocument();
     expect(screen.queryByText('Floods are hydrological.')).toBeNull();
     expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'incorrect');
+    expect(container.querySelector('.mg-quiz-question__status')).toBeNull();
 
     fireEvent.click(screen.getByLabelText('Flood'));
     check();
@@ -112,15 +113,189 @@ describe('QuizQuestion', () => {
     expect(onCheck).not.toHaveBeenCalled();
   });
 
-  it('keeps an earlier result when a later attempt is empty', () => {
+  it('words an incorrect result and an empty attempt differently', () => {
+    render(<QuizQuestion {...CHOICE} />);
+    check();
+    const empty = screen.getByText('Choose an answer first.');
+    fireEvent.click(screen.getByLabelText('Earthquake'));
+    check();
+    expect(empty).not.toBeInTheDocument();
+    expect(screen.getByText('Not correct yet. Try again.')).toBeInTheDocument();
+  });
+
+  it('locks a correct choice question and removes the check button', () => {
+    const onCheck = jest.fn();
+    const { container } = render(
+      <QuizQuestion {...CHOICE} explanation="Because." onCheck={onCheck} />
+    );
+    const flood = screen.getByLabelText('Flood');
+    const quake = screen.getByLabelText('Earthquake');
+    expect(flood).not.toHaveAttribute('aria-disabled');
+    fireEvent.click(flood);
+    check();
+
+    expect(screen.queryByRole('button', { name: 'Check answer' })).toBeNull();
+    expect(container.querySelector('.mg-quiz-question__actions')).toBeNull();
+    // Read-only, not disabled: still focusable, still fully legible.
+    [flood, quake].forEach(input => {
+      expect(input).toHaveAttribute('aria-disabled', 'true');
+      expect(input).not.toBeDisabled();
+    });
+
+    fireEvent.click(quake);
+    expect(flood).toBeChecked();
+    expect(quake).not.toBeChecked();
+    expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'correct');
+    expect(screen.getByText('Because.')).toBeInTheDocument();
+    expect(onCheck).toHaveBeenCalledTimes(1);
+  });
+
+  it('locks a correct multiple-answer question', () => {
+    const { container } = render(<QuizQuestion {...MULTI} />);
+    fireEvent.click(screen.getByLabelText('Flood'));
+    fireEvent.click(screen.getByLabelText('Storm surge'));
+    check();
+    fireEvent.click(screen.getByLabelText('Earthquake'));
+    fireEvent.click(screen.getByLabelText('Flood'));
+    expect(screen.getByLabelText('Earthquake')).not.toBeChecked();
+    expect(screen.getByLabelText('Flood')).toBeChecked();
+    expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'correct');
+  });
+
+  it('locks correct text answers as read-only fields', () => {
+    const { container } = render(
+      <>
+        <QuizQuestion {...TEXT} />
+        <QuizQuestion {...BLANKS} />
+      </>
+    );
+    const [text, blanks] = container.querySelectorAll('.mg-quiz-question');
+    const answer = within(text).getByRole('textbox');
+    fireEvent.change(answer, { target: { value: 'sendai framework' } });
+    fireEvent.keyDown(answer, { key: 'Enter' });
+    expect(answer).toHaveAttribute('readonly');
+    expect(answer).not.toBeDisabled();
+    expect(answer).toHaveValue('sendai framework');
+    fireEvent.change(answer, { target: { value: 'other' } });
+    fireEvent.keyDown(answer, { key: 'Enter' });
+    expect(answer).toHaveValue('sendai framework');
+    expect(text).toHaveAttribute('data-mg-quiz-state', 'correct');
+    expect(within(text).queryByRole('button')).toBeNull();
+
+    const [city, year] = within(blanks).getAllByRole('textbox');
+    fireEvent.change(city, { target: { value: 'Sendai' } });
+    fireEvent.change(year, { target: { value: '2015' } });
+    check(blanks);
+    expect(city).toHaveAttribute('readonly');
+    expect(year).toHaveAttribute('readonly');
+    fireEvent.change(year, { target: { value: '1999' } });
+    expect(year).toHaveValue('2015');
+    expect(blanks).toHaveAttribute('data-mg-quiz-state', 'correct');
+  });
+
+  it('moves focus to the feedback when a correct answer removes the button', () => {
+    const { container } = render(<QuizQuestion {...CHOICE} />);
+    const feedback = container.querySelector('.mg-quiz-question__feedback');
+    expect(feedback).toHaveAttribute('tabindex', '-1');
+
+    // Incorrect: the button stays and keeps focus.
+    fireEvent.click(screen.getByLabelText('Earthquake'));
+    const button = screen.getByRole('button', { name: 'Check answer' });
+    button.focus();
+    fireEvent.click(button);
+    expect(button).toHaveFocus();
+
+    fireEvent.click(screen.getByLabelText('Flood'));
+    button.focus();
+    fireEvent.click(button);
+    expect(button).not.toBeInTheDocument();
+    expect(feedback).toHaveFocus();
+    expect(document.body).not.toHaveFocus();
+  });
+
+  it('leaves focus in the field when Enter gives a correct answer', () => {
     const { container } = render(<QuizQuestion {...TEXT} />);
     const input = screen.getByRole('textbox');
-    fireEvent.change(input, { target: { value: 'sendai framework' } });
-    check();
-    fireEvent.change(input, { target: { value: '   ' } });
+    input.focus();
+    fireEvent.change(input, { target: { value: 'Sendai Framework' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'correct');
+    expect(input).toHaveFocus();
+  });
+
+  it.each([
+    [
+      'a choice',
+      CHOICE,
+      () => fireEvent.click(screen.getByLabelText('Earthquake')),
+      () => fireEvent.click(screen.getByLabelText('Flood')),
+    ],
+    [
+      'several choices',
+      MULTI,
+      () => fireEvent.click(screen.getByLabelText('Flood')),
+      () => fireEvent.click(screen.getByLabelText('Earthquake')),
+    ],
+    [
+      'a short answer',
+      TEXT,
+      () =>
+        fireEvent.change(screen.getByRole('textbox'), {
+          target: { value: 'Hyogo' },
+        }),
+      () =>
+        fireEvent.change(screen.getByRole('textbox'), {
+          target: { value: 'Hyogo F' },
+        }),
+    ],
+    [
+      'a blank',
+      BLANKS,
+      () =>
+        fireEvent.change(screen.getByRole('textbox', { name: 'City' }), {
+          target: { value: 'Tokyo' },
+        }),
+      () =>
+        fireEvent.change(screen.getByRole('textbox', { name: 'City' }), {
+          target: { value: 'Tokyo!' },
+        }),
+    ],
+  ])(
+    'returns to unanswered when %s changes after an incorrect result',
+    (name, props, answerWrongly, change) => {
+      const { container } = render(<QuizQuestion {...props} />);
+      const onChange = jest.fn();
+      document.addEventListener('mg-quiz:change', onChange);
+      answerWrongly();
+      check();
+      expect(root(container)).toHaveAttribute(
+        'data-mg-quiz-state',
+        'incorrect'
+      );
+      expect(container.querySelector('.mg-notice')).not.toBeNull();
+      onChange.mockClear();
+
+      change();
+      expect(root(container)).toHaveAttribute(
+        'data-mg-quiz-state',
+        'unanswered'
+      );
+      expect(root(container)).not.toHaveClass('mg-quiz-question--incorrect');
+      expect(container.querySelector('.mg-notice')).toBeNull();
+      expect(onChange).toHaveBeenCalled();
+      expect(
+        screen.getByRole('button', { name: 'Check answer' })
+      ).toBeInTheDocument();
+      document.removeEventListener('mg-quiz:change', onChange);
+    }
+  );
+
+  it('clears the empty-attempt message when an answer is given', () => {
+    const { container } = render(<QuizQuestion {...TEXT} />);
     check();
     expect(screen.getByText('Type an answer first.')).toBeInTheDocument();
-    expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'correct');
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'S' } });
+    expect(container.querySelector('.mg-notice')).toBeNull();
   });
 
   it('signposts several answers and needs the exact set', () => {
@@ -151,7 +326,7 @@ describe('QuizQuestion', () => {
     fireEvent.click(screen.getByLabelText('خطأ'));
     fireEvent.click(screen.getByRole('button', { name: 'تحقق من الإجابة' }));
     expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'correct');
-    expect(screen.getAllByText('إجابة صحيحة').length).toBeGreaterThan(0);
+    expect(screen.getByText('إجابة صحيحة')).toBeInTheDocument();
   });
 
   it('labels the short-answer input with the prompt and checks on Enter', () => {
@@ -181,6 +356,12 @@ describe('QuizQuestion', () => {
     const sentence = container.querySelector('.mg-quiz-question__sentence');
     expect(sentence).toHaveTextContent('Adopted in , Japan, in the year .');
     expect(sentence.textContent).not.toContain('[1]');
+    // A blank and the punctuation after it wrap as one unit.
+    const units = sentence.querySelectorAll('.mg-quiz-question__blank-unit');
+    expect(units).toHaveLength(2);
+    expect(units[0]).toHaveTextContent(/^,$/);
+    expect(units[1]).toHaveTextContent(/^\.$/);
+    expect(units[0].querySelector('input')).toHaveAccessibleName('City');
 
     const city = screen.getByRole('textbox', { name: 'City' });
     const year = screen.getByRole('textbox', { name: 'Blank 2 of 2' });

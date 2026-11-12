@@ -3,7 +3,7 @@
  *
  * One self-checking question in the page flow: multiple choice, true/false, short answer or fill in the blank.
  * Composes the Forms controls, the primary button and Notice; this file adds the question surface,
- * the option rows, inline blanks and the answered states.
+ * the option rows, inline blanks and the locked state of a correct answer.
  *
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Quiz/QuizQuestion/QuizQuestion.mdx
@@ -11,14 +11,19 @@
 @use "../../../assets/scss/mixins" as *;
 @use "../../../assets/scss/config" as *;
 
+// One reading width for the prompt, the answer controls and the feedback, so
+// they share an edge on wide screens. A length, not `ch`: those elements have
+// different font sizes, and `ch` would give each its own width.
+$mg-quiz-question-measure: mg-rem(768);
+
 %mg-quiz-question-prompt {
   color: rgb(var(--mg-color-neutral-900));
   display: block;
   font-size: var(--mg-font-size-400);
   font-weight: 700;
-  line-height: 1.35;
+  line-height: var(--mg-font-line-height-500);
   margin: 0 0 var(--mg-spacing-150);
-  max-inline-size: 70ch;
+  max-inline-size: $mg-quiz-question-measure;
   padding: 0;
 
   // Editors separate paragraphs of a prompt with line breaks.
@@ -29,7 +34,7 @@
   color: rgb(var(--mg-color-neutral-700));
   font-size: var(--mg-font-size-250);
   font-weight: 400;
-  line-height: 1.4;
+  line-height: var(--mg-font-line-height-700);
   margin: 0 0 var(--mg-spacing-150);
   padding: 0;
 }
@@ -47,55 +52,17 @@
     padding: var(--mg-spacing-250) var(--mg-spacing-300);
   }
 
-  // The status in the header names the state; the edge only echoes it.
-  &--correct {
-    border-color: rgb(var(--mg-color-accent-400) / 0.5);
-  }
-
   &__header {
-    align-items: center;
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--mg-spacing-50) var(--mg-spacing-150);
-    justify-content: space-between;
     margin-block-end: var(--mg-spacing-100);
-  }
-
-  &__number,
-  &__status {
-    font-family: var(--mg-font-family-ui);
-    font-size: var(--mg-font-size-250);
-    font-weight: 600;
-    line-height: 1.4;
-    margin: 0;
   }
 
   &__number {
     color: rgb(var(--mg-color-neutral-700));
-  }
-
-  &__status {
-    align-items: center;
-    display: inline-flex;
-    gap: var(--mg-spacing-50);
-
-    // Keeps the status at the inline end when the question is not numbered.
-    margin-inline-start: auto;
-
-    svg {
-      block-size: 1.25em;
-      fill: currentColor;
-      flex-shrink: 0;
-      inline-size: 1.25em;
-    }
-
-    &--correct svg {
-      color: rgb(var(--mg-color-accent-400));
-    }
-
-    &--incorrect svg {
-      color: rgb(var(--mg-color-red-900));
-    }
+    font-family: var(--mg-font-family-ui);
+    font-size: var(--mg-font-size-250);
+    font-weight: 600;
+    line-height: var(--mg-font-line-height-700);
+    margin: 0;
   }
 
   // FormGroup supplies the fieldset and legend; the question is already the
@@ -117,6 +84,14 @@
   &__hint,
   &__group--sentence > .mg-form-group__legend {
     @extend %mg-quiz-question-hint;
+  }
+
+  // Server-rendered fallback only: says, inside <noscript>, that checking
+  // needs JavaScript. The mounted component never renders it.
+  &__note {
+    @extend %mg-quiz-question-hint;
+
+    margin-block: var(--mg-spacing-150) 0;
   }
 
   &__media {
@@ -145,14 +120,17 @@
   &__options {
     display: grid;
     gap: var(--mg-spacing-75);
+    max-inline-size: $mg-quiz-question-measure;
   }
 
   // Each option is one row-sized target. The radio or checkbox keeps its own
-  // 3:1 boundary and focus ring; the row edge is supporting structure.
+  // 3:1 boundary and focus ring. The row has no edge at rest, so a question is
+  // not a stack of boxes; the edge is there, transparent, so nothing shifts
+  // when hover, keyboard focus or selection draws it.
   &__option.mg-form-check {
     align-items: flex-start;
     background-color: rgb(var(--mg-color-neutral-0));
-    border: 1px solid rgb(var(--mg-color-neutral-600) / 0.35);
+    border: 1px solid transparent;
     border-radius: var(--mg-radius-form-input);
     min-block-size: mg-rem(48);
     padding: var(--mg-spacing-75) var(--mg-spacing-100);
@@ -163,10 +141,14 @@
       }
     }
 
+    // Keyboard focus marks the row as hover does. The ring stays on the control.
+    &:has(.mg-form-check__input:focus-visible) {
+      border-color: rgb(var(--mg-color-interactive));
+    }
+
     &:has(.mg-form-check__input:checked) {
       background-color: rgb(var(--mg-color-interactive) / 0.06);
       border-color: rgb(var(--mg-color-interactive));
-      box-shadow: inset 0 0 0 1px rgb(var(--mg-color-interactive));
     }
 
     .mg-form-check__input {
@@ -178,7 +160,7 @@
 
     .mg-form-check__label {
       flex: 1;
-      line-height: 1.4;
+      line-height: var(--mg-font-line-height-700);
       overflow-wrap: anywhere;
       padding-block: var(--mg-spacing-25);
       padding-inline: var(--mg-spacing-100) 0;
@@ -192,29 +174,73 @@
     }
   }
 
+  // A correct answer locks the question. The controls are read-only, not
+  // disabled, so the chosen answer keeps its contrast; the rows stop
+  // responding and the options that were not chosen step back.
+  &--correct &__option.mg-form-check {
+    &:not(:has(.mg-form-check__input:checked)) {
+      border-color: transparent;
+
+      .mg-form-check__input {
+        border-color: rgb(var(--mg-color-neutral-400));
+      }
+
+      .mg-form-check__label {
+        color: rgb(var(--mg-color-neutral-700));
+      }
+    }
+
+    .mg-form-check__input,
+    .mg-form-check__label {
+      cursor: default;
+    }
+  }
+
+  // A read-only field loses the tinted surface that invites typing.
+  &--correct &__blank.mg-form-input,
+  &--correct &__field .mg-form-input {
+    background-color: transparent;
+    border-color: rgb(var(--mg-color-neutral-400));
+    cursor: default;
+  }
+
   &__sentence {
     @extend %mg-quiz-question-prompt;
 
     font-weight: 400;
-    line-height: 1.6;
-    margin-block-end: 0;
 
-    // Blanks need the full width to stay on the line they belong to.
-    max-inline-size: none;
+    // One row is as tall as a blank plus a gap, with or without a blank in
+    // it, so wrapped rows are evenly spaced.
+    line-height: calc(var(--mg-form-input-block-size) + var(--mg-spacing-100));
+    margin-block-end: 0;
 
     // Server templates put each blank on its own source line.
     white-space: normal;
   }
 
+  // A blank and the punctuation that follows it wrap as one.
+  &__blank-unit {
+    display: inline-block;
+    max-inline-size: 100%;
+    white-space: nowrap;
+  }
+
   // An inline blank sits in the sentence at a fixed width, so its size gives
-  // no hint about the length of the answer.
+  // no hint about the length of the answer. It has no margin at its start:
+  // the space in the sentence separates it from the word before, and a blank
+  // that wraps starts at the text edge. The margin at its end keeps the
+  // punctuation off its border.
   &__blank.mg-form-input {
     display: inline-block;
-    inline-size: 9em;
-    margin-block: var(--mg-spacing-25);
-    margin-inline: var(--mg-spacing-25);
+    inline-size: 7em;
+    margin: 0;
+    margin-inline-end: var(--mg-spacing-25);
     max-inline-size: 100%;
-    vertical-align: baseline;
+    vertical-align: middle;
+
+    @media (min-width: $mg-breakpoint-mobile) {
+      inline-size: 9em;
+    }
   }
 
   &__fields {
@@ -240,8 +266,19 @@
     }
   }
 
-  &__feedback:not(:empty) {
-    margin-block-start: var(--mg-spacing-200);
+  &__feedback {
+    max-inline-size: $mg-quiz-question-measure;
+
+    &:not(:empty) {
+      margin-block-start: var(--mg-spacing-200);
+    }
+
+    // Focus arrives here when a correct answer removes the check button.
+    &:focus-visible {
+      border-radius: var(--mg-radius-button);
+
+      @include mg-focus-ring;
+    }
   }
 
   &__feedback-title,
@@ -249,8 +286,12 @@
     margin: 0;
   }
 
+  // The explanation is the point of a correct answer, so it reads at body
+  // size, not at the Notice's smaller description size.
   &__explanation {
-    max-inline-size: 70ch;
+    color: rgb(var(--mg-color-neutral-900));
+    font-size: var(--mg-font-size-300);
+    line-height: var(--mg-font-line-height-700);
     white-space: pre-line;
   }
 

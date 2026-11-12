@@ -14,8 +14,7 @@ import { createLabelResolver } from '../../../src/i18n';
 export const DEFAULT_QUIZ_QUESTION_LABELS = {
   checkAnswer: 'Check answer',
   correct: 'Correct',
-  incorrect: 'Not quite',
-  incorrectMessage: 'Not quite. Try again.',
+  incorrectMessage: 'Not correct yet. Try again.',
   emptyChoice: 'Choose an answer first.',
   emptyText: 'Type an answer first.',
   questionNumber: 'Question {number} of {total}',
@@ -29,7 +28,6 @@ export const DEFAULT_QUIZ_QUESTION_LABELS = {
 const QUESTION_AR = {
   checkAnswer: 'تحقق من الإجابة',
   correct: 'إجابة صحيحة',
-  incorrect: 'ليست صحيحة بعد',
   incorrectMessage: 'ليست صحيحة بعد. حاول مرة أخرى.',
   emptyChoice: 'اختر إجابة أولاً.',
   emptyText: 'اكتب إجابة أولاً.',
@@ -44,8 +42,7 @@ const QUESTION_AR = {
 const QUESTION_ES = {
   checkAnswer: 'Comprobar respuesta',
   correct: 'Correcto',
-  incorrect: 'Todavía no',
-  incorrectMessage: 'Todavía no. Inténtalo de nuevo.',
+  incorrectMessage: 'Todavía no es correcto. Inténtalo de nuevo.',
   emptyChoice: 'Elige primero una respuesta.',
   emptyText: 'Escribe primero una respuesta.',
   questionNumber: 'Pregunta {number} de {total}',
@@ -59,8 +56,7 @@ const QUESTION_ES = {
 const QUESTION_FR = {
   checkAnswer: 'Vérifier la réponse',
   correct: 'Bonne réponse',
-  incorrect: 'Pas tout à fait',
-  incorrectMessage: 'Pas tout à fait. Essayez encore.',
+  incorrectMessage: 'Ce n’est pas encore correct. Essayez encore.',
   emptyChoice: 'Choisissez d’abord une réponse.',
   emptyText: 'Saisissez d’abord une réponse.',
   questionNumber: 'Question {number} sur {total}',
@@ -74,8 +70,7 @@ const QUESTION_FR = {
 const QUESTION_JA = {
   checkAnswer: '答えを確認',
   correct: '正解',
-  incorrect: '惜しい',
-  incorrectMessage: '惜しい。もう一度お試しください。',
+  incorrectMessage: 'まだ正解ではありません。もう一度お試しください。',
   emptyChoice: '先に答えを選んでください。',
   emptyText: '先に答えを入力してください。',
   questionNumber: '問題 {number}/{total}',
@@ -89,8 +84,7 @@ const QUESTION_JA = {
 const QUESTION_RU = {
   checkAnswer: 'Проверить ответ',
   correct: 'Верно',
-  incorrect: 'Не совсем',
-  incorrectMessage: 'Не совсем. Попробуйте ещё раз.',
+  incorrectMessage: 'Пока неверно. Попробуйте ещё раз.',
   emptyChoice: 'Сначала выберите ответ.',
   emptyText: 'Сначала введите ответ.',
   questionNumber: 'Вопрос {number} из {total}',
@@ -104,7 +98,6 @@ const QUESTION_RU = {
 const QUESTION_ZH = {
   checkAnswer: '检查答案',
   correct: '回答正确',
-  incorrect: '还不对',
   incorrectMessage: '还不对，请再试一次。',
   emptyChoice: '请先选择答案。',
   emptyText: '请先输入答案。',
@@ -117,7 +110,8 @@ const QUESTION_ZH = {
 };
 
 export const DEFAULT_QUIZ_SCORE_LABELS = {
-  scoreSoFar:
+  scoreSoFar: '{correct} of {total} correct so far.',
+  scoreSoFarWithAnswered:
     'Score so far: {correct} of {total} correct (answered: {answered}).',
   scoreFinal: 'You got {correct} of {total} correct.',
   progressLabel: 'Questions answered',
@@ -126,7 +120,8 @@ export const DEFAULT_QUIZ_SCORE_LABELS = {
 };
 
 const SCORE_AR = {
-  scoreSoFar:
+  scoreSoFar: '{correct} من {total} صحيحة حتى الآن.',
+  scoreSoFarWithAnswered:
     'النتيجة حتى الآن: {correct} من {total} صحيحة (تمت الإجابة: {answered}).',
   scoreFinal: 'نتيجتك: {correct} من {total} صحيحة.',
   progressLabel: 'الأسئلة التي تمت الإجابة عنها',
@@ -135,7 +130,8 @@ const SCORE_AR = {
 };
 
 const SCORE_ES = {
-  scoreSoFar:
+  scoreSoFar: '{correct} de {total} correctas hasta ahora.',
+  scoreSoFarWithAnswered:
     'Puntuación hasta ahora: {correct} de {total} correctas (respondidas: {answered}).',
   scoreFinal: 'Has acertado {correct} de {total}.',
   progressLabel: 'Preguntas respondidas',
@@ -144,7 +140,8 @@ const SCORE_ES = {
 };
 
 const SCORE_FR = {
-  scoreSoFar:
+  scoreSoFar: '{correct} sur {total} pour l’instant.',
+  scoreSoFarWithAnswered:
     'Score actuel : {correct} sur {total} (questions traitées : {answered}).',
   scoreFinal: 'Votre score : {correct} sur {total}.',
   progressLabel: 'Questions traitées',
@@ -153,7 +150,8 @@ const SCORE_FR = {
 };
 
 const SCORE_JA = {
-  scoreSoFar:
+  scoreSoFar: '現在、{total}問中{correct}問正解。',
+  scoreSoFarWithAnswered:
     '現在のスコア：{total}問中{correct}問正解（回答済み：{answered}）。',
   scoreFinal: '{total}問中{correct}問正解でした。',
   progressLabel: '回答済みの問題',
@@ -162,7 +160,8 @@ const SCORE_JA = {
 };
 
 const SCORE_RU = {
-  scoreSoFar:
+  scoreSoFar: 'Пока верно: {correct} из {total}.',
+  scoreSoFarWithAnswered:
     'Текущий результат: {correct} из {total} верно (отвечено: {answered}).',
   scoreFinal: 'Ваш результат: {correct} из {total} верно.',
   progressLabel: 'Отвечено вопросов',
@@ -171,7 +170,8 @@ const SCORE_RU = {
 };
 
 const SCORE_ZH = {
-  scoreSoFar:
+  scoreSoFar: '目前共 {total} 题，答对 {correct} 题。',
+  scoreSoFarWithAnswered:
     '当前得分：共 {total} 题，答对 {correct} 题（已作答：{answered}）。',
   scoreFinal: '共 {total} 题，您答对了 {correct} 题。',
   progressLabel: '已作答的题目',

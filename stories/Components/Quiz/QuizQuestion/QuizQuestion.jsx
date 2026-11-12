@@ -38,25 +38,18 @@ export {
 export { gradeAnswer, QUIZ_QUESTION_TYPES } from '../quizGrading';
 
 const EMPTY_LIST = [];
+// A wrong answer is an invitation to try again, not an error, so it shares the
+// quiet `info` variant with the empty attempt. The wording tells them apart.
 const NOTICE_VARIANTS = {
   correct: 'positive',
-  incorrect: 'negative',
+  incorrect: 'info',
   empty: 'info',
 };
+// Punctuation written straight after a blank ("[1], Japan") stays on the
+// blank's line when the sentence wraps.
+const TRAILING_PUNCTUATION = /^[^\s\p{L}\p{N}]+/u;
 
 const joinClasses = (...classes) => classes.filter(Boolean).join(' ');
-
-const CorrectIcon = () => (
-  <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
-    <path d="M16.59 7.58 10 14.17l-3.59-3.58L5 12l5 5 8-8zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z" />
-  </svg>
-);
-
-const IncorrectIcon = () => (
-  <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
-    <path d="M7 11h10v2H7zm5-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z" />
-  </svg>
-);
 
 /** The figure that belongs to the question, from a node or trusted HTML. */
 function QuestionMedia({ media, mediaHtml }) {
@@ -86,6 +79,11 @@ QuestionMedia.propTypes = {
  *
  * Each question publishes its state as `data-mg-quiz-state` on its root, which
  * is how QuizScore counts a page of independent questions.
+ *
+ * A correct answer locks the question: the controls become read-only and the
+ * check button leaves. Changing an answer after any other attempt clears the
+ * feedback and returns the question to unanswered, so a result never outlives
+ * the answer it was given for.
  */
 export function QuizQuestion({
   type = 'multiple_choice',
@@ -117,6 +115,8 @@ export function QuizQuestion({
   const text = getQuizQuestionLabels(lang, labels);
 
   const rootRef = useRef(null);
+  const feedbackRef = useRef(null);
+  const focusFeedbackRef = useRef(false);
   const id = useId();
   const [selected, setSelected] = useState(EMPTY_LIST);
   const [texts, setTexts] = useState(EMPTY_LIST);
@@ -124,6 +124,7 @@ export function QuizQuestion({
   // `attempt` remounts the notice so a repeated message is announced again.
   const [feedback, setFeedback] = useState({ kind: null, attempt: 0 });
   const [position, setPosition] = useState(null);
+  const locked = result === 'correct';
 
   const choices =
     safeType === 'true_false'
@@ -165,7 +166,21 @@ export function QuizQuestion({
   // The score reads the state attribute, so it is told after each commit.
   useEffect(() => {
     notifyQuizChange(rootRef.current.ownerDocument);
+    // The check button has just left the page. Focus goes to the feedback so
+    // that it is not dropped on the body.
+    if (result === 'correct' && focusFeedbackRef.current) {
+      feedbackRef.current?.focus();
+    }
+    focusFeedbackRef.current = false;
   }, [result]);
+
+  // A result or a prompt describes the answer as it was when it was checked.
+  const clearAttempt = () => {
+    setResult('unanswered');
+    setFeedback(current =>
+      current.kind ? { kind: null, attempt: current.attempt } : current
+    );
+  };
 
   const collectAnswer = () => {
     if (safeType === 'text') return texts[0] ?? '';
@@ -176,6 +191,7 @@ export function QuizQuestion({
   };
 
   const handleCheck = () => {
+    if (locked) return;
     const submitted = collectAnswer();
     if (isEmptyAnswer(submitted)) {
       setFeedback(current => ({ kind: 'empty', attempt: current.attempt + 1 }));
@@ -192,6 +208,13 @@ export function QuizQuestion({
       },
       submitted
     );
+    if (correct) {
+      const root = rootRef.current;
+      const active = root.ownerDocument.activeElement;
+      focusFeedbackRef.current =
+        active?.closest?.('.mg-quiz-question__actions') != null &&
+        root.contains(active);
+    }
     setResult(correct ? 'correct' : 'incorrect');
     setFeedback(current => ({
       kind: correct ? 'correct' : 'incorrect',
@@ -201,7 +224,9 @@ export function QuizQuestion({
   };
 
   const handleChoice = event => {
+    if (locked) return;
     const { value, checked } = event.target;
+    clearAttempt();
     setSelected(current => {
       if (!isMultiple) return [value];
       return checked
@@ -210,12 +235,15 @@ export function QuizQuestion({
     });
   };
 
-  const setText = (index, value) =>
+  const setText = (index, value) => {
+    if (locked) return;
+    clearAttempt();
     setTexts(current => {
       const next = [...current];
       next[index] = value;
       return next;
     });
+  };
 
   // A question is not a form, so Enter in a text field checks the answer.
   const handleTextKeyDown = event => {
@@ -271,6 +299,9 @@ export function QuizQuestion({
               label={option.label}
               checked={selected.includes(String(option.value))}
               onChange={handleChoice}
+              // Read-only, not disabled: the chosen answer keeps its place in
+              // the tab order and its full contrast.
+              aria-disabled={locked || undefined}
             />
           ))}
         </div>
@@ -278,6 +309,23 @@ export function QuizQuestion({
     );
   } else if (safeType === 'fill_blank') {
     const { parts, inline } = parseBlankPrompt(prompt, blanks.length);
+    // Each blank takes the punctuation that follows it into one unit.
+    const sentenceParts = [];
+    parts.forEach((part, index) => {
+      if ('blank' in part) {
+        const next = parts[index + 1];
+        const after =
+          next && 'text' in next
+            ? (next.text.match(TRAILING_PUNCTUATION)?.[0] ?? '')
+            : '';
+        sentenceParts.push({ blank: part.blank, after });
+        return;
+      }
+      const previous = sentenceParts[sentenceParts.length - 1];
+      const taken = previous && 'blank' in previous ? previous.after.length : 0;
+      const rest = part.text.slice(taken);
+      if (rest) sentenceParts.push({ text: rest });
+    });
     const below = blanks
       .map((blank, index) => index)
       .filter(index => !inline.includes(index));
@@ -295,22 +343,28 @@ export function QuizQuestion({
         <QuestionMedia media={media} mediaHtml={mediaHtml} />
         {inline.length > 0 && (
           <p className="mg-quiz-question__sentence">
-            {parts.map((part, index) =>
+            {sentenceParts.map((part, index) =>
               'text' in part ? (
                 <span key={`text-${index}`}>{part.text}</span>
               ) : (
-                <input
+                <span
                   key={`blank-${part.blank}`}
-                  className="mg-form-input mg-quiz-question__blank"
-                  type="text"
-                  autoComplete="off"
-                  autoCapitalize="none"
-                  spellCheck={false}
-                  aria-label={blankLabel(part.blank)}
-                  value={texts[part.blank] ?? ''}
-                  onChange={event => setText(part.blank, event.target.value)}
-                  onKeyDown={handleTextKeyDown}
-                />
+                  className="mg-quiz-question__blank-unit"
+                >
+                  <input
+                    className="mg-form-input mg-quiz-question__blank"
+                    type="text"
+                    autoComplete="off"
+                    autoCapitalize="none"
+                    spellCheck={false}
+                    aria-label={blankLabel(part.blank)}
+                    value={texts[part.blank] ?? ''}
+                    readOnly={locked}
+                    onChange={event => setText(part.blank, event.target.value)}
+                    onKeyDown={handleTextKeyDown}
+                  />
+                  {part.after}
+                </span>
               )
             )}
           </p>
@@ -327,6 +381,7 @@ export function QuizQuestion({
                 autoCapitalize="none"
                 spellCheck={false}
                 value={texts[index] ?? ''}
+                readOnly={locked}
                 onChange={event => setText(index, event.target.value)}
                 onKeyDown={handleTextKeyDown}
               />
@@ -354,6 +409,7 @@ export function QuizQuestion({
           autoCapitalize="none"
           spellCheck={false}
           value={texts[0] ?? ''}
+          readOnly={locked}
           onChange={event => setText(0, event.target.value)}
           onKeyDown={handleTextKeyDown}
         />
@@ -381,33 +437,31 @@ export function QuizQuestion({
       {...getLanguageProps(lang, dir)}
       {...rest}
     >
-      {(numberText || result !== 'unanswered') && (
+      {numberText && (
         <div className="mg-quiz-question__header">
-          {numberText && (
-            <p className="mg-quiz-question__number">{numberText}</p>
-          )}
-          {result !== 'unanswered' && (
-            <p
-              className={`mg-quiz-question__status mg-quiz-question__status--${result}`}
-            >
-              {result === 'correct' ? <CorrectIcon /> : <IncorrectIcon />}
-              {result === 'correct' ? text.correct : text.incorrect}
-            </p>
-          )}
+          <p className="mg-quiz-question__number">{numberText}</p>
         </div>
       )}
       {body}
-      <div className="mg-quiz-question__actions">
-        <button
-          type="button"
-          className="mg-button mg-button-primary mg-quiz-question__check"
-          data-vf-analytics-label="Quiz: Check answer"
-          onClick={handleCheck}
-        >
-          {text.checkAnswer}
-        </button>
-      </div>
-      <div className="mg-quiz-question__feedback" aria-live="polite">
+      {!locked && (
+        <div className="mg-quiz-question__actions">
+          <button
+            type="button"
+            className="mg-button mg-button-primary mg-quiz-question__check"
+            data-vf-analytics-label="Quiz: Check answer"
+            onClick={handleCheck}
+          >
+            {text.checkAnswer}
+          </button>
+        </div>
+      )}
+      <div
+        ref={feedbackRef}
+        className="mg-quiz-question__feedback"
+        aria-live="polite"
+        // Takes focus when a correct answer removes the check button.
+        tabIndex={-1}
+      >
         {feedback.kind && (
           <Notice
             key={feedback.attempt}
@@ -480,7 +534,6 @@ QuizQuestion.propTypes = {
   labels: PropTypes.shape({
     checkAnswer: PropTypes.string,
     correct: PropTypes.string,
-    incorrect: PropTypes.string,
     incorrectMessage: PropTypes.string,
     emptyChoice: PropTypes.string,
     emptyText: PropTypes.string,
@@ -491,7 +544,7 @@ QuizQuestion.propTypes = {
     trueLabel: PropTypes.string,
     falseLabel: PropTypes.string,
   }),
-  /** Called after each graded attempt with `{ correct, answer }`. An empty attempt is not graded and does not call it. */
+  /** Called after each graded attempt with `{ correct, answer }`. An empty attempt is not graded and does not call it. A correct answer locks the question, so it is the last call until the quiz is started again. */
   onCheck: PropTypes.func,
   /** Additional CSS class names for the root. */
   className: PropTypes.string,

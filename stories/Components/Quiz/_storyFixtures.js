@@ -60,13 +60,16 @@ export const QUESTIONS = {
   },
   image: {
     type: 'multiple_choice',
-    prompt: 'Which hazard does this image show?',
+    prompt:
+      'Which hazard most directly threatens a rain-fed crop like the one in this photo?',
     options: [
-      { value: 'amr', label: 'Antimicrobial resistant microorganisms' },
-      { value: 'hab', label: 'Harmful algal blooms', correct: true },
-      { value: 'toxins', label: 'Marine toxins' },
-      { value: 'oil', label: 'Oil pollution' },
+      { value: 'surge', label: 'Storm surge' },
+      { value: 'drought', label: 'Drought', correct: true },
+      { value: 'avalanche', label: 'Avalanche' },
+      { value: 'tsunami', label: 'Tsunami' },
     ],
+    explanation:
+      'A rain-fed crop depends on seasonal rainfall, so a prolonged shortfall can cut the harvest or destroy it.',
   },
   longLabels: {
     type: 'multiple_choice',
@@ -141,13 +144,16 @@ export const QUESTIONS_AR = {
     ],
   },
   image: {
-    prompt: 'ما الخطر الذي تُظهره هذه الصورة؟',
+    prompt:
+      'ما الخطر الذي يهدد مباشرةً محصولاً يعتمد على الأمطار مثل المحصول الظاهر في هذه الصورة؟',
     options: [
-      { value: 'amr', label: 'الكائنات الدقيقة المقاومة لمضادات الميكروبات' },
-      { value: 'hab', label: 'تكاثر الطحالب الضارة', correct: true },
-      { value: 'toxins', label: 'السموم البحرية' },
-      { value: 'oil', label: 'التلوث النفطي' },
+      { value: 'surge', label: 'عرام العواصف' },
+      { value: 'drought', label: 'الجفاف', correct: true },
+      { value: 'avalanche', label: 'الانهيار الثلجي' },
+      { value: 'tsunami', label: 'التسونامي' },
     ],
+    explanation:
+      'يعتمد المحصول البعلي على الأمطار الموسمية، ولذلك قد يؤدي نقصها الطويل إلى تراجع الحصاد أو تلفه.',
   },
 };
 
@@ -158,7 +164,8 @@ export const PAGE_TEXT = {
       'Take the quiz to test your disaster knowledge. Each question is checked as you go, and you can try as often as you like.',
     between:
       'The hazard information profiles describe 302 hazards in a consistent way, so that governments and partners can share one vocabulary.',
-    imageAlt: 'Aerial view of green algae spreading across a lake shore',
+    imageAlt:
+      'A farmer sits at the edge of a wheat field during harvest, with cut sheaves beside him',
     caption: 'Photo used for illustration.',
     after: 'About the hazard information profiles',
     afterBody:
@@ -170,7 +177,7 @@ export const PAGE_TEXT = {
       'أجب عن الأسئلة لاختبار معلوماتك عن الكوارث. يُتحقق من كل سؤال فوراً، ويمكنك المحاولة بقدر ما تشاء.',
     between:
       'تصف ملفات معلومات الأخطار 302 خطراً بطريقة متسقة، ليتشارك الجميع المفردات نفسها.',
-    imageAlt: 'منظر جوي لطحالب خضراء تنتشر على ضفة بحيرة',
+    imageAlt: 'مزارع يجلس على طرف حقل قمح وقت الحصاد وبجانبه حزم من السنابل',
     caption: 'صورة للتوضيح.',
     after: 'عن ملفات معلومات الأخطار',
     afterBody:
