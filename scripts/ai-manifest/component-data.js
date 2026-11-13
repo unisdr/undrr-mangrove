@@ -89,6 +89,10 @@ export const REQUIRES_REACT = {
     'ScrollContainer manages horizontal scroll state with navigation buttons. Requires React. Can be hydrated via createHydrator.',
   'components-user-feedback':
     'UserFeedback manages a binary page response, confirmation state and focus. Requires React for button behavior and can be hydrated via createHydrator with data-mg-user-feedback. Place it as a separate sibling immediately before Footer when the pattern is used.',
+  'components-quiz-quiz-question':
+    'QuizQuestion grades answers, shows feedback and publishes its state in the browser. Requires React; hydrate server-rendered markup via createHydrator with data-mg-quiz-question. A correct answer locks the question. Optional: a hint shown after a wrong answer, and a Show answer button that appears after the first wrong answer, puts the answer on screen and locks the question as revealed. The static renderedHtml has a check button that does nothing. After other code removes or replaces quiz markup without unmounting it, call refreshQuiz().',
+  'components-quiz-quiz-score':
+    'QuizScore counts the mounted QuizQuestion components that share its scope and updates as answers are checked. Requires React; hydrate an empty data-mg-quiz-score container via createHydrator. After other code removes or replaces quiz markup without unmounting it, call refreshQuiz() or ensureQuizScoreHost().',
   'components-navigation-tree':
     'Tree needs JavaScript: keyboard navigation and expand/collapse come from React, so the static renderedHtml is not a working tree. On non-React pages, hydrate a nested list inside a data-mg-tree container; see the hydration field for the full contract.',
   'components-buttons-sharebuttons':
@@ -1355,6 +1359,138 @@ npm run build</code></pre>
     },
   },
 
+  // --- Quiz question (auto-rendered + hydration) ---
+  'components-quiz-quiz-question': {
+    summary:
+      'One self-checking quiz question in the page flow: multiple choice (one or several answers), true or false, short answer or fill in the blank. Engagement only; the answer key is in the page.',
+    description:
+      'One self-checking quiz question in the page flow: multiple choice (one or several answers), true or false, short answer or fill in the blank with inline blanks written as [1], [2] in the prompt. Engagement only: answers are graded in the browser against the key in the props or data-question, the component stores and sends nothing and the key is readable in the page, so never use it for assessed quizzes. The visitor answers and selects Check answer. Feedback is a Notice in a polite live region: positive for a correct answer ("Correct", with an optional plain-text explanation) and info for a wrong answer ("Not correct yet. Try again.", with the optional hint), for an empty attempt, which is not graded, and for a revealed answer ("Here is the answer.", with the explanation). After a wrong answer visitors can retry without limit, and changing the answer clears the feedback and returns the question to unanswered. A correct answer locks the question: radios and checkboxes get aria-disabled="true", text fields become readonly, the buttons are removed and focus moves to the result Notice, which is then a group named by its title with tabindex="-1"; the live region itself is never focused. Two optional parts help after a wrong answer. hint is plain text shown inside the "Not correct yet. Try again." Notice after an incorrect attempt only. showAnswer (boolean, default false) adds a Show answer button after Check answer from the first incorrect attempt; an empty attempt does not earn it, and once earned it stays while the visitor edits the answer, until the question is answered correctly, revealed or started again. It is a secondary outline button beside the primary check button of a lone question, and the same button without its edge and underlined (mg-quiz-question__reveal--quiet) beside the outline check button on a page of questions. Show answer selects the correct option or options and clears the selection the visitor made, or fills the short-answer field or each blank with its first accepted answer; the question then locks as a correct answer locks it, in the revealed state. onCheck is not called for it; onReveal is called, with questionId when the question has one. The answer-key fields are optional. Without a usable key no answer is marked correct and Show answer is never offered: no option flagged correct, a single-answer question with more than one option flagged, a true_false question with no answer, or a text field or blank with no non-blank accepted answer. A true_false answer is the boolean true or false, or the string "true" or "false" in any letter case; anything else is no key. Text matching normalizes Unicode to NFKC (full-width digits and letters match their ordinary forms), removes zero-width characters, trims and collapses whitespace and ignores case unless caseSensitive is set. There is no language-specific case folding (ß does not match SS, dotted İ does not match i), accents count and digits of other scripts are not converted. A multiple-answer question needs exactly the correct set; options are graded by position, so repeated or empty option values still work. In fill_blank each blank appears once at its first marker, a repeated marker or one with no blank is not shown, blanks the prompt does not mention are listed after the sentence, and a question with no blanks has no check button and is not counted. Each mounted question numbers itself among the mounted questions sharing its scope (the nearest data-mg-quiz ancestor, or the page) and publishes data-mg-quiz-state (unanswered, correct, incorrect, revealed) on its root for QuizScore, which counts revealed as answered and not correct. An optional id in data-question (questionId in React) is reflected as data-mg-quiz-id on the root and passed to onCheck and onReveal; it is not used for DOM ids or radio names. When the props change to a different question (another questionId, or other content when there is none) the answer and result are cleared. lang selects built-in labels (en, ar, es, fr, ja, ru, zh) including True and False; labels overrides individual strings; prompts, options, explanations and hints are consumer content. Every option, text input and blank and both buttons carry a fixed data-vf-analytics-label (Quiz: Answer option, Quiz: Answer field, Quiz: Blank, Quiz: Check answer, Quiz: Show answer) that never contains an option value, a position or typed text, so a site click tracker can record that a control was used but not which answer was given. For server-rendered use, the hydration field gives the data-question fields, the fallback markup and the mounting calls.',
+    cssClasses: [
+      'mg-quiz-question',
+      'mg-quiz-question--multiple-choice',
+      'mg-quiz-question--true-false',
+      'mg-quiz-question--text',
+      'mg-quiz-question--fill-blank',
+      'mg-quiz-question--correct',
+      'mg-quiz-question--incorrect',
+      'mg-quiz-question--revealed',
+      'mg-quiz-question__header',
+      'mg-quiz-question__number',
+      'mg-quiz-question__group',
+      'mg-quiz-question__group--sentence',
+      'mg-quiz-question__prompt',
+      'mg-quiz-question__hint',
+      'mg-quiz-question__media',
+      'mg-quiz-question__media-slot',
+      'mg-quiz-question__options',
+      'mg-quiz-question__option',
+      'mg-quiz-question__sentence',
+      'mg-quiz-question__blank-unit',
+      'mg-quiz-question__blank',
+      'mg-quiz-question__note',
+      'mg-quiz-question__fields',
+      'mg-quiz-question__field',
+      'mg-quiz-question__actions',
+      'mg-quiz-question__check',
+      'mg-quiz-question__reveal',
+      'mg-quiz-question__reveal--quiet',
+      'mg-quiz-question__feedback',
+      'mg-quiz-question__feedback-title',
+      'mg-quiz-question__feedback-hint',
+      'mg-quiz-question__explanation',
+    ],
+    hydration: {
+      note: 'renderedHtml is static: its check button does nothing. Render a data-mg-quiz-question container (with data-mg-ssr) that carries the whole question in data-question, put a no-JavaScript fallback inside it, then hydrate. The JSON is the source of truth: the fallback is replaced on mount and only its media element is kept. Fallback: the prompt, optional media and native controls, with no button, no hint, no feedback and no id attributes; the markup is the same with or without hint and showAnswer. Each option is a label.mg-form-check.mg-form-check--row.mg-quiz-question__option (the Forms option row) that wraps its input and a span.mg-form-check__label. The radios of one question MUST share a name attribute that no other question on the page uses, generated for each rendering (a counter or random token, not the question id), or they are not a radio group without JavaScript; checkboxes need no name. Give each fallback option label and input data-vf-analytics-label="Quiz: Answer option" and each text input "Quiz: Blank" or "Quiz: Answer field". In a fill_blank fallback wrap each blank input and the punctuation after it in a span.mg-quiz-question__blank-unit, render each blank once at its first marker and leave out any other marker. End the fallback with a noscript note (p.mg-form-help.mg-quiz-question__note) in the page language saying that checking answers needs JavaScript. With showAnswer, put the spelling to show first in each expected list, because the first accepted answer is the one revealed, and give a single-answer multiple_choice question exactly one correct option. On mount the component discards the fallback name and generates its own ids and radio name, so the same question can appear twice. The fallback .mg-quiz-question__media element is moved into the mounted component as the same DOM nodes, so listeners attached before hydration keep working; on unmount the container gets its server markup back. If data-question cannot be used (missing, not valid JSON, unknown type, prompt missing or not text, multiple_choice with no usable option, fill_blank with no blanks or a blank that is not an object) the component does not mount and the fallback stays; a malformed option or accepted answer is dropped; if rendering still fails the fallback is put back. A question that does not mount is not numbered or counted. Hydrate QuizScore as well for a page score. When other code removes or replaces quiz markup without unmounting it (Drupal AJAX), call prune() on the hydrator and then refreshQuiz(context), or refreshQuiz(context, { defer: true }) from a Drupal behavior detach; refreshQuiz is exported from the QuizQuestion and QuizScore modules.',
+      selector: '[data-mg-quiz-question]',
+      modules: hydrationModules('QuizQuestion'),
+      dataAttributes: {
+        'data-mg-quiz-question': 'Marks the container to hydrate (required).',
+        'data-question':
+          'JSON object (required). All types: type ("multiple_choice", "true_false", "text", "fill_blank"), prompt (plain text, line breaks as \\n), optional explanation (plain text), optional hint (plain-text string shown after an incorrect attempt; any other type is ignored), optional showAnswer (the boolean true offers Show answer after the first incorrect attempt; any other value, including the string "true", is ignored), optional id (string or number, a stable identifier reflected as data-mg-quiz-id). multiple_choice: options [{value, label, correct}], optional multiple. true_false: answer, the boolean true or false or the string "true" or "false" in any letter case; any other value, or none, is no key and no answer is marked correct. text: expected (list of accepted answers), optional caseSensitive. fill_blank: prompt containing [1], [2] and blanks [{label, expected, caseSensitive}].',
+        'data-mg-ssr':
+          'Keeps the fallback markup on screen until the component replaces it (recommended).',
+        'data-lang':
+          'Language tag for the interface labels (en, ar, es, fr, ja, ru, zh), including regional variants. Defaults to the nearest HTML lang attribute, then English.',
+        dir: 'Explicit direction on the hydration container: ltr, rtl or auto.',
+        'data-labels':
+          'JSON object of UI label overrides. A value that is not a non-empty string is ignored.',
+        'data-number':
+          'Position of the question. Counted automatically when absent.',
+        'data-total': 'Number of questions. Counted automatically when absent.',
+        'data-show-number': '"false" to leave out "Question 2 of 5".',
+      },
+      events: [
+        {
+          name: 'mg-quiz:change',
+          target: 'The document',
+          bubbles: true,
+          when: 'A question mounts, unmounts, is graded or returns to unanswered because its answer changed or the quiz was started again. Batched: all the changes of one task share one event, dispatched in a microtask after that task; refreshQuiz() and ensureQuizScoreHost() dispatch it at once. The event does not say what changed. Read data-mg-quiz-state on the .mg-quiz-question[data-mg-quiz-state] roots for the current results.',
+        },
+      ],
+      example: hydrationExample({
+        name: 'QuizQuestion',
+        selector: '[data-mg-quiz-question]',
+        markup: `<div data-mg-quiz-question data-mg-ssr
+  data-question='{"type":"true_false","prompt":"A storm tide is the same thing as a tsunami.","answer":false,"explanation":"A storm tide is the predicted tide plus a storm surge."}'>
+  <div class="mg-quiz-question mg-quiz-question--true-false">
+    <fieldset class="mg-form-group mg-quiz-question__group">
+      <legend class="mg-form-group__legend">A storm tide is the same thing as a tsunami.</legend>
+      <div class="mg-quiz-question__options">
+        <label class="mg-form-check mg-form-check--row mg-quiz-question__option" data-vf-analytics-label="Quiz: Answer option">
+          <input class="mg-form-check__input mg-form-check__input--radio" type="radio" name="quiz-c41e-answer" value="true" data-vf-analytics-label="Quiz: Answer option">
+          <span class="mg-form-check__label">True</span>
+        </label>
+        <label class="mg-form-check mg-form-check--row mg-quiz-question__option" data-vf-analytics-label="Quiz: Answer option">
+          <input class="mg-form-check__input mg-form-check__input--radio" type="radio" name="quiz-c41e-answer" value="false" data-vf-analytics-label="Quiz: Answer option">
+          <span class="mg-form-check__label">False</span>
+        </label>
+      </div>
+    </fieldset>
+    <noscript><p class="mg-form-help mg-quiz-question__note">Checking your answers needs JavaScript.</p></noscript>
+  </div>
+</div>`,
+      }),
+    },
+  },
+
+  // --- Quiz score (auto-rendered + hydration) ---
+  'components-quiz-quiz-score': {
+    summary:
+      'Running score and end summary for the quiz questions on a page or in a data-mg-quiz wrapper. Empty until the first answer is checked.',
+    description:
+      'Running score and end summary for the QuizQuestion components that share its scope (the nearest data-mg-quiz ancestor, or the page). Empty until the first answer is checked, then a short role="status" sentence ("1 of 5 correct so far.") with a ProgressBar of questions answered, or a longer sentence with the answered count when the bar is off, and the final score with a Start again button once every question is answered. Start again unlocks and clears every question in the scope. A question is answered when its state is correct, incorrect or revealed, and only correct adds to the score, so a question ended with Show answer lets the quiz complete and counts as not correct. Only mounted questions are counted: a server-rendered question that did not mount, or a question with nothing to answer, is left out. The component stores and sends nothing; the Start again button carries the fixed data-vf-analytics-label "Quiz: Start again" for a site click tracker.',
+    cssClasses: [
+      'mg-quiz-score',
+      'mg-quiz-score--active',
+      'mg-quiz-score--complete',
+      'mg-quiz-score__summary',
+      'mg-quiz-score__progress',
+      'mg-quiz-score__actions',
+      'mg-quiz-score__reset',
+    ],
+    hydration: {
+      note: 'Render an empty data-mg-quiz-score container after the last question, or call ensureQuizScoreHost(context), exported from the QuizScore module, before hydrating: for each scope with a data-mg-quiz-question inside context (the document by default) it adds the container after the last question container of that scope, keeps it there when more questions arrive, marks it data-mg-quiz-score-auto and ends by asking every question and score to count again. Put data-mg-quiz on an ancestor to make a separate scope. When other code removes or replaces quiz markup without unmounting it, call ensureQuizScoreHost(context) again or refreshQuiz(context), also exported from the module. renderedHtml is the empty state before any answer is checked.',
+      selector: '[data-mg-quiz-score]',
+      modules: hydrationModules('QuizScore'),
+      dataAttributes: {
+        'data-mg-quiz-score': 'Marks the container to hydrate (required).',
+        'data-lang':
+          'Language tag for the labels (en, ar, es, fr, ja, ru, zh), including regional variants. Defaults to the nearest HTML lang attribute, then English.',
+        dir: 'Explicit direction on the hydration container: ltr, rtl or auto.',
+        'data-labels':
+          'JSON object of UI label overrides: scoreSoFar (with the progress bar), scoreSoFarWithAnswered (without it), scoreFinal, progressLabel, progressValue, reset. Placeholders: {correct}, {total}, {answered}.',
+        'data-show-progress': '"false" to leave out the progress bar.',
+        'data-show-reset': '"false" to leave out the Start again button.',
+      },
+      events: [],
+      example: hydrationExample({
+        name: 'QuizScore',
+        selector: '[data-mg-quiz-score]',
+        markup: `<div data-mg-quiz-score></div>`,
+      }),
+    },
+  },
+
   // --- Service notice (auto-rendered + hydration) ---
   'components-notice-service-notice': {
     description:
@@ -1573,9 +1709,9 @@ npm run build</code></pre>
   },
   'components-forms-checkbox': {
     summary:
-      'Styled checkbox with label, plus the CSS-only .mg-switch toggle. Error, disabled and pending states, and a vanilla helper for switches that save a setting.',
+      'Styled checkbox with label and an optional full-width option row, plus the CSS-only .mg-switch toggle. Error, disabled and pending states, and a vanilla helper for switches that save a setting.',
     description:
-      'Styled checkbox with label. Error and disabled states available. Also documents the CSS-only .mg-switch toggle (role="switch"), including a pending state set with aria-busy="true" on the input or .mg-switch--pending on the label. The switch has an error state, set the same way as on any other control: aria-invalid="true" on the input (preferred, and the only form assistive technology sees), or mg-switch__input--error on the input, or mg-switch--error on the label, each giving the track a red boundary; put the message in a sibling p.mg-form-error with role="alert" OUTSIDE the label (inside it would join the switch\'s accessible name) and join the two with aria-describedby, exactly as with a text input, so FormErrorSummary can link to the switch by id. The error state does not move the thumb: use it for "the thing this switch controls failed", and the pending helper when the save itself failed and the switch must revert. The switch is sized and coloured with the --mg-switch-* custom properties in this entry, set on the switch or any ancestor, and never by overriding the thumb transform, which also breaks RTL. The thumb travel, its RTL counterpart and the pending ring all derive from the size properties, so setting those is enough in both directions. .mg-switch--small sets --mg-switch-size: 1.125rem and a tighter row gap, and re-declares no length inside the switch; prefer it to a size of your own for a toolbar, table row or panel header. Do not paint a switch state with box-shadow or outline on the track: the focus ring owns both, and a consumer rule of equal specificity replaces its separator band. For a switch that saves a setting, load the dependency-free js/switch-pending.js module (no React): it announces "Saving…", "Still saving…" and the outcome in a role="status" region, ignores presses while saving, sets aria-busy a frame after the change, honours only the latest request, and times out (10s) and reverts on failure. Use mgSwitchPending(input, { save }) where save(checked, signal) returns a Promise, or mark switches with data-mg-switch-pending and answer one document-level mg-switch:save listener. Both defaults can be switched off: revert: false keeps the position the user asked for and sets aria-invalid="true" instead (which also turns on the error state above, so supply the .mg-form-error message too), and timeout: 0 or Infinity removes the deadline. mgSwitchAnnouncer(element, { status, labels }) exports the announcements on their own, for apps that run their own save.',
+      'Styled checkbox with label. Error and disabled states available. Add mg-form-check--row to the wrapper (the row prop in React) to draw the option as a full-width row at least 48px tall: the label is stretched over the row so the whole row selects, and the row shows hover, keyboard focus (:has(:focus-visible)), the checked state, disabled and forced colours; the same modifier works on radios, and on a label.mg-form-check--row that wraps the input with the text in span.mg-form-check__label. Use rows when options are sentences or the choice is the main task on screen, not in dense forms. Also documents the CSS-only .mg-switch toggle (role="switch"), including a pending state set with aria-busy="true" on the input or .mg-switch--pending on the label. The switch has an error state, set the same way as on any other control: aria-invalid="true" on the input (preferred, and the only form assistive technology sees), or mg-switch__input--error on the input, or mg-switch--error on the label, each giving the track a red boundary; put the message in a sibling p.mg-form-error with role="alert" OUTSIDE the label (inside it would join the switch\'s accessible name) and join the two with aria-describedby, exactly as with a text input, so FormErrorSummary can link to the switch by id. The error state does not move the thumb: use it for "the thing this switch controls failed", and the pending helper when the save itself failed and the switch must revert. The switch is sized and coloured with the --mg-switch-* custom properties in this entry, set on the switch or any ancestor, and never by overriding the thumb transform, which also breaks RTL. The thumb travel, its RTL counterpart and the pending ring all derive from the size properties, so setting those is enough in both directions. .mg-switch--small sets --mg-switch-size: 1.125rem and a tighter row gap, and re-declares no length inside the switch; prefer it to a size of your own for a toolbar, table row or panel header. Do not paint a switch state with box-shadow or outline on the track: the focus ring owns both, and a consumer rule of equal specificity replaces its separator band. For a switch that saves a setting, load the dependency-free js/switch-pending.js module (no React): it announces "Saving…", "Still saving…" and the outcome in a role="status" region, ignores presses while saving, sets aria-busy a frame after the change, honours only the latest request, and times out (10s) and reverts on failure. Use mgSwitchPending(input, { save }) where save(checked, signal) returns a Promise, or mark switches with data-mg-switch-pending and answer one document-level mg-switch:save listener. Both defaults can be switched off: revert: false keeps the position the user asked for and sets aria-invalid="true" instead (which also turns on the error state above, so supply the .mg-form-error message too), and timeout: 0 or Infinity removes the deadline. mgSwitchAnnouncer(element, { status, labels }) exports the announcements on their own, for apps that run their own save.',
     vanillaModule: {
       note: 'Plain ES module: no React, no hydrate.js, no import map. renderedHtml switches toggle but do not save. Marked switches are enhanced on load; an explicit mgSwitchPending or mgSwitchPendingInit call takes over those switches with its options. Without a save function, each change dispatches a cancelable mg-switch:save event; a listener must call event.detail.respondWith(promise) synchronously (wrap awaited work in an async function and pass its promise), or call event.preventDefault() synchronously and respondWith later. Otherwise the switch reverts with a console warning. Call mgSwitchPendingDestroy(scope), or abort the { signal } passed to mgSwitchPendingInit, before removing switches. Exports: mgSwitchPending(input, { save, status, timeout, revert, labels, signal }) returning { destroy() }, mgSwitchPendingInit(scope, options) returning the new helpers, mgSwitchPendingDestroy(scope), and mgSwitchAnnouncer(element, { status, labels }). The announcer is the announcements without the save state machine, for an app that owns the switch position and its own requests: it adds no listeners and sets no attributes, and returns { status, labels, label(), announce(text), pending(), stillSaving(force), settled(checked), failed(), destroy() }, where announce() takes a string with {label} or a function (labelText, input). mgSwitchPending runs the same announcer.',
       selector: '[data-mg-switch-pending]',
@@ -1653,6 +1789,7 @@ npm run build</code></pre>
     },
     cssClasses: [
       'mg-form-check',
+      'mg-form-check--row',
       'mg-form-check__input',
       'mg-form-check__input--checkbox',
       'mg-form-check__input--disabled',
@@ -1672,7 +1809,19 @@ npm run build</code></pre>
   },
   'components-forms-radio': {
     description:
-      'Styled radio button with label. Error and disabled states available.',
+      'Styled radio button with label. Error and disabled states available. Add mg-form-check--row to the wrapper (the row prop in React) to draw each option as a full-width row: the whole row selects and shows hover, keyboard focus, the checked state and disabled. Use rows when options are sentences or the choice is the main task on screen.',
+    summary:
+      'Styled radio button with label and an optional full-width option row. Error and disabled states available.',
+    cssClasses: [
+      'mg-form-check',
+      'mg-form-check--row',
+      'mg-form-check__input',
+      'mg-form-check__input--radio',
+      'mg-form-check__input--disabled',
+      'mg-form-check__input--error',
+      'mg-form-check__label',
+      'mg-form-error',
+    ],
   },
   'components-forms-segmented-control': {
     summary:

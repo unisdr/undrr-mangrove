@@ -98,12 +98,13 @@ import createHydrator from '@undrr/undrr-mangrove/components/hydrate.js';
 | `options.onError` | `Function` | No | `(error, container) => void` callback |
 | `options.identifierPrefix` | `string` | No | `useId()` prefix override |
 
-Returns: `{ roots, update, unmountAll }`
+Returns: `{ roots, update, prune, unmountAll }`
 
 | Property | Type | Description |
 |----------|------|-------------|
 | `roots` | `ReactRoot[]` | Roots created across calls |
 | `update(context?)` | `(Element?) => ReactRoot[]` | Mounts new matches in `context` or `document` |
+| `prune()` | `() => Element[]` | Unmounts and releases the roots whose container is no longer in the document, and returns those containers. Containers still in the page, including ones that were moved, are left alone |
 | `unmountAll()` | `() => void` | Unmounts roots and clears hydration markers |
 
 ## Runtime behavior and caveats
@@ -114,6 +115,7 @@ Returns: `{ roots, update, unmountAll }`
 - The one arrangement that cannot work is nesting a container inside a hydrated container of the *same* kind. A marker the component rendered itself and one it re-emitted for the consumer are the same DOM node to the runtime, so the ambiguous case is resolved in favour of not duplicating
 - **Appending to, or refilling, a hydrated container is a no-op for a host of that container's own kind**, for the same reason: a match that lands under a hydrated container of its own kind is skipped, and `update()` reports no new roots rather than raising. To replace a hydrated container's contents, call `unmountAll()`, write the new markup, then call `update()` again. To add a container of the same kind, put it outside every hydrated container of that kind — a host of a different kind nested inside one, such as a card inside a scroll container, hydrates normally
 - Saves original `innerHTML` before rendering for rollback
+- A container that other code removes from the document (Drupal AJAX replacing a block) keeps its root until `prune()` or `unmountAll()` is called. Call `prune()` at the start of a Drupal behavior's `attach`, before `update()`. It runs only when called, so a container taken out to be put back later keeps its state unless the consumer asks. The next `update()` mounts a pruned container that comes back, or new markup that replaces it
 - Applies React root error hooks:
   - `onCaughtError` and `onUncaughtError`: `console.error` + optional `onError`
   - `onRecoverableError`: `console.warn`
@@ -136,6 +138,8 @@ Returns: `{ roots, update, unmountAll }`
 | IconCard | Medium | `[data-mg-icon-card]` | `data-items` (JSON), `data-centered`, `data-variant` |
 | StatsCard | Medium | `[data-mg-stats-card]` | `data-stats` (JSON), `data-title`, `data-variant` |
 | UserFeedback | Simple | `[data-mg-user-feedback]` | `data-question`, `data-yes-label`, `data-no-label`, `data-report-issue-label`, `data-feedback-url`, `data-confirmation-before-link`, `data-confirmation-separator`, `data-confirmation-link`, `data-confirmation-after-link`. There is no submission endpoint: Mangrove itself records nothing |
+| QuizQuestion | Medium | `[data-mg-quiz-question]` | `data-question` (JSON, with the answer key), `data-labels` (JSON), `data-number`, `data-total`, `data-show-number`. Add `data-mg-ssr` and render a no-JavaScript fallback inside the container: radios that share a `name` unique to that rendering of the question, an optional `.mg-quiz-question__media` element and a `<noscript>` note. The Quiz question component docs give the full markup and data contract. `data-mg-quiz` on any ancestor makes a separate quiz scope. Engagement only: the key is readable in the page |
+| QuizScore | Simple | `[data-mg-quiz-score]` | `data-labels` (JSON), `data-show-progress`, `data-show-reset`. Counts the mounted questions in the nearest `data-mg-quiz` ancestor, or the page. `ensureQuizScoreHost(context)` from the same module adds the container after the last question, and `refreshQuiz(context)` recounts after other code has changed the page |
 | MegaMenu | Complex | `[data-mg-mega-menu]` | `data-delay`, `data-hover-delay`, `data-sections` (JSON, optional) |
 | SyndicationSearchWidget | Complex | `[data-mg-search-widget]` | `data-search-endpoint`, `data-results-per-page`, `data-default-filters` (JSON) |
 | Pager | Medium | `[data-mg-pager]` | `data-page`, `data-total-pages`, `data-show-jump-to`, `data-aria-label` |

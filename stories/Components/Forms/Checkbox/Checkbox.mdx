@@ -46,6 +46,61 @@ The checkbox component lets users select or deselect individual options. Each ch
 
 <Canvas of={CheckboxStories.CheckboxGroup} />
 
+## Option rows
+
+Pass `row`, or add `mg-form-check--row` to the wrapper, to draw the checkbox as a full-width row. The whole row is the target, and the row itself shows hover, keyboard focus and selection. Wrap a set of them in a `<FormGroup>` as usual.
+
+<Canvas of={CheckboxStories.Row} />
+
+### When to use option rows
+
+- When each option is a phrase or a sentence, or may wrap in translation.
+- When choosing from the set is the main task on the screen, such as a question or a survey step, and a larger target helps on a touch screen.
+- Use the default checkbox in a dense form, a filter list or anywhere the options are short and many. A row is at least 48 pixels tall, so a long list of rows is a long page.
+- Use one presentation for a whole group. Do not mix rows and default checkboxes in the same group.
+
+### How a row behaves
+
+- **Rest**: no edge and no fill, so a group does not read as a stack of boxes. The edge is there, transparent, so nothing moves when a state draws it.
+- **Hover and keyboard focus**: the row takes an edge in the interactive colour. The focus ring stays on the control.
+- **Selected**: the row takes the edge and a light tint of the interactive colour.
+- **Disabled**: the label is greyed, the row does not respond to the pointer and a selected row keeps a neutral edge. A disabled `FormGroup` does the same for every row in it.
+- **Error**: the control takes its red boundary as usual, and the message sits on its own line under the label.
+- **Long labels**: the label wraps and the control stays on its first line.
+- **Label before**: `labelPosition="before"` puts the control at the end of the row.
+- **Right to left**: the row uses logical properties and mirrors under `dir="rtl"`.
+
+<Canvas of={CheckboxStories.RowStates} />
+
+```html
+<div class="mg-form-check mg-form-check--row">
+  <input
+    class="mg-form-check__input mg-form-check__input--checkbox"
+    type="checkbox"
+    id="hazard-flood"
+    name="hazards"
+    value="flood"
+  />
+  <label class="mg-form-check__label" for="hazard-flood">Flood</label>
+</div>
+```
+
+Markup with no ids can make the row a `label` that wraps the control, with the text in a `span`:
+
+```html
+<label class="mg-form-check mg-form-check--row">
+  <input
+    class="mg-form-check__input mg-form-check__input--checkbox"
+    type="checkbox"
+    name="hazards"
+    value="flood"
+  />
+  <span class="mg-form-check__label">Flood</span>
+</label>
+```
+
+The variant has no read-only state. [Quiz question](?path=/docs/components-quiz-quiz-question--docs) locks its rows after a correct or revealed answer with styles of its own.
+
 ## Switch toggle (`.mg-switch`)
 
 For immediate binary state switches (e.g., activating map layers, live filtering, feature toggles) where a standard form checkbox reads as an unanswered form field, use `.mg-switch` with `role="switch"`.
@@ -537,6 +592,7 @@ Keep the ring at 3:1 or more against the thumb, and the thumb at 3:1 or more aga
 - The label is programmatically associated with the checkbox via `htmlFor`/`id`.
 - For groups of checkboxes, wrap them in a `<FormGroup>` (renders `<fieldset>` with `<legend>`).
 - Keyboard users can toggle the checkbox with Space.
+- In an option row the stretched label makes the whole row the target, at least 48 pixels tall, and the control keeps its own boundary and focus ring. Selection is never colour alone: the control shows it. In forced-colours mode a selected row has a double edge in the system highlight colour, other rows have no edge until hover or keyboard focus and a disabled row uses the system's inactive colour. The row states use `:has()`, which every [supported browser](?path=/docs/getting-started-browser-support--docs) has; without it the row still selects and only the row's own edge and tint are missing.
 - UNDRR's shared click tracker names a click after the element's visible text, and a click on the label after its `for` id. Set `analyticsLabel` to give the input and its label a fixed `data-vf-analytics-label` instead, so reports do not split by language or show generated ids.
 
 ## See also
@@ -545,6 +601,7 @@ Keep the ring at 3:1 or more against the thumb, and the thumb at 3:1 or more aga
 
 ## Changelog
 
+- **2.6**, 2026-11-13 ([#1481](https://github.com/unisdr/undrr-mangrove/issues/1481)): Added option rows: the `row` prop and the `mg-form-check--row` modifier draw a checkbox as a full-width target that shows hover, keyboard focus, selection, disabled and error on the row, with forced-colours styles. Checkboxes without it render as before. Added the "Row" and "Row states" stories.
 - **2.5**, 2026-11-12 ([undrr/web-backlog#3320](https://gitlab.com/undrr/web-backlog/-/work_items/3320)): Added an optional `analyticsLabel` prop, which sets the same `data-vf-analytics-label` on the input and its label. Checkboxes without it render as before.
 - **2.4**, 2026-09-18 ([#1214](https://github.com/unisdr/undrr-mangrove/pull/1214)): Gave `.mg-switch` an error state and size hooks. A default switch renders exactly as before.
   - Error state ([#1187](https://github.com/unisdr/undrr-mangrove/issues/1187)): `aria-invalid="true"` on the input, `.mg-switch__input--error`, or `.mg-switch--error` on the label, each giving the track a red boundary, with a `.mg-form-error` message joined by `aria-describedby`: the same pattern, class naming and error summary relationship as the text input, select, radio and checkbox. Unlike the pending state it does not move the thumb, so a controller whose latest intent wins does not contradict the user. `--mg-switch-track-border-color--error` sets the colour.

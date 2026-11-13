@@ -34,7 +34,7 @@ function nextRootId() {
  * @param {string} [config.options.debugLabel] - Label for error messages (defaults to selector)
  * @param {Function} [config.options.onError] - (error, container) callback
  * @param {string} [config.options.identifierPrefix] - Prefix for React useId() (defaults to selector-based slug). A page-wide root number is appended, so ids stay unique across hydrators and `update()` calls
- * @returns {{ roots: Array, update: Function, unmountAll: Function }}
+ * @returns {{ roots: Array, update: Function, prune: Function, unmountAll: Function }}
  */
 export default function createHydrator({
   selector,
@@ -169,6 +169,44 @@ export default function createHydrator({
     return newRoots;
   }
 
+  /**
+   * Release the roots whose container is no longer in a document.
+   *
+   * Code outside React can remove a hydrated container without unmounting it
+   * (Drupal AJAX replacing a block). Its root would otherwise be kept, with
+   * the removed markup, until `unmountAll()`. Each such root is unmounted and
+   * dropped here. A container that was moved is still connected and is left
+   * alone, and so is every container that is still in the page.
+   *
+   * It runs only when called: a container that some code has taken out to
+   * put back later keeps its root and its state unless the consumer asks.
+   * The hydrated flag is removed from a pruned container, so if it does come
+   * back, the next `update()` mounts it again from whatever the component
+   * left in it when it unmounted.
+   *
+   * @returns {Element[]} The containers whose roots were released
+   */
+  function prune() {
+    const released = [];
+    entries
+      .filter(({ container }) => !container.isConnected)
+      .forEach(entry => {
+        // Taken out of the list before its root is unmounted, so a call made
+        // while one is unmounting cannot unmount it a second time.
+        const index = entries.indexOf(entry);
+        if (index === -1) return;
+        entries.splice(index, 1);
+        delete entry.container.dataset.mgHydrated;
+        try {
+          entry.root.unmount();
+        } catch (error) {
+          console.error(`[${debugLabel}] Pruning a removed container:`, error);
+        }
+        released.push(entry.container);
+      });
+    return released;
+  }
+
   // Initial scan against the full document
   update();
 
@@ -178,6 +216,7 @@ export default function createHydrator({
       return entries.map(e => e.root);
     },
     update,
+    prune,
     unmountAll() {
       entries.forEach(({ root, container }) => {
         root.unmount();

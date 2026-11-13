@@ -22,6 +22,24 @@ const getCaptionForLocale = locale => {
           { label: 'المرونة', value: 'resilience' },
         ],
         errorText: 'يجب عليك قبول الشروط والأحكام',
+        rowLegend: 'ما الأخطار التي تؤثر في مجتمعك المحلي؟',
+        rowItems: [
+          { label: 'الفيضانات', value: 'flood' },
+          { label: 'الجفاف', value: 'drought' },
+          {
+            label:
+              'الانهيارات الأرضية وتدفقات الحطام على المنحدرات التي أُزيلت أشجارها أو احترقت أو شُيِّدت عليها مبانٍ خلال السنوات العشر الماضية',
+            value: 'landslide',
+          },
+        ],
+        rowStates: {
+          rest: 'غير محدد',
+          checked: 'محدد',
+          disabled: 'معطَّل',
+          disabledChecked: 'معطَّل ومحدد',
+          error: 'خطأ',
+          before: 'التسمية قبل عنصر التحكم',
+        },
       };
     case 'japanese':
       return {
@@ -34,6 +52,24 @@ const getCaptionForLocale = locale => {
           { label: 'レジリエンス', value: 'resilience' },
         ],
         errorText: '利用規約に同意する必要があります',
+        rowLegend: '地域に影響するハザードを選択してください',
+        rowItems: [
+          { label: '洪水', value: 'flood' },
+          { label: '干ばつ', value: 'drought' },
+          {
+            label:
+              '過去10年間に伐採や火災、建築があった斜面で起こる地すべりと土石流',
+            value: 'landslide',
+          },
+        ],
+        rowStates: {
+          rest: '未選択',
+          checked: '選択済み',
+          disabled: '無効',
+          disabledChecked: '無効で選択済み',
+          error: 'エラー',
+          before: 'ラベルが先',
+        },
       };
     default:
       return {
@@ -46,6 +82,24 @@ const getCaptionForLocale = locale => {
           { label: 'Resilience', value: 'resilience' },
         ],
         errorText: 'You must accept the terms and conditions',
+        rowLegend: 'Which hazards affect your community?',
+        rowItems: [
+          { label: 'Flood', value: 'flood' },
+          { label: 'Drought', value: 'drought' },
+          {
+            label:
+              'Landslides and debris flows on slopes that have been cleared, burned or built on in the past 10 years',
+            value: 'landslide',
+          },
+        ],
+        rowStates: {
+          rest: 'Not selected',
+          checked: 'Selected',
+          disabled: 'Disabled',
+          disabledChecked: 'Disabled and selected',
+          error: 'Error',
+          before: 'Label before the control',
+        },
       };
   }
 };
@@ -367,4 +421,75 @@ export const SwitchPendingInteractive = {
     />
   ),
   name: 'Switch pending, interactive',
+};
+
+// The row variant: each option is a full-width target. The last option wraps,
+// to show the control staying on the first line of its label.
+export const Row = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <FormGroup legend={caption.rowLegend}>
+        {caption.rowItems.map((item, index) => (
+          <Checkbox
+            row
+            key={item.value}
+            label={item.label}
+            value={item.value}
+            defaultChecked={index === 1}
+            {...args}
+          />
+        ))}
+      </FormGroup>
+    );
+  },
+};
+
+export const RowStates = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    const states = caption.rowStates;
+    return (
+      <>
+        <Checkbox row label={states.rest} value="rest" {...args} />
+        <Checkbox
+          row
+          label={states.checked}
+          value="checked"
+          defaultChecked
+          {...args}
+        />
+        <Checkbox
+          row
+          label={states.disabled}
+          value="disabled"
+          disabled
+          {...args}
+        />
+        <Checkbox
+          row
+          label={states.disabledChecked}
+          value="disabled-checked"
+          disabled
+          defaultChecked
+          {...args}
+        />
+        <Checkbox
+          row
+          label={states.error}
+          value="error"
+          error
+          errorText={caption.errorText}
+          {...args}
+        />
+        <Checkbox
+          row
+          label={states.before}
+          value="before"
+          labelPosition="before"
+          {...args}
+        />
+      </>
+    );
+  },
 };

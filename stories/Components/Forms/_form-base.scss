@@ -253,6 +253,136 @@
 }
 
 // -----------------------------------------------------------------------------
+// Checkbox / Radio row variant (.mg-form-check--row)
+// -----------------------------------------------------------------------------
+// One radio or checkbox drawn as a full-width, row-sized target, for a short
+// list of options where each option is a sentence or the choice is the main
+// thing on screen. The control keeps its own 3:1 boundary and focus ring. The
+// row has no edge at rest, so a group is not a stack of boxes; the edge is
+// there, transparent, so nothing shifts when hover, keyboard focus or
+// selection draws it. Every rule here needs the modifier: a check without it
+// is untouched.
+.mg-form-check--row {
+  align-items: flex-start;
+  border: 1px solid transparent;
+  border-radius: var(--mg-radius-form-input);
+  min-block-size: mg-rem(48);
+  padding: var(--mg-spacing-75) var(--mg-spacing-100);
+
+  @media (hover: hover) {
+    &:hover {
+      border-color: rgb(var(--mg-color-interactive));
+    }
+  }
+
+  // Keyboard focus marks the row as hover does. The ring stays on the control.
+  &:has(.mg-form-check__input:focus-visible) {
+    border-color: rgb(var(--mg-color-interactive));
+  }
+
+  &:has(.mg-form-check__input:checked) {
+    background-color: rgb(var(--mg-color-interactive) / 0.06);
+    border-color: rgb(var(--mg-color-interactive));
+  }
+
+  .mg-form-check__input {
+    flex-shrink: 0;
+
+    // Lines the control up with the first line of a wrapping label.
+    margin-block: var(--mg-spacing-25);
+  }
+
+  .mg-form-check__label {
+    flex: 1;
+    line-height: var(--mg-font-line-height-700);
+    overflow-wrap: anywhere;
+    padding-block: var(--mg-spacing-25);
+    padding-inline: var(--mg-spacing-100) 0;
+
+    // Stretches the label over the row, so the whole row selects.
+    &::after {
+      content: "";
+      inset: 0;
+      position: absolute;
+    }
+
+    // labelPosition="before": the gap moves to the side the control is on.
+    &:first-child {
+      padding-inline: 0 var(--mg-spacing-100);
+    }
+  }
+
+  // An error message takes its own line under the label and lines up with
+  // it. It is raised above the stretched label so its text can be selected.
+  &:has(> .mg-form-error) {
+    flex-wrap: wrap;
+  }
+
+  > .mg-form-error {
+    flex-basis: 100%;
+    padding-inline-start: calc(#{mg-rem(24)} + var(--mg-spacing-100));
+    position: relative;
+  }
+
+  > .mg-form-check__label:first-child ~ .mg-form-error {
+    padding-inline-start: 0;
+  }
+
+  // Disabled, by its own attribute or by a disabled fieldset: the row does not
+  // answer to the pointer, and a checked one keeps a neutral edge so the
+  // choice can still be read. Declared after the states above, which it
+  // matches in specificity.
+  &:has(.mg-form-check__input:disabled) {
+    background-color: transparent;
+    border-color: transparent;
+
+    .mg-form-check__label {
+      color: rgb(var(--mg-color-neutral-400));
+      cursor: default;
+    }
+  }
+
+  &:has(.mg-form-check__input:disabled:checked) {
+    border-color: rgb(var(--mg-color-neutral-400));
+  }
+}
+
+// Forced colours replace the tint of a selected row with the page background
+// and paint every border, the transparent resting one included, so all rows
+// would look the same. System colours restore the difference: no edge at rest,
+// a text-coloured edge on hover and keyboard focus, and a double highlight
+// edge on the selected row.
+@media (forced-colors: active) {
+  .mg-form-check--row {
+    border-color: Canvas;
+
+    &:hover,
+    &:has(.mg-form-check__input:focus-visible) {
+      border-color: CanvasText;
+    }
+
+    &:has(.mg-form-check__input:checked) {
+      border-color: Highlight;
+      outline: 2px solid Highlight;
+      outline-offset: -4px;
+    }
+
+    &:has(.mg-form-check__input:disabled) {
+      border-color: Canvas;
+
+      .mg-form-check__label {
+        color: GrayText;
+      }
+    }
+
+    &:has(.mg-form-check__input:disabled:checked) {
+      border-color: GrayText;
+      outline-color: GrayText;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
 // Accessible Switch Control (.mg-switch / role="switch")
 // Binary toggle for immediate on/off states (map layers, dashboard filters)
 // -----------------------------------------------------------------------------

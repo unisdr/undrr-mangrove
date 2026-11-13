@@ -23,6 +23,7 @@ import PropTypes from 'prop-types';
  * @param {boolean} [props.error=false]        Whether the checkbox is in an error state
  * @param {string} [props.errorText]           Error message displayed below the checkbox
  * @param {string} [props.labelPosition='after'] Label position: 'before' or 'after'
+ * @param {boolean} [props.row=false]          Draw the checkbox as a full-width option row (`mg-form-check--row`): the whole row selects, and hover, keyboard focus and the checked state mark the row
  * @param {string} [props.className]           Additional CSS class for the wrapper
  * @param {string} [props.analyticsLabel]      Fixed `data-vf-analytics-label` for the input and its label, so click tracking does not report the visible text or a generated id
  */
@@ -38,6 +39,7 @@ export function Checkbox({
   error = false,
   errorText,
   labelPosition = 'after',
+  row = false,
   className,
   analyticsLabel,
   ...rest
@@ -66,7 +68,11 @@ export function Checkbox({
   );
 
   return (
-    <div className={['mg-form-check', className].filter(Boolean).join(' ')}>
+    <div
+      className={['mg-form-check', row && 'mg-form-check--row', className]
+        .filter(Boolean)
+        .join(' ')}
+    >
       {labelPosition === 'before' && labelElement}
 
       <input
@@ -109,6 +115,8 @@ Checkbox.propTypes = {
   error: PropTypes.bool,
   errorText: PropTypes.string,
   labelPosition: PropTypes.oneOf(['before', 'after']),
+  /** Draw the control as a full-width option row (`mg-form-check--row`). */
+  row: PropTypes.bool,
   className: PropTypes.string,
   /** Fixed `data-vf-analytics-label` for the input and its label. */
   analyticsLabel: PropTypes.string,

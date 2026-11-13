@@ -1,0 +1,303 @@
+/**
+ * Story content for the quiz components, in English and Arabic.
+ *
+ * Question content belongs to the consumer and is translated by the consumer;
+ * only the interface labels come from the component. These fixtures let the
+ * locale toolbar show a realistic right-to-left page. Other locales show the
+ * English content with translated interface labels.
+ */
+
+export const QUESTIONS = {
+  multipleChoice: {
+    type: 'multiple_choice',
+    prompt:
+      'Which hazard is this?\nThis invisible wave of energy can penetrate the Earth’s ozone layer and reach the surface.',
+    options: [
+      { value: 'uv', label: 'Ultraviolet radiation', correct: true },
+      { value: 'ionospheric', label: 'Ionospheric storm' },
+      { value: 'chlorine', label: 'Chlorine' },
+      { value: 'anthrax', label: 'Anthrax' },
+    ],
+    explanation:
+      'Ultraviolet radiation from the sun reaches the surface when the ozone layer does not absorb it. Overexposure can cause skin cancer and eye damage.',
+  },
+  multipleAnswers: {
+    type: 'multiple_choice',
+    multiple: true,
+    prompt: 'Which of these hazards are water-related?',
+    options: [
+      { value: 'flood', label: 'Flood', correct: true },
+      { value: 'surge', label: 'Storm surge', correct: true },
+      { value: 'earthquake', label: 'Earthquake' },
+    ],
+    explanation:
+      'Floods and storm surges are hydrometeorological hazards. An earthquake is a geological hazard, although it can trigger a tsunami.',
+  },
+  trueFalse: {
+    type: 'true_false',
+    prompt: 'A storm tide is the same thing as a tsunami.',
+    answer: false,
+    explanation:
+      'A storm tide is the predicted tide plus a storm surge. A tsunami is a series of waves caused by a sudden displacement of water.',
+  },
+  shortAnswer: {
+    type: 'text',
+    prompt: 'Which framework guides global disaster risk reduction to 2030?',
+    expected: [
+      'Sendai Framework',
+      'Sendai Framework for Disaster Risk Reduction',
+    ],
+    explanation:
+      'The Sendai Framework for Disaster Risk Reduction 2015–2030 was adopted by United Nations Member States in March 2015.',
+  },
+  fillBlank: {
+    type: 'fill_blank',
+    prompt: 'The Sendai Framework was adopted in [1], Japan, in the year [2].',
+    blanks: [
+      { label: 'City', expected: ['Sendai'] },
+      { label: 'Year', expected: ['2015'] },
+    ],
+  },
+  image: {
+    type: 'multiple_choice',
+    prompt:
+      'Which hazard most directly threatens a rain-fed crop like the one in this photo?',
+    options: [
+      { value: 'surge', label: 'Storm surge' },
+      { value: 'drought', label: 'Drought', correct: true },
+      { value: 'avalanche', label: 'Avalanche' },
+      { value: 'tsunami', label: 'Tsunami' },
+    ],
+    explanation:
+      'A rain-fed crop depends on seasonal rainfall, so a prolonged shortfall can cut the harvest or destroy it.',
+  },
+  longLabels: {
+    type: 'multiple_choice',
+    multiple: true,
+    prompt:
+      'A coastal city is revising its development plan after three consecutive years of flooding. Which of the following measures reduce existing disaster risk, as opposed to only preparing people to respond once a flood is already under way?',
+    options: [
+      {
+        value: 'a',
+        label:
+          'Relocating the municipal wastewater treatment plant and two primary schools out of the mapped 1-in-100-year floodplain',
+        correct: true,
+      },
+      {
+        value: 'b',
+        label:
+          'Running an annual evacuation drill with neighbourhood volunteers and the national meteorological service',
+      },
+      {
+        value: 'c',
+        label:
+          'Restoring upstream wetlands and mangroves so that they absorb peak flows before these reach built-up districts',
+        correct: true,
+      },
+      {
+        value: 'd',
+        label: 'Hydrometeorologicalearlywarningdisseminationinfrastructure',
+      },
+    ],
+  },
+};
+
+export const QUESTIONS_AR = {
+  multipleChoice: {
+    prompt:
+      'عن أي خطر نتحدث؟\nموجة غير مرئية من الطاقة يمكنها اختراق طبقة الأوزون والوصول إلى سطح الأرض.',
+    options: [
+      { value: 'uv', label: 'الأشعة فوق البنفسجية', correct: true },
+      { value: 'ionospheric', label: 'عاصفة أيونوسفيرية' },
+      { value: 'chlorine', label: 'الكلور' },
+      { value: 'anthrax', label: 'الجمرة الخبيثة' },
+    ],
+    explanation:
+      'تصل الأشعة فوق البنفسجية القادمة من الشمس إلى السطح عندما لا تمتصها طبقة الأوزون، وقد يسبب التعرض المفرط لها سرطان الجلد.',
+  },
+  multipleAnswers: {
+    prompt: 'أيٌّ من هذه الأخطار مرتبط بالمياه؟',
+    options: [
+      { value: 'flood', label: 'الفيضان', correct: true },
+      { value: 'surge', label: 'عرام العواصف', correct: true },
+      { value: 'earthquake', label: 'الزلزال' },
+    ],
+    explanation:
+      'الفيضانات وعرام العواصف أخطار هيدرولوجية جوية، أما الزلزال فخطر جيولوجي.',
+  },
+  trueFalse: {
+    prompt: 'مدّ العاصفة هو نفسه التسونامي.',
+    explanation:
+      'مدّ العاصفة هو المدّ المتوقع مضافاً إليه عرام العاصفة، أما التسونامي فسلسلة أمواج ناتجة عن إزاحة مفاجئة للمياه.',
+  },
+  shortAnswer: {
+    prompt: 'ما الإطار الذي يوجّه الحد من مخاطر الكوارث عالمياً حتى عام 2030؟',
+    expected: ['إطار سنداي', 'Sendai Framework'],
+    explanation:
+      'اعتُمد إطار سنداي للحد من مخاطر الكوارث 2015–2030 في مارس 2015.',
+  },
+  fillBlank: {
+    prompt: 'اعتُمد إطار سنداي في مدينة [1] في اليابان عام [2].',
+    blanks: [
+      { label: 'المدينة', expected: ['سنداي', 'Sendai'] },
+      { label: 'السنة', expected: ['2015', '٢٠١٥'] },
+    ],
+  },
+  image: {
+    prompt:
+      'ما الخطر الذي يهدد مباشرةً محصولاً يعتمد على الأمطار مثل المحصول الظاهر في هذه الصورة؟',
+    options: [
+      { value: 'surge', label: 'عرام العواصف' },
+      { value: 'drought', label: 'الجفاف', correct: true },
+      { value: 'avalanche', label: 'الانهيار الثلجي' },
+      { value: 'tsunami', label: 'التسونامي' },
+    ],
+    explanation:
+      'يعتمد المحصول البعلي على الأمطار الموسمية، ولذلك قد يؤدي نقصها الطويل إلى تراجع الحصاد أو تلفه.',
+  },
+};
+
+// The two optional kinds of help after a wrong answer, kept apart from the
+// questions so that a story adds them only when it shows them.
+export const HELP = {
+  multipleChoice: {
+    hint: 'It is a form of energy that comes from the sun, not a substance or a disease.',
+    showAnswer: true,
+  },
+  trueFalse: {
+    hint: 'Think about what causes each one: wind and tide, or a sudden movement of the sea floor.',
+  },
+  fillBlank: {
+    hint: 'The framework takes its name from the city, and it runs for 15 years to 2030.',
+    showAnswer: true,
+  },
+};
+
+export const HELP_AR = {
+  multipleChoice: {
+    hint: 'إنه شكل من أشكال الطاقة القادمة من الشمس، وليس مادة أو مرضاً.',
+  },
+  trueFalse: {
+    hint: 'يمكن التفكير في سبب كل منهما: الرياح والمدّ، أو حركة مفاجئة في قاع البحر.',
+  },
+  fillBlank: {
+    hint: 'يحمل الإطار اسم المدينة، ومدته 15 عاماً تنتهي في 2030.',
+  },
+};
+
+export const PAGE_TEXT = {
+  english: {
+    title: 'How many hazards can you identify?',
+    intro:
+      'Take the quiz to test your disaster knowledge. Each question is checked as you go, and you can try as often as you like.',
+    between:
+      'The hazard information profiles describe 302 hazards in a consistent way, so that governments and partners can share one vocabulary.',
+    imageAlt:
+      'A farmer sits at the edge of a wheat field during harvest, with cut sheaves beside him',
+    caption: 'Photo used for illustration.',
+    after: 'About the hazard information profiles',
+    afterBody:
+      'The profiles were developed through a consultative process by scientists and experts across the globe.',
+  },
+  arabic: {
+    title: 'كم خطراً يمكنك أن تتعرّف عليه؟',
+    intro:
+      'أجب عن الأسئلة لاختبار معلوماتك عن الكوارث. يُتحقق من كل سؤال فوراً، ويمكنك المحاولة بقدر ما تشاء.',
+    between:
+      'تصف ملفات معلومات الأخطار 302 خطراً بطريقة متسقة، ليتشارك الجميع المفردات نفسها.',
+    imageAlt: 'مزارع يجلس على طرف حقل قمح وقت الحصاد وبجانبه حزم من السنابل',
+    caption: 'صورة للتوضيح.',
+    after: 'عن ملفات معلومات الأخطار',
+    afterBody:
+      'أُعدّت الملفات عبر عملية تشاورية شارك فيها علماء وخبراء من أنحاء العالم.',
+  },
+};
+
+/**
+ * @param {Object} globals Storybook globals
+ * @param {string} key Fixture name
+ * @returns {Object} The question in the toolbar's language, English otherwise
+ */
+export function getQuestion(globals, key) {
+  return globals?.locale === 'arabic' && QUESTIONS_AR[key]
+    ? { ...QUESTIONS[key], ...QUESTIONS_AR[key] }
+    : QUESTIONS[key];
+}
+
+/**
+ * @param {Object} globals Storybook globals
+ * @param {string} key Fixture name
+ * @returns {Object} `hint` and `showAnswer` for the question, with the hint in
+ *   the toolbar's language
+ */
+export function getHelp(globals, key) {
+  return globals?.locale === 'arabic' && HELP_AR[key]
+    ? { ...HELP[key], ...HELP_AR[key] }
+    : HELP[key];
+}
+
+export function getPageText(globals) {
+  return PAGE_TEXT[globals?.locale] ?? PAGE_TEXT.english;
+}
+
+const NO_SCRIPT_NOTE =
+  '<noscript><p class="mg-form-help mg-quiz-question__note">Checking your answers needs JavaScript.</p></noscript>';
+
+const fallbackRadio = (name, value, label) => `
+        <label class="mg-form-check mg-form-check--row mg-quiz-question__option" data-vf-analytics-label="Quiz: Answer option">
+          <input class="mg-form-check__input mg-form-check__input--radio" type="radio" name="${name}" value="${value}" data-vf-analytics-label="Quiz: Answer option">
+          <span class="mg-form-check__label">${label}</span>
+        </label>`;
+
+/**
+ * The markup a server renders for three questions, following the documented
+ * contract: the question in `data-question`, and inside the container the
+ * no-JavaScript state. The radios of one question share a `name` that no
+ * other question on the page uses, which is what makes them a group before
+ * the component mounts.
+ *
+ * @param {string} imageSrc Image for the first question
+ * @returns {string} HTML
+ */
+export function getServerMarkup(imageSrc) {
+  return `
+<div data-mg-quiz-question data-mg-ssr
+  data-question='{"type":"multiple_choice","prompt":"Which hazard most directly threatens a rain-fed crop like the one in this photo?","options":[{"value":"surge","label":"Storm surge","correct":false},{"value":"drought","label":"Drought","correct":true},{"value":"avalanche","label":"Avalanche","correct":false}],"explanation":"A rain-fed crop depends on seasonal rainfall, so a prolonged shortfall can cut the harvest or destroy it."}'>
+  <div class="mg-quiz-question mg-quiz-question--multiple-choice">
+    <fieldset class="mg-form-group mg-quiz-question__group">
+      <legend class="mg-form-group__legend">Which hazard most directly threatens a rain-fed crop like the one in this photo?</legend>
+      <div class="mg-quiz-question__media">
+        <img src="${imageSrc}" alt="A farmer sits at the edge of a wheat field during harvest, with cut sheaves beside him" width="640" height="360">
+      </div>
+      <div class="mg-quiz-question__options">${fallbackRadio('quiz-8f3a-answer', 'surge', 'Storm surge')}${fallbackRadio('quiz-8f3a-answer', 'drought', 'Drought')}${fallbackRadio('quiz-8f3a-answer', 'avalanche', 'Avalanche')}
+      </div>
+    </fieldset>
+    ${NO_SCRIPT_NOTE}
+  </div>
+</div>
+<div data-mg-quiz-question data-mg-ssr
+  data-question='{"type":"true_false","prompt":"A storm tide is the same thing as a tsunami.","answer":false}'>
+  <div class="mg-quiz-question mg-quiz-question--true-false">
+    <fieldset class="mg-form-group mg-quiz-question__group">
+      <legend class="mg-form-group__legend">A storm tide is the same thing as a tsunami.</legend>
+      <div class="mg-quiz-question__options">${fallbackRadio('quiz-c41e-answer', 'true', 'True')}${fallbackRadio('quiz-c41e-answer', 'false', 'False')}
+      </div>
+    </fieldset>
+    ${NO_SCRIPT_NOTE}
+  </div>
+</div>
+<div data-mg-quiz-question data-mg-ssr
+  data-question='{"type":"fill_blank","prompt":"The Sendai Framework was adopted in [1], Japan, in the year [2].","blanks":[{"label":"City","expected":["Sendai"]},{"label":"Year","expected":["2015"]}]}'>
+  <div class="mg-quiz-question mg-quiz-question--fill-blank">
+    <fieldset class="mg-form-group mg-quiz-question__group mg-quiz-question__group--sentence">
+      <legend class="mg-form-group__legend">Complete the sentence.</legend>
+      <p class="mg-quiz-question__sentence">
+        The Sendai Framework was adopted in
+        <span class="mg-quiz-question__blank-unit"><input class="mg-form-input mg-quiz-question__blank" type="text" aria-label="City" data-vf-analytics-label="Quiz: Blank">,</span> Japan, in the year
+        <span class="mg-quiz-question__blank-unit"><input class="mg-form-input mg-quiz-question__blank" type="text" aria-label="Year" data-vf-analytics-label="Quiz: Blank">.</span>
+      </p>
+    </fieldset>
+    ${NO_SCRIPT_NOTE}
+  </div>
+</div>`;
+}

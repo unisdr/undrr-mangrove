@@ -1,0 +1,320 @@
+/**
+ * Quiz question (QuizQuestion)
+ *
+ * One self-checking question in the page flow: multiple choice, true/false, short answer or fill in the blank.
+ * Composes the Forms controls, option rows and help text, the button and Notice; this file adds the question
+ * surface, inline blanks and the locked state of a correct answer.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Quiz/QuizQuestion/QuizQuestion.mdx
+ */
+@use "../../../assets/scss/breakpoints" as *;
+@use "../../../assets/scss/mixins" as *;
+@use "../../../assets/scss/config" as *;
+
+// One reading width for the prompt, the answer controls and the feedback, so
+// they share an edge on wide screens. A length, not `ch`: those elements have
+// different font sizes, and `ch` would give each its own width.
+$mg-quiz-question-measure: mg-rem(768);
+
+%mg-quiz-question-prompt {
+  @extend %paragraph-font-300;
+
+  color: rgb(var(--mg-color-neutral-900));
+  display: block;
+  font-weight: 700;
+  line-height: var(--mg-font-line-height-500);
+  margin: 0 0 var(--mg-spacing-150);
+  max-inline-size: $mg-quiz-question-measure;
+  padding: 0;
+
+  // Editors separate paragraphs of a prompt with line breaks.
+  white-space: pre-line;
+}
+
+.mg-quiz-question {
+  background-color: rgb(var(--mg-color-neutral-0));
+  border: 1px solid rgb(var(--mg-color-neutral-600) / 0.18);
+  border-radius: var(--mg-radius-form-input);
+  box-sizing: border-box;
+  color: rgb(var(--mg-color-neutral-900));
+  margin-block: var(--mg-spacing-300);
+  padding: var(--mg-spacing-200);
+
+  @media (min-width: $mg-breakpoint-tablet) {
+    padding: var(--mg-spacing-250) var(--mg-spacing-300);
+  }
+
+  &__header {
+    margin-block-end: var(--mg-spacing-100);
+  }
+
+  &__number {
+    color: rgb(var(--mg-color-neutral-700));
+    font-family: var(--mg-font-family-ui);
+    font-size: var(--mg-font-size-250);
+    font-weight: 600;
+    line-height: var(--mg-font-line-height-700);
+    margin: 0;
+  }
+
+  // FormGroup supplies the fieldset and legend; the question is already the
+  // surface, so the group's own box is removed.
+  &__group,
+  &__group.mg-form-group {
+    background: none;
+    border: 0;
+    margin: 0;
+    min-inline-size: 0;
+    padding: 0;
+  }
+
+  &__prompt,
+  &__group > .mg-form-group__legend {
+    @extend %mg-quiz-question-prompt;
+  }
+
+  // "Select all that apply." and "Complete the sentence." tell the visitor how
+  // to answer, so they read one step larger and darker than Forms help text.
+  // The hint is `mg-form-help`; FormGroup owns the legend's class.
+  &__hint.mg-form-help,
+  &__group--sentence > .mg-form-group__legend {
+    color: rgb(var(--mg-color-neutral-700));
+    font-size: var(--mg-font-size-250);
+    font-weight: 400;
+  }
+
+  &__hint {
+    margin: 0 0 var(--mg-spacing-150);
+  }
+
+  // Server-rendered fallback only: says, inside <noscript>, that checking
+  // needs JavaScript. Also `mg-form-help`; the mounted component never
+  // renders it.
+  &__note {
+    margin-block: var(--mg-spacing-150) 0;
+  }
+
+  &__media {
+    margin-block-end: var(--mg-spacing-200);
+
+    figure {
+      margin: 0;
+    }
+
+    img,
+    picture,
+    video {
+      border-radius: var(--mg-radius-form-input);
+      display: block;
+      height: auto;
+      max-inline-size: 100%;
+    }
+
+    figcaption {
+      color: rgb(var(--mg-color-neutral-700));
+      font-size: var(--mg-font-size-200);
+      margin-block-start: var(--mg-spacing-50);
+    }
+  }
+
+  // A hydrated question moves the server's own media element into this slot.
+  // The slot adds no box, so the media lays out as it does in the fallback.
+  &__media-slot {
+    display: contents;
+  }
+
+  &__options {
+    display: grid;
+    gap: var(--mg-spacing-75);
+    max-inline-size: $mg-quiz-question-measure;
+  }
+
+  // An option is the Forms option row (`mg-form-check--row`), which owns the
+  // row-sized target and its rest, hover, focus and selected states.
+
+  // A correct answer locks the question, and so does "Show answer". The
+  // controls are read-only, not disabled, so the answer on screen keeps its
+  // contrast; the rows stop responding and the other options step back.
+  &--correct &__option.mg-form-check,
+  &--revealed &__option.mg-form-check {
+    &:not(:has(.mg-form-check__input:checked)) {
+      border-color: transparent;
+
+      .mg-form-check__input {
+        border-color: rgb(var(--mg-color-neutral-400));
+      }
+
+      .mg-form-check__label {
+        color: rgb(var(--mg-color-neutral-700));
+      }
+    }
+
+    .mg-form-check__input,
+    .mg-form-check__label {
+      cursor: default;
+    }
+  }
+
+  // A read-only field loses the tinted surface that invites typing.
+  &--correct &__blank.mg-form-input,
+  &--correct &__field .mg-form-input,
+  &--revealed &__blank.mg-form-input,
+  &--revealed &__field .mg-form-input {
+    background-color: transparent;
+    border-color: rgb(var(--mg-color-neutral-400));
+    cursor: default;
+  }
+
+  &__sentence {
+    @extend %mg-quiz-question-prompt;
+
+    font-weight: 400;
+
+    // One row is as tall as a blank plus a gap, with or without a blank in
+    // it, so wrapped rows are evenly spaced.
+    line-height: calc(var(--mg-form-input-block-size) + var(--mg-spacing-100));
+    margin-block-end: 0;
+
+    // Server templates put each blank on its own source line.
+    white-space: normal;
+  }
+
+  // A blank and the punctuation that follows it wrap as one.
+  &__blank-unit {
+    display: inline-block;
+    max-inline-size: 100%;
+    white-space: nowrap;
+  }
+
+  // An inline blank sits in the sentence at a fixed width, so its size gives
+  // no hint about the length of the answer. It has no margin at its start:
+  // the space in the sentence separates it from the word before, and a blank
+  // that wraps starts at the text edge. The margin at its end keeps the
+  // punctuation off its border.
+  &__blank.mg-form-input {
+    display: inline-block;
+    inline-size: 7em;
+    margin: 0;
+    margin-inline-end: var(--mg-spacing-25);
+    max-inline-size: 100%;
+    vertical-align: middle;
+
+    @media (min-width: $mg-breakpoint-mobile) {
+      inline-size: 9em;
+    }
+  }
+
+  &__fields {
+    display: grid;
+    gap: var(--mg-spacing-100);
+    margin-block-start: var(--mg-spacing-150);
+  }
+
+  &__field {
+    max-inline-size: mg-rem(384);
+  }
+
+  // The buttons stack at full width on a narrow screen, as a lone check
+  // button does, and sit side by side where buttons are inline.
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mg-spacing-100);
+    margin-block-start: var(--mg-spacing-200);
+
+    @include devicebreak(medium) {
+      align-items: center;
+      flex-flow: row wrap;
+    }
+  }
+
+  &__check.mg-button,
+  &__reveal.mg-button {
+    min-block-size: mg-rem(44);
+  }
+
+  // "Show answer" beside an outline check button. Mangrove has no button
+  // quieter than an outline, so this one gives up its edge and is underlined
+  // to stay recognizable as an action. The edge is kept, transparent, so the
+  // two buttons are the same size and forced colours still paint it. On hover
+  // it draws the edge, as an option row does, and does not take the solid
+  // fill of an outline button, which would outweigh the check button.
+  &__reveal--quiet.mg-button.mg-button-outline {
+    border-color: transparent;
+    text-decoration: underline;
+    text-decoration-thickness: from-font;
+    text-underline-offset: 0.2em;
+
+    &:hover {
+      background-color: rgb(var(--mg-color-button-outline-secondary) / 0.06);
+      border-color: rgb(var(--mg-color-button-outline-secondary));
+      color: rgb(var(--mg-color-button-outline-secondary));
+    }
+  }
+
+  &__feedback {
+    max-inline-size: $mg-quiz-question-measure;
+
+    &:not(:empty) {
+      margin-block-start: var(--mg-spacing-200);
+    }
+
+    // Focus arrives on the result when a correct answer or "Show answer"
+    // removes the buttons. The wrapper is the live region and is never
+    // focused itself.
+    .mg-notice:focus-visible {
+      @include mg-focus-ring;
+    }
+  }
+
+  &__feedback-title,
+  &__feedback-hint,
+  &__explanation {
+    margin: 0;
+  }
+
+  // The explanation is the point of a correct answer, and the hint is what
+  // helps after a wrong one, so both read at body size, not at the Notice's
+  // smaller description size.
+  &__feedback-hint,
+  &__explanation {
+    color: rgb(var(--mg-color-neutral-900));
+    font-size: var(--mg-font-size-300);
+    line-height: var(--mg-font-line-height-700);
+    white-space: pre-line;
+  }
+
+  // Forms paints the option rows in forced colours. This adds the locked
+  // state.
+  @media (forced-colors: active) {
+    // Locked: the chosen row keeps its highlight edge. The others stay
+    // without one and do not answer to the pointer, and the unchosen
+    // controls and read-only fields take the system's inactive colour.
+    &--correct &__option.mg-form-check:not(:has(.mg-form-check__input:checked)),
+    &--revealed
+      &__option.mg-form-check:not(:has(.mg-form-check__input:checked)) {
+      border-color: Canvas;
+
+      .mg-form-check__input {
+        border-color: GrayText;
+      }
+    }
+
+    &--correct &__blank.mg-form-input,
+    &--correct &__field .mg-form-input,
+    &--revealed &__blank.mg-form-input,
+    &--revealed &__field .mg-form-input {
+      border-color: GrayText;
+      border-style: dashed;
+    }
+  }
+
+  @media print {
+    break-inside: avoid;
+
+    &__actions {
+      display: none;
+    }
+  }
+}
