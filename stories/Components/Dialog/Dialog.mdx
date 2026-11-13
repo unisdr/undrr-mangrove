@@ -78,7 +78,7 @@ Supply a root `data-mg-dialog`, a hidden button `data-mg-dialog-trigger`, a disc
 ></script>
 ```
 
-This experimental component first ships in **2.4.0**, under `js/dialog.js` with matching CSS. The versioned CDN paths become available after npm publication and the shared-web-assets production deployment; verify both before upgrading a consumer. For local builds, run `yarn build`, serve `dist/assets` as the web root, and use the relative `css/style.css` and `js/dialog.js` paths shown in the machine-readable example. Use `2.4.0` for `{release}` in the production example once those assets are live. No CSS-only open state is provided.
+This experimental component first ships in **2.4.0**, under `js/dialog.js` with matching CSS. The versioned CDN paths become available after npm publication and the shared-web-assets production deployment; verify both before upgrading a consumer. For local builds, run `yarn build`, serve `dist/assets` as the web root, and use the relative `css/style.css` and `js/dialog.js` paths shown in the machine-readable example. Use `2.4.0` or later for `{release}` in the production example once those assets are live. From 2.5.0, `js/dialog.js` imports `js/dialog-scroll-lock.js` from the same folder, so a site that copies the module must copy both files and keep them side by side. No CSS-only open state is provided.
 
 For a local smoke test, first run `yarn build`. After the build completes, save the authored page as `dist/assets/dialog-example.html` and include the generated example’s relative CSS/module paths. Then serve the assembled assets:
 
@@ -111,4 +111,5 @@ The module exports `mgDialog` and `mgDialogDestroy`. It does not refactor Drawer
 
 ## Changelog
 
+- **0.1.1**, 2026-11-12 ([undrr/web-backlog#3314](https://gitlab.com/undrr/web-backlog/-/work_items/3314)): The scroll lock moved into `js/dialog-scroll-lock.js`, which `js/dialog.js` imports and the search download modal shares, so the two do not undo each other's lock. Sites that copy `js/dialog.js` must copy both files. Dialog behaviour is unchanged.
 - **0.1.0**, 2026-10-29 ([#1435](https://github.com/unisdr/undrr-mangrove/pull/1435)): Added an experimental native dialog enhancement with authored disclosure fallback, short-message and long-reading examples, cleanup and lifecycle tests. Red-team checks cover queued close/reopen, trigger focus return, independent overflow axes/priorities, restored disclosure focus, multiple Close controls and safe fallback for unsupported nested roots. The title uses an outward focus ring to preserve text contrast when focused. Contribution review adds responsive expanded-label header geometry, the shared modal scrim role, locale-driven authored fixtures, generated copyable HTML, and an explicit unreleased local-build metadata recipe. Follow-up is tracked in [#1432](https://github.com/unisdr/undrr-mangrove/issues/1432).

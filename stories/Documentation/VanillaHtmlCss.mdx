@@ -50,7 +50,7 @@ needs no JavaScript.
     <title>Mangrove example</title>
     <link
       rel="stylesheet"
-      href="https://assets.undrr.org/mangrove/2.4.0/css/style.css"
+      href="https://assets.undrr.org/mangrove/2.5.0/css/style.css"
     />
   </head>
   <body>
@@ -157,7 +157,7 @@ the page:
 
 ```html
 <script type="module">
-  import { mgTabs } from 'https://assets.undrr.org/mangrove/2.4.0/js/tabs.js';
+  import { mgTabs } from 'https://assets.undrr.org/mangrove/2.5.0/js/tabs.js';
   mgTabs();
 </script>
 ```
@@ -198,7 +198,7 @@ replace its sharing section and module script with this CtaButton mount:
 <script type="module">
   import React from 'react';
   import { createRoot } from 'react-dom/client';
-  import { CtaButton } from 'https://assets.undrr.org/mangrove/2.4.0/components/CtaButton.js';
+  import { CtaButton } from 'https://assets.undrr.org/mangrove/2.5.0/components/CtaButton.js';
 
   createRoot(document.getElementById('mangrove-action')).render(
     React.createElement(CtaButton, {
@@ -227,7 +227,7 @@ A self-contained page you can save as an `.html` file and open in a browser. It 
     <!-- Mangrove CSS theme -->
     <link
       rel="stylesheet"
-      href="https://assets.undrr.org/mangrove/2.4.0/css/style.css"
+      href="https://assets.undrr.org/mangrove/2.5.0/css/style.css"
     />
 
     <!-- Import map: provides React to Mangrove ES module bundles -->
@@ -257,10 +257,10 @@ A self-contained page you can save as an `.html` file and open in a browser. It 
 
     <!-- Load the hydration runtime and component, then mount -->
     <script type="module">
-      import createHydrator from 'https://assets.undrr.org/mangrove/2.4.0/components/hydrate.js';
+      import createHydrator from 'https://assets.undrr.org/mangrove/2.5.0/components/hydrate.js';
       import ShareButtons, {
         fromElement,
-      } from 'https://assets.undrr.org/mangrove/2.4.0/components/ShareButtons.js';
+      } from 'https://assets.undrr.org/mangrove/2.5.0/components/ShareButtons.js';
 
       createHydrator({
         selector: '[data-mg-share-buttons]',
