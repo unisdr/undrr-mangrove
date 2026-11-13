@@ -3,7 +3,7 @@
  * Storybook:    https://mangrove.undrr.org/
  * LLMs context: https://mangrove.undrr.org/llms.txt
  * Repository:   https://github.com/PreventionWeb/undrr-mangrove
- * Compiled on:  2026-11-13T14:25:07.167Z
+ * Compiled on:  2026-11-13T14:34:07.038Z
  */
 /*! For license information please see QuizQuestion.js.LICENSE.txt */
 import*as e from"react";var t={3387(e,t,n){n.d(t,{S:()=>l});var r=n(1649),o=/*#__PURE__*/n(5556),a=/*#__PURE__*/n.n(o),s=n(4848);function l({id:e,name:t,label:n,value:o,checked:a,defaultChecked:l,onChange:i,disabled:c=!1,error:u=!1,errorText:d,labelPosition:m="after",row:p=!1,className:f,analyticsLabel:g,...b}){const h=(0,r.useId)(),y=e||h,v=u&&d?`${y}-error`:void 0,x=["mg-form-check__input","mg-form-check__input--checkbox",c&&"mg-form-check__input--disabled",u&&"mg-form-check__input--error"].filter(Boolean).join(" "),k=n&&/*#__PURE__*/ /*#__PURE__*/(0,s.jsx)("label",{className:"mg-form-check__label",htmlFor:y,"data-vf-analytics-label":g,children:n});/*#__PURE__*/ /*#__PURE__*/
