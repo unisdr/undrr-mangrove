@@ -3,17 +3,22 @@
  *
  * Questions are independent blocks in the page flow, each possibly its own
  * React root, so they cannot share React state. The document is the shared
- * state instead: every question carries `data-mg-quiz-state` on its root, and
- * a `mg-quiz:change` event tells listeners to count again. That survives
- * questions arriving or leaving in batches (AJAX, BigPipe) and more than one
- * copy of this module on a page.
+ * state instead: every mounted question carries `data-mg-quiz-state` on its
+ * root, and a `mg-quiz:change` event tells listeners to count again. The count
+ * is always read from the document, so it only has to be told when to look:
+ * questions tell it when they mount, unmount or change, and `refreshQuiz` is
+ * for code that adds or removes markup without React knowing (Drupal AJAX,
+ * BigPipe). It also works with more than one copy of this module on a page.
  *
  * A scope is the nearest `[data-mg-quiz]` ancestor, or the whole document for
  * questions that have none.
  */
 
 export const QUIZ_SCOPE_SELECTOR = '[data-mg-quiz]';
-export const QUIZ_QUESTION_SELECTOR = '.mg-quiz-question';
+// Only a mounted question has a state. The server-rendered fallback carries
+// the `mg-quiz-question` class too, and a fallback that never mounts cannot be
+// answered, so it is neither numbered nor counted.
+export const QUIZ_QUESTION_SELECTOR = '.mg-quiz-question[data-mg-quiz-state]';
 export const QUIZ_CHANGE_EVENT = 'mg-quiz:change';
 export const QUIZ_RESET_EVENT = 'mg-quiz:reset';
 
@@ -71,6 +76,25 @@ function dispatch(target, type) {
 /** Tells listeners that a question was added, removed or checked. */
 export function notifyQuizChange(doc) {
   dispatch(doc, QUIZ_CHANGE_EVENT);
+}
+
+/**
+ * Asks every question and score on the page to count again. Call it after
+ * code outside React has added, moved or removed quiz markup: the questions
+ * renumber, the scores recount, and a question whose root has left the
+ * document stops listening.
+ *
+ * @param {Document|Element} [context=document] Any node of the page
+ * @param {Object} [options]
+ * @param {boolean} [options.defer=false] Count after the current task has
+ *   finished, for a caller that runs just before the markup is removed, such
+ *   as a Drupal behavior's `detach`
+ */
+export function refreshQuiz(context = document, { defer = false } = {}) {
+  const doc = context?.ownerDocument ?? context;
+  if (!doc?.defaultView) return;
+  if (defer) doc.defaultView.setTimeout(() => notifyQuizChange(doc), 0);
+  else notifyQuizChange(doc);
 }
 
 /** Asks every question in the scope to return to its unanswered state. */

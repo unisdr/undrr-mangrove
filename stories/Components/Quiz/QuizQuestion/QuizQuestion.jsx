@@ -6,7 +6,14 @@
  * @module QuizQuestion
  */
 
-import React, { useEffect, useId, useRef, useState } from 'react';
+import React, {
+  Component,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import PropTypes from 'prop-types';
 import { getLanguageProps } from '../../../../src/i18n';
 import { Checkbox } from '../../Forms/Checkbox/Checkbox';
@@ -35,7 +42,11 @@ export {
   DEFAULT_QUIZ_QUESTION_LABELS,
   getQuizQuestionLabels,
 } from '../_labels';
-export { gradeAnswer, QUIZ_QUESTION_TYPES } from '../quizGrading';
+export {
+  gradeAnswer as gradeQuizAnswer,
+  QUIZ_QUESTION_TYPES,
+} from '../quizGrading';
+export { refreshQuiz } from '../quizScope';
 
 const EMPTY_LIST = [];
 // A wrong answer is an invitation to try again, not an error, so it shares the
@@ -49,46 +60,119 @@ const NOTICE_VARIANTS = {
 // blank's line when the sentence wraps.
 const TRAILING_PUNCTUATION = /^[^\s\p{L}\p{N}]+/u;
 
-const joinClasses = (...classes) => classes.filter(Boolean).join(' ');
+// Fixed click-tracking names. They never carry an option's value or position
+// or anything typed, because that would report the visitor's answer.
+const ANALYTICS = {
+  option: 'Quiz: Answer option',
+  field: 'Quiz: Answer field',
+  blank: 'Quiz: Blank',
+  check: 'Quiz: Check answer',
+};
 
-/** The figure that belongs to the question, from a node or trusted HTML. */
-function QuestionMedia({ media, mediaHtml }) {
+const joinClasses = (...classes) => classes.filter(Boolean).join(' ');
+const isRecord = value => value !== null && typeof value === 'object';
+const asList = value => (Array.isArray(value) ? value : EMPTY_LIST);
+const asText = value =>
+  typeof value === 'string' || typeof value === 'number' ? String(value) : '';
+
+// Layout effects do nothing on the server, and React 18 warns about them.
+const useBrowserLayoutEffect =
+  typeof window === 'undefined' ? useEffect : useLayoutEffect;
+
+/**
+ * The figure that belongs to the question.
+ *
+ * A React consumer passes `media` as a node. A hydrated question is given the
+ * server's own `.mg-quiz-question__media` element instead, which is moved
+ * into a slot as it is: the same nodes, so listeners attached before the
+ * mount keep working and nothing loads or runs a second time. The element
+ * goes back to where it came from when the question unmounts.
+ */
+function QuestionMedia({ media, element }) {
+  const slotRef = useRef(null);
+  useBrowserLayoutEffect(() => {
+    const slot = slotRef.current;
+    if (!slot || !element) return undefined;
+    const home = element.parentNode;
+    const next = element.nextSibling;
+    slot.appendChild(element);
+    return () => {
+      if (!home) {
+        element.remove();
+        return;
+      }
+      home.insertBefore(element, next?.parentNode === home ? next : null);
+    };
+  }, [element]);
+
   if (media) return <div className="mg-quiz-question__media">{media}</div>;
-  if (!mediaHtml) return null;
-  return (
-    <div
-      className="mg-quiz-question__media"
-      // eslint-disable-next-line react/no-danger -- caller-sanitized contract: server-rendered media markup read by fromElement, documented on the prop
-      dangerouslySetInnerHTML={{ __html: mediaHtml }}
-    />
-  );
+  if (!element) return null;
+  return <div className="mg-quiz-question__media-slot" ref={slotRef} />;
 }
 
 QuestionMedia.propTypes = {
   media: PropTypes.node,
-  mediaHtml: PropTypes.string,
+  element: PropTypes.object,
 };
 
 /**
- * QuizQuestion component.
+ * Keeps the server-rendered fallback of a hydrated question safe.
  *
- * Checks the answer in the browser against the answer key in its props and
- * shows the result as a Notice. Nothing is stored or sent anywhere. The key is
- * readable in the page by design, so this is for engagement, never for
- * assessment.
- *
- * Each question publishes its state as `data-mg-quiz-state` on its root, which
- * is how QuizScore counts a page of independent questions.
- *
- * A correct answer locks the question: the controls become read-only and the
- * check button is removed. Changing an answer after any other attempt clears
- * the feedback and returns the question to unanswered, so a result never
- * outlives the answer it was given for.
- *
- * The answer key is optional in the props. Without a usable key no answer is
- * marked correct, except that `true_false` treats a missing `answer` as true.
+ * React empties the container when it mounts. If the question then fails to
+ * render, the fallback is put back, so the visitor keeps a readable question
+ * and the container is never left empty. It is also put back when the
+ * question unmounts, which returns the container to its server-rendered
+ * state: mounting it again reads the same markup and the same media element.
  */
-export function QuizQuestion({
+class ServerFallbackBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { failed: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+
+  componentDidMount() {
+    this.sync();
+  }
+
+  componentDidUpdate() {
+    this.sync();
+  }
+
+  componentWillUnmount() {
+    this.place(true);
+  }
+
+  // The fallback is in the container exactly when the question is not.
+  place(show) {
+    const { container, nodes } = this.props.fallback;
+    nodes.forEach(node => {
+      if (show && node.parentNode !== container) container.appendChild(node);
+      if (!show && node.parentNode === container) node.remove();
+    });
+  }
+
+  sync() {
+    this.place(this.state.failed);
+  }
+
+  render() {
+    return this.state.failed ? null : this.props.children;
+  }
+}
+
+ServerFallbackBoundary.propTypes = {
+  fallback: PropTypes.shape({
+    container: PropTypes.object.isRequired,
+    nodes: PropTypes.array.isRequired,
+  }).isRequired,
+  children: PropTypes.node,
+};
+
+function QuizQuestionView({
   type = 'multiple_choice',
   prompt = '',
   options = EMPTY_LIST,
@@ -99,7 +183,7 @@ export function QuizQuestion({
   blanks = EMPTY_LIST,
   explanation,
   media,
-  mediaHtml,
+  mediaElement,
   number,
   total,
   showNumber = true,
@@ -118,10 +202,16 @@ export function QuizQuestion({
   const isMultiple = safeType === 'multiple_choice' && multiple;
   const text = getQuizQuestionLabels(lang, labels);
 
+  const promptText = asText(prompt);
+  const explanationText = asText(explanation);
+  const blankList = asList(blanks);
+
   const rootRef = useRef(null);
   const feedbackRef = useRef(null);
   const focusFeedbackRef = useRef(false);
   const id = useId();
+  // Options are tracked by position, so an empty value or two options with
+  // the same value are still separate, answerable options.
   const [selected, setSelected] = useState(EMPTY_LIST);
   const [texts, setTexts] = useState(EMPTY_LIST);
   const [result, setResult] = useState('unanswered');
@@ -132,17 +222,70 @@ export function QuizQuestion({
 
   const choices =
     safeType === 'true_false'
-      ? trueFalseOptions({ answer, options }).map(option => ({
+      ? trueFalseOptions({ answer, options: asList(options) }).map(option => ({
           ...option,
           label: option.value === 'true' ? text.trueLabel : text.falseLabel,
         }))
-      : options;
+      : asList(options).filter(isRecord);
+
+  // A question with nothing to answer has no check button and no state, so
+  // it is not numbered and cannot hold up the score.
+  let answerable = true;
+  if (isChoice) answerable = choices.length > 0;
+  if (safeType === 'fill_blank') answerable = blankList.length > 0;
+
+  // An answer and its result belong to one question. When the props describe
+  // a different one (another `questionId`, or other content when there is no
+  // id), the question starts again instead of showing the old result.
+  const identity =
+    questionId ||
+    JSON.stringify([
+      safeType,
+      promptText,
+      isMultiple,
+      safeType === 'multiple_choice'
+        ? choices.map(option => [
+            asText(option.value),
+            asText(option.label),
+            option.correct === true,
+          ])
+        : null,
+      safeType === 'true_false' ? choices.map(option => option.correct) : null,
+      safeType === 'text' ? [expected, Boolean(caseSensitive)] : null,
+      safeType === 'fill_blank' ? blankList : null,
+    ]);
+  const [shownIdentity, setShownIdentity] = useState(identity);
+  if (shownIdentity !== identity) {
+    setShownIdentity(identity);
+    setSelected(EMPTY_LIST);
+    setTexts(EMPTY_LIST);
+    setResult('unanswered');
+    setFeedback(current => ({ kind: null, attempt: current.attempt }));
+  }
 
   // Position among the questions that share this scope, unless given.
   useEffect(() => {
     const root = rootRef.current;
     const doc = root.ownerDocument;
+    let offChange = () => {};
+    let offReset = () => {};
+    // Other code can remove the question's markup without unmounting it
+    // (Drupal AJAX replacing a block). The next event finds the root out of
+    // the document and lets go of the document listeners, so the removed
+    // question is not kept alive by them.
+    let wasConnected = root.isConnected;
+    const hasLeft = () => {
+      if (root.isConnected) {
+        wasConnected = true;
+        return false;
+      }
+      if (!wasConnected) return false;
+      offChange();
+      offReset();
+      return true;
+    };
     const measure = () => {
+      if (hasLeft()) return;
       const next = getQuizPosition(root);
       setPosition(current =>
         current?.number === next.number && current?.total === next.total
@@ -151,9 +294,9 @@ export function QuizQuestion({
       );
     };
     measure();
-    const offChange = onQuizEvent(doc, QUIZ_CHANGE_EVENT, measure);
-    const offReset = onQuizEvent(doc, QUIZ_RESET_EVENT, event => {
-      if (event.target !== getQuizScope(root)) return;
+    offChange = onQuizEvent(doc, QUIZ_CHANGE_EVENT, measure);
+    offReset = onQuizEvent(doc, QUIZ_RESET_EVENT, event => {
+      if (hasLeft() || event.target !== getQuizScope(root)) return;
       setSelected(EMPTY_LIST);
       setTexts(EMPTY_LIST);
       setResult('unanswered');
@@ -170,13 +313,14 @@ export function QuizQuestion({
   // The score reads the state attribute, so it is told after each commit.
   useEffect(() => {
     notifyQuizChange(rootRef.current.ownerDocument);
-    // The check button has just left the page. Focus goes to the feedback so
-    // that it is not dropped on the body.
+    // The check button has just left the page. Focus goes to the result so
+    // that it is not dropped on the body: to the Notice, a group named by its
+    // title, and not to the live region around it.
     if (result === 'correct' && focusFeedbackRef.current) {
-      feedbackRef.current?.focus();
+      feedbackRef.current?.querySelector('.mg-notice')?.focus();
     }
     focusFeedbackRef.current = false;
-  }, [result]);
+  }, [result, answerable]);
 
   // A result or a prompt describes the answer as it was when it was checked.
   const clearAttempt = () => {
@@ -186,32 +330,39 @@ export function QuizQuestion({
     );
   };
 
+  // The answer as `onCheck` reports it: option values as the consumer wrote
+  // them, or the text typed.
   const collectAnswer = () => {
     if (safeType === 'text') return texts[0] ?? '';
     if (safeType === 'fill_blank') {
-      return blanks.map((blank, index) => texts[index] ?? '');
+      return blankList.map((blank, index) => texts[index] ?? '');
     }
-    return isMultiple ? selected : (selected[0] ?? '');
+    const values = selected.map(index => asText(choices[index]?.value));
+    return isMultiple ? values : (values[0] ?? '');
   };
 
   const handleCheck = () => {
-    if (locked) return;
+    if (locked || !answerable) return;
     const submitted = collectAnswer();
-    if (isEmptyAnswer(submitted)) {
+    if (isChoice ? selected.length === 0 : isEmptyAnswer(submitted)) {
       setFeedback(current => ({ kind: 'empty', attempt: current.attempt + 1 }));
       return;
     }
-    const correct = gradeAnswer(
-      {
-        type: safeType,
-        options: choices,
-        answer,
-        expected,
-        caseSensitive,
-        blanks,
-      },
-      submitted
-    );
+    const correct = isChoice
+      ? gradeAnswer(
+          {
+            type: 'multiple_choice',
+            options: choices.map((option, index) => ({
+              value: String(index),
+              correct: option.correct === true,
+            })),
+          },
+          selected.map(String)
+        )
+      : gradeAnswer(
+          { type: safeType, expected, caseSensitive, blanks: blankList },
+          submitted
+        );
     if (correct) {
       const root = rootRef.current;
       const active = root.ownerDocument.activeElement;
@@ -231,15 +382,13 @@ export function QuizQuestion({
     });
   };
 
-  const handleChoice = event => {
+  const handleChoice = (index, checked) => {
     if (locked) return;
-    const { value, checked } = event.target;
     clearAttempt();
     setSelected(current => {
-      if (!isMultiple) return [value];
-      return checked
-        ? [...current, value]
-        : current.filter(item => item !== value);
+      if (!isMultiple) return [index];
+      const others = current.filter(item => item !== index);
+      return checked ? [...others, index] : others;
     });
   };
 
@@ -281,12 +430,14 @@ export function QuizQuestion({
 
   const hintId = `${id}-hint`;
   const promptId = `${id}-prompt`;
+  const feedbackTitleId = `${id}-result`;
   const blankLabel = index =>
-    blanks[index]?.label?.trim() ||
+    asText(blankList[index]?.label).trim() ||
     formatQuizLabel(text.blankLabel, {
       number: index + 1,
-      total: blanks.length,
+      total: blankList.length,
     });
+  const questionMedia = <QuestionMedia media={media} element={mediaElement} />;
 
   let body;
   if (isChoice) {
@@ -294,7 +445,7 @@ export function QuizQuestion({
     body = (
       <FormGroup
         className="mg-quiz-question__group"
-        legend={prompt}
+        legend={promptText}
         aria-describedby={isMultiple ? hintId : undefined}
       >
         {isMultiple && (
@@ -302,18 +453,20 @@ export function QuizQuestion({
             {text.selectAll}
           </p>
         )}
-        <QuestionMedia media={media} mediaHtml={mediaHtml} />
+        {questionMedia}
         <div className="mg-quiz-question__options">
           {choices.map((option, index) => (
             <Control
-              key={String(option.value)}
+              // Options are identified by position: values may repeat or be empty.
+              key={index}
               id={`${id}-option-${index}`}
               className="mg-quiz-question__option"
               name={`${id}-answer`}
-              value={String(option.value)}
-              label={option.label}
-              checked={selected.includes(String(option.value))}
-              onChange={handleChoice}
+              value={asText(option.value)}
+              label={asText(option.label) || asText(option.value)}
+              checked={selected.includes(index)}
+              onChange={event => handleChoice(index, event.target.checked)}
+              analyticsLabel={ANALYTICS.option}
               // Read-only, not disabled: the chosen answer keeps its place in
               // the tab order and its full contrast.
               aria-disabled={locked || undefined}
@@ -323,7 +476,7 @@ export function QuizQuestion({
       </FormGroup>
     );
   } else if (safeType === 'fill_blank') {
-    const { parts, inline } = parseBlankPrompt(prompt, blanks.length);
+    const { parts, inline } = parseBlankPrompt(promptText, blankList.length);
     // Each blank takes the punctuation that follows it into one unit.
     const sentenceParts = [];
     parts.forEach((part, index) => {
@@ -341,7 +494,7 @@ export function QuizQuestion({
       const rest = part.text.slice(taken);
       if (rest) sentenceParts.push({ text: rest });
     });
-    const below = blanks
+    const below = blankList
       .map((blank, index) => index)
       .filter(index => !inline.includes(index));
     body = (
@@ -353,9 +506,14 @@ export function QuizQuestion({
           'mg-quiz-question__group',
           inline.length > 0 && 'mg-quiz-question__group--sentence'
         )}
-        legend={inline.length > 0 ? text.fillBlankLegend : prompt}
+        legend={
+          inline.length > 0
+            ? text.fillBlankLegend
+            : // Any marker left has no blank to stand for, so it is not shown.
+              parts.map(part => part.text ?? '').join('')
+        }
       >
-        <QuestionMedia media={media} mediaHtml={mediaHtml} />
+        {questionMedia}
         {inline.length > 0 && (
           <p className="mg-quiz-question__sentence">
             {sentenceParts.map((part, index) =>
@@ -373,6 +531,7 @@ export function QuizQuestion({
                     autoCapitalize="none"
                     spellCheck={false}
                     aria-label={blankLabel(part.blank)}
+                    data-vf-analytics-label={ANALYTICS.blank}
                     value={texts[part.blank] ?? ''}
                     readOnly={locked}
                     onChange={event => setText(part.blank, event.target.value)}
@@ -392,6 +551,7 @@ export function QuizQuestion({
                 id={`${id}-blank-${index}`}
                 className="mg-quiz-question__field"
                 label={blankLabel(index)}
+                analyticsLabel={ANALYTICS.blank}
                 autoComplete="off"
                 autoCapitalize="none"
                 spellCheck={false}
@@ -412,14 +572,16 @@ export function QuizQuestion({
           className="mg-quiz-question__prompt"
           id={promptId}
           htmlFor={`${id}-answer`}
+          data-vf-analytics-label={ANALYTICS.field}
         >
-          {prompt}
+          {promptText}
         </label>
-        <QuestionMedia media={media} mediaHtml={mediaHtml} />
+        {questionMedia}
         <TextInput
           id={`${id}-answer`}
           className="mg-quiz-question__field"
           aria-labelledby={promptId}
+          analyticsLabel={ANALYTICS.field}
           autoComplete="off"
           autoCapitalize="none"
           spellCheck={false}
@@ -439,8 +601,13 @@ export function QuizQuestion({
     feedbackTitle = isChoice ? text.emptyChoice : text.emptyText;
   }
 
+  const isCorrect = feedback.kind === 'correct';
+
   return (
     <div
+      // First, so that a consumer prop cannot replace what the component
+      // publishes about itself.
+      {...rest}
       ref={rootRef}
       className={joinClasses(
         'mg-quiz-question',
@@ -448,10 +615,9 @@ export function QuizQuestion({
         result !== 'unanswered' && `mg-quiz-question--${result}`,
         className
       )}
-      data-mg-quiz-state={result}
+      data-mg-quiz-state={answerable ? result : undefined}
       data-mg-quiz-id={questionId || undefined}
       {...getLanguageProps(lang, dir)}
-      {...rest}
     >
       {numberText && (
         <div className="mg-quiz-question__header">
@@ -459,12 +625,12 @@ export function QuizQuestion({
         </div>
       )}
       {body}
-      {!locked && (
+      {answerable && !locked && (
         <div className="mg-quiz-question__actions">
           <button
             type="button"
             className={`${checkClass} mg-quiz-question__check`}
-            data-vf-analytics-label="Quiz: Check answer"
+            data-vf-analytics-label={ANALYTICS.check}
             onClick={handleCheck}
           >
             {text.checkAnswer}
@@ -475,23 +641,28 @@ export function QuizQuestion({
         ref={feedbackRef}
         className="mg-quiz-question__feedback"
         aria-live="polite"
-        // Takes focus when a correct answer removes the check button.
-        tabIndex={-1}
       >
         {feedback.kind && (
           <Notice
             key={feedback.attempt}
             variant={NOTICE_VARIANTS[feedback.kind]}
-            // The wrapper is the live region; a second one would announce twice.
-            role={null}
+            // The wrapper is the live region; a second one would announce
+            // twice. The correct result is a group named by its title, so it
+            // can take focus when the check button is removed.
+            role={isCorrect ? 'group' : null}
+            aria-labelledby={isCorrect ? feedbackTitleId : undefined}
+            tabIndex={isCorrect ? -1 : undefined}
             headerContent={
-              <p className="mg-notice__title mg-quiz-question__feedback-title">
+              <p
+                className="mg-notice__title mg-quiz-question__feedback-title"
+                id={feedbackTitleId}
+              >
                 {feedbackTitle}
               </p>
             }
           >
-            {feedback.kind === 'correct' && explanation ? (
-              <p className="mg-quiz-question__explanation">{explanation}</p>
+            {isCorrect && explanationText ? (
+              <p className="mg-quiz-question__explanation">{explanationText}</p>
             ) : null}
           </Notice>
         )}
@@ -500,12 +671,42 @@ export function QuizQuestion({
   );
 }
 
+/**
+ * QuizQuestion component.
+ *
+ * Checks the answer in the browser against the answer key in its props and
+ * shows the result as a Notice. The component stores nothing and sends
+ * nothing. The key is readable in the page by design, so this is for
+ * engagement, never for assessment.
+ *
+ * Each question publishes its state as `data-mg-quiz-state` on its root, which
+ * is how QuizScore counts a page of independent questions.
+ *
+ * A correct answer locks the question: the controls become read-only and the
+ * check button is removed. Changing an answer after any other attempt clears
+ * the feedback and returns the question to unanswered, so a result never
+ * outlives the answer it was given for.
+ *
+ * The answer key is optional in the props. Without a usable key no answer is
+ * marked correct, for every type: a `true_false` question with no `answer`
+ * has no key.
+ */
+export function QuizQuestion({ serverFallback, ...props }) {
+  // Set by `fromElement` for a hydrated question, never by a React consumer.
+  if (!serverFallback) return <QuizQuestionView {...props} />;
+  return (
+    <ServerFallbackBoundary fallback={serverFallback}>
+      <QuizQuestionView {...props} mediaElement={serverFallback.media} />
+    </ServerFallbackBoundary>
+  );
+}
+
 QuizQuestion.propTypes = {
   /** Question type. The values match the Drupal grader types. */
   type: PropTypes.oneOf(QUIZ_QUESTION_TYPES),
-  /** The question, as plain text. Line breaks are kept. For `fill_blank`, write `[1]`, `[2]` where each blank belongs in the sentence. */
+  /** The question, as plain text. Line breaks are kept. For `fill_blank`, write `[1]`, `[2]` where each blank belongs in the sentence; a repeated marker or one with no blank is left out. */
   prompt: PropTypes.string.isRequired,
-  /** Options for `multiple_choice`: a unique `value`, a visible `label`, and `correct: true` on each right answer. */
+  /** Options for `multiple_choice`: a `value`, a visible `label`, and `correct: true` on each right answer. Options are graded by position, so a repeated or empty `value` still works; `onCheck` reports the values as written, so keep them unique if you read them. */
   options: PropTypes.arrayOf(
     PropTypes.shape({
       value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
@@ -516,13 +717,13 @@ QuizQuestion.propTypes = {
   ),
   /** `multiple_choice` only: several options are correct, so the question uses checkboxes and says "Select all that apply". */
   multiple: PropTypes.bool,
-  /** `true_false` only: whether the statement is true. The True and False labels come from the language catalogue. */
+  /** `true_false` only: whether the statement is true. Left out, the question has no key and no answer is marked correct. The True and False labels come from the language catalogue. */
   answer: PropTypes.bool,
   /** `text` only: every accepted answer. */
   expected: PropTypes.arrayOf(PropTypes.string),
-  /** `text` only: match letter case exactly. Whitespace and Unicode form are always normalized. */
+  /** `text` only: match letter case exactly. Whitespace, Unicode compatibility forms (NFKC, so full-width digits match) and zero-width characters are always normalized. */
   caseSensitive: PropTypes.bool,
-  /** `fill_blank` only: one entry per blank, in order, with its accepted answers, optional case sensitivity and an optional label used as the input's accessible name. */
+  /** `fill_blank` only: one entry per blank, in order, with its accepted answers, optional case sensitivity and an optional label used as the input's accessible name. With no blanks the question has no check button and is not counted. */
   blanks: PropTypes.arrayOf(
     PropTypes.shape({
       label: PropTypes.string,
@@ -534,8 +735,6 @@ QuizQuestion.propTypes = {
   explanation: PropTypes.string,
   /** Optional image or figure that belongs to the question, shown between the prompt and the answer controls. */
   media: PropTypes.node,
-  /** Server-rendered media markup, used by hydration in place of `media`. Inserted as HTML: pass only markup the server has already sanitized. */
-  mediaHtml: PropTypes.string,
   /** Position of the question. Left out, it is counted from the questions that share the page or the nearest `data-mg-quiz` wrapper. */
   number: PropTypes.number,
   /** Number of questions. Left out, it is counted in the same way as `number`. */
@@ -566,6 +765,11 @@ QuizQuestion.propTypes = {
   onCheck: PropTypes.func,
   /** Additional CSS class names for the root. */
   className: PropTypes.string,
+};
+
+QuizQuestionView.propTypes = {
+  ...QuizQuestion.propTypes,
+  mediaElement: PropTypes.object,
 };
 
 export default QuizQuestion;

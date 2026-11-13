@@ -20,6 +20,7 @@ import {
 } from '../quizScope';
 
 export { DEFAULT_QUIZ_SCORE_LABELS, getQuizScoreLabels } from '../_labels';
+export { refreshQuiz } from '../quizScope';
 
 const IDLE = { total: 0, answered: 0, correct: 0 };
 const FOCUSABLE = 'input:not([disabled]), button:not([disabled])';
@@ -35,7 +36,8 @@ const joinClasses = (...classes) => classes.filter(Boolean).join(' ');
  * final score with a "Start again" action once every question is answered.
  * "Start again" unlocks and clears every question in the scope.
  *
- * The score is a count for the visitor only. Nothing is stored or sent.
+ * The score is a count for the visitor only. The component stores nothing
+ * and sends nothing.
  */
 export function QuizScore({
   showProgress = true,
@@ -52,7 +54,16 @@ export function QuizScore({
 
   useEffect(() => {
     const root = rootRef.current;
+    let off = () => {};
+    // A score whose markup was removed without an unmount stops listening
+    // the next time it is asked to count.
+    let wasConnected = root.isConnected;
     const count = () => {
+      if (root.isConnected) wasConnected = true;
+      else if (wasConnected) {
+        off();
+        return;
+      }
       const next = getQuizSummary(getQuizScope(root));
       setSummary(current =>
         current.total === next.total &&
@@ -63,7 +74,8 @@ export function QuizScore({
       );
     };
     count();
-    return onQuizEvent(root.ownerDocument, QUIZ_CHANGE_EVENT, count);
+    off = onQuizEvent(root.ownerDocument, QUIZ_CHANGE_EVENT, count);
+    return () => off();
   }, []);
 
   const { total, answered, correct } = summary;
@@ -101,6 +113,7 @@ export function QuizScore({
 
   return (
     <div
+      {...rest}
       ref={rootRef}
       className={joinClasses(
         'mg-quiz-score',
@@ -109,7 +122,6 @@ export function QuizScore({
         className
       )}
       {...getLanguageProps(lang, dir)}
-      {...rest}
     >
       {/* Always in the page, so the first score is announced as a change. */}
       <p className="mg-quiz-score__summary" role="status">

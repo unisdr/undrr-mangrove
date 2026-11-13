@@ -64,7 +64,8 @@ export {
   default as QuizQuestion,
   DEFAULT_QUIZ_QUESTION_LABELS,
   getQuizQuestionLabels,
-  gradeAnswer as gradeQuizAnswer,
+  gradeQuizAnswer,
+  refreshQuiz,
 } from '../stories/Components/Quiz/QuizQuestion/QuizQuestion';
 export {
   default as QuizScore,

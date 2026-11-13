@@ -91,7 +91,12 @@ describe('QuizQuestion', () => {
     expect(feedback).toHaveAttribute('aria-live', 'polite');
     const notice = feedback.querySelector('.mg-notice');
     expect(notice).toHaveClass('mg-notice--positive');
-    expect(notice).not.toHaveAttribute('role');
+    // A named group, never a second live region inside the first.
+    expect(notice).toHaveAttribute('role', 'group');
+    expect(notice).toHaveAccessibleName('Correct');
+    expect(
+      container.querySelectorAll('[aria-live], [role="status"]')
+    ).toHaveLength(1);
     expect(notice).toHaveTextContent('Correct');
     expect(notice).toHaveTextContent('Floods are hydrological.');
     expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'correct');
@@ -194,13 +199,55 @@ describe('QuizQuestion', () => {
     expect(onCheck).toHaveBeenCalledWith({ correct: false, answer: 'flood' });
   });
 
-  it('treats a true/false question with no key as true', () => {
+  it.each([
+    ['is left out', {}],
+    ['is undefined', { answer: undefined }],
+    ['is null', { answer: null }],
+    ['is not a boolean', { answer: 'no' }],
+  ])('marks neither true nor false correct when `answer` %s', (name, key) => {
+    const error = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const onCheck = jest.fn();
     const { container } = render(
-      <QuizQuestion type="true_false" prompt="A statement with no key." />
+      <QuizQuestion
+        type="true_false"
+        prompt="A statement with no key."
+        explanation="Never shown."
+        onCheck={onCheck}
+        {...key}
+      />
+    );
+    ['True', 'False'].forEach(label => {
+      fireEvent.click(screen.getByLabelText(label));
+      check();
+      expect(root(container)).toHaveAttribute(
+        'data-mg-quiz-state',
+        'incorrect'
+      );
+      expect(container).toHaveTextContent('Not correct yet. Try again.');
+    });
+    expect(container).not.toHaveTextContent('Never shown.');
+    expect(onCheck).toHaveBeenCalledTimes(2);
+    expect(onCheck).not.toHaveBeenCalledWith(
+      expect.objectContaining({ correct: true })
+    );
+    error.mockRestore();
+  });
+
+  it('grades a true/false question with a key either way round', () => {
+    const { container, unmount } = render(
+      <QuizQuestion
+        type="true_false"
+        prompt="False statement."
+        answer={false}
+      />
     );
     fireEvent.click(screen.getByLabelText('True'));
     check();
+    expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'incorrect');
+    fireEvent.click(screen.getByLabelText('False'));
+    check();
     expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'correct');
+    unmount();
   });
 
   it('asks to try again without revealing the explanation, and allows a retry', () => {
@@ -316,23 +363,39 @@ describe('QuizQuestion', () => {
     expect(blanks).toHaveAttribute('data-mg-quiz-state', 'correct');
   });
 
-  it('moves focus to the feedback when a correct answer removes the button', () => {
-    const { container } = render(<QuizQuestion {...CHOICE} />);
+  it('moves focus to the named result when a correct answer removes the button', () => {
+    const { container } = render(
+      <QuizQuestion {...CHOICE} explanation="Floods are hydrological." />
+    );
     const feedback = container.querySelector('.mg-quiz-question__feedback');
-    expect(feedback).toHaveAttribute('tabindex', '-1');
+    // The live region itself is never a focus target.
+    expect(feedback).toHaveAttribute('aria-live', 'polite');
+    expect(feedback).not.toHaveAttribute('tabindex');
 
-    // Incorrect: the button stays and keeps focus.
+    // Incorrect: the button stays and keeps focus, and the message is not
+    // focusable.
     fireEvent.click(screen.getByLabelText('Earthquake'));
     const button = screen.getByRole('button', { name: 'Check answer' });
     button.focus();
     fireEvent.click(button);
     expect(button).toHaveFocus();
+    expect(feedback.querySelector('.mg-notice')).not.toHaveAttribute(
+      'tabindex'
+    );
+    expect(feedback.querySelector('.mg-notice')).not.toHaveAttribute('role');
 
     fireEvent.click(screen.getByLabelText('Flood'));
     button.focus();
     fireEvent.click(button);
     expect(button).not.toBeInTheDocument();
-    expect(feedback).toHaveFocus();
+    const result = screen.getByRole('group', { name: 'Correct' });
+    expect(result).toHaveFocus();
+    expect(result).toHaveClass('mg-notice');
+    expect(result).toHaveAttribute('tabindex', '-1');
+    expect(result).not.toHaveAttribute('aria-live');
+    expect(result).not.toBe(feedback);
+    expect(feedback).toContainElement(result);
+    expect(feedback).not.toHaveFocus();
     expect(document.body).not.toHaveFocus();
   });
 
@@ -582,6 +645,307 @@ describe('QuizQuestion', () => {
       <QuizQuestion {...CHOICE} lang="es" labels={{ checkAnswer: 'Listo' }} />
     );
     expect(screen.getByRole('button', { name: 'Listo' })).toBeInTheDocument();
+  });
+
+  it('gives every answer control a fixed analytics label that carries no answer', () => {
+    const page = (
+      <>
+        <QuizQuestion
+          type="multiple_choice"
+          prompt="Pick"
+          options={[
+            { value: 'secret-flood', label: 'Flood label', correct: true },
+            { value: 'secret-quake', label: 'Quake label' },
+          ]}
+        />
+        <QuizQuestion {...MULTI} />
+        <QuizQuestion type="true_false" prompt="True?" answer />
+        <QuizQuestion {...TEXT} />
+        <QuizQuestion {...BLANKS} />
+        <QuizQuestion
+          type="fill_blank"
+          prompt="Name the city."
+          blanks={[{ label: 'City', expected: ['Sendai'] }]}
+        />
+      </>
+    );
+    const { container } = render(page);
+    const labelOf = element => element.getAttribute('data-vf-analytics-label');
+
+    // What the UNDRR click tracker names: inputs, their labels and buttons.
+    const tracked = Array.from(
+      container.querySelectorAll('input, label, button, a, select, textarea')
+    );
+    expect(tracked.length).toBeGreaterThan(20);
+    tracked.forEach(element => expect(labelOf(element)).toBeTruthy());
+    expect(new Set(tracked.map(labelOf))).toEqual(
+      new Set([
+        'Quiz: Answer option',
+        'Quiz: Answer field',
+        'Quiz: Blank',
+        'Quiz: Check answer',
+      ])
+    );
+    container
+      .querySelectorAll('input[type="radio"], input[type="checkbox"]')
+      .forEach(input => {
+        expect(labelOf(input)).toBe('Quiz: Answer option');
+        expect(
+          labelOf(container.querySelector(`label[for="${input.id}"]`))
+        ).toBe('Quiz: Answer option');
+      });
+
+    // The labels are the same whatever is chosen or typed.
+    const before = tracked.map(labelOf);
+    fireEvent.click(screen.getByLabelText('Flood label'));
+    fireEvent.change(screen.getByRole('textbox', { name: TEXT.prompt }), {
+      target: { value: 'typed-secret' },
+    });
+    fireEvent.change(screen.getByRole('textbox', { name: 'Blank 2 of 2' }), {
+      target: { value: 'typed-secret' },
+    });
+    expect(tracked.map(labelOf)).toEqual(before);
+    const labels = Array.from(
+      container.querySelectorAll('[data-vf-analytics-label]'),
+      labelOf
+    ).join('|');
+    ['secret', 'Flood', 'Quake', 'typed', 'Sendai', 'true', 'false'].forEach(
+      answer => expect(labels).not.toContain(answer)
+    );
+  });
+
+  it('starts again when the props describe another question', () => {
+    const { container, rerender } = render(
+      <QuizQuestion
+        type="true_false"
+        prompt="First statement."
+        answer
+        explanation="one"
+      />
+    );
+    fireEvent.click(screen.getByLabelText('True'));
+    check();
+    expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'correct');
+
+    rerender(
+      <QuizQuestion
+        type="text"
+        prompt="New question"
+        expected={['z']}
+        explanation="two"
+      />
+    );
+    expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'unanswered');
+    expect(root(container)).not.toHaveClass('mg-quiz-question--correct');
+    expect(container.querySelector('.mg-notice')).toBeNull();
+    expect(container).not.toHaveTextContent('two');
+    const input = screen.getByRole('textbox');
+    expect(input).not.toHaveAttribute('readonly');
+    expect(input).toHaveValue('');
+    expect(
+      screen.getByRole('button', { name: 'Check answer' })
+    ).toBeInTheDocument();
+  });
+
+  it('starts again when the same shape of question gets new content', () => {
+    const second = {
+      ...CHOICE,
+      options: [
+        { value: 'flood', label: 'Flood' },
+        { value: 'quake', label: 'Earthquake', correct: true },
+      ],
+    };
+    const { container, rerender } = render(<QuizQuestion {...CHOICE} />);
+    fireEvent.click(screen.getByLabelText('Flood'));
+    check();
+    expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'correct');
+    rerender(<QuizQuestion {...second} />);
+    expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'unanswered');
+    expect(screen.getByLabelText('Flood')).not.toBeChecked();
+  });
+
+  it('keeps the answer when the same question is rendered again', () => {
+    const fresh = () => ({
+      ...CHOICE,
+      options: CHOICE.options.map(option => ({ ...option })),
+    });
+    const { container, rerender } = render(
+      <QuizQuestion {...fresh()} labels={{ checkAnswer: 'Check' }} />
+    );
+    fireEvent.click(screen.getByLabelText('Flood'));
+    fireEvent.click(screen.getByRole('button', { name: 'Check' }));
+    // New object identities, another language, another callback: same question.
+    rerender(<QuizQuestion {...fresh()} lang="fr" onCheck={() => {}} />);
+    expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'correct');
+    expect(screen.getByLabelText('Flood')).toBeChecked();
+  });
+
+  it('follows questionId, not content, when the question has an id', () => {
+    const { container, rerender } = render(
+      <QuizQuestion {...CHOICE} questionId="q1" />
+    );
+    fireEvent.click(screen.getByLabelText('Flood'));
+    check();
+    rerender(
+      <QuizQuestion {...CHOICE} questionId="q1" prompt="Reworded prompt?" />
+    );
+    expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'correct');
+    rerender(<QuizQuestion {...CHOICE} questionId="q2" />);
+    expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'unanswered');
+    expect(screen.getByLabelText('Flood')).not.toBeChecked();
+  });
+
+  it('lets an option with an empty or whitespace value be the answer', () => {
+    const onCheck = jest.fn();
+    const { container } = render(
+      <QuizQuestion
+        type="multiple_choice"
+        prompt="P"
+        options={[
+          { value: '', label: 'None of these', correct: true },
+          { value: ' ', label: 'Blank' },
+          { value: 'a', label: 'A' },
+        ]}
+        onCheck={onCheck}
+      />
+    );
+    fireEvent.click(screen.getByLabelText('Blank'));
+    check();
+    expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'incorrect');
+    expect(container).not.toHaveTextContent('Choose an answer first.');
+    fireEvent.click(screen.getByLabelText('None of these'));
+    expect(screen.getByLabelText('Blank')).not.toBeChecked();
+    check();
+    expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'correct');
+    expect(onCheck).toHaveBeenLastCalledWith({ correct: true, answer: '' });
+  });
+
+  it('grades options that share a value by position, without key warnings', () => {
+    const error = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const { container } = render(
+      <QuizQuestion
+        type="multiple_choice"
+        prompt="P"
+        options={[
+          { value: 'a', label: 'First', correct: true },
+          { value: 'a', label: 'Second' },
+          { value: 'b', label: 'Third' },
+        ]}
+      />
+    );
+    fireEvent.click(screen.getByLabelText('Second'));
+    expect(screen.getByLabelText('Second')).toBeChecked();
+    expect(screen.getByLabelText('First')).not.toBeChecked();
+    check();
+    expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'incorrect');
+    fireEvent.click(screen.getByLabelText('First'));
+    expect(screen.getByLabelText('Second')).not.toBeChecked();
+    check();
+    expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'correct');
+    expect(error).not.toHaveBeenCalled();
+    error.mockRestore();
+  });
+
+  it('grades several answers that share a value by position', () => {
+    const { container } = render(
+      <QuizQuestion
+        type="multiple_choice"
+        multiple
+        prompt="P"
+        options={[
+          { value: 'a', label: 'First', correct: true },
+          { value: 'a', label: 'Second' },
+          { value: '', label: 'Third', correct: true },
+        ]}
+      />
+    );
+    fireEvent.click(screen.getByLabelText('First'));
+    fireEvent.click(screen.getByLabelText('Second'));
+    check();
+    expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'incorrect');
+    fireEvent.click(screen.getByLabelText('Second'));
+    fireEvent.click(screen.getByLabelText('Third'));
+    check();
+    expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'correct');
+  });
+
+  it('shows each blank once and never shows a marker', () => {
+    const { container } = render(
+      <QuizQuestion
+        type="fill_blank"
+        prompt="In [1], then [1] again, [0] and [3]."
+        blanks={[{ expected: ['a'] }, { expected: ['b'] }]}
+      />
+    );
+    const sentence = container.querySelector('.mg-quiz-question__sentence');
+    expect(sentence.textContent).not.toMatch(/\[\d+\]/);
+    expect(sentence.querySelectorAll('input')).toHaveLength(1);
+    // The blank the prompt never mentions follows the sentence.
+    const below = container.querySelectorAll('.mg-quiz-question__fields input');
+    expect(below).toHaveLength(1);
+    expect(below[0]).toHaveAccessibleName('Blank 2 of 2');
+
+    fireEvent.change(screen.getByRole('textbox', { name: 'Blank 1 of 2' }), {
+      target: { value: 'a' },
+    });
+    fireEvent.change(below[0], { target: { value: 'b' } });
+    check();
+    expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'correct');
+  });
+
+  it('offers no check button for a question with nothing to answer', () => {
+    const { container } = render(
+      <>
+        <QuizQuestion type="fill_blank" prompt="No blanks [1]." blanks={[]} />
+        <QuizQuestion type="multiple_choice" prompt="No options" options={[]} />
+        <QuizQuestion {...CHOICE} />
+      </>
+    );
+    const [noBlanks, noOptions, real] =
+      container.querySelectorAll('.mg-quiz-question');
+    [noBlanks, noOptions].forEach(question => {
+      expect(within(question).queryByRole('button')).toBeNull();
+      // No state, so it is not numbered and the score does not wait for it.
+      expect(question).not.toHaveAttribute('data-mg-quiz-state');
+      expect(question.querySelector('.mg-quiz-question__number')).toBeNull();
+    });
+    expect(noBlanks).toHaveTextContent('No blanks .');
+    expect(noBlanks.textContent).not.toContain('[1]');
+    expect(real).toHaveAttribute('data-mg-quiz-state', 'unanswered');
+    expect(real.querySelector('.mg-quiz-question__number')).toBeNull();
+    expect(
+      within(real).getByRole('button', { name: 'Check answer' })
+    ).toHaveClass('mg-button-primary');
+  });
+
+  it('does not let a consumer prop replace the published state', () => {
+    const { container } = render(
+      <QuizQuestion
+        {...CHOICE}
+        data-mg-quiz-state="correct"
+        data-testid="kept"
+      />
+    );
+    expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'unanswered');
+    expect(root(container)).toHaveAttribute('data-testid', 'kept');
+  });
+
+  it('keeps a built-in label when an override is not usable text', () => {
+    const error = jest.spyOn(console, 'error').mockImplementation(() => {});
+    render(
+      <QuizQuestion
+        type="true_false"
+        prompt="True?"
+        answer
+        labels={{ checkAnswer: null, trueLabel: { a: 1 }, falseLabel: '' }}
+      />
+    );
+    expect(
+      screen.getByRole('button', { name: 'Check answer' })
+    ).toBeInTheDocument();
+    expect(screen.getByLabelText('True')).toBeInTheDocument();
+    expect(screen.getByLabelText('False')).toBeInTheDocument();
+    error.mockRestore();
   });
 
   it('keeps unsupported language metadata without forcing a direction', () => {

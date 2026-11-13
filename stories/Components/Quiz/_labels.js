@@ -195,7 +195,26 @@ const SCORE_ZH = {
   reset: '重新开始',
 };
 
-export const getQuizQuestionLabels = createLabelResolver(
+/**
+ * Keeps the label overrides that can be shown: own keys whose value is a
+ * non-empty string. Anything else (null, a number, an object from hand-edited
+ * JSON) is dropped, so that key keeps its built-in label and a control is
+ * never left without a name.
+ *
+ * @param {*} labels Overrides from a prop or from `data-labels`
+ * @returns {Object<string, string>|undefined} Usable overrides, if any
+ */
+export function cleanQuizLabels(labels) {
+  if (!labels || typeof labels !== 'object' || Array.isArray(labels)) {
+    return undefined;
+  }
+  const entries = Object.entries(labels).filter(
+    ([, value]) => typeof value === 'string' && value.trim() !== ''
+  );
+  return entries.length > 0 ? Object.fromEntries(entries) : undefined;
+}
+
+const resolveQuestionLabels = createLabelResolver(
   DEFAULT_QUIZ_QUESTION_LABELS,
   {
     ar: QUESTION_AR,
@@ -207,17 +226,30 @@ export const getQuizQuestionLabels = createLabelResolver(
   }
 );
 
-export const getQuizScoreLabels = createLabelResolver(
-  DEFAULT_QUIZ_SCORE_LABELS,
-  {
-    ar: SCORE_AR,
-    es: SCORE_ES,
-    fr: SCORE_FR,
-    ja: SCORE_JA,
-    ru: SCORE_RU,
-    zh: SCORE_ZH,
-  }
-);
+const resolveScoreLabels = createLabelResolver(DEFAULT_QUIZ_SCORE_LABELS, {
+  ar: SCORE_AR,
+  es: SCORE_ES,
+  fr: SCORE_FR,
+  ja: SCORE_JA,
+  ru: SCORE_RU,
+  zh: SCORE_ZH,
+});
+
+/**
+ * @param {string} [lang] Language tag
+ * @param {Object} [labels] Overrides; unusable values are ignored
+ * @returns {Object<string, string>} Every QuizQuestion label
+ */
+export const getQuizQuestionLabels = (lang, labels) =>
+  resolveQuestionLabels(lang, cleanQuizLabels(labels));
+
+/**
+ * @param {string} [lang] Language tag
+ * @param {Object} [labels] Overrides; unusable values are ignored
+ * @returns {Object<string, string>} Every QuizScore label
+ */
+export const getQuizScoreLabels = (lang, labels) =>
+  resolveScoreLabels(lang, cleanQuizLabels(labels));
 
 /**
  * Replaces `{name}` placeholders in a label.

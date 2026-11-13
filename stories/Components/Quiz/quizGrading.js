@@ -2,10 +2,13 @@
  * Grading rules for quiz questions.
  *
  * Pure functions with no DOM or React dependency, so a consumer can run the
- * same rules elsewhere. They mirror the Drupal `undrr_training` runtime
- * (undrr/web-backlog#3129): text matching trims and collapses whitespace,
- * normalizes Unicode to NFC and ignores case unless the question says
- * otherwise; a choice question needs exactly the correct set of options.
+ * same rules elsewhere. They are based on the Drupal `undrr_training` runtime
+ * (undrr/web-backlog#3129): text matching trims and collapses whitespace and
+ * ignores case unless the question says otherwise; a choice question needs
+ * exactly the correct set of options. Text matching here also folds Unicode
+ * compatibility forms (NFKC) and drops zero-width characters.
+ *
+ * A question with no usable answer key never passes, whatever its type.
  */
 
 export const QUIZ_QUESTION_TYPES = [
@@ -15,8 +18,23 @@ export const QUIZ_QUESTION_TYPES = [
   'fill_blank',
 ];
 
+// Zero-width space, non-joiner and joiner, word joiner and the byte-order
+// mark: invisible characters that arrive with pasted text.
+const ZERO_WIDTH = /[\u200B-\u200D\u2060\uFEFF]/g;
+
 /**
  * Normalizes text for comparison.
+ *
+ * NFKC folds characters that differ only in width or presentation, so
+ * full-width digits and letters from a Japanese or Chinese keyboard match
+ * their ASCII forms, and composed and decomposed accents match each other.
+ * Zero-width characters are removed, whitespace is trimmed and collapsed, and
+ * case is ignored with `toLowerCase()` unless `caseSensitive` is set.
+ *
+ * Limits: there is no language-specific case folding, so `ß` does not match
+ * `SS` and a dotted capital `İ` does not match `i`. Accents are significant,
+ * and digits of other scripts (Arabic-Indic `٢`) do not match ASCII digits.
+ * List each form as its own accepted answer.
  *
  * @param {*} value Submitted or expected text
  * @param {boolean} caseSensitive Keep letter case
@@ -24,7 +42,8 @@ export const QUIZ_QUESTION_TYPES = [
  */
 export function normalizeText(value, caseSensitive) {
   const trimmed = String(value === undefined || value === null ? '' : value)
-    .normalize('NFC')
+    .normalize('NFKC')
+    .replace(ZERO_WIDTH, '')
     .trim()
     .replace(/\s+/g, ' ');
   return caseSensitive ? trimmed : trimmed.toLowerCase();
@@ -50,7 +69,7 @@ export function isEmptyAnswer(answer) {
 
 function gradeChoice(question, submitted) {
   const correct = (question.options || [])
-    .filter(option => option.correct === true)
+    .filter(option => option?.correct === true)
     .map(option => String(option.value))
     .sort();
   const selected = (Array.isArray(submitted) ? submitted : [submitted])
@@ -80,8 +99,8 @@ function gradeFillBlank(question, submitted) {
   return blanks.every((blank, index) =>
     gradeText(
       {
-        expected: toList(blank.expected),
-        caseSensitive: Boolean(blank.caseSensitive),
+        expected: toList(blank?.expected),
+        caseSensitive: Boolean(blank?.caseSensitive),
       },
       String(answers[index] ?? '')
     )
@@ -89,23 +108,52 @@ function gradeFillBlank(question, submitted) {
 }
 
 /**
- * The two options of a true/false question, from either form of the key:
- * `answer: true` or the legacy `options` pair with `correct` flags.
+ * Reads one form of a true/false key.
+ *
+ * @param {*} value A boolean, or the string "true" or "false" in any case
+ * @returns {boolean|null} The key, or null for anything else
+ */
+export function parseTrueFalse(value) {
+  if (typeof value === 'boolean') return value;
+  if (typeof value !== 'string') return null;
+  const text = value.toLowerCase();
+  if (text === 'true') return true;
+  if (text === 'false') return false;
+  return null;
+}
+
+/**
+ * The key of a true/false question, from either form: `answer`, or the legacy
+ * `options` pair with values "true" and "false" and one `correct` flag.
+ *
+ * @param {Object} question Question definition
+ * @returns {boolean|null} The key, or null when the question has no usable one
+ */
+export function trueFalseKey(question) {
+  const answer = parseTrueFalse(question.answer);
+  if (answer !== null) return answer;
+  const flagged = new Set(
+    (Array.isArray(question.options) ? question.options : [])
+      .filter(option => option && option.correct === true)
+      .map(option => parseTrueFalse(option.value))
+  );
+  // One option flagged, and it is recognizably true or false.
+  if (flagged.size !== 1) return null;
+  return [...flagged][0];
+}
+
+/**
+ * The two options of a true/false question. Without a usable key neither is
+ * correct, so no answer passes.
  *
  * @param {Object} question Question definition
  * @returns {{value: string, correct: boolean}[]} The true and false options
  */
 export function trueFalseOptions(question) {
-  let answer = question.answer;
-  if (typeof answer !== 'boolean') {
-    const legacy = (question.options || []).find(
-      option => option.correct === true
-    );
-    answer = legacy ? String(legacy.value) !== 'false' : true;
-  }
+  const key = trueFalseKey(question);
   return [
-    { value: 'true', correct: answer },
-    { value: 'false', correct: !answer },
+    { value: 'true', correct: key === true },
+    { value: 'false', correct: key === false },
   ];
 }
 
@@ -134,8 +182,9 @@ export function gradeAnswer(question, submitted) {
 
 /**
  * Splits a fill-in-the-blank prompt into text and blank parts. `[1]` refers
- * to the first blank. A reference to a blank that does not exist, or a second
- * reference to the same blank, stays as text.
+ * to the first blank. Each blank appears once, at its first reference. A
+ * second reference to the same blank, or a reference to a blank that does not
+ * exist, is left out, so a marker is never shown to the visitor.
  *
  * @param {string} prompt Prompt such as "Adopted in [1], Japan, in [2]."
  * @param {number} blankCount Number of blanks the question defines
@@ -161,8 +210,6 @@ export function parseBlankPrompt(prompt, blankCount) {
     if (index >= 0 && index < blankCount && !inline.includes(index)) {
       parts.push({ blank: index });
       inline.push(index);
-    } else {
-      pushText(match[0]);
     }
     last = match.index + match[0].length;
     match = pattern.exec(source);

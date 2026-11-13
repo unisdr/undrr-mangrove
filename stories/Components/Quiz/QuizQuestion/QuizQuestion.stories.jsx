@@ -3,7 +3,12 @@ import { expect, userEvent, within } from 'storybook/test';
 import { withLanguage } from '../../../../.storybook/withLanguage';
 import createHydrator from '../../../../src/hydrate';
 import sampleImage from '../../../assets/images/sample_image-md.jpg';
-import { QUESTIONS, getPageText, getQuestion } from '../_storyFixtures';
+import {
+  QUESTIONS,
+  getPageText,
+  getQuestion,
+  getServerMarkup,
+} from '../_storyFixtures';
 import { QuizScore } from '../QuizScore/QuizScore';
 import quizScoreFromElement, {
   ensureQuizScoreHost,
@@ -32,11 +37,15 @@ export default {
     docs: {
       description: {
         component:
-          'One self-checking question in the page flow. Answers are checked in the browser and nothing is stored.',
+          'One self-checking question in the page flow. Answers are checked in the browser, and the component stores and sends nothing.',
       },
     },
   },
   argTypes: {
+    type: { table: { defaultValue: { summary: 'multiple_choice' } } },
+    multiple: { table: { defaultValue: { summary: 'false' } } },
+    caseSensitive: { table: { defaultValue: { summary: 'false' } } },
+    showNumber: { table: { defaultValue: { summary: 'true' } } },
     media: { control: false },
     onCheck: { action: 'check' },
   },
@@ -165,14 +174,16 @@ export const AnsweredCorrect = {
     await expect(
       canvasElement.querySelector('.mg-quiz-question')
     ).toHaveAttribute('data-mg-quiz-state', 'correct');
-    // Locked: the button has gone, focus is on the feedback and the answer
-    // can no longer be changed.
+    // Locked: the button has gone, focus is on the result (a group named
+    // "Correct", not the live region around it) and the answer can no longer
+    // be changed.
     await expect(
       canvas.queryByRole('button', { name: 'Check answer' })
     ).toBeNull();
+    await expect(canvas.getByRole('group', { name: 'Correct' })).toHaveFocus();
     await expect(
       canvasElement.querySelector('.mg-quiz-question__feedback')
-    ).toHaveFocus();
+    ).not.toHaveFocus();
     await userEvent.click(canvas.getByLabelText('Chlorine'));
     await expect(answer).toBeChecked();
   },
@@ -180,7 +191,7 @@ export const AnsweredCorrect = {
     docs: {
       description: {
         story:
-          'A correct answer locks the question. The controls become read-only, the check button is removed and focus moves to the feedback.',
+          'A correct answer locks the question. The controls become read-only, the check button is removed and focus moves to the result.',
       },
     },
   },
@@ -269,69 +280,7 @@ export const QuizPage = {
   ),
 };
 
-const NO_SCRIPT_NOTE =
-  '<noscript><p class="mg-form-help mg-quiz-question__note">Checking your answers needs JavaScript.</p></noscript>';
-
-const SERVER_MARKUP = `
-<div data-mg-quiz-question data-mg-ssr
-  data-question='{"type":"multiple_choice","prompt":"Which hazard most directly threatens a rain-fed crop like the one in this photo?","options":[{"value":"surge","label":"Storm surge","correct":false},{"value":"drought","label":"Drought","correct":true},{"value":"avalanche","label":"Avalanche","correct":false}],"explanation":"A rain-fed crop depends on seasonal rainfall, so a prolonged shortfall can cut the harvest or destroy it."}'>
-  <div class="mg-quiz-question mg-quiz-question--multiple-choice">
-    <fieldset class="mg-form-group mg-quiz-question__group">
-      <legend class="mg-form-group__legend">Which hazard most directly threatens a rain-fed crop like the one in this photo?</legend>
-      <div class="mg-quiz-question__media">
-        <img src="${sampleImage}" alt="A farmer sits at the edge of a wheat field during harvest, with cut sheaves beside him" width="640" height="360">
-      </div>
-      <div class="mg-quiz-question__options">
-        <label class="mg-form-check mg-quiz-question__option">
-          <input class="mg-form-check__input mg-form-check__input--radio" type="radio" value="surge">
-          <span class="mg-form-check__label">Storm surge</span>
-        </label>
-        <label class="mg-form-check mg-quiz-question__option">
-          <input class="mg-form-check__input mg-form-check__input--radio" type="radio" value="drought">
-          <span class="mg-form-check__label">Drought</span>
-        </label>
-        <label class="mg-form-check mg-quiz-question__option">
-          <input class="mg-form-check__input mg-form-check__input--radio" type="radio" value="avalanche">
-          <span class="mg-form-check__label">Avalanche</span>
-        </label>
-      </div>
-    </fieldset>
-    ${NO_SCRIPT_NOTE}
-  </div>
-</div>
-<div data-mg-quiz-question data-mg-ssr
-  data-question='{"type":"true_false","prompt":"A storm tide is the same thing as a tsunami.","answer":false}'>
-  <div class="mg-quiz-question mg-quiz-question--true-false">
-    <fieldset class="mg-form-group mg-quiz-question__group">
-      <legend class="mg-form-group__legend">A storm tide is the same thing as a tsunami.</legend>
-      <div class="mg-quiz-question__options">
-        <label class="mg-form-check mg-quiz-question__option">
-          <input class="mg-form-check__input mg-form-check__input--radio" type="radio" value="true">
-          <span class="mg-form-check__label">True</span>
-        </label>
-        <label class="mg-form-check mg-quiz-question__option">
-          <input class="mg-form-check__input mg-form-check__input--radio" type="radio" value="false">
-          <span class="mg-form-check__label">False</span>
-        </label>
-      </div>
-    </fieldset>
-    ${NO_SCRIPT_NOTE}
-  </div>
-</div>
-<div data-mg-quiz-question data-mg-ssr
-  data-question='{"type":"fill_blank","prompt":"The Sendai Framework was adopted in [1], Japan, in the year [2].","blanks":[{"label":"City","expected":["Sendai"]},{"label":"Year","expected":["2015"]}]}'>
-  <div class="mg-quiz-question mg-quiz-question--fill-blank">
-    <fieldset class="mg-form-group mg-quiz-question__group mg-quiz-question__group--sentence">
-      <legend class="mg-form-group__legend">Complete the sentence</legend>
-      <p class="mg-quiz-question__sentence">
-        The Sendai Framework was adopted in
-        <span class="mg-quiz-question__blank-unit"><input class="mg-form-input mg-quiz-question__blank" type="text" aria-label="City">,</span> Japan, in the year
-        <span class="mg-quiz-question__blank-unit"><input class="mg-form-input mg-quiz-question__blank" type="text" aria-label="Year">.</span>
-      </p>
-    </fieldset>
-    ${NO_SCRIPT_NOTE}
-  </div>
-</div>`;
+const SERVER_MARKUP = getServerMarkup(sampleImage);
 
 // Storybook always runs scripts, so a browser here never shows what is inside
 // <noscript>. The no-JavaScript story unwraps the note to show that state.
@@ -379,9 +328,42 @@ export const NoJavaScript = {
       source: { code: SERVER_MARKUP, language: 'html' },
       description: {
         story:
-          'The markup a server renders, as a browser without JavaScript shows it: a readable question with working controls, no check button, and a note from `<noscript>` that checking answers needs JavaScript. The note is the consumer’s text, in the page’s language.',
+          'The markup a server renders, as a browser without JavaScript shows it: a readable question with working controls, no check button, and a note from `<noscript>` that checking answers needs JavaScript. The radios of each question share a `name`, so only one can be selected. The note is the consumer’s text, in the page’s language.',
       },
     },
+  },
+  // Nothing is mounted in this story, so these are the browser's own radio
+  // groups: the shared `name` in the markup is all that makes them exclusive.
+  play: async ({ canvasElement }) => {
+    const questions = Array.from(
+      canvasElement.querySelectorAll('[data-mg-quiz-question]')
+    );
+    const groups = questions
+      .map(question =>
+        Array.from(question.querySelectorAll('input[type="radio"]'))
+      )
+      .filter(radios => radios.length > 0);
+    await expect(groups).toHaveLength(2);
+    await expect(
+      canvasElement.querySelector('.mg-quiz-question__check')
+    ).toBeNull();
+    for (const radios of groups) {
+      for (const radio of radios) {
+        // eslint-disable-next-line no-await-in-loop -- one click after another, as a visitor would
+        await userEvent.click(radio.closest('label'));
+      }
+    }
+    for (const radios of groups) {
+      // eslint-disable-next-line no-await-in-loop -- sequential assertions
+      await expect(radios.filter(radio => radio.checked)).toEqual([
+        radios[radios.length - 1],
+      ]);
+    }
+    // The arrow keys move within one question's group only.
+    groups[0][0].focus();
+    await userEvent.keyboard('{ArrowDown}');
+    await expect(groups[0][1]).toBeChecked();
+    await expect(groups[1][groups[1].length - 1]).toBeChecked();
   },
   render: args => (
     <ServerMarkup hydrate={false} lang={args.lang} dir={args.dir} />
