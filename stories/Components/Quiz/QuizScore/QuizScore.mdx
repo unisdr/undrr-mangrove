@@ -29,7 +29,7 @@ Leave it out for a single question; the question's own feedback is enough.
 
 <Canvas of={QuizScoreStories.InProgress} meta={QuizScoreStories} />
 
-The progress bar and "Start again" are additions to the earlier Drupal behaviour and can be turned off with `showProgress={false}` and `showReset={false}`.
+The progress bar and "Start again" are optional. Turn them off with `showProgress={false}` and `showReset={false}`.
 
 <Canvas of={QuizScoreStories.WithoutProgressOrReset} meta={QuizScoreStories} />
 
@@ -87,11 +87,11 @@ Render an empty container where the score belongs, or let Mangrove add one after
 
 `ensureQuizScoreHost(context)`, exported with the component, creates the container after the last `data-mg-quiz-question` in each scope that has none, and keeps a container it created after the last question when more arrive. See the mounting example in <LinkTo kind="components-quiz-quiz-question" story="docs">Quiz question</LinkTo>.
 
-Without JavaScript there is no score, which is correct: nothing can be checked.
+Without JavaScript there is no score, because nothing can be checked.
 
 ## Implementation notes
 
-> **Implementation note (for contributors):** The score holds no state of its own. It listens for `mg-quiz:change` on the document and counts `data-mg-quiz-state` on the question roots in its scope. "Start again" dispatches `mg-quiz:reset` on the scope, and each question in that scope clears itself. The reasons are in the design decisions of the Quiz question documentation.
+> **Implementation note (for contributors):** The score holds no state of its own. It listens for `mg-quiz:change` on the document and counts `data-mg-quiz-state` on the question roots in its scope. "Start again" dispatches `mg-quiz:reset` on the scope, and each question in that scope clears itself. The reasons are in the implementation notes of <LinkTo kind="components-quiz-quiz-question" story="docs">Quiz question</LinkTo>.
 
 ## CSS classes
 
@@ -108,4 +108,5 @@ Without JavaScript there is no score, which is correct: nothing can be checked.
 
 - **1.0**, 2026-11-12 ([#1481](https://github.com/unisdr/undrr-mangrove/issues/1481)): Initial component. Running and final score for the quiz questions in a scope, optional progress bar and "Start again", built-in translations with overrides, and hydration with `ensureQuizScoreHost`.
   - "Start again" is an outline secondary button, matching the check buttons on a page of questions.
-  - Design review: the running score is the short "1 of 5 correct so far." beside the progress bar, and the longer form with the answered count (`scoreSoFarWithAnswered`) only when the bar is off; "Start again" unlocks questions locked by a correct answer.
+  - The running score is the short "1 of 5 correct so far." beside the progress bar, and the longer form with the answered count (`scoreSoFarWithAnswered`) when the bar is off.
+  - "Start again" unlocks questions locked by a correct answer.

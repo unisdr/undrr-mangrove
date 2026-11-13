@@ -180,7 +180,7 @@ export const AnsweredCorrect = {
     docs: {
       description: {
         story:
-          'A correct answer locks the question. The controls become read-only, the check button leaves and the feedback takes its focus.',
+          'A correct answer locks the question. The controls become read-only, the check button is removed and focus moves to the feedback.',
       },
     },
   },

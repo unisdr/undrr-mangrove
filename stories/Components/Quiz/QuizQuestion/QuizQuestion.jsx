@@ -81,9 +81,12 @@ QuestionMedia.propTypes = {
  * is how QuizScore counts a page of independent questions.
  *
  * A correct answer locks the question: the controls become read-only and the
- * check button leaves. Changing an answer after any other attempt clears the
- * feedback and returns the question to unanswered, so a result never outlives
- * the answer it was given for.
+ * check button is removed. Changing an answer after any other attempt clears
+ * the feedback and returns the question to unanswered, so a result never
+ * outlives the answer it was given for.
+ *
+ * The answer key is optional in the props. Without a usable key no answer is
+ * marked correct, except that `true_false` treats a missing `answer` as true.
  */
 export function QuizQuestion({
   type = 'multiple_choice',
@@ -345,7 +348,7 @@ export function QuizQuestion({
       <FormGroup
         // The instruction is the legend and the sentence carries the blanks.
         // With no blank placed in the sentence, the prompt is the legend and
-        // the blanks are listed under it, as they were before inline blanks.
+        // the blanks are listed under it.
         className={joinClasses(
           'mg-quiz-question__group',
           inline.length > 0 && 'mg-quiz-question__group--sentence'
