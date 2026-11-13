@@ -80,6 +80,26 @@ describe('quiz labels', () => {
     });
   });
 
+  it('words a revealed answer as neither correct nor true or false', () => {
+    ['en', ...LANGUAGES].forEach(lang => {
+      const labels = getQuizQuestionLabels(lang);
+      [labels.correct, labels.trueLabel, labels.falseLabel].forEach(word => {
+        expect(labels.revealedMessage).not.toContain(word);
+      });
+      expect(labels.revealedMessage).not.toBe(labels.incorrectMessage);
+      expect(labels.showAnswer).not.toBe(labels.checkAnswer);
+    });
+    LANGUAGES.forEach(lang => {
+      const labels = getQuizQuestionLabels(lang);
+      expect(labels.showAnswer).not.toBe(
+        DEFAULT_QUIZ_QUESTION_LABELS.showAnswer
+      );
+      expect(labels.revealedMessage).not.toBe(
+        DEFAULT_QUIZ_QUESTION_LABELS.revealedMessage
+      );
+    });
+  });
+
   it('follows the editorial and typographic conventions', () => {
     ['en', ...LANGUAGES].forEach(lang => {
       Object.values({

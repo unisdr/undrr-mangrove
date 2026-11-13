@@ -529,3 +529,60 @@ describe('ensureQuizScoreHost', () => {
     document.removeEventListener('mg-quiz:change', heard);
   });
 });
+
+describe('a hint and "Show answer" from data-question', () => {
+  it('mounts both, reveals the answer and lets the score complete', () => {
+    document.body.innerHTML =
+      host({
+        ...TRUE,
+        hint: 'Think of rain.',
+        showAnswer: true,
+        explanation: 'It is.',
+        id: 'q-1',
+      }) + host({ ...TRUE, hint: 7, showAnswer: 'true' });
+    hydrate();
+    const [first, second] = mounted();
+    const wrong = question =>
+      act(() => {
+        fireEvent.click(within(question).getByLabelText('False'));
+        fireEvent.click(
+          within(question).getByRole('button', { name: 'Check answer' })
+        );
+      });
+
+    // The server renders no button, and none appears before an attempt.
+    expect(screen.queryByRole('button', { name: 'Show answer' })).toBeNull();
+    wrong(first);
+    wrong(second);
+    expect(within(first).getByText('Think of rain.')).toBeInTheDocument();
+    // A hint that is not a string and a showAnswer that is not `true` are
+    // dropped: the second question behaves as if it had neither.
+    expect(second.querySelector('.mg-quiz-question__feedback-hint')).toBeNull();
+    expect(
+      within(second).queryByRole('button', { name: 'Show answer' })
+    ).toBeNull();
+
+    act(() => {
+      fireEvent.click(
+        within(first).getByRole('button', { name: 'Show answer' })
+      );
+    });
+    expect(first).toHaveAttribute('data-mg-quiz-state', 'revealed');
+    expect(first).toHaveAttribute('data-mg-quiz-id', 'q-1');
+    expect(within(first).getByLabelText('True')).toBeChecked();
+    expect(within(first).getByText('It is.')).toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'You got 0 of 2 correct.'
+    );
+    // Numbering still counts a revealed question.
+    expect(numbers()).toEqual(['Question 1 of 2', 'Question 2 of 2']);
+
+    act(() => {
+      fireEvent.click(screen.getByRole('button', { name: 'Start again' }));
+    });
+    expect(mounted().map(question => question.dataset.mgQuizState)).toEqual([
+      'unanswered',
+      'unanswered',
+    ]);
+  });
+});

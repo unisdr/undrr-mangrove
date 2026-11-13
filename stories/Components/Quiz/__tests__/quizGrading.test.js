@@ -1,4 +1,5 @@
 import {
+  firstAcceptedAnswer,
   gradeAnswer,
   isEmptyAnswer,
   normalizeText,
@@ -271,5 +272,24 @@ describe('quiz grading', () => {
     expect(
       gradeAnswer({ type: 'multiple_choice', options: [null] }, ['a'])
     ).toBe(false);
+  });
+
+  it('picks the first accepted answer that could match, as it was written', () => {
+    expect(firstAcceptedAnswer(['Sendai Framework', 'Sendai'])).toBe(
+      'Sendai Framework'
+    );
+    expect(firstAcceptedAnswer(['', '  ', '\u200B', ' Sendai '])).toBe(
+      'Sendai'
+    );
+    expect(firstAcceptedAnswer('2015')).toBe('2015');
+    expect(firstAcceptedAnswer(2015)).toBe('2015');
+    [undefined, null, [], [''], ['  ', null]].forEach(expected => {
+      expect(firstAcceptedAnswer(expected)).toBeNull();
+    });
+    // What is shown is itself a correct answer.
+    const question = { type: 'text', expected: ['  ', 'ＳＥＮＤＡＩ'] };
+    expect(gradeAnswer(question, firstAcceptedAnswer(question.expected))).toBe(
+      true
+    );
   });
 });

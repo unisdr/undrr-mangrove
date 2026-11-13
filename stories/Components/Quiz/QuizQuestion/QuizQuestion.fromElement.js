@@ -32,7 +32,8 @@ const fail = reason => {
  * option and a fill-in-the-blank question whose blanks are missing or
  * malformed. Smaller faults are dropped and the question still mounts: an
  * option that is not an object or has nothing to show, an accepted answer
- * that is not text, a label override that is not a non-empty string.
+ * that is not text, a `hint` that is not a string, a `showAnswer` that is not
+ * the boolean `true`, a label override that is not a non-empty string.
  *
  * The markup inside the container is the no-JavaScript state. It is handed to
  * the component as `serverFallback`, by reference: the component moves the
@@ -110,6 +111,13 @@ export default function quizQuestionFromElement(container) {
   if (text(question.explanation).trim()) {
     props.explanation = text(question.explanation);
   }
+  // A hint is text an editor wrote, so only a string is one. "Show answer" is
+  // offered for the boolean `true` alone: a string or a number is a mistake
+  // in the data, and a mistake must not put the answer on screen.
+  if (typeof question.hint === 'string' && question.hint.trim() !== '') {
+    props.hint = question.hint;
+  }
+  if (question.showAnswer === true) props.showAnswer = true;
   if (text(question.id).trim() !== '') props.questionId = text(question.id);
 
   const number = parseInt(dataset.number, 10);

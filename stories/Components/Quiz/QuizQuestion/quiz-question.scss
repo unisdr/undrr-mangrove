@@ -8,6 +8,7 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Quiz/QuizQuestion/QuizQuestion.mdx
  */
+@use "../../../assets/scss/breakpoints" as *;
 @use "../../../assets/scss/mixins" as *;
 @use "../../../assets/scss/config" as *;
 
@@ -180,10 +181,11 @@ $mg-quiz-question-measure: mg-rem(768);
     }
   }
 
-  // A correct answer locks the question. The controls are read-only, not
-  // disabled, so the chosen answer keeps its contrast; the rows stop
-  // responding and the options that were not chosen step back.
-  &--correct &__option.mg-form-check {
+  // A correct answer locks the question, and so does "Show answer". The
+  // controls are read-only, not disabled, so the answer on screen keeps its
+  // contrast; the rows stop responding and the other options step back.
+  &--correct &__option.mg-form-check,
+  &--revealed &__option.mg-form-check {
     &:not(:has(.mg-form-check__input:checked)) {
       border-color: transparent;
 
@@ -204,7 +206,9 @@ $mg-quiz-question-measure: mg-rem(768);
 
   // A read-only field loses the tinted surface that invites typing.
   &--correct &__blank.mg-form-input,
-  &--correct &__field .mg-form-input {
+  &--correct &__field .mg-form-input,
+  &--revealed &__blank.mg-form-input,
+  &--revealed &__field .mg-form-input {
     background-color: transparent;
     border-color: rgb(var(--mg-color-neutral-400));
     cursor: default;
@@ -259,12 +263,42 @@ $mg-quiz-question-measure: mg-rem(768);
     max-inline-size: mg-rem(384);
   }
 
+  // The buttons stack at full width on a narrow screen, as a lone check
+  // button does, and sit side by side where buttons are inline.
   &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mg-spacing-100);
     margin-block-start: var(--mg-spacing-200);
+
+    @include devicebreak(medium) {
+      align-items: center;
+      flex-flow: row wrap;
+    }
   }
 
-  &__check.mg-button {
+  &__check.mg-button,
+  &__reveal.mg-button {
     min-block-size: mg-rem(44);
+  }
+
+  // "Show answer" beside an outline check button. Mangrove has no button
+  // quieter than an outline, so this one gives up its edge and is underlined
+  // to stay recognizable as an action. The edge is kept, transparent, so the
+  // two buttons are the same size and forced colours still paint it. On hover
+  // it draws the edge, as an option row does, and does not take the solid
+  // fill of an outline button, which would outweigh the check button.
+  &__reveal--quiet.mg-button.mg-button-outline {
+    border-color: transparent;
+    text-decoration: underline;
+    text-decoration-thickness: from-font;
+    text-underline-offset: 0.2em;
+
+    &:hover {
+      background-color: rgb(var(--mg-color-button-outline-secondary) / 0.06);
+      border-color: rgb(var(--mg-color-button-outline-secondary));
+      color: rgb(var(--mg-color-button-outline-secondary));
+    }
   }
 
   &__feedback {
@@ -274,20 +308,24 @@ $mg-quiz-question-measure: mg-rem(768);
       margin-block-start: var(--mg-spacing-200);
     }
 
-    // Focus arrives on the result when a correct answer removes the check
-    // button. The wrapper is the live region and is never focused itself.
+    // Focus arrives on the result when a correct answer or "Show answer"
+    // removes the buttons. The wrapper is the live region and is never
+    // focused itself.
     .mg-notice:focus-visible {
       @include mg-focus-ring;
     }
   }
 
   &__feedback-title,
+  &__feedback-hint,
   &__explanation {
     margin: 0;
   }
 
-  // The explanation is the point of a correct answer, so it reads at body
-  // size, not at the Notice's smaller description size.
+  // The explanation is the point of a correct answer, and the hint is what
+  // helps after a wrong one, so both read at body size, not at the Notice's
+  // smaller description size.
+  &__feedback-hint,
   &__explanation {
     color: rgb(var(--mg-color-neutral-900));
     font-size: var(--mg-font-size-300);
@@ -319,7 +357,8 @@ $mg-quiz-question-measure: mg-rem(768);
     // Locked: the chosen row keeps its highlight edge, the others stay
     // without one and no longer answer to the pointer, and the unchosen
     // controls and read-only fields take the system's inactive colour.
-    &--correct
+    &--correct &__option.mg-form-check:not(:has(.mg-form-check__input:checked)),
+    &--revealed
       &__option.mg-form-check:not(:has(.mg-form-check__input:checked)) {
       border-color: Canvas;
 
@@ -329,7 +368,9 @@ $mg-quiz-question-measure: mg-rem(768);
     }
 
     &--correct &__blank.mg-form-input,
-    &--correct &__field .mg-form-input {
+    &--correct &__field .mg-form-input,
+    &--revealed &__blank.mg-form-input,
+    &--revealed &__field .mg-form-input {
       border-color: GrayText;
       border-style: dashed;
     }

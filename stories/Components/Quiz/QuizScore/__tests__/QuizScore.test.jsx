@@ -129,6 +129,82 @@ describe('QuizScore', () => {
     expect(choice).toHaveAttribute('data-mg-quiz-state', 'incorrect');
   });
 
+  it('counts a revealed question as answered and not correct, and completes', () => {
+    const { container } = render(
+      <div>
+        <QuizQuestion {...TRUE} showAnswer />
+        <QuizQuestion {...TEXT} />
+        <QuizScore />
+      </div>
+    );
+    const [first, second] = questions(container);
+    answer(first, 'False');
+    expect(screen.getByRole('status')).toHaveTextContent(
+      '0 of 2 correct so far.'
+    );
+    fireEvent.click(within(first).getByRole('button', { name: 'Show answer' }));
+    expect(first).toHaveAttribute('data-mg-quiz-state', 'revealed');
+    // Still one question answered, and still none correct.
+    expect(screen.getByRole('status')).toHaveTextContent(
+      '0 of 2 correct so far.'
+    );
+    expect(screen.getByRole('progressbar')).toHaveAttribute('value', '1');
+
+    fireEvent.change(within(second).getByRole('textbox'), {
+      target: { value: 'sendai' },
+    });
+    fireEvent.click(
+      within(second).getByRole('button', { name: 'Check answer' })
+    );
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'You got 1 of 2 correct.'
+    );
+    expect(container.querySelector('.mg-quiz-score')).toHaveClass(
+      'mg-quiz-score--complete'
+    );
+    expect(
+      screen.getByRole('button', { name: 'Start again' })
+    ).toBeInTheDocument();
+  });
+
+  it('starts again: reopens a revealed question like any other', () => {
+    const { container } = render(
+      <div>
+        <QuizQuestion {...TRUE} showAnswer />
+        <QuizScore />
+      </div>
+    );
+    const [question] = questions(container);
+    answer(question, 'False');
+    fireEvent.click(
+      within(question).getByRole('button', { name: 'Show answer' })
+    );
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'You got 0 of 1 correct.'
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Start again' }));
+
+    expect(question).toHaveAttribute('data-mg-quiz-state', 'unanswered');
+    expect(question).not.toHaveClass('mg-quiz-question--revealed');
+    expect(question.querySelector('.mg-notice')).toBeNull();
+    within(question)
+      .getAllByRole('radio')
+      .forEach(radio => {
+        expect(radio).not.toBeChecked();
+        expect(radio).not.toHaveAttribute('aria-disabled');
+      });
+    expect(
+      within(question).getByRole('button', { name: 'Check answer' })
+    ).toBeInTheDocument();
+    // The button has to be earned again.
+    expect(
+      within(question).queryByRole('button', { name: 'Show answer' })
+    ).toBeNull();
+    expect(screen.getByRole('status')).toHaveTextContent('');
+    answer(question, 'True');
+    expect(question).toHaveAttribute('data-mg-quiz-state', 'correct');
+  });
+
   it('drops a stale result from the count when the answer changes', () => {
     const { container } = render(
       <>

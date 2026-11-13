@@ -108,6 +108,21 @@ function gradeFillBlank(question, submitted) {
 }
 
 /**
+ * The answer shown when a question reveals its key: the first accepted answer
+ * that could be matched, as the editor wrote it. Blank entries can never match
+ * and are passed over.
+ *
+ * @param {*} expected Accepted answers, or a single one
+ * @returns {string|null} The answer to show, or null when there is none
+ */
+export function firstAcceptedAnswer(expected) {
+  const usable = toList(expected).find(
+    value => normalizeText(value, true) !== ''
+  );
+  return usable === undefined ? null : String(usable).trim();
+}
+
+/**
  * Reads one form of a true/false key.
  *
  * @param {*} value A boolean, or the string "true" or "false" in any case

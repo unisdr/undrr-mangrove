@@ -4,7 +4,9 @@ import { withLanguage } from '../../../../.storybook/withLanguage';
 import createHydrator from '../../../../src/hydrate';
 import sampleImage from '../../../assets/images/sample_image-md.jpg';
 import {
+  HELP,
   QUESTIONS,
+  getHelp,
   getPageText,
   getQuestion,
   getServerMarkup,
@@ -21,10 +23,18 @@ import quizQuestionFromElement from './QuizQuestion.fromElement';
 const withQuestionContent = (Story, context) => {
   const key = context.parameters.quizFixture;
   const localized = key ? getQuestion(context.globals, key) : null;
+  // Only the hint is content. Whether "Show answer" is offered stays with the
+  // story's own args.
+  const hint =
+    key && context.parameters.quizHint
+      ? { hint: getHelp(context.globals, key).hint }
+      : null;
   return (
     <Story
       {...context}
-      args={localized ? { ...context.args, ...localized } : context.args}
+      args={
+        localized ? { ...context.args, ...localized, ...hint } : context.args
+      }
     />
   );
 };
@@ -47,7 +57,9 @@ export default {
     caseSensitive: { table: { defaultValue: { summary: 'false' } } },
     showNumber: { table: { defaultValue: { summary: 'true' } } },
     media: { control: false },
+    showAnswer: { table: { defaultValue: { summary: 'false' } } },
     onCheck: { action: 'check' },
+    onReveal: { action: 'reveal' },
   },
 };
 
@@ -219,6 +231,160 @@ export const AnsweredIncorrect = {
   },
 };
 
+// The stories below are driven by structure, not by label text, so they run
+// in every language of the locale toolbar.
+const questionRoot = canvasElement =>
+  canvasElement.querySelector('.mg-quiz-question');
+const checkAnswer = canvasElement =>
+  userEvent.click(canvasElement.querySelector('.mg-quiz-question__check'));
+const revealButton = canvasElement =>
+  canvasElement.querySelector('.mg-quiz-question__reveal');
+// The third option of the multiple choice fixture is a wrong answer.
+const chooseWrongOption = async canvasElement => {
+  await userEvent.click(canvasElement.querySelectorAll('input')[2]);
+  await checkAnswer(canvasElement);
+};
+const typeWrongBlank = async canvasElement => {
+  await userEvent.type(canvasElement.querySelector('input'), 'Kobe');
+  await checkAnswer(canvasElement);
+};
+
+export const IncorrectWithHint = {
+  args: { ...QUESTIONS.multipleChoice, hint: HELP.multipleChoice.hint },
+  parameters: {
+    quizFixture: 'multipleChoice',
+    quizHint: true,
+    docs: {
+      description: {
+        story:
+          'With `hint`, the "try again" feedback carries a line of help. It is shown only after an incorrect attempt, never before one and never for an empty attempt.',
+      },
+    },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(
+      canvasElement.querySelector('.mg-quiz-question__feedback-hint')
+    ).toBeNull();
+    await chooseWrongOption(canvasElement);
+    await expect(questionRoot(canvasElement)).toHaveAttribute(
+      'data-mg-quiz-state',
+      'incorrect'
+    );
+    await expect(
+      canvasElement.querySelector('.mg-quiz-question__feedback-hint')
+    ).toBeVisible();
+    await expect(
+      canvasElement.querySelector('.mg-quiz-question__explanation')
+    ).toBeNull();
+    await expect(revealButton(canvasElement)).toBeNull();
+  },
+};
+
+export const ShowAnswerOffered = {
+  args: { ...QUESTIONS.multipleChoice, ...HELP.multipleChoice },
+  parameters: {
+    quizFixture: 'multipleChoice',
+    quizHint: true,
+    docs: {
+      description: {
+        story:
+          'With `showAnswer`, a "Show answer" button joins "Check answer" after the first incorrect attempt. It is the quieter of the two, and it stays while the visitor edits the answer.',
+      },
+    },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(revealButton(canvasElement)).toBeNull();
+    // An empty attempt does not earn the button.
+    await checkAnswer(canvasElement);
+    await expect(revealButton(canvasElement)).toBeNull();
+    await chooseWrongOption(canvasElement);
+    await expect(revealButton(canvasElement)).toBeVisible();
+    await expect(revealButton(canvasElement)).toHaveAttribute(
+      'data-vf-analytics-label',
+      'Quiz: Show answer'
+    );
+    await expect(
+      canvasElement.querySelector('.mg-quiz-question__check')
+    ).toBeVisible();
+  },
+};
+
+export const AnswerRevealed = {
+  args: { ...QUESTIONS.multipleChoice, ...HELP.multipleChoice },
+  parameters: {
+    quizFixture: 'multipleChoice',
+    quizHint: true,
+    docs: {
+      description: {
+        story:
+          '"Show answer" selects the correct option in place of the visitor’s, locks the question and shows a neutral message with the explanation. Focus moves to that message. Quiz score counts the question as answered and not correct.',
+      },
+    },
+  },
+  play: async ({ canvasElement }) => {
+    await chooseWrongOption(canvasElement);
+    await userEvent.click(revealButton(canvasElement));
+    const inputs = Array.from(canvasElement.querySelectorAll('input'));
+    await expect(inputs.map(input => input.checked)).toEqual([
+      true,
+      false,
+      false,
+      false,
+    ]);
+    const root = questionRoot(canvasElement);
+    await expect(root).toHaveAttribute('data-mg-quiz-state', 'revealed');
+    await expect(root).toHaveClass('mg-quiz-question--revealed');
+    await expect(canvasElement.querySelector('button')).toBeNull();
+    const notice = canvasElement.querySelector('.mg-notice');
+    await expect(notice).toHaveClass('mg-notice--info');
+    await expect(notice).toHaveFocus();
+    await expect(
+      canvasElement.querySelector('.mg-quiz-question__explanation')
+    ).toBeVisible();
+    await expect(
+      canvasElement.querySelector('.mg-quiz-question__feedback-hint')
+    ).toBeNull();
+    // Locked: another option cannot be chosen.
+    await userEvent.click(inputs[2]);
+    await expect(inputs[0]).toBeChecked();
+  },
+};
+
+export const AnswerRevealedFillInTheBlank = {
+  args: { ...QUESTIONS.fillBlank, ...HELP.fillBlank },
+  parameters: {
+    quizFixture: 'fillBlank',
+    quizHint: true,
+    docs: {
+      description: {
+        story:
+          'In a text question "Show answer" fills each field with its first accepted answer and makes the fields read-only.',
+      },
+    },
+  },
+  play: async ({ canvasElement, args }) => {
+    await typeWrongBlank(canvasElement);
+    await expect(
+      canvasElement.querySelector('.mg-quiz-question__feedback-hint')
+    ).toBeVisible();
+    await userEvent.click(revealButton(canvasElement));
+    const inputs = Array.from(canvasElement.querySelectorAll('input'));
+    await expect(inputs.map(input => input.value)).toEqual(
+      args.blanks.map(blank => blank.expected[0])
+    );
+    for (const input of inputs) {
+      // eslint-disable-next-line no-await-in-loop -- sequential assertions
+      await expect(input).toHaveAttribute('readonly');
+    }
+    await expect(questionRoot(canvasElement)).toHaveAttribute(
+      'data-mg-quiz-state',
+      'revealed'
+    );
+    await expect(canvasElement.querySelector('button')).toBeNull();
+    await expect(canvasElement.querySelector('.mg-notice')).toHaveFocus();
+  },
+};
+
 export const EmptyAttempt = {
   args: { ...QUESTIONS.shortAnswer, lang: 'en' },
   play: async ({ canvasElement }) => {
@@ -234,11 +400,16 @@ export const EmptyAttempt = {
 function QuizPageExample({ lang, dir, globals }) {
   const text = getPageText(globals);
   const question = key => getQuestion(globals, key);
+  const help = key => getHelp(globals, key);
   return (
     <article className="mg-container" lang={lang} dir={dir}>
       <h1>{text.title}</h1>
       <p>{text.intro}</p>
-      <QuizQuestion {...question('multipleChoice')} lang={lang} />
+      <QuizQuestion
+        {...question('multipleChoice')}
+        {...help('multipleChoice')}
+        lang={lang}
+      />
       <p>{text.between}</p>
       <QuizQuestion
         {...question('image')}
@@ -256,8 +427,16 @@ function QuizPageExample({ lang, dir, globals }) {
         }
       />
       <QuizQuestion {...question('multipleAnswers')} lang={lang} />
-      <QuizQuestion {...question('trueFalse')} lang={lang} />
-      <QuizQuestion {...question('fillBlank')} lang={lang} />
+      <QuizQuestion
+        {...question('trueFalse')}
+        {...help('trueFalse')}
+        lang={lang}
+      />
+      <QuizQuestion
+        {...question('fillBlank')}
+        {...help('fillBlank')}
+        lang={lang}
+      />
       <QuizScore lang={lang} />
       <h2>{text.after}</h2>
       <p>{text.afterBody}</p>
@@ -271,7 +450,7 @@ export const QuizPage = {
     docs: {
       description: {
         story:
-          'Five independent questions between ordinary content, one with a figure, followed by QuizScore. The questions number themselves and the score appears once the first answer is checked.',
+          'Five independent questions between ordinary content, one with a figure, followed by QuizScore. The questions number themselves and the score appears once the first answer is checked. The first, fourth and fifth questions have a hint, and the first and fifth offer "Show answer" after a wrong attempt.',
       },
     },
   },

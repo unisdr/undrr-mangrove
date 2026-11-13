@@ -987,3 +987,455 @@ describe('QuizQuestion', () => {
     }
   );
 });
+
+const showAnswerButton = () =>
+  screen.queryByRole('button', { name: 'Show answer' });
+const answerWrongly = label => {
+  fireEvent.click(screen.getByLabelText(label));
+  check();
+};
+
+describe('QuizQuestion hint', () => {
+  it('shows the hint only with the feedback of an incorrect attempt', () => {
+    const { container } = render(
+      <QuizQuestion
+        {...CHOICE}
+        hint={'Think about rivers.\nAnd rain.'}
+        explanation="Floods are hydrological."
+      />
+    );
+    expect(screen.queryByText(/Think about rivers/)).toBeNull();
+
+    // An empty attempt is not an incorrect one.
+    check();
+    expect(screen.getByText('Choose an answer first.')).toBeInTheDocument();
+    expect(screen.queryByText(/Think about rivers/)).toBeNull();
+
+    answerWrongly('Earthquake');
+    const hint = screen.getByText(/Think about rivers/);
+    expect(hint).toHaveClass('mg-quiz-question__feedback-hint');
+    // Line breaks are kept in the text; the stylesheet shows them.
+    expect(hint.textContent).toBe('Think about rivers.\nAnd rain.');
+    // One live region holds the message and the hint.
+    const feedback = container.querySelector('.mg-quiz-question__feedback');
+    expect(feedback).toContainElement(hint);
+    expect(feedback).toContainElement(
+      screen.getByText('Not correct yet. Try again.')
+    );
+    expect(container.querySelectorAll('[aria-live], [role="status"]')).toEqual(
+      expect.objectContaining({ length: 1 })
+    );
+    expect(feedback.querySelector('.mg-notice')).toHaveClass('mg-notice--info');
+    expect(screen.queryByText('Floods are hydrological.')).toBeNull();
+
+    // Changing the answer clears the feedback and the hint with it.
+    fireEvent.click(screen.getByLabelText('Flood'));
+    expect(screen.queryByText(/Think about rivers/)).toBeNull();
+    check();
+    expect(screen.queryByText(/Think about rivers/)).toBeNull();
+    expect(screen.getByText('Floods are hydrological.')).toBeInTheDocument();
+  });
+
+  it.each([[undefined], [''], ['   '], [42], [{ text: 'no' }]])(
+    'adds nothing to the feedback for the hint %p',
+    hint => {
+      const { container } = render(<QuizQuestion {...CHOICE} hint={hint} />);
+      answerWrongly('Earthquake');
+      expect(
+        container.querySelector('.mg-quiz-question__feedback-hint')
+      ).toBeNull();
+      expect(container.querySelector('.mg-notice__content')).toBeNull();
+    }
+  );
+});
+
+describe('QuizQuestion show answer', () => {
+  it('offers no button by default, whatever the attempt', () => {
+    render(<QuizQuestion {...CHOICE} />);
+    expect(showAnswerButton()).toBeNull();
+    answerWrongly('Earthquake');
+    expect(showAnswerButton()).toBeNull();
+  });
+
+  it('offers the button only after the first incorrect attempt', () => {
+    render(<QuizQuestion {...CHOICE} showAnswer />);
+    expect(showAnswerButton()).toBeNull();
+    // An empty attempt does not earn it.
+    check();
+    expect(showAnswerButton()).toBeNull();
+
+    answerWrongly('Earthquake');
+    const button = showAnswerButton();
+    expect(button).toHaveAttribute('type', 'button');
+    expect(button).toHaveAttribute(
+      'data-vf-analytics-label',
+      'Quiz: Show answer'
+    );
+    expect(button.closest('.mg-quiz-question__actions')).toContainElement(
+      screen.getByRole('button', { name: 'Check answer' })
+    );
+    // After "Check answer" in the source, so it follows it in the tab order.
+    expect(
+      Array.from(
+        button.closest('.mg-quiz-question__actions').querySelectorAll('button'),
+        item => item.textContent
+      )
+    ).toEqual(['Check answer', 'Show answer']);
+  });
+
+  it('keeps the button once earned, while the answer is edited', () => {
+    const { container } = render(<QuizQuestion {...CHOICE} showAnswer />);
+    answerWrongly('Earthquake');
+    fireEvent.click(screen.getByLabelText('Flood'));
+    expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'unanswered');
+    expect(container.querySelector('.mg-notice')).toBeNull();
+    expect(showAnswerButton()).toBeInTheDocument();
+  });
+
+  it('removes the button when the question is then answered correctly', () => {
+    render(<QuizQuestion {...CHOICE} showAnswer />);
+    answerWrongly('Earthquake');
+    fireEvent.click(screen.getByLabelText('Flood'));
+    check();
+    expect(showAnswerButton()).toBeNull();
+    expect(screen.getByText('Correct')).toBeInTheDocument();
+  });
+
+  it('is one step quieter than the check button in both cases', () => {
+    const { unmount } = render(<QuizQuestion {...CHOICE} showAnswer />);
+    answerWrongly('Earthquake');
+    expect(screen.getByRole('button', { name: 'Check answer' })).toHaveClass(
+      'mg-button-primary'
+    );
+    expect(showAnswerButton()).toHaveClass(
+      'mg-button',
+      'mg-button-secondary',
+      'mg-button-outline',
+      'mg-quiz-question__reveal'
+    );
+    expect(showAnswerButton()).not.toHaveClass(
+      'mg-quiz-question__reveal--quiet'
+    );
+    unmount();
+
+    render(<QuizQuestion {...CHOICE} showAnswer number={2} total={5} />);
+    answerWrongly('Earthquake');
+    expect(screen.getByRole('button', { name: 'Check answer' })).toHaveClass(
+      'mg-button-outline'
+    );
+    expect(showAnswerButton()).toHaveClass(
+      'mg-button',
+      'mg-button-secondary',
+      'mg-button-outline',
+      'mg-quiz-question__reveal',
+      'mg-quiz-question__reveal--quiet'
+    );
+    expect(showAnswerButton()).not.toHaveClass('mg-button-primary');
+  });
+
+  it('reveals a choice question: the right option replaces the wrong one', () => {
+    const onCheck = jest.fn();
+    const onReveal = jest.fn();
+    const { container } = render(
+      <QuizQuestion
+        {...CHOICE}
+        showAnswer
+        hint="Think about rivers."
+        explanation="Floods are hydrological."
+        questionId="hazards-1"
+        onCheck={onCheck}
+        onReveal={onReveal}
+      />
+    );
+    answerWrongly('Earthquake');
+    expect(onCheck).toHaveBeenCalledTimes(1);
+    fireEvent.click(showAnswerButton());
+
+    expect(screen.getByLabelText('Flood')).toBeChecked();
+    expect(screen.getByLabelText('Earthquake')).not.toBeChecked();
+    expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'revealed');
+    expect(root(container)).toHaveClass('mg-quiz-question--revealed');
+    expect(root(container)).not.toHaveClass('mg-quiz-question--correct');
+
+    // Neutral feedback with the explanation, and no hint.
+    const notice = container.querySelector('.mg-notice');
+    expect(notice).toHaveClass('mg-notice--info');
+    expect(notice).not.toHaveClass('mg-notice--positive');
+    expect(screen.getByText('Here is the answer.')).toBeInTheDocument();
+    expect(screen.queryByText('Correct')).toBeNull();
+    expect(screen.getByText('Floods are hydrological.')).toBeInTheDocument();
+    expect(screen.queryByText('Think about rivers.')).toBeNull();
+    expect(container.querySelectorAll('.mg-notice')).toHaveLength(1);
+    expect(container.querySelectorAll('[aria-live], [role="status"]')).toEqual(
+      expect.objectContaining({ length: 1 })
+    );
+
+    // Locked as a correct answer locks: read-only, both buttons removed.
+    expect(screen.queryByRole('button')).toBeNull();
+    screen
+      .getAllByRole('radio')
+      .forEach(radio => expect(radio).toHaveAttribute('aria-disabled', 'true'));
+    fireEvent.click(screen.getByLabelText('Earthquake'));
+    expect(screen.getByLabelText('Flood')).toBeChecked();
+    expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'revealed');
+
+    expect(onReveal).toHaveBeenCalledTimes(1);
+    expect(onReveal).toHaveBeenCalledWith({ questionId: 'hazards-1' });
+    expect(onCheck).toHaveBeenCalledTimes(1);
+  });
+
+  it('calls onReveal with an empty payload when the question has no id', () => {
+    const onReveal = jest.fn();
+    render(<QuizQuestion {...CHOICE} showAnswer onReveal={onReveal} />);
+    answerWrongly('Earthquake');
+    fireEvent.click(showAnswerButton());
+    expect(onReveal).toHaveBeenCalledWith({});
+  });
+
+  it('reveals every correct option of a multiple-answer question', () => {
+    render(<QuizQuestion {...MULTI} showAnswer />);
+    fireEvent.click(screen.getByLabelText('Flood'));
+    fireEvent.click(screen.getByLabelText('Earthquake'));
+    check();
+    fireEvent.click(showAnswerButton());
+    expect(screen.getByLabelText('Flood')).toBeChecked();
+    expect(screen.getByLabelText('Storm surge')).toBeChecked();
+    expect(screen.getByLabelText('Earthquake')).not.toBeChecked();
+    screen
+      .getAllByRole('checkbox')
+      .forEach(box => expect(box).toHaveAttribute('aria-disabled', 'true'));
+  });
+
+  it('reveals a true/false question', () => {
+    render(
+      <QuizQuestion
+        type="true_false"
+        prompt="True?"
+        answer={false}
+        showAnswer
+      />
+    );
+    answerWrongly('True');
+    fireEvent.click(showAnswerButton());
+    expect(screen.getByLabelText('False')).toBeChecked();
+    expect(screen.getByLabelText('True')).not.toBeChecked();
+  });
+
+  it('reveals a short answer as its first accepted answer', () => {
+    const { container } = render(
+      <QuizQuestion
+        {...TEXT}
+        expected={['  ', 'Sendai Framework', 'Sendai']}
+        showAnswer
+      />
+    );
+    const field = screen.getByRole('textbox');
+    fireEvent.change(field, { target: { value: 'Hyogo' } });
+    check();
+    fireEvent.click(showAnswerButton());
+    expect(field).toHaveValue('Sendai Framework');
+    expect(field).toHaveAttribute('readonly');
+    fireEvent.change(field, { target: { value: 'changed' } });
+    expect(field).toHaveValue('Sendai Framework');
+    expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'revealed');
+    expect(screen.queryByRole('button')).toBeNull();
+  });
+
+  it('reveals each blank as its first accepted answer', () => {
+    const { container } = render(
+      <QuizQuestion
+        type="fill_blank"
+        prompt="Adopted in [1], Japan, in [2]. Third:"
+        blanks={[
+          { label: 'City', expected: ['Sendai', 'Sendai City'] },
+          { label: 'Year', expected: ['2015'] },
+          { label: 'Country', expected: ['Japan'] },
+        ]}
+        showAnswer
+      />
+    );
+    fireEvent.change(screen.getByLabelText('City'), {
+      target: { value: 'Kobe' },
+    });
+    check();
+    fireEvent.click(showAnswerButton());
+    expect(screen.getByLabelText('City')).toHaveValue('Sendai');
+    expect(screen.getByLabelText('Year')).toHaveValue('2015');
+    // A blank listed under the sentence is filled in too.
+    expect(screen.getByLabelText('Country')).toHaveValue('Japan');
+    screen
+      .getAllByRole('textbox')
+      .forEach(input => expect(input).toHaveAttribute('readonly'));
+    expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'revealed');
+  });
+
+  it.each([
+    [
+      'a choice question with no option flagged',
+      {
+        ...CHOICE,
+        options: [
+          { value: 'a', label: 'Flood' },
+          { value: 'b', label: 'Earthquake' },
+        ],
+      },
+      () => fireEvent.click(screen.getByLabelText('Earthquake')),
+    ],
+    [
+      'a single-answer question with two options flagged',
+      {
+        ...CHOICE,
+        options: [
+          { value: 'a', label: 'Flood', correct: true },
+          { value: 'b', label: 'Earthquake', correct: true },
+        ],
+      },
+      () => fireEvent.click(screen.getByLabelText('Earthquake')),
+    ],
+    [
+      'a true/false question with no answer',
+      { type: 'true_false', prompt: 'True?' },
+      () => fireEvent.click(screen.getByLabelText('True')),
+    ],
+    [
+      'a short answer with no accepted answer',
+      { ...TEXT, expected: ['', '  '] },
+      () =>
+        fireEvent.change(screen.getByRole('textbox'), {
+          target: { value: 'x' },
+        }),
+    ],
+    [
+      'a blank with no accepted answer',
+      {
+        ...BLANKS,
+        blanks: [{ label: 'City', expected: ['Sendai'] }, { expected: [] }],
+      },
+      () =>
+        fireEvent.change(screen.getByLabelText('City'), {
+          target: { value: 'x' },
+        }),
+    ],
+  ])('never offers the button for %s', (name, props, answer) => {
+    const { container } = render(<QuizQuestion {...props} showAnswer />);
+    answer();
+    check();
+    expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'incorrect');
+    expect(showAnswerButton()).toBeNull();
+  });
+
+  it('ignores a showAnswer value that is not the boolean true', () => {
+    render(<QuizQuestion {...CHOICE} showAnswer="true" />);
+    answerWrongly('Earthquake');
+    expect(showAnswerButton()).toBeNull();
+  });
+
+  it('moves focus to the named result, in the one live region', () => {
+    const { container } = render(
+      <QuizQuestion {...CHOICE} showAnswer explanation="Because." />
+    );
+    answerWrongly('Earthquake');
+    const button = showAnswerButton();
+    button.focus();
+    fireEvent.click(button);
+    expect(button).not.toBeInTheDocument();
+    const feedback = container.querySelector('.mg-quiz-question__feedback');
+    const result = screen.getByRole('group', { name: 'Here is the answer.' });
+    expect(result).toHaveFocus();
+    expect(result).toHaveClass('mg-notice');
+    expect(result).toHaveAttribute('tabindex', '-1');
+    expect(result).not.toHaveAttribute('aria-live');
+    expect(feedback).toContainElement(result);
+    expect(feedback).not.toHaveFocus();
+    expect(document.body).not.toHaveFocus();
+  });
+
+  it('starts again when the props describe another question', () => {
+    const { container, rerender } = render(
+      <QuizQuestion {...CHOICE} showAnswer />
+    );
+    answerWrongly('Earthquake');
+    fireEvent.click(showAnswerButton());
+    rerender(<QuizQuestion {...MULTI} showAnswer />);
+    expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'unanswered');
+    expect(root(container)).not.toHaveClass('mg-quiz-question--revealed');
+    expect(showAnswerButton()).toBeNull();
+    expect(
+      screen.getByRole('button', { name: 'Check answer' })
+    ).toBeInTheDocument();
+  });
+
+  it('translates the button and the message, and takes overrides', () => {
+    const { unmount } = render(
+      <QuizQuestion {...CHOICE} showAnswer lang="fr" />
+    );
+    fireEvent.click(screen.getByLabelText('Earthquake'));
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Vérifier la réponse' })
+    );
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Afficher la réponse' })
+    );
+    expect(screen.getByText('Voici la réponse.')).toBeInTheDocument();
+    unmount();
+
+    render(
+      <QuizQuestion
+        {...CHOICE}
+        showAnswer
+        labels={{ showAnswer: 'Reveal', revealedMessage: 'Answer shown.' }}
+      />
+    );
+    answerWrongly('Earthquake');
+    fireEvent.click(screen.getByRole('button', { name: 'Reveal' }));
+    expect(
+      screen.getByRole('group', { name: 'Answer shown.' })
+    ).toBeInTheDocument();
+  });
+
+  it.each([
+    ['multiple choice', CHOICE, () => answerWrongly('Earthquake')],
+    ['multiple answers', MULTI, () => answerWrongly('Earthquake')],
+    [
+      'short answer',
+      TEXT,
+      () => {
+        fireEvent.change(screen.getByRole('textbox'), {
+          target: { value: 'x' },
+        });
+        check();
+      },
+    ],
+    [
+      'fill in the blank',
+      BLANKS,
+      () => {
+        fireEvent.change(screen.getByLabelText('City'), {
+          target: { value: 'x' },
+        });
+        check();
+      },
+    ],
+  ])(
+    'has no axe violations: %s with a hint, the button and the revealed answer',
+    async (name, props, answerIncorrectly) => {
+      const { container } = render(
+        <main>
+          <QuizQuestion
+            {...props}
+            showAnswer
+            hint="A hint."
+            explanation="Because."
+          />
+        </main>
+      );
+      answerIncorrectly();
+      expect(screen.getByText('A hint.')).toBeInTheDocument();
+      expect(showAnswerButton()).toBeInTheDocument();
+      expect(await axe(container)).toHaveNoViolations();
+      fireEvent.click(showAnswerButton());
+      expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'revealed');
+      expect(await axe(container)).toHaveNoViolations();
+    }
+  );
+});

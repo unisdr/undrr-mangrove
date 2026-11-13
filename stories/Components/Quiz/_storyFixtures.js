@@ -157,6 +157,34 @@ export const QUESTIONS_AR = {
   },
 };
 
+// The two optional kinds of help after a wrong answer, kept apart from the
+// questions so that the stories without them stay as they are.
+export const HELP = {
+  multipleChoice: {
+    hint: 'It is a form of energy that comes from the sun, not a substance or a disease.',
+    showAnswer: true,
+  },
+  trueFalse: {
+    hint: 'Think about what causes each one: wind and tide, or a sudden movement of the sea floor.',
+  },
+  fillBlank: {
+    hint: 'The framework takes its name from the city, and it runs for 15 years to 2030.',
+    showAnswer: true,
+  },
+};
+
+export const HELP_AR = {
+  multipleChoice: {
+    hint: 'إنه شكل من أشكال الطاقة القادمة من الشمس، وليس مادة أو مرضاً.',
+  },
+  trueFalse: {
+    hint: 'يمكن التفكير في سبب كل منهما: الرياح والمدّ، أو حركة مفاجئة في قاع البحر.',
+  },
+  fillBlank: {
+    hint: 'يحمل الإطار اسم المدينة، ومدته 15 عاماً تنتهي في 2030.',
+  },
+};
+
 export const PAGE_TEXT = {
   english: {
     title: 'How many hazards can you identify?',
@@ -194,6 +222,18 @@ export function getQuestion(globals, key) {
   return globals?.locale === 'arabic' && QUESTIONS_AR[key]
     ? { ...QUESTIONS[key], ...QUESTIONS_AR[key] }
     : QUESTIONS[key];
+}
+
+/**
+ * @param {Object} globals Storybook globals
+ * @param {string} key Fixture name
+ * @returns {Object} `hint` and `showAnswer` for the question, with the hint in
+ *   the toolbar's language
+ */
+export function getHelp(globals, key) {
+  return globals?.locale === 'arabic' && HELP_AR[key]
+    ? { ...HELP[key], ...HELP_AR[key] }
+    : HELP[key];
 }
 
 export function getPageText(globals) {

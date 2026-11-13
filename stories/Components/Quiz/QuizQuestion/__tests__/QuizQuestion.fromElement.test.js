@@ -167,6 +167,55 @@ describe('quizQuestionFromElement', () => {
     });
   });
 
+  it('maps `hint` and `showAnswer`, and leaves both out by default', () => {
+    const base = { type: 'true_false', prompt: 'True?', answer: true };
+    const plain = fromElement(makeContainer(base));
+    expect(plain).not.toHaveProperty('hint');
+    expect(plain).not.toHaveProperty('showAnswer');
+
+    expect(
+      fromElement(
+        makeContainer({
+          ...base,
+          hint: 'Look again.\nSlowly.',
+          showAnswer: true,
+        })
+      )
+    ).toMatchObject({ hint: 'Look again.\nSlowly.', showAnswer: true });
+  });
+
+  it.each([['true'], ['false'], [1], [0], [null], [{}], [[]], [false]])(
+    'does not offer "Show answer" for showAnswer %p',
+    showAnswer => {
+      expect(
+        fromElement(
+          makeContainer({
+            type: 'true_false',
+            prompt: 'True?',
+            answer: true,
+            showAnswer,
+          })
+        )
+      ).not.toHaveProperty('showAnswer');
+    }
+  );
+
+  it.each([[7], [true], [null], [['a']], [{ text: 'a' }], [''], ['  ']])(
+    'drops the hint %p and still reads the question',
+    hint => {
+      const props = fromElement(
+        makeContainer({
+          type: 'text',
+          prompt: 'Name it.',
+          expected: ['a'],
+          hint,
+        })
+      );
+      expect(props).not.toHaveProperty('hint');
+      expect(props.expected).toEqual(['a']);
+    }
+  );
+
   it('reads a question that has no answer key', () => {
     expect(
       fromElement(

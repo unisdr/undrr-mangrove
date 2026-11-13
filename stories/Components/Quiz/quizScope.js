@@ -21,6 +21,7 @@ export const QUIZ_SCOPE_SELECTOR = '[data-mg-quiz]';
 export const QUIZ_QUESTION_SELECTOR = '.mg-quiz-question[data-mg-quiz-state]';
 export const QUIZ_CHANGE_EVENT = 'mg-quiz:change';
 export const QUIZ_RESET_EVENT = 'mg-quiz:reset';
+const ANSWERED_STATES = ['correct', 'incorrect', 'revealed'];
 
 /**
  * @param {Element} element Question or score element
@@ -47,6 +48,10 @@ export function getQuizQuestions(scope) {
 }
 
 /**
+ * A question is answered when it is `correct`, `incorrect` or `revealed`. A
+ * revealed question was ended by "Show answer": it is answered, so the quiz
+ * can complete, and it is never correct.
+ *
  * @param {Element|Document} scope Scope to count
  * @returns {{total: number, answered: number, correct: number}} Current score
  */
@@ -54,8 +59,8 @@ export function getQuizSummary(scope) {
   const questions = getQuizQuestions(scope);
   const states = questions.map(question => question.dataset.mgQuizState);
   const correct = states.filter(state => state === 'correct').length;
-  const incorrect = states.filter(state => state === 'incorrect').length;
-  return { total: questions.length, answered: correct + incorrect, correct };
+  const answered = states.filter(state => ANSWERED_STATES.includes(state));
+  return { total: questions.length, answered: answered.length, correct };
 }
 
 /**

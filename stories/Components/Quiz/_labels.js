@@ -16,8 +16,10 @@ import { createLabelResolver } from '../../../src/i18n';
 
 export const DEFAULT_QUIZ_QUESTION_LABELS = {
   checkAnswer: 'Check answer',
+  showAnswer: 'Show answer',
   correct: 'Correct',
   incorrectMessage: 'Not correct yet. Try again.',
+  revealedMessage: 'Here is the answer.',
   emptyChoice: 'Choose an answer first.',
   emptyText: 'Type an answer first.',
   questionNumber: 'Question {number} of {total}',
@@ -32,8 +34,10 @@ export const DEFAULT_QUIZ_QUESTION_LABELS = {
 // string assumes the visitor's gender.
 const QUESTION_AR = {
   checkAnswer: 'التحقق من الإجابة',
+  showAnswer: 'إظهار الإجابة',
   correct: 'إجابة صحيحة',
   incorrectMessage: 'الإجابة ليست صحيحة بعد. يمكنك المحاولة مرة أخرى.',
+  revealedMessage: 'هذه هي الإجابة.',
   emptyChoice: 'يُرجى اختيار إجابة أولاً.',
   emptyText: 'يُرجى كتابة إجابة أولاً.',
   questionNumber: 'السؤال {number} من {total}',
@@ -47,8 +51,10 @@ const QUESTION_AR = {
 // Spanish: usted, as in the search widget, CopyButton and ServiceNotice.
 const QUESTION_ES = {
   checkAnswer: 'Comprobar respuesta',
+  showAnswer: 'Mostrar respuesta',
   correct: 'Correcto',
   incorrectMessage: 'Todavía no es correcto. Vuelva a intentarlo.',
+  revealedMessage: 'Esta es la respuesta.',
   emptyChoice: 'Elija primero una respuesta.',
   emptyText: 'Escriba primero una respuesta.',
   questionNumber: 'Pregunta {number} de {total}',
@@ -63,8 +69,10 @@ const QUESTION_ES = {
 // colon never starts a line.
 const QUESTION_FR = {
   checkAnswer: 'Vérifier la réponse',
+  showAnswer: 'Afficher la réponse',
   correct: 'Bonne réponse',
   incorrectMessage: 'Ce n’est pas encore la bonne réponse. Réessayez.',
+  revealedMessage: 'Voici la réponse.',
   emptyChoice: 'Choisissez d’abord une réponse.',
   emptyText: 'Saisissez d’abord une réponse.',
   questionNumber: 'Question {number} sur {total}',
@@ -79,8 +87,10 @@ const QUESTION_FR = {
 // screen reader may read as a fraction.
 const QUESTION_JA = {
   checkAnswer: '答えを確認',
+  showAnswer: '答えを表示',
   correct: '正解です',
   incorrectMessage: 'まだ正解ではありません。もう一度お試しください。',
+  revealedMessage: 'こちらが答えです。',
   emptyChoice: '先に答えを選んでください。',
   emptyText: '先に答えを入力してください。',
   questionNumber: '第{number}問（全{total}問）',
@@ -95,8 +105,10 @@ const QUESTION_JA = {
 // with the «Верно» and «Неверно» options of a true or false question.
 const QUESTION_RU = {
   checkAnswer: 'Проверить ответ',
+  showAnswer: 'Показать ответ',
   correct: 'Правильно',
   incorrectMessage: 'Пока неправильно. Попробуйте ещё раз.',
+  revealedMessage: 'Вот ответ.',
   emptyChoice: 'Сначала выберите ответ.',
   emptyText: 'Сначала введите ответ.',
   questionNumber: 'Вопрос {number} из {total}',
@@ -111,8 +123,10 @@ const QUESTION_RU = {
 // search widget.
 const QUESTION_ZH = {
   checkAnswer: '检查答案',
+  showAnswer: '显示答案',
   correct: '回答正确',
   incorrectMessage: '回答还不正确，请再试一次。',
+  revealedMessage: '这是答案。',
   emptyChoice: '请先选择答案。',
   emptyText: '请先输入答案。',
   questionNumber: '第 {number} 题，共 {total} 题',

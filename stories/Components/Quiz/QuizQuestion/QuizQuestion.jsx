@@ -24,6 +24,7 @@ import { Notice } from '../../Notice/Notice';
 import { formatQuizLabel, getQuizQuestionLabels } from '../_labels';
 import {
   QUIZ_QUESTION_TYPES,
+  firstAcceptedAnswer,
   gradeAnswer,
   isEmptyAnswer,
   parseBlankPrompt,
@@ -51,11 +52,17 @@ export { refreshQuiz } from '../quizScope';
 const EMPTY_LIST = [];
 // A wrong answer is an invitation to try again, not an error, so it shares the
 // quiet `info` variant with the empty attempt. The wording tells them apart.
+// A revealed answer is `info` as well: the visitor did not get it, so it is
+// not `positive`, and nothing went wrong, so it is not a warning.
 const NOTICE_VARIANTS = {
   correct: 'positive',
+  revealed: 'info',
   incorrect: 'info',
   empty: 'info',
 };
+// The states that end a question: the controls are read-only and the buttons
+// are removed until the quiz is started again.
+const LOCKED_RESULTS = ['correct', 'revealed'];
 // Punctuation written straight after a blank ("[1], Japan") stays on the
 // blank's line when the sentence wraps.
 const TRAILING_PUNCTUATION = /^[^\s\p{L}\p{N}]+/u;
@@ -67,6 +74,7 @@ const ANALYTICS = {
   field: 'Quiz: Answer field',
   blank: 'Quiz: Blank',
   check: 'Quiz: Check answer',
+  reveal: 'Quiz: Show answer',
 };
 
 const joinClasses = (...classes) => classes.filter(Boolean).join(' ');
@@ -182,6 +190,8 @@ function QuizQuestionView({
   caseSensitive = false,
   blanks = EMPTY_LIST,
   explanation,
+  hint,
+  showAnswer = false,
   media,
   mediaElement,
   number,
@@ -192,6 +202,7 @@ function QuizQuestionView({
   dir,
   labels,
   onCheck,
+  onReveal,
   className,
   ...rest
 }) {
@@ -204,6 +215,7 @@ function QuizQuestionView({
 
   const promptText = asText(prompt);
   const explanationText = asText(explanation);
+  const hintText = typeof hint === 'string' ? hint.trim() : '';
   const blankList = asList(blanks);
 
   const rootRef = useRef(null);
@@ -218,7 +230,10 @@ function QuizQuestionView({
   // `attempt` remounts the notice so a repeated message is announced again.
   const [feedback, setFeedback] = useState({ kind: null, attempt: 0 });
   const [position, setPosition] = useState(null);
-  const locked = result === 'correct';
+  // "Show answer" is earned by the first incorrect attempt and then stays, so
+  // it does not come and go as the visitor edits the answer.
+  const [revealEarned, setRevealEarned] = useState(false);
+  const locked = LOCKED_RESULTS.includes(result);
 
   const choices =
     safeType === 'true_false'
@@ -233,6 +248,30 @@ function QuizQuestionView({
   let answerable = true;
   if (isChoice) answerable = choices.length > 0;
   if (safeType === 'fill_blank') answerable = blankList.length > 0;
+
+  // What "Show answer" puts on screen, or null when no answer could be marked
+  // correct: then there is nothing to show and the button is never offered.
+  let answerKey = null;
+  if (isChoice) {
+    const correct = choices
+      .map((option, index) => (option.correct === true ? index : -1))
+      .filter(index => index >= 0);
+    // One radio can be selected, so a single-answer question with several
+    // options flagged cannot be answered correctly either.
+    if (isMultiple ? correct.length > 0 : correct.length === 1) {
+      answerKey = { selected: correct };
+    }
+  } else {
+    const answers =
+      safeType === 'text'
+        ? [firstAcceptedAnswer(expected)]
+        : blankList.map(blank => firstAcceptedAnswer(blank?.expected));
+    if (answers.length > 0 && answers.every(item => item !== null)) {
+      answerKey = { texts: answers };
+    }
+  }
+  const canReveal =
+    showAnswer === true && answerable && !locked && answerKey !== null;
 
   // An answer and its result belong to one question. When the props describe
   // a different one (another `questionId`, or other content when there is no
@@ -260,6 +299,7 @@ function QuizQuestionView({
     setSelected(EMPTY_LIST);
     setTexts(EMPTY_LIST);
     setResult('unanswered');
+    setRevealEarned(false);
     setFeedback(current => ({ kind: null, attempt: current.attempt }));
   }
 
@@ -300,6 +340,7 @@ function QuizQuestionView({
       setSelected(EMPTY_LIST);
       setTexts(EMPTY_LIST);
       setResult('unanswered');
+      setRevealEarned(false);
       setFeedback(current => ({ kind: null, attempt: current.attempt }));
     });
     return () => {
@@ -313,10 +354,10 @@ function QuizQuestionView({
   // The score reads the state attribute, so it is told after each commit.
   useEffect(() => {
     notifyQuizChange(rootRef.current.ownerDocument);
-    // The check button has just left the page. Focus goes to the result so
-    // that it is not dropped on the body: to the Notice, a group named by its
+    // The buttons have just left the page. Focus goes to the result so that
+    // it is not dropped on the body: to the Notice, a group named by its
     // title, and not to the live region around it.
-    if (result === 'correct' && focusFeedbackRef.current) {
+    if (LOCKED_RESULTS.includes(result) && focusFeedbackRef.current) {
       feedbackRef.current?.querySelector('.mg-notice')?.focus();
     }
     focusFeedbackRef.current = false;
@@ -341,6 +382,15 @@ function QuizQuestionView({
     return isMultiple ? values : (values[0] ?? '');
   };
 
+  // Whether focus is on a button that is about to be removed.
+  const noteFocusInActions = () => {
+    const root = rootRef.current;
+    const active = root.ownerDocument.activeElement;
+    focusFeedbackRef.current =
+      active?.closest?.('.mg-quiz-question__actions') != null &&
+      root.contains(active);
+  };
+
   const handleCheck = () => {
     if (locked || !answerable) return;
     const submitted = collectAnswer();
@@ -363,13 +413,8 @@ function QuizQuestionView({
           { type: safeType, expected, caseSensitive, blanks: blankList },
           submitted
         );
-    if (correct) {
-      const root = rootRef.current;
-      const active = root.ownerDocument.activeElement;
-      focusFeedbackRef.current =
-        active?.closest?.('.mg-quiz-question__actions') != null &&
-        root.contains(active);
-    }
+    if (correct) noteFocusInActions();
+    else setRevealEarned(true);
     setResult(correct ? 'correct' : 'incorrect');
     setFeedback(current => ({
       kind: correct ? 'correct' : 'incorrect',
@@ -380,6 +425,21 @@ function QuizQuestionView({
       answer: submitted,
       ...(questionId ? { questionId } : {}),
     });
+  };
+
+  // Ends the question with the answer on screen in place of the visitor's.
+  // It is not a graded attempt, so `onCheck` is not called.
+  const handleReveal = () => {
+    if (!canReveal || !revealEarned) return;
+    noteFocusInActions();
+    if (answerKey.selected) setSelected(answerKey.selected);
+    else setTexts(answerKey.texts);
+    setResult('revealed');
+    setFeedback(current => ({
+      kind: 'revealed',
+      attempt: current.attempt + 1,
+    }));
+    onReveal?.(questionId ? { questionId } : {});
   };
 
   const handleChoice = (index, checked) => {
@@ -423,10 +483,18 @@ function QuizQuestionView({
 
   // One primary action per view: on a page of questions each card's check
   // button steps back to an outline, and only a lone question keeps primary.
-  const checkClass =
-    resolvedTotal > 1
-      ? 'mg-button mg-button-secondary mg-button-outline'
-      : 'mg-button mg-button-primary';
+  const onPage = resolvedTotal > 1;
+  const checkClass = onPage
+    ? 'mg-button mg-button-secondary mg-button-outline'
+    : 'mg-button mg-button-primary';
+  // "Show answer" is always one step quieter than the check button beside
+  // it: an outline beside the primary button, and an outline without its
+  // edge beside the outline button, which is the quietest button Mangrove has.
+  const revealClass = joinClasses(
+    'mg-button mg-button-secondary mg-button-outline',
+    'mg-quiz-question__reveal',
+    onPage && 'mg-quiz-question__reveal--quiet'
+  );
 
   const hintId = `${id}-hint`;
   const promptId = `${id}-prompt`;
@@ -596,12 +664,25 @@ function QuizQuestionView({
 
   let feedbackTitle = null;
   if (feedback.kind === 'correct') feedbackTitle = text.correct;
+  if (feedback.kind === 'revealed') feedbackTitle = text.revealedMessage;
   if (feedback.kind === 'incorrect') feedbackTitle = text.incorrectMessage;
   if (feedback.kind === 'empty') {
     feedbackTitle = isChoice ? text.emptyChoice : text.emptyText;
   }
 
-  const isCorrect = feedback.kind === 'correct';
+  // The two results that end the question: they show the explanation and
+  // take focus when the buttons are removed.
+  const isFinal = LOCKED_RESULTS.includes(feedback.kind);
+  let feedbackBody = null;
+  if (isFinal && explanationText) {
+    feedbackBody = (
+      <p className="mg-quiz-question__explanation">{explanationText}</p>
+    );
+  } else if (feedback.kind === 'incorrect' && hintText) {
+    feedbackBody = (
+      <p className="mg-quiz-question__feedback-hint">{hintText}</p>
+    );
+  }
 
   return (
     <div
@@ -635,6 +716,16 @@ function QuizQuestionView({
           >
             {text.checkAnswer}
           </button>
+          {canReveal && revealEarned && (
+            <button
+              type="button"
+              className={revealClass}
+              data-vf-analytics-label={ANALYTICS.reveal}
+              onClick={handleReveal}
+            >
+              {text.showAnswer}
+            </button>
+          )}
         </div>
       )}
       <div
@@ -647,11 +738,11 @@ function QuizQuestionView({
             key={feedback.attempt}
             variant={NOTICE_VARIANTS[feedback.kind]}
             // The wrapper is the live region; a second one would announce
-            // twice. The correct result is a group named by its title, so it
-            // can take focus when the check button is removed.
-            role={isCorrect ? 'group' : null}
-            aria-labelledby={isCorrect ? feedbackTitleId : undefined}
-            tabIndex={isCorrect ? -1 : undefined}
+            // twice. A result that ends the question is a group named by its
+            // title, so it can take focus when the buttons are removed.
+            role={isFinal ? 'group' : null}
+            aria-labelledby={isFinal ? feedbackTitleId : undefined}
+            tabIndex={isFinal ? -1 : undefined}
             headerContent={
               <p
                 className="mg-notice__title mg-quiz-question__feedback-title"
@@ -661,9 +752,7 @@ function QuizQuestionView({
               </p>
             }
           >
-            {isCorrect && explanationText ? (
-              <p className="mg-quiz-question__explanation">{explanationText}</p>
-            ) : null}
+            {feedbackBody}
           </Notice>
         )}
       </div>
@@ -686,6 +775,12 @@ function QuizQuestionView({
  * check button is removed. Changing an answer after any other attempt clears
  * the feedback and returns the question to unanswered, so a result never
  * outlives the answer it was given for.
+ *
+ * Two optional parts help after a wrong answer. `hint` is shown with the
+ * "try again" feedback. `showAnswer` offers a "Show answer" button from the
+ * first incorrect attempt on; it puts the answer on screen, locks the
+ * question in the `revealed` state and shows the explanation. A revealed
+ * question counts as answered and not correct.
  *
  * The answer key is optional in the props. Without a usable key no answer is
  * marked correct, for every type: a `true_false` question with no `answer`
@@ -731,8 +826,12 @@ QuizQuestion.propTypes = {
       caseSensitive: PropTypes.bool,
     })
   ),
-  /** Optional plain-text explanation shown with the "Correct" feedback, to say why the answer is right. */
+  /** Optional plain-text explanation, to say why the answer is right. Shown with the "Correct" feedback, and with "Here is the answer." after "Show answer". */
   explanation: PropTypes.string,
+  /** Optional plain-text hint shown with "Not correct yet. Try again." after an incorrect attempt. Never shown before an attempt or for an empty one. Line breaks are kept. */
+  hint: PropTypes.string,
+  /** Offer a "Show answer" button beside "Check answer" from the first incorrect attempt until the question is answered correctly, revealed or started again. It selects the correct options, or fills in the first accepted answer of each field, locks the question in the `revealed` state and shows the explanation. Never offered for a question with no usable answer key. */
+  showAnswer: PropTypes.bool,
   /** Optional image or figure that belongs to the question, shown between the prompt and the answer controls. */
   media: PropTypes.node,
   /** Position of the question. Left out, it is counted from the questions that share the page or the nearest `data-mg-quiz` wrapper. */
@@ -750,8 +849,10 @@ QuizQuestion.propTypes = {
   /** Overrides for individual built-in labels. */
   labels: PropTypes.shape({
     checkAnswer: PropTypes.string,
+    showAnswer: PropTypes.string,
     correct: PropTypes.string,
     incorrectMessage: PropTypes.string,
+    revealedMessage: PropTypes.string,
     emptyChoice: PropTypes.string,
     emptyText: PropTypes.string,
     questionNumber: PropTypes.string,
@@ -761,8 +862,10 @@ QuizQuestion.propTypes = {
     trueLabel: PropTypes.string,
     falseLabel: PropTypes.string,
   }),
-  /** Called after each graded attempt with `{ correct, answer }`, and `questionId` when the question has one. An empty attempt is not graded and does not call it. A correct answer locks the question, so it is the last call until the quiz is started again. */
+  /** Called after each graded attempt with `{ correct, answer }`, and `questionId` when the question has one. An empty attempt is not graded and does not call it. A correct answer locks the question, so it is the last call until the quiz is started again. "Show answer" is not an attempt and does not call it. */
   onCheck: PropTypes.func,
+  /** Called when the visitor selects "Show answer", with an object that carries `questionId` when the question has one and is otherwise empty. The question is then locked, so no call to `onCheck` follows until the quiz is started again. */
+  onReveal: PropTypes.func,
   /** Additional CSS class names for the root. */
   className: PropTypes.string,
 };
