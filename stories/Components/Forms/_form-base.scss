@@ -162,6 +162,33 @@
   }
 }
 
+// Forced colours keep a url() image as it is, so the arrow stayed a fixed dark
+// grey and was close to invisible on a dark palette. A select has no
+// pseudo-element to hold a mask, and a mask on the select itself would clip
+// the whole control, so the arrow goes back to the browser, which paints its
+// own in the forced text colour: CanvasText, or GrayText when disabled, at the
+// inline end in either direction.
+@media (forced-colors: active) {
+  .mg-form-select {
+    appearance: auto;
+    background-image: none;
+  }
+}
+
+// Forced colours repaint the red edge of an invalid field as CanvasText, the
+// same as a valid one, and no system colour means "error". The edge is dashed
+// instead, as on the switch (unisdr/undrr-mangrove#1187), so the state
+// survives a palette with no red in it. The .mg-form-error message carries
+// the rest. The focus ring is a solid outline outside the edge, so the two
+// read apart and show together.
+@media (forced-colors: active) {
+  .mg-form-input--error,
+  .mg-form-textarea--error,
+  .mg-form-select--error {
+    border-style: dashed;
+  }
+}
+
 // -----------------------------------------------------------------------------
 // Checkbox / Radio shared (check group)
 // -----------------------------------------------------------------------------
@@ -259,7 +286,9 @@
 // CanvasText edge as an enabled one. Each state is carried here by a system
 // colour on the box itself, which forcing keeps: a Highlight fill when
 // checked, and GrayText when disabled. The focus ring is an outline, which
-// forcing already repaints, so it needs nothing.
+// forcing already repaints, so it needs nothing. An invalid control lost its
+// red edge to CanvasText in the same way; no system colour means "error", so
+// its edge is dashed, as on the fields above.
 @media (forced-colors: active) {
   .mg-form-check__input--checkbox:checked {
     background-color: Highlight;
@@ -290,8 +319,24 @@
     padding: 3px;
   }
 
+  .mg-form-check__input--error {
+    border-style: dashed;
+  }
+
+  // A checked checkbox has a Highlight edge on a Highlight fill that runs
+  // under it, so dashes there would not show. The fill stops at the edge and
+  // the edge goes back to CanvasText. A radio keeps its CanvasText edge when
+  // selected, so it needs nothing. :where() holds this at the specificity of
+  // the checked rule above and the disabled rule below, so it wins over the
+  // first and loses to the second by order alone.
+  .mg-form-check__input--checkbox:where(.mg-form-check__input--error):checked {
+    background-clip: padding-box;
+    border-color: CanvasText;
+  }
+
   // Disabled, by its own attribute or by a disabled fieldset. Declared after
-  // the checked rules, which the first selector matches in specificity.
+  // the checked and error rules, which the first selector matches in
+  // specificity.
   .mg-form-check__input:disabled {
     border-color: GrayText;
   }

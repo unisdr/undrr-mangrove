@@ -36,12 +36,18 @@ A disabled range slider.
 
 The shared click tracker on UNDRR sites names a click on the slider after its `name`. Set `analyticsLabel` to give the input a fixed `data-vf-analytics-label` instead. A `data-vf-analytics-label` passed directly still wins.
 
+## Accessibility
+
+- A stepped slider announces the label of the current tick (for example "+2°C") through `aria-valuetext`, not the raw number.
+- In forced-colours mode (such as Windows high contrast) the track and the tick marks are drawn in the system text colour and the thumb is filled with the system highlight colour inside a ring in the text colour, so the scale and the position of the thumb stay visible. A disabled slider uses the system's inactive colour for its track and thumb. The focus ring around the thumb is kept.
+
 ## Prototype notice
 
 This component is a prototype and subject to change. The API and behavior may be updated based on user feedback and usability testing.
 
 ## Changelog
 
+- **1.1.1**, 2026-11-13 ([#1489](https://github.com/unisdr/undrr-mangrove/issues/1489)): Fixed the track and the tick marks disappearing in forced-colours mode, which left only the ring of the thumb. The track and the tick marks are drawn in `CanvasText` and the thumb is filled with `Highlight`; a disabled slider uses `GrayText`. Rendering outside forced-colours mode is unchanged.
 - **1.1.0**, 2026-11-12 ([undrr/web-backlog#3320](https://gitlab.com/undrr/web-backlog/-/work_items/3320)): Added an optional `analyticsLabel` prop, which sets `data-vf-analytics-label` on the input. Sliders without it render as before.
 - **1.0.0**, 2026-09-16 ([#1160](https://github.com/unisdr/undrr-mangrove/pull/1160)): Initial implementation with continuous and stepped slider support.
   - Before rc.1: stepped sliders announce the tick label through `aria-valuetext`; thumb hover, track radius and tick label size use real tokens; disabled and hover styles no longer sit in selector lists that browsers drop; motion respects reduced-motion; logical properties; stories use visible labels.

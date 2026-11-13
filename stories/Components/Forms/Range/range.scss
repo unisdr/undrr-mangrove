@@ -141,3 +141,75 @@
     }
   }
 }
+
+// Forced colours repaint every author background as Canvas. The track and the
+// tick marks are backgrounds with no border, so both vanished, and the thumb
+// kept only its edge: a ring with no scale to sit on, the same whether the
+// slider was enabled or not. Each part is given a system colour here, which
+// forcing keeps: a CanvasText track and tick marks, a Highlight thumb inside
+// its CanvasText edge, and GrayText for the track and thumb when disabled.
+// The slider has no filled part, so there is none to restore. The focus ring
+// is an outline on the thumb, which forcing already repaints, so it needs
+// nothing.
+@mixin mg-range-thumb-forced {
+  background-color: Highlight;
+  border-color: CanvasText;
+}
+
+@mixin mg-range-thumb-forced-disabled {
+  background-color: GrayText;
+  border-color: GrayText;
+}
+
+@media (forced-colors: active) {
+  .mg-range {
+    &::-webkit-slider-runnable-track {
+      background-color: CanvasText;
+    }
+
+    &::-moz-range-track {
+      background-color: CanvasText;
+    }
+
+    &::-webkit-slider-thumb {
+      @include mg-range-thumb-forced;
+    }
+
+    &::-moz-range-thumb {
+      @include mg-range-thumb-forced;
+    }
+
+    // The hover rules above outrank the two thumb rules, and their fill is an
+    // author colour, so without these a pointer over the slider would empty
+    // the thumb again.
+    &:hover:not(:disabled)::-webkit-slider-thumb {
+      @include mg-range-thumb-forced;
+    }
+
+    &:hover:not(:disabled)::-moz-range-thumb {
+      @include mg-range-thumb-forced;
+    }
+
+    &:disabled {
+      &::-webkit-slider-runnable-track {
+        background-color: GrayText;
+      }
+
+      &::-moz-range-track {
+        background-color: GrayText;
+      }
+
+      &::-webkit-slider-thumb {
+        @include mg-range-thumb-forced-disabled;
+      }
+
+      &::-moz-range-thumb {
+        @include mg-range-thumb-forced-disabled;
+      }
+    }
+  }
+
+  .mg-range__ticks span::before {
+    background-color: CanvasText;
+  }
+}
