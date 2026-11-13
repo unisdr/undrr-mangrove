@@ -98,15 +98,18 @@ import createHydrator from '@undrr/undrr-mangrove/components/hydrate.js';
 | `options.onError` | `Function` | No | `(error, container) => void` callback |
 | `options.identifierPrefix` | `string` | No | `useId()` prefix override |
 
-Returns: `{ roots, update, unmountAll }`
+Returns: `{ roots, update, prune, unmountAll }`
 
 | Property | Type | Description |
 |----------|------|-------------|
 | `roots` | `ReactRoot[]` | Roots created across calls |
 | `update(context?)` | `(Element?) => ReactRoot[]` | Mounts new matches in `context` or `document` |
+| `prune()` | `() => Element[]` | Unmounts and releases the roots whose container is no longer in the document, and returns those containers. Containers still in the page, including ones that were moved, are left alone |
 | `unmountAll()` | `() => void` | Unmounts roots and clears hydration markers |
 
 ## Runtime behavior and caveats
+
+- A container removed from the document by other code (Drupal AJAX replacing a block) keeps its root until `prune()` or `unmountAll()` is called. `prune()` runs only when called, so a container taken out to be put back later keeps its state unless the consumer asks. Call it at the start of a Drupal behavior's `attach`, before `update()`. A pruned container that comes back, or new markup that replaces it, is mounted by the next `update()`.
 
 - Skips already hydrated containers via `data-mg-hydrated="true"`
 - Skips a match **inside** a hydrated container that the same `selector` also matches. This is what makes it safe for a component to render the same `data-mg-*` marker its hydration selector matches — `SyndicationSearchWidget` does, so its pager can find the widget root to scroll to. Without the rule, `update()` mounted a second widget inside the first ([#1227](https://github.com/unisdr/undrr-mangrove/issues/1227))

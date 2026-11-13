@@ -562,3 +562,168 @@ describe('update(context)', () => {
     expect(mockUnmount).toHaveBeenCalledTimes(3);
   });
 });
+
+describe('prune()', () => {
+  const setup = (html = '<div class="target" data-text="a"></div>') => {
+    document.body.innerHTML = html;
+    const result = createHydrator({
+      selector: '.target',
+      component: DummyComponent,
+      fromElement: el => ({ text: el.dataset.text }),
+    });
+    jest.clearAllMocks();
+    return result;
+  };
+
+  it('unmounts and drops the root of a container that was removed', () => {
+    const result = setup(
+      '<div class="target" id="a"></div><div class="target" id="b"></div>'
+    );
+    const [keptRoot] = result.roots;
+    const removed = document.getElementById('b');
+    removed.remove();
+
+    expect(result.prune()).toEqual([removed]);
+    expect(mockUnmount).toHaveBeenCalledTimes(1);
+    expect(result.roots).toEqual([keptRoot]);
+    expect(removed.dataset.mgHydrated).toBeUndefined();
+    expect(document.getElementById('a').dataset.mgHydrated).toBe('true');
+  });
+
+  it('releases a container removed with an ancestor', () => {
+    const result = setup('<section><div class="target"></div></section>');
+    document.querySelector('section').remove();
+
+    expect(result.prune()).toHaveLength(1);
+    expect(result.roots).toHaveLength(0);
+  });
+
+  it('leaves every container that is still in the page alone', () => {
+    const result = setup(
+      '<div class="target"></div><div class="target"></div>'
+    );
+    expect(result.prune()).toEqual([]);
+    expect(mockUnmount).not.toHaveBeenCalled();
+    expect(result.roots).toHaveLength(2);
+  });
+
+  it('leaves a container that was moved alone', () => {
+    const result = setup(
+      '<div id="from"><div class="target"></div></div><div id="to"></div>'
+    );
+    const container = document.querySelector('.target');
+    document.getElementById('to').appendChild(container);
+
+    expect(result.prune()).toEqual([]);
+    expect(mockUnmount).not.toHaveBeenCalled();
+    expect(result.roots).toHaveLength(1);
+    expect(container.dataset.mgHydrated).toBe('true');
+    // Still hydrated, so a scan does not mount it a second time.
+    result.update();
+    expect(mockCreateRoot).not.toHaveBeenCalled();
+  });
+
+  it('hydrates markup that replaced a pruned container', () => {
+    const result = setup(
+      '<main><div class="target" data-text="a"></div></main>'
+    );
+    const old = document.querySelector('.target');
+    // What Drupal AJAX does: new markup, same selector.
+    document.querySelector('main').innerHTML =
+      '<div class="target" data-text="b"></div>';
+
+    expect(result.prune()).toEqual([old]);
+    const created = result.update();
+    expect(created).toHaveLength(1);
+    expect(mockCreateRoot).toHaveBeenCalledTimes(1);
+    expect(mockCreateRoot.mock.calls[0][0]).toBe(
+      document.querySelector('.target')
+    );
+    expect(mockRender.mock.calls[0][0].props).toEqual({ text: 'b' });
+    expect(result.roots).toHaveLength(1);
+  });
+
+  it('hydrates a pruned container again when it is put back', () => {
+    const result = setup();
+    const container = document.querySelector('.target');
+    container.remove();
+    result.prune();
+
+    document.body.appendChild(container);
+    expect(result.update()).toHaveLength(1);
+    expect(mockCreateRoot).toHaveBeenCalledWith(container, expect.anything());
+    expect(container.dataset.mgHydrated).toBe('true');
+    expect(result.roots).toHaveLength(1);
+  });
+
+  it('never unmounts a root twice', () => {
+    const result = setup();
+    document.querySelector('.target').remove();
+
+    result.prune();
+    result.prune();
+    result.unmountAll();
+    expect(mockUnmount).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not unmount a root twice when unmounting it prunes again', () => {
+    const result = setup(
+      '<div class="target"></div><div class="target"></div>'
+    );
+    document.body.innerHTML = '';
+    mockUnmount.mockImplementation(() => result.prune());
+
+    result.prune();
+    expect(mockUnmount).toHaveBeenCalledTimes(2);
+    expect(result.roots).toHaveLength(0);
+    mockUnmount.mockReset();
+  });
+
+  it('drops the root and carries on when unmounting it throws', () => {
+    const consoleSpy = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+    const result = setup(
+      '<div class="target"></div><div class="target"></div>'
+    );
+    document.body.innerHTML = '';
+    mockUnmount.mockImplementationOnce(() => {
+      throw new Error('boom');
+    });
+
+    expect(result.prune()).toHaveLength(2);
+    expect(mockUnmount).toHaveBeenCalledTimes(2);
+    expect(result.roots).toHaveLength(0);
+    expect(consoleSpy).toHaveBeenCalledTimes(1);
+    consoleSpy.mockRestore();
+  });
+
+  it('is not run by update(): a removed container keeps its root until asked', () => {
+    const result = setup();
+    const container = document.querySelector('.target');
+    container.remove();
+
+    result.update();
+    expect(mockUnmount).not.toHaveBeenCalled();
+    expect(result.roots).toHaveLength(1);
+    expect(container.dataset.mgHydrated).toBe('true');
+
+    // Put back without a prune, it is the same root with its state.
+    document.body.appendChild(container);
+    result.update();
+    expect(mockCreateRoot).not.toHaveBeenCalled();
+  });
+
+  it('leaves unmountAll() as it was: every root, connected or not', () => {
+    const result = setup(
+      '<div class="target" id="a"></div><div class="target" id="b"></div>'
+    );
+    const removed = document.getElementById('b');
+    removed.remove();
+
+    result.unmountAll();
+    expect(mockUnmount).toHaveBeenCalledTimes(2);
+    expect(removed.dataset.mgHydrated).toBeUndefined();
+    expect(result.roots).toHaveLength(0);
+  });
+});
