@@ -32,7 +32,7 @@ You should see an “Organization” tag styled with the default UNDRR theme.
     <title>Mangrove example</title>
     <link
       rel="stylesheet"
-      href="https://assets.undrr.org/mangrove/2.4.0/css/style.css"
+      href="https://assets.undrr.org/mangrove/2.5.0/css/style.css"
     />
   </head>
   <body>
