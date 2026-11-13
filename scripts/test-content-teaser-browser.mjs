@@ -220,29 +220,51 @@ try {
       if (mobile) assert.notEqual(surface.outline, 'none');
       else assert.notEqual(surface.shadow, 'none');
       if (!mobile) {
-        const isolated = await cards.first().evaluate(async card => {
-          const before = getComputedStyle(card).backgroundColor;
+        // The teaser reads its surface from its own token, so the card's
+        // publication token must not move it and the teaser token must.
+        // Poll for each expected colour, as above, rather than reading after
+        // a fixed number of frames: a slow runner can still be applying
+        // styles two frames later.
+        const before = await cards.first().evaluate(card => {
+          const colour = getComputedStyle(card).backgroundColor;
           card.style.setProperty(
             '--mg-card-publication-background',
             'rgb(255, 0, 255)'
           );
-          await new Promise(resolve =>
-            requestAnimationFrame(() => requestAnimationFrame(resolve))
-          );
-          const unchanged = getComputedStyle(card).backgroundColor === before;
-          card.style.removeProperty('--mg-card-publication-background');
           card.style.setProperty(
             '--mg-content-teaser-background',
             'rgb(1, 2, 3)'
           );
-          await new Promise(resolve =>
-            requestAnimationFrame(() => requestAnimationFrame(resolve))
-          );
-          const overridden =
-            getComputedStyle(card).backgroundColor === 'rgb(1, 2, 3)';
-          card.style.removeProperty('--mg-content-teaser-background');
-          return unchanged && overridden;
+          return colour;
         });
+        const surfaceIs = expected =>
+          page
+            .waitForFunction(
+              colour =>
+                getComputedStyle(document.querySelector('.mg-content-teaser'))
+                  .backgroundColor === colour,
+              expected,
+              { timeout: 5000 }
+            )
+            .then(
+              () => true,
+              () => false
+            );
+        const overridden = await surfaceIs('rgb(1, 2, 3)');
+        await cards
+          .first()
+          .evaluate(card =>
+            card.style.removeProperty('--mg-content-teaser-background')
+          );
+        // The publication token is still set here, so the surface only
+        // returns to its original colour if that token does not reach it.
+        const unchanged = await surfaceIs(before);
+        await cards
+          .first()
+          .evaluate(card =>
+            card.style.removeProperty('--mg-card-publication-background')
+          );
+        const isolated = unchanged && overridden;
         assert(
           isolated,
           `${theme}: teaser surfaces must have independent token overrides`
