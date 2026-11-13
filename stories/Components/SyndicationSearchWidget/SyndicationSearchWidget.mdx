@@ -299,7 +299,7 @@ markup. This is deliberate: Elasticsearch wraps matched terms in `<em>`, and
 escaping the response would print those tags instead of emphasising the match.
 
 Point `searchEndpoint` only at a service you trust to return safe HTML. The
-default, `https://www.undrr.org/search-endpoint`, is UNDRR's own proxy over the
+default, `https://www.undrr.org/search-endpoint`, is a proxy that UNDRR runs over the
 syndication index. If you point it at your own service — through the
 `searchEndpoint` config value or the `data-search-endpoint` attribute — then
 whatever that service returns is rendered on your page, and you own what comes
@@ -829,6 +829,52 @@ document.addEventListener('mg-search-export:download', event => {
 });
 ```
 
+### Filter and sort events
+
+The click labels above record that a visitor opened a filter, not what they chose: the options are list items the shared tracker does not name, and keyboard use is not counted at all. Two bubbling events report the choice itself, for pointer and keyboard alike. Each is dispatched from the control that changed (the filter, sort or result tab `fieldset`, or the active filters bar for chips and Clear all), so it also bubbles through an external `facetsTarget` and reaches `document`.
+
+| Event                     | When                                                                                                                                                  |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `mg-search:filter-change` | A visitor selects or clears a filter value, switches a result tab, changes a filter's match mode, removes a filter chip or chooses Clear all filters. |
+| `mg-search:sort-change`   | A visitor chooses a different sort order.                                                                                                             |
+
+One action dispatches one event. Neither event fires when the widget loads, for `defaultFilters`, `customFilters`, `defaultSort` or the default tab, for filters and sort restored from the URL (on load or with back and forward), for configuration changes in an editor preview, when the widget resets a filter or the sort itself, or when the visitor chooses the value that is already selected. Controls shared by a group of widgets (`sharedControls`) report one change, from the widget that renders them, however many lists it updates. Each list in a group keeps its own Sort control and reports its own sort.
+
+The `detail` of `mg-search:filter-change`:
+
+| Field      | Value                                                                                                                                                          |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `region`   | The widget's facets analytics region: `undrr-search-facets`, or `<analyticsRegionPrefix>-facets`. It names the widget whichever control was used.              |
+| `kind`     | `field` for a standard filter, `custom` for an editor-defined dropdown filter, `tab` for a result tab, `null` for Clear all.                                   |
+| `key`      | The field key (for example `field_hazard`, `type` or `year`) or the custom facet `id`; `null` for Clear all.                                                   |
+| `action`   | `select`, `clear`, `operator` (match mode changed) or `clear-all`. A choice that replaces another, in a single-choice filter or a result tab, is one `select`. |
+| `changed`  | The values this action selected or cleared; empty for `operator` and `clear-all`.                                                                              |
+| `values`   | The filter's selection after the action; empty for `clear-all`.                                                                                                |
+| `operator` | `or` or `and` for a standard filter after the action; `null` for custom filters, result tabs and Clear all.                                                    |
+
+Values are the stable codes the search uses: term, node and domain IDs, language codes, content type machine names, subtype values such as `field_news_type:751`, and the year. A custom filter or result tab option reports its authored `value` when that is a unique URL-safe string, otherwise its position, as in the `Search tab` click label. Removing the chip of a custom filter clears that whole filter, so `changed` lists every value it held. After Clear all, configured `defaultFilters` apply again and the result tab is kept; the event does not list them.
+
+The `detail` of `mg-search:sort-change` is `region` and `sort`: `relevance`, `newest`, `oldest`, `eventDateAsc` or `eventDateDesc`.
+
+The details never include the visitor's search text, the text typed into a filter's option search, translated labels, option queries, result counts or anything that identifies the visitor. The consuming site maps these events to its consent-aware analytics; Mangrove sends nothing to Google.
+
+```js
+document.addEventListener('mg-search:filter-change', event => {
+  const { region, key, action, changed } = event.detail;
+  analytics.track('search_filter', {
+    region,
+    filter: key ?? 'all',
+    action,
+    value: changed.join(','),
+  });
+});
+
+document.addEventListener('mg-search:sort-change', event => {
+  const { region, sort } = event.detail;
+  analytics.track('search_sort', { region, sort });
+});
+```
+
 ## Results notification
 
 After each completed search the widget calls `onResults({ total, query, page })` and dispatches an `mg-search-widget:results` event with the same `detail`, bubbling from its root. A host uses it to hide a section around a widget that found nothing, or to show the total somewhere else; the event works without React:
@@ -1136,6 +1182,8 @@ pass `dir` explicitly when external search or facet portals cross direction
 boundaries: a DOM portal cannot inherit direction from the widget's ancestors.
 
 ## Changelog
+
+- **1.10.0**, 2026-11-13 ([mangrove#1477](https://github.com/unisdr/undrr-mangrove/issues/1477)): Add bubbling `mg-search:filter-change` and `mg-search:sort-change` events, dispatched once when a visitor selects or clears a filter value, switches a result tab, changes a match mode, removes a chip, clears all filters or changes the sort, by pointer or keyboard. They carry field keys and stable values, never the search text or translated labels, and do not fire for defaults, URL restoration or configuration changes. See [Filter and sort events](#filter-and-sort-events). Existing behaviour, markup and events are unchanged.
 
 - **1.9.1**, 2026-11-12 ([undrr/web-backlog#3270](https://gitlab.com/undrr/web-backlog/-/work_items/3270)): Label the PreventionWeb `short_update` bundle as Short update in the Type filter and result badges, and bind it to the article/news teaser pattern. Existing widgets are unaffected.
 

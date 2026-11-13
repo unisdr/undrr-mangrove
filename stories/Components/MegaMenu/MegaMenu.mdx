@@ -320,6 +320,8 @@ for consumers needing the same strings outside React.
 
 ## Changelog
 
+- **1.7.1**, 2026-11-13 ([web-backlog#3328](https://gitlab.com/undrr/web-backlog/-/work_items/3328)): The logo in the branded variant keeps its proportions when the top bar is too narrow for its full width. It previously kept its height while its width shrank, so it was drawn squeezed. It now scales down inside its box, aligned to the inline start in left-to-right and right-to-left layouts.
+
 - **1.7**, 2026-11-12 ([undrr/web-backlog#3320](https://gitlab.com/undrr/web-backlog/-/work_items/3320)): Controls carry fixed `data-vf-analytics-label` values for the UNDRR click tracker, and the site-search link no longer reports the typed query, as its label or its URL: its `href` leaves out the query until the link is followed. The nav reports under `data-vf-google-analytics-region="mega-menu"` unless the host has set its own region, overridable with the new `analyticsRegion` prop. No visual change; following a site-search link still searches for the query, but copying it gives the search page without the query.
 
 - **1.6**, 2026-11-03 ([#1445](https://github.com/unisdr/undrr-mangrove/pull/1445)): Added opt-in navigation finding (`enableFilter`, `enableSiteSearch`, `searchUrl`), translated labels and hydration support.

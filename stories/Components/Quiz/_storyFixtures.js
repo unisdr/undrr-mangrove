@@ -105,7 +105,7 @@ export const QUESTIONS = {
 export const QUESTIONS_AR = {
   multipleChoice: {
     prompt:
-      'عن أي خطر نتحدث؟\nموجة غير مرئية من الطاقة يمكنها اختراق طبقة الأوزون والوصول إلى سطح الأرض.',
+      'أيُّ خطر هذا؟\nموجة غير مرئية من الطاقة يمكنها اختراق طبقة الأوزون والوصول إلى سطح الأرض.',
     options: [
       { value: 'uv', label: 'الأشعة فوق البنفسجية', correct: true },
       { value: 'ionospheric', label: 'عاصفة أيونوسفيرية' },

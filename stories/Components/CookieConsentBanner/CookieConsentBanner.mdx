@@ -97,11 +97,11 @@ const myCustomConfig = {
 <CookieConsentBanner config={myCustomConfig} />;
 ```
 
-If no config is provided, the component uses UNDRR's official configuration from the CDN, ensuring compliance with current standards and policies.
+If no config is provided, the component uses the official UNDRR configuration from the CDN, ensuring compliance with current standards and policies.
 
 ### Default UNDRR Configuration
 
-When no `config` prop is supplied, the component loads UNDRR's maintained configuration from the CDN, covering cookie categories, UI layout, branding, multi-language support, and legal links kept current by the UNDRR team.
+When no `config` prop is supplied, the component loads the configuration maintained by UNDRR from the CDN, covering cookie categories, UI layout, branding, multi-language support, and legal links kept current by the UNDRR team.
 
 > **Implementation note (for contributors):** The CDN configuration includes layout (bottom-bar consent, left-positioned preferences), categories (necessary, functionality, analytics), content (UNDRR branding), languages (with browser detection), legal links, and compliance settings. Updates are managed by the UNDRR team in the CDN config file.
 

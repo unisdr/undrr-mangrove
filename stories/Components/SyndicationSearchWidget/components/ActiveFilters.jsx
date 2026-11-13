@@ -6,7 +6,7 @@ import { isTabFacet } from '../utils/customFacetTabs';
  * @module SearchWidget/components/ActiveFilters
  */
 
-import React, { useCallback, useMemo, useId } from 'react';
+import React, { useCallback, useMemo, useId, useRef } from 'react';
 import {
   useSearchState,
   useSearchConfig,
@@ -17,6 +17,7 @@ import {
 } from '../context/SearchContext';
 import { useTaxonomies } from '../hooks/useTaxonomies';
 import { facetsFromDefaults } from '../utils/hashState';
+import { useSearchEvents, customOptionValue } from '../hooks/useSearchEvents';
 import {
   getDomain,
   getLanguage,
@@ -36,6 +37,8 @@ export function ActiveFilters() {
   const dispatch = useSearchDispatch();
   const labels = useSearchLabels();
   const labelId = useId();
+  const emit = useSearchEvents();
+  const regionRef = useRef(null);
   const { getLabel: getTaxonomyLabel } = useTaxonomies();
 
   const { facets, facetOperators, customFacets: customFacetSelections } = state;
@@ -149,17 +152,55 @@ export function ActiveFilters() {
     chip => {
       if (chip.isCustomFacet) {
         dispatch(actions.removeCustomFacet(chip.key));
+        // Removing a custom chip clears the whole custom filter.
+        const facet = customFacetConfigs.find(f => f.id === chip.key);
+        emit(regionRef.current, 'filter-change', {
+          kind: 'custom',
+          key: chip.key,
+          action: 'clear',
+          changed: customFacetSelections[chip.key].map(value =>
+            customOptionValue(facet, value)
+          ),
+          values: [],
+          operator: null,
+        });
       } else {
         dispatch(actions.removeFacet(chip.key, chip.value));
+        const values = facets[chip.key].filter(value => value !== chip.value);
+        emit(regionRef.current, 'filter-change', {
+          kind: 'field',
+          key: chip.key,
+          action: 'clear',
+          changed: [chip.value],
+          values,
+          operator: values.length
+            ? (facetOperators[chip.key] || 'OR').toLowerCase()
+            : 'or',
+        });
       }
     },
-    [dispatch]
+    [
+      dispatch,
+      emit,
+      facets,
+      facetOperators,
+      customFacetSelections,
+      customFacetConfigs,
+    ]
   );
 
   // Handle clear all
   const handleClearAll = useCallback(() => {
     dispatch(actions.clearFacets({ defaultFilters }));
-  }, [dispatch, defaultFilters]);
+    emit(regionRef.current, 'filter-change', {
+      kind: null,
+      key: null,
+      action: 'clear-all',
+      changed: [],
+      values: [],
+      operator: null,
+    });
+  }, [dispatch, defaultFilters, emit]);
 
   // Don't render if disabled or no chips
   if (!showActiveFilters || chips.length === 0) {
@@ -168,6 +209,7 @@ export function ActiveFilters() {
 
   return (
     <div
+      ref={regionRef}
       className="mg-search__active-filters"
       role="region"
       aria-label={labels.activeFiltersRegion}

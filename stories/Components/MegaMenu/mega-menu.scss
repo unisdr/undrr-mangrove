@@ -119,6 +119,14 @@
     max-width: 100%;
     width: auto;
 
+    // Keep proportions when max-width caps the width below the fixed height's ratio.
+    object-fit: contain;
+    object-position: left center;
+
+    [dir="rtl"] & {
+      object-position: right center;
+    }
+
     @media screen and (min-width: $mg-breakpoint-tablet) {
       height: mg-rem(35);
     }
