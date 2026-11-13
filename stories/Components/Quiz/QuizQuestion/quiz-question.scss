@@ -73,19 +73,18 @@ $mg-quiz-question-measure: mg-rem(768);
     @extend %mg-quiz-question-prompt;
   }
 
-  // "Select all that apply" is Forms help text (`mg-form-help`); only the
-  // spacing under it is set here.
-  &__hint {
-    margin: 0 0 var(--mg-spacing-150);
+  // "Select all that apply" and "Complete the sentence" tell the visitor how
+  // to answer, so they read one step larger and darker than Forms help text.
+  // The hint is `mg-form-help`; FormGroup owns the legend's class.
+  &__hint.mg-form-help,
+  &__group--sentence > .mg-form-group__legend {
+    color: rgb(var(--mg-color-neutral-700));
+    font-size: var(--mg-font-size-250);
+    font-weight: 400;
   }
 
-  // The sentence carries the question, so its legend steps down to help text.
-  // FormGroup owns the legend's class, so the `mg-form-help` values are
-  // repeated here.
-  &__group--sentence > .mg-form-group__legend {
-    color: rgb(var(--mg-color-neutral-500));
-    font-size: var(--mg-font-size-200);
-    font-weight: 400;
+  &__hint {
+    margin: 0 0 var(--mg-spacing-150);
   }
 
   // Server-rendered fallback only: says, inside <noscript>, that checking
