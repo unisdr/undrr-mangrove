@@ -58,13 +58,13 @@ export function QuizScore({
     // A score whose markup was removed without an unmount stops listening
     // the next time it is asked to count.
     let wasConnected = root.isConnected;
-    const count = () => {
+    const count = early => {
       if (root.isConnected) wasConnected = true;
       else if (wasConnected) {
         off();
         return;
       }
-      const next = getQuizSummary(getQuizScope(root));
+      const next = getQuizSummary(getQuizScope(root), early === true);
       setSummary(current =>
         current.total === next.total &&
         current.answered === next.answered &&
@@ -73,7 +73,7 @@ export function QuizScore({
           : next
       );
     };
-    count();
+    count(true);
     off = onQuizEvent(root.ownerDocument, QUIZ_CHANGE_EVENT, count);
     return () => off();
   }, []);

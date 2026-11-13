@@ -104,7 +104,7 @@ The component stores nothing and sends nothing. UNDRR sites load a shared click 
 
 ## Implementation notes
 
-> **Implementation note (for contributors):** The score holds no state of its own. It listens for `mg-quiz:change` on the document and counts `data-mg-quiz-state` on the mounted question roots in its scope. "Start again" dispatches `mg-quiz:reset` on the scope, and each question in that scope clears itself. The reasons are in the implementation notes of <LinkTo kind="components-quiz-quiz-question" story="docs">Quiz question</LinkTo>.
+> **Implementation note (for contributors):** The score holds no state of its own. It listens for `mg-quiz:change` on the document and counts `data-mg-quiz-state` on the mounted question roots in its scope. The event is batched, one for all the changes of a task, so the score updates a microtask after an answer is checked, before the browser paints. "Start again" dispatches `mg-quiz:reset` on the scope, and each question in that scope clears itself. The reasons are in the implementation notes of <LinkTo kind="components-quiz-quiz-question" story="docs">Quiz question</LinkTo>.
 
 ## CSS classes
 
@@ -127,3 +127,4 @@ The component stores nothing and sends nothing. UNDRR sites load a shared click 
   - Only mounted questions are counted, so a server-rendered question that did not mount does not hold the score short of complete.
   - `ensureQuizScoreHost(context)` looks only at the scopes with a question inside `context` and ends with a recount. `refreshQuiz()` recounts after other code has changed the page, and a score whose markup was removed releases its document listener on the next count.
   - "Start again" carries the fixed analytics label `Quiz: Start again`.
+  - The score counts once for each batch of changes, not once for each question that mounts or is checked.

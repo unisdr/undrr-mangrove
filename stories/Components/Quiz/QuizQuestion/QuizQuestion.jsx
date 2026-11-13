@@ -324,16 +324,20 @@ function QuizQuestionView({
       offReset();
       return true;
     };
-    const measure = () => {
+    const measure = early => {
       if (hasLeft()) return;
-      const next = getQuizPosition(root);
+      const next = getQuizPosition(root, early === true);
       setPosition(current =>
         current?.number === next.number && current?.total === next.total
           ? current
           : next
       );
     };
-    measure();
+    // Every question that mounts in the same task is numbered from one
+    // search of the scope, and the batch asked for here confirms the numbers
+    // once all of them are in the page.
+    notifyQuizChange(doc);
+    measure(true);
     offChange = onQuizEvent(doc, QUIZ_CHANGE_EVENT, measure);
     offReset = onQuizEvent(doc, QUIZ_RESET_EVENT, event => {
       if (hasLeft() || event.target !== getQuizScope(root)) return;
@@ -346,12 +350,13 @@ function QuizQuestionView({
     return () => {
       offChange();
       offReset();
-      // Runs after React has removed the root, so the count no longer has it.
-      doc.defaultView?.queueMicrotask(() => notifyQuizChange(doc));
+      // The count runs in a microtask, after React has removed the root.
+      notifyQuizChange(doc);
     };
   }, []);
 
   // The score reads the state attribute, so it is told after each commit.
+  // This runs on mount as well, which is what numbers a new question.
   useEffect(() => {
     notifyQuizChange(rootRef.current.ownerDocument);
     // The buttons have just left the page. Focus goes to the result so that

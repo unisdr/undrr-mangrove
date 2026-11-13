@@ -240,7 +240,7 @@ Override individual labels with `labels`. The rest still come from the selected 
 - **A correct answer locks the question.** The controls become read-only and the buttons are removed, so the result always belongs to the answer on screen. The options that were not chosen are toned down. "Start again" on Quiz score unlocks every question.
 - **"Show answer" locks it too.** With `showAnswer`, the button is offered from the first incorrect attempt until the question is answered correctly, revealed or started again, and stays while the answer is edited. Selecting it replaces the visitor's answer with the correct one and locks the question in the same way. It is not an attempt: `onCheck` is not called, and `onReveal` is. See [Show answer](#show-answer).
 - **Changing an answer clears the result.** After a wrong answer or an empty attempt, the first change to the answer removes the feedback, the hint included, and returns the question to unanswered. The score counts it as unanswered until it is checked again.
-- **State.** The root carries `data-mg-quiz-state` (`unanswered`, `correct`, `incorrect` or `revealed`) and a `mg-quiz:change` event is dispatched on the document whenever it changes. The Notice is the only visible statement of the result. Quiz score counts `revealed` as answered and not correct.
+- **State.** The root carries `data-mg-quiz-state` (`unanswered`, `correct`, `incorrect` or `revealed`) and a `mg-quiz:change` event is dispatched on the document after it changes. The event is batched: see [When the page changes](#when-the-page-changes). The Notice is the only visible statement of the result. Quiz score counts `revealed` as answered and not correct.
 - **Focus.** After a wrong answer or an empty attempt focus stays on the button, so a keyboard user can adjust the answer and check again. After a correct answer or "Show answer" the buttons are removed, so focus moves to the result Notice, which shows the focus ring for keyboard users; the next Tab goes to whatever follows the question. When Enter in a text field gives the correct answer, focus stays in that field, which is now read-only.
 - **Motion.** None. Feedback appears immediately; there is nothing to disable under reduced motion.
 - **Print.** The buttons are hidden. The question, the answer the visitor entered and any feedback print as shown, and a question is not split across pages where the printer allows.
@@ -445,6 +445,9 @@ const score = createHydrator({
 
 Drupal.behaviors.mangroveQuiz = {
   attach(context) {
+    // Releases the roots of markup that Drupal has removed since last time.
+    questions.prune();
+    score.prune();
     questions.update(context);
     // Places the score and asks every question and score to count again.
     ensureQuizScoreHost(context);
@@ -461,7 +464,18 @@ Drupal.behaviors.mangroveQuiz = {
 
 ### When the page changes
 
-Numbering and the score are counted from the document each time a `mg-quiz:change` event is heard. Questions dispatch it themselves when they mount, unmount through React, are checked or are cleared, so a page that only adds and removes questions through `createHydrator` or React needs nothing more.
+Numbering and the score are counted from the document each time a `mg-quiz:change` event is heard. Questions ask for it themselves when they mount, unmount through React, are checked or are cleared, so a page that only adds and removes questions through `createHydrator` or React needs nothing more.
+
+The event is batched. Every question that mounts, unmounts or changes in the same task shares one `mg-quiz:change`, dispatched on the document in a microtask after that task and before the browser paints. Each scope is searched once for that event, however many questions and scores listen, so mounting sixty questions costs the same two searches as mounting five. `refreshQuiz()` and `ensureQuizScoreHost()` dispatch the event at once and take any waiting change with them.
+
+A listener of `mg-quiz:change` can rely on this:
+
+- When the event arrives, every `data-mg-quiz-state` in the document is up to date. Read the `.mg-quiz-question[data-mg-quiz-state]` roots for the results.
+- One event can stand for many changes, and it does not say which. It can also arrive when nothing the listener reads has changed.
+- It is never dispatched in the middle of the task that made the change. Code that changes a question and reads the score in the same task reads the score from before the change; wait for the event, or for a microtask, first.
+- The numbering and the score are React output and re-render after the event. Inside the listener, read the state attributes and not the text of "Question 2 of 5" or of the score.
+
+A question or score that mounts also reads its own numbers at once, so a page rendered in one pass is numbered as soon as it has mounted and does not wait for the batch.
 
 Code that removes or replaces quiz markup without unmounting it (Drupal AJAX replacing a block, BigPipe, a view refresh) has to say so, because nothing else tells the remaining questions:
 
@@ -473,7 +487,7 @@ Code that removes or replaces quiz markup without unmounting it (Drupal AJAX rep
 
 `context` is any element of the page, or the document; the whole page is counted either way. `refreshQuiz` is exported from both `QuizQuestion.js` and `QuizScore.js`.
 
-On that count, a question or score whose root is no longer in the document releases its document listeners. Without one of these calls, the remaining questions' "of n" and the score's total still include the removed question until the next time an answer is checked or cleared, which triggers the same count.
+On that count, a question or score whose root is no longer in the document releases its document listeners. The hydrator's own reference to that root is released by `prune()`, which the example calls at the start of `attach`. Without one of these calls, the remaining questions' "of n" and the score's total still include the removed question until the next time an answer is checked or cleared, which triggers the same count.
 
 ### Without JavaScript
 
@@ -547,7 +561,7 @@ Three things remain the consumer's responsibility. Give the fallback's controls 
 - "Show answer" displays the first accepted answer of a text field. Other accepted answers are not listed.
 - Only "Start again" on Quiz score unlocks a correct or revealed answer. A page with one question and no score has no way to try that question again.
 - The question surface has no public `--mg-quiz-*` custom properties. It uses shared tokens only.
-- `createHydrator` keeps a reference to every root it creates until `unmountAll()`. A question whose markup was removed by other code lets go of its document listeners on the next count, but the hydrator still holds its root.
+- `createHydrator` keeps the root of a question whose markup was removed by other code until `prune()` or `unmountAll()` is called. The mounting example calls `prune()` in `attach`; a consumer that never does keeps those roots for the life of the page.
 
 ## Implementation notes
 
@@ -567,7 +581,7 @@ No wrapper is required because the first consumer cannot supply one: Drupal's qu
 
 The component is hydrated React, so the React and server-rendered paths are one implementation with one set of tests, and it reuses the Forms, Notice and ProgressBar components directly. The cost is that the server's inner markup is replaced on mount and not enhanced in place, which is why the JSON is the source of truth and the markup is not.
 
-Questions do not share React state, since each may be its own root. Each publishes `data-mg-quiz-state` on its root and dispatches a `mg-quiz:change` event on the document; the score and the numbering count from the DOM when they hear it. Only a mounted question has the state attribute, which is what separates it from a server-rendered fallback with the same class. The count needs no bookkeeping of its own, so it stays right when questions arrive or leave in batches and when two copies of the bundle are on a page, provided it is told to look: see [When the page changes](#when-the-page-changes).
+Questions do not share React state, since each may be its own root. Each publishes `data-mg-quiz-state` on its root and asks for a `mg-quiz:change` event on the document; the score and the numbering count from the DOM when they hear it. Only a mounted question has the state attribute, which is what separates it from a server-rendered fallback with the same class. The count needs no bookkeeping of its own, so it stays right when questions arrive or leave in batches and when two copies of the bundle are on a page, provided it is told to look: see [When the page changes](#when-the-page-changes).
 
 The grading rules live in one pure module with no DOM or React dependency, exported as `gradeQuizAnswer` for consumers that need the same rules elsewhere.
 
@@ -594,6 +608,8 @@ The Notice title is a paragraph, not a heading, so a page of answered questions 
 ### Numbering and score
 
 Questions number themselves by counting their scope, because the server does not know the order either.
+
+The count is batched for each document. A question that mounts, unmounts or changes asks for a count, and all the requests of one task become one `mg-quiz:change` in a microtask. While that event is handled, the questions of each scope are found once and every listener reads the same list, so the cost of a page does not grow with the square of its questions: 60 questions and a score mount with 2 searches and 2 events, where each question counting for itself took 1,891 searches and 61 events. The pending batch and the shared list are kept on the document, not in the module, because QuizQuestion and QuizScore are separate bundles and each has its own copy of the module. A microtask was chosen over an animation frame because it runs before the browser paints and still runs in a background tab.
 
 The score is not sticky and not repeated in each question. The feedback in each question and the numbering already say where the visitor is; a floating score would compete with the content the questions sit in.
 
@@ -635,6 +651,7 @@ These were kept open so a server-graded mode can be added without a new componen
   - Server markup: the fallback radios of a question share a `name` that is unique to that rendering, which makes them a group without JavaScript. The `.mg-quiz-question__media` element is moved into the mounted question as it is, and the container gets its server markup back on unmount. Data that cannot be shown leaves the fallback in place, and a question that does not mount is not numbered or counted.
   - Fixed `data-vf-analytics-label` values on every answer control and on the check button, none of which carries an option value or typed text.
   - `refreshQuiz()` recounts numbering and score after other code has changed the page, and `ensureQuizScoreHost(context)` honours its context and recounts.
+  - `mg-quiz:change` is batched: the questions that mount, unmount or change in one task share one event in a microtask after it, and each scope is searched once for that event.
   - Forced-colours styles for the selected option row and the locked state.
   - The question starts again when its props describe a different question. Options are graded by position, so repeated or empty option values work. A fill-in-the-blank marker that repeats or has no blank is not shown, and a question with nothing to answer has no check button.
   - Check button: primary for a lone question, outline secondary when more than one question shares the page, so a page of questions does not carry several primary actions.

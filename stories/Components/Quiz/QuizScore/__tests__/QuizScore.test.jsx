@@ -16,33 +16,39 @@ const TEXT = {
   expected: ['Sendai'],
 };
 
-const answer = (question, label) => {
+// Questions tell the score about a change in a batch, one microtask after
+// the task that made it. This waits for that batch, as a visitor always has.
+const batch = () => act(async () => {});
+const answer = async (question, label) => {
   fireEvent.click(within(question).getByLabelText(label));
   fireEvent.click(
     within(question).getByRole('button', { name: 'Check answer' })
   );
+  await batch();
 };
 const questions = container =>
   Array.from(container.querySelectorAll('.mg-quiz-question'));
 
 describe('QuizScore', () => {
-  it('is empty until the first answer is checked', () => {
+  it('is empty until the first answer is checked', async () => {
     const { container } = render(
       <>
         <QuizQuestion {...TRUE} />
         <QuizScore />
       </>
     );
+    await batch();
     const status = screen.getByRole('status');
     expect(status).toBeEmptyDOMElement();
     expect(container.querySelector('.mg-quiz-score')).not.toHaveClass(
       'mg-quiz-score--active'
     );
     fireEvent.click(screen.getByRole('button', { name: 'Check answer' }));
+    await batch();
     expect(status).toBeEmptyDOMElement();
   });
 
-  it('shows the running score with progress, then the final score', () => {
+  it('shows the running score with progress, then the final score', async () => {
     const { container } = render(
       <>
         <QuizQuestion {...TRUE} />
@@ -50,8 +56,9 @@ describe('QuizScore', () => {
         <QuizScore />
       </>
     );
+    await batch();
     const [first, second] = questions(container);
-    answer(first, 'True');
+    await answer(first, 'True');
     expect(screen.getByRole('status')).toHaveTextContent(
       /^1 of 2 correct so far\.$/
     );
@@ -62,28 +69,30 @@ describe('QuizScore', () => {
     expect(progress).toHaveAttribute('max', '2');
     expect(progress).toHaveAttribute('aria-valuetext', '1 of 2');
 
-    answer(second, 'True');
+    await answer(second, 'True');
     expect(screen.getByRole('status')).toHaveTextContent(
       'You got 1 of 2 correct.'
     );
     expect(screen.queryByRole('progressbar')).toBeNull();
 
-    answer(second, 'False');
+    await answer(second, 'False');
     expect(screen.getByRole('status')).toHaveTextContent(
       'You got 2 of 2 correct.'
     );
   });
 
-  it('starts again: clears every question and moves focus to the first', () => {
+  it('starts again: clears every question and moves focus to the first', async () => {
     const { container } = render(
       <>
         <QuizQuestion {...TRUE} />
         <QuizScore />
       </>
     );
+    await batch();
     const [question] = questions(container);
-    answer(question, 'True');
+    await answer(question, 'True');
     fireEvent.click(screen.getByRole('button', { name: 'Start again' }));
+    await batch();
 
     expect(question).toHaveAttribute('data-mg-quiz-state', 'unanswered');
     expect(within(question).getByLabelText('True')).not.toBeChecked();
@@ -93,7 +102,7 @@ describe('QuizScore', () => {
     expect(within(question).getByLabelText('True')).toHaveFocus();
   });
 
-  it('starts again: unlocks every locked question', () => {
+  it('starts again: unlocks every locked question', async () => {
     const { container } = render(
       <>
         <QuizQuestion {...TRUE} />
@@ -101,15 +110,19 @@ describe('QuizScore', () => {
         <QuizScore />
       </>
     );
+    await batch();
     const [choice, text] = questions(container);
-    answer(choice, 'True');
+    await answer(choice, 'True');
     const input = within(text).getByRole('textbox');
     fireEvent.change(input, { target: { value: 'Sendai' } });
+    await batch();
     fireEvent.keyDown(input, { key: 'Enter' });
+    await batch();
     expect(within(choice).queryByRole('button')).toBeNull();
     expect(input).toHaveAttribute('readonly');
 
     fireEvent.click(screen.getByRole('button', { name: 'Start again' }));
+    await batch();
 
     [choice, text].forEach(question => {
       expect(question).toHaveAttribute('data-mg-quiz-state', 'unanswered');
@@ -125,11 +138,11 @@ describe('QuizScore', () => {
       .forEach(radio => expect(radio).not.toHaveAttribute('aria-disabled'));
 
     // Unlocked for real: a different answer can be given and graded.
-    answer(choice, 'False');
+    await answer(choice, 'False');
     expect(choice).toHaveAttribute('data-mg-quiz-state', 'incorrect');
   });
 
-  it('counts a revealed question as answered and not correct, and completes', () => {
+  it('counts a revealed question as answered and not correct, and completes', async () => {
     const { container } = render(
       <div>
         <QuizQuestion {...TRUE} showAnswer />
@@ -137,12 +150,14 @@ describe('QuizScore', () => {
         <QuizScore />
       </div>
     );
+    await batch();
     const [first, second] = questions(container);
-    answer(first, 'False');
+    await answer(first, 'False');
     expect(screen.getByRole('status')).toHaveTextContent(
       '0 of 2 correct so far.'
     );
     fireEvent.click(within(first).getByRole('button', { name: 'Show answer' }));
+    await batch();
     expect(first).toHaveAttribute('data-mg-quiz-state', 'revealed');
     // Still one question answered, and still none correct.
     expect(screen.getByRole('status')).toHaveTextContent(
@@ -153,9 +168,11 @@ describe('QuizScore', () => {
     fireEvent.change(within(second).getByRole('textbox'), {
       target: { value: 'sendai' },
     });
+    await batch();
     fireEvent.click(
       within(second).getByRole('button', { name: 'Check answer' })
     );
+    await batch();
     expect(screen.getByRole('status')).toHaveTextContent(
       'You got 1 of 2 correct.'
     );
@@ -167,22 +184,25 @@ describe('QuizScore', () => {
     ).toBeInTheDocument();
   });
 
-  it('starts again: reopens a revealed question like any other', () => {
+  it('starts again: reopens a revealed question like any other', async () => {
     const { container } = render(
       <div>
         <QuizQuestion {...TRUE} showAnswer />
         <QuizScore />
       </div>
     );
+    await batch();
     const [question] = questions(container);
-    answer(question, 'False');
+    await answer(question, 'False');
     fireEvent.click(
       within(question).getByRole('button', { name: 'Show answer' })
     );
+    await batch();
     expect(screen.getByRole('status')).toHaveTextContent(
       'You got 0 of 1 correct.'
     );
     fireEvent.click(screen.getByRole('button', { name: 'Start again' }));
+    await batch();
 
     expect(question).toHaveAttribute('data-mg-quiz-state', 'unanswered');
     expect(question).not.toHaveClass('mg-quiz-question--revealed');
@@ -201,11 +221,11 @@ describe('QuizScore', () => {
       within(question).queryByRole('button', { name: 'Show answer' })
     ).toBeNull();
     expect(screen.getByRole('status')).toHaveTextContent('');
-    answer(question, 'True');
+    await answer(question, 'True');
     expect(question).toHaveAttribute('data-mg-quiz-state', 'correct');
   });
 
-  it('drops a stale result from the count when the answer changes', () => {
+  it('drops a stale result from the count when the answer changes', async () => {
     const { container } = render(
       <>
         <QuizQuestion {...TRUE} />
@@ -213,13 +233,15 @@ describe('QuizScore', () => {
         <QuizScore />
       </>
     );
+    await batch();
     const [first, second] = questions(container);
-    answer(first, 'True');
-    answer(second, 'True');
+    await answer(first, 'True');
+    await answer(second, 'True');
     expect(screen.getByRole('status')).toHaveTextContent(
       'You got 1 of 2 correct.'
     );
     fireEvent.click(within(second).getByLabelText('False'));
+    await batch();
     expect(second).toHaveAttribute('data-mg-quiz-state', 'unanswered');
     expect(screen.getByRole('status')).toHaveTextContent(
       '1 of 2 correct so far.'
@@ -239,14 +261,17 @@ describe('QuizScore', () => {
       </>
     );
     const { container, rerender } = render(page([TRUE]));
+    await batch();
     const status = screen.getByRole('status');
-    answer(questions(container)[0], 'True');
+    await answer(questions(container)[0], 'True');
     expect(status).toHaveTextContent('You got 1 of 1 correct.');
 
     rerender(page([TRUE, TEXT]));
+    await batch();
     expect(status).toHaveTextContent('1 of 2 correct so far.');
 
     rerender(page([]));
+    await batch();
     await act(async () => {
       await Promise.resolve();
     });
@@ -254,7 +279,7 @@ describe('QuizScore', () => {
     expect(status).toBeEmptyDOMElement();
   });
 
-  it('counts only its own data-mg-quiz scope', () => {
+  it('counts only its own data-mg-quiz scope', async () => {
     const { container } = render(
       <>
         <div data-mg-quiz="" data-testid="one">
@@ -268,9 +293,10 @@ describe('QuizScore', () => {
         </div>
       </>
     );
+    await batch();
     const one = screen.getByTestId('one');
     const two = screen.getByTestId('two');
-    answer(questions(one)[0], 'True');
+    await answer(questions(one)[0], 'True');
     expect(within(one).getByRole('status')).toHaveTextContent(
       'You got 1 of 1 correct.'
     );
@@ -281,7 +307,7 @@ describe('QuizScore', () => {
     ).toHaveLength(2);
   });
 
-  it('uses the longer running score only without the progress bar', () => {
+  it('uses the longer running score only without the progress bar', async () => {
     const { container } = render(
       <>
         <QuizQuestion {...TRUE} />
@@ -292,14 +318,15 @@ describe('QuizScore', () => {
         />
       </>
     );
-    answer(questions(container)[0], 'True');
+    await batch();
+    await answer(questions(container)[0], 'True');
     expect(screen.getByRole('status')).toHaveTextContent(
       'Score so far: 1 of 2 correct (answered: 1).'
     );
     expect(screen.queryByRole('progressbar')).toBeNull();
   });
 
-  it('applies overrides to both forms of the running score', () => {
+  it('applies overrides to both forms of the running score', async () => {
     const page = showProgress => (
       <>
         <QuizQuestion {...TRUE} />
@@ -314,13 +341,15 @@ describe('QuizScore', () => {
       </>
     );
     const { container, rerender } = render(page(true));
-    answer(questions(container)[0], 'True');
+    await batch();
+    await answer(questions(container)[0], 'True');
     expect(screen.getByRole('status')).toHaveTextContent('Short 1/2');
     rerender(page(false));
+    await batch();
     expect(screen.getByRole('status')).toHaveTextContent('Long 1/2/1');
   });
 
-  it('translates the score and hides optional parts', () => {
+  it('translates the score and hides optional parts', async () => {
     const { container } = render(
       <>
         <QuizQuestion {...TRUE} lang="fr" />
@@ -328,10 +357,13 @@ describe('QuizScore', () => {
         <QuizScore lang="fr" showProgress={false} />
       </>
     );
+    await batch();
     fireEvent.click(within(questions(container)[0]).getByLabelText('Vrai'));
+    await batch();
     fireEvent.click(
       screen.getAllByRole('button', { name: 'Vérifier la réponse' })[0]
     );
+    await batch();
     expect(screen.getByRole('status')).toHaveTextContent(
       'Bonnes réponses pour l’instant : 1 sur 2 (questions traitées : 1).'
     );
@@ -350,10 +382,11 @@ describe('QuizScore', () => {
         <QuizScore />
       </main>
     );
+    await batch();
     const [first, second] = questions(container);
-    answer(first, 'True');
+    await answer(first, 'True');
     expect(await axe(container)).toHaveNoViolations();
-    answer(second, 'True');
+    await answer(second, 'True');
     expect(await axe(container)).toHaveNoViolations();
   });
 });
@@ -366,9 +399,9 @@ describe('quiz hydration from server-rendered markup', () => {
     document.body.innerHTML = '';
   });
 
-  const hydrate = () => {
+  const hydrate = async () => {
     let handles;
-    act(() => {
+    await act(async () => {
       const question = createHydrator({
         selector: '[data-mg-quiz-question]',
         component: QuizQuestion,
@@ -385,9 +418,9 @@ describe('quiz hydration from server-rendered markup', () => {
     return handles;
   };
 
-  it('mounts each question, adds the score after the last and grades', () => {
+  it('mounts each question, adds the score after the last and grades', async () => {
     document.body.innerHTML = `<main lang="es">${host(TRUE)}<p>Text</p>${host(TRUE)}<p>After</p></main>`;
-    const handles = hydrate();
+    const handles = await hydrate();
 
     const hosts = document.querySelectorAll('[data-mg-quiz-question]');
     const scoreHost = document.querySelector('[data-mg-quiz-score]');
@@ -403,7 +436,7 @@ describe('quiz hydration from server-rendered markup', () => {
     );
     expect(names[0]).not.toBe(names[1]);
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(within(first).getByLabelText('Verdadero'));
       fireEvent.click(
         within(first).getByRole('button', { name: 'Comprobar respuesta' })
@@ -415,17 +448,17 @@ describe('quiz hydration from server-rendered markup', () => {
       'Aciertos hasta ahora: 1 de 2.'
     );
 
-    act(() => {
+    await act(async () => {
       handles.question.unmountAll();
       handles.score.unmountAll();
     });
   });
 
-  it('leaves the server markup alone when the question data is unreadable', () => {
+  it('leaves the server markup alone when the question data is unreadable', async () => {
     const error = jest.spyOn(console, 'error').mockImplementation(() => {});
     document.body.innerHTML =
       '<div data-mg-quiz-question data-mg-ssr data-question="{broken"><div class="mg-quiz-question"><p>fallback</p></div></div>';
-    const handles = hydrate();
+    const handles = await hydrate();
     expect(document.body).toHaveTextContent('fallback');
     expect(screen.queryByRole('button')).toBeNull();
     expect(error).toHaveBeenCalled();

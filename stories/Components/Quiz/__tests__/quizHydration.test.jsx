@@ -19,9 +19,14 @@ const host = (question, { attrs = '', fallback = '<p>fallback</p>' } = {}) =>
     typeof question === 'string' ? question : JSON.stringify(question)
   }'><div class="mg-quiz-question">${fallback}</div></div>`;
 
-const hydrate = (questionConfig = {}) => {
+// Questions tell the page about a change in a batch, one microtask after the
+// task that made it. Each helper waits for that batch before it returns, so
+// what a test reads next is what a visitor sees.
+const batch = () => act(async () => {});
+
+const hydrate = async (questionConfig = {}) => {
   let handles;
-  act(() => {
+  await act(async () => {
     const question = createHydrator({
       selector: '[data-mg-quiz-question]',
       component: QuizQuestion,
@@ -40,7 +45,7 @@ const hydrate = (questionConfig = {}) => {
 };
 
 const unmount = handles =>
-  act(() => {
+  act(async () => {
     handles.question.unmountAll();
     handles.score.unmountAll();
   });
@@ -55,7 +60,7 @@ const numbers = () =>
     element => element.textContent
   );
 const answerTrue = question =>
-  act(() => {
+  act(async () => {
     fireEvent.click(within(question).getByLabelText('True'));
     fireEvent.click(
       within(question).getByRole('button', { name: 'Check answer' })
@@ -78,21 +83,21 @@ afterEach(() => {
 });
 
 describe('a question that does not mount', () => {
-  it('is left out of the numbering and the score', () => {
+  it('is left out of the numbering and the score', async () => {
     document.body.innerHTML = `${host(TRUE)}${host('{broken')}${host(TRUE)}`;
-    const handles = hydrate();
+    const handles = await hydrate();
 
     expect(document.querySelectorAll('.mg-quiz-question')).toHaveLength(3);
     expect(mounted()).toHaveLength(2);
     expect(numbers()).toEqual(['Question 1 of 2', 'Question 2 of 2']);
 
-    answerTrue(mounted()[0]);
+    await answerTrue(mounted()[0]);
     expect(screen.getByRole('status')).toHaveTextContent(
       '1 of 2 correct so far.'
     );
     expect(document.querySelector('progress')).toHaveAttribute('max', '2');
 
-    answerTrue(mounted()[1]);
+    await answerTrue(mounted()[1]);
     expect(screen.getByRole('status')).toHaveTextContent(
       'You got 2 of 2 correct.'
     );
@@ -100,38 +105,39 @@ describe('a question that does not mount', () => {
     expect(document.body).toHaveTextContent('fallback');
 
     fireEvent.click(screen.getByRole('button', { name: 'Start again' }));
+    await batch();
     expect(mounted().map(question => question.dataset.mgQuizState)).toEqual([
       'unanswered',
       'unanswered',
     ]);
     expect(within(mounted()[0]).getByLabelText('True')).toHaveFocus();
-    unmount(handles);
+    await unmount(handles);
   });
 
-  it('keeps a lone mounted question unnumbered beside a fallback', () => {
+  it('keeps a lone mounted question unnumbered beside a fallback', async () => {
     document.body.innerHTML = `${host('{broken')}${host(TRUE)}`;
-    const handles = hydrate();
+    const handles = await hydrate();
     expect(numbers()).toEqual([]);
     expect(screen.getByRole('button', { name: 'Check answer' })).toHaveClass(
       'mg-button-primary'
     );
-    answerTrue(mounted()[0]);
+    await answerTrue(mounted()[0]);
     expect(screen.getByRole('status')).toHaveTextContent(
       'You got 1 of 1 correct.'
     );
-    unmount(handles);
+    await unmount(handles);
   });
 
-  it('does not count a fallback nested in a mounted question as a question', () => {
+  it('does not count a fallback nested in a mounted question as a question', async () => {
     document.body.innerHTML = host(TRUE, {
       fallback:
         '<div class="mg-quiz-question__media"><div class="mg-quiz-question"><img src="a.jpg" alt=""></div></div>',
     });
-    const handles = hydrate();
+    const handles = await hydrate();
     expect(document.querySelectorAll('.mg-quiz-question')).toHaveLength(2);
     expect(mounted()).toHaveLength(1);
     expect(numbers()).toEqual([]);
-    unmount(handles);
+    await unmount(handles);
   });
 });
 
@@ -153,10 +159,10 @@ describe('data that parses but cannot be shown', () => {
     ['no blanks', '{"type":"fill_blank","prompt":"[1]","blanks":[]}'],
     ['an unknown type', '{"type":"essay","prompt":"x"}'],
     ['a list', '[1,2]'],
-  ])('leaves the fallback in place for %s', (name, json) => {
+  ])('leaves the fallback in place for %s', async (name, json) => {
     document.body.innerHTML = host(json);
     const fallback = document.querySelector('.mg-quiz-question');
-    const handles = hydrate();
+    const handles = await hydrate();
     const container = document.querySelector('[data-mg-quiz-question]');
 
     expect(container.firstElementChild).toBe(fallback);
@@ -165,7 +171,7 @@ describe('data that parses but cannot be shown', () => {
     expect(screen.queryByRole('button')).toBeNull();
     expect(mounted()).toHaveLength(0);
     expect(error).toHaveBeenCalled();
-    unmount(handles);
+    await unmount(handles);
   });
 
   it.each([
@@ -175,31 +181,31 @@ describe('data that parses but cannot be shown', () => {
     ['a number', '{"checkAnswer":5}'],
   ])(
     'mounts with the built-in label when an override is %s',
-    (name, labels) => {
+    async (name, labels) => {
       document.body.innerHTML = host(TRUE, {
         attrs: `data-labels='${labels}'`,
       });
-      const handles = hydrate();
+      const handles = await hydrate();
       expect(mounted()).toHaveLength(1);
       expect(
         screen.getByRole('button', { name: 'Check answer' })
       ).toBeInTheDocument();
       expect(error).not.toHaveBeenCalled();
-      unmount(handles);
+      await unmount(handles);
     }
   );
 
-  it('mounts a true/false question with a null option and marks nothing correct', () => {
+  it('mounts a true/false question with a null option and marks nothing correct', async () => {
     document.body.innerHTML = host({
       type: 'true_false',
       prompt: 'x',
       options: [null],
     });
-    const handles = hydrate();
-    answerTrue(mounted()[0]);
+    const handles = await hydrate();
+    await answerTrue(mounted()[0]);
     expect(mounted()[0]).toHaveAttribute('data-mg-quiz-state', 'incorrect');
     expect(error).not.toHaveBeenCalled();
-    unmount(handles);
+    await unmount(handles);
   });
 
   it('puts the fallback back when the question throws while rendering', async () => {
@@ -210,7 +216,7 @@ describe('data that parses but cannot be shown', () => {
     const onError = jest.fn();
     let handles;
     await act(async () => {
-      handles = hydrate({
+      handles = await hydrate({
         // A plain object is not something React can render.
         fromElement: container => ({
           ...questionFromElement(container),
@@ -232,11 +238,11 @@ describe('data that parses but cannot be shown', () => {
     // The other question is unaffected and is the only one counted.
     expect(mounted()).toHaveLength(1);
     expect(numbers()).toEqual([]);
-    answerTrue(mounted()[0]);
+    await answerTrue(mounted()[0]);
     expect(screen.getByRole('status')).toHaveTextContent(
       'You got 1 of 1 correct.'
     );
-    unmount(handles);
+    await unmount(handles);
     expect(broken.childNodes).toHaveLength(1);
     expect(broken.firstElementChild).toBe(fallback);
   });
@@ -250,7 +256,7 @@ describe('the documented server markup', () => {
       )
       .filter(radios => radios.length > 0);
 
-  it('gives the radios of each question one name that no other question has', () => {
+  it('gives the radios of each question one name that no other question has', async () => {
     document.body.innerHTML = getServerMarkup('a.jpg');
     const groups = radioGroups();
     expect(groups).toHaveLength(2);
@@ -271,7 +277,7 @@ describe('the documented server markup', () => {
     });
   });
 
-  it('labels the fallback controls for click tracking without their values', () => {
+  it('labels the fallback controls for click tracking without their values', async () => {
     document.body.innerHTML = getServerMarkup('a.jpg');
     const tracked = document.querySelectorAll(
       '[data-mg-quiz-question] input, [data-mg-quiz-question] label'
@@ -284,14 +290,14 @@ describe('the documented server markup', () => {
     });
   });
 
-  it('replaces the fallback names with its own, so copies stay independent', () => {
+  it('replaces the fallback names with its own, so copies stay independent', async () => {
     // The same rendered block twice: identical names before the mount.
     document.body.innerHTML = `${getServerMarkup('a.jpg')}${getServerMarkup('b.jpg')}`;
     const fallbackNames = new Set(
       radioGroups().map(radios => radios[0].getAttribute('name'))
     );
     expect(fallbackNames.size).toBe(2);
-    const handles = hydrate();
+    const handles = await hydrate();
 
     expect(mounted()).toHaveLength(6);
     const groups = radioGroups();
@@ -303,23 +309,23 @@ describe('the documented server markup', () => {
     fireEvent.click(groups[2][1]);
     expect(groups[0][0]).toBeChecked();
     expect(groups[2][1]).toBeChecked();
-    unmount(handles);
+    await unmount(handles);
   });
 });
 
 describe('media carried over from the server markup', () => {
-  const setup = () => {
+  const setup = async () => {
     document.body.innerHTML = `${host(TRUE, { fallback: `${MEDIA}<p>fallback</p>` })}${host(TRUE)}`;
     const image = document.querySelector('img');
     const wrapper = image.parentElement;
     const clicks = jest.fn();
     image.addEventListener('click', clicks);
     wrapper.addEventListener('click', clicks);
-    return { image, wrapper, clicks, handles: hydrate() };
+    return { image, wrapper, clicks, handles: await hydrate() };
   };
 
-  it('moves the existing nodes into the question, listeners and all', () => {
-    const { image, wrapper, clicks, handles } = setup();
+  it('moves the existing nodes into the question, listeners and all', async () => {
+    const { image, wrapper, clicks, handles } = await setup();
     const [question] = mounted();
 
     expect(document.querySelectorAll('img')).toHaveLength(1);
@@ -343,24 +349,26 @@ describe('media carried over from the server markup', () => {
     // Once on the image and once, bubbling, on its wrapper.
     expect(clicks).toHaveBeenCalledTimes(2);
     expect(image).toHaveAttribute('data-once', 'lightbox');
-    unmount(handles);
+    await unmount(handles);
   });
 
-  it('keeps one copy through an answer and "Start again"', () => {
-    const { image, handles } = setup();
-    mounted().forEach(answerTrue);
+  it('keeps one copy through an answer and "Start again"', async () => {
+    const { image, handles } = await setup();
+    await answerTrue(mounted()[0]);
+    await answerTrue(mounted()[1]);
     expect(mounted()[0].querySelector('img')).toBe(image);
     fireEvent.click(screen.getByRole('button', { name: 'Start again' }));
+    await batch();
     expect(mounted()[0]).toHaveAttribute('data-mg-quiz-state', 'unanswered');
     expect(document.querySelectorAll('img')).toHaveLength(1);
     expect(mounted()[0].querySelector('img')).toBe(image);
-    unmount(handles);
+    await unmount(handles);
   });
 
-  it('returns the container to its server markup on unmount, and mounts again', () => {
-    const { image, wrapper, clicks, handles } = setup();
+  it('returns the container to its server markup on unmount, and mounts again', async () => {
+    const { image, wrapper, clicks, handles } = await setup();
     const container = document.querySelector('[data-mg-quiz-question]');
-    unmount(handles);
+    await unmount(handles);
 
     expect(container).not.toHaveAttribute('data-mg-hydrated');
     expect(container.innerHTML).toBe(
@@ -369,7 +377,7 @@ describe('media carried over from the server markup', () => {
     expect(container.querySelector('img')).toBe(image);
     expect(mounted()).toHaveLength(0);
 
-    const again = hydrate();
+    const again = await hydrate();
     expect(mounted()).toHaveLength(2);
     expect(document.querySelectorAll('img')).toHaveLength(1);
     expect(mounted()[0].querySelector('img')).toBe(image);
@@ -383,16 +391,16 @@ describe('media carried over from the server markup', () => {
     });
     expect(document.querySelectorAll('img')).toHaveLength(1);
     expect(mounted()).toHaveLength(2);
-    unmount(again);
+    await unmount(again);
     expect(container.querySelector('img')).toBe(image);
   });
 });
 
 describe('markup removed without an unmount', () => {
-  const setup = () => {
+  const setup = async () => {
     document.body.innerHTML = `${host(TRUE)}${host(TRUE)}${host(TRUE)}`;
-    const handles = hydrate();
-    answerTrue(mounted()[0]);
+    const handles = await hydrate();
+    await answerTrue(mounted()[0]);
     expect(screen.getByRole('status')).toHaveTextContent(
       '1 of 3 correct so far.'
     );
@@ -403,8 +411,8 @@ describe('markup removed without an unmount', () => {
       .pop()
       .remove();
 
-  it('recounts and renumbers when told that the page changed', () => {
-    const handles = setup();
+  it('recounts and renumbers when told that the page changed', async () => {
+    const handles = await setup();
     removeLast();
     act(() => refreshQuiz(document));
     expect(screen.getByRole('status')).toHaveTextContent(
@@ -412,15 +420,15 @@ describe('markup removed without an unmount', () => {
     );
     expect(numbers()).toEqual(['Question 1 of 2', 'Question 2 of 2']);
 
-    answerTrue(mounted()[1]);
+    await answerTrue(mounted()[1]);
     expect(screen.getByRole('status')).toHaveTextContent(
       'You got 2 of 2 correct.'
     );
-    unmount(handles);
+    await unmount(handles);
   });
 
   it('recounts after the removal when asked just before it', async () => {
-    const handles = setup();
+    const handles = await setup();
     // The order of a Drupal behavior's detach: told first, removed after.
     refreshQuiz(document.querySelector('[data-mg-quiz-question]'), {
       defer: true,
@@ -433,11 +441,11 @@ describe('markup removed without an unmount', () => {
     expect(screen.getByRole('status')).toHaveTextContent(
       '1 of 2 correct so far.'
     );
-    unmount(handles);
+    await unmount(handles);
   });
 
-  it('recounts when ensureQuizScoreHost runs again', () => {
-    const handles = setup();
+  it('recounts when ensureQuizScoreHost runs again', async () => {
+    const handles = await setup();
     removeLast();
     const scoreHost = document.querySelector('[data-mg-quiz-score]');
     act(() => {
@@ -449,11 +457,11 @@ describe('markup removed without an unmount', () => {
     // The score it created follows the question that is now last.
     const hosts = document.querySelectorAll('[data-mg-quiz-question]');
     expect(hosts[hosts.length - 1].nextElementSibling).toBe(scoreHost);
-    unmount(handles);
+    await unmount(handles);
   });
 
-  it('releases the document listeners of a removed question', () => {
-    const handles = setup();
+  it('releases the document listeners of a removed question', async () => {
+    const handles = await setup();
     const remove = jest.spyOn(document, 'removeEventListener');
     const released = () =>
       remove.mock.calls.filter(([type]) => String(type).startsWith('mg-quiz:'))
@@ -472,11 +480,11 @@ describe('markup removed without an unmount', () => {
     act(() => refreshQuiz(document));
     expect(released()).toBe(2);
     remove.mockRestore();
-    unmount(handles);
+    await unmount(handles);
   });
 
-  it('releases the listener of a removed score', () => {
-    const handles = setup();
+  it('releases the listener of a removed score', async () => {
+    const handles = await setup();
     const remove = jest.spyOn(document, 'removeEventListener');
     document.querySelector('[data-mg-quiz-score]').remove();
     act(() => refreshQuiz(document));
@@ -484,12 +492,120 @@ describe('markup removed without an unmount', () => {
       remove.mock.calls.filter(([type]) => type === 'mg-quiz:change')
     ).toHaveLength(1);
     remove.mockRestore();
-    unmount(handles);
+    await unmount(handles);
+  });
+});
+
+describe('pruning roots whose markup was removed', () => {
+  const setup = async () => {
+    document.body.innerHTML = `<main>${host(TRUE, { fallback: `${MEDIA}<p>fallback</p>` })}${host(TRUE)}${host(TRUE)}</main>`;
+    const handles = await hydrate();
+    await answerTrue(mounted()[0]);
+    expect(screen.getByRole('status')).toHaveTextContent(
+      '1 of 3 correct so far.'
+    );
+    return handles;
+  };
+
+  it('releases the removed question, restores its fallback and recounts', async () => {
+    const handles = await setup();
+    const [first] = document.querySelectorAll('[data-mg-quiz-question]');
+    const image = first.querySelector('img');
+    first.remove();
+
+    let released;
+    await act(async () => {
+      released = handles.question.prune();
+    });
+    expect(released).toEqual([first]);
+    expect(handles.question.roots).toHaveLength(2);
+    expect(error).not.toHaveBeenCalled();
+    // Unmounting the question is what tells the page, so no call to
+    // refreshQuiz is needed: the answered question is gone from the count.
+    expect(screen.getByRole('status')).toBeEmptyDOMElement();
+    expect(numbers()).toEqual(['Question 1 of 2', 'Question 2 of 2']);
+    // The detached container is back to its server markup.
+    expect(first).not.toHaveAttribute('data-mg-hydrated');
+    expect(first.innerHTML).toBe(
+      `<div class="mg-quiz-question">${MEDIA}<p>fallback</p></div>`
+    );
+    expect(first.querySelector('img')).toBe(image);
+
+    // Nothing left to release, and nothing is unmounted twice.
+    await act(async () => {
+      expect(handles.question.prune()).toEqual([]);
+    });
+    await unmount(handles);
+    expect(error).not.toHaveBeenCalled();
+  });
+
+  it('mounts the removed container again when it is put back', async () => {
+    const handles = await setup();
+    const [first] = document.querySelectorAll('[data-mg-quiz-question]');
+    const image = first.querySelector('img');
+    first.remove();
+    await act(async () => {
+      handles.question.prune();
+    });
+
+    document.querySelector('main').prepend(first);
+    await act(async () => {
+      expect(handles.question.update(document)).toHaveLength(1);
+    });
+    expect(mounted()).toHaveLength(3);
+    expect(numbers()[0]).toBe('Question 1 of 3');
+    // A new mount: the answer given before the removal is not kept.
+    expect(mounted()[0]).toHaveAttribute('data-mg-quiz-state', 'unanswered');
+    expect(mounted()[0].querySelector('img')).toBe(image);
+    expect(document.body).not.toHaveTextContent('fallback');
+    await unmount(handles);
+  });
+
+  it('mounts the markup that replaced a whole quiz', async () => {
+    const handles = await setup();
+    // What Drupal AJAX does: the old block goes, new markup arrives.
+    document.querySelector('main').innerHTML = `${host(TRUE)}${host(TRUE)}`;
+    await act(async () => {
+      expect(handles.question.prune()).toHaveLength(3);
+      expect(handles.score.prune()).toHaveLength(1);
+      handles.question.update(document);
+      ensureQuizScoreHost(document);
+      handles.score.update(document);
+    });
+    expect(handles.question.roots).toHaveLength(2);
+    expect(handles.score.roots).toHaveLength(1);
+    expect(numbers()).toEqual(['Question 1 of 2', 'Question 2 of 2']);
+    expect(screen.getByRole('status')).toBeEmptyDOMElement();
+
+    await answerTrue(mounted()[0]);
+    expect(screen.getByRole('status')).toHaveTextContent(
+      '1 of 2 correct so far.'
+    );
+    await unmount(handles);
+    expect(error).not.toHaveBeenCalled();
+  });
+
+  it('leaves a question that was moved mounted, with its answer', async () => {
+    const handles = await setup();
+    const [first] = document.querySelectorAll('[data-mg-quiz-question]');
+    document.querySelector('main').append(first);
+    await act(async () => {
+      expect(handles.question.prune()).toEqual([]);
+      refreshQuiz(document);
+    });
+    expect(handles.question.roots).toHaveLength(3);
+    expect(mounted()[2]).toHaveAttribute('data-mg-quiz-state', 'correct');
+    expect(numbers()).toEqual([
+      'Question 1 of 3',
+      'Question 2 of 3',
+      'Question 3 of 3',
+    ]);
+    await unmount(handles);
   });
 });
 
 describe('ensureQuizScoreHost', () => {
-  it('only touches the scopes that have a question inside the context', () => {
+  it('only touches the scopes that have a question inside the context', async () => {
     document.body.innerHTML = `<section data-mg-quiz id="one">${host(TRUE)}<div id="added">${host(TRUE)}</div></section><section data-mg-quiz id="two">${host(TRUE)}</div>`;
     const added = document.getElementById('added');
 
@@ -508,7 +624,7 @@ describe('ensureQuizScoreHost', () => {
     );
   });
 
-  it('accepts a question container as the context, and one with no questions', () => {
+  it('accepts a question container as the context, and one with no questions', async () => {
     document.body.innerHTML = `${host(TRUE)}<p id="plain">Text</p>`;
     expect(ensureQuizScoreHost(document.getElementById('plain'))).toHaveLength(
       0
@@ -519,7 +635,7 @@ describe('ensureQuizScoreHost', () => {
     ).toHaveLength(1);
   });
 
-  it('asks the page to count again each time it runs', () => {
+  it('asks the page to count again each time it runs', async () => {
     document.body.innerHTML = host(TRUE);
     const heard = jest.fn();
     document.addEventListener('mg-quiz:change', heard);
@@ -531,7 +647,7 @@ describe('ensureQuizScoreHost', () => {
 });
 
 describe('a hint and "Show answer" from data-question', () => {
-  it('mounts both, reveals the answer and lets the score complete', () => {
+  it('mounts both, reveals the answer and lets the score complete', async () => {
     document.body.innerHTML =
       host({
         ...TRUE,
@@ -540,10 +656,10 @@ describe('a hint and "Show answer" from data-question', () => {
         explanation: 'It is.',
         id: 'q-1',
       }) + host({ ...TRUE, hint: 7, showAnswer: 'true' });
-    hydrate();
+    await hydrate();
     const [first, second] = mounted();
     const wrong = question =>
-      act(() => {
+      act(async () => {
         fireEvent.click(within(question).getByLabelText('False'));
         fireEvent.click(
           within(question).getByRole('button', { name: 'Check answer' })
@@ -552,8 +668,8 @@ describe('a hint and "Show answer" from data-question', () => {
 
     // The server renders no button, and none appears before an attempt.
     expect(screen.queryByRole('button', { name: 'Show answer' })).toBeNull();
-    wrong(first);
-    wrong(second);
+    await wrong(first);
+    await wrong(second);
     expect(within(first).getByText('Think of rain.')).toBeInTheDocument();
     // A hint that is not a string and a showAnswer that is not `true` are
     // dropped: the second question behaves as if it had neither.
@@ -562,7 +678,7 @@ describe('a hint and "Show answer" from data-question', () => {
       within(second).queryByRole('button', { name: 'Show answer' })
     ).toBeNull();
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(
         within(first).getByRole('button', { name: 'Show answer' })
       );
@@ -577,7 +693,7 @@ describe('a hint and "Show answer" from data-question', () => {
     // Numbering still counts a revealed question.
     expect(numbers()).toEqual(['Question 1 of 2', 'Question 2 of 2']);
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getByRole('button', { name: 'Start again' }));
     });
     expect(mounted().map(question => question.dataset.mgQuizState)).toEqual([

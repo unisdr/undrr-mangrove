@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { axe } from 'jest-axe';
 import { QuizQuestion } from '../QuizQuestion';
 
@@ -37,6 +37,9 @@ const check = (container = document.body) =>
     within(container).getByRole('button', { name: 'Check answer' })
   );
 const root = container => container.querySelector('.mg-quiz-question');
+// Questions tell the page about a change in a batch, one microtask after the
+// task that made it. This waits for that batch, as a visitor always has.
+const batch = () => act(async () => {});
 
 describe('QuizQuestion', () => {
   it('renders a single-answer question as a named radio group', () => {
@@ -448,7 +451,7 @@ describe('QuizQuestion', () => {
     ],
   ])(
     'returns to unanswered when %s changes after an incorrect result',
-    (name, props, answerWrongly, change) => {
+    async (name, props, answerWrongly, change) => {
       const { container } = render(<QuizQuestion {...props} />);
       const onChange = jest.fn();
       document.addEventListener('mg-quiz:change', onChange);
@@ -459,16 +462,19 @@ describe('QuizQuestion', () => {
         'incorrect'
       );
       expect(container.querySelector('.mg-notice')).not.toBeNull();
+      await batch();
       onChange.mockClear();
 
       change();
+      await batch();
       expect(root(container)).toHaveAttribute(
         'data-mg-quiz-state',
         'unanswered'
       );
       expect(root(container)).not.toHaveClass('mg-quiz-question--incorrect');
       expect(container.querySelector('.mg-notice')).toBeNull();
-      expect(onChange).toHaveBeenCalled();
+      // One event for the change, however many updates it took.
+      expect(onChange).toHaveBeenCalledTimes(1);
       expect(
         screen.getByRole('button', { name: 'Check answer' })
       ).toBeInTheDocument();
@@ -597,8 +603,9 @@ describe('QuizQuestion', () => {
     expect(secondRadios[1]).toBeChecked();
   });
 
-  it('numbers questions that share a page and leaves a lone one unnumbered', () => {
+  it('numbers questions that share a page and leaves a lone one unnumbered', async () => {
     const { container, rerender } = render(<QuizQuestion {...CHOICE} />);
+    await batch();
     expect(container.querySelector('.mg-quiz-question__number')).toBeNull();
 
     rerender(
@@ -607,6 +614,7 @@ describe('QuizQuestion', () => {
         <QuizQuestion {...TEXT} />
       </>
     );
+    await batch();
     expect(screen.getByText('Question 1 of 2')).toBeInTheDocument();
     expect(screen.getByText('Question 2 of 2')).toBeInTheDocument();
   });

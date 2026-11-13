@@ -1424,7 +1424,7 @@ npm run build</code></pre>
           name: 'mg-quiz:change',
           target: 'The document',
           bubbles: true,
-          when: 'A question mounts, unmounts, is graded, or returns to unanswered because its answer changed or the quiz was started again; also dispatched by refreshQuiz() and ensureQuizScoreHost(). Read data-mg-quiz-state on the .mg-quiz-question[data-mg-quiz-state] roots for the current results.',
+          when: 'A question mounts, unmounts, is graded, or returns to unanswered because its answer changed or the quiz was started again. Batched: all the changes of one task share one event, dispatched in a microtask after that task; refreshQuiz() and ensureQuizScoreHost() dispatch it at once. The event does not say what changed. Read data-mg-quiz-state on the .mg-quiz-question[data-mg-quiz-state] roots for the current results.',
         },
       ],
       example: hydrationExample({
