@@ -3,7 +3,7 @@
  * Storybook:    https://mangrove.undrr.org/
  * LLMs context: https://mangrove.undrr.org/llms.txt
  * Repository:   https://github.com/PreventionWeb/undrr-mangrove
- * Compiled on:  2026-11-13T16:43:40.502Z
+ * Compiled on:  2026-11-13T17:31:35.831Z
  */
 /*! For license information please see SyndicationSearchWidget.js.LICENSE.txt */
 import*as e from"react";import{createPortal as t}from"react-dom";var r={3387(e,t,r){r.d(t,{S:()=>l});var a=r(1649),s=/*#__PURE__*/r(5556),n=/*#__PURE__*/r.n(s),o=r(4848);function l({id:e,name:t,label:r,value:s,checked:n,defaultChecked:l,onChange:i,disabled:c=!1,error:u=!1,errorText:d,labelPosition:p="after",row:m=!1,className:g,analyticsLabel:h,...f}){const y=(0,a.useId)(),b=e||y,x=u&&d?`${b}-error`:void 0,v=["mg-form-check__input","mg-form-check__input--checkbox",c&&"mg-form-check__input--disabled",u&&"mg-form-check__input--error"].filter(Boolean).join(" "),_=r&&/*#__PURE__*/ /*#__PURE__*/(0,o.jsx)("label",{className:"mg-form-check__label",htmlFor:b,"data-vf-analytics-label":h,children:r});/*#__PURE__*/ /*#__PURE__*/

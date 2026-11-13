@@ -3,7 +3,7 @@
  * Storybook:    https://mangrove.undrr.org/
  * LLMs context: https://mangrove.undrr.org/llms.txt
  * Repository:   https://github.com/PreventionWeb/undrr-mangrove
- * Compiled on:  2026-11-13T16:43:40.502Z
+ * Compiled on:  2026-11-13T17:31:35.831Z
  */
 /*! For license information please see QuizScore.js.LICENSE.txt */
 import*as e from"react";var r={4639(e,r,t){t.d(r,{z:()=>l});var s=t(1649),o=/*#__PURE__*/t(5556),a=/*#__PURE__*/t.n(o),n=t(4848);function l({value:e,max:r=100,label:t,hideLabel:o=!1,helpText:c,showValue:i=!1,valueText:u,variant:d="default",className:p="",...b}){a().checkPropTypes(l.propTypes,{value:e,max:r,label:t,hideLabel:o,helpText:c,showValue:i,valueText:u,variant:d,className:p,...b},"prop","ProgressBar");const m=(0,s.useId)(),f=`${m}-label`,g=`${m}-help`,h="flush"===d,w="number"==typeof r&&r>0?r:100,y="number"==typeof e&&Number.isFinite(e),v=y?Math.min(Math.max(e,0),w):null,A=y?Math.round(v/w*100):null,S=u||`${A}%`,x=Boolean(t)&&!o&&!h,L=Boolean(c)&&!h,q={};b["aria-label"]||b["aria-labelledby"]||(x?q["aria-labelledby"]=f:t&&(q["aria-label"]=t));const k=[b["aria-describedby"],L&&g].filter(Boolean).join(" ");k&&(q["aria-describedby"]=k),y&&u&&(q["aria-valuetext"]=u);const T=["mg-progress-bar",h&&"mg-progress-bar--flush",p].filter(Boolean).join(" ");/*#__PURE__*/ /*#__PURE__*/
