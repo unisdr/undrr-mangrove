@@ -60,6 +60,51 @@ describe('quiz labels', () => {
     });
   });
 
+  it('fills every label without leaving a placeholder behind', () => {
+    const values = { number: 2, total: 5, correct: 1, answered: 21 };
+    ['en', ...LANGUAGES].forEach(lang => {
+      Object.values({
+        ...getQuizQuestionLabels(lang),
+        ...getQuizScoreLabels(lang),
+      }).forEach(label => {
+        expect(formatQuizLabel(label, values)).not.toMatch(/[{}]/);
+      });
+    });
+  });
+
+  it('keeps the feedback wording apart from the true and false options', () => {
+    ['en', ...LANGUAGES].forEach(lang => {
+      const labels = getQuizQuestionLabels(lang);
+      expect(labels.correct).not.toBe(labels.trueLabel);
+      expect(labels.incorrectMessage).not.toContain(labels.falseLabel);
+    });
+  });
+
+  it('follows the editorial and typographic conventions', () => {
+    ['en', ...LANGUAGES].forEach(lang => {
+      Object.values({
+        ...getQuizQuestionLabels(lang),
+        ...getQuizScoreLabels(lang),
+      }).forEach(label => {
+        expect(label).not.toMatch(/[!！¡]/);
+        expect(label).toBe(label.trim());
+      });
+    });
+    // French: a no-break space before each colon.
+    Object.values(getQuizScoreLabels('fr')).forEach(label => {
+      expect(label).not.toMatch(/[^\u00a0]:/);
+    });
+    // Chinese and Japanese: full-width punctuation only.
+    ['ja', 'zh'].forEach(lang => {
+      Object.values({
+        ...getQuizQuestionLabels(lang),
+        ...getQuizScoreLabels(lang),
+      }).forEach(label => {
+        expect(label).not.toMatch(/[.,:;?()/]/);
+      });
+    });
+  });
+
   it('has no label for the removed header status', () => {
     ['en', ...LANGUAGES].forEach(lang => {
       expect(getQuizQuestionLabels(lang)).not.toHaveProperty('incorrect');

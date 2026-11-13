@@ -447,7 +447,7 @@ describe('QuizQuestion', () => {
     expect(root(container)).toHaveAttribute('lang', 'ar');
     expect(root(container)).toHaveAttribute('dir', 'rtl');
     fireEvent.click(screen.getByLabelText('خطأ'));
-    fireEvent.click(screen.getByRole('button', { name: 'تحقق من الإجابة' }));
+    fireEvent.click(screen.getByRole('button', { name: 'التحقق من الإجابة' }));
     expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'correct');
     expect(screen.getByText('إجابة صحيحة')).toBeInTheDocument();
   });

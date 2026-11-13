@@ -257,7 +257,7 @@ describe('QuizScore', () => {
       screen.getAllByRole('button', { name: 'Vérifier la réponse' })[0]
     );
     expect(screen.getByRole('status')).toHaveTextContent(
-      'Score actuel : 1 sur 2 (questions traitées : 1).'
+      'Bonnes réponses pour l’instant : 1 sur 2 (questions traitées : 1).'
     );
     expect(screen.queryByRole('progressbar')).toBeNull();
     expect(container.querySelector('.mg-quiz-score')).toHaveAttribute(
@@ -336,7 +336,7 @@ describe('quiz hydration from server-rendered markup', () => {
     expect(first).toHaveAttribute('data-mg-quiz-state', 'correct');
     expect(second).toHaveAttribute('data-mg-quiz-state', 'unanswered');
     expect(screen.getByRole('status')).toHaveTextContent(
-      '1 de 2 correctas hasta ahora.'
+      'Aciertos hasta ahora: 1 de 2.'
     );
 
     act(() => {
