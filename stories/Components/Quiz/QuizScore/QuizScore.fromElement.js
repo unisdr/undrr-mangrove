@@ -40,7 +40,7 @@ const SCOPE = '[data-mg-quiz]';
  * this function created is moved so it stays after the last question.
  *
  * Every call ends by asking the questions and scores on the page to count
- * again, so it doubles as the "the page changed" signal.
+ * again, so it also serves to tell them that the page changed.
  *
  * @param {Document|Element} [context=document] Where to look for questions
  * @returns {HTMLElement[]} Score containers created by this call

@@ -28,8 +28,8 @@ const ZERO_WIDTH = /[\u200B-\u200D\u2060\uFEFF]/g;
  * NFKC folds characters that differ only in width or presentation, so
  * full-width digits and letters from a Japanese or Chinese keyboard match
  * their ASCII forms, and composed and decomposed accents match each other.
- * Zero-width characters are removed, whitespace is trimmed and collapsed, and
- * case is ignored with `toLowerCase()` unless `caseSensitive` is set.
+ * Zero-width characters are removed and whitespace is trimmed and collapsed.
+ * Case is ignored with `toLowerCase()` unless `caseSensitive` is set.
  *
  * Limits: there is no language-specific case folding, so `ß` does not match
  * `SS` and a dotted capital `İ` does not match `i`. Accents are significant,

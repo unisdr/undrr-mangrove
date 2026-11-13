@@ -72,7 +72,7 @@ const getCaptionForLocale = locale => {
           { label: 'High', value: 'high' },
         ],
         errorText: 'Please select an option',
-        rowLegend: 'How should we send you early warnings?',
+        rowLegend: 'How should early warnings reach you?',
         rowItems: [
           { label: 'Text message', value: 'sms' },
           { label: 'Community radio', value: 'radio' },

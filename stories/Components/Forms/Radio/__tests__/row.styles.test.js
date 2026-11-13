@@ -123,9 +123,9 @@ describe('check row variant styles', () => {
   });
 });
 
-// The quiz question was where these rows were first drawn. It now uses the
-// variant and keeps only the locked state, which must outrank the variant's
-// hover, focus and checked rules.
+// The quiz question uses the variant for its options and adds only the
+// locked state, which must outrank the variant's hover, focus and checked
+// rules.
 describe('quiz question option rows', () => {
   const QUIZ_OPTION = /\.mg-quiz-question__option(?![\w-])/;
 

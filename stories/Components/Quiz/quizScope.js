@@ -13,8 +13,8 @@
  * Changes are batched. Every question that mounts, unmounts or changes in one
  * task asks for a count, and the document gets one `mg-quiz:change` for all of
  * them, in a microtask after the task. While that event is being handled,
- * each scope is searched once and every listener reads the same result, so a
- * page of sixty questions costs one search and not sixty times sixty. A
+ * each scope is searched once and every listener reads the same result, so
+ * the number of searches does not grow with the number of questions. A
  * question or score that mounts also reads its first numbers at once, so it
  * does not wait for the batch to be right; those first reads share one search
  * per scope as well, and the batch that follows corrects them if more
@@ -173,7 +173,7 @@ export function notifyQuizChange(doc) {
 /**
  * Asks every question and score on the page to count again. Call it after
  * code outside React has added, moved or removed quiz markup: the questions
- * renumber, the scores recount, and a question whose root has left the
+ * renumber, the scores recount and a question whose root has left the
  * document stops listening.
  *
  * The count is made at once, and includes any change that was still waiting

@@ -88,7 +88,7 @@ const getCaptionForLocale = locale => {
           { label: 'Drought', value: 'drought' },
           {
             label:
-              'Landslides and debris flows on slopes that have been cleared, burned or built on in the past ten years',
+              'Landslides and debris flows on slopes that have been cleared, burned or built on in the past 10 years',
             value: 'landslide',
           },
         ],

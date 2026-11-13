@@ -75,7 +75,7 @@ export const MultipleAnswers = {
     docs: {
       description: {
         story:
-          'With `multiple`, the options are checkboxes and the question says "Select all that apply". The answer is correct only when exactly the right options are selected.',
+          'With `multiple`, the options are checkboxes and the question shows the "Select all that apply." instruction. The answer is correct only when exactly the right options are selected.',
       },
     },
   },
@@ -257,7 +257,7 @@ export const IncorrectWithHint = {
     docs: {
       description: {
         story:
-          'With `hint`, the "try again" feedback carries a line of help. It is shown only after an incorrect attempt, never before one and never for an empty attempt.',
+          'With `hint`, the "Not correct yet. Try again." feedback carries a line of help. It is shown only after an incorrect attempt, never before one and never for an empty attempt.',
       },
     },
   },
@@ -507,7 +507,7 @@ export const NoJavaScript = {
       source: { code: SERVER_MARKUP, language: 'html' },
       description: {
         story:
-          'The markup a server renders, as a browser without JavaScript shows it: a readable question with working controls, no check button, and a note from `<noscript>` that checking answers needs JavaScript. The radios of each question share a `name`, so only one can be selected. The note is the consumer’s text, in the page’s language.',
+          'The markup a server renders, as a browser without JavaScript shows it: a readable question with working controls, no check button and a note from `<noscript>` that checking answers needs JavaScript. The radios of each question share a `name`, so only one can be selected. The note is the consumer’s text, in the page’s language.',
       },
     },
   },

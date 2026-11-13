@@ -11,7 +11,7 @@ export const QUESTIONS = {
   multipleChoice: {
     type: 'multiple_choice',
     prompt:
-      'Which hazard are we talking about?\nThis invisible wave of energy can penetrate the Earth’s ozone layer and reach the surface.',
+      'Which hazard is this?\nThis invisible wave of energy can penetrate the Earth’s ozone layer and reach the surface.',
     options: [
       { value: 'uv', label: 'Ultraviolet radiation', correct: true },
       { value: 'ionospheric', label: 'Ionospheric storm' },
@@ -158,7 +158,7 @@ export const QUESTIONS_AR = {
 };
 
 // The two optional kinds of help after a wrong answer, kept apart from the
-// questions so that the stories without them stay as they are.
+// questions so that a story adds them only when it shows them.
 export const HELP = {
   multipleChoice: {
     hint: 'It is a form of energy that comes from the sun, not a substance or a disease.',

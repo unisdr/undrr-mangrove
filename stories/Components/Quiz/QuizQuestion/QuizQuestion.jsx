@@ -784,10 +784,10 @@ function QuizQuestionView({
  * outlives the answer it was given for.
  *
  * Two optional parts help after a wrong answer. `hint` is shown with the
- * "try again" feedback. `showAnswer` offers a "Show answer" button from the
- * first incorrect attempt on; it puts the answer on screen, locks the
- * question in the `revealed` state and shows the explanation. A revealed
- * question counts as answered and not correct.
+ * "Not correct yet. Try again." feedback. `showAnswer` offers a "Show answer"
+ * button from the first incorrect attempt on; it puts the answer on screen,
+ * locks the question in the `revealed` state and shows the explanation. A
+ * revealed question counts as answered and not correct.
  *
  * The answer key is optional in the props. Without a usable key no answer is
  * marked correct, for every type: a `true_false` question with no `answer`
@@ -808,7 +808,7 @@ QuizQuestion.propTypes = {
   type: PropTypes.oneOf(QUIZ_QUESTION_TYPES),
   /** The question, as plain text. Line breaks are kept. For `fill_blank`, write `[1]`, `[2]` where each blank belongs in the sentence; a repeated marker or one with no blank is left out. */
   prompt: PropTypes.string.isRequired,
-  /** Options for `multiple_choice`: a `value`, a visible `label`, and `correct: true` on each right answer. Options are graded by position, so a repeated or empty `value` still works; `onCheck` reports the values as written, so keep them unique if you read them. */
+  /** Options for `multiple_choice`: a `value`, a visible `label` and `correct: true` on each right answer. Options are graded by position, so a repeated or empty `value` still works; `onCheck` reports the values as written, so keep them unique if you read them. */
   options: PropTypes.arrayOf(
     PropTypes.shape({
       value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
@@ -817,7 +817,7 @@ QuizQuestion.propTypes = {
       correct: PropTypes.bool,
     })
   ),
-  /** `multiple_choice` only: several options are correct, so the question uses checkboxes and says "Select all that apply". */
+  /** `multiple_choice` only: several options are correct, so the question uses checkboxes and shows the "Select all that apply." instruction. */
   multiple: PropTypes.bool,
   /** `true_false` only: whether the statement is true. Left out, the question has no key and no answer is marked correct. The True and False labels come from the language catalogue. */
   answer: PropTypes.bool,
@@ -847,7 +847,7 @@ QuizQuestion.propTypes = {
   total: PropTypes.number,
   /** Show "Question 2 of 5" above the prompt. A question on its own is not numbered unless `number` is passed. */
   showNumber: PropTypes.bool,
-  /** Optional stable identifier for the question, for consumers that tie a result to a question. Reflected as `data-mg-quiz-id` on the root and passed to `onCheck`. DOM ids and radio names do not use it, so the same question can appear twice on a page. */
+  /** Optional stable identifier for the question, for consumers that tie a result to a question. Reflected as `data-mg-quiz-id` on the root and passed to `onCheck` and `onReveal`. DOM ids and radio names do not use it, so the same question can appear twice on a page. */
   questionId: PropTypes.string,
   /** Language of the built-in labels (en, ar, es, fr, ja, ru, zh), including regional tags. */
   lang: PropTypes.string,
