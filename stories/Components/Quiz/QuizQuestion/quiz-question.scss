@@ -117,6 +117,12 @@ $mg-quiz-question-measure: mg-rem(768);
     }
   }
 
+  // A hydrated question moves the server's own media element into this slot.
+  // The slot adds no box, so the media lays out as it does in the fallback.
+  &__media-slot {
+    display: contents;
+  }
+
   &__options {
     display: grid;
     gap: var(--mg-spacing-75);
@@ -268,10 +274,9 @@ $mg-quiz-question-measure: mg-rem(768);
       margin-block-start: var(--mg-spacing-200);
     }
 
-    // Focus arrives here when a correct answer removes the check button.
-    &:focus-visible {
-      border-radius: var(--mg-radius-button);
-
+    // Focus arrives on the result when a correct answer removes the check
+    // button. The wrapper is the live region and is never focused itself.
+    .mg-notice:focus-visible {
       @include mg-focus-ring;
     }
   }
@@ -288,6 +293,46 @@ $mg-quiz-question-measure: mg-rem(768);
     font-size: var(--mg-font-size-300);
     line-height: var(--mg-font-line-height-700);
     white-space: pre-line;
+  }
+
+  // Forced colours replace the tint of a selected row with the page
+  // background and paint every border, the transparent resting one included,
+  // so all rows would look the same. System colours restore the difference:
+  // no edge at rest, a text-coloured edge on hover and keyboard focus, and a
+  // double highlight edge on the selected row.
+  @media (forced-colors: active) {
+    &__option.mg-form-check {
+      border-color: Canvas;
+
+      &:hover,
+      &:has(.mg-form-check__input:focus-visible) {
+        border-color: CanvasText;
+      }
+
+      &:has(.mg-form-check__input:checked) {
+        border-color: Highlight;
+        outline: 2px solid Highlight;
+        outline-offset: -4px;
+      }
+    }
+
+    // Locked: the chosen row keeps its highlight edge, the others stay
+    // without one and no longer answer to the pointer, and the unchosen
+    // controls and read-only fields take the system's inactive colour.
+    &--correct
+      &__option.mg-form-check:not(:has(.mg-form-check__input:checked)) {
+      border-color: Canvas;
+
+      .mg-form-check__input {
+        border-color: GrayText;
+      }
+    }
+
+    &--correct &__blank.mg-form-input,
+    &--correct &__field .mg-form-input {
+      border-color: GrayText;
+      border-style: dashed;
+    }
   }
 
   @media print {
