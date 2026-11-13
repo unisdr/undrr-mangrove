@@ -593,6 +593,7 @@ Keep the ring at 3:1 or more against the thumb, and the thumb at 3:1 or more aga
 - For groups of checkboxes, wrap them in a `<FormGroup>` (renders `<fieldset>` with `<legend>`).
 - Keyboard users can toggle the checkbox with Space.
 - In an option row the stretched label makes the whole row the target, at least 48 pixels tall, and the control keeps its own boundary and focus ring. Selection is never colour alone: the control shows it. In forced-colours mode a selected row has a double edge in the system highlight colour, other rows have no edge until hover or keyboard focus and a disabled row uses the system's inactive colour. The row states use `:has()`, which every [supported browser](?path=/docs/getting-started-browser-support--docs) has; without it the row still selects and only the row's own edge and tint are missing.
+- In forced-colours mode (such as Windows high contrast) a checked checkbox is filled with the system highlight colour and its tick is cut out of the fill, so the tick contrasts in every palette. A disabled checkbox uses the system's inactive colour, checked or not. Where the browser cannot cut the tick out without clipping the focus ring, the filled box alone shows the checked state.
 - UNDRR's shared click tracker names a click after the element's visible text, and a click on the label after its `for` id. Set `analyticsLabel` to give the input and its label a fixed `data-vf-analytics-label` instead, so reports do not split by language or show generated ids.
 
 ## See also
@@ -601,6 +602,7 @@ Keep the ring at 3:1 or more against the thumb, and the thumb at 3:1 or more aga
 
 ## Changelog
 
+- **2.6.1**, 2026-11-13 ([#1484](https://github.com/unisdr/undrr-mangrove/pull/1484)): Fixed a checked checkbox showing no tick in forced-colours mode, with or without `mg-form-check--row`. The checked box is filled with `Highlight` and the tick is cut out of the fill; a disabled checkbox uses `GrayText`. Rendering outside forced-colours mode is unchanged.
 - **2.6**, 2026-11-13 ([#1481](https://github.com/unisdr/undrr-mangrove/issues/1481)): Added option rows: the `row` prop and the `mg-form-check--row` modifier draw a checkbox as a full-width target that shows hover, keyboard focus, selection, disabled and error on the row, with forced-colours styles. Checkboxes without it render as before. Added the "Row" and "Row states" stories.
 - **2.5**, 2026-11-12 ([undrr/web-backlog#3320](https://gitlab.com/undrr/web-backlog/-/work_items/3320)): Added an optional `analyticsLabel` prop, which sets the same `data-vf-analytics-label` on the input and its label. Checkboxes without it render as before.
 - **2.4**, 2026-09-18 ([#1214](https://github.com/unisdr/undrr-mangrove/pull/1214)): Gave `.mg-switch` an error state and size hooks. A default switch renders exactly as before.
