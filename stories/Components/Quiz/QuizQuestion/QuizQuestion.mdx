@@ -261,7 +261,7 @@ Override individual labels with `labels`. The rest still come from the selected 
 - A locked question has `aria-disabled="true"` on its radios or checkboxes and `readonly` on its text fields. Neither is `disabled`, so the answer on screen stays in the tab order and keeps its full contrast.
 - When a correct answer or "Show answer" removes the buttons, focus moves to the result Notice, which for that purpose is a `group` named by its title ("Correct" or "Here is the answer.") with `tabindex="-1"`. Revealing an answer changes the controls and the feedback in one update, and the feedback is the only live region, so there is one announcement. It is not a tab stop. The live region around it is never focused: an element that is both focused and live gives a screen reader two reasons to read the whole result. With this arrangement the focus move reads the name and role of the group, and the live region announces the result with its explanation. The title may therefore be heard twice; that was preferred to a focus target with some other name, because a focus move can cut a polite announcement short, and the result must be heard in either case. This reasoning has not been tested with a screen reader.
 - In forced-colours mode (Windows High Contrast) the tint of a selected row is not painted, so the selected row has a double edge in the system highlight colour, other rows have no edge until hover or keyboard focus, and the read-only fields of a locked question have a dashed edge in the system's inactive colour.
-- Radios, checkboxes, inputs and the buttons are the Mangrove Forms and button classes, with their focus rings. Option rows are at least 48 pixels tall and each button at least 44. The quiet "Show answer" button keeps a transparent edge, which forced-colours mode paints.
+- Radios, checkboxes, inputs and the buttons are the Mangrove Forms and button classes, with their focus rings. The options are Forms [option rows](?path=/docs/components-forms-radio--docs#option-rows), at least 48 pixels tall, and each button at least 44. The quiet "Show answer" button keeps a transparent edge, which forced-colours mode paints.
 - Layout uses logical properties and mirrors under `dir="rtl"`.
 
 ## Server-rendered usage
@@ -291,7 +291,7 @@ Drupal and other server-rendered consumers render a container per question and l
       </div>
       <div class="mg-quiz-question__options">
         <label
-          class="mg-form-check mg-quiz-question__option"
+          class="mg-form-check mg-form-check--row mg-quiz-question__option"
           data-vf-analytics-label="Quiz: Answer option"
         >
           <input
@@ -304,7 +304,7 @@ Drupal and other server-rendered consumers render a container per question and l
           <span class="mg-form-check__label">Drought</span>
         </label>
         <label
-          class="mg-form-check mg-quiz-question__option"
+          class="mg-form-check mg-form-check--row mg-quiz-question__option"
           data-vf-analytics-label="Quiz: Answer option"
         >
           <input
@@ -333,6 +333,7 @@ The inner markup has these requirements:
 | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Radio `name`                              | Required. Every radio of one question carries the same `name`, and no other question on the page uses it, or the radios are not a group and more than one can be selected. Generate it for each rendering of the question (a counter or a random token), not from the question's id, so two copies of one question differ. |
 | Checkbox `name`                           | Not needed.                                                                                                                                                                                                                                                                                                                |
+| Option rows                               | Each option is a `label` with the classes `mg-form-check mg-form-check--row mg-quiz-question__option`. `mg-form-check--row` is the Forms option row, which draws the row; without it the option is a plain radio or checkbox.                                                                                              |
 | `id` attributes                           | None. The labels wrap their inputs.                                                                                                                                                                                                                                                                                        |
 | `data-vf-analytics-label`                 | `Quiz: Answer option` on each option's `label` and `input`, and `Quiz: Blank` or `Quiz: Answer field` on text inputs, so a click before the component mounts is not reported with the option's text. See [Analytics](#analytics).                                                                                          |
 | `.mg-quiz-question__media`                | Optional, at most one. The element is moved into the mounted component as it is.                                                                                                                                                                                                                                           |
@@ -522,7 +523,7 @@ Before the mount, and without JavaScript, the browser groups radios by `name` al
 | `mg-quiz-question__prompt`, `__hint`                                                                                          | Short-answer prompt label; "Select all that apply" (with `mg-form-help`)                                                                                                       |
 | `mg-quiz-question__media`                                                                                                     | Image or figure                                                                                                                                                                |
 | `mg-quiz-question__media-slot`                                                                                                | Hydrated questions only: the box-less wrapper that holds the server's own `mg-quiz-question__media` element                                                                    |
-| `mg-quiz-question__options`, `__option`                                                                                       | Option list and row (with `mg-form-check`)                                                                                                                                     |
+| `mg-quiz-question__options`, `__option`                                                                                       | Option list and row (with `mg-form-check mg-form-check--row`, the Forms [option row](?path=/docs/components-forms-radio--docs#option-rows))                                    |
 | `mg-quiz-question__sentence`, `__blank-unit`, `__blank`                                                                       | Sentence, the no-wrap unit of a blank and its punctuation, and the inline input (with `mg-form-input`)                                                                         |
 | `mg-quiz-question__note`                                                                                                      | Server markup only: the `<noscript>` note that checking needs JavaScript (with `mg-form-help`)                                                                                 |
 | `mg-quiz-question__fields`, `__field`                                                                                         | Labelled text fields                                                                                                                                                           |
@@ -652,6 +653,7 @@ These were kept open so a server-graded mode can be added without a new componen
   - Fixed `data-vf-analytics-label` values on every answer control and on the check button, none of which carries an option value or typed text.
   - `refreshQuiz()` recounts numbering and score after other code has changed the page, and `ensureQuizScoreHost(context)` honours its context and recounts.
   - `mg-quiz:change` is batched: the questions that mount, unmount or change in one task share one event in a microtask after it, and each scope is searched once for that event.
+  - Options use the Forms option row (`mg-form-check--row`), which carries the row styles first written for this component. The server fallback carries the modifier on each option's `label`.
   - Forced-colours styles for the selected option row and the locked state.
   - The question starts again when its props describe a different question. Options are graded by position, so repeated or empty option values work. A fill-in-the-blank marker that repeats or has no blank is not shown, and a question with nothing to answer has no check button.
   - Check button: primary for a lone question, outline secondary when more than one question shares the page, so a page of questions does not carry several primary actions.

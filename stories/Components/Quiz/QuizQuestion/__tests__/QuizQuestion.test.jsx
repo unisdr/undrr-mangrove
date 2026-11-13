@@ -296,6 +296,25 @@ describe('QuizQuestion', () => {
     expect(screen.getByText('Not correct yet. Try again.')).toBeInTheDocument();
   });
 
+  // The row is Forms' option row; the quiz class only adds the locked state.
+  // The server fallback prints the same classes on each option's label.
+  it.each([
+    ['radios', CHOICE, 2],
+    ['checkboxes', MULTI, 3],
+  ])('renders %s as Forms option rows', (kind, question, count) => {
+    const { container } = render(<QuizQuestion {...question} />);
+    const rows = container.querySelectorAll('.mg-quiz-question__option');
+    expect(rows).toHaveLength(count);
+    rows.forEach(row =>
+      expect(row).toHaveClass(
+        'mg-form-check',
+        'mg-form-check--row',
+        'mg-quiz-question__option',
+        { exact: true }
+      )
+    );
+  });
+
   it('locks a correct choice question and removes the check button', () => {
     const onCheck = jest.fn();
     const { container } = render(

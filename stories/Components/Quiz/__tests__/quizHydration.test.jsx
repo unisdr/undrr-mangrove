@@ -277,6 +277,25 @@ describe('the documented server markup', () => {
     });
   });
 
+  // The row is drawn by the Forms option row, so a fallback without the
+  // modifier would show plain radios until the component mounts.
+  it('prints each fallback option as a Forms option row', () => {
+    document.body.innerHTML = getServerMarkup('a.jpg');
+    const options = document.querySelectorAll('.mg-quiz-question__option');
+    expect(options).toHaveLength(5);
+    options.forEach(option => {
+      expect(option.tagName).toBe('LABEL');
+      expect(option).toHaveClass(
+        'mg-form-check',
+        'mg-form-check--row',
+        'mg-quiz-question__option',
+        { exact: true }
+      );
+      expect(option.querySelector('.mg-form-check__input')).not.toBeNull();
+      expect(option.querySelector('span.mg-form-check__label')).not.toBeNull();
+    });
+  });
+
   it('labels the fallback controls for click tracking without their values', async () => {
     document.body.innerHTML = getServerMarkup('a.jpg');
     const tracked = document.querySelectorAll(

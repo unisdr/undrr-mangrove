@@ -2,8 +2,8 @@
  * Quiz question (QuizQuestion)
  *
  * One self-checking question in the page flow: multiple choice, true/false, short answer or fill in the blank.
- * Composes the Forms controls and help text, the button and Notice; this file adds the question surface,
- * the option rows, inline blanks and the locked state of a correct answer.
+ * Composes the Forms controls, option rows and help text, the button and Notice; this file adds the question
+ * surface, inline blanks and the locked state of a correct answer.
  *
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Quiz/QuizQuestion/QuizQuestion.mdx
@@ -130,56 +130,8 @@ $mg-quiz-question-measure: mg-rem(768);
     max-inline-size: $mg-quiz-question-measure;
   }
 
-  // Each option is one row-sized target. The radio or checkbox keeps its own
-  // 3:1 boundary and focus ring. The row has no edge at rest, so a question is
-  // not a stack of boxes; the edge is there, transparent, so nothing shifts
-  // when hover, keyboard focus or selection draws it.
-  &__option.mg-form-check {
-    align-items: flex-start;
-    background-color: rgb(var(--mg-color-neutral-0));
-    border: 1px solid transparent;
-    border-radius: var(--mg-radius-form-input);
-    min-block-size: mg-rem(48);
-    padding: var(--mg-spacing-75) var(--mg-spacing-100);
-
-    @media (hover: hover) {
-      &:hover {
-        border-color: rgb(var(--mg-color-interactive));
-      }
-    }
-
-    // Keyboard focus marks the row as hover does. The ring stays on the control.
-    &:has(.mg-form-check__input:focus-visible) {
-      border-color: rgb(var(--mg-color-interactive));
-    }
-
-    &:has(.mg-form-check__input:checked) {
-      background-color: rgb(var(--mg-color-interactive) / 0.06);
-      border-color: rgb(var(--mg-color-interactive));
-    }
-
-    .mg-form-check__input {
-      flex-shrink: 0;
-
-      // Lines the control up with the first line of a wrapping label.
-      margin-block: var(--mg-spacing-25);
-    }
-
-    .mg-form-check__label {
-      flex: 1;
-      line-height: var(--mg-font-line-height-700);
-      overflow-wrap: anywhere;
-      padding-block: var(--mg-spacing-25);
-      padding-inline: var(--mg-spacing-100) 0;
-
-      // Stretches the label over the row, so the whole row selects.
-      &::after {
-        content: "";
-        inset: 0;
-        position: absolute;
-      }
-    }
-  }
+  // An option is the Forms option row (`mg-form-check--row`), which owns the
+  // row-sized target and its rest, hover, focus and selected states.
 
   // A correct answer locks the question, and so does "Show answer". The
   // controls are read-only, not disabled, so the answer on screen keeps its
@@ -333,27 +285,9 @@ $mg-quiz-question-measure: mg-rem(768);
     white-space: pre-line;
   }
 
-  // Forced colours replace the tint of a selected row with the page
-  // background and paint every border, the transparent resting one included,
-  // so all rows would look the same. System colours restore the difference:
-  // no edge at rest, a text-coloured edge on hover and keyboard focus, and a
-  // double highlight edge on the selected row.
+  // Forms paints the option rows in forced colours. This adds the locked
+  // state.
   @media (forced-colors: active) {
-    &__option.mg-form-check {
-      border-color: Canvas;
-
-      &:hover,
-      &:has(.mg-form-check__input:focus-visible) {
-        border-color: CanvasText;
-      }
-
-      &:has(.mg-form-check__input:checked) {
-        border-color: Highlight;
-        outline: 2px solid Highlight;
-        outline-offset: -4px;
-      }
-    }
-
     // Locked: the chosen row keeps its highlight edge, the others stay
     // without one and no longer answer to the pointer, and the unchosen
     // controls and read-only fields take the system's inactive colour.

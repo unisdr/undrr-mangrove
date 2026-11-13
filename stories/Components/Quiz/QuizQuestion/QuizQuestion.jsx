@@ -533,6 +533,8 @@ function QuizQuestionView({
               // Options are identified by position: values may repeat or be empty.
               key={index}
               id={`${id}-option-${index}`}
+              // The Forms option row; this class adds the locked state.
+              row
               className="mg-quiz-question__option"
               name={`${id}-answer`}
               value={asText(option.value)}

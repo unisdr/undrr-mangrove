@@ -244,7 +244,7 @@ const NO_SCRIPT_NOTE =
   '<noscript><p class="mg-form-help mg-quiz-question__note">Checking your answers needs JavaScript.</p></noscript>';
 
 const fallbackRadio = (name, value, label) => `
-        <label class="mg-form-check mg-quiz-question__option" data-vf-analytics-label="Quiz: Answer option">
+        <label class="mg-form-check mg-form-check--row mg-quiz-question__option" data-vf-analytics-label="Quiz: Answer option">
           <input class="mg-form-check__input mg-form-check__input--radio" type="radio" name="${name}" value="${value}" data-vf-analytics-label="Quiz: Answer option">
           <span class="mg-form-check__label">${label}</span>
         </label>`;

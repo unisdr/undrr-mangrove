@@ -122,3 +122,22 @@ describe('check row variant styles', () => {
     );
   });
 });
+
+// The quiz question was where these rows were first drawn. It now uses the
+// variant and keeps only the locked state, which must outrank the variant's
+// hover, focus and checked rules.
+describe('quiz question option rows', () => {
+  const QUIZ_OPTION = /\.mg-quiz-question__option(?![\w-])/;
+
+  test('every quiz option rule is for the locked state', () => {
+    const unlocked = rulesWhere(selector => QUIZ_OPTION.test(selector))
+      .flatMap(rule => rule.selectors)
+      .filter(
+        selector =>
+          QUIZ_OPTION.test(selector) &&
+          !/\.mg-quiz-question--(correct|revealed) /.test(selector)
+      );
+
+    expect(unlocked).toEqual([]);
+  });
+});
