@@ -290,7 +290,7 @@ export function getServerMarkup(imageSrc) {
   data-question='{"type":"fill_blank","prompt":"The Sendai Framework was adopted in [1], Japan, in the year [2].","blanks":[{"label":"City","expected":["Sendai"]},{"label":"Year","expected":["2015"]}]}'>
   <div class="mg-quiz-question mg-quiz-question--fill-blank">
     <fieldset class="mg-form-group mg-quiz-question__group mg-quiz-question__group--sentence">
-      <legend class="mg-form-group__legend">Complete the sentence</legend>
+      <legend class="mg-form-group__legend">Complete the sentence.</legend>
       <p class="mg-quiz-question__sentence">
         The Sendai Framework was adopted in
         <span class="mg-quiz-question__blank-unit"><input class="mg-form-input mg-quiz-question__blank" type="text" aria-label="City" data-vf-analytics-label="Quiz: Blank">,</span> Japan, in the year

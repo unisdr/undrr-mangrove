@@ -562,7 +562,7 @@ describe('QuizQuestion', () => {
   it('places blanks in the sentence and names each one', () => {
     const { container } = render(<QuizQuestion {...BLANKS} />);
     expect(
-      screen.getByRole('group', { name: 'Complete the sentence' })
+      screen.getByRole('group', { name: 'Complete the sentence.' })
     ).toBeInTheDocument();
     const sentence = container.querySelector('.mg-quiz-question__sentence');
     expect(sentence).toHaveTextContent('Adopted in , Japan, in the year .');
