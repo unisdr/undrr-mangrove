@@ -24,10 +24,10 @@ Leave it out for a single question; the question's own feedback is enough.
 - **Empty at first.** Nothing shows until the first answer is checked. An empty attempt does not count.
 - **In progress.** "1 of 5 correct so far." with a ProgressBar of questions answered. The bar says how many are answered, so the sentence does not repeat it. With `showProgress={false}` the sentence is the longer "Score so far: 1 of 5 correct (answered: 2)."
 - **How a question is counted.** The score reads the state of each question. `correct` is answered and correct. `incorrect` is answered and not correct. `revealed`, a question the visitor ended with "Show answer", is also answered and not correct: it moves the progress bar and lets the quiz complete, and it never adds to the number correct. `unanswered` is neither.
-- **Complete.** "You got 4 of 5 correct." and a "Start again" button, once every question is answered. Correct and revealed answers are locked. A wrong answer can still be changed; changing it returns that question to unanswered, so the score goes back to in progress until it is checked again.
-- **Start again.** Unlocks and clears every question in the scope, revealed ones included, and moves focus to the first one. A "Show answer" button has to be earned again. Scrolling there is smooth only when the visitor has not asked for reduced motion.
-- **Scope.** It counts the mounted questions in the nearest `data-mg-quiz` ancestor, or every mounted question on the page that is not inside one. A server-rendered question that did not mount, and a question with nothing to answer, are not counted, so they cannot hold the score short of complete.
-- **Changes to the page.** Questions that mount or unmount through React or `createHydrator` are counted as they come and go. When other code removes or replaces question markup without unmounting it (Drupal AJAX, BigPipe), call `refreshQuiz()` or `ensureQuizScoreHost()` so the score counts again; otherwise it catches up the next time an answer is checked or cleared. See "When the page changes" in <LinkTo kind="components-quiz-quiz-question" story="docs">Quiz question</LinkTo>.
+- **Complete.** "You got 4 of 5 correct." and a "Start again" button, once every question is answered. A wrong answer can still be changed. Changing it returns that question to unanswered, so the score goes back to in progress until the answer is checked again.
+- **Start again.** Unlocks and clears every question in the scope, including those locked by a correct or revealed answer, and moves focus to the first one. A "Show answer" button has to be earned again. Scrolling to the first question is smooth only when the visitor has not asked for reduced motion.
+- **Scope.** The score counts the mounted questions in the nearest `data-mg-quiz` ancestor, or every mounted question on the page that is not inside one. A server-rendered question that did not mount and a question with nothing to answer are not counted, so they cannot hold the score short of complete.
+- **Changes to the page.** Questions that mount or unmount through React or `createHydrator` are counted as they come and go. Markup that other code removes or replaces without unmounting it (Drupal AJAX, BigPipe) is counted out only when the consumer asks: see [Server-rendered usage](#server-rendered-usage).
 
 <Canvas of={QuizScoreStories.InProgress} meta={QuizScoreStories} />
 
@@ -47,7 +47,7 @@ import QuizScore from '@undrr/undrr-mangrove/components/QuizScore.js';
 
 ## Languages and label overrides
 
-`lang` selects the built-in English, Arabic, Spanish, French, Japanese, Russian or Simplified Chinese labels, in the same way as Quiz question. Override individual labels with `labels`.
+`lang` selects the built-in English, Arabic, Spanish, French, Japanese, Russian or Simplified Chinese labels, as it does for Quiz question. Override individual labels with `labels`.
 
 | Key                      | English                                                                  | Placeholders                         |
 | ------------------------ | ------------------------------------------------------------------------ | ------------------------------------ |
@@ -87,9 +87,7 @@ Render an empty container where the score belongs, or let Mangrove add one after
 | `data-show-progress="false"` | Leaves the progress bar out.                                                    |
 | `data-show-reset="false"`    | Leaves "Start again" out.                                                       |
 
-`ensureQuizScoreHost(context)`, exported with the component, looks for `data-mg-quiz-question` containers inside `context` (the document by default) and, for each scope they belong to, creates the score container after the last question container of that scope if the scope has none. It keeps a container it created after the last question when more arrive, marks it with `data-mg-quiz-score-auto`, and leaves alone a container the server rendered. Each call ends by asking the questions and scores on the page to count again.
-
-`refreshQuiz(context, { defer })`, also exported with the component, asks for that count on its own. Use it after other code has changed the page, or with `defer: true` just before it does. See the mounting example in <LinkTo kind="components-quiz-quiz-question" story="docs">Quiz question</LinkTo>.
+Two more attributes take part:
 
 | Attribute                 | Purpose                                                                                                  |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -98,13 +96,10 @@ Render an empty container where the score belongs, or let Mangrove add one after
 
 Without JavaScript there is no score, because nothing can be checked.
 
-## Analytics
+Two functions are exported with the component. The mounting example in <LinkTo kind="components-quiz-quiz-question" story="docs">Quiz question</LinkTo> shows both in a Drupal behavior.
 
-The component stores nothing and sends nothing. UNDRR sites load a shared click tracker separately ([Analytics enhancements](https://mangrove.undrr.org/?path=/docs/platform-services-analytics-enhancements--docs)) that names a pointer press on a button after `data-vf-analytics-label` and adds the innermost `data-vf-google-analytics-region`. "Start again" carries `Quiz: Start again`, whatever the language of its visible label. It is the only control in the score, so that press is all the tracker can receive from it: not the score, the number of questions or any answer. The component sets no region of its own.
-
-## Implementation notes
-
-> **Implementation note (for contributors):** The score holds no state of its own. It listens for `mg-quiz:change` on the document and counts `data-mg-quiz-state` on the mounted question roots in its scope. The event is batched, one for all the changes of a task, so the score updates a microtask after an answer is checked, before the browser paints. "Start again" dispatches `mg-quiz:reset` on the scope, and each question in that scope clears itself. The reasons are in the implementation notes of <LinkTo kind="components-quiz-quiz-question" story="docs">Quiz question</LinkTo>.
+- `ensureQuizScoreHost(context)` adds the score container for consumers whose questions are independent blocks with no template that knows which one is last. It looks for `data-mg-quiz-question` containers inside `context` (the document by default) and handles only the scopes they belong to. In each of those scopes it creates the container after the last question container of the whole scope, unless the scope already has one. When more questions arrive, it moves a container it created so that it stays after the last one, and it leaves alone a container the server rendered. A question container counts whether or not it mounted, so the score stays below a question that is showing its fallback. Each call ends by asking the questions and scores on the page to count again.
+- `refreshQuiz(context, { defer })` asks for that count on its own. Call it after other code has removed or replaced quiz markup without unmounting it, or with `defer: true` just before it does. Without either call the score catches up the next time an answer is checked or cleared. "When the page changes" in Quiz question has the details.
 
 ## CSS classes
 
@@ -117,14 +112,19 @@ The component stores nothing and sends nothing. UNDRR sites load a shared click 
 | `mg-quiz-score__progress`           | ProgressBar wrapper                                                                   |
 | `mg-quiz-score__actions`, `__reset` | Button row and "Start again" (with `mg-button mg-button-secondary mg-button-outline`) |
 
+## Analytics
+
+The component stores nothing and sends nothing. UNDRR sites load a shared click tracker separately ([Analytics enhancements](https://mangrove.undrr.org/?path=/docs/platform-services-analytics-enhancements--docs)) that names a pointer press on a button after `data-vf-analytics-label` and adds the innermost `data-vf-google-analytics-region`. "Start again" carries `Quiz: Start again`, whatever the language of its visible label. It is the only control in the score, so that press is all the tracker can receive from it: not the score, the number of questions or any answer. The component sets no region of its own.
+
+## Implementation notes
+
+> **Implementation note (for contributors):** The score holds no state of its own. It listens for `mg-quiz:change` on the document and counts `data-mg-quiz-state` on the mounted question roots in its scope. The event is batched, one for all the changes of a task, so the score updates a microtask after an answer is checked, before the browser paints. "Start again" dispatches `mg-quiz:reset` on the scope, and each question in that scope clears itself. The reasons are in the implementation notes of <LinkTo kind="components-quiz-quiz-question" story="docs">Quiz question</LinkTo>.
+
 ## Changelog
 
-- **1.0**, 2026-11-12 ([#1481](https://github.com/unisdr/undrr-mangrove/issues/1481)): Initial component. Running and final score for the quiz questions in a scope, optional progress bar and "Start again", built-in translations with overrides, and hydration with `ensureQuizScoreHost`.
-  - "Start again" is an outline secondary button, matching the check buttons on a page of questions.
+- **1.0**, 2026-11-12 ([#1481](https://github.com/unisdr/undrr-mangrove/issues/1481)): Initial component. Running and final score for the quiz questions in a scope, optional progress bar and "Start again", built-in translations with overrides and hydration with `ensureQuizScoreHost`.
   - The running score is the short "1 of 5 correct so far." beside the progress bar, and the longer form with the answered count (`scoreSoFarWithAnswered`) when the bar is off.
-  - "Start again" unlocks questions locked by a correct answer or by "Show answer".
-  - A question in the `revealed` state counts as answered and not correct.
-  - Only mounted questions are counted, so a server-rendered question that did not mount does not hold the score short of complete.
+  - Only mounted questions are counted, so a server-rendered question that did not mount does not hold the score short of complete. A question in the `revealed` state counts as answered and not correct.
+  - "Start again" is an outline secondary button, matching the check buttons on a page of questions. It unlocks questions locked by a correct answer or by "Show answer", and carries the fixed analytics label `Quiz: Start again`.
   - `ensureQuizScoreHost(context)` looks only at the scopes with a question inside `context` and ends with a recount. `refreshQuiz()` recounts after other code has changed the page, and a score whose markup was removed releases its document listener on the next count.
-  - "Start again" carries the fixed analytics label `Quiz: Start again`.
   - The score counts once for each batch of changes, not once for each question that mounts or is checked.

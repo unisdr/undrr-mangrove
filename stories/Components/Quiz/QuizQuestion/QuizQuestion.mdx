@@ -459,9 +459,7 @@ Drupal.behaviors.mangroveQuiz = {
 };
 ```
 
-`ensureQuizScoreHost(context)` adds a `data-mg-quiz-score` container after the last question, for consumers whose questions are independent blocks with no template that knows which one is last. It looks for question containers inside `context` and handles only the scopes they belong to, but places the score after the last question container of the whole scope. When more questions arrive, it moves a container it created so that it stays after the last one, and it leaves alone a container the server rendered. A question container counts here whether or not it mounted, so the score stays below a question that is showing its fallback.
-
-`prune()` is described in the [hydration guide](?path=/docs/getting-started-integration-hydration-guide--docs), and `refreshQuiz` in the next section.
+`ensureQuizScoreHost(context)` adds a `data-mg-quiz-score` container after the last question of each scope that has a question inside `context`, for consumers whose questions are independent blocks with no template that knows which one is last. <LinkTo kind="components-quiz-quiz-score" story="docs">Quiz score</LinkTo> describes where it places the container. `prune()` is described in the [hydration guide](?path=/docs/getting-started-integration-hydration-guide--docs) and `refreshQuiz` in the next section.
 
 ### When the page changes
 
