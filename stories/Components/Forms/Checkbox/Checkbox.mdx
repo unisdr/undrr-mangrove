@@ -64,7 +64,7 @@ Pass `row`, or add `mg-form-check--row` to the wrapper, to draw the checkbox as 
 - **Rest**: no edge and no fill, so a group does not read as a stack of boxes. The edge is there, transparent, so nothing moves when a state draws it.
 - **Hover and keyboard focus**: the row takes an edge in the interactive colour. The focus ring stays on the control.
 - **Selected**: the row takes the edge and a light tint of the interactive colour.
-- **Disabled**: the label is greyed, the row does not answer to the pointer, and a selected row keeps a neutral edge. A disabled `FormGroup` does the same for every row in it.
+- **Disabled**: the label is greyed, the row does not respond to the pointer and a selected row keeps a neutral edge. A disabled `FormGroup` does the same for every row in it.
 - **Error**: the control takes its red boundary as usual, and the message sits on its own line under the label.
 - **Long labels**: the label wraps and the control stays on its first line.
 - **Label before**: `labelPosition="before"` puts the control at the end of the row.
@@ -99,7 +99,7 @@ Markup with no ids can make the row a `label` that wraps the control, with the t
 </label>
 ```
 
-The variant has no read-only state. [Quiz question](?path=/docs/components-quiz-quiz-question--docs) locks its rows after a correct answer with styles of its own.
+The variant has no read-only state. [Quiz question](?path=/docs/components-quiz-quiz-question--docs) locks its rows after a correct or revealed answer with styles of its own.
 
 ## Switch toggle (`.mg-switch`)
 
@@ -592,7 +592,7 @@ Keep the ring at 3:1 or more against the thumb, and the thumb at 3:1 or more aga
 - The label is programmatically associated with the checkbox via `htmlFor`/`id`.
 - For groups of checkboxes, wrap them in a `<FormGroup>` (renders `<fieldset>` with `<legend>`).
 - Keyboard users can toggle the checkbox with Space.
-- In an option row the stretched label makes the whole row the target, at least 48 pixels tall, and the control keeps its own boundary and focus ring. Selection is never colour alone: the control shows it. In forced-colours mode a selected row has a double edge in the system highlight colour, other rows have no edge until hover or keyboard focus, and a disabled row uses the system's inactive colour. The row states use `:has()`, which every [supported browser](?path=/docs/getting-started-browser-support--docs) has; without it the row still selects and only the row's own edge and tint are missing.
+- In an option row the stretched label makes the whole row the target, at least 48 pixels tall, and the control keeps its own boundary and focus ring. Selection is never colour alone: the control shows it. In forced-colours mode a selected row has a double edge in the system highlight colour, other rows have no edge until hover or keyboard focus and a disabled row uses the system's inactive colour. The row states use `:has()`, which every [supported browser](?path=/docs/getting-started-browser-support--docs) has; without it the row still selects and only the row's own edge and tint are missing.
 - UNDRR's shared click tracker names a click after the element's visible text, and a click on the label after its `for` id. Set `analyticsLabel` to give the input and its label a fixed `data-vf-analytics-label` instead, so reports do not split by language or show generated ids.
 
 ## See also
