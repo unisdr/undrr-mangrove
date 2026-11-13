@@ -9,7 +9,7 @@
  * @module SearchWidget/components/CustomFacetSelect
  */
 
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import {
   useSearchState,
   useSearchDispatch,
@@ -19,6 +19,11 @@ import {
 } from '../context/SearchContext';
 import { SelectDropdown } from './SelectDropdown';
 import { FACET_SEARCH_THRESHOLD } from '../utils/constants';
+import {
+  useSearchEvents,
+  selectionChange,
+  customOptionValue,
+} from '../hooks/useSearchEvents';
 
 /**
  * CustomFacetSelect component.
@@ -37,6 +42,8 @@ export function CustomFacetSelect({ facet, widgetId = 'search' }) {
   const { customFacets } = useSearchState();
   const dispatch = useSearchDispatch();
   const labels = useSearchLabels();
+  const emit = useSearchEvents();
+  const fieldsetRef = useRef(null);
 
   const { id, title, options = [], multiSelect = false } = facet;
   const selectedValues = customFacets?.[id] || [];
@@ -74,8 +81,22 @@ export function CustomFacetSelect({ facet, widgetId = 'search' }) {
           dispatch(actions.setCustomFacet(id, [newValue]));
         }
       }
+      const reported = values =>
+        values.map(value => customOptionValue(facet, value));
+      const next = multiSelect ? [newValue].flat() : [newValue].filter(Boolean);
+      const change = selectionChange(selectedValues, next);
+      if (change) {
+        emit(fieldsetRef.current, 'filter-change', {
+          kind: 'custom',
+          key: id,
+          action: change.action,
+          changed: reported(change.changed),
+          values: reported(next),
+          operator: null,
+        });
+      }
     },
-    [dispatch, id, multiSelect]
+    [dispatch, id, multiSelect, emit, facet, selectedValues]
   );
 
   // Don't render if no options
@@ -87,6 +108,7 @@ export function CustomFacetSelect({ facet, widgetId = 'search' }) {
 
   return (
     <fieldset
+      ref={fieldsetRef}
       className="mg-search__facet mg-search__facet--custom"
       data-custom-facet={id}
     >
