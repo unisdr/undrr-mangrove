@@ -408,26 +408,27 @@ Not addressed and needing design before any assessed use: sign-in, stored attemp
 
 ## CSS classes
 
-| Class                                                                         | Purpose                                                                                                    |
-| ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `mg-quiz-question`                                                            | Root surface. Carries `data-mg-quiz-state`                                                                 |
-| `mg-quiz-question--multiple-choice`, `--true-false`, `--text`, `--fill-blank` | Question type                                                                                              |
-| `mg-quiz-question--correct`, `--incorrect`                                    | Latest graded result. `--correct` styles the locked controls; `--incorrect` and the type classes are hooks |
-| `mg-quiz-question__header`, `__number`                                        | Numbering                                                                                                  |
-| `mg-quiz-question__group`                                                     | Fieldset (with `mg-form-group`) or short-answer wrapper                                                    |
-| `mg-quiz-question__group--sentence`                                           | Fill in the blank with inline blanks                                                                       |
-| `mg-quiz-question__prompt`, `__hint`                                          | Short-answer prompt label; "Select all that apply"                                                         |
-| `mg-quiz-question__media`                                                     | Image or figure                                                                                            |
-| `mg-quiz-question__options`, `__option`                                       | Option list and row (with `mg-form-check`)                                                                 |
-| `mg-quiz-question__sentence`, `__blank-unit`, `__blank`                       | Sentence, the no-wrap unit of a blank and its punctuation, and the inline input (with `mg-form-input`)     |
-| `mg-quiz-question__note`                                                      | Server markup only: the `<noscript>` note that checking needs JavaScript                                   |
-| `mg-quiz-question__fields`, `__field`                                         | Labelled text fields                                                                                       |
-| `mg-quiz-question__actions`, `__check`                                        | Button row and check button (with `mg-button mg-button-primary`)                                           |
-| `mg-quiz-question__feedback`, `__feedback-title`, `__explanation`             | Live region (focusable from script), Notice title and explanation                                          |
+| Class                                                                         | Purpose                                                                                                                                                                        |
+| ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `mg-quiz-question`                                                            | Root surface. Carries `data-mg-quiz-state`                                                                                                                                     |
+| `mg-quiz-question--multiple-choice`, `--true-false`, `--text`, `--fill-blank` | Question type                                                                                                                                                                  |
+| `mg-quiz-question--correct`, `--incorrect`                                    | Latest graded result. `--correct` styles the locked controls; `--incorrect` and the type classes are hooks                                                                     |
+| `mg-quiz-question__header`, `__number`                                        | Numbering                                                                                                                                                                      |
+| `mg-quiz-question__group`                                                     | Fieldset (with `mg-form-group`) or short-answer wrapper                                                                                                                        |
+| `mg-quiz-question__group--sentence`                                           | Fill in the blank with inline blanks                                                                                                                                           |
+| `mg-quiz-question__prompt`, `__hint`                                          | Short-answer prompt label; "Select all that apply"                                                                                                                             |
+| `mg-quiz-question__media`                                                     | Image or figure                                                                                                                                                                |
+| `mg-quiz-question__options`, `__option`                                       | Option list and row (with `mg-form-check`)                                                                                                                                     |
+| `mg-quiz-question__sentence`, `__blank-unit`, `__blank`                       | Sentence, the no-wrap unit of a blank and its punctuation, and the inline input (with `mg-form-input`)                                                                         |
+| `mg-quiz-question__note`                                                      | Server markup only: the `<noscript>` note that checking needs JavaScript                                                                                                       |
+| `mg-quiz-question__fields`, `__field`                                         | Labelled text fields                                                                                                                                                           |
+| `mg-quiz-question__actions`, `__check`                                        | Button row and check button (`mg-button mg-button-primary` for a lone question; `mg-button mg-button-secondary mg-button-outline` when more than one question shares the page) |
+| `mg-quiz-question__feedback`, `__feedback-title`, `__explanation`             | Live region (focusable from script), Notice title and explanation                                                                                                              |
 
 ## Changelog
 
 - **1.0**, 2026-11-12 ([#1481](https://github.com/unisdr/undrr-mangrove/issues/1481)): Initial component.
   - Multiple choice (one or several answers), true/false, short answer and fill in the blank, checked in the browser with the grading rules of the Drupal `undrr_training` blocks ([web-backlog#3129](https://gitlab.com/undrr/web-backlog/-/work_items/3129)).
   - Feedback through Notice, optional explanation, optional media, automatic numbering, inline blanks, built-in translations with overrides, and hydration from server-rendered markup.
+  - Check button: primary for a lone question, outline secondary when more than one question shares the page, so a page of questions does not carry several primary actions.
   - Design review: a correct answer locks the question and removes the check button, with focus moved to the feedback; changing an answer after a wrong or empty attempt returns the question to unanswered; the Notice is the only statement of the result (no header status, no coloured edge); a wrong answer uses the `info` variant with "Not correct yet. Try again."; option rows have no resting border and respond to keyboard focus; the options, sentence and feedback share the prompt's reading width; inline blanks wrap with their punctuation in even rows; the explanation is body size; and the server markup gains a `<noscript>` note.

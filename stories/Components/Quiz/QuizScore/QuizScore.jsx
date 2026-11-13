@@ -129,7 +129,7 @@ export function QuizScore({
         <div className="mg-quiz-score__actions">
           <button
             type="button"
-            className="mg-button mg-button-secondary mg-quiz-score__reset"
+            className="mg-button mg-button-secondary mg-button-outline mg-quiz-score__reset"
             data-vf-analytics-label="Quiz: Start again"
             onClick={handleReset}
           >

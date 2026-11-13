@@ -95,16 +95,17 @@ Without JavaScript there is no score, which is correct: nothing can be checked.
 
 ## CSS classes
 
-| Class                               | Purpose                                                             |
-| ----------------------------------- | ------------------------------------------------------------------- |
-| `mg-quiz-score`                     | Root. Has no box until the quiz has started                         |
-| `mg-quiz-score--active`             | At least one answer checked: tinted surface                         |
-| `mg-quiz-score--complete`           | Every question answered                                             |
-| `mg-quiz-score__summary`            | Score sentence (`role="status"`)                                    |
-| `mg-quiz-score__progress`           | ProgressBar wrapper                                                 |
-| `mg-quiz-score__actions`, `__reset` | Button row and "Start again" (with `mg-button mg-button-secondary`) |
+| Class                               | Purpose                                                                               |
+| ----------------------------------- | ------------------------------------------------------------------------------------- |
+| `mg-quiz-score`                     | Root. Has no box until the quiz has started                                           |
+| `mg-quiz-score--active`             | At least one answer checked: tinted surface                                           |
+| `mg-quiz-score--complete`           | Every question answered                                                               |
+| `mg-quiz-score__summary`            | Score sentence (`role="status"`)                                                      |
+| `mg-quiz-score__progress`           | ProgressBar wrapper                                                                   |
+| `mg-quiz-score__actions`, `__reset` | Button row and "Start again" (with `mg-button mg-button-secondary mg-button-outline`) |
 
 ## Changelog
 
 - **1.0**, 2026-11-12 ([#1481](https://github.com/unisdr/undrr-mangrove/issues/1481)): Initial component. Running and final score for the quiz questions in a scope, optional progress bar and "Start again", built-in translations with overrides, and hydration with `ensureQuizScoreHost`.
+  - "Start again" is an outline secondary button, matching the check buttons on a page of questions.
   - Design review: the running score is the short "1 of 5 correct so far." beside the progress bar, and the longer form with the answered count (`scoreSoFarWithAnswered`) only when the bar is off; "Start again" unlocks questions locked by a correct answer.

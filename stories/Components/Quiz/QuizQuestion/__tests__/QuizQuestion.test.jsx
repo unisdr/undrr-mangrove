@@ -53,6 +53,28 @@ describe('QuizQuestion', () => {
     );
   });
 
+  it('steps the check button back to an outline on a page of questions', () => {
+    const { rerender } = render(
+      <QuizQuestion {...CHOICE} number={2} total={5} />
+    );
+    const button = () => screen.getByRole('button', { name: 'Check answer' });
+    expect(button()).toHaveClass(
+      'mg-button',
+      'mg-button-secondary',
+      'mg-button-outline'
+    );
+    expect(button()).not.toHaveClass('mg-button-primary');
+
+    rerender(
+      <QuizQuestion {...CHOICE} number={2} total={5} showNumber={false} />
+    );
+    expect(button()).toHaveClass('mg-button-outline');
+
+    rerender(<QuizQuestion {...CHOICE} number={1} total={1} />);
+    expect(button()).toHaveClass('mg-button-primary');
+    expect(button()).not.toHaveClass('mg-button-outline');
+  });
+
   it('gives correct feedback with the explanation and reports the result', () => {
     const onCheck = jest.fn();
     const { container } = render(

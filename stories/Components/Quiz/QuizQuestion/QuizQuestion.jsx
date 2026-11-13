@@ -264,6 +264,13 @@ export function QuizQuestion({
         })
       : null;
 
+  // One primary action per view: on a page of questions each card's check
+  // button steps back to an outline, and only a lone question keeps primary.
+  const checkClass =
+    resolvedTotal > 1
+      ? 'mg-button mg-button-secondary mg-button-outline'
+      : 'mg-button mg-button-primary';
+
   const hintId = `${id}-hint`;
   const promptId = `${id}-prompt`;
   const blankLabel = index =>
@@ -447,7 +454,7 @@ export function QuizQuestion({
         <div className="mg-quiz-question__actions">
           <button
             type="button"
-            className="mg-button mg-button-primary mg-quiz-question__check"
+            className={`${checkClass} mg-quiz-question__check`}
             data-vf-analytics-label="Quiz: Check answer"
             onClick={handleCheck}
           >
