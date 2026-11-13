@@ -17,9 +17,10 @@
 $mg-quiz-question-measure: mg-rem(768);
 
 %mg-quiz-question-prompt {
+  @extend %paragraph-font-300;
+
   color: rgb(var(--mg-color-neutral-900));
   display: block;
-  font-size: var(--mg-font-size-400);
   font-weight: 700;
   line-height: var(--mg-font-line-height-500);
   margin: 0 0 var(--mg-spacing-150);
@@ -28,15 +29,6 @@ $mg-quiz-question-measure: mg-rem(768);
 
   // Editors separate paragraphs of a prompt with line breaks.
   white-space: pre-line;
-}
-
-%mg-quiz-question-hint {
-  color: rgb(var(--mg-color-neutral-700));
-  font-size: var(--mg-font-size-250);
-  font-weight: 400;
-  line-height: var(--mg-font-line-height-700);
-  margin: 0 0 var(--mg-spacing-150);
-  padding: 0;
 }
 
 .mg-quiz-question {
@@ -81,16 +73,25 @@ $mg-quiz-question-measure: mg-rem(768);
     @extend %mg-quiz-question-prompt;
   }
 
-  &__hint,
+  // "Select all that apply" is Forms help text (`mg-form-help`); only the
+  // spacing under it is set here.
+  &__hint {
+    margin: 0 0 var(--mg-spacing-150);
+  }
+
+  // The sentence carries the question, so its legend steps down to help text.
+  // FormGroup owns the legend's class, so the `mg-form-help` values are
+  // repeated here.
   &__group--sentence > .mg-form-group__legend {
-    @extend %mg-quiz-question-hint;
+    color: rgb(var(--mg-color-neutral-500));
+    font-size: var(--mg-font-size-200);
+    font-weight: 400;
   }
 
   // Server-rendered fallback only: says, inside <noscript>, that checking
-  // needs JavaScript. The mounted component never renders it.
+  // needs JavaScript. Also `mg-form-help`; the mounted component never
+  // renders it.
   &__note {
-    @extend %mg-quiz-question-hint;
-
     margin-block: var(--mg-spacing-150) 0;
   }
 
@@ -259,11 +260,6 @@ $mg-quiz-question-measure: mg-rem(768);
 
   &__check.mg-button {
     min-block-size: mg-rem(44);
-
-    // Mangrove's button sets `display` after normalize's [hidden] rule.
-    &[hidden] {
-      display: none;
-    }
   }
 
   &__feedback {

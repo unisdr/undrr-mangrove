@@ -8,8 +8,9 @@ const strings = value =>
  * Extract QuizQuestion props from a hydration container.
  *
  * The question, including its answer key, is one JSON object in
- * `data-question`. The markup inside the container is the no-JavaScript
- * state; only its media element is carried over. A container without a
+ * `data-question`. Its optional `id` becomes the `questionId` prop. The markup
+ * inside the container is the no-JavaScript state; only its media element is
+ * carried over. A container without a
  * readable question throws, which leaves that markup in place: the visitor
  * keeps a readable question and never sees a check button that cannot work.
  *
@@ -66,6 +67,12 @@ export default function quizQuestionFromElement(container) {
   }
 
   if (question.explanation) props.explanation = String(question.explanation);
+  if (
+    (typeof question.id === 'string' || typeof question.id === 'number') &&
+    String(question.id).trim() !== ''
+  ) {
+    props.questionId = String(question.id);
+  }
 
   const media = container.querySelector('.mg-quiz-question__media');
   if (media && media.innerHTML.trim()) props.mediaHtml = media.innerHTML;

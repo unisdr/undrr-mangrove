@@ -17,7 +17,8 @@
   // The status paragraph is always in the page so its first message is
   // announced. Until then it is empty and takes no space.
   &__summary {
-    font-size: var(--mg-font-size-400);
+    @extend %paragraph-font-300;
+
     font-weight: 700;
     line-height: var(--mg-font-line-height-500);
     margin: 0;

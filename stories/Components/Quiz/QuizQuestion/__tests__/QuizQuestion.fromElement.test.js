@@ -86,6 +86,50 @@ describe('quizQuestionFromElement', () => {
     ]);
   });
 
+  it('maps an optional `id` to questionId', () => {
+    const question = { type: 'true_false', prompt: 'Q', answer: true };
+    expect(fromElement(makeContainer(question))).not.toHaveProperty(
+      'questionId'
+    );
+    expect(
+      fromElement(makeContainer({ ...question, id: 'hazards-1' })).questionId
+    ).toBe('hazards-1');
+    expect(fromElement(makeContainer({ ...question, id: 42 })).questionId).toBe(
+      '42'
+    );
+    [' ', '', null, {}, true].forEach(id => {
+      expect(
+        fromElement(makeContainer({ ...question, id }))
+      ).not.toHaveProperty('questionId');
+    });
+  });
+
+  it('reads a question that has no answer key', () => {
+    expect(
+      fromElement(
+        makeContainer({
+          type: 'multiple_choice',
+          prompt: 'Pick one',
+          options: [{ value: 'a', label: 'A' }],
+        })
+      )
+    ).toEqual({
+      type: 'multiple_choice',
+      prompt: 'Pick one',
+      multiple: false,
+      options: [{ value: 'a', label: 'A', correct: false }],
+    });
+    expect(fromElement(makeContainer({ type: 'text', prompt: 'Q' }))).toEqual({
+      type: 'text',
+      prompt: 'Q',
+      expected: [],
+      caseSensitive: false,
+    });
+    expect(
+      fromElement(makeContainer({ type: 'true_false', prompt: 'Q' }))
+    ).toEqual({ type: 'true_false', prompt: 'Q' });
+  });
+
   it('throws without a readable question, so the server markup stays', () => {
     expect(() => fromElement(makeContainer())).toThrow(/data-question/);
     expect(() => fromElement(makeContainer('{not json'))).toThrow();

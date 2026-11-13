@@ -270,7 +270,7 @@ export const QuizPage = {
 };
 
 const NO_SCRIPT_NOTE =
-  '<noscript><p class="mg-quiz-question__note">Checking your answers needs JavaScript.</p></noscript>';
+  '<noscript><p class="mg-form-help mg-quiz-question__note">Checking your answers needs JavaScript.</p></noscript>';
 
 const SERVER_MARKUP = `
 <div data-mg-quiz-question data-mg-ssr

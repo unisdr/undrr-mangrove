@@ -102,6 +102,107 @@ describe('QuizQuestion', () => {
     expect(onCheck).toHaveBeenCalledWith({ correct: true, answer: 'flood' });
   });
 
+  it('reflects an optional question id on the root and in onCheck', () => {
+    const onCheck = jest.fn();
+    const { container } = render(
+      <>
+        <QuizQuestion {...CHOICE} questionId="hazards-1" onCheck={onCheck} />
+        <QuizQuestion {...CHOICE} questionId="hazards-1" />
+      </>
+    );
+    const [first, second] = container.querySelectorAll('.mg-quiz-question');
+    expect(first).toHaveAttribute('data-mg-quiz-id', 'hazards-1');
+    expect(second).toHaveAttribute('data-mg-quiz-id', 'hazards-1');
+
+    // The id is not used for DOM ids or radio names, so two copies of one
+    // question stay independent.
+    const ids = Array.from(container.querySelectorAll('[id]'), el => el.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(ids.some(id => id.includes('hazards-1'))).toBe(false);
+    const name = scope => scope.querySelector('input').getAttribute('name');
+    expect(name(first)).not.toBe(name(second));
+    expect(name(first)).not.toContain('hazards-1');
+
+    fireEvent.click(within(first).getByLabelText('Flood'));
+    check(first);
+    expect(onCheck).toHaveBeenCalledWith({
+      correct: true,
+      answer: 'flood',
+      questionId: 'hazards-1',
+    });
+    expect(second).toHaveAttribute('data-mg-quiz-state', 'unanswered');
+  });
+
+  it('leaves the id attribute and payload field out when no id is given', () => {
+    const onCheck = jest.fn();
+    const { container } = render(
+      <QuizQuestion {...CHOICE} onCheck={onCheck} />
+    );
+    expect(root(container)).not.toHaveAttribute('data-mg-quiz-id');
+    fireEvent.click(screen.getByLabelText('Earthquake'));
+    check();
+    expect(onCheck.mock.calls[0][0]).toStrictEqual({
+      correct: false,
+      answer: 'quake',
+    });
+  });
+
+  it('marks every answer incorrect when a question has no usable key', () => {
+    const onCheck = jest.fn();
+    const { container } = render(
+      <>
+        <QuizQuestion
+          type="multiple_choice"
+          prompt="Which hazard is water-related?"
+          options={[
+            { value: 'flood', label: 'Flood' },
+            { value: 'quake', label: 'Earthquake' },
+          ]}
+          explanation="Never shown."
+          onCheck={onCheck}
+        />
+        <QuizQuestion type="text" prompt="Which framework?" />
+        <QuizQuestion
+          type="fill_blank"
+          prompt="Adopted in [1]."
+          blanks={[{ label: 'City' }]}
+        />
+      </>
+    );
+    const [choice, text, blank] =
+      container.querySelectorAll('.mg-quiz-question');
+
+    fireEvent.click(within(choice).getByLabelText('Flood'));
+    check(choice);
+    fireEvent.change(within(text).getByRole('textbox'), {
+      target: { value: 'Sendai Framework' },
+    });
+    check(text);
+    fireEvent.change(within(blank).getByRole('textbox'), {
+      target: { value: 'Sendai' },
+    });
+    check(blank);
+
+    [choice, text, blank].forEach(question => {
+      expect(question).toHaveAttribute('data-mg-quiz-state', 'incorrect');
+      expect(question).toHaveTextContent('Not correct yet. Try again.');
+      expect(
+        within(question).getByRole('button', { name: 'Check answer' })
+      ).toBeInTheDocument();
+    });
+    expect(container).not.toHaveTextContent('Never shown.');
+    expect(onCheck).toHaveBeenCalledWith({ correct: false, answer: 'flood' });
+  });
+
+  it('treats a true/false question with no key as true', () => {
+    const { container } = render(
+      <QuizQuestion type="true_false" prompt="A statement with no key." />
+    );
+    fireEvent.click(screen.getByLabelText('True'));
+    check();
+    expect(root(container)).toHaveAttribute('data-mg-quiz-state', 'correct');
+  });
+
   it('asks to try again without revealing the explanation, and allows a retry', () => {
     const { container } = render(
       <QuizQuestion {...CHOICE} explanation="Floods are hydrological." />

@@ -100,6 +100,7 @@ export function QuizQuestion({
   number,
   total,
   showNumber = true,
+  questionId,
   lang,
   dir,
   labels,
@@ -220,7 +221,11 @@ export function QuizQuestion({
       kind: correct ? 'correct' : 'incorrect',
       attempt: current.attempt + 1,
     }));
-    onCheck?.({ correct, answer: submitted });
+    onCheck?.({
+      correct,
+      answer: submitted,
+      ...(questionId ? { questionId } : {}),
+    });
   };
 
   const handleChoice = event => {
@@ -290,7 +295,7 @@ export function QuizQuestion({
         aria-describedby={isMultiple ? hintId : undefined}
       >
         {isMultiple && (
-          <p className="mg-quiz-question__hint" id={hintId}>
+          <p className="mg-form-help mg-quiz-question__hint" id={hintId}>
             {text.selectAll}
           </p>
         )}
@@ -441,6 +446,7 @@ export function QuizQuestion({
         className
       )}
       data-mg-quiz-state={result}
+      data-mg-quiz-id={questionId || undefined}
       {...getLanguageProps(lang, dir)}
       {...rest}
     >
@@ -533,6 +539,8 @@ QuizQuestion.propTypes = {
   total: PropTypes.number,
   /** Show "Question 2 of 5" above the prompt. A question on its own is not numbered unless `number` is passed. */
   showNumber: PropTypes.bool,
+  /** Optional stable identifier for the question, for consumers that tie a result to a question. Reflected as `data-mg-quiz-id` on the root and passed to `onCheck`. DOM ids and radio names do not use it, so the same question can appear twice on a page. */
+  questionId: PropTypes.string,
   /** Language of the built-in labels (en, ar, es, fr, ja, ru, zh), including regional tags. */
   lang: PropTypes.string,
   /** Explicit text direction. Arabic selects right-to-left without it. */
@@ -551,7 +559,7 @@ QuizQuestion.propTypes = {
     trueLabel: PropTypes.string,
     falseLabel: PropTypes.string,
   }),
-  /** Called after each graded attempt with `{ correct, answer }`. An empty attempt is not graded and does not call it. A correct answer locks the question, so it is the last call until the quiz is started again. */
+  /** Called after each graded attempt with `{ correct, answer }`, and `questionId` when the question has one. An empty attempt is not graded and does not call it. A correct answer locks the question, so it is the last call until the quiz is started again. */
   onCheck: PropTypes.func,
   /** Additional CSS class names for the root. */
   className: PropTypes.string,
