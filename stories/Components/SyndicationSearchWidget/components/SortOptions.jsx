@@ -10,7 +10,7 @@
  * @module SearchWidget/components/SortOptions
  */
 
-import React, { memo, useCallback, useMemo } from 'react';
+import React, { memo, useCallback, useMemo, useRef } from 'react';
 import {
   useSearchState,
   useSearchDispatch,
@@ -20,6 +20,7 @@ import {
 } from '../context/SearchContext';
 import { EVENT_SORT_VALUES } from '../utils/constants';
 import { SelectDropdown } from './SelectDropdown';
+import { useSearchEvents } from '../hooks/useSearchEvents';
 
 /**
  * SortOptions component.
@@ -32,6 +33,8 @@ export function SortOptions({ widgetId = 'search' }) {
   const { defaultSort, showSort } = useSearchConfig();
   const dispatch = useSearchDispatch();
   const labels = useSearchLabels();
+  const emit = useSearchEvents();
+  const fieldsetRef = useRef(null);
 
   // Event date sorts put every result without an event date last, so they
   // are offered only on listings set up for events: when the configured
@@ -69,15 +72,20 @@ export function SortOptions({ widgetId = 'search' }) {
       // Sort always has a value; falling back to 'relevance' guards
       // against the consumer clearing the selection (the SelectDropdown
       // emits '' when cleared).
-      dispatch(actions.setSort(value || 'relevance'));
+      const sort = value || 'relevance';
+      dispatch(actions.setSort(sort));
+      if (sort !== (sortBy || 'relevance')) {
+        emit(fieldsetRef.current, 'sort-change', { sort });
+      }
     },
-    [dispatch]
+    [dispatch, emit, sortBy]
   );
 
   if (showSort === false) return null;
 
   return (
     <SortSelect
+      fieldsetRef={fieldsetRef}
       widgetId={widgetId}
       legend={labels.sortLegend}
       placeholder={labels.sortPlaceholder}
@@ -94,6 +102,7 @@ export function SortOptions({ widgetId = 'search' }) {
  * sort or its options change.
  */
 const SortSelect = memo(function SortSelect({
+  fieldsetRef,
   widgetId,
   legend,
   placeholder,
@@ -104,7 +113,7 @@ const SortSelect = memo(function SortSelect({
   const selectId = `sort-${widgetId}`;
 
   return (
-    <fieldset className="mg-search__sort">
+    <fieldset ref={fieldsetRef} className="mg-search__sort">
       <legend id={`${selectId}-label`}>{legend}</legend>
       <SelectDropdown
         id={selectId}

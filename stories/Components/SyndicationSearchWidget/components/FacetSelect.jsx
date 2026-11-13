@@ -11,7 +11,7 @@
  * @module SearchWidget/components/FacetSelect
  */
 
-import React, { memo, useMemo, useCallback } from 'react';
+import React, { memo, useMemo, useCallback, useRef } from 'react';
 import {
   useSearchDispatch,
   useSearchConfig,
@@ -22,6 +22,7 @@ import {
 
 const EMPTY_BUCKETS = [];
 import { SelectDropdown } from './SelectDropdown';
+import { useSearchEvents, selectionChange } from '../hooks/useSearchEvents';
 import {
   ALWAYS_OR_FACETS,
   FACET_SEARCH_THRESHOLD,
@@ -69,6 +70,8 @@ function FacetSelectComponent({
   const dispatch = useSearchDispatch();
   const shared = !!useSearchConfig().sharedControls?.id;
   const labels = useSearchLabels();
+  const emit = useSearchEvents();
+  const fieldsetRef = useRef(null);
 
   const { key, label, vocabulary, type, labelSource } = field;
 
@@ -102,8 +105,16 @@ function FacetSelectComponent({
   const handleOperatorChange = useCallback(
     newOperator => {
       dispatch(actions.setFacetOperator(key, newOperator));
+      emit(fieldsetRef.current, 'filter-change', {
+        kind: 'field',
+        key,
+        action: 'operator',
+        changed: [],
+        values: selectedValues,
+        operator: newOperator.toLowerCase(),
+      });
     },
-    [dispatch, key]
+    [dispatch, key, emit, selectedValues]
   );
 
   /**
@@ -346,8 +357,23 @@ function FacetSelectComponent({
           dispatch(actions.setFacet(key, newValue, true));
         }
       }
+      const next = isMultiple
+        ? [newValue].flat()
+        : [newValue].filter(
+            value => value !== null && value !== undefined && value !== ''
+          );
+      const change = selectionChange(selectedValues, next);
+      if (change) {
+        emit(fieldsetRef.current, 'filter-change', {
+          kind: 'field',
+          key,
+          ...change,
+          values: next,
+          operator: next.length ? operator.toLowerCase() : 'or',
+        });
+      }
     },
-    [dispatch, key, isMultiple]
+    [dispatch, key, isMultiple, emit, selectedValues, operator]
   );
 
   // Don't render if no options
@@ -358,7 +384,11 @@ function FacetSelectComponent({
   const selectId = `facet-${key}-${widgetId}`;
 
   return (
-    <fieldset className="mg-search__facet" data-facet-key={key}>
+    <fieldset
+      ref={fieldsetRef}
+      className="mg-search__facet"
+      data-facet-key={key}
+    >
       <legend id={`${selectId}-label`}>{label}</legend>
       <SelectDropdown
         id={selectId}
