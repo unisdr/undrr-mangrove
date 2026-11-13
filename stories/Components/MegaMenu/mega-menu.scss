@@ -123,7 +123,7 @@
     object-fit: contain;
     object-position: left center;
 
-    [dir='rtl'] & {
+    [dir="rtl"] & {
       object-position: right center;
     }
 
