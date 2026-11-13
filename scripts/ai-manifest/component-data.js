@@ -90,9 +90,9 @@ export const REQUIRES_REACT = {
   'components-user-feedback':
     'UserFeedback manages a binary page response, confirmation state and focus. Requires React for button behavior and can be hydrated via createHydrator with data-mg-user-feedback. Place it as a separate sibling immediately before Footer when the pattern is used.',
   'components-quiz-quiz-question':
-    'QuizQuestion grades answers, shows feedback and publishes its state in the browser. Requires React; hydrate server-rendered markup via createHydrator with data-mg-quiz-question. A correct answer locks the question. The static renderedHtml has a check button that does nothing.',
+    'QuizQuestion grades answers, shows feedback and publishes its state in the browser. Requires React; hydrate server-rendered markup via createHydrator with data-mg-quiz-question. A correct answer locks the question. The static renderedHtml has a check button that does nothing. After other code removes or replaces quiz markup without unmounting it, call refreshQuiz().',
   'components-quiz-quiz-score':
-    'QuizScore counts the QuizQuestion components that share its scope and updates as answers are checked. Requires React; hydrate an empty data-mg-quiz-score container via createHydrator.',
+    'QuizScore counts the mounted QuizQuestion components that share its scope and updates as answers are checked. Requires React; hydrate an empty data-mg-quiz-score container via createHydrator. After other code removes or replaces quiz markup without unmounting it, call refreshQuiz() or ensureQuizScoreHost().',
   'components-navigation-tree':
     'Tree needs JavaScript: keyboard navigation and expand/collapse come from React, so the static renderedHtml is not a working tree. On non-React pages, hydrate a nested list inside a data-mg-tree container; see the hydration field for the full contract.',
   'components-buttons-sharebuttons':
@@ -1364,10 +1364,15 @@ npm run build</code></pre>
     summary:
       'One self-checking quiz question in the page flow: multiple choice (one or several answers), true/false, short answer or fill in the blank. Engagement only; the answer key is in the page.',
     description:
-      'One self-checking quiz question in the page flow: multiple choice (one or several answers), true/false, short answer or fill in the blank with inline blanks written as [1], [2] in the prompt. The visitor answers and selects Check answer; feedback is a Notice in a polite live region: positive for a correct answer, with an optional plain-text explanation, and info both for a wrong answer ("Not correct yet. Try again.") and for an empty attempt, which is not graded. A correct answer locks the question: radios and checkboxes get aria-disabled="true", text fields become readonly, the check button is removed and focus moves to the feedback. After a wrong answer visitors can retry without limit, and changing the answer clears the feedback and returns the question to unanswered. Text matching trims and collapses whitespace, normalizes Unicode to NFC and ignores case unless caseSensitive is set; a multiple-answer question needs exactly the correct set. Answers are graded in the browser against the key in the props or data-question, nothing is stored, and the key is readable in the page by design: never use it for assessed quizzes. Each question numbers itself among the questions sharing its scope (the nearest data-mg-quiz ancestor, or the page) and publishes data-mg-quiz-state (unanswered, correct, incorrect) on its root for QuizScore. An optional id in data-question (questionId in React) is reflected as data-mg-quiz-id on the root and passed to onCheck; it is not used for DOM ids or radio names. The answer-key fields are optional: without a usable key no answer is marked correct, except that true_false treats a missing answer as true. lang selects built-in labels (en, ar, es, fr, ja, ru, zh) including True and False; labels overrides individual strings; prompts, options and explanations are consumer content. Server-rendered consumers put the whole question in one data-question JSON attribute and render a no-JavaScript fallback inside the container, with no button, ids or names, and a noscript note (.mg-form-help.mg-quiz-question__note) saying that checking answers needs JavaScript; only the contents of .mg-quiz-question__media are carried into the mounted component.',
+      'One self-checking quiz question in the page flow: multiple choice (one or several answers), true/false, short answer or fill in the blank with inline blanks written as [1], [2] in the prompt. The visitor answers and selects Check answer; feedback is a Notice in a polite live region: positive for a correct answer, with an optional plain-text explanation, and info both for a wrong answer ("Not correct yet. Try again.") and for an empty attempt, which is not graded. A correct answer locks the question: radios and checkboxes get aria-disabled="true", text fields become readonly, the check button is removed and focus moves to the result Notice, which is then a group named by its title with tabindex="-1"; the live region itself is never focused. After a wrong answer visitors can retry without limit, and changing the answer clears the feedback and returns the question to unanswered. Text matching normalizes Unicode to NFKC (full-width digits and letters match their ordinary forms), removes zero-width characters, trims and collapses whitespace, and ignores case unless caseSensitive is set; there is no language-specific case folding (ß does not match SS, dotted İ does not match i), accents count, and digits of other scripts are not converted. A multiple-answer question needs exactly the correct set; options are graded by position, so repeated or empty option values still work. In fill_blank each blank appears once at its first marker, a repeated marker or one with no blank is not shown, blanks the prompt does not mention are listed after the sentence, and a question with no blanks has no check button and is not counted. Answers are graded in the browser against the key in the props or data-question, the component stores and sends nothing, and the key is readable in the page by design: never use it for assessed quizzes. Each mounted question numbers itself among the mounted questions sharing its scope (the nearest data-mg-quiz ancestor, or the page) and publishes data-mg-quiz-state (unanswered, correct, incorrect) on its root for QuizScore; a server-rendered fallback that did not mount has no state and is not numbered or counted. An optional id in data-question (questionId in React) is reflected as data-mg-quiz-id on the root and passed to onCheck; it is not used for DOM ids or radio names. When the props change to a different question (another questionId, or other content when there is none) the answer and result are cleared. The answer-key fields are optional: without a usable key no answer is marked correct, for every type. A true_false answer is the boolean true or false, or the string "true" or "false" in any case; anything else, or no answer, is no key and never means true. lang selects built-in labels (en, ar, es, fr, ja, ru, zh) including True and False; labels overrides individual strings, and an override that is not a non-empty string is ignored; prompts, options and explanations are consumer content. Every option, text input, blank and the check button carries a fixed data-vf-analytics-label (Quiz: Answer option, Quiz: Answer field, Quiz: Blank, Quiz: Check answer) that never contains an option value, a position or typed text, so a site click tracker can record that a control was used but not which answer was given. Server-rendered consumers put the whole question in one data-question JSON attribute and render a no-JavaScript fallback inside the container: no button and no ids, radios that share one name unique to that rendering of the question, the same analytics labels, and a noscript note (.mg-form-help.mg-quiz-question__note) saying that checking answers needs JavaScript. The .mg-quiz-question__media element of the fallback is moved into the mounted component as the same DOM nodes, not re-parsed, and the container gets its server markup back on unmount. Data that cannot be shown leaves the fallback in place.',
     cssClasses: [
       'mg-quiz-question',
+      'mg-quiz-question--multiple-choice',
+      'mg-quiz-question--true-false',
+      'mg-quiz-question--text',
+      'mg-quiz-question--fill-blank',
       'mg-quiz-question--correct',
+      'mg-quiz-question--incorrect',
       'mg-quiz-question__header',
       'mg-quiz-question__number',
       'mg-quiz-question__group',
@@ -1375,6 +1380,7 @@ npm run build</code></pre>
       'mg-quiz-question__prompt',
       'mg-quiz-question__hint',
       'mg-quiz-question__media',
+      'mg-quiz-question__media-slot',
       'mg-quiz-question__options',
       'mg-quiz-question__option',
       'mg-quiz-question__sentence',
@@ -1390,19 +1396,20 @@ npm run build</code></pre>
       'mg-quiz-question__explanation',
     ],
     hydration: {
-      note: 'renderedHtml is static: its check button does nothing. Render a data-mg-quiz-question container with the question in data-question and a fallback inside it (prompt, optional media, native controls and a noscript note in the page language that checking answers needs JavaScript; no button), then hydrate. In a fill_blank fallback wrap each blank input and the punctuation after it in a span.mg-quiz-question__blank-unit. The fallback is replaced on mount; the JSON is the source of truth. If data-question is missing or unreadable the component does not mount and the fallback stays. Do not add id or name attributes: the component generates them per mount, so the same question can appear twice. Hydrate QuizScore as well for a page score.',
+      note: 'renderedHtml is static: its check button does nothing. Render a data-mg-quiz-question container with the question in data-question and a fallback inside it (prompt, optional media, native controls and a noscript note in the page language that checking answers needs JavaScript; no button), then hydrate. The radios of one question MUST share a name attribute that no other question on the page uses, generated per rendering (a counter or random token, not the question id), or they are not a radio group without JavaScript; checkboxes need no name; add no id attributes. Give each fallback option label and input data-vf-analytics-label="Quiz: Answer option" and each text input "Quiz: Blank" or "Quiz: Answer field". In a fill_blank fallback wrap each blank input and the punctuation after it in a span.mg-quiz-question__blank-unit, render each blank once at its first marker and leave out any other marker. The fallback is replaced on mount; the JSON is the source of truth. The mounted component discards the fallback name and generates its own ids and radio name per mount, so the same question can appear twice. The fallback .mg-quiz-question__media element is moved into the mounted component as the same DOM nodes, so listeners attached before hydration keep working; on unmount the container gets its server markup back. If data-question cannot be used (missing, not valid JSON, unknown type, prompt missing or not text, multiple_choice with no usable option, fill_blank with no blanks or a blank that is not an object) the component does not mount and the fallback stays; a malformed option or accepted answer is dropped; if rendering still fails the fallback is put back. A question that does not mount is not numbered or counted. Hydrate QuizScore as well for a page score. When other code removes or replaces quiz markup without unmounting it (Drupal AJAX), call refreshQuiz(context) afterwards, or refreshQuiz(context, { defer: true }) from a Drupal behavior detach, exported from the QuizQuestion and QuizScore modules.',
       selector: '[data-mg-quiz-question]',
       modules: hydrationModules('QuizQuestion'),
       dataAttributes: {
         'data-mg-quiz-question': 'Marks the container to hydrate (required).',
         'data-question':
-          'JSON object (required). All types: type ("multiple_choice", "true_false", "text", "fill_blank"), prompt (plain text, line breaks as \\n), optional explanation (plain text), optional id (string, a stable identifier reflected as data-mg-quiz-id). multiple_choice: options [{value, label, correct}], optional multiple. true_false: answer (boolean). text: expected (list of accepted answers), optional caseSensitive. fill_blank: prompt containing [1], [2] and blanks [{label, expected, caseSensitive}].',
+          'JSON object (required). All types: type ("multiple_choice", "true_false", "text", "fill_blank"), prompt (plain text, line breaks as \\n), optional explanation (plain text), optional id (string, a stable identifier reflected as data-mg-quiz-id). multiple_choice: options [{value, label, correct}], optional multiple. true_false: answer, the boolean true or false or the string "true" or "false" in any case; any other value, or none, is no key and no answer is marked correct. text: expected (list of accepted answers), optional caseSensitive. fill_blank: prompt containing [1], [2] and blanks [{label, expected, caseSensitive}].',
         'data-mg-ssr':
           'Keeps the fallback markup on screen until the component replaces it (recommended).',
         'data-lang':
           'Language tag for the interface labels (en, ar, es, fr, ja, ru, zh), including regional variants. Defaults to the nearest HTML lang attribute, then English.',
         dir: 'Explicit direction on the hydration container: ltr, rtl or auto.',
-        'data-labels': 'JSON object of UI label overrides.',
+        'data-labels':
+          'JSON object of UI label overrides. A value that is not a non-empty string is ignored.',
         'data-number':
           'Position of the question. Counted automatically when absent.',
         'data-total': 'Number of questions. Counted automatically when absent.',
@@ -1413,7 +1420,7 @@ npm run build</code></pre>
           name: 'mg-quiz:change',
           target: 'The document',
           bubbles: true,
-          when: 'A question mounts, unmounts, is graded, or returns to unanswered because its answer changed or the quiz was started again. Read data-mg-quiz-state on the .mg-quiz-question roots for the current results.',
+          when: 'A question mounts, unmounts, is graded, or returns to unanswered because its answer changed or the quiz was started again; also dispatched by refreshQuiz() and ensureQuizScoreHost(). Read data-mg-quiz-state on the .mg-quiz-question[data-mg-quiz-state] roots for the current results.',
         },
       ],
       example: hydrationExample({
@@ -1425,12 +1432,12 @@ npm run build</code></pre>
     <fieldset class="mg-form-group mg-quiz-question__group">
       <legend class="mg-form-group__legend">A storm tide is the same thing as a tsunami.</legend>
       <div class="mg-quiz-question__options">
-        <label class="mg-form-check mg-quiz-question__option">
-          <input class="mg-form-check__input mg-form-check__input--radio" type="radio" value="true">
+        <label class="mg-form-check mg-quiz-question__option" data-vf-analytics-label="Quiz: Answer option">
+          <input class="mg-form-check__input mg-form-check__input--radio" type="radio" name="quiz-c41e-answer" value="true" data-vf-analytics-label="Quiz: Answer option">
           <span class="mg-form-check__label">True</span>
         </label>
-        <label class="mg-form-check mg-quiz-question__option">
-          <input class="mg-form-check__input mg-form-check__input--radio" type="radio" value="false">
+        <label class="mg-form-check mg-quiz-question__option" data-vf-analytics-label="Quiz: Answer option">
+          <input class="mg-form-check__input mg-form-check__input--radio" type="radio" name="quiz-c41e-answer" value="false" data-vf-analytics-label="Quiz: Answer option">
           <span class="mg-form-check__label">False</span>
         </label>
       </div>
@@ -1447,17 +1454,18 @@ npm run build</code></pre>
     summary:
       'Running score and end summary for the quiz questions on a page or in a data-mg-quiz wrapper. Empty until the first answer is checked.',
     description:
-      'Running score and end summary for the QuizQuestion components that share its scope (the nearest data-mg-quiz ancestor, or the page). Empty until the first answer is checked, then a short role="status" sentence ("1 of 5 correct so far.") with a ProgressBar of questions answered, or a longer sentence with the answered count when the bar is off, and the final score with a Start again button once every question is answered. Start again unlocks and clears every question in the scope. Nothing is stored or sent.',
+      'Running score and end summary for the QuizQuestion components that share its scope (the nearest data-mg-quiz ancestor, or the page). Empty until the first answer is checked, then a short role="status" sentence ("1 of 5 correct so far.") with a ProgressBar of questions answered, or a longer sentence with the answered count when the bar is off, and the final score with a Start again button once every question is answered. Start again unlocks and clears every question in the scope. Only mounted questions are counted: a server-rendered question that did not mount, or a question with nothing to answer, is left out. The component stores and sends nothing; the Start again button carries the fixed data-vf-analytics-label "Quiz: Start again" for a site click tracker.',
     cssClasses: [
       'mg-quiz-score',
       'mg-quiz-score--active',
+      'mg-quiz-score--complete',
       'mg-quiz-score__summary',
       'mg-quiz-score__progress',
       'mg-quiz-score__actions',
       'mg-quiz-score__reset',
     ],
     hydration: {
-      note: 'Render an empty data-mg-quiz-score container after the last question, or call ensureQuizScoreHost(document), exported from the QuizScore module, before hydrating: it adds the container after the last data-mg-quiz-question in each scope and keeps it there when more questions arrive. renderedHtml is the empty state before any answer is checked.',
+      note: 'Render an empty data-mg-quiz-score container after the last question, or call ensureQuizScoreHost(context), exported from the QuizScore module, before hydrating: for each scope with a data-mg-quiz-question inside context (the document by default) it adds the container after the last question container of that scope, keeps it there when more questions arrive, marks it data-mg-quiz-score-auto, and ends by asking every question and score to count again. Put data-mg-quiz on an ancestor to make a separate scope. When other code removes or replaces quiz markup without unmounting it, call ensureQuizScoreHost(context) again or refreshQuiz(context), also exported from the module. renderedHtml is the empty state before any answer is checked.',
       selector: '[data-mg-quiz-score]',
       modules: hydrationModules('QuizScore'),
       dataAttributes: {
