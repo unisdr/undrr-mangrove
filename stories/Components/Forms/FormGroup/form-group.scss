@@ -43,3 +43,13 @@
     border-color: rgb(var(--mg-color-red-900));
   }
 }
+
+// Forced colours repaint the red edge of an invalid group as CanvasText, the
+// same as a valid one, and no system colour means "error". The edge is dashed
+// instead, as on every other invalid control (see _form-base.scss), so the
+// state survives a palette with no red in it. The message carries the rest.
+@media (forced-colors: active) {
+  .mg-form-group--error {
+    border-style: dashed;
+  }
+}
