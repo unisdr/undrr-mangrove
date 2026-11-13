@@ -256,7 +256,7 @@ Nothing here was invented or interpolated.
 | Group                     | Source                                                                                                                                         |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
 | Categorical slots         | Documented Sendai target base colours + the UNDRR brand blue. Only the _ordering_ is a design decision.                                        |
-| Sequential blue / magenta | DELTA's shipped chart schemes, `HorizontalBarChart.tsx` → `colorSchemes.cerulean` / `.violet`. Five stops each; they are five stops, not nine. |
+| Sequential blue / magenta | The chart schemes shipped by DELTA, `HorizontalBarChart.tsx` → `colorSchemes.cerulean` / `.violet`. Five stops each; they are five stops, not nine. |
 | Sequential map            | The Figma "Map Colours" board, "Main maps #296768" stack, all ten swatches.                                                                    |
 | Sendai target ramps       | The Figma "Color and Tint Stacks" board, all ten swatches per target.                                                                          |
 
@@ -309,13 +309,13 @@ greyscale printing and every dichromacy.
 <Ramp
   label="Blue (DELTA cerulean) — 5 stops"
   tokens={[1, 2, 3, 4, 5].map(i => `--mg-dataviz-sequential-blue-${i}`)}
-  note="Verbatim from DELTA's chart component. Five stops. If a chart needs more classes, bin the data to five or use the map ramp — do not interpolate."
+  note="Verbatim from the DELTA chart component. Five stops. If a chart needs more classes, bin the data to five or use the map ramp — do not interpolate."
 />
 
 <Ramp
   label="Magenta (DELTA violet) — 5 stops"
   tokens={[1, 2, 3, 4, 5].map(i => `--mg-dataviz-sequential-magenta-${i}`)}
-  note="These five stops are exactly stops 6–10 of the Figma Target B ramp: DELTA's second chart scheme is the light half of 'Human Direct Effects' reused generically. Its darkest stop is only 4.04:1 on white, so it cannot carry white text at any stop."
+  note="These five stops are exactly stops 6–10 of the Figma Target B ramp: the second DELTA chart scheme is the light half of 'Human Direct Effects' reused generically. Its darkest stop is only 4.04:1 on white, so it cannot carry white text at any stop."
 />
 
 <Ramp

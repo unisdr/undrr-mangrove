@@ -299,7 +299,7 @@ markup. This is deliberate: Elasticsearch wraps matched terms in `<em>`, and
 escaping the response would print those tags instead of emphasising the match.
 
 Point `searchEndpoint` only at a service you trust to return safe HTML. The
-default, `https://www.undrr.org/search-endpoint`, is UNDRR's own proxy over the
+default, `https://www.undrr.org/search-endpoint`, is a proxy that UNDRR runs over the
 syndication index. If you point it at your own service — through the
 `searchEndpoint` config value or the `data-search-endpoint` attribute — then
 whatever that service returns is rendered on your page, and you own what comes

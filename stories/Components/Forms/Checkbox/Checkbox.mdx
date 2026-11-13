@@ -594,7 +594,7 @@ Keep the ring at 3:1 or more against the thumb, and the thumb at 3:1 or more aga
 - Keyboard users can toggle the checkbox with Space.
 - In an option row the stretched label makes the whole row the target, at least 48 pixels tall, and the control keeps its own boundary and focus ring. Selection is never colour alone: the control shows it. In forced-colours mode a selected row has a double edge in the system highlight colour, other rows have no edge until hover or keyboard focus and a disabled row uses the system's inactive colour. The row states use `:has()`, which every [supported browser](?path=/docs/getting-started-browser-support--docs) has; without it the row still selects and only the row's own edge and tint are missing.
 - In forced-colours mode (such as Windows high contrast) a checked checkbox is filled with the system highlight colour and its tick is cut out of the fill, so the tick contrasts in every palette. A disabled checkbox uses the system's inactive colour, checked or not. Where the browser cannot cut the tick out without clipping the focus ring, the filled box alone shows the checked state.
-- UNDRR's shared click tracker names a click after the element's visible text, and a click on the label after its `for` id. Set `analyticsLabel` to give the input and its label a fixed `data-vf-analytics-label` instead, so reports do not split by language or show generated ids.
+- The shared click tracker on UNDRR sites names a click after the element's visible text, and a click on the label after its `for` id. Set `analyticsLabel` to give the input and its label a fixed `data-vf-analytics-label` instead, so reports do not split by language or show generated ids.
 
 ## See also
 

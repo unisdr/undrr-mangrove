@@ -329,7 +329,7 @@ export const SplitWithHtml = {
       {
         title: 'Global Assessment Report 2026',
         summaryText:
-          "<p>UNDRR's flagship biennial review of global progress on disaster risk reduction.</p>",
+          '<p>The flagship biennial UNDRR review of global progress on disaster risk reduction.</p>',
         label: 'Flagship report',
         primary_button: 'Read the report',
         media: {
