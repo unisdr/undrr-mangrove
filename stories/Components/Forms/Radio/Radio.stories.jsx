@@ -14,7 +14,7 @@ const getCaptionForLocale = locale => {
           { label: 'مرتفع', value: 'high' },
         ],
         errorText: 'يرجى تحديد خيار',
-        rowLegend: 'كيف نرسل إليك الإنذارات المبكرة؟',
+        rowLegend: 'كيف ينبغي أن تصلك الإنذارات المبكرة؟',
         rowItems: [
           { label: 'رسالة نصية', value: 'sms' },
           { label: 'الإذاعة المحلية', value: 'radio' },

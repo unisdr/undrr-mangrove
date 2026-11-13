@@ -175,13 +175,13 @@ The obvious repair is to turn the brand tint up until the photograph stops
 showing through. It does not work, and the reason is worth stating because it
 will be proposed again.
 
-IRP's hero surface measures **4.71 against white at full opacity**. That is the
+The IRP hero surface measures **4.71 against white at full opacity**. That is the
 flat-fill figure the register already records, and it passes — by 0.21. So the
 colour has no headroom to spend: any translucency at all, over any photograph
 brighter than the tint, spends more than 0.21 and the copy fails. Turning the
 tint to fully opaque would buy exactly 4.71, still with no margin, at the cost
 of the photograph the hero exists to show. Repointing `--mg-color-hero` at
-IRP's deeper blue (`13 103 163`, 6.02 flat) was also measured and still lands
+the deeper IRP blue (`13 103 163`, 6.02 flat) was also measured and still lands
 at 4.46 under the same gradient.
 
 The guarantee therefore cannot come from a brand colour. It has to come from a
@@ -221,7 +221,7 @@ copy filled the frame, so the label sat at the top where the tint was down to
 its end opacity of 0.08. Sampled with the method above against four bright
 images — a near-white wall, a high-key sky, a busy high-frequency pattern and
 a white-sky landscape — **the eyebrow label failed in all five themes at every
-width from 320px to the breakpoint**, and on the two narrowest phones IRP's
+width from 320px to the breakpoint**, and on the two narrowest phones the IRP
 title failed the 3:1 large-text bar too:
 
 | Theme | label, 320px | label, 390px | label, 900px | title, 320px |
@@ -500,7 +500,7 @@ None of them moved the colour. Each moved the copy.
 | `HubHeader` `--surface-secondary` | white bar and banner text on `hero--secondary`, 2.65 | the theme's own hero surface; the orange is the rule under the bar |
 | `Card` `--secondary` | title `secondary` as ink, 2.65 (2.37 on DELTA) | the interactive colour, like every other card title link; the orange is the leading rule |
 | `AuthorImage` `--secondary` | title `secondary` as ink on white, 2.65 | `--mg-color-text` on white, 17.40 / 93.9; the ring and the hover tint keep the orange, which no copy sits on |
-| `.mg-button-primary:hover`, PreventionWeb and IRP | white label on `orange-900`, 2.95 | PreventionWeb's `teal-800` (5.50 / 69.7) and IRP's `blue-800` (6.02 / 71.1), the primitives their secondary buttons already use |
+| `.mg-button-primary:hover`, PreventionWeb and IRP | white label on `orange-900`, 2.95 | PreventionWeb's `teal-800` (5.50 / 69.7) and the IRP `blue-800` (6.02 / 71.1), the primitives their secondary buttons already use |
 
 The same applies to `.mg-button-primary.mg-button-outline:hover`, which shares
 the token and moved with it.

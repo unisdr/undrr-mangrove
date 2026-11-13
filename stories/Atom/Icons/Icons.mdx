@@ -125,7 +125,7 @@ Multi-color only works with SVGs that have explicit fill/stroke color values in 
 - **Lucide icons** use `currentColor` in their source SVGs, so `mg-icon--multicolor` won't produce a visible difference — the icon remains a single-color silhouette.
 - **OCHA icons** don't respond to the `mg-icon--multicolor` modifier — they always render in their built-in navy color, regardless of the current theme. Avoid `mg-icon--multicolor` with OCHA icons; use the default (single-color) mode so they follow the theme color.
 
-> **Implementation note (for contributors):** OCHA icons contain hardcoded fill values from OCHA's brand palette (`#011E41` navy) in their source SVGs. Because `mg-icon--multicolor` switches from `mask-image` (which ignores fill colors) to `background-image` (which preserves them), OCHA icons always render in navy when the modifier is applied.
+> **Implementation note (for contributors):** OCHA icons contain hardcoded fill values from the OCHA brand palette (`#011E41` navy) in their source SVGs. Because `mg-icon--multicolor` switches from `mask-image` (which ignores fill colors) to `background-image` (which preserves them), OCHA icons always render in navy when the modifier is applied.
 
 - **Custom icons** (social logos, SDG wheel) have explicit brand colors and are the intended use case for `mg-icon--multicolor`.
 

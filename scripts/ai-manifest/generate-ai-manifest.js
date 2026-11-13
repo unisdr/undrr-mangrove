@@ -2480,7 +2480,7 @@ async function main() {
 
   const llmsTxt = `# UNDRR Mangrove
 
-> UI component library for UNDRR's disaster risk reduction websites (undrr.org, preventionweb.net, mcr2030.undrr.org). Provides both React components and vanilla HTML/CSS patterns. Built with Storybook.
+> UI component library for UNDRR disaster risk reduction websites (undrr.org, preventionweb.net, mcr2030.undrr.org). Provides both React components and vanilla HTML/CSS patterns. Built with Storybook.
 
 - Version: ${pkg.version}
 - Package: ${pkg.name}

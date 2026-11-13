@@ -252,6 +252,56 @@
     0 0 0 var(--mg-focus-ring-offset) rgb(var(--mg-color-neutral-0));
 }
 
+// Forced colours repaint the checked fill as Canvas and drop every
+// box-shadow. That left the radio's dot, which is a shadow, with nothing to
+// draw it, and the checkbox's white tick on a Canvas box, where it shows only
+// if the palette happens to be dark. A disabled control also took the same
+// CanvasText edge as an enabled one. Each state is carried here by a system
+// colour on the box itself, which forcing keeps: a Highlight fill when
+// checked, and GrayText when disabled. The focus ring is an outline, which
+// forcing already repaints, so it needs nothing.
+@media (forced-colors: active) {
+  .mg-form-check__input--checkbox:checked {
+    background-color: Highlight;
+    background-image: none;
+    border-color: Highlight;
+
+    // The tick is cut out of the fill, so it takes the colour of whatever is
+    // behind the box and contrasts with Highlight in every palette; an image
+    // could only be one fixed colour. A mask clips the focus outline unless
+    // `mask-clip: no-clip` is honoured, so without it the box stays a plain
+    // Highlight fill, which still reads as checked.
+    @supports (mask-clip: no-clip) {
+      mask-clip: no-clip;
+      mask-composite: exclude;
+      mask-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23000' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M3.5 8l3 3 6-6'/%3E%3C/svg%3E"),
+        linear-gradient(#000, #000);
+      mask-origin: padding-box;
+      mask-repeat: no-repeat, repeat;
+    }
+  }
+
+  // The dot is the fill, held 3px inside the edge by the padding, where the
+  // inset shadow held it. Both inputs are border-box, so the size is the same.
+  .mg-form-check__input--radio:checked {
+    background-clip: content-box;
+    background-color: Highlight;
+    padding: 3px;
+  }
+
+  // Disabled, by its own attribute or by a disabled fieldset. Declared after
+  // the checked rules, which the first selector matches in specificity.
+  .mg-form-check__input:disabled {
+    border-color: GrayText;
+  }
+
+  .mg-form-check__input--checkbox:disabled:checked,
+  .mg-form-check__input--radio:disabled:checked {
+    background-color: GrayText;
+  }
+}
+
 // -----------------------------------------------------------------------------
 // Checkbox / Radio row variant (.mg-form-check--row)
 // -----------------------------------------------------------------------------
