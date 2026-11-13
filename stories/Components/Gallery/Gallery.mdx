@@ -289,9 +289,40 @@ for consumers needing the same strings outside React.
 
 ## Analytics
 
-UNDRR sites load a shared GA4 click tracker that names each click after the element's visible text unless `data-vf-analytics-label` is set, and reports the innermost `data-vf-google-analytics-region`. The arrows carry `Gallery: Previous` and `Gallery: Next` (both arrow styles) and each thumbnail carries `Gallery: Thumbnail`, so reports do not split by arrow glyph or image. The root gets `data-vf-google-analytics-region="gallery"`; set `analyticsRegion` to rename it. When hydrating, a non-empty `data-vf-google-analytics-region` on the container is carried over to the root. Because the region covers the whole gallery, links inside HTML slides report under it rather than the page's region. Swipe and keyboard navigation are not tracked.
+UNDRR sites load a shared GA4 click tracker that names each click after the element's visible text unless `data-vf-analytics-label` is set, and reports the innermost `data-vf-google-analytics-region`. The arrows carry `Gallery: Previous` and `Gallery: Next` (both arrow styles) and each thumbnail carries `Gallery: Thumbnail`, so reports do not split by arrow glyph or image. The root gets `data-vf-google-analytics-region="gallery"`; set `analyticsRegion` to rename it. When hydrating, a non-empty `data-vf-google-analytics-region` on the container is carried over to the root. Because the region covers the whole gallery, links inside HTML slides report under it rather than the page's region. Swipe and arrow-key navigation produce no click, and the tracker listens for pointer presses only, so click counts understate gallery use. The event below covers every way of changing the item.
+
+### Change event
+
+The gallery dispatches `mg-gallery:change` from its root each time a visitor changes the visible item. The event bubbles, so it reaches `document`, and `event.target` is the gallery root (`.mg-gallery`). It is dispatched after the new item is on screen. It works the same for a React gallery and a hydrated one.
+
+| `detail` field | Type   | Value                                                                                                                                                            |
+| -------------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `region`       | string | The analytics region the click tracker reports for the gallery's controls: the root's region, or the nearest region around a gallery that has none; `''` if none |
+| `index`        | number | Zero-based position of the item now shown, as in `initialIndex` and `onMediaChange`                                                                              |
+| `count`        | number | Number of items in the gallery                                                                                                                                   |
+| `method`       | string | `click` (an arrow button), `thumbnail`, `swipe` or `key` (Left, Right, Home or End)                                                                              |
+
+One event is dispatched for each change. Nothing is dispatched on the initial render, for a press that changes nothing (the thumbnail already shown, an arrow key at either end without `loop`), or for a drag too short to count as a swipe. An arrow button reports `click` however it was activated, including with Enter or Space. The gallery has no programmatic way to change the item after it mounts, so every event is a visitor's action.
+
+The detail never includes a title, caption, alternative text, address or anything else from the media items. The consuming site maps the event to its consent-aware analytics; Mangrove sends nothing to Google.
+
+```js
+document.addEventListener('mg-gallery:change', event => {
+  const { region, index, count, method } = event.detail;
+  analytics.track('gallery_change', {
+    region,
+    position: index + 1,
+    total: count,
+    method,
+  });
+});
+```
+
+Send the fields above and nothing more. To tell galleries on one page apart, give each its own `analyticsRegion`; do not read titles or captions from `event.target`. A site that also counts the `Gallery: Previous`, `Gallery: Next` and `Gallery: Thumbnail` clicks counts a mouse press twice, once as a click and once as a change, so report on one or the other.
 
 ## Changelog
+
+- **1.7**, 2026-11-13 ([#1478](https://github.com/unisdr/undrr-mangrove/issues/1478)): Dispatches a bubbling `mg-gallery:change` event when a visitor changes the visible item with an arrow button, a thumbnail, a swipe or the keyboard. Its `detail` has the analytics region, the position, the item count and the method, and never content. No visual or behavioural change.
 
 - **1.6**, 2026-11-12 ([undrr/web-backlog#3320](https://gitlab.com/undrr/web-backlog/-/work_items/3320)): Arrows and thumbnails carry fixed `data-vf-analytics-label` values for the UNDRR click tracker, and the root gets a default `gallery` analytics region, overridable with the new `analyticsRegion` prop or a region on the hydration container. No visual or behavioural change.
 
