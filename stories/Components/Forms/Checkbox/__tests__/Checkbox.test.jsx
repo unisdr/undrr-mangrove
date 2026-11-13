@@ -343,3 +343,74 @@ describe('Checkbox analytics label', () => {
     );
   });
 });
+
+describe('Checkbox row variant', () => {
+  it('adds the row modifier to the wrapper', () => {
+    const { container } = render(
+      <Checkbox row label="Option A" value="a" className="custom" />
+    );
+    expect(container.firstChild).toHaveClass(
+      'mg-form-check',
+      'mg-form-check--row',
+      'custom'
+    );
+  });
+
+  it('adds nothing without it', () => {
+    const { container } = render(
+      <Checkbox label="Option A" value="a" id="plain" />
+    );
+    expect(container.firstChild.className).toBe('mg-form-check');
+    expect(container.innerHTML).not.toContain('row');
+  });
+
+  it('does not pass the prop on to the input', () => {
+    render(<Checkbox row label="Option A" value="a" />);
+    expect(screen.getByRole('checkbox')).not.toHaveAttribute('row');
+  });
+
+  it('keeps the label, the control and the error message in the row', () => {
+    const { container } = render(
+      <Checkbox
+        row
+        label="Option A"
+        value="a"
+        error
+        errorText="Select an option"
+      />
+    );
+    const row = container.querySelector('.mg-form-check--row');
+    expect(Array.from(row.children).map(child => child.tagName)).toEqual([
+      'INPUT',
+      'LABEL',
+      'P',
+    ]);
+    expect(screen.getByRole('checkbox')).toHaveAccessibleDescription(
+      'Select an option'
+    );
+  });
+
+  it('selects from the label, which the stylesheet stretches over the row', () => {
+    render(<Checkbox row label="Option A" value="a" />);
+    fireEvent.click(screen.getByText('Option A'));
+    expect(screen.getByRole('checkbox')).toBeChecked();
+  });
+
+  it('has no a11y violations in a group, with a disabled row and an error', async () => {
+    const { container } = render(
+      <FormGroup legend="Priority">
+        <Checkbox row label="Low" value="low" defaultChecked />
+        <Checkbox row label="Medium" value="medium" disabled />
+        <Checkbox
+          row
+          label="High"
+          value="high"
+          error
+          errorText="Select an option"
+        />
+        <Checkbox row label="Unknown" value="unknown" labelPosition="before" />
+      </FormGroup>
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+});

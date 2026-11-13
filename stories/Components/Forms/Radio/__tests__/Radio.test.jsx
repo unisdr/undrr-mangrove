@@ -220,3 +220,82 @@ describe('Radio analytics label', () => {
     );
   });
 });
+
+describe('Radio row variant', () => {
+  it('adds the row modifier to the wrapper', () => {
+    const { container } = render(
+      <Radio row label="Option A" value="a" name="test" className="custom" />
+    );
+    expect(container.firstChild).toHaveClass(
+      'mg-form-check',
+      'mg-form-check--row',
+      'custom'
+    );
+  });
+
+  it('adds nothing without it', () => {
+    const { container } = render(
+      <Radio label="Option A" value="a" name="test" id="plain" />
+    );
+    expect(container.firstChild.className).toBe('mg-form-check');
+    expect(container.innerHTML).not.toContain('row');
+  });
+
+  it('does not pass the prop on to the input', () => {
+    render(<Radio row label="Option A" value="a" name="test" />);
+    expect(screen.getByRole('radio')).not.toHaveAttribute('row');
+  });
+
+  it('keeps the label, the control and the error message in the row', () => {
+    const { container } = render(
+      <Radio
+        row
+        label="Option A"
+        value="a"
+        name="test"
+        error
+        errorText="Select an option"
+      />
+    );
+    const row = container.querySelector('.mg-form-check--row');
+    expect(Array.from(row.children).map(child => child.tagName)).toEqual([
+      'INPUT',
+      'LABEL',
+      'P',
+    ]);
+    expect(screen.getByRole('radio')).toHaveAccessibleDescription(
+      'Select an option'
+    );
+  });
+
+  it('selects from the label, which the stylesheet stretches over the row', () => {
+    render(<Radio row label="Option A" value="a" name="test" />);
+    fireEvent.click(screen.getByText('Option A'));
+    expect(screen.getByRole('radio')).toBeChecked();
+  });
+
+  it('has no a11y violations in a group, with a disabled row and an error', async () => {
+    const { container } = render(
+      <FormGroup legend="Priority">
+        <Radio row label="Low" value="low" name="priority" defaultChecked />
+        <Radio row label="Medium" value="medium" name="priority" disabled />
+        <Radio
+          row
+          label="High"
+          value="high"
+          name="priority"
+          error
+          errorText="Select an option"
+        />
+        <Radio
+          row
+          label="Unknown"
+          value="unknown"
+          name="priority"
+          labelPosition="before"
+        />
+      </FormGroup>
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+});
