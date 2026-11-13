@@ -6,6 +6,9 @@ import { Loader } from '../../Utilities/Loader/Loader';
 
 export { getGalleryLabels } from './_labels';
 export { DEFAULT_GALLERY_LABELS } from './_labels';
+
+// Bubbling event dispatched from the gallery root when the visible item changes.
+const GALLERY_CHANGE_EVENT = 'mg-gallery:change';
 // Styles imported via stories/assets/scss/_components.scss to maintain Sass cascade
 
 const cls = (...classes) =>
@@ -56,6 +59,7 @@ function GalleryComponent({
   const thumbnailPreviewRefs = useRef([]);
   const touchStartX = useRef(null);
   const touchEndX = useRef(null);
+  const pendingChange = useRef(null);
 
   const activeItem = media[activeIndex];
 
@@ -85,9 +89,37 @@ function GalleryComponent({
     });
   }, [media]);
 
-  // Handle thumbnail click
-  const handleThumbnailClick = useCallback(
-    index => {
+  // One `mg-gallery:change` for each change a visitor makes, sent after the
+  // new item is on screen. The handlers record how the change was made; the
+  // initial render records nothing, so it sends nothing. The detail carries
+  // position and method only, never a caption, title or address.
+  useEffect(() => {
+    const change = pendingChange.current;
+    const target = galleryRef.current;
+    pendingChange.current = null;
+    if (!change || !target) return;
+    const EventClass =
+      target.ownerDocument?.defaultView?.CustomEvent || CustomEvent;
+    // The region the click tracker reports for the arrows and thumbnails.
+    const region =
+      target.closest('[data-vf-google-analytics-region]')?.dataset
+        .vfGoogleAnalyticsRegion ?? '';
+    target.dispatchEvent(
+      new EventClass(GALLERY_CHANGE_EVENT, {
+        bubbles: true,
+        composed: true,
+        detail: { region, ...change },
+      })
+    );
+  }, [activeIndex]);
+
+  // Show an item. `method` is how the visitor asked for it: `click` (an
+  // arrow button), `thumbnail`, `swipe` or `key`.
+  const goTo = useCallback(
+    (index, method) => {
+      if (index !== activeIndex) {
+        pendingChange.current = { index, count: media.length, method };
+      }
       setActiveIndex(index);
       if (onMediaChange) {
         onMediaChange(index, media[index]);
@@ -107,26 +139,32 @@ function GalleryComponent({
         });
       }
     },
-    [media, onMediaChange]
+    [activeIndex, media, onMediaChange]
   );
 
   // Navigate to next item
-  const handleNext = useCallback(() => {
-    if (activeIndex < media.length - 1) {
-      handleThumbnailClick(activeIndex + 1);
-    } else if (loop) {
-      handleThumbnailClick(0);
-    }
-  }, [activeIndex, media.length, handleThumbnailClick, loop]);
+  const handleNext = useCallback(
+    method => {
+      if (activeIndex < media.length - 1) {
+        goTo(activeIndex + 1, method);
+      } else if (loop) {
+        goTo(0, method);
+      }
+    },
+    [activeIndex, media.length, goTo, loop]
+  );
 
   // Navigate to previous item
-  const handlePrevious = useCallback(() => {
-    if (activeIndex > 0) {
-      handleThumbnailClick(activeIndex - 1);
-    } else if (loop) {
-      handleThumbnailClick(media.length - 1);
-    }
-  }, [activeIndex, handleThumbnailClick, loop, media.length]);
+  const handlePrevious = useCallback(
+    method => {
+      if (activeIndex > 0) {
+        goTo(activeIndex - 1, method);
+      } else if (loop) {
+        goTo(media.length - 1, method);
+      }
+    },
+    [activeIndex, goTo, loop, media.length]
+  );
 
   // Keyboard navigation (scoped to gallery when focused)
   const handleKeyDown = useCallback(
@@ -136,31 +174,25 @@ function GalleryComponent({
       switch (e.key) {
         case 'ArrowLeft':
           e.preventDefault();
-          handlePrevious();
+          handlePrevious('key');
           break;
         case 'ArrowRight':
           e.preventDefault();
-          handleNext();
+          handleNext('key');
           break;
         case 'Home':
           e.preventDefault();
-          handleThumbnailClick(0);
+          goTo(0, 'key');
           break;
         case 'End':
           e.preventDefault();
-          handleThumbnailClick(media.length - 1);
+          goTo(media.length - 1, 'key');
           break;
         default:
           break;
       }
     },
-    [
-      enableKeyboard,
-      handleNext,
-      handlePrevious,
-      handleThumbnailClick,
-      media.length,
-    ]
+    [enableKeyboard, handleNext, handlePrevious, goTo, media.length]
   );
 
   // Touch/swipe handlers for mobile
@@ -182,10 +214,10 @@ function GalleryComponent({
     if (Math.abs(swipeDistance) > minSwipeDistance) {
       if (swipeDistance > 0) {
         // Swiped left, go to next image
-        handleNext();
+        handleNext('swipe');
       } else {
         // Swiped right, go to previous image
-        handlePrevious();
+        handlePrevious('swipe');
       }
     }
 
@@ -288,7 +320,7 @@ function GalleryComponent({
           <>
             <button
               className="mg-gallery__arrow mg-gallery__arrow--prev"
-              onClick={handlePrevious}
+              onClick={() => handlePrevious('click')}
               disabled={!loop && activeIndex === 0}
               aria-label={prevLabel}
               data-vf-analytics-label="Gallery: Previous"
@@ -298,7 +330,7 @@ function GalleryComponent({
             </button>
             <button
               className="mg-gallery__arrow mg-gallery__arrow--next"
-              onClick={handleNext}
+              onClick={() => handleNext('click')}
               disabled={!loop && activeIndex === media.length - 1}
               aria-label={nextLabel}
               data-vf-analytics-label="Gallery: Next"
@@ -312,7 +344,7 @@ function GalleryComponent({
           <div className="mg-gallery__arrow-controls">
             <button
               className="mg-gallery__arrow-button mg-gallery__arrow-button--prev"
-              onClick={handlePrevious}
+              onClick={() => handlePrevious('click')}
               disabled={!loop && activeIndex === 0}
               aria-label={prevLabel}
               data-vf-analytics-label="Gallery: Previous"
@@ -322,7 +354,7 @@ function GalleryComponent({
             </button>
             <button
               className="mg-gallery__arrow-button mg-gallery__arrow-button--next"
-              onClick={handleNext}
+              onClick={() => handleNext('click')}
               disabled={!loop && activeIndex === media.length - 1}
               aria-label={nextLabel}
               data-vf-analytics-label="Gallery: Next"
@@ -367,7 +399,7 @@ function GalleryComponent({
                   !item.thumbnail &&
                   'mg-gallery__thumbnail--html'
               )}
-              onClick={() => handleThumbnailClick(index)}
+              onClick={() => goTo(index, 'thumbnail')}
               role="tab"
               aria-selected={index === activeIndex}
               aria-current={index === activeIndex ? 'true' : undefined}
