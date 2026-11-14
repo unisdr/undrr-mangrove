@@ -1,0 +1,24 @@
+// =============================================================================
+// UTILITIES INDEX
+// =============================================================================
+// Barrel file that loads all utility modules.
+// Import this single file to get all Mangrove utilities.
+// Usage in Mangrove: @use "utilities/index";
+// Usage in Drupal:   @use "@undrr/undrr-mangrove/scss/assets/scss/utilities/index";
+// =============================================================================
+
+// Layout utilities
+@use "display";
+@use "position";
+@use "flexbox";
+@use "sizing";
+
+// Spacing utilities
+@use "spacing";
+
+// Typography utilities
+@use "typography";
+
+// Visual utilities
+@use "borders";
+@use "shadows";

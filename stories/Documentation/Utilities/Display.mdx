@@ -1,0 +1,255 @@
+import { Meta, Source } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
+import { Demo } from '../components';
+
+<Meta
+  title="Components/Utility CSS/Display"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: {
+      canvas: { hidden: true },
+    },
+  }}
+/>
+
+# Display utilities
+
+Control element visibility and display type with display and visibility utilities.
+
+## Display types
+
+### Basic display
+
+<Demo title="Block vs Inline">
+  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+    <div>
+      <span className="mg-u-display--block mg-u-background-color--blue-100 mg-u-padding-100">
+        Block (full width)
+      </span>
+    </div>
+    <div>
+      <span className="mg-u-display--inline mg-u-background-color--blue-200 mg-u-padding-100">
+        Inline A
+      </span>
+      <span className="mg-u-display--inline mg-u-background-color--blue-300 mg-u-padding-100">
+        Inline B
+      </span>
+    </div>
+    <div>
+      <span
+        className="mg-u-display--inline-block mg-u-background-color--blue-200 mg-u-padding-100"
+        style={{ width: '100px', textAlign: 'center' }}
+      >
+        Inline-block A
+      </span>
+      <span
+        className="mg-u-display--inline-block mg-u-background-color--blue-300 mg-u-padding-100"
+        style={{ width: '100px', textAlign: 'center' }}
+      >
+        Inline-block B
+      </span>
+    </div>
+  </div>
+</Demo>
+
+<Demo title="Flex container">
+  <div className="mg-u-display--flex mg-u-gap-100">
+    <div className="mg-u-background-color--sendai-turquoise mg-u-color--white mg-u-padding-100">
+      Flex item 1
+    </div>
+    <div className="mg-u-background-color--sendai-turquoise mg-u-color--white mg-u-padding-100">
+      Flex item 2
+    </div>
+    <div className="mg-u-background-color--sendai-turquoise mg-u-color--white mg-u-padding-100">
+      Flex item 3
+    </div>
+  </div>
+</Demo>
+
+<Demo title="Grid container">
+  <div
+    className="mg-u-display--grid mg-u-gap-100"
+    style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}
+  >
+    <div className="mg-u-background-color--sendai-orange mg-u-color--white mg-u-padding-100 mg-u-text-align--center">
+      1
+    </div>
+    <div className="mg-u-background-color--sendai-orange mg-u-color--white mg-u-padding-100 mg-u-text-align--center">
+      2
+    </div>
+    <div className="mg-u-background-color--sendai-orange mg-u-color--white mg-u-padding-100 mg-u-text-align--center">
+      3
+    </div>
+    <div className="mg-u-background-color--sendai-orange mg-u-color--white mg-u-padding-100 mg-u-text-align--center">
+      4
+    </div>
+    <div className="mg-u-background-color--sendai-orange mg-u-color--white mg-u-padding-100 mg-u-text-align--center">
+      5
+    </div>
+    <div className="mg-u-background-color--sendai-orange mg-u-color--white mg-u-padding-100 mg-u-text-align--center">
+      6
+    </div>
+  </div>
+</Demo>
+
+<Demo title="Display none">
+  <div className="mg-u-display--flex mg-u-gap-100">
+    <span className="mg-u-background-color--blue-200 mg-u-padding-100">
+      Visible
+    </span>
+    <span className="mg-u-display--none mg-u-background-color--red-200 mg-u-padding-100">
+      Hidden
+    </span>
+    <span className="mg-u-background-color--blue-200 mg-u-padding-100">
+      Visible
+    </span>
+  </div>
+</Demo>
+
+### All display classes
+
+| Class                         | CSS output              |
+| ----------------------------- | ----------------------- |
+| `.mg-u-display--none`         | `display: none`         |
+| `.mg-u-display--block`        | `display: block`        |
+| `.mg-u-display--inline`       | `display: inline`       |
+| `.mg-u-display--inline-block` | `display: inline-block` |
+| `.mg-u-display--flex`         | `display: flex`         |
+| `.mg-u-display--inline-flex`  | `display: inline-flex`  |
+| `.mg-u-display--grid`         | `display: grid`         |
+| `.mg-u-display--inline-grid`  | `display: inline-grid`  |
+
+## Visibility utilities
+
+Control visibility without affecting layout:
+
+<Demo title="Visibility hidden vs display none">
+  <div className="mg-u-display--flex mg-u-gap-100 mg-u-align-items--start">
+    <div className="mg-u-background-color--neutral-100 mg-u-padding-100">
+      <span className="mg-u-background-color--blue-200 mg-u-padding-50">A</span>
+      <span className="mg-u-visibility--hidden mg-u-background-color--red-200 mg-u-padding-50">
+        Hidden (keeps space)
+      </span>
+      <span className="mg-u-background-color--blue-200 mg-u-padding-50">B</span>
+    </div>
+    <div className="mg-u-background-color--neutral-100 mg-u-padding-100">
+      <span className="mg-u-background-color--blue-200 mg-u-padding-50">A</span>
+      <span className="mg-u-display--none mg-u-background-color--red-200 mg-u-padding-50">
+        None (removed)
+      </span>
+      <span className="mg-u-background-color--blue-200 mg-u-padding-50">B</span>
+    </div>
+  </div>
+</Demo>
+
+| Class                        | CSS output             |
+| ---------------------------- | ---------------------- |
+| `.mg-u-visibility--visible`  | `visibility: visible`  |
+| `.mg-u-visibility--hidden`   | `visibility: hidden`   |
+| `.mg-u-visibility--collapse` | `visibility: collapse` |
+
+## Responsive display
+
+Add breakpoint suffixes to change display at different screen sizes:
+
+| Suffix | Breakpoint | Description    |
+| ------ | ---------- | -------------- |
+| `--sm` | ≤480px     | Mobile only    |
+| `--md` | ≥900px     | Tablet and up  |
+| `--lg` | ≥1164px    | Desktop and up |
+| `--xl` | ≥1440px    | Wide desktop   |
+
+### Show/hide at breakpoints
+
+<Demo title="Responsive visibility (resize browser to test)">
+  <div className="mg-u-display--flex mg-u-gap-100 mg-u-flex-wrap--wrap">
+    <div className="mg-u-display--none mg-u-display--block--md mg-u-background-color--sendai-turquoise mg-u-color--white mg-u-padding-100">
+      Hidden on mobile, visible on tablet+
+    </div>
+    <div className="mg-u-display--block mg-u-display--none--md mg-u-background-color--sendai-red mg-u-color--white mg-u-padding-100">
+      Visible on mobile only
+    </div>
+  </div>
+</Demo>
+
+```html
+<!-- Hide on mobile, show on tablet+ -->
+<div class="mg-u-display--none mg-u-display--block--md">Hidden on mobile</div>
+
+<!-- Show on mobile, hide on tablet+ -->
+<div class="mg-u-display--block mg-u-display--none--md">
+  Visible only on mobile
+</div>
+
+<!-- Flex on desktop only -->
+<div class="mg-u-display--block mg-u-display--flex--lg">
+  Flex layout on desktop
+</div>
+```
+
+## Semantic visibility helpers
+
+For common responsive patterns, use these semantic helper classes:
+
+<Demo title="Semantic helpers (resize browser to test)">
+  <div className="mg-u-display--flex mg-u-gap-100 mg-u-flex-wrap--wrap">
+    <div className="mg-u-hidden--mobile mg-u-background-color--blue-200 mg-u-padding-100">
+      .mg-u-hidden--mobile
+    </div>
+    <div className="mg-u-visible--mobile-only mg-u-background-color--sendai-orange mg-u-color--white mg-u-padding-100">
+      .mg-u-visible--mobile-only
+    </div>
+    <div className="mg-u-visible--desktop-only mg-u-background-color--sendai-purple mg-u-color--white mg-u-padding-100">
+      .mg-u-visible--desktop-only
+    </div>
+  </div>
+</Demo>
+
+| Class                         | Behavior                     |
+| ----------------------------- | ---------------------------- |
+| `.mg-u-hidden--mobile`        | Hidden on mobile (≤480px)    |
+| `.mg-u-hidden--tablet-up`     | Hidden on tablet+ (≥900px)   |
+| `.mg-u-hidden--desktop-up`    | Hidden on desktop+ (≥1164px) |
+| `.mg-u-visible--mobile-only`  | Only visible on mobile       |
+| `.mg-u-visible--tablet-only`  | Only visible on tablet       |
+| `.mg-u-visible--desktop-only` | Only visible on desktop+     |
+
+## Usage examples
+
+### Responsive navigation
+
+<Demo title="Responsive navigation pattern">
+  <div>
+    <button className="mg-u-display--block mg-u-display--none--md mg-u-padding-100 mg-u-background-color--blue-600 mg-u-color--white mg-u-border-radius">
+      ☰ Menu (mobile)
+    </button>
+    <nav className="mg-u-display--none mg-u-display--flex--md mg-u-gap-200">
+      <a href="#" className="mg-u-color--blue-600">
+        Home
+      </a>
+      <a href="#" className="mg-u-color--blue-600">
+        About
+      </a>
+      <a href="#" className="mg-u-color--blue-600">
+        Services
+      </a>
+      <a href="#" className="mg-u-color--blue-600">
+        Contact
+      </a>
+    </nav>
+  </div>
+</Demo>
+
+## Drupal migration
+
+| Legacy class | Mangrove class                |
+| ------------ | ----------------------------- |
+| `.dp-il`     | `.mg-u-display--inline`       |
+| `.dp-bl`     | `.mg-u-display--block`        |
+| `.dp-ib`     | `.mg-u-display--inline-block` |
+| `.dp-if`     | `.mg-u-display--inline-flex`  |
+| `.dp-fl`     | `.mg-u-display--flex`         |
+
+## Source file
+
+`stories/assets/scss/utilities/_display.scss`
