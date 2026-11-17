@@ -206,7 +206,8 @@ try {
       return {
         indent:
           parseFloat(style.paddingInlineStart) +
-          parseFloat(style.marginInlineStart),
+          parseFloat(style.marginInlineStart) +
+          parseFloat(style.borderInlineStartWidth),
         pitch: rows[1].top - rows[0].top,
       };
     });
@@ -309,8 +310,37 @@ try {
     true,
     'Mobile RTL review must not overflow horizontally'
   );
+  const dialogPage = await browser.newPage({
+    viewport: { width: 390, height: 844 },
+  });
+  const dialogUrl = new URL(url.href);
+  dialogUrl.searchParams.set('id', 'components-dialog--short-message');
+  dialogUrl.searchParams.set('globals', 'theme:Delta 2027 Theme;addonRtl:rtl');
+  await dialogPage.goto(dialogUrl.href);
+  const dialogTrigger = dialogPage.locator('[data-mg-dialog-trigger]');
+  await dialogTrigger.waitFor({ state: 'visible' });
+  await dialogTrigger.click();
+  const dialog = dialogPage.locator('dialog[open]');
+  await dialog.waitFor();
+  const dialogRect = await dialog.boundingBox();
+  assert.equal(
+    dialogRect.width,
+    390,
+    'Mobile dialog must fill the viewport width'
+  );
+  assert.equal(
+    dialogRect.height,
+    844,
+    'Mobile dialog must fill the viewport height'
+  );
+  await dialogPage.keyboard.press('Escape');
+  await dialogPage.waitForFunction(
+    () => !document.querySelector('dialog[open]')
+  );
+  await dialogPage.close();
+
   console.log(
-    'Delta 2027 passed: local fonts, 32px controls, field padding, hover/pressed/disabled states, keyboard focus, editing, tabs, card ink, token propagation, motion mapping, 16px/32px Tree geometry, Arabic/Latin routing, forced colours with reduced motion, and mobile RTL.'
+    'Delta 2027 passed: local fonts, 32px controls, field padding, hover/pressed/disabled states, keyboard focus, editing, tabs, card ink, token propagation, motion mapping, 16px/32px Tree geometry, Arabic/Latin routing, forced colours with reduced motion, mobile RTL and full-screen mobile Dialog.'
   );
 } finally {
   clearTimeout(deadline);

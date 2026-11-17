@@ -617,6 +617,7 @@
   @media (width < 48rem) {
     .mg-dialog {
       inline-size: 100%;
+      max-inline-size: 100%;
       block-size: 100%;
       max-block-size: 100%;
       margin: 0;
@@ -635,11 +636,11 @@
   }
 
   .mg-tree.mg-tree--guides .mg-tree__group {
-    --mg-tree-guide-offset: calc(#{delta(spacing-2)} + 0.5rem - 0.5px);
+    --mg-tree-guide-offset: calc(#{delta(spacing-2)} + 0.5rem - 1px);
     --mg-tree-group-indent: #{delta(spacing-4)};
 
     padding-inline-start: calc(
-      var(--mg-tree-group-indent) - var(--mg-tree-guide-offset)
+      var(--mg-tree-group-indent) - var(--mg-tree-guide-offset) - 1px
     );
   }
 
