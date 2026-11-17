@@ -2,7 +2,7 @@
 //
 // A component's custom properties are its theming API: the supported way to
 // restyle it without writing rules that fight its own. `tokens.json` covers
-// the THEME tokens only — the --mg-* properties generated from tokens/*.yaml —
+// the THEME tokens only — the --mg-* properties generated from tokens/*.tokens.json —
 // so component-scoped properties appeared nowhere machine-readable and a
 // consuming team had to grep the compiled CSS to find them
 // (unisdr/undrr-mangrove#1200, #1207).
@@ -46,7 +46,7 @@ const PROPERTY_NAME = /^--mg-[A-Za-z0-9]+(?:-{1,2}[A-Za-z0-9]+)*$/;
 
 // Properties that are global rather than component-scoped, and so belong to
 // the theme layer even though tokens.json does not list them — it is built
-// from the tokens/*.yaml sources only, and these are declared straight in
+// from the tokens/*.tokens.json sources only, and these are declared straight in
 // SCSS.
 //
 // Naming a prefix here is a claim, not a filter: it says this group is the

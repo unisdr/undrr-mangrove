@@ -45,6 +45,7 @@ describe('the published-path model', () => {
       'scss',
       'error-pages',
       'docs',
+      'tokens',
     ]) {
       expect([...paths].some(entry => entry.startsWith(`${dir}/`))).toBe(true);
     }
@@ -58,10 +59,12 @@ describe('the published-path model', () => {
       "['dist/assets/error-pages', 'error-pages']",
       "['dist/components', 'components']",
       "['dist/docs', 'docs']",
+      "['dist/tokens', 'tokens']",
     ]) {
       expect(assembleSource).toContain(line);
     }
     expect(assembleSource).toContain("'docs/**/*'");
+    expect(assembleSource).toContain("'tokens/*.tokens.json'");
     // The scss copy is flattened from stories/, which is why the published
     // entry point is scss/assets/scss/style.scss.
     expect(assembleSource).toContain(
@@ -99,6 +102,14 @@ describe('the published-path model', () => {
     expect(docsFileNames().every(name => /\.(md|txt)$/.test(name))).toBe(true);
   });
 
+  test('publishes composed token documents for all five distributed brands', () => {
+    for (const brand of ['mangrove', 'preventionweb', 'irp', 'mcr', 'delta'])
+      expect(paths.has(`tokens/${brand}.tokens.json`)).toBe(true);
+    expect(paths.has('tokens/undrr.tokens.json')).toBe(false);
+    expect(paths.has('tokens/output-baseline.json')).toBe(false);
+    expect([...paths].some(entry => entry.endsWith('.yaml'))).toBe(false);
+  });
+
   test('derives one component bundle per webpack entry', () => {
     const names = componentEntryNames();
     expect(names.length).toBeGreaterThan(30);
@@ -120,6 +131,7 @@ describe('the published-path model', () => {
         ['assets/error-pages', 'error-pages'],
         ['components', 'components'],
         ['docs', 'docs'],
+        ['tokens', 'tokens'],
       ]) {
         if (entry === from || entry.startsWith(`${from}/`)) {
           return `${to}${entry.slice(from.length)}`;

@@ -1,0 +1,1755 @@
+{
+  "$extensions": {
+    "org.undrr.mangrove": {
+      "brand": {
+        "id": "mangrove",
+        "base": true,
+        "title": "Mangrove",
+        "selector": ":root"
+      }
+    }
+  },
+  "color": {
+    "neutral-0": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [1, 1, 1]
+      }
+    },
+    "neutral-25": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9411764705882353, 0.9529411764705882, 0.9647058823529412
+        ]
+      }
+    },
+    "neutral-50": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.8941176470588236, 0.9058823529411765, 0.9176470588235294
+        ]
+      }
+    },
+    "neutral-100": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.792156862745098, 0.803921568627451, 0.8156862745098039]
+      }
+    },
+    "neutral-200": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.6941176470588235, 0.7058823529411765, 0.7176470588235294
+        ]
+      }
+    },
+    "neutral-300": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.5882352941176471, 0.6, 0.611764705882353]
+      }
+    },
+    "neutral-400": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.49411764705882355, 0.5019607843137255, 0.5098039215686274
+        ]
+      }
+    },
+    "neutral-500": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.4, 0.4, 0.4]
+      }
+    },
+    "neutral-600": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.30196078431372547, 0.30196078431372547, 0.30196078431372547
+        ]
+      }
+    },
+    "neutral-700": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.2, 0.2, 0.2]
+      }
+    },
+    "neutral-800": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.10196078431372549, 0.10196078431372549, 0.10196078431372549
+        ]
+      }
+    },
+    "neutral-900": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0, 0, 0]
+      }
+    },
+    "red-50": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9764705882352941, 0.9019607843137255, 0.9137254901960784
+        ]
+      }
+    },
+    "red-100": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9529411764705882, 0.807843137254902, 0.8235294117647058
+        ]
+      }
+    },
+    "red-200": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9254901960784314, 0.7098039215686275, 0.7372549019607844
+        ]
+      }
+    },
+    "red-300": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9019607843137255, 0.615686274509804, 0.6509803921568628
+        ]
+      }
+    },
+    "red-400": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.8784313725490196, 0.5176470588235295, 0.5647058823529412
+        ]
+      }
+    },
+    "red-500": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.8549019607843137, 0.4196078431372549, 0.4745098039215686
+        ]
+      }
+    },
+    "red-600": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.8313725490196079, 0.3254901960784314, 0.38823529411764707
+        ]
+      }
+    },
+    "red-700": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.803921568627451, 0.22745098039215686, 0.30196078431372547
+        ]
+      }
+    },
+    "red-800": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.7803921568627451, 0.13333333333333333, 0.21176470588235294
+        ]
+      }
+    },
+    "red-900": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.7568627450980392, 0.03529411764705882, 0.12549019607843137
+        ]
+      }
+    },
+    "gold-800": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.5254901960784314, 0.3843137254901961, 0]
+      }
+    },
+    "accent-100": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9568627450980393, 0.8941176470588236, 0.5882352941176471
+        ]
+      }
+    },
+    "accent-200": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.8274509803921568, 0.807843137254902, 0.6627450980392157
+        ]
+      }
+    },
+    "accent-300": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9921568627450981, 0.9647058823529412, 0.8509803921568627
+        ]
+      }
+    },
+    "accent-400": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.0392156862745098, 0.4117647058823529, 0.4117647058823529
+        ]
+      }
+    },
+    "accent-500": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.996078431372549, 0.7568627450980392, 0.1411764705882353
+        ]
+      }
+    },
+    "accent-600": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.7372549019607844, 0.6823529411764706, 0.403921568627451
+        ]
+      }
+    },
+    "interactive": {
+      "$type": "color",
+      "$value": "{color.neutral-800}",
+      "$description": "The one colour a brand must state. Links, buttons, tabs, focus rings, tags and form checks all derive from it."
+    },
+    "interactive-active": {
+      "$type": "color",
+      "$value": "{color.neutral-700}"
+    },
+    "text": {
+      "$type": "color",
+      "$value": "{color.neutral-800}"
+    },
+    "black": {
+      "$type": "color",
+      "$value": "{color.neutral-800}"
+    },
+    "white": {
+      "$type": "color",
+      "$value": "{color.neutral-0}"
+    },
+    "secondary": {
+      "$type": "color",
+      "$value": "{color.neutral-700}"
+    },
+    "tertiary": {
+      "$type": "color",
+      "$value": "{color.neutral-900}"
+    },
+    "quaternary": {
+      "$type": "color",
+      "$value": "{color.red-800}"
+    },
+    "tag": {
+      "$type": "color",
+      "$value": "{color.interactive}"
+    },
+    "tag--hover": {
+      "$type": "color",
+      "$value": "{color.interactive-active}"
+    },
+    "tag-secondary": {
+      "$type": "color",
+      "$value": "{color.neutral-500}"
+    },
+    "tag-secondary--hover": {
+      "$type": "color",
+      "$value": "{color.neutral-600}"
+    },
+    "tag-accent": {
+      "$type": "color",
+      "$value": "{color.neutral-700}"
+    },
+    "tag-accent--hover": {
+      "$type": "color",
+      "$value": "{color.neutral-800}"
+    },
+    "button": {
+      "$type": "color",
+      "$value": "{color.neutral-0}"
+    },
+    "button--hover": {
+      "$type": "color",
+      "$value": "{color.neutral-0}"
+    },
+    "button-background": {
+      "$type": "color",
+      "$value": "{color.interactive}",
+      "$description": "Colour-valued, not a channel triplet: DELTA needs `transparent` here and a triplet cannot express it. Consumers must not wrap this in rgb().",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function"
+        }
+      }
+    },
+    "button-background--hover": {
+      "$type": "color",
+      "$value": "{color.interactive-active}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function"
+        }
+      }
+    },
+    "button-secondary-background": {
+      "$type": "color",
+      "$value": "{color.neutral-700}"
+    },
+    "button-secondary-background--hover": {
+      "$type": "color",
+      "$value": "{color.neutral-600}"
+    },
+    "button-outline-primary": {
+      "$type": "color",
+      "$value": "{color.interactive}"
+    },
+    "button-outline-primary--hover": {
+      "$type": "color",
+      "$value": "{color.interactive-active}"
+    },
+    "button-outline-secondary": {
+      "$type": "color",
+      "$value": "{color.button-secondary-background}"
+    },
+    "button-outline-secondary--hover": {
+      "$type": "color",
+      "$value": "{color.button-secondary-background--hover}"
+    },
+    "text-button": {
+      "$type": "color",
+      "$value": "{color.neutral-0}"
+    },
+    "form-check": {
+      "$type": "color",
+      "$value": "{color.interactive}"
+    },
+    "form-check--hover": {
+      "$type": "color",
+      "$value": "{color.interactive-active}"
+    },
+    "form-check--checked": {
+      "$type": "color",
+      "$value": "{color.interactive}"
+    },
+    "form-focus": {
+      "$type": "color",
+      "$value": "{color.interactive}"
+    },
+    "focus-ring": {
+      "$type": "color",
+      "$value": "{color.gold-800}"
+    },
+    "focus-ring-inverse": {
+      "$type": "color",
+      "$value": "{color.neutral-0}"
+    },
+    "hero": {
+      "$type": "color",
+      "$value": "{color.interactive}"
+    },
+    "hero--secondary": {
+      "$type": "color",
+      "$value": "{color.secondary}"
+    },
+    "hero--tertiary": {
+      "$type": "color",
+      "$value": "{color.tertiary}"
+    },
+    "hero--quaternary": {
+      "$type": "color",
+      "$value": "{color.quaternary}"
+    },
+    "hero-title": {
+      "$type": "color",
+      "$value": "{color.neutral-0}"
+    },
+    "hero-button-secondary-background": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          {
+            "$ref": "#/color/neutral-0/$value/components/0"
+          },
+          {
+            "$ref": "#/color/neutral-0/$value/components/1"
+          },
+          {
+            "$ref": "#/color/neutral-0/$value/components/2"
+          }
+        ],
+        "alpha": 0.9
+      },
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function"
+        }
+      }
+    },
+    "hero-button-secondary-color": {
+      "$type": "color",
+      "$value": "{color.hero}"
+    },
+    "mega-content-bg": {
+      "$type": "color",
+      "$value": "{color.button}"
+    },
+    "modal-scrim": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          {
+            "$ref": "#/color/neutral-900/$value/components/0"
+          },
+          {
+            "$ref": "#/color/neutral-900/$value/components/1"
+          },
+          {
+            "$ref": "#/color/neutral-900/$value/components/2"
+          }
+        ],
+        "alpha": 0.85
+      },
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function"
+        }
+      }
+    },
+    "tabbar-background": {
+      "$type": "color",
+      "$value": "{color.neutral-50}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function"
+        }
+      }
+    },
+    "tab-background": {
+      "$type": "color",
+      "$value": "{color.neutral-100}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function"
+        }
+      }
+    },
+    "tab-background--inactive": {
+      "$type": "color",
+      "$value": "{color.neutral-50}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function"
+        }
+      }
+    },
+    "tab-background--hover": {
+      "$type": "color",
+      "$value": "{color.neutral-700}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function"
+        }
+      }
+    },
+    "tab-border": {
+      "$type": "color",
+      "$value": "{color.neutral-700}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function"
+        }
+      }
+    },
+    "tab-border--hover": {
+      "$type": "color",
+      "$value": "{color.neutral-900}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function"
+        }
+      }
+    },
+    "tab-border--active": {
+      "$type": "color",
+      "$value": "{color.neutral-800}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function"
+        }
+      }
+    },
+    "text-tab": {
+      "$type": "color",
+      "$value": "{color.neutral-700}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function"
+        }
+      }
+    },
+    "text-tab--hover": {
+      "$type": "color",
+      "$value": "{color.neutral-0}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function"
+        }
+      }
+    },
+    "text-tab-active": {
+      "$type": "color",
+      "$value": "{color.neutral-700}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function"
+        }
+      }
+    },
+    "text-tab-no-results": {
+      "$type": "color",
+      "$value": "{color.neutral-500}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function"
+        }
+      }
+    },
+    "tab-section-background": {
+      "$type": "color",
+      "$value": "{color.neutral-0}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function"
+        }
+      }
+    }
+  },
+  "border-color": {
+    "button": {
+      "$type": "color",
+      "$value": "{color.text-button}",
+      "$description": "Must be a colour, not a channel triplet: it is consumed inside a `border:` shorthand, and a bare triplet makes the whole declaration invalid, which silently drops border-style to none. .mg-button-outline rendered as bare text for the entire time this was a triplet.",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function"
+        }
+      }
+    },
+    "button-primary": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0, 0, 0],
+        "alpha": 0
+      },
+      "$description": "Stroke on filled primary buttons. The fill is painted under the border, so `transparent` makes the stroke match the fill and keeps filled and outline buttons the same size. A theme can set a colour here (for example a darker shade of the fill) to give filled buttons a visible edge.",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "button-secondary": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0, 0, 0],
+        "alpha": 0
+      },
+      "$description": "Stroke on filled secondary buttons. See border-color.button-primary.",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "hero-button-secondary": {
+      "$type": "color",
+      "$value": "{color.neutral-0}"
+    }
+  },
+  "spacing": {
+    "0": {
+      "$type": "dimension",
+      "$value": {
+        "value": 0,
+        "unit": "px"
+      },
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal",
+          "unitlessZero": true
+        }
+      }
+    },
+    "25": {
+      "$type": "dimension",
+      "$value": {
+        "value": 2.5,
+        "unit": "px"
+      }
+    },
+    "50": {
+      "$type": "dimension",
+      "$value": {
+        "value": 5,
+        "unit": "px"
+      }
+    },
+    "75": {
+      "$type": "dimension",
+      "$value": {
+        "value": 7.5,
+        "unit": "px"
+      }
+    },
+    "100": {
+      "$type": "dimension",
+      "$value": {
+        "value": 10,
+        "unit": "px"
+      }
+    },
+    "150": {
+      "$type": "dimension",
+      "$value": {
+        "value": 15,
+        "unit": "px"
+      }
+    },
+    "175": {
+      "$type": "dimension",
+      "$value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "200": {
+      "$type": "dimension",
+      "$value": {
+        "value": 20,
+        "unit": "px"
+      }
+    },
+    "250": {
+      "$type": "dimension",
+      "$value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "300": {
+      "$type": "dimension",
+      "$value": {
+        "value": 30,
+        "unit": "px"
+      }
+    },
+    "350": {
+      "$type": "dimension",
+      "$value": {
+        "value": 35,
+        "unit": "px"
+      }
+    },
+    "400": {
+      "$type": "dimension",
+      "$value": {
+        "value": 50,
+        "unit": "px"
+      }
+    },
+    "500": {
+      "$type": "dimension",
+      "$value": {
+        "value": 60,
+        "unit": "px"
+      }
+    },
+    "600": {
+      "$type": "dimension",
+      "$value": {
+        "value": 80,
+        "unit": "px"
+      }
+    },
+    "800": {
+      "$type": "dimension",
+      "$value": {
+        "value": 100,
+        "unit": "px"
+      }
+    },
+    "1000": {
+      "$type": "dimension",
+      "$value": {
+        "value": 400,
+        "unit": "px"
+      }
+    },
+    "$extensions": {
+      "org.undrr.mangrove": {
+        "format": "rem"
+      }
+    },
+    "hero-overlay": {
+      "$type": "dimension",
+      "$value": {
+        "value": 0,
+        "unit": "px"
+      },
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal",
+          "unitlessZero": true
+        }
+      }
+    }
+  },
+  "width": {
+    "150": {
+      "$type": "dimension",
+      "$value": {
+        "value": 150,
+        "unit": "px"
+      }
+    },
+    "300": {
+      "$type": "dimension",
+      "$value": {
+        "value": 300,
+        "unit": "px"
+      }
+    },
+    "400": {
+      "$type": "dimension",
+      "$value": {
+        "value": 400,
+        "unit": "px"
+      }
+    },
+    "600": {
+      "$type": "dimension",
+      "$value": {
+        "value": 600,
+        "unit": "px"
+      }
+    },
+    "$extensions": {
+      "org.undrr.mangrove": {
+        "format": "rem"
+      }
+    }
+  },
+  "font-size": {
+    "100": {
+      "$type": "dimension",
+      "$value": {
+        "value": 10,
+        "unit": "px"
+      }
+    },
+    "150": {
+      "$type": "dimension",
+      "$value": {
+        "value": 11.25,
+        "unit": "px"
+      }
+    },
+    "200": {
+      "$type": "dimension",
+      "$value": {
+        "value": 12.5,
+        "unit": "px"
+      }
+    },
+    "250": {
+      "$type": "dimension",
+      "$value": {
+        "value": 14,
+        "unit": "px"
+      }
+    },
+    "300": {
+      "$type": "dimension",
+      "$value": {
+        "value": 16,
+        "unit": "px"
+      },
+      "$description": "Regular body text."
+    },
+    "400": {
+      "$type": "dimension",
+      "$value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "500": {
+      "$type": "dimension",
+      "$value": {
+        "value": 23,
+        "unit": "px"
+      }
+    },
+    "600": {
+      "$type": "dimension",
+      "$value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "800": {
+      "$type": "dimension",
+      "$value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "900": {
+      "$type": "dimension",
+      "$value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "1000": {
+      "$type": "dimension",
+      "$value": {
+        "value": 48,
+        "unit": "px"
+      }
+    },
+    "1100": {
+      "$type": "dimension",
+      "$value": {
+        "value": 64,
+        "unit": "px"
+      }
+    },
+    "$extensions": {
+      "org.undrr.mangrove": {
+        "format": "rem",
+        "sass": true
+      }
+    },
+    "button": {
+      "$type": "dimension",
+      "$value": "{font-size.250}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal",
+          "private": false,
+          "sass": false,
+          "resolve": "literal"
+        }
+      }
+    },
+    "tab": {
+      "$type": "dimension",
+      "$value": "{font-size.400}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal",
+          "private": false,
+          "sass": false,
+          "resolve": "literal"
+        }
+      }
+    },
+    "form-input": {
+      "$type": "dimension",
+      "$value": "{font-size.300}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal",
+          "private": false,
+          "sass": false,
+          "resolve": "literal"
+        }
+      }
+    }
+  },
+  "font-line-height": {
+    "500": {
+      "$type": "number",
+      "$value": 1.25,
+      "$description": "Tight line height. An em value, so it resolves against the font size of the element where the property is used.",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "cssUnit": "em",
+          "cssType": "dimension"
+        }
+      }
+    },
+    "700": {
+      "$type": "number",
+      "$value": 1.5,
+      "$description": "Body line height. An em value, so it resolves against the font size of the element where the property is used.",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "cssUnit": "em",
+          "cssType": "dimension"
+        }
+      }
+    },
+    "$extensions": {
+      "org.undrr.mangrove": {
+        "format": "literal",
+        "sass": true
+      }
+    }
+  },
+  "radius": {
+    "tag": {
+      "$type": "dimension",
+      "$value": "{spacing.50}"
+    },
+    "button": {
+      "$type": "dimension",
+      "$value": "{spacing.50}"
+    },
+    "form-input": {
+      "$type": "dimension",
+      "$value": "{spacing.50}"
+    },
+    "tab": {
+      "$type": "dimension",
+      "$value": {
+        "value": 0,
+        "unit": "px"
+      },
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "unitlessZero": true
+        }
+      }
+    },
+    "tab-section": {
+      "$type": "dimension",
+      "$value": {
+        "value": 0,
+        "unit": "px"
+      },
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "unitlessZero": true
+        }
+      }
+    }
+  },
+  "padding": {
+    "button": {
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "output": {
+            "value": "{spacing.100} {spacing.150}",
+            "type": "dimension"
+          }
+        }
+      }
+    },
+    "tab": {
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "output": {
+            "value": "{spacing.75} {spacing.150}",
+            "type": "dimension"
+          }
+        }
+      }
+    },
+    "tab-section": {
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "output": {
+            "value": "{spacing.100} {spacing.0}",
+            "type": "dimension"
+          }
+        }
+      }
+    }
+  },
+  "border-width": {
+    "button": {
+      "$type": "dimension",
+      "$value": {
+        "value": 1,
+        "unit": "px"
+      }
+    }
+  },
+  "box-shadow": {
+    "tab-section": {
+      "$type": "shadow",
+      "$value": {
+        "color": {
+          "colorSpace": "srgb",
+          "components": [0, 0, 0],
+          "alpha": 0
+        },
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 0,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 0,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      },
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "none": true
+        }
+      }
+    }
+  },
+  "container": {
+    "spacer": {
+      "$type": "dimension",
+      "$value": "{spacing.150}"
+    }
+  },
+  "cta": {
+    "padding": {
+      "$type": "dimension",
+      "$value": "{spacing.400}"
+    }
+  },
+  "author-image": {
+    "radius": {
+      "$type": "number",
+      "$value": 0.5,
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "cssUnit": "%",
+          "cssType": "dimension"
+        }
+      }
+    }
+  },
+  "opacity": {
+    "hero": {
+      "$type": "number",
+      "$value": 0.85
+    }
+  },
+  "tab": {
+    "padding": {
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "output": {
+            "value": "{spacing.150} {spacing.200}",
+            "type": "dimension"
+          }
+        }
+      }
+    },
+    "min-block-size": {
+      "$type": "dimension",
+      "$value": {
+        "value": 44,
+        "unit": "px"
+      },
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "rem"
+        }
+      }
+    },
+    "indicator-size": {
+      "$type": "dimension",
+      "$value": {
+        "value": 3,
+        "unit": "px"
+      }
+    }
+  },
+  "form-input": {
+    "background": {
+      "$type": "color",
+      "$value": "{color.neutral-25}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function"
+        }
+      }
+    },
+    "background--focus": {
+      "$type": "color",
+      "$value": "{color.neutral-0}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function"
+        }
+      }
+    },
+    "border-color": {
+      "$type": "color",
+      "$value": "{color.neutral-400}",
+      "$description": "The border was rgb(neutral-600 / 0.22), which is 1.43:1 against the page and 1.39:1 against the field's own fill, so every input, textarea and select in the system failed WCAG 1.4.11. neutral-400 is 3.96:1.",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function"
+        }
+      }
+    },
+    "border-width": {
+      "$type": "dimension",
+      "$value": {
+        "value": 1,
+        "unit": "px"
+      }
+    },
+    "block-size": {
+      "$type": "dimension",
+      "$value": {
+        "value": 46,
+        "unit": "px"
+      }
+    },
+    "padding": {
+      "$type": "dimension",
+      "$value": {
+        "value": 6.25,
+        "unit": "px"
+      },
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "rem"
+        }
+      }
+    }
+  },
+  "focus-ring": {
+    "width": {
+      "$type": "dimension",
+      "$value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "offset": {
+      "$type": "dimension",
+      "$value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "radius": {
+      "$type": "dimension",
+      "$value": {
+        "value": 2,
+        "unit": "px"
+      }
+    }
+  },
+  "surface": {
+    "raised": {
+      "$type": "color",
+      "$value": "{color.neutral-0}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function"
+        }
+      }
+    }
+  },
+  "shadow": {
+    "raised": {
+      "$type": "shadow",
+      "$value": {
+        "color": {
+          "colorSpace": "srgb",
+          "components": [
+            {
+              "$ref": "#/color/neutral-600/$value/components/0"
+            },
+            {
+              "$ref": "#/color/neutral-600/$value/components/1"
+            },
+            {
+              "$ref": "#/color/neutral-600/$value/components/2"
+            }
+          ],
+          "alpha": 0.24
+        },
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 0,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 0,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 1,
+          "unit": "px"
+        },
+        "inset": true
+      }
+    },
+    "raised-hover": {
+      "$type": "shadow",
+      "$value": {
+        "color": "{color.interactive}",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 0,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 0,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 2,
+          "unit": "px"
+        },
+        "inset": true
+      }
+    }
+  },
+  "motion": {
+    "duration-fast": {
+      "$type": "duration",
+      "$value": {
+        "value": 160,
+        "unit": "ms"
+      }
+    },
+    "duration-medium": {
+      "$type": "duration",
+      "$value": {
+        "value": 300,
+        "unit": "ms"
+      }
+    },
+    "easing-standard": {
+      "$type": "cubicBezier",
+      "$value": [0.2, 0, 0, 1]
+    }
+  },
+  "card": {
+    "background": {
+      "$type": "color",
+      "$value": "{surface.raised}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "padding": {
+      "$type": "dimension",
+      "$value": "{spacing.150}"
+    },
+    "border-radius": {
+      "$type": "dimension",
+      "$value": "{spacing.50}"
+    },
+    "shadow": {
+      "$type": "shadow",
+      "$value": "{shadow.raised}"
+    },
+    "shadow-hover": {
+      "$type": "shadow",
+      "$value": "{shadow.raised-hover}"
+    },
+    "icon-badge-radius": {
+      "$type": "number",
+      "$value": 0.2,
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "cssUnit": "%",
+          "cssType": "dimension"
+        }
+      }
+    },
+    "publication": {
+      "background": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0, 0, 0],
+          "alpha": 0
+        },
+        "$description": "Background of book and horizontal book publication teasers.",
+        "$extensions": {
+          "org.undrr.mangrove": {
+            "format": "literal"
+          }
+        }
+      },
+      "padding": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0,
+          "unit": "px"
+        },
+        "$description": "Outer publication teaser inset; cover-to-caption gaps are separate."
+      },
+      "border-radius": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0,
+          "unit": "px"
+        },
+        "$description": "Outer publication surface radius; complete cover artwork remains square."
+      },
+      "shadow": {
+        "$type": "shadow",
+        "$value": {
+          "color": {
+            "colorSpace": "srgb",
+            "components": [0, 0, 0],
+            "alpha": 0
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 0,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 0,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        "$description": "Publication surface elevation at rest.",
+        "$extensions": {
+          "org.undrr.mangrove": {
+            "none": true
+          }
+        }
+      },
+      "shadow-hover": {
+        "$type": "shadow",
+        "$value": {
+          "color": {
+            "colorSpace": "srgb",
+            "components": [0, 0, 0],
+            "alpha": 0
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 0,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 0,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        "$description": "Linked publication surface elevation on hover.",
+        "$extensions": {
+          "org.undrr.mangrove": {
+            "none": true
+          }
+        }
+      }
+    }
+  },
+  "content-meta": {
+    "font-size": {
+      "$type": "dimension",
+      "$value": "{font-size.250}",
+      "$description": "Dates, attribution and supporting metadata in content teasers and cards; summaries retain body size.",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    }
+  },
+  "content-teaser": {
+    "background": {
+      "$type": "color",
+      "$value": "{card.background}",
+      "$description": "Content teaser surface, defaulting to the standard card background independently of publication surfaces.",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "padding": {
+      "$type": "dimension",
+      "$value": "{card.padding}",
+      "$description": "Content inset and complete-cover/logo inset inside the enclosed horizontal teaser; photographs meet the outer edge."
+    },
+    "border-radius": {
+      "$type": "dimension",
+      "$value": "{card.border-radius}",
+      "$description": "Content teaser enclosure radius, defaulting to the standard card radius."
+    },
+    "shadow": {
+      "$type": "shadow",
+      "$value": "{card.shadow}",
+      "$description": "Content teaser soft enclosure, defaulting to the standard card surface at rest."
+    },
+    "shadow-hover": {
+      "$type": "shadow",
+      "$value": "{card.shadow-hover}",
+      "$description": "Content teaser soft enclosure on hover, defaulting to the standard card hover surface."
+    }
+  },
+  "content-card": {
+    "title-font-size": {
+      "$type": "dimension",
+      "$value": "{font-size.500}",
+      "$description": "Title size in vertical content card layouts.",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "book-title-font-size": {
+      "$type": "dimension",
+      "$value": "{font-size.300}",
+      "$description": "Title size in book card layouts.",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "book": {
+      "background": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0, 0, 0],
+          "alpha": 0
+        },
+        "$description": "Independent content-card surface; publication surfaces do not determine this value.",
+        "$extensions": {
+          "org.undrr.mangrove": {
+            "format": "literal"
+          }
+        }
+      },
+      "padding": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0,
+          "unit": "px"
+        },
+        "$description": "Independent content-card surface; publication surfaces do not determine this value."
+      },
+      "border-radius": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0,
+          "unit": "px"
+        },
+        "$description": "Independent content-card surface; publication surfaces do not determine this value."
+      },
+      "shadow": {
+        "$type": "shadow",
+        "$value": {
+          "color": {
+            "colorSpace": "srgb",
+            "components": [0, 0, 0],
+            "alpha": 0
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 0,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 0,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        "$description": "Independent content-card surface; publication surfaces do not determine this value.",
+        "$extensions": {
+          "org.undrr.mangrove": {
+            "none": true
+          }
+        }
+      },
+      "shadow-hover": {
+        "$type": "shadow",
+        "$value": {
+          "color": {
+            "colorSpace": "srgb",
+            "components": [0, 0, 0],
+            "alpha": 0
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 0,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 0,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        "$description": "Independent content-card surface; publication surfaces do not determine this value.",
+        "$extensions": {
+          "org.undrr.mangrove": {
+            "none": true
+          }
+        }
+      }
+    }
+  },
+  "search": {
+    "book-cover-height": {
+      "$type": "dimension",
+      "$value": {
+        "value": 320,
+        "unit": "px"
+      },
+      "$description": "Desktop search book-grid media stage; missing media reserves this space only in multi-column layouts.",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "rem"
+        }
+      }
+    }
+  },
+  "notice": {
+    "action-secondary": {
+      "$type": "color",
+      "$value": "{color.button-outline-secondary}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function"
+        }
+      }
+    }
+  },
+  "hero-overlay": {
+    "max-width": {
+      "$type": "dimension",
+      "$value": {
+        "value": 600,
+        "unit": "px"
+      },
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "rem"
+        }
+      }
+    },
+    "padding": {
+      "$type": "dimension",
+      "$value": "{spacing.300}"
+    },
+    "radius": {
+      "$type": "dimension",
+      "$value": "{spacing.50}"
+    },
+    "shadow": {
+      "$type": "shadow",
+      "$value": {
+        "color": {
+          "colorSpace": "srgb",
+          "components": [
+            {
+              "$ref": "#/color/neutral-900/$value/components/0"
+            },
+            {
+              "$ref": "#/color/neutral-900/$value/components/1"
+            },
+            {
+              "$ref": "#/color/neutral-900/$value/components/2"
+            }
+          ],
+          "alpha": 0.22
+        },
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 18,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 55,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      },
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "omitSpread": true
+        }
+      }
+    }
+  },
+  "hero-gradient": {
+    "start-opacity": {
+      "$type": "number",
+      "$value": 0.98
+    },
+    "middle-opacity": {
+      "$type": "number",
+      "$value": 0.82
+    },
+    "end-opacity": {
+      "$type": "number",
+      "$value": 0.08
+    }
+  },
+  "hero-scrim": {
+    "opacity": {
+      "$type": "number",
+      "$value": 0.16
+    },
+    "fade": {
+      "$type": "dimension",
+      "$value": {
+        "value": 160,
+        "unit": "px"
+      },
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "rem"
+        }
+      }
+    }
+  },
+  "z-index": {
+    "behind": {
+      "$type": "number",
+      "$value": -1
+    },
+    "nav": {
+      "$type": "number",
+      "$value": 10
+    },
+    "sticky": {
+      "$type": "number",
+      "$value": 11
+    },
+    "nav-toggle": {
+      "$type": "number",
+      "$value": 14
+    },
+    "header": {
+      "$type": "number",
+      "$value": 22
+    },
+    "drawer": {
+      "$type": "number",
+      "$value": 2000
+    },
+    "dropdown": {
+      "$type": "number",
+      "$value": 2500
+    },
+    "modal": {
+      "$type": "number",
+      "$value": 5000
+    },
+    "toast": {
+      "$type": "number",
+      "$value": 5500
+    }
+  },
+  "$description": "DTCG 2025.10 token data. Mangrove output conventions are namespaced extensions. CSS-only group output recipes are not portable design tokens."
+}

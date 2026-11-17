@@ -69,6 +69,18 @@ beforeEach(() => {
   write(root, 'dist/components/nested/Thing.js');
   write(root, 'dist/docs/EDITORIAL-MANUAL.md');
   write(root, 'dist/docs/llms-editorial-manual.txt');
+  write(
+    root,
+    'dist/tokens/delta.tokens.json',
+    JSON.stringify({
+      color: {
+        $type: 'color',
+        $value: { colorSpace: 'srgb', components: [0, 0, 0] },
+      },
+    })
+  );
+  // Authored inputs are not the self-contained exchange output.
+  write(root, 'tokens/private-source.tokens.json', '{"private":true}');
   write(root, 'stories/assets/scss/style.scss');
   write(root, 'stories/Components/Tabs/tabs.scss');
   write(root, 'stories/Components/Tabs/Tabs.jsx');
@@ -111,6 +123,7 @@ test('copies dist subpaths and SCSS sources into the CI layout', () => {
       'dist/docs/llms-editorial-manual.txt',
       'dist/fonts/mangrove-icon-set.woff2',
       'dist/index.js',
+      'dist/tokens/delta.tokens.json',
       'docs/EDITORIAL-MANUAL.md',
       'docs/llms-editorial-manual.txt',
       'error-pages/404.html',
@@ -118,6 +131,7 @@ test('copies dist subpaths and SCSS sources into the CI layout', () => {
       'package.json',
       'scss/Components/Tabs/tabs.scss',
       'scss/assets/scss/style.scss',
+      'tokens/delta.tokens.json',
     ].sort()
   );
 });
@@ -197,6 +211,7 @@ test('the packed tarball ships the subpath directories', () => {
     'package.json',
     'scss/Components/Tabs/tabs.scss',
     'scss/assets/scss/style.scss',
+    'tokens/delta.tokens.json',
   ]);
   // `npm pack` is a subprocess; give it room under a loaded worker.
 }, 30000);
@@ -250,6 +265,7 @@ test('generates the slimmed package.json', () => {
       'scss/**/*.scss',
       'error-pages/**/*',
       'docs/**/*',
+      'tokens/*.tokens.json',
       '!**/__tests__/**',
       '!**/__snapshots__/**',
       '!**/__mocks__/**',

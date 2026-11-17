@@ -28,7 +28,7 @@ For pointer-only hover effects, use `@media (hover: hover)`; preserve keyboard f
 | `--mg-motion-duration-medium` | `300ms` | Larger surface or drawer movement that needs continuity |
 | `--mg-motion-easing-standard` | `cubic-bezier(0.2, 0, 0, 1)` | Interaction transitions and finite state-change animations |
 
-These tokens live in `tokens/mangrove.yaml`. Start with this set when motion is justified; it is not a minimum duration or evidence that one curve suits every interaction. Immediate feedback needs no transition or timing token. Add a shared token only when repeated component needs justify it, with evidence across themes and reduced motion. Never hand-edit generated token output.
+These tokens live in `tokens/mangrove.tokens.json`. Start with this set when motion is justified; it is not a minimum duration or evidence that one curve suits every interaction. Immediate feedback needs no transition or timing token. Add a shared token only when repeated component needs justify it, with evidence across themes and reduced motion. Never hand-edit generated token output.
 
 Name the properties being transitioned instead of using `transition: all`. Use tokens for finite interaction timing, including finite keyframes. Prefer transform and opacity where they serve the interaction, while keeping the final layout correct without them.
 

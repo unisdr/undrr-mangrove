@@ -49,11 +49,11 @@ npm install @undrr/undrr-mangrove
 
 The SCSS source files are in `scss/assets/scss/` within the installed package. Note that this is **not** the path they have in the repository: the tarball ships no `stories/` directory, and `scss/` is the flattened copy of it. Every path on this page is the published one.
 
-The token sources (`tokens/*.yaml`) are not published — the package ships the SCSS they generate, not the YAML. Read them in the [repository](https://github.com/PreventionWeb/undrr-mangrove/tree/main/tokens).
+The token authoring fragments (`tokens/*.tokens.json`) are not published. The package ships their generated SCSS and complete DTCG exchange documents at `tokens/{brand}.tokens.json`. Read them in the [repository](https://github.com/PreventionWeb/undrr-mangrove/tree/main/tokens).
 
 ## What is still Sass
 
-In Mangrove 2.0, colour, spacing, radius, and component tokens are **CSS custom properties** generated from `tokens/*.yaml`. Override them in selectors, not Sass. See the <LinkTo kind="getting-started-integration-theming-guide" story="docs">Theming guide</LinkTo>.
+In Mangrove 2.0, colour, spacing, radius, and component tokens are **CSS custom properties** generated from `tokens/*.tokens.json`. Override them in selectors, not Sass. See the <LinkTo kind="getting-started-integration-theming-guide" story="docs">Theming guide</LinkTo>.
 
 Sass variables remain only for compile-time needs (`@media`, `@if`, `@font-face`, interpolation): breakpoints, type scale, font faces, and a few constants. Other legacy `$mg-*` variables are removed; assigning them appears to compile but has no effect. Legacy import consumers receive build warnings for removed variables; module consumers must configure supported hooks with `with`, so Sass rejects unknown names.
 
@@ -156,7 +156,7 @@ Static because `@media` cannot read `var()`. Note that these are the raw values;
 
 ### Font sizes
 
-Generated from `tokens/mangrove.yaml` into `generated/_tokens-mangrove.scss` as CSS custom properties. Components read them with `var(--mg-font-size-*)`, so a theme can re-value a step at runtime.
+Generated from `tokens/mangrove.tokens.json` into `generated/_tokens-mangrove.scss` as CSS custom properties. Components read them with `var(--mg-font-size-*)`, so a theme can re-value a step at runtime.
 
 | Custom property       | Value      | Pixels at a 16px root | Notes             |
 | --------------------- | ---------- | --------------------- | ----------------- |

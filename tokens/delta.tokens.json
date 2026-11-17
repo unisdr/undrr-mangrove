@@ -1,0 +1,597 @@
+{
+  "$extensions": {
+    "org.undrr.mangrove": {
+      "brand": {
+        "id": "delta",
+        "extends": "undrr",
+        "title": "DELTA Resilience",
+        "selector": ".mg-theme-delta"
+      }
+    }
+  },
+  "theme": {
+    "loaded": {
+      "$description": "Runtime marker: lets JS and tooling detect that this brand theme is active, guarding the sub-brand body-class trap. See docs/RELEASE-2.0.md.",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "output": {
+            "value": "delta",
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "brand": {
+    "$extensions": {
+      "org.undrr.mangrove": {
+        "private": true
+      }
+    },
+    "primary": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0, 0.30980392156862746, 0.5686274509803921]
+      },
+      "$description": "UNDRR Blue. DELTA's own design system labels this swatch \"UNDRR Blue - Corporate blue\" and marks it Brand. 54 uses in DELTA's code, 1551 fills and 1645 strokes in its Figma file. It is rgb(0 79 145), identical to Mangrove's --mg-color-blue-900: DELTA's brand blue is UNDRR's."
+    },
+    "primary-800": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.06274509803921569, 0.4235294117647059, 0.7215686274509804
+        ]
+      },
+      "$description": "Hover/active partner of the brand blue, 9 uses in DELTA. Note it is LIGHTER than the base colour, unlike Mangrove's convention of darkening on hover. That is DELTA's actual behaviour, not an error."
+    },
+    "ink": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.09411764705882353, 0.09411764705882353, 0.13725490196078433
+        ]
+      },
+      "$description": "Body text and overlay/shadow base."
+    },
+    "card-surface": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9490196078431372, 0.9490196078431372, 0.9490196078431372
+        ]
+      },
+      "$description": "Card / subtle surface fill. #f2f2f2 appears 11 times in DELTA; #fafafa, which Mangrove previously guessed, appears once."
+    },
+    "secondary": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0, 0.4823529411764706, 0.47843137254901963]
+      },
+      "$description": "UNDRR Teal, DELTA's secondary brand colour. Mangrove previously mapped the secondary button to the same blue as the primary, collapsing a genuine two-colour brand into one."
+    },
+    "secondary-800": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0, 0.4117647058823529, 0.40784313725490196]
+      },
+      "$description": "Hover partner of UNDRR Teal, taken one step DOWN the teal ramp in DELTA's design file (#002323 #004646 #006968 #007B7A #00AFAE). DELTA's stylesheet uses #359999 here, a step UP, but white text on that is 3.40:1 and fails WCAG 1.4.3. #006968 is 6.52:1 and comes from DELTA's own ramp, so this is a deliberate, sourced divergence rather than an invented colour \u2014 the same call already made for DELTA's field border."
+    }
+  },
+  "color": {
+    "interactive": {
+      "$type": "color",
+      "$value": "{brand.primary}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "resolve": "literal"
+        }
+      }
+    },
+    "interactive-active": {
+      "$type": "color",
+      "$value": "{brand.primary-800}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "resolve": "literal"
+        }
+      }
+    },
+    "tag": {
+      "$type": "color",
+      "$value": "{color.interactive}"
+    },
+    "tag--hover": {
+      "$type": "color",
+      "$value": "{color.interactive-active}"
+    },
+    "button": {
+      "$type": "color",
+      "$value": "{color.neutral-0}"
+    },
+    "button--hover": {
+      "$type": "color",
+      "$value": "{color.neutral-0}"
+    },
+    "button-background": {
+      "$type": "color",
+      "$value": "{brand.primary}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function",
+          "resolve": "literal"
+        }
+      }
+    },
+    "button-background--hover": {
+      "$type": "color",
+      "$value": "{brand.primary-800}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function",
+          "resolve": "literal"
+        }
+      }
+    },
+    "button-secondary-background": {
+      "$type": "color",
+      "$value": "{brand.secondary}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "resolve": "literal"
+        }
+      }
+    },
+    "button-secondary-background--hover": {
+      "$type": "color",
+      "$value": "{brand.secondary-800}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "resolve": "literal"
+        }
+      }
+    },
+    "button-outline-primary": {
+      "$type": "color",
+      "$value": "{brand.primary}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "resolve": "literal"
+        }
+      }
+    },
+    "button-outline-primary--hover": {
+      "$type": "color",
+      "$value": "{brand.primary-800}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "resolve": "literal"
+        }
+      }
+    },
+    "button-outline-secondary": {
+      "$type": "color",
+      "$value": "{brand.secondary}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "resolve": "literal"
+        }
+      }
+    },
+    "button-outline-secondary--hover": {
+      "$type": "color",
+      "$value": "{brand.secondary-800}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "resolve": "literal"
+        }
+      }
+    },
+    "text-button": {
+      "$type": "color",
+      "$value": "{color.neutral-0}"
+    },
+    "form-check": {
+      "$type": "color",
+      "$value": "{color.interactive}"
+    },
+    "form-check--hover": {
+      "$type": "color",
+      "$value": "{color.interactive-active}"
+    },
+    "form-check--checked": {
+      "$type": "color",
+      "$value": "{color.interactive}"
+    },
+    "form-focus": {
+      "$type": "color",
+      "$value": "{color.interactive}"
+    },
+    "mega-content-bg": {
+      "$type": "color",
+      "$value": "{color.white}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "hero": {
+      "$type": "color",
+      "$value": "{brand.primary}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "resolve": "literal"
+        }
+      }
+    },
+    "hero-title": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "oklch",
+        "components": [0.685, 0.169, 237.323]
+      },
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "hero--tertiary": {
+      "$type": "color",
+      "$value": "{brand.ink}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function",
+          "resolve": "literal"
+        }
+      }
+    },
+    "hero-button-secondary-background": {
+      "$type": "color",
+      "$value": "{brand.primary}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function",
+          "resolve": "literal"
+        }
+      }
+    },
+    "hero-button-secondary-color": {
+      "$type": "color",
+      "$value": "{color.white}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "tabbar-background": {
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal",
+          "output": {
+            "value": "none",
+            "type": "color",
+            "format": "literal"
+          }
+        }
+      }
+    },
+    "tab-background": {
+      "$type": "color",
+      "$value": "{brand.primary}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function",
+          "resolve": "literal"
+        }
+      }
+    },
+    "tab-background--inactive": {
+      "$type": "color",
+      "$value": "{color.white}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function"
+        }
+      }
+    },
+    "tab-background--hover": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          {
+            "$ref": "#/brand/primary/$value/components/0"
+          },
+          {
+            "$ref": "#/brand/primary/$value/components/1"
+          },
+          {
+            "$ref": "#/brand/primary/$value/components/2"
+          }
+        ],
+        "alpha": 0.7
+      },
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function",
+          "resolve": "literal"
+        }
+      }
+    },
+    "tab-border": {
+      "$type": "color",
+      "$value": "{color.blue-200}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function"
+        }
+      }
+    },
+    "tab-border--hover": {
+      "$type": "color",
+      "$value": "{brand.primary-800}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function",
+          "resolve": "literal"
+        }
+      }
+    },
+    "tab-border--active": {
+      "$type": "color",
+      "$value": "{color.blue-200}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function"
+        }
+      }
+    },
+    "text-tab": {
+      "$type": "color",
+      "$value": "{color.neutral-700}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function"
+        }
+      }
+    },
+    "text-tab--hover": {
+      "$type": "color",
+      "$value": "{color.white}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function"
+        }
+      }
+    },
+    "text-tab-active": {
+      "$type": "color",
+      "$value": "{color.white}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function"
+        }
+      }
+    }
+  },
+  "border-color": {
+    "button": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0, 0, 0],
+        "alpha": 0
+      },
+      "$description": "DELTA's filled buttons carry no border. This is the case the channel convention could not express: a triplet cannot say \"transparent\", which is how the token came to hold two invalid declarations that both collapsed to nothing.",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "hero-button-secondary": {
+      "$type": "color",
+      "$value": "{color.white}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    }
+  },
+  "radius": {
+    "tag": {
+      "$type": "dimension",
+      "$value": "{spacing.50}"
+    },
+    "button": {
+      "$type": "dimension",
+      "$value": "{spacing.50}"
+    },
+    "form-input": {
+      "$type": "dimension",
+      "$value": "{spacing.50}"
+    },
+    "tab": {
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "output": {
+            "value": "{spacing.50} {spacing.50} 0 0",
+            "type": "dimension"
+          }
+        }
+      }
+    },
+    "tab-section": {
+      "$type": "dimension",
+      "$value": "{spacing.50}"
+    }
+  },
+  "padding": {
+    "button": {
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "output": {
+            "value": "{spacing.100} {spacing.200}",
+            "type": "dimension"
+          }
+        }
+      }
+    },
+    "tab": {
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "output": {
+            "value": "{spacing.150} {spacing.200}",
+            "type": "dimension"
+          }
+        }
+      }
+    },
+    "tab-section": {
+      "$type": "dimension",
+      "$value": "{spacing.300}"
+    }
+  },
+  "border-width": {
+    "button": {
+      "$type": "dimension",
+      "$value": {
+        "value": 1,
+        "unit": "px"
+      }
+    }
+  },
+  "font-size": {
+    "button": {
+      "$type": "dimension",
+      "$value": "{font-size.250}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal",
+          "resolve": "literal"
+        }
+      }
+    }
+  },
+  "box-shadow": {
+    "tab-section": {
+      "$type": "shadow",
+      "$value": {
+        "color": {
+          "colorSpace": "srgb",
+          "components": [0, 0, 0],
+          "alpha": 0
+        },
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 0,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 0,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      },
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "none": true
+        }
+      }
+    }
+  },
+  "card": {
+    "background": {
+      "$type": "color",
+      "$value": "{brand.card-surface}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function",
+          "resolve": "literal"
+        }
+      }
+    },
+    "padding": {
+      "$type": "dimension",
+      "$value": "{spacing.150}"
+    },
+    "border-radius": {
+      "$type": "dimension",
+      "$value": "{spacing.50}"
+    },
+    "icon-badge-radius": {
+      "$type": "number",
+      "$value": 0.15,
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "cssUnit": "%",
+          "cssType": "dimension"
+        }
+      }
+    }
+  },
+  "notice": {
+    "action-secondary": {
+      "$type": "color",
+      "$value": "{brand.secondary-800}",
+      "$description": "UNDRR Teal #007b7a is 5.10:1 on white but 4.26:1 on the offline notice's red-50 tint, which fails WCAG 1.4.3 for the status link. The hover partner #006968 from DELTA's own teal ramp is 5.44:1 there and 4.5:1 or more on every notice surface.",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function",
+          "resolve": "literal"
+        }
+      }
+    }
+  },
+  "opacity": {
+    "hero": {
+      "$type": "number",
+      "$value": 1
+    }
+  },
+  "hero-overlay": {
+    "max-width": {
+      "$type": "dimension",
+      "$value": "{width.600}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "padding": {
+      "$type": "dimension",
+      "$value": "{spacing.400}"
+    }
+  },
+  "spacing": {
+    "hero-overlay": {
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal",
+          "output": {
+            "value": "{=spacing.200} 0",
+            "type": "dimension",
+            "format": "literal"
+          }
+        }
+      }
+    }
+  },
+  "$description": "DTCG 2025.10 token data. Mangrove output conventions are namespaced extensions. CSS-only group output recipes are not portable design tokens."
+}

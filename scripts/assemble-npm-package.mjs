@@ -60,6 +60,7 @@ export const PACKAGE_FILES = [
   'scss/**/*.scss',
   'error-pages/**/*',
   'docs/**/*',
+  'tokens/*.tokens.json',
   // Second line of defence: even if a development-only file reaches the
   // assembled directory, npm leaves it out of the tarball.
   '!**/__tests__/**',
@@ -110,6 +111,8 @@ const DIST_COPIES = [
   // The editorial manual and the llms-*.txt sub-manifests, written by
   // scripts/copy-docs-to-dist.mjs (undrr/web-backlog#3109).
   ['dist/docs', 'docs'],
+  // Self-contained portable token data, not the brand authoring fragments.
+  ['dist/tokens', 'tokens'],
 ];
 
 // Top-level names in the repo that must never be used as (or contain) the
