@@ -303,6 +303,27 @@ try {
   const selectRtl = await css(select, ['paddingLeft', 'paddingRight']);
   assert.equal(selectRtl.paddingLeft, '24px');
   assert.equal(selectRtl.paddingRight, '12px');
+  const rtlTree = await page.evaluate(() => {
+    const probe = document.createElement('section');
+    probe.dir = 'rtl';
+    probe.innerHTML =
+      '<ul class="mg-tree mg-tree--guides" role="tree"><li class="mg-tree__item" role="treeitem"><div class="mg-tree__label-container">Parent</div><ul class="mg-tree__group" role="group"><li class="mg-tree__item" role="treeitem"><div class="mg-tree__label-container">Child one</div></li><li class="mg-tree__item" role="treeitem"><div class="mg-tree__label-container">Child two</div></li></ul></li></ul>';
+    document.body.append(probe);
+    const rows = [...probe.querySelectorAll('.mg-tree__label-container')].map(
+      node => node.getBoundingClientRect()
+    );
+    const result = {
+      indent: rows[0].right - rows[1].right,
+      pitch: rows[2].top - rows[1].top,
+    };
+    probe.remove();
+    return result;
+  });
+  assert.deepEqual(
+    rtlTree,
+    { indent: 16, pitch: 32 },
+    'RTL Tree must not inherit the prose list inset'
+  );
   assert.equal(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth + 1

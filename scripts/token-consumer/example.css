@@ -1,0 +1,73 @@
+/* Example application CSS. This does not import Mangrove component styles. */
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  padding: 24px;
+  background: var(--example-page);
+  color: var(--example-text);
+  font-family: var(--example-font);
+  font-size: var(--example-body-size);
+  font-weight: var(--example-regular);
+  line-height: var(--example-line-height);
+}
+main {
+  max-width: 36rem;
+  margin-inline: auto;
+}
+h1 {
+  font-size: var(--example-title-size);
+  font-weight: var(--example-weight);
+}
+form {
+  display: grid;
+  gap: var(--example-gap);
+  margin-block: 24px;
+}
+label {
+  margin-block-end: -8px;
+}
+input,
+button {
+  font: inherit;
+  padding: 8px var(--example-padding);
+  border-radius: var(--example-radius);
+}
+input {
+  min-width: 0;
+  color: var(--example-text);
+  background: var(--example-surface);
+  border: 1px solid var(--example-border);
+}
+button {
+  justify-self: start;
+  background: var(--example-action);
+  color: var(--example-inverse);
+  border: 1px solid transparent;
+  font-weight: var(--example-weight);
+  cursor: pointer;
+}
+button:hover {
+  background: var(--example-hover);
+}
+input:focus-visible,
+button:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--example-focus);
+  outline-offset: 3px;
+}
+summary {
+  cursor: pointer;
+}
+pre {
+  max-width: 100%;
+  overflow: auto;
+  font-size: 12px;
+}
+@media (forced-colors: active) {
+  input,
+  button {
+    border: 1px solid ButtonText;
+  }
+}

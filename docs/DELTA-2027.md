@@ -1,37 +1,64 @@
 # Delta 2027 theme
 
-Delta 2027 adds the visual language supplied by Anders in the v0.7.2 handoff. The existing Delta theme keeps its name, stylesheet and appearance. This is an implementation for review, not approval of the redesigned application.
+Delta 2027 applies Anders's v0.7.2 design handoff to existing Mangrove components. It adds a separate theme alongside the existing Delta theme, which keeps its name, stylesheet and appearance.
 
-## Try it
+The implementation is available for review in [draft PR #1498](https://github.com/unisdr/undrr-mangrove/pull/1498), on the Mangrove 3 stack. Design approval and validation in the Delta application are still pending.
 
-Use the [local review guide](DELTA-2027-LOCAL-REVIEW.md) for an interactive comparison of the same components in both themes.
+## Try the theme
 
-Load `css/style-delta-2027.css` and add `mg-theme-delta-2027` to the body or a wrapper. For pages switching between brands, load `css/style-all.css` instead. The source entry is `stories/assets/scss/style-delta-2027.scss`; the npm Sass entry is `scss/assets/scss/style-delta-2027.scss`.
+Start with the [local review guide](DELTA-2027-LOCAL-REVIEW.md) to compare both themes and use the buttons, fields and tabs.
 
-Use separate wrappers or isolated frames for different brands. Nesting another brand inside Delta 2027 does not reset its component geometry. A theme class must also reach portal content; setting it on a wrapper does not automatically theme a popup appended to the body.
+In a package built from this branch, load `css/style-delta-2027.css` and add `mg-theme-delta-2027` to the body or a wrapper. For a page that switches between brands, load `css/style-all.css` instead. These paths describe the new build; earlier published packages do not contain the theme.
 
-## Tokens and mappings
+The repository Sass entry is `stories/assets/scss/style-delta-2027.scss`. The installed-package entry is `scss/assets/scss/style-delta-2027.scss`.
 
-`tokens/delta-2027.tokens.json` is the editable source. It keeps the supplied taxonomy under `delta-2027` and maps it to Mangrove's existing roles. Extra Delta roles remain available without requiring every component to use them.
+Use separate wrappers or frames for different brands. Nesting another brand inside Delta 2027 does not reset its component sizes and spacing. A popup added outside the themed wrapper also needs the theme class. The wrapper's class does not automatically reach a popup appended to the body.
 
-The handoff contains 112 `$value` entries. Of these, 111 describe typed values. The remaining entry, “WCAG 2.2 AA”, is an accessibility target, so it is retained as metadata rather than represented as an invented DTCG type. Two additional semantic aliases, selected action and toast surface, come from the supplied component descriptions. The source records the original file's SHA-256 and retains the supplied component specifications as metadata.
+## How the tokens reach components
 
-The build exports a complete document at `tokens/delta-2027.tokens.json` in the npm package and `dist/tokens/delta-2027.tokens.json` in build output. These are composed exchange documents; the similarly named repository authoring file depends on inherited Mangrove values. See [the token guide](DESIGN-TOKENS.md).
+A token gives a value a name, such as an action colour or a spacing size. The Delta source keeps Anders's groups and names under `delta-2027`. Mappings then connect those values to the roles Mangrove components already read. Extra Delta roles remain available without requiring every component to use them.
 
-Delta colour properties such as `--mg-delta-2027-semantic-action-default` contain complete CSS colours. Existing properties such as `--mg-color-interactive` keep their channel contract. Do not wrap a complete colour in another `rgb()`. Adapters from complete colours to channels currently resolve at build time. Editing and rebuilding the source updates them; overriding only the complete-colour property at runtime does not update the materialised channel adapter.
+DTCG defines a shared format for token names, types and values. The Mangrove build combines the Delta source with inherited Mangrove values, then produces CSS and a complete JSON file for other tools. See [Design-token sources](DESIGN-TOKENS.md) for the format and build rules.
 
-## What this implements
+The source and exported files have similar names but different purposes:
 
-Existing Mangrove components receive the warm page surface, new accent, Inter typography, compact controls, pill tabs, status dots, quieter cards and tables, and related dialog and notification surfaces. Component behaviour and public markup remain shared. The component recipes live in `_delta-2027-components.scss`; the supplied prose contains geometry that is not itself a token.
+| Location | Purpose |
+| --- | --- |
+| Repository: `tokens/delta-2027.tokens.json` | Editable source. It depends on inherited Mangrove values. |
+| Build output: `dist/tokens/delta-2027.tokens.json` | Complete exchange file, including the values and references other tools need. |
+| Built npm package: `tokens/delta-2027.tokens.json` | The same complete exchange file, ready for a consuming application or design tool. |
 
-The supplied handoff also describes components and variants that Mangrove does not currently expose. This change does not add all of those components. In particular, a native Select retains its native popup; it cannot promise the handoff's checkmark-only custom menu. New text-button ghost and destructive variants require a separate component API decision. Existing toast placement and lifecycle remain unchanged.
+The handoff contains 112 `$value` entries. Of these, 111 describe typed values. The remaining entry, “WCAG 2.2 AA”, is an accessibility target, so it stays in metadata. Two additional semantic aliases, selected action and toast surface, come from the supplied component descriptions. The source also records the original file's SHA-256 and retains those component descriptions as metadata.
 
-The React Aria ComboBox pilot in #1088 remains a separate integration step. Its checkmark selection, popup theme inheritance and focus treatment need validation with the new theme before claiming parity.
+## Edit values and override colours
+
+Edit the repository source and run `yarn scss` to regenerate the token outputs and rebuild the styles. If only the exchange JSON and generated Sass are needed, run `yarn build:tokens` instead.
+
+The two colour representations need different CSS. For example, within Delta 2027:
+
+| Property | Example value | Read it in CSS |
+| --- | --- | --- |
+| `--mg-delta-2027-semantic-action-default` | `rgb(45 111 163)` | `color: var(--mg-delta-2027-semantic-action-default)` |
+| `--mg-color-interactive` | `45 111 163` | `color: rgb(var(--mg-color-interactive))` |
+
+The first property contains a complete CSS colour. The second keeps Mangrove's existing three-channel format. Do not wrap the complete colour in another `rgb()`.
+
+The build calculates the channel value from the complete colour. Editing the source and rebuilding updates both outputs. Changing only the complete-colour property in the browser updates components that read it directly; it does not update the channel value already calculated by the build. Hover, pressed and disabled colours also have separate tokens. The local review's override control demonstrates this limited runtime change. Its [standalone token example](DELTA-2027-LOCAL-REVIEW.md#check-token-use-without-mangrove-components) separately shows temporary source edits, regenerated exports and an independent HTML consumer.
+
+## Components covered and work still pending
+
+Existing Mangrove components receive the warm page surface, new accent, Inter typography, compact controls, pill tabs, status dots, quieter cards and tables, and related dialog and notification surfaces. Their behaviour and public markup remain shared. Theme-specific rules live in `stories/assets/scss/_delta-2027-components.scss`; some sizes and spacing come from the handoff's component descriptions rather than individual tokens.
+
+The handoff also describes components and variants Mangrove does not currently expose. A native Select keeps its native popup, so it does not demonstrate the handoff's checkmark-only custom menu. New text-button ghost and destructive variants need a separate component API decision. Existing toast placement at the top of the viewport and its lifecycle remain unchanged. The handoff's bottom-positioned toast still needs a separate placement decision.
+
+A separate [ComboBox proof branch](https://github.com/unisdr/undrr-mangrove/blob/khawkins98/delta-2027-combobox-proof/docs/DELTA-2027-COMBOBOX-PROOF.md) connects Delta 2027 to the [React Aria pilot, #1088](https://github.com/unisdr/undrr-mangrove/pull/1088). It checks checkmark-only selection, popup theme inheritance, inset focus and disabled colours. Those changes remain outside the main theme branch; production integration and application validation are still pending.
 
 ## Accessibility and fonts
 
-Actual field placeholders use the readable secondary text colour. The handoff's pale placeholder colour remains available for its intended decorative or disabled use. Normal status labels use the supplied 8px dot with visible text; forced-colours mode retains Mangrove's distinguishing status shapes. Field focus uses the inset treatment with a system-colour outline in forced-colours mode.
+Field placeholders use the readable secondary text colour. The handoff's pale placeholder colour remains available for decorative or disabled use. Normal status labels use the supplied 8px dot with visible text; forced-colours mode retains Mangrove's distinguishing status shapes. Fields use inset focus with a system-colour outline in forced-colours mode.
 
-Inter and IBM Plex Mono are self-hosted under `fonts/delta-2027/` in the npm package, next to `css/`. The source folder contains OFL licences, original download URLs and checksums. Sass consumers with another output layout can configure `$font-path-delta-2027`. Arabic script routing continues to use Mangrove's Noto families; Latin islands return to Inter.
+Inter and IBM Plex Mono are self-hosted under `fonts/delta-2027/` in the built npm package, next to `css/`. Keep the OFL licences with the font files when redistributing them. The repository source folder, `stories/assets/fonts/delta-2027/`, contains the licences, original download URLs and checksums.
 
-Visual review, automated checks and remaining limitations are recorded in the local review guide. Approval against the Figma designs and validation in the consuming Delta application remain separate from these implementation checks.
+Sass consumers with another asset layout can configure `$font-path-delta-2027`. Its default, `../fonts/delta-2027`, is relative to the compiled stylesheet. If text falls back to a system font, check the browser's network panel for missing font files. Arabic text continues to use Mangrove's Noto families; English content inside an Arabic section returns to Inter.
+
+The [local review guide](DELTA-2027-LOCAL-REVIEW.md#recorded-review) records the visual and automated checks and their limits. Those checks do not establish Figma approval, complete accessibility conformance or compatibility with the consuming Delta application.

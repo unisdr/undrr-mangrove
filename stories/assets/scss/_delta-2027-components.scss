@@ -625,6 +625,13 @@
     }
   }
 
+  // Reset the shared RTL list inset on both levels of the tree. Otherwise
+  // each child li adds the prose list's 9px inset to the intended tree indent.
+  .mg-tree,
+  .mg-tree__group {
+    @include mg-list-unmarked;
+  }
+
   .mg-tree {
     --mg-tree-item-background--hover: #{delta(semantic-background-inset)};
     --mg-tree-item-background--selected: #{delta(semantic-action-selected)};
