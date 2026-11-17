@@ -269,6 +269,50 @@ describe('typed sources through the generator', () => {
     }
   );
 
+  test.each(['runtime', 'literal'])(
+    'whole-colour aliases adapt complete colours without double wrapping (%s)',
+    mode => {
+      const document = baseDocument();
+      document.color.completeCopy = {
+        $value: '{color.button}',
+        ...extension({
+          format: 'srgb-rgb-function',
+          ...(mode === 'literal' ? { resolve: 'literal' } : {}),
+        }),
+      };
+      document.color.channelCopy = {
+        $value: '{color.completeCopy}',
+        ...extension({ format: 'srgb-channels' }),
+      };
+      write('mangrove', document);
+      const css = output();
+      expect(css).toContain(
+        `--mg-color-completeCopy: ${mode === 'runtime' ? 'var(--mg-color-button)' : 'rgb(0 79 145)'};`
+      );
+      expect(css).toContain('--mg-color-channelCopy: 0 79 145;');
+      expect(css).not.toContain('rgb(var(--mg-color-button))');
+    }
+  );
+
+  test.each(['srgb-rgb-function', 'srgb-channels'])(
+    'colour aliases follow the effective shape through literal adapters (%s)',
+    format => {
+      const document = baseDocument();
+      document.color.adapter = {
+        $value: '{color.button}',
+        ...extension({ format: 'literal' }),
+      };
+      document.color.copy = {
+        $value: '{color.adapter}',
+        ...extension({ format }),
+      };
+      write('mangrove', document);
+      expect(output()).toContain(
+        `--mg-color-copy: ${format === 'srgb-channels' ? '0 79 145' : 'var(--mg-color-adapter)'};`
+      );
+    }
+  );
+
   test.each(['public', 'private-literal'])(
     'structured shadow references resolve nested colour and dimension values (%s)',
     mode => {
@@ -473,6 +517,7 @@ describe('self-contained portable exchange documents', () => {
   test('exports one closed standard document per distributed brand', () => {
     const documents = buildDtcgDocuments();
     expect([...documents.keys()].sort()).toEqual([
+      'delta-2027.tokens.json',
       'delta.tokens.json',
       'irp.tokens.json',
       'mangrove.tokens.json',

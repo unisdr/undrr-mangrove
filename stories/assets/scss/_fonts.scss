@@ -58,6 +58,27 @@
   --mg-font-family-ui: #{mg-font-stack($mg-font-face-sans-condensed)};
 }
 
+// Theme font roles still pass through the shared Arabic routing. Included
+// inside a theme selector, so a wrapper can choose Latin faces without
+// suppressing Noto on Arabic sub-roots or losing its own Latin reset.
+@mixin mg-theme-font-routing($latin-text, $latin-ui, $latin-display) {
+  &:lang(ar),
+  :where(:not(:lang(ar))) > :where([lang]:not([lang=""]):lang(ar)) {
+    @include mg-font-roles-arabic;
+
+    font-family: var(--mg-font-family-text);
+  }
+
+  :where(:lang(ar)) > :where([lang]:not([lang=""], :lang(ar))) {
+    --mg-font-family-text: #{$latin-text};
+    --mg-font-family-heading: #{$latin-text};
+    --mg-font-family-display: #{$latin-display};
+    --mg-font-family-ui: #{$latin-ui};
+
+    font-family: var(--mg-font-family-text);
+  }
+}
+
 /* Arabic fonts */
 
 /*

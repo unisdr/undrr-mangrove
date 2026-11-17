@@ -292,7 +292,15 @@ describe('Arabic typography selectors (compiled CSS)', () => {
       // declaration at (0,0,1) that ties with the consumer's own `h1` rule and
       // wins on source order. Its VALUE is asserted below.
       const css = compile(entry);
-      const ROLE_MAP = [ARABIC_ROOT, ...BOUNDARY_SELECTORS, ...ARABIC_HEADINGS];
+      const ROLE_MAP = [
+        ARABIC_ROOT,
+        ...BOUNDARY_SELECTORS,
+        ...ARABIC_HEADINGS,
+        '.mg-theme-delta-2027:lang(ar)',
+        ...BOUNDARY_SELECTORS.map(
+          selector => `.mg-theme-delta-2027 ${selector}`
+        ),
+      ];
 
       const strays = arabicSelectors(css)
         .filter(selector => !ROLE_MAP.includes(selector))

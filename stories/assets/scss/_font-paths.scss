@@ -8,3 +8,6 @@ $font-path-noto-sans-arabic: "https://assets.undrr.org/fonts/noto-sans-arabic/v1
 // Keep one source for both Roboto families, including configured overrides.
 $FontName: "Roboto" !default;
 $font-version: "2.137" !default;
+
+// Theme-local webfonts, published next to the CSS and configurable for Sass hosts.
+$font-path-delta-2027: "../fonts/delta-2027" !default;

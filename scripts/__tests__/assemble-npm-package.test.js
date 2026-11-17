@@ -64,6 +64,8 @@ beforeEach(() => {
   write(root, 'dist/assets/css/.hidden');
   write(root, 'dist/assets/error-pages/404.html');
   write(root, 'dist/assets/images/logo.png');
+  write(root, 'dist/assets/fonts/delta-2027/inter.woff2');
+  write(root, 'dist/assets/fonts/delta-2027/inter-OFL.txt');
   write(root, 'dist/fonts/mangrove-icon-set.woff2');
   write(root, 'dist/components/MegaMenu.js');
   write(root, 'dist/components/nested/Thing.js');
@@ -115,6 +117,8 @@ test('copies dist subpaths and SCSS sources into the CI layout', () => {
       'dist/assets/css/.hidden',
       'dist/assets/css/style.css',
       'dist/assets/error-pages/404.html',
+      'dist/assets/fonts/delta-2027/inter-OFL.txt',
+      'dist/assets/fonts/delta-2027/inter.woff2',
       'dist/assets/images/logo.png',
       'dist/assets/js/tabs.js',
       'dist/components/MegaMenu.js',
@@ -132,6 +136,8 @@ test('copies dist subpaths and SCSS sources into the CI layout', () => {
       'scss/Components/Tabs/tabs.scss',
       'scss/assets/scss/style.scss',
       'tokens/delta.tokens.json',
+      'fonts/delta-2027/inter.woff2',
+      'fonts/delta-2027/inter-OFL.txt',
     ].sort()
   );
 });
@@ -207,6 +213,8 @@ test('the packed tarball ships the subpath directories', () => {
     'docs/EDITORIAL-MANUAL.md',
     'docs/llms-editorial-manual.txt',
     'error-pages/404.html',
+    'fonts/delta-2027/inter-OFL.txt',
+    'fonts/delta-2027/inter.woff2',
     'js/tabs.js',
     'package.json',
     'scss/Components/Tabs/tabs.scss',
@@ -266,6 +274,7 @@ test('generates the slimmed package.json', () => {
       'error-pages/**/*',
       'docs/**/*',
       'tokens/*.tokens.json',
+      'fonts/delta-2027/**/*',
       '!**/__tests__/**',
       '!**/__snapshots__/**',
       '!**/__mocks__/**',
@@ -296,6 +305,7 @@ test('generates the slimmed package.json', () => {
 
 test('skips optional directories that are not in dist', () => {
   fs.rmSync(path.join(root, 'dist/fonts'), { recursive: true });
+  fs.rmSync(path.join(root, 'dist/assets/fonts'), { recursive: true });
   fs.rmSync(path.join(root, 'dist/assets/error-pages'), { recursive: true });
   expect(run(out, '--root', root).status).toBe(0);
   expect(fs.existsSync(path.join(out, 'fonts'))).toBe(false);

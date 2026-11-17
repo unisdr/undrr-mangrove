@@ -111,5 +111,7 @@ The module exports `mgDialog` and `mgDialogDestroy`. It does not refactor Drawer
 
 ## Changelog
 
+- **0.1.2**, 2026-11-17 ([#1495](https://github.com/unisdr/undrr-mangrove/issues/1495)): Adds opt-in Delta 2027 styling with a 480px desktop surface, 12px corners and a full-height mobile presentation. Existing dialog focus management and disclosure fallback are preserved.
+
 - **0.1.1**, 2026-11-12 ([undrr/web-backlog#3314](https://gitlab.com/undrr/web-backlog/-/work_items/3314)): The scroll lock moved into `js/dialog-scroll-lock.js`, which `js/dialog.js` imports and the search download modal shares, so the two do not undo each other's lock. Sites that copy `js/dialog.js` must copy both files. Dialog behaviour is unchanged.
 - **0.1.0**, 2026-10-29 ([#1435](https://github.com/unisdr/undrr-mangrove/pull/1435)): Added an experimental native dialog enhancement with authored disclosure fallback, short-message and long-reading examples, cleanup and lifecycle tests. Red-team checks cover queued close/reopen, trigger focus return, independent overflow axes/priorities, restored disclosure focus, multiple Close controls and safe fallback for unsupported nested roots. The title uses an outward focus ring to preserve text contrast when focused. Contribution review adds responsive expanded-label header geometry, the shared modal scrim role, locale-driven authored fixtures, generated copyable HTML, and an explicit unreleased local-build metadata recipe. Follow-up is tracked in [#1432](https://github.com/unisdr/undrr-mangrove/issues/1432).

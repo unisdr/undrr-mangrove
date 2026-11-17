@@ -100,6 +100,7 @@ const THEME_CSS = {
   mcr2030: `${CDN_BASE}/css/style-mcr.css`,
   irp: `${CDN_BASE}/css/style-irp.css`,
   delta: `${CDN_BASE}/css/style-delta.css`,
+  'delta-2027': `${CDN_BASE}/css/style-delta-2027.css`,
   all: `${CDN_BASE}/css/style-all.css`,
 };
 
@@ -1212,8 +1213,14 @@ const manifestIds = new Set(Object.values(manifest.components).map(c => c.id));
 // Check curated data keys (component-data.js entries)
 const curatedKeys = Object.keys(curatedData);
 const unmatchedKeys = curatedKeys.filter(k => !manifestIds.has(k));
+// This review canvas composes existing components; it is not a new public API.
+const REVIEW_ONLY_IDS = new Set(['design-decisions-delta-2027']);
 const uncoveredIds = [...manifestIds].filter(
-  id => !curatedData[id] && !REQUIRES_REACT[id] && !id.startsWith('example-')
+  id =>
+    !curatedData[id] &&
+    !REQUIRES_REACT[id] &&
+    !id.startsWith('example-') &&
+    !REVIEW_ONLY_IDS.has(id)
 );
 
 if (unmatchedKeys.length > 0) {
@@ -2622,7 +2629,7 @@ Where they come from:
 
 - Compiled theme token dictionary: ${DOCS_BASE}tokens.json — theme tokens only; see its \`scope\` field
 - \`tokens/mangrove.tokens.json\` — the brand-neutral base: ${PUBLIC_REPO_RAW_MAIN}tokens/mangrove.tokens.json
-- \`tokens/undrr.tokens.json\`, \`preventionweb.tokens.json\`, \`irp.tokens.json\`, \`mcr.tokens.json\`, \`delta.tokens.json\` — brand layers merged over the base, same directory.
+- \`tokens/undrr.tokens.json\`, \`preventionweb.tokens.json\`, \`irp.tokens.json\`, \`mcr.tokens.json\`, \`delta.tokens.json\`, \`delta-2027.tokens.json\` — brand layers merged over the base, same directory.
 - \`stories/assets/scss/_tokens-data-viz.scss\` — the chart and map palette: ${PUBLIC_REPO_RAW_MAIN}stories/assets/scss/_tokens-data-viz.scss
 
 Those DTCG JSON files carry a \`$description\` on the tokens that need one, which is the reasoning behind the value. For automated and tooling integrations, fetch the machine-readable \`${DOCS_BASE}tokens.json\` dictionary which includes token types, formats, descriptions, and rgb() wrapping requirements.

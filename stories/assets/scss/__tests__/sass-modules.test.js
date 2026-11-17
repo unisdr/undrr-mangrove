@@ -8,6 +8,7 @@ const BUNDLES = [
   'style',
   'style-all',
   'style-delta',
+  'style-delta-2027',
   'style-gutenberg',
   'style-irp',
   'style-mcr',
@@ -78,7 +79,9 @@ test.each(BUNDLES)(
       expect(modern).toContain(`"Consumer ${index} Face"`);
     const faces = [];
     postcss.parse(modern).walkAtRules('font-face', rule => faces.push(rule));
-    expect(faces).toHaveLength(32);
+    expect(faces).toHaveLength(
+      ['style-all', 'style-delta-2027'].includes(bundle) ? 72 : 32
+    );
     expect(modern).toContain('Renamed-Light.woff2?v=3.0');
     expect(modern).toContain('RobotoCondensed-Light.woff2?v=3.0');
     const defaults = compile(`@use '${bundle}';`);

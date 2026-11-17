@@ -1,0 +1,1058 @@
+{
+  "$description": "Proposal for discussion: the 111 typed values supplied in Delta v0.7.2, expressed in DTCG 2025.10 format. This is a review snapshot, not an additional authoring source. See delta-token-exchange.md.",
+  "primitive": {
+    "neutral": {
+      "100": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.9686274509803922,
+            0.9725490196078431,
+            0.9803921568627451
+          ]
+        }
+      },
+      "200": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.9333333333333333,
+            0.9411764705882353,
+            0.9607843137254902
+          ]
+        }
+      },
+      "300": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.8666666666666667,
+            0.8823529411764706,
+            0.9254901960784314
+          ]
+        }
+      },
+      "400": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.7686274509803922,
+            0.792156862745098,
+            0.8509803921568627
+          ]
+        }
+      },
+      "500": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.6078431372549019,
+            0.6392156862745098,
+            0.7215686274509804
+          ]
+        }
+      },
+      "600": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.4196078431372549,
+            0.4549019607843137,
+            0.5647058823529412
+          ]
+        }
+      },
+      "700": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.2823529411764706,
+            0.3215686274509804,
+            0.4392156862745098
+          ]
+        }
+      },
+      "800": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.18823529411764706,
+            0.22745098039215686,
+            0.32941176470588235
+          ]
+        }
+      },
+      "900": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.11764705882352941,
+            0.15294117647058825,
+            0.23137254901960785
+          ]
+        }
+      },
+      "1000": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.06666666666666667,
+            0.09411764705882353,
+            0.1607843137254902
+          ]
+        }
+      },
+      "1100": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.03137254901960784,
+            0.047058823529411764,
+            0.09019607843137255
+          ]
+        }
+      }
+    },
+    "warm": {
+      "$description": "Anchors #FAF9F5 (page) and #141413 (text). The other values are derived by eye. Warm page confirmed on the example screen, 2026-11-09.",
+      "50": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.9803921568627451,
+            0.9764705882352941,
+            0.9607843137254902
+          ]
+        }
+      },
+      "100": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.9411764705882353,
+            0.9333333333333333,
+            0.9019607843137255
+          ]
+        }
+      },
+      "200": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.9254901960784314,
+            0.9176470588235294,
+            0.8862745098039215
+          ]
+        }
+      },
+      "300": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.8784313725490196,
+            0.8666666666666667,
+            0.8235294117647058
+          ]
+        }
+      },
+      "400": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.8117647058823529,
+            0.796078431372549,
+            0.7450980392156863
+          ]
+        }
+      },
+      "700": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.3686274509803922,
+            0.36470588235294116,
+            0.34901960784313724
+          ]
+        }
+      },
+      "1000": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.0784313725490196,
+            0.0784313725490196,
+            0.07450980392156863
+          ]
+        }
+      }
+    },
+    "accent": {
+      "100": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.9098039215686274,
+            0.9450980392156862,
+            0.9764705882352941
+          ]
+        }
+      },
+      "200": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.7843137254901961,
+            0.8627450980392157,
+            0.9411764705882353
+          ]
+        }
+      },
+      "300": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.615686274509804,
+            0.7529411764705882,
+            0.8901960784313725
+          ]
+        }
+      },
+      "400": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.41568627450980394,
+            0.6274509803921569,
+            0.8196078431372549
+          ]
+        }
+      },
+      "500": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.25882352941176473,
+            0.5137254901960784,
+            0.7372549019607844
+          ]
+        }
+      },
+      "600": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.17647058823529413,
+            0.43529411764705883,
+            0.6392156862745098
+          ]
+        }
+      },
+      "700": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.1411764705882353,
+            0.35294117647058826,
+            0.5215686274509804
+          ]
+        }
+      },
+      "800": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.10196078431372549,
+            0.26666666666666666,
+            0.39215686274509803
+          ]
+        }
+      },
+      "900": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.06666666666666667,
+            0.18823529411764706,
+            0.2823529411764706
+          ]
+        }
+      },
+      "1000": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.0392156862745098,
+            0.11764705882352941,
+            0.1803921568627451
+          ]
+        }
+      },
+      "1100": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.01568627450980392,
+            0.058823529411764705,
+            0.09411764705882353
+          ]
+        }
+      }
+    },
+    "green": {
+      "100": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.9019607843137255,
+            0.9568627450980393,
+            0.9254901960784314
+          ]
+        }
+      },
+      "200": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.7529411764705882,
+            0.8941176470588236,
+            0.807843137254902
+          ]
+        }
+      },
+      "500": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.11372549019607843,
+            0.5607843137254902,
+            0.33725490196078434
+          ]
+        }
+      },
+      "600": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.0784313725490196,
+            0.4196078431372549,
+            0.25098039215686274
+          ]
+        }
+      },
+      "700": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.054901960784313725,
+            0.30980392156862746,
+            0.1843137254901961
+          ]
+        }
+      }
+    },
+    "amber": {
+      "100": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.996078431372549,
+            0.9529411764705882,
+            0.8862745098039215
+          ]
+        }
+      },
+      "200": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.9921568627450981,
+            0.8588235294117647,
+            0.6509803921568628
+          ]
+        }
+      },
+      "500": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.8156862745098039,
+            0.47058823529411764,
+            0.0
+          ]
+        }
+      },
+      "600": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.6588235294117647,
+            0.3607843137254902,
+            0.0
+          ]
+        }
+      },
+      "700": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.47843137254901963,
+            0.2627450980392157,
+            0.0
+          ]
+        }
+      }
+    },
+    "red": {
+      "100": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.9921568627450981,
+            0.9254901960784314,
+            0.9176470588235294
+          ]
+        }
+      },
+      "200": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.9764705882352941,
+            0.7725490196078432,
+            0.7568627450980392
+          ]
+        }
+      },
+      "500": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.8784313725490196,
+            0.2823529411764706,
+            0.25098039215686274
+          ]
+        }
+      },
+      "600": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.7843137254901961,
+            0.20784313725490197,
+            0.16470588235294117
+          ]
+        }
+      },
+      "700": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.611764705882353,
+            0.1568627450980392,
+            0.12549019607843137
+          ]
+        }
+      }
+    }
+  },
+  "semantic": {
+    "background": {
+      "default": {
+        "$type": "color",
+        "$value": "{primitive.warm.50}",
+        "$description": "#FAF9F5 - page background (warm). White surfaces sit on it"
+      },
+      "surface": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "$description": "card / panel background"
+      },
+      "inset": {
+        "$type": "color",
+        "$value": "{primitive.warm.100}",
+        "$description": "hover state on rows / list items, current nav item"
+      },
+      "overlay": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.06666666666666667,
+            0.09411764705882353,
+            0.1607843137254902
+          ],
+          "alpha": 0.48
+        },
+        "$description": "modal scrim"
+      }
+    },
+    "border": {
+      "default": {
+        "$type": "color",
+        "$value": "{primitive.warm.300}"
+      },
+      "subtle": {
+        "$type": "color",
+        "$value": "{primitive.warm.200}"
+      },
+      "strong": {
+        "$type": "color",
+        "$value": "{primitive.warm.400}"
+      },
+      "control": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.5607843137254902,
+            0.5490196078431373,
+            0.5098039215686274
+          ]
+        },
+        "$description": "Inputs, selects, secondary buttons. 3.36:1 on white, 3.19:1 on page (WCAG 1.4.11). Hover: text.secondary. Cards and dividers keep default/subtle. Agreed 2026-11-09."
+      }
+    },
+    "text": {
+      "primary": {
+        "$type": "color",
+        "$value": "{primitive.warm.1000}",
+        "$description": "17.50:1 on page, 18.43:1 on white - body text, headings"
+      },
+      "secondary": {
+        "$type": "color",
+        "$value": "{primitive.warm.700}",
+        "$description": "6.26:1 on page, 6.59:1 on white - supporting text, labels"
+      },
+      "placeholder": {
+        "$type": "color",
+        "$value": "{primitive.neutral.500}",
+        "$description": "2.52:1 on white, 2.39:1 on page - decorative / disabled ONLY, never informational text"
+      },
+      "inverse": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "$description": "text on dark surfaces"
+      }
+    },
+    "action": {
+      "default": {
+        "$type": "color",
+        "$value": "{primitive.accent.600}",
+        "$description": "5.37:1 on white, 5.09:1 on page - interactive elements, links"
+      },
+      "hover": {
+        "$type": "color",
+        "$value": "{primitive.accent.700}"
+      },
+      "active": {
+        "$type": "color",
+        "$value": "{primitive.accent.800}"
+      },
+      "disabled": {
+        "$type": "color",
+        "$value": "{primitive.neutral.400}"
+      }
+    },
+    "status": {
+      "positive": {
+        "text": {
+          "$type": "color",
+          "$value": "{primitive.green.600}",
+          "$description": "6.55:1 on white, 6.22:1 on page"
+        },
+        "background": {
+          "$type": "color",
+          "$value": "{primitive.green.100}"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "{primitive.green.200}"
+        }
+      },
+      "warning": {
+        "text": {
+          "$type": "color",
+          "$value": "{primitive.amber.600}",
+          "$description": "5.00:1 on white, 4.75:1 on page"
+        },
+        "background": {
+          "$type": "color",
+          "$value": "{primitive.amber.100}"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "{primitive.amber.200}"
+        }
+      },
+      "critical": {
+        "text": {
+          "$type": "color",
+          "$value": "{primitive.red.600}",
+          "$description": "5.25:1 on white, 4.99:1 on page"
+        },
+        "background": {
+          "$type": "color",
+          "$value": "{primitive.red.100}"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "{primitive.red.200}"
+        },
+        "hover": {
+          "$type": "color",
+          "$value": "{primitive.red.700}",
+          "$description": "Destructive button hover. Agreed 2026-11-09."
+        }
+      },
+      "informational": {
+        "text": {
+          "$type": "color",
+          "$value": "{primitive.accent.600}"
+        },
+        "background": {
+          "$type": "color",
+          "$value": "{primitive.accent.100}"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "{primitive.accent.200}"
+        }
+      }
+    },
+    "focus": {
+      "ring": {
+        "$type": "color",
+        "$value": "{primitive.accent.600}",
+        "$description": "2px solid, 2px offset"
+      }
+    }
+  },
+  "typography": {
+    "font": {
+      "sans": {
+        "$type": "fontFamily",
+        "$value": [
+          "Inter",
+          "system-ui",
+          "-apple-system",
+          "sans-serif"
+        ]
+      },
+      "mono": {
+        "$type": "fontFamily",
+        "$value": [
+          "IBM Plex Mono",
+          "Fira Code",
+          "monospace"
+        ]
+      }
+    },
+    "scale": {
+      "11": {
+        "$type": "dimension",
+        "$value": {
+          "value": 11,
+          "unit": "px"
+        }
+      },
+      "12": {
+        "$type": "dimension",
+        "$value": {
+          "value": 12,
+          "unit": "px"
+        }
+      },
+      "14": {
+        "$type": "dimension",
+        "$value": {
+          "value": 14,
+          "unit": "px"
+        }
+      },
+      "20": {
+        "$type": "dimension",
+        "$value": {
+          "value": 20,
+          "unit": "px"
+        }
+      },
+      "24": {
+        "$type": "dimension",
+        "$value": {
+          "value": 24,
+          "unit": "px"
+        }
+      },
+      "30": {
+        "$type": "dimension",
+        "$value": {
+          "value": 30,
+          "unit": "px"
+        }
+      }
+    },
+    "weight": {
+      "regular": {
+        "$type": "fontWeight",
+        "$value": 400
+      },
+      "medium": {
+        "$type": "fontWeight",
+        "$value": 500
+      },
+      "semibold": {
+        "$type": "fontWeight",
+        "$value": 600
+      }
+    },
+    "lineHeight": {
+      "tight": {
+        "$type": "number",
+        "$value": 1.25
+      },
+      "normal": {
+        "$type": "number",
+        "$value": 1.5
+      }
+    }
+  },
+  "spacing": {
+    "1": {
+      "$type": "dimension",
+      "$value": {
+        "value": 4,
+        "unit": "px"
+      },
+      "$description": "icon gaps, tight inline spacing"
+    },
+    "2": {
+      "$type": "dimension",
+      "$value": {
+        "value": 8,
+        "unit": "px"
+      },
+      "$description": "badge padding, label-icon gap"
+    },
+    "3": {
+      "$type": "dimension",
+      "$value": {
+        "value": 12,
+        "unit": "px"
+      },
+      "$description": "compact padding"
+    },
+    "4": {
+      "$type": "dimension",
+      "$value": {
+        "value": 16,
+        "unit": "px"
+      },
+      "$description": "default component padding, mobile margin"
+    },
+    "6": {
+      "$type": "dimension",
+      "$value": {
+        "value": 24,
+        "unit": "px"
+      },
+      "$description": "card padding, section gaps, tablet/desktop margin"
+    },
+    "8": {
+      "$type": "dimension",
+      "$value": {
+        "value": 32,
+        "unit": "px"
+      },
+      "$description": "between major sections, desktop margin"
+    },
+    "12": {
+      "$type": "dimension",
+      "$value": {
+        "value": 48,
+        "unit": "px"
+      },
+      "$description": "large section breaks"
+    },
+    "16": {
+      "$type": "dimension",
+      "$value": {
+        "value": 64,
+        "unit": "px"
+      },
+      "$description": "page-level separation"
+    }
+  },
+  "radius": {
+    "sm": {
+      "$type": "dimension",
+      "$value": {
+        "value": 4,
+        "unit": "px"
+      },
+      "$description": "badges, chips"
+    },
+    "md": {
+      "$type": "dimension",
+      "$value": {
+        "value": 6,
+        "unit": "px"
+      },
+      "$description": "buttons, inputs"
+    },
+    "lg": {
+      "$type": "dimension",
+      "$value": {
+        "value": 8,
+        "unit": "px"
+      },
+      "$description": "cards, dropdowns"
+    },
+    "xl": {
+      "$type": "dimension",
+      "$value": {
+        "value": 12,
+        "unit": "px"
+      },
+      "$description": "modals"
+    },
+    "full": {
+      "$type": "dimension",
+      "$value": {
+        "value": 9999,
+        "unit": "px"
+      },
+      "$description": "pills, avatars"
+    }
+  },
+  "shadow": {
+    "sm": {
+      "$type": "shadow",
+      "$value": {
+        "color": {
+          "colorSpace": "srgb",
+          "components": [
+            0.06666666666666667,
+            0.09411764705882353,
+            0.1607843137254902
+          ],
+          "alpha": 0.06
+        },
+        "offsetX": {
+          "value": 0.0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 1,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 2,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "md": {
+      "$type": "shadow",
+      "$value": {
+        "color": {
+          "colorSpace": "srgb",
+          "components": [
+            0.06666666666666667,
+            0.09411764705882353,
+            0.1607843137254902
+          ],
+          "alpha": 0.1
+        },
+        "offsetX": {
+          "value": 0.0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 4,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 12,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      },
+      "$description": "dropdowns, popovers"
+    },
+    "lg": {
+      "$type": "shadow",
+      "$value": {
+        "color": {
+          "colorSpace": "srgb",
+          "components": [
+            0.06666666666666667,
+            0.09411764705882353,
+            0.1607843137254902
+          ],
+          "alpha": 0.14
+        },
+        "offsetX": {
+          "value": 0.0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 8,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 24,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      },
+      "$description": "modals"
+    }
+  },
+  "motion": {
+    "duration": {
+      "fast": {
+        "$type": "duration",
+        "$value": {
+          "value": 100,
+          "unit": "ms"
+        },
+        "$description": "tooltips, hover states, focus rings - pre-wired in components, do not use in feature code"
+      },
+      "normal": {
+        "$type": "duration",
+        "$value": {
+          "value": 200,
+          "unit": "ms"
+        },
+        "$description": "dropdowns, modals, toasts - pre-wired in components, do not use in feature code"
+      },
+      "slow": {
+        "$type": "duration",
+        "$value": {
+          "value": 300,
+          "unit": "ms"
+        },
+        "$description": "page transitions, large panels - pre-wired in components, do not use in feature code"
+      }
+    },
+    "easing": {
+      "default": {
+        "$type": "cubicBezier",
+        "$value": [
+          0.16,
+          1.0,
+          0.3,
+          1.0
+        ],
+        "$description": "all transitions - fast out, slow to settle"
+      },
+      "in": {
+        "$type": "cubicBezier",
+        "$value": [
+          0.4,
+          0.0,
+          1.0,
+          1.0
+        ],
+        "$description": "elements leaving the screen"
+      },
+      "out": {
+        "$type": "cubicBezier",
+        "$value": [
+          0.0,
+          0.0,
+          0.2,
+          1.0
+        ],
+        "$description": "elements entering the screen"
+      }
+    }
+  },
+  "layout": {
+    "maxWidth": {
+      "$type": "dimension",
+      "$value": {
+        "value": 1280,
+        "unit": "px"
+      }
+    }
+  },
+  "accessibility": {
+    "targetMin": {
+      "$type": "dimension",
+      "$value": {
+        "value": 24,
+        "unit": "px"
+      },
+      "$description": "Smallest clickable area, width and height (WCAG 2.5.8). Icon buttons are 32px. A smaller visual, for example a 16px checkbox, gets its size from padding or its label."
+    }
+  }
+}

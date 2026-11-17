@@ -1,0 +1,2459 @@
+{
+  "$extensions": {
+    "org.undrr.mangrove": {
+      "brand": {
+        "id": "delta-2027",
+        "extends": "undrr",
+        "title": "Delta 2027",
+        "selector": ".mg-theme-delta-2027"
+      },
+      "handoff": {
+        "version": "0.7.2",
+        "source": "Anders: tokens.json, received 17 November 2026",
+        "sha256": "e25a55fd14ab67908e6de8b6bc7b2debc0e2d42427054e77a9293d03645299cf",
+        "accessibilityStandard": "WCAG 2.2 AA",
+        "typographyRoles": {
+          "page-title": {
+            "size": "20px",
+            "weight": 500,
+            "lineHeight": "tight",
+            "font": "sans",
+            "comment": "top-level screen heading",
+            "htmlHeading": "h1"
+          },
+          "section-title": {
+            "size": "16px",
+            "weight": 500,
+            "lineHeight": "tight",
+            "font": "sans",
+            "comment": "card and panel heading, modal header, mobile menu group titles",
+            "htmlHeading": "h2"
+          },
+          "body": {
+            "size": "14px",
+            "weight": 400,
+            "lineHeight": "normal",
+            "font": "sans",
+            "comment": "default UI text"
+          },
+          "body-strong": {
+            "size": "14px",
+            "weight": 500,
+            "lineHeight": "normal",
+            "font": "sans",
+            "comment": "emphasis within body",
+            "htmlHeading": "h3 (when used as a heading)"
+          },
+          "label": {
+            "size": "12px",
+            "weight": 400,
+            "lineHeight": "tight",
+            "font": "sans",
+            "comment": "KPI labels (form field labels use the body role)"
+          },
+          "column-header": {
+            "size": "12px",
+            "weight": 500,
+            "lineHeight": "tight",
+            "font": "sans",
+            "comment": "table column headers. Sentence case, text.secondary, never uppercase"
+          },
+          "caption": {
+            "size": "11px",
+            "weight": 400,
+            "lineHeight": "normal",
+            "font": "sans",
+            "comment": "metadata, timestamps, helper text"
+          },
+          "overline": {
+            "size": "11px",
+            "weight": 500,
+            "lineHeight": "tight",
+            "font": "sans",
+            "letterSpacing": "0.06em",
+            "textTransform": "uppercase",
+            "comment": "rare small uppercase labels, e.g. the Site label in the nav. Not for table headers"
+          },
+          "data": {
+            "size": "14px",
+            "weight": 400,
+            "lineHeight": "tight",
+            "font": "mono",
+            "comment": "identifiers and codes only (IDs, record numbers). Numbers and dates in tables use the body role with tabular-nums"
+          },
+          "data-large": {
+            "size": "24px",
+            "weight": 500,
+            "lineHeight": "tight",
+            "font": "sans",
+            "comment": "KPI values. Inter, not mono (agreed 2026-11-09)",
+            "fontFeature": "tabular-nums"
+          }
+        },
+        "componentSpecifications": {
+          "button": {
+            "height": {
+              "default": "32px",
+              "compact": "28px",
+              "large": "40px"
+            },
+            "padding": {
+              "default": "0 12px",
+              "compact": "0 8px",
+              "large": "0 16px"
+            },
+            "radius": "{radius.md}",
+            "font": "14px / 400",
+            "variants": ["primary", "secondary", "ghost", "destructive"],
+            "states": ["default", "hover", "active", "disabled", "loading"]
+          },
+          "input": {
+            "height": {
+              "default": "32px",
+              "large": "40px"
+            },
+            "padding": "0 12px",
+            "radius": "{radius.md}",
+            "font": "body role (14px / 400)",
+            "labelGap": "6px",
+            "errorGap": "4px",
+            "states": ["default", "focus", "filled", "error", "disabled"],
+            "focus": "accent border + inset 1px ring, no offset ring (agreed 2026-11-09)"
+          },
+          "status": {
+            "comment": "Replaces the boxed uppercase badge. Display only.",
+            "indicator": "8px dot, {radius.full}, colour from semantic.status.*.text (neutral: primitive.neutral.500)",
+            "text": "body role (14px / 400), text.primary, sentence case",
+            "gap": "8px",
+            "height": "20px",
+            "fill": "none",
+            "border": "none",
+            "variants": [
+              "positive",
+              "warning",
+              "critical",
+              "informational",
+              "neutral"
+            ],
+            "interactive": false,
+            "a11y": "The text label carries the meaning. The dot is reinforcement, never the only signal."
+          },
+          "card": {
+            "background": "{semantic.background.surface}",
+            "border": "1px {semantic.border.subtle}",
+            "radius": "{radius.lg}",
+            "padding": "16px"
+          },
+          "table": {
+            "rowHeight": {
+              "default": "40px",
+              "compact": "32px"
+            },
+            "cellPadding": "0 16px",
+            "headerFont": "column-header role (12px / 500), text.secondary, sentence case, no uppercase",
+            "bodyFont": "body role (14px / 400)",
+            "identifierFont": "data role (IBM Plex Mono) for IDs and codes only",
+            "numericFont": "body role with tabular-nums for numbers and dates",
+            "borders": "horizontal dividers only, no vertical lines",
+            "hoverState": "{semantic.background.inset}, only when clicking the row does something. Rows in a table where only the action buttons react have no hover fill and no hand cursor. Agreed 2026-11-11.",
+            "selectedState": "{primitive.accent.100} background",
+            "stickyHeader": true,
+            "reactAria": "Table component",
+            "sorting": "Click a column header to sort, click again to reverse. Sorted column shows an up or down arrow, other sortable columns a faint double arrow (12px icons). Only on columns where the order means something, never the actions column. Sorting applies to the whole list. Agreed 2026-11-11.",
+            "longText": "Cut off with an ellipsis, full text on hover. Action icon buttons stay visible, each with a tooltip."
+          },
+          "dropdown": {
+            "trigger": "same spec as input",
+            "menuRadius": "{radius.xl}",
+            "menuShadow": "{shadow.md}",
+            "itemHeight": "32px",
+            "itemPadding": "0 12px",
+            "maxHeight": "320px",
+            "reactAria": "Select + ListBox",
+            "menuPadding": "8px",
+            "menuBorder": "1px {semantic.border.default}",
+            "itemContent": "label only",
+            "selectedState": "check icon only, no fill or accent text",
+            "hoverState": "{semantic.background.inset}"
+          },
+          "modal": {
+            "width": {
+              "default": "480px",
+              "large": "640px",
+              "mobile": "full-screen"
+            },
+            "radius": "{radius.xl}",
+            "shadow": "{shadow.lg}",
+            "headerPadding": "24px",
+            "bodyPadding": "24px",
+            "footerPadding": "24px",
+            "reactAria": "Dialog + Modal",
+            "header": "section-title role (16px / 500)"
+          },
+          "toast": {
+            "width": "320px",
+            "position": "fixed bottom-right",
+            "radius": "{radius.lg}",
+            "background": "{primitive.neutral.900}",
+            "textColor": "white",
+            "autoDismiss": "4000ms",
+            "criticalDismiss": "persistent",
+            "maxStack": 3,
+            "reactAria": "Toast"
+          },
+          "nav": {
+            "pattern": "top nav, quiet pill triggers",
+            "height": "48px",
+            "background": "{semantic.background.default} (on the page colour, no white bar)",
+            "border": "{semantic.border.subtle} bottom",
+            "font": "14px / 400",
+            "left": "DELTA wordmark + instance selector",
+            "right": "Data \u00b7 Analysis \u00b7 About \u00b7 Settings + avatar",
+            "trigger": {
+              "height": "32px",
+              "padding": "0 12px",
+              "radius": "{radius.full}",
+              "color": "{semantic.text.secondary}",
+              "chevron": "16px, 1.5 stroke"
+            },
+            "states": {
+              "hover": "{semantic.background.inset} at 55% opacity, text.primary",
+              "open": "same as hover",
+              "current": "{semantic.background.inset} fill, text.primary. No underline, no accent colour"
+            },
+            "dropdowns": "label only, no description (agreed 2026-11-09)",
+            "reactAria": "MenuBar + MenuTrigger + Menu",
+            "mobile": {
+              "breakpoint": "768px",
+              "pattern": "hamburger, full-height list",
+              "groupDivider": "1px {semantic.border.default} between groups",
+              "groupTitle": "section-title role (16px / 500, text.primary). Items 14px / 400 text.secondary, hover text.primary"
+            }
+          },
+          "filterTrigger": {
+            "content": "value only ('All hazards', 'Flood'); the field name is the aria-label",
+            "activeState": "{semantic.background.inset} fill, text.primary, when value is not the default",
+            "reactAria": "Select"
+          },
+          "field": {
+            "label": "body role (14px / 400) above the control, 6px gap",
+            "help": "12px text.secondary below, 6px gap",
+            "error": "12px semantic.critical below, plain language",
+            "invalidBorder": "semantic.critical",
+            "disabledFill": "{semantic.background.inset}, text.secondary",
+            "reactAria": "TextField, TextArea, Select"
+          },
+          "checkbox": {
+            "size": "16px",
+            "radius": "4px",
+            "border": "{semantic.border.control}",
+            "selected": "accent fill, white check",
+            "reactAria": "Checkbox, CheckboxGroup"
+          },
+          "radio": {
+            "size": "16px",
+            "selected": "5px accent ring",
+            "reactAria": "Radio, RadioGroup"
+          },
+          "switch": {
+            "track": "32px x 18px, border.control off, accent on",
+            "thumb": "14px surface",
+            "reactAria": "Switch"
+          },
+          "datePicker": {
+            "input": "input spec with date segments (tabular-nums), calendar icon button",
+            "calendar": "popover, 32px day cells, selected = accent fill",
+            "reactAria": "DatePicker, Calendar"
+          },
+          "emptyState": {
+            "layout": "centred in a card: 24px icon (text.secondary), section-title, one line text.secondary, one action",
+            "variants": "first use (primary action), no results (secondary action: clear filters)"
+          },
+          "loading": {
+            "table": "skeleton rows (inset fill, 12px, 4px radius, pulse) that keep the layout",
+            "button": "keeps width, spinner plus label, disabled while busy",
+            "spinner": "14px, 2px ring",
+            "reducedMotion": "animations stop"
+          },
+          "errorBanner": {
+            "layout": "critical-bg, critical-border, radius lg, warning icon, bold message + secondary detail, 'Try again' secondary button",
+            "role": "alert"
+          },
+          "chart": {
+            "library": "Recharts (MIT)",
+            "line": "2px linear line (no smoothing), accent, no dots, 5px active dot with surface ring",
+            "bar": "14px bars, 4px rounded data end, direct value labels, accent",
+            "grid": "horizontal lines only, border.subtle; axes text.secondary 12px",
+            "tooltip": "surface, border, radius lg, shadow md",
+            "animation": "none",
+            "accessibility": "role=img with a text summary, 'Show as table' on every chart, tooltip on hover and keyboard",
+            "colourRoles": {
+              "categories": "fixed order #2D6FA3, #eb6834, #1baf7a; max 3 when colour must separate series; passes colour-blind check (adjacent CVD dE 9.1); aqua is below 3:1 so direct labels or table are required",
+              "magnitude": "one hue light to dark: #cde2fb, #86b6ef, #3987e5, #256abf, #104281",
+              "status": "good, warning, critical tokens only, always with a label"
+            }
+          },
+          "tabs": {
+            "style": "Pill tabs in the nav trigger style: 32px high, 12px horizontal padding, hover inset at 55%, selected inset. Agreed 2026-11-09."
+          },
+          "pagination": {
+            "layout": "Range text left; on the right a 'Rows per page' select, then previous and next icon buttons with 'Page x of y'. Built from Select and Button.",
+            "pageSizes": [25, 50, 100],
+            "defaultPageSize": 25,
+            "status": "Layout agreed 2026-11-09. Rows per page agreed 2026-11-11."
+          },
+          "dialog": {
+            "bodySpacing": "8px under the header, 24px above the footer. Agreed 2026-11-09.",
+            "use": "Add, edit, view, delete and import open as dialogs on the list page, not as separate pages. Errors show under their field and clear on edit. After saving, the dialog closes and a toast confirms. Agreed 2026-11-11.",
+            "blockedDelete": "When an object cannot be deleted because it is in use, the dialog says so up front, says why and what to do, and has only a Close button. Agreed 2026-11-12."
+          },
+          "topNav": {
+            "siteSelector": "Bordered select trigger (a switcher, not a nav item). Agreed 2026-11-09."
+          },
+          "textArea": {
+            "base": "Same as input (border, radius, states)",
+            "minHeight": "80px",
+            "padding": "8px 12px",
+            "resize": "vertical only",
+            "reactAria": "TextField + TextArea",
+            "status": "Agreed 2026-11-10."
+          },
+          "passwordField": {
+            "base": "Same as input",
+            "trailing": "Eye / EyeOff icon button, 16px, text.secondary, toggles visibility",
+            "a11y": "The toggle has an accessible label (Show password / Hide password)",
+            "reactAria": "TextField + Input + Button",
+            "status": "Agreed 2026-11-10."
+          },
+          "inputMask": {
+            "visual": "None. Standard input, no extra states.",
+            "behaviour": "Formats what the user types (for example dates and codes). Behaviour only.",
+            "reactAria": "TextField + Input",
+            "status": "Agreed 2026-11-10."
+          },
+          "tag": {
+            "height": "24px",
+            "radius": "{radius.sm}",
+            "background": "{semantic.background.inset}",
+            "font": "label role (12px / 400)",
+            "removable": "optional X icon button, 16px",
+            "reactAria": "TagGroup",
+            "status": "Agreed 2026-11-10."
+          },
+          "multiSelect": {
+            "trigger": "Select trigger showing the count, for example '2 hazards selected'",
+            "popover": "Same as dropdown. Selected items show a check icon.",
+            "reactAria": "Select / ListBox with multiple selection",
+            "status": "Agreed 2026-11-10."
+          },
+          "fileUpload": {
+            "layout": "Drop area, 1px dashed border (border.strong), radius lg, upload icon, text, secondary Button 'Choose files', 11px format hint (caption role)",
+            "states": ["default", "drag over", "disabled"],
+            "dragOver": "accent border, accent-100 fill",
+            "disabled": "inset fill, text.disabled",
+            "reactAria": "DropZone + FileTrigger",
+            "status": "Agreed 2026-11-10."
+          },
+          "messageBanner": {
+            "tones": ["info", "success", "warning", "error"],
+            "layout": "status background and border (1px), radius lg, 16px icon top-aligned (Info, Check, Alert, X), body-strong title plus body detail in text.secondary, padding 12px 16px, gap 12px",
+            "error": "Same as errorBanner (role alert)",
+            "status": "Agreed 2026-11-10."
+          },
+          "tooltip": {
+            "background": "toast background",
+            "text": "label role (12px / 400), text.inverse",
+            "padding": "4px 8px",
+            "radius": "{radius.md}",
+            "trigger": "hover and keyboard focus",
+            "reactAria": "Tooltip",
+            "status": "Agreed 2026-11-10."
+          },
+          "breadcrumbs": {
+            "layout": "Links in accent (body role), 16px chevron separators in text.secondary, current page in body-strong, not a link (aria-current)",
+            "reactAria": "Breadcrumbs",
+            "status": "Agreed 2026-11-10."
+          },
+          "accordion": {
+            "header": "48px high, 12px vertical padding, body-strong title, chevron right (turns 180 degrees when open)",
+            "divider": "1px border.subtle under each item",
+            "body": "body role, text.secondary, 16px bottom padding",
+            "reactAria": "Disclosure / DisclosureGroup",
+            "status": "Agreed 2026-11-10."
+          },
+          "listbox": {
+            "container": "surface, 1px border.control, radius md, 4px padding",
+            "items": "Same as menu items (32px, label only, hover inset, selected = check icon)",
+            "reactAria": "ListBox",
+            "status": "Agreed 2026-11-10."
+          },
+          "tree": {
+            "rowHeight": "32px",
+            "radius": "{radius.md}",
+            "padding": "0 8px",
+            "gap": "8px",
+            "indent": "16px per level",
+            "chevron": "16px, right when closed, down when open, text.secondary",
+            "selected": "accent-100 fill, accent text",
+            "reactAria": "Tree",
+            "status": "Agreed 2026-11-10."
+          },
+          "treeList": {
+            "use": "A hierarchy shown as rows inside a card (sectors, geographic levels). Use tree for picking inside forms and popovers.",
+            "rowHeight": "40px",
+            "divider": "{semantic.border.subtle}",
+            "indent": "24px per level",
+            "chevron": "24px button per branch, 16px icon, right when closed, down when open",
+            "header": "Column header row above, column-header role. Columns after the name have fixed widths so they line up across levels.",
+            "branchRow": "Opens and closes on click. Hand cursor and inset hover fill.",
+            "leafRow": "Does nothing on click. No hand cursor, no hover fill.",
+            "actions": "Optional 32px icon buttons at the row end, each with a tooltip.",
+            "tools": "Search filters the tree and opens the matches. 'Expand all' and 'Collapse all' are ghost buttons. A count sits in the footer.",
+            "reactAria": "Tree",
+            "status": "Agreed 2026-11-12."
+          },
+          "treeSelect": {
+            "layout": "Select trigger plus a popover containing a tree. Built from Select and Tree, React Aria has no tree select.",
+            "status": "Agreed 2026-11-10."
+          },
+          "listItem": {
+            "purpose": "Rows in a list view of records (replaces PrimeReact DataView)",
+            "rowHeight": "56px",
+            "padding": "0 16px",
+            "layout": "body-strong title, caption-role detail line in text.secondary, chevron right",
+            "divider": "1px border.subtle",
+            "hover": "inset at 55%",
+            "container": "surface, 1px border.default, radius lg",
+            "reactAria": "GridList",
+            "status": "Agreed 2026-11-10."
+          },
+          "segmentedButton": {
+            "layout": "Joined segments in one bordered container (border.control, radius md), segments 32px high, 12px horizontal padding",
+            "states": ["default", "hover", "selected", "disabled"],
+            "selected": "inset fill",
+            "hover": "inset at 55%",
+            "use": "Switching between views of the same data (for example Table, Chart, Map)",
+            "reactAria": "ToggleButtonGroup (single selection)",
+            "status": "Agreed 2026-11-10."
+          },
+          "stepper": {
+            "note": "React Aria has no stepper. Built by us from basic elements.",
+            "marker": "24px circle (radius full)",
+            "complete": "accent fill, check icon in text.inverse",
+            "current": "surface fill, 2px accent border, number in accent",
+            "upcoming": "surface fill, 1px border.control, number in text.secondary",
+            "label": "body-strong when current, otherwise body (upcoming in text.secondary)",
+            "connector": "1px line, 48px, accent after a completed step, border.default otherwise",
+            "status": "Agreed 2026-11-10."
+          },
+          "avatar": {
+            "size": {
+              "default": "28px",
+              "large": "32px"
+            },
+            "radius": "{radius.full}",
+            "background": "{semantic.background.inset}",
+            "content": "initials in label role",
+            "status": "Agreed 2026-11-10."
+          },
+          "divider": {
+            "line": "1px, border.default",
+            "orientation": ["horizontal", "vertical"],
+            "reactAria": "Separator",
+            "status": "Agreed 2026-11-10."
+          }
+        },
+        "layoutRules": {
+          "grid": {
+            "mobile": {
+              "columns": 4,
+              "gutter": "16px",
+              "margin": "16px",
+              "breakpoint": "375px"
+            },
+            "tablet": {
+              "columns": 8,
+              "gutter": "24px",
+              "margin": "24px",
+              "breakpoint": "768px"
+            },
+            "desktop": {
+              "columns": 12,
+              "gutter": "24px",
+              "margin": "32px",
+              "breakpoint": "1280px"
+            }
+          },
+          "gapOwnership": {
+            "comment": "Every gap belongs to one container. Use gap on flex/grid parent. Never combine margin-bottom on child with gap on parent."
+          }
+        },
+        "reducedMotion": {
+          "comment": "prefers-reduced-motion: set all durations to 1ms. Handled at component level - contributors do not implement this."
+        }
+      }
+    }
+  },
+  "$description": "Delta 2027 light theme. Normalized from the Delta v0.7.2 handoff. All 111 typed values retain their source paths below delta-2027; the prose accessibility-standard entry and component specifications remain handoff metadata. Mangrove adapter aliases follow separately. Existing Delta is unchanged.",
+  "delta-2027": {
+    "primitive": {
+      "neutral": {
+        "100": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.9686274509803922, 0.9725490196078431, 0.9803921568627451
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "200": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.9333333333333333, 0.9411764705882353, 0.9607843137254902
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "300": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.8666666666666667, 0.8823529411764706, 0.9254901960784314
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "400": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.7686274509803922, 0.792156862745098, 0.8509803921568627
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "500": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.6078431372549019, 0.6392156862745098, 0.7215686274509804
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "600": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.4196078431372549, 0.4549019607843137, 0.5647058823529412
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "700": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.2823529411764706, 0.3215686274509804, 0.4392156862745098
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "800": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.18823529411764706, 0.22745098039215686, 0.32941176470588235
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "900": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.11764705882352941, 0.15294117647058825, 0.23137254901960785
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "1000": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.06666666666666667, 0.09411764705882353, 0.1607843137254902
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "1100": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.03137254901960784, 0.047058823529411764, 0.09019607843137255
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        }
+      },
+      "warm": {
+        "$description": "Anchors #FAF9F5 (page) and #141413 (text). The other values are derived by eye. Warm page confirmed on the example screen, 2026-11-09.",
+        "50": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.9803921568627451, 0.9764705882352941, 0.9607843137254902
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "100": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.9411764705882353, 0.9333333333333333, 0.9019607843137255
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "200": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.9254901960784314, 0.9176470588235294, 0.8862745098039215
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "300": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.8784313725490196, 0.8666666666666667, 0.8235294117647058
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "400": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.8117647058823529, 0.796078431372549, 0.7450980392156863
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "700": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.3686274509803922, 0.36470588235294116, 0.34901960784313724
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "1000": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.0784313725490196, 0.0784313725490196, 0.07450980392156863
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        }
+      },
+      "accent": {
+        "100": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.9098039215686274, 0.9450980392156862, 0.9764705882352941
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "200": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.7843137254901961, 0.8627450980392157, 0.9411764705882353
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "300": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.615686274509804, 0.7529411764705882, 0.8901960784313725
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "400": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.41568627450980394, 0.6274509803921569, 0.8196078431372549
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "500": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.25882352941176473, 0.5137254901960784, 0.7372549019607844
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "600": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.17647058823529413, 0.43529411764705883, 0.6392156862745098
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "700": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.1411764705882353, 0.35294117647058826, 0.5215686274509804
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "800": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.10196078431372549, 0.26666666666666666, 0.39215686274509803
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "900": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.06666666666666667, 0.18823529411764706, 0.2823529411764706
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "1000": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.0392156862745098, 0.11764705882352941, 0.1803921568627451
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "1100": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.01568627450980392, 0.058823529411764705, 0.09411764705882353
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        }
+      },
+      "green": {
+        "100": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.9019607843137255, 0.9568627450980393, 0.9254901960784314
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "200": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.7529411764705882, 0.8941176470588236, 0.807843137254902
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "500": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.11372549019607843, 0.5607843137254902, 0.33725490196078434
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "600": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.0784313725490196, 0.4196078431372549, 0.25098039215686274
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "700": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.054901960784313725, 0.30980392156862746, 0.1843137254901961
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        }
+      },
+      "amber": {
+        "100": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.996078431372549, 0.9529411764705882, 0.8862745098039215
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "200": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.9921568627450981, 0.8588235294117647, 0.6509803921568628
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "500": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.8156862745098039, 0.47058823529411764, 0.0]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "600": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.6588235294117647, 0.3607843137254902, 0.0]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "700": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.47843137254901963, 0.2627450980392157, 0.0]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        }
+      },
+      "red": {
+        "100": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.9921568627450981, 0.9254901960784314, 0.9176470588235294
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "200": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.9764705882352941, 0.7725490196078432, 0.7568627450980392
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "500": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.8784313725490196, 0.2823529411764706, 0.25098039215686274
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "600": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.7843137254901961, 0.20784313725490197, 0.16470588235294117
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "700": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.611764705882353, 0.1568627450980392, 0.12549019607843137
+            ]
+          },
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        }
+      }
+    },
+    "semantic": {
+      "background": {
+        "default": {
+          "$type": "color",
+          "$value": "{delta-2027.primitive.warm.50}",
+          "$description": "#FAF9F5 - page background (warm). White surfaces sit on it",
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "surface": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [1.0, 1.0, 1.0]
+          },
+          "$description": "card / panel background",
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "inset": {
+          "$type": "color",
+          "$value": "{delta-2027.primitive.warm.100}",
+          "$description": "hover state on rows / list items, current nav item",
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "overlay": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.06666666666666667, 0.09411764705882353, 0.1607843137254902
+            ],
+            "alpha": 0.48
+          },
+          "$description": "modal scrim",
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "literal"
+            }
+          }
+        },
+        "toast": {
+          "$type": "color",
+          "$value": "{delta-2027.primitive.neutral.900}",
+          "$description": "Adapter role from the handoff toast and tooltip specifications.",
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        }
+      },
+      "border": {
+        "default": {
+          "$type": "color",
+          "$value": "{delta-2027.primitive.warm.300}",
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "subtle": {
+          "$type": "color",
+          "$value": "{delta-2027.primitive.warm.200}",
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "strong": {
+          "$type": "color",
+          "$value": "{delta-2027.primitive.warm.400}",
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "control": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.5607843137254902, 0.5490196078431373, 0.5098039215686274
+            ]
+          },
+          "$description": "Inputs, selects, secondary buttons. 3.36:1 on white, 3.19:1 on page (WCAG 1.4.11). Hover: text.secondary. Cards and dividers keep default/subtle. Agreed 2026-11-09.",
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        }
+      },
+      "text": {
+        "primary": {
+          "$type": "color",
+          "$value": "{delta-2027.primitive.warm.1000}",
+          "$description": "17.50:1 on page, 18.43:1 on white - body text, headings",
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "secondary": {
+          "$type": "color",
+          "$value": "{delta-2027.primitive.warm.700}",
+          "$description": "6.26:1 on page, 6.59:1 on white - supporting text, labels",
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "placeholder": {
+          "$type": "color",
+          "$value": "{delta-2027.primitive.neutral.500}",
+          "$description": "2.52:1 on white, 2.39:1 on page - decorative / disabled ONLY, never informational text",
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "inverse": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [1.0, 1.0, 1.0]
+          },
+          "$description": "text on dark surfaces",
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        }
+      },
+      "action": {
+        "default": {
+          "$type": "color",
+          "$value": "{delta-2027.primitive.accent.600}",
+          "$description": "5.37:1 on white, 5.09:1 on page - interactive elements, links",
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "hover": {
+          "$type": "color",
+          "$value": "{delta-2027.primitive.accent.700}",
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "active": {
+          "$type": "color",
+          "$value": "{delta-2027.primitive.accent.800}",
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "disabled": {
+          "$type": "color",
+          "$value": "{delta-2027.primitive.neutral.400}",
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "selected": {
+          "$type": "color",
+          "$value": "{delta-2027.primitive.accent.100}",
+          "$description": "Adapter role from the handoff table and tree selected-state specifications.",
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        }
+      },
+      "status": {
+        "positive": {
+          "text": {
+            "$type": "color",
+            "$value": "{delta-2027.primitive.green.600}",
+            "$description": "6.55:1 on white, 6.22:1 on page",
+            "$extensions": {
+              "org.undrr.mangrove": {
+                "format": "srgb-rgb-function"
+              }
+            }
+          },
+          "background": {
+            "$type": "color",
+            "$value": "{delta-2027.primitive.green.100}",
+            "$extensions": {
+              "org.undrr.mangrove": {
+                "format": "srgb-rgb-function"
+              }
+            }
+          },
+          "border": {
+            "$type": "color",
+            "$value": "{delta-2027.primitive.green.200}",
+            "$extensions": {
+              "org.undrr.mangrove": {
+                "format": "srgb-rgb-function"
+              }
+            }
+          }
+        },
+        "warning": {
+          "text": {
+            "$type": "color",
+            "$value": "{delta-2027.primitive.amber.600}",
+            "$description": "5.00:1 on white, 4.75:1 on page",
+            "$extensions": {
+              "org.undrr.mangrove": {
+                "format": "srgb-rgb-function"
+              }
+            }
+          },
+          "background": {
+            "$type": "color",
+            "$value": "{delta-2027.primitive.amber.100}",
+            "$extensions": {
+              "org.undrr.mangrove": {
+                "format": "srgb-rgb-function"
+              }
+            }
+          },
+          "border": {
+            "$type": "color",
+            "$value": "{delta-2027.primitive.amber.200}",
+            "$extensions": {
+              "org.undrr.mangrove": {
+                "format": "srgb-rgb-function"
+              }
+            }
+          }
+        },
+        "critical": {
+          "text": {
+            "$type": "color",
+            "$value": "{delta-2027.primitive.red.600}",
+            "$description": "5.25:1 on white, 4.99:1 on page",
+            "$extensions": {
+              "org.undrr.mangrove": {
+                "format": "srgb-rgb-function"
+              }
+            }
+          },
+          "background": {
+            "$type": "color",
+            "$value": "{delta-2027.primitive.red.100}",
+            "$extensions": {
+              "org.undrr.mangrove": {
+                "format": "srgb-rgb-function"
+              }
+            }
+          },
+          "border": {
+            "$type": "color",
+            "$value": "{delta-2027.primitive.red.200}",
+            "$extensions": {
+              "org.undrr.mangrove": {
+                "format": "srgb-rgb-function"
+              }
+            }
+          },
+          "hover": {
+            "$type": "color",
+            "$value": "{delta-2027.primitive.red.700}",
+            "$description": "Destructive button hover. Agreed 2026-11-09.",
+            "$extensions": {
+              "org.undrr.mangrove": {
+                "format": "srgb-rgb-function"
+              }
+            }
+          }
+        },
+        "informational": {
+          "text": {
+            "$type": "color",
+            "$value": "{delta-2027.primitive.accent.600}",
+            "$extensions": {
+              "org.undrr.mangrove": {
+                "format": "srgb-rgb-function"
+              }
+            }
+          },
+          "background": {
+            "$type": "color",
+            "$value": "{delta-2027.primitive.accent.100}",
+            "$extensions": {
+              "org.undrr.mangrove": {
+                "format": "srgb-rgb-function"
+              }
+            }
+          },
+          "border": {
+            "$type": "color",
+            "$value": "{delta-2027.primitive.accent.200}",
+            "$extensions": {
+              "org.undrr.mangrove": {
+                "format": "srgb-rgb-function"
+              }
+            }
+          }
+        }
+      },
+      "focus": {
+        "ring": {
+          "$type": "color",
+          "$value": "{delta-2027.primitive.accent.600}",
+          "$description": "2px solid, 2px offset",
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        }
+      }
+    },
+    "typography": {
+      "font": {
+        "sans": {
+          "$type": "fontFamily",
+          "$value": ["Inter", "system-ui", "-apple-system", "sans-serif"],
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "font-family-stack"
+            }
+          }
+        },
+        "mono": {
+          "$type": "fontFamily",
+          "$value": ["IBM Plex Mono", "Fira Code", "monospace"],
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "font-family-stack"
+            }
+          }
+        }
+      },
+      "scale": {
+        "11": {
+          "$type": "dimension",
+          "$value": {
+            "value": 11,
+            "unit": "px"
+          }
+        },
+        "12": {
+          "$type": "dimension",
+          "$value": {
+            "value": 12,
+            "unit": "px"
+          }
+        },
+        "14": {
+          "$type": "dimension",
+          "$value": {
+            "value": 14,
+            "unit": "px"
+          }
+        },
+        "20": {
+          "$type": "dimension",
+          "$value": {
+            "value": 20,
+            "unit": "px"
+          }
+        },
+        "24": {
+          "$type": "dimension",
+          "$value": {
+            "value": 24,
+            "unit": "px"
+          }
+        },
+        "30": {
+          "$type": "dimension",
+          "$value": {
+            "value": 30,
+            "unit": "px"
+          }
+        }
+      },
+      "weight": {
+        "regular": {
+          "$type": "fontWeight",
+          "$value": 400
+        },
+        "medium": {
+          "$type": "fontWeight",
+          "$value": 500
+        },
+        "semibold": {
+          "$type": "fontWeight",
+          "$value": 600
+        }
+      },
+      "lineHeight": {
+        "tight": {
+          "$type": "number",
+          "$value": 1.25,
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "name": "--mg-delta-2027-typography-line-height-tight"
+            }
+          }
+        },
+        "normal": {
+          "$type": "number",
+          "$value": 1.5,
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "name": "--mg-delta-2027-typography-line-height-normal"
+            }
+          }
+        }
+      }
+    },
+    "spacing": {
+      "1": {
+        "$type": "dimension",
+        "$value": {
+          "value": 4,
+          "unit": "px"
+        },
+        "$description": "icon gaps, tight inline spacing"
+      },
+      "2": {
+        "$type": "dimension",
+        "$value": {
+          "value": 8,
+          "unit": "px"
+        },
+        "$description": "badge padding, label-icon gap"
+      },
+      "3": {
+        "$type": "dimension",
+        "$value": {
+          "value": 12,
+          "unit": "px"
+        },
+        "$description": "compact padding"
+      },
+      "4": {
+        "$type": "dimension",
+        "$value": {
+          "value": 16,
+          "unit": "px"
+        },
+        "$description": "default component padding, mobile margin"
+      },
+      "6": {
+        "$type": "dimension",
+        "$value": {
+          "value": 24,
+          "unit": "px"
+        },
+        "$description": "card padding, section gaps, tablet/desktop margin"
+      },
+      "8": {
+        "$type": "dimension",
+        "$value": {
+          "value": 32,
+          "unit": "px"
+        },
+        "$description": "between major sections, desktop margin"
+      },
+      "12": {
+        "$type": "dimension",
+        "$value": {
+          "value": 48,
+          "unit": "px"
+        },
+        "$description": "large section breaks"
+      },
+      "16": {
+        "$type": "dimension",
+        "$value": {
+          "value": 64,
+          "unit": "px"
+        },
+        "$description": "page-level separation"
+      }
+    },
+    "radius": {
+      "sm": {
+        "$type": "dimension",
+        "$value": {
+          "value": 4,
+          "unit": "px"
+        },
+        "$description": "badges, chips"
+      },
+      "md": {
+        "$type": "dimension",
+        "$value": {
+          "value": 6,
+          "unit": "px"
+        },
+        "$description": "buttons, inputs"
+      },
+      "lg": {
+        "$type": "dimension",
+        "$value": {
+          "value": 8,
+          "unit": "px"
+        },
+        "$description": "cards, dropdowns"
+      },
+      "xl": {
+        "$type": "dimension",
+        "$value": {
+          "value": 12,
+          "unit": "px"
+        },
+        "$description": "modals"
+      },
+      "full": {
+        "$type": "dimension",
+        "$value": {
+          "value": 9999,
+          "unit": "px"
+        },
+        "$description": "pills, avatars"
+      }
+    },
+    "shadow": {
+      "sm": {
+        "$type": "shadow",
+        "$value": {
+          "color": {
+            "colorSpace": "srgb",
+            "components": [
+              0.06666666666666667, 0.09411764705882353, 0.1607843137254902
+            ],
+            "alpha": 0.06
+          },
+          "offsetX": {
+            "value": 0.0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 1,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 2,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        }
+      },
+      "md": {
+        "$type": "shadow",
+        "$value": {
+          "color": {
+            "colorSpace": "srgb",
+            "components": [
+              0.06666666666666667, 0.09411764705882353, 0.1607843137254902
+            ],
+            "alpha": 0.1
+          },
+          "offsetX": {
+            "value": 0.0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 4,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 12,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        "$description": "dropdowns, popovers"
+      },
+      "lg": {
+        "$type": "shadow",
+        "$value": {
+          "color": {
+            "colorSpace": "srgb",
+            "components": [
+              0.06666666666666667, 0.09411764705882353, 0.1607843137254902
+            ],
+            "alpha": 0.14
+          },
+          "offsetX": {
+            "value": 0.0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 8,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 24,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        "$description": "modals"
+      }
+    },
+    "motion": {
+      "duration": {
+        "fast": {
+          "$type": "duration",
+          "$value": {
+            "value": 100,
+            "unit": "ms"
+          },
+          "$description": "tooltips, hover states, focus rings - pre-wired in components, do not use in feature code"
+        },
+        "normal": {
+          "$type": "duration",
+          "$value": {
+            "value": 200,
+            "unit": "ms"
+          },
+          "$description": "dropdowns, modals, toasts - pre-wired in components, do not use in feature code"
+        },
+        "slow": {
+          "$type": "duration",
+          "$value": {
+            "value": 300,
+            "unit": "ms"
+          },
+          "$description": "page transitions, large panels - pre-wired in components, do not use in feature code"
+        }
+      },
+      "easing": {
+        "default": {
+          "$type": "cubicBezier",
+          "$value": [0.16, 1.0, 0.3, 1.0],
+          "$description": "all transitions - fast out, slow to settle"
+        },
+        "in": {
+          "$type": "cubicBezier",
+          "$value": [0.4, 0.0, 1.0, 1.0],
+          "$description": "elements leaving the screen"
+        },
+        "out": {
+          "$type": "cubicBezier",
+          "$value": [0.0, 0.0, 0.2, 1.0],
+          "$description": "elements entering the screen"
+        }
+      }
+    },
+    "layout": {
+      "maxWidth": {
+        "$type": "dimension",
+        "$value": {
+          "value": 1280,
+          "unit": "px"
+        },
+        "$extensions": {
+          "org.undrr.mangrove": {
+            "name": "--mg-delta-2027-layout-max-width"
+          }
+        }
+      }
+    },
+    "accessibility": {
+      "targetMin": {
+        "$type": "dimension",
+        "$value": {
+          "value": 24,
+          "unit": "px"
+        },
+        "$description": "Smallest clickable area, width and height (WCAG 2.5.8). Icon buttons are 32px. A smaller visual, for example a 16px checkbox, gets its size from padding or its label.",
+        "$extensions": {
+          "org.undrr.mangrove": {
+            "name": "--mg-delta-2027-accessibility-target-min"
+          }
+        }
+      }
+    }
+  },
+  "theme": {
+    "loaded": {
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "output": {
+            "value": "delta-2027",
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "color": {
+    "text": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.text.primary}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-channels"
+        }
+      }
+    },
+    "interactive": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.action.default}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-channels"
+        }
+      }
+    },
+    "interactive-active": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.action.hover}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-channels"
+        }
+      }
+    },
+    "secondary": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.text.secondary}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-channels"
+        }
+      }
+    },
+    "tertiary": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.action.default}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-channels"
+        }
+      }
+    },
+    "quaternary": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.text.primary}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-channels"
+        }
+      }
+    },
+    "button": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.text.inverse}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-channels"
+        }
+      }
+    },
+    "button--hover": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.text.inverse}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-channels"
+        }
+      }
+    },
+    "button-secondary-background": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.background.surface}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-channels"
+        }
+      }
+    },
+    "button-secondary-background--hover": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.background.inset}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-channels"
+        }
+      }
+    },
+    "button-outline-primary": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.action.default}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-channels"
+        }
+      }
+    },
+    "button-outline-primary--hover": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.action.hover}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-channels"
+        }
+      }
+    },
+    "button-outline-secondary": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.text.primary}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-channels"
+        }
+      }
+    },
+    "button-outline-secondary--hover": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.text.primary}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-channels"
+        }
+      }
+    },
+    "text-button": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.text.inverse}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-channels"
+        }
+      }
+    },
+    "form-check": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.action.default}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-channels"
+        }
+      }
+    },
+    "form-check--hover": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.action.hover}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-channels"
+        }
+      }
+    },
+    "form-check--checked": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.action.default}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-channels"
+        }
+      }
+    },
+    "form-focus": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.focus.ring}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-channels"
+        }
+      }
+    },
+    "focus-ring": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.focus.ring}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-channels"
+        }
+      }
+    },
+    "tag": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.text.secondary}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-channels"
+        }
+      }
+    },
+    "tag--hover": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.text.secondary}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-channels"
+        }
+      }
+    },
+    "tag-accent": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.background.inset}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-channels"
+        }
+      }
+    },
+    "tag-accent--hover": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.background.inset}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-channels"
+        }
+      }
+    },
+    "hero": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.action.default}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-channels"
+        }
+      }
+    },
+    "hero-title": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.text.inverse}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-channels"
+        }
+      }
+    },
+    "hero--tertiary": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.text.primary}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-channels"
+        }
+      }
+    },
+    "button-background": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.action.default}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "button-background--hover": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.action.hover}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "modal-scrim": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.background.overlay}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    }
+  },
+  "surface": {
+    "raised": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.background.surface}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    }
+  },
+  "border-color": {
+    "button": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.action.default}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    }
+  },
+  "card": {
+    "background": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.background.surface}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "border-radius": {
+      "$type": "dimension",
+      "$value": "{delta-2027.radius.lg}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "padding": {
+      "$type": "dimension",
+      "$value": "{delta-2027.spacing.4}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    }
+  },
+  "form-input": {
+    "background": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.background.surface}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "background--focus": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.background.surface}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "border-color": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.border.control}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "block-size": {
+      "$type": "dimension",
+      "$value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "padding": {
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "output": {
+            "value": "0 {delta-2027.spacing.3}",
+            "type": "dimension",
+            "format": "literal"
+          }
+        }
+      }
+    }
+  },
+  "notice": {
+    "action-secondary": {
+      "$type": "color",
+      "$value": "{delta-2027.semantic.action.default}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    }
+  },
+  "radius": {
+    "button": {
+      "$type": "dimension",
+      "$value": "{delta-2027.radius.md}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "form-input": {
+      "$type": "dimension",
+      "$value": "{delta-2027.radius.md}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "tag": {
+      "$type": "dimension",
+      "$value": "{delta-2027.radius.sm}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    }
+  },
+  "font-size": {
+    "button": {
+      "$type": "dimension",
+      "$value": "{delta-2027.typography.scale.14}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "form-input": {
+      "$type": "dimension",
+      "$value": "{delta-2027.typography.scale.14}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "tab": {
+      "$type": "dimension",
+      "$value": "{delta-2027.typography.scale.14}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "300": {
+      "$type": "dimension",
+      "$value": "{delta-2027.typography.scale.14}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "400": {
+      "$type": "dimension",
+      "$value": "{delta-2027.typography.scale.20}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "500": {
+      "$type": "dimension",
+      "$value": "{delta-2027.typography.scale.20}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "600": {
+      "$type": "dimension",
+      "$value": "{delta-2027.typography.scale.24}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "250": {
+      "$type": "dimension",
+      "$value": "{delta-2027.typography.scale.14}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "200": {
+      "$type": "dimension",
+      "$value": "{delta-2027.typography.scale.12}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    }
+  },
+  "tab": {
+    "min-block-size": {
+      "$type": "dimension",
+      "$value": "{delta-2027.spacing.8}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "padding": {
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "output": {
+            "value": "0 {delta-2027.spacing.3}",
+            "type": "dimension"
+          }
+        }
+      }
+    }
+  },
+  "font-family": {
+    "text": {
+      "$type": "fontFamily",
+      "$value": "{delta-2027.typography.font.sans}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "heading": {
+      "$type": "fontFamily",
+      "$value": "{delta-2027.typography.font.sans}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "display": {
+      "$type": "fontFamily",
+      "$value": "{delta-2027.typography.font.sans}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "ui": {
+      "$type": "fontFamily",
+      "$value": "{delta-2027.typography.font.sans}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "code": {
+      "$type": "fontFamily",
+      "$value": "{delta-2027.typography.font.mono}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    }
+  },
+  "font-line-height": {
+    "500": {
+      "$type": "number",
+      "$value": "{delta-2027.typography.lineHeight.tight}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "700": {
+      "$type": "number",
+      "$value": "{delta-2027.typography.lineHeight.normal}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    }
+  },
+  "padding": {
+    "button": {
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "output": {
+            "value": "2px {delta-2027.spacing.3} {delta-2027.spacing.1}",
+            "type": "dimension"
+          }
+        }
+      },
+      "$description": "Horizontal control padding with the component optical adjustment; consumers can override the complete padding role."
+    }
+  },
+  "motion": {
+    "duration-fast": {
+      "$type": "duration",
+      "$value": "{delta-2027.motion.duration.fast}"
+    },
+    "duration-medium": {
+      "$type": "duration",
+      "$value": "{delta-2027.motion.duration.normal}"
+    },
+    "easing-standard": {
+      "$type": "cubicBezier",
+      "$value": "{delta-2027.motion.easing.default}"
+    }
+  }
+}

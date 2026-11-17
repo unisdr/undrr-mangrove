@@ -122,6 +122,7 @@ function publishedPaths() {
   // dist/, and assemble-npm-package.mjs lifts them to the package root.
   const verbatim = [
     ['stories/assets/js', 'js'],
+    ['stories/assets/fonts/delta-2027', 'fonts/delta-2027'],
     ['stories/Components/ErrorPages/static', 'error-pages'],
   ];
   for (const [from, to] of verbatim) {

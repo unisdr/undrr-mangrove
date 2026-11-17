@@ -1,0 +1,115 @@
+/**
+ * Story-only review layout for the Delta 2027 theme.
+ * Component geometry and expression come from each theme's actual styles.
+ * Guide: docs/DELTA-2027-LOCAL-REVIEW.md
+ */
+.mg-delta-review,
+.mg-delta-comparison {
+  box-sizing: border-box;
+  min-inline-size: 0;
+  padding: 24px;
+  display: grid;
+  gap: 24px;
+
+  &__intro {
+    display: grid;
+    gap: 8px;
+
+    h1,
+    p {
+      margin: 0;
+    }
+  }
+}
+
+.mg-delta-review {
+  max-inline-size: 64rem;
+  margin-inline: auto;
+
+  &__section {
+    display: grid;
+    gap: 16px;
+    min-inline-size: 0;
+
+    > h2,
+    > p {
+      margin: 0;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__fields {
+    display: grid;
+    gap: 16px;
+  }
+
+  &__feedback {
+    min-block-size: 1.5em;
+  }
+
+  &__override {
+    min-inline-size: 0;
+
+    summary {
+      cursor: pointer;
+    }
+
+    > :not(summary) {
+      margin-block-start: 8px;
+    }
+
+    code {
+      overflow-wrap: anywhere;
+    }
+  }
+
+  &__colour {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+.mg-delta-comparison {
+  &__panes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+
+  &__pane {
+    min-inline-size: 0;
+
+    h2 {
+      margin: 0 0 16px;
+    }
+
+    iframe {
+      display: block;
+      inline-size: 100%;
+      block-size: 1800px;
+      border: 0;
+
+      // Match the browser's white canvas beneath a transparent legacy body.
+      // The new theme paints its own page background inside the document.
+      background: white;
+    }
+  }
+}
+
+@media (width <= 680px) {
+  .mg-delta-review,
+  .mg-delta-comparison {
+    padding: 16px;
+  }
+
+  .mg-delta-comparison__panes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
