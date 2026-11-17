@@ -205,6 +205,10 @@ The first pattern is more reliable: some screen readers take a moment to registe
 | ---------------------- | ------- | ----------------- |
 | `--mg-loader-duration` | `0.9s`  | Time for one turn |
 
+## Verification
+
+The [2.2 loading-indicator verification record](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/LOADING-INDICATOR-VERIFICATION.md) describes the Firefox/Safari rendering checks and their limits. VoiceOver/NVDA listening checks, native Safari reduced motion and Windows forced-colour verification remain outstanding under [#1387](https://github.com/unisdr/undrr-mangrove/issues/1387). The available browser results do not establish spoken announcement behaviour.
+
 ## See also
 
 - [Progress bar](?path=/docs/components-progress-bar--docs): use it instead when progress can be measured, or when a region updates in place, such as paging or filtering results.
@@ -213,6 +217,8 @@ The first pattern is more reliable: some screen readers take a moment to registe
 - [Accessibility](?path=/docs/getting-started-accessibility--docs): the loading states guidance, including announcing loading and its outcome through a live region that is already in the page.
 
 ## Changelog
+
+- **1.4.1**, 2026-10-17 ([#1387](https://github.com/unisdr/undrr-mangrove/issues/1387)): Document representative Firefox/Safari rendering verification and the remaining screen-reader, reduced-motion and Windows checks. No component behaviour changes.
 
 - **1.4**, 2026-10-15 ([#1368](https://github.com/unisdr/undrr-mangrove/issues/1368)): Reduced motion now shows a static full dashed marker and the existing translated status label in normal flow, including forced colours. Decorative loaders stay icon-only and require visible caller-owned loading context. Normal-motion sizes, rotation, markup, roles and the 100ms React announcement delay are unchanged. Labels can expand the reduced-motion status container; CSS consumers should leave room for wrapping rather than constraining the entire status to the marker dimensions.
 - **1.3**, 2026-10-12 ([#1332](https://github.com/unisdr/undrr-mangrove/pull/1332)): Inline size, decorative mode, theme colour and announcement on insertion.

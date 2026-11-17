@@ -1,6 +1,11 @@
+import { getLanguageProps } from '../../../src/i18n';
+import { getTabLabels } from './_labels';
 import React, { memo, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { mgTabsRuntime, mgTabsDestroy } from '../../assets/js/tabs';
+
+export { getTabLabels } from './_labels';
+export { DEFAULT_TAB_LABELS } from './_labels';
 
 /**
  * Trust boundary: panel content is rendered unescaped, on purpose.
@@ -24,20 +29,17 @@ import { mgTabsRuntime, mgTabsDestroy } from '../../assets/js/tabs';
  * the page and `tabs.js` only enhances it.
  */
 
-export const DEFAULT_TAB_LABELS = {
-  filterPlaceholder: 'Filter sections…',
-  tabListLabel: 'Sections',
-};
-
 /**
  * Renders a tab component with either stacked or horizontal layout.
  * @param {Object} props - The component props.
  * @param {Array} props.tabdata - An array of tab objects containing text, text_id, and data.
  * @param {string} [props.variant='horizontal'] - The layout variant, either 'stacked' or 'horizontal'.
+ * @param {boolean} [props.sticky=false] - Opt in to a sticky horizontal rail, confined to this tab set.
  * @param {boolean} [props.defaultOpen] - Whether stacked panels start open (true), closed (false), or default (undefined = open first).
  * @param {boolean} [props.singleOpen=false] - When true, only one stacked panel can be open at a time.
  * @param {boolean} [props.filterable=false] - When true, renders a search input to filter stacked sections.
  * @param {object} [props.labels] - UI label overrides.
+ * @param {string} [props.analyticsRegion] - Optional click-tracking region on the whole tab set, including its panels.
  * @returns {JSX.Element} A React component representing the tab structure.
  */
 export function Tab({
@@ -46,13 +48,14 @@ export function Tab({
   defaultOpen,
   singleOpen = false,
   stackOnMobile = false,
+  sticky = false,
   filterable = false,
-  labels = DEFAULT_TAB_LABELS,
+  lang,
+  dir,
+  labels,
+  analyticsRegion,
 }) {
-  const { filterPlaceholder, tabListLabel } = {
-    ...DEFAULT_TAB_LABELS,
-    ...labels,
-  };
+  const { filterPlaceholder, tabListLabel } = getTabLabels(lang, labels);
   const containerRef = useRef(null);
 
   // Initialize this container's tabs runtime (scoped, not global).
@@ -74,6 +77,7 @@ export function Tab({
     defaultOpen,
     singleOpen,
     stackOnMobile,
+    sticky,
     filterable,
     filterPlaceholder,
     tabListLabel,
@@ -81,10 +85,12 @@ export function Tab({
 
   return tabdata ? (
     <article
+      {...getLanguageProps(lang, dir)}
       ref={containerRef}
-      className={`mg-tabs ${variant === 'stacked' ? 'mg-tabs--stacked' : 'mg-tabs--horizontal'}`}
+      className={`mg-tabs ${variant === 'stacked' ? 'mg-tabs--stacked' : 'mg-tabs--horizontal'}${sticky ? ' mg-tabs--sticky' : ''}`}
       data-mg-js-tabs
       data-mg-js-tabs-label={tabListLabel}
+      data-vf-google-analytics-region={analyticsRegion}
       {...(stackOnMobile && variant !== 'stacked'
         ? { 'data-mg-js-tabs-stack-on-mobile': '' }
         : {})}
@@ -214,11 +220,19 @@ Tab.propTypes = {
   singleOpen: PropTypes.bool,
   /** Opt in to stacked disclosures below 480px for the horizontal variant. */
   stackOnMobile: PropTypes.bool,
+  /** Keep the horizontal rail visible within its tab set; ignored in stacked layouts and short viewports. */
+  sticky: PropTypes.bool,
   /** When true, renders a search input to filter stacked sections by text content. */
   filterable: PropTypes.bool,
-  /** UI label overrides. */
+  /** UI language tag; selects the built-in catalogue, with English fallback. */
+  lang: PropTypes.string,
+  /** Explicit text direction; otherwise known catalogue languages select their direction. */
+  dir: PropTypes.oneOf(['ltr', 'rtl', 'auto']),
+  /** Explicit UI label overrides; omitted keys use the selected catalogue, then English. */
   labels: PropTypes.shape({
     filterPlaceholder: PropTypes.string,
     tabListLabel: PropTypes.string,
   }),
+  /** Optional `data-vf-google-analytics-region` on the whole tab set, including its panels. */
+  analyticsRegion: PropTypes.string,
 };

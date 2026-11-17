@@ -6,6 +6,9 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/PreviewAccess/PreviewAccess.mdx
  */
+@use "../../assets/scss/mixins" as *;
+@use "../../assets/scss/config" as *;
+
 // Preview access
 // Soft preview gate for unfinished UNDRR pages. CSS hides the page on parse
 // (via :has()); the runtime layers a modal over it and asks for a PIN.

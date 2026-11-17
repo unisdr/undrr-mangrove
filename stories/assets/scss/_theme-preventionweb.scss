@@ -3,7 +3,8 @@
 // ---------------------------------------------------------------------
 // Every token in this block is generated from tokens/preventionweb.yaml, merged over
 // tokens/mangrove.yaml and tokens/undrr.yaml.
-@import "./generated/tokens-preventionweb";
+@use "generated/tokens-preventionweb" as *;
+@use "tokens-tabs" as *;
 
 .mg-theme-preventionweb {
   @include mg-tokens-tabs;

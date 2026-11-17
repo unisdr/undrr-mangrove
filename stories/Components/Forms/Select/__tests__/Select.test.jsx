@@ -107,3 +107,29 @@ describe('Select', () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 });
+
+describe('Select analytics label', () => {
+  it('labels the select and its label for click tracking', () => {
+    render(
+      <Select label="Pays" options={options} analyticsLabel="Search: Country" />
+    );
+    expect(screen.getByLabelText('Pays')).toHaveAttribute(
+      'data-vf-analytics-label',
+      'Search: Country'
+    );
+    expect(screen.getByText('Pays')).toHaveAttribute(
+      'data-vf-analytics-label',
+      'Search: Country'
+    );
+  });
+
+  it('adds no attribute when unset', () => {
+    render(<Select label="Country" options={options} />);
+    expect(screen.getByLabelText('Country')).not.toHaveAttribute(
+      'data-vf-analytics-label'
+    );
+    expect(screen.getByText('Country')).not.toHaveAttribute(
+      'data-vf-analytics-label'
+    );
+  });
+});

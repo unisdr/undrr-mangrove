@@ -1,0 +1,28 @@
+/**
+ * Publication branding example
+ *
+ * Consumer-owned report expression for the paired Publication page stories.
+ * This is story scaffolding, not an additional component API or theme.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Patterns/LandingPages/PublicationPage.mdx
+ */
+
+// Existing theme token: the report changes its masthead surface, not the
+// theme's interactive colours, fonts, responsive geometry or focus rules.
+.mg-publication-example--branded {
+  --mg-color-hero: var(--mg-color-neutral-900);
+}
+
+// A documented Hero property is set on the component that owns its value.
+// Changing the shared copy-width hook keeps copy and protective veil aligned.
+.mg-publication-example--branded .mg-hero {
+  --mg-hero-overlay-max-width: 44rem;
+}
+
+// The only direct presentation override belongs to consumer-authored prose.
+// It never reaches a shared component's children or interaction states.
+.mg-publication-example--branded .mg-publication-example__intro {
+  border-inline-start: 4px solid rgb(var(--mg-color-interactive));
+  padding-inline-start: var(--mg-spacing-200);
+}

@@ -1,38 +1,17 @@
+import { withLanguage } from '../../../.storybook/withLanguage';
 import React, { useEffect, useRef } from 'react';
-import OnThisPageNav from './OnThisPageNav';
+import OnThisPageNav, { getOnThisPageNavLabels } from './OnThisPageNav';
+import { getLanguageProps } from '../../../src/i18n';
 import {
   mgOnThisPageNav,
   mgOnThisPageNavDestroy,
 } from '../../assets/js/on-this-page-nav';
 import { mgTabsRuntime } from '../../assets/js/tabs';
-import {
-  LABELS_AR,
-  LABELS_ES,
-  LABELS_FR,
-  LABELS_JA,
-  LABELS_RU,
-  LABELS_ZH,
-} from './_labels';
-
-const LOCALE_LABELS = {
-  spanish: LABELS_ES,
-  french: LABELS_FR,
-  japanese: LABELS_JA,
-  chinese: LABELS_ZH,
-  arabic: LABELS_AR,
-  russian: LABELS_RU,
-};
-
-const withLocaleLabels = (Story, context) => {
-  const labels = LOCALE_LABELS[context.globals?.locale];
-  if (!labels) return <Story />;
-  return <Story {...context} args={{ ...context.args, labels }} />;
-};
 
 export default {
   title: 'Components/Navigation/On this page nav',
   component: OnThisPageNav,
-  decorators: [withLocaleLabels],
+  decorators: [withLanguage],
   parameters: {
     docs: {
       description: {
@@ -80,7 +59,16 @@ const SectionContent = () => (
  * Avoids the querySelector scoping bug where only the first nav inits
  * when multiple stories render on the Docs page.
  */
-function useOnThisPageNav(wrapperRef) {
+function navigationLanguage(args) {
+  const { label } = getOnThisPageNavLabels(args.lang, args.labels);
+  return {
+    ...getLanguageProps(args.lang, args.dir),
+    'aria-label': label,
+    'data-mg-on-this-page-nav-label': label,
+  };
+}
+
+function useOnThisPageNav(wrapperRef, args) {
   useEffect(() => {
     if (!wrapperRef.current) return;
     const nav = wrapperRef.current.querySelector('[data-mg-on-this-page-nav]');
@@ -91,7 +79,7 @@ function useOnThisPageNav(wrapperRef) {
     return () => {
       if (nav) mgOnThisPageNavDestroy(nav);
     };
-  }, []);
+  }, [wrapperRef, args.lang, args.dir, args.labels]);
 }
 
 /**
@@ -101,9 +89,9 @@ function useOnThisPageNav(wrapperRef) {
  * active section as you scroll.
  */
 export const AutoDetect = {
-  render: () => {
+  render: args => {
     const ref = useRef(null);
-    useOnThisPageNav(ref);
+    useOnThisPageNav(ref, args);
 
     return (
       <div ref={ref}>
@@ -141,6 +129,7 @@ export const AutoDetect = {
 
         <article className="mg-auto-detect-demo">
           <nav
+            {...navigationLanguage(args)}
             data-mg-on-this-page-nav
             data-mg-on-this-page-nav-content=".mg-auto-detect-demo"
             className="mg-on-this-page-nav"
@@ -179,13 +168,14 @@ export const AutoDetect = {
  * h3 headings in the navigation.
  */
 export const WithNestedHeadings = {
-  render: () => {
+  render: args => {
     const ref = useRef(null);
-    useOnThisPageNav(ref);
+    useOnThisPageNav(ref, args);
 
     return (
       <article className="mg-nested-demo" ref={ref}>
         <nav
+          {...navigationLanguage(args)}
           data-mg-on-this-page-nav
           data-mg-on-this-page-nav-depth="3"
           data-mg-on-this-page-nav-content=".mg-nested-demo"
@@ -222,13 +212,17 @@ export const WithNestedHeadings = {
  * The nav items and CTA are defined directly.
  */
 export const ExplicitLinks = {
-  render: () => {
+  render: args => {
     const ref = useRef(null);
-    useOnThisPageNav(ref);
+    useOnThisPageNav(ref, args);
 
     return (
       <article ref={ref}>
-        <nav data-mg-on-this-page-nav className="mg-on-this-page-nav">
+        <nav
+          {...navigationLanguage(args)}
+          data-mg-on-this-page-nav
+          className="mg-on-this-page-nav"
+        >
           <ul className="mg-on-this-page-nav__list">
             <li className="mg-on-this-page-nav__item">
               <a href="#about" className="mg-on-this-page-nav__link">
@@ -269,13 +263,14 @@ export const ExplicitLinks = {
  * The CTA is preserved when the nav generates its links.
  */
 export const WithCTA = {
-  render: () => {
+  render: args => {
     const ref = useRef(null);
-    useOnThisPageNav(ref);
+    useOnThisPageNav(ref, args);
 
     return (
       <article className="mg-cta-demo" ref={ref}>
         <nav
+          {...navigationLanguage(args)}
           data-mg-on-this-page-nav
           data-mg-on-this-page-nav-content=".mg-cta-demo"
           className="mg-on-this-page-nav"
@@ -309,13 +304,14 @@ export const WithCTA = {
  * mg-on-this-page-nav--exclude class and does not appear in the nav.
  */
 export const WithExcludedHeading = {
-  render: () => {
+  render: args => {
     const ref = useRef(null);
-    useOnThisPageNav(ref);
+    useOnThisPageNav(ref, args);
 
     return (
       <article className="mg-exclude-demo" ref={ref}>
         <nav
+          {...navigationLanguage(args)}
           data-mg-on-this-page-nav
           data-mg-on-this-page-nav-content=".mg-exclude-demo"
           className="mg-on-this-page-nav"
@@ -345,9 +341,9 @@ export const WithExcludedHeading = {
  * auto-scrolled into view.
  */
 export const ManyItems = {
-  render: () => {
+  render: args => {
     const ref = useRef(null);
-    useOnThisPageNav(ref);
+    useOnThisPageNav(ref, args);
 
     const sections = [
       'Executive summary',
@@ -365,6 +361,7 @@ export const ManyItems = {
     return (
       <article className="mg-many-demo" ref={ref}>
         <nav
+          {...navigationLanguage(args)}
           data-mg-on-this-page-nav
           data-mg-on-this-page-nav-content=".mg-many-demo"
           className="mg-on-this-page-nav"
@@ -397,9 +394,9 @@ export const ManyItems = {
  * height so the nav docks below it.
  */
 export const WithOffset = {
-  render: () => {
+  render: args => {
     const ref = useRef(null);
-    useOnThisPageNav(ref);
+    useOnThisPageNav(ref, args);
 
     return (
       <article className="mg-offset-demo" ref={ref}>
@@ -418,6 +415,7 @@ export const WithOffset = {
         </div>
 
         <nav
+          {...navigationLanguage(args)}
           data-mg-on-this-page-nav
           data-mg-on-this-page-nav-content=".mg-offset-demo"
           className="mg-on-this-page-nav"
@@ -445,14 +443,16 @@ export const WithOffset = {
  * to the left (logical end). Uses Arabic heading text.
  */
 export const RTL = {
-  render: () => {
+  args: { lang: 'ar', dir: 'rtl' },
+  render: args => {
     const ref = useRef(null);
-    useOnThisPageNav(ref);
+    useOnThisPageNav(ref, args);
 
     return (
       <div dir="rtl" lang="ar" ref={ref}>
         <article className="mg-rtl-demo">
           <nav
+            {...navigationLanguage(args)}
             data-mg-on-this-page-nav
             data-mg-on-this-page-nav-content=".mg-rtl-demo"
             data-mg-on-this-page-nav-label="في هذه الصفحة"
@@ -514,7 +514,7 @@ const tabSections = [
  * collapsed disclosure panel before scrolling.
  */
 export const WithTabsContent = {
-  render: () => {
+  render: args => {
     const ref = useRef(null);
 
     useEffect(() => {
@@ -538,11 +538,12 @@ export const WithTabsContent = {
       return () => {
         if (nav) mgOnThisPageNavDestroy(nav);
       };
-    }, []);
+    }, [args.lang, args.dir, args.labels]);
 
     return (
       <article ref={ref} className="mg-tabs-nav-demo">
         <nav
+          {...navigationLanguage(args)}
           data-mg-on-this-page-nav
           data-mg-on-this-page-nav-content=".mg-tabs-nav-demo"
           className="mg-on-this-page-nav"

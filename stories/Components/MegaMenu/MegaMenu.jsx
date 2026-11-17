@@ -1,3 +1,5 @@
+import { getLanguageProps } from '../../../src/i18n';
+import { getMegaMenuLabels } from './_labels';
 /**
  * MegaMenu component. Multi-level navigation with sections and items.
  *
@@ -28,6 +30,10 @@
  * @param {string} [logoHref='/'] - Where the logo links to. Defaults to `/`; on multilingual sites, pass the language-prefixed root from the CMS (e.g. `/ar/`)
  * @param {number} [logoWidth] - Optional explicit width for CLS prevention
  * @param {number} [logoHeight] - Optional explicit height for CLS prevention
+ * @param {boolean} [enableFilter=false] - Whether to show quick filter input in desktop and mobile navigation
+ * @param {boolean} [enableSiteSearch=true] - Whether to offer full-site search option when filtering
+ * @param {string} [searchUrl='/search'] - Base URL for full-site search (defaults to syndicated search page /search)
+ * @param {string|null} [analyticsRegion='mega-menu'] - `data-vf-google-analytics-region` on the root `<nav>`; pass `null` or `''` to inherit the host's region
  * @returns {JSX.Element} Rendered MegaMenu component
  */
 import React, { useState, useEffect, useRef, useId } from 'react';
@@ -35,16 +41,8 @@ import PropTypes from 'prop-types';
 import { TopBar } from './TopBar/TopBar';
 import { Sidebar } from './TopBar/Sidebar';
 
-export const DEFAULT_MEGAMENU_LABELS = {
-  navLabel: 'Main Navigation',
-  closeMobileNavLabel: 'Close mobile navigation',
-  menuLabel: 'Menu',
-  backLabel: 'Back',
-  allSectionsLabel: 'All sections',
-  closeLabel: 'Close',
-  overviewLabel: 'Overview',
-  toggleMobileNavLabel: 'Open navigation menu',
-};
+export { getMegaMenuLabels } from './_labels';
+export { DEFAULT_MEGAMENU_LABELS } from './_labels';
 
 const MegaMenu = ({
   sections,
@@ -55,15 +53,20 @@ const MegaMenu = ({
   logoHref = '/',
   logoWidth,
   logoHeight,
-  labels = DEFAULT_MEGAMENU_LABELS,
+  enableFilter = false,
+  enableSiteSearch = true,
+  searchUrl = '/search',
+  onNavigate,
+  lang,
+  dir,
+  labels,
+  analyticsRegion = 'mega-menu',
 }) => {
-  const resolvedLabels = {
-    ...DEFAULT_MEGAMENU_LABELS,
-    ...labels,
-  };
+  const resolvedLabels = getMegaMenuLabels(lang, labels);
   const { navLabel, closeMobileNavLabel } = resolvedLabels;
   const sidebarId = useId();
   const wrapperRef = useRef(null);
+  const [initialSection, setInitialSection] = useState(null);
   const [showSidebar, setShowSidebar] = useState(false);
   const [retained, setRetained] = useState(false);
   const present = showSidebar || retained;
@@ -115,7 +118,7 @@ const MegaMenu = ({
   const openTimeoutRef = useRef(null);
 
   // Signal that JS has mounted and the sidebar is available to handle mobile nav.
-  // This adds --js-active so the CSS can safely hide pointer events on mobile items.
+  // Retain the enhancement marker for consumers of the navigation markup.
   useEffect(() => {
     setJsActive(true);
   }, []);
@@ -148,6 +151,12 @@ const MegaMenu = ({
 
     // Set timeout to close the menu
     closeTimeoutRef.current = setTimeout(() => {
+      if (
+        wrapperRef.current?.ownerDocument.activeElement?.closest(
+          '.mg-mega-menu-finder'
+        )
+      )
+        return;
       releaseDesktopFocus();
       setActiveItem(null);
     }, delay);
@@ -194,7 +203,12 @@ const MegaMenu = ({
     const handleClickOutside = e => {
       // Check if click is outside the mega menu wrapper
       const megaWrapper = wrapperRef.current;
-      if (megaWrapper && !megaWrapper.contains(e.target)) {
+      // Mode changes can remove the clicked control before this document
+      // listener runs. Its original event path still identifies an inside click.
+      const clickedInside =
+        megaWrapper?.contains(e.target) ||
+        (e.composedPath?.() || []).includes(megaWrapper);
+      if (megaWrapper && !clickedInside) {
         releaseDesktopFocus();
         setActiveItem(null);
       }
@@ -223,19 +237,28 @@ const MegaMenu = ({
 
   return (
     <nav
+      {...getLanguageProps(lang, dir)}
       ref={wrapperRef}
       className={`mg-mega-wrapper${jsActive ? ' mg-mega-wrapper--js-active' : ''}${present ? ' mg-mega-wrapper--mobile-open' : ''}`}
       onMouseLeave={handleMouseLeave}
       onKeyDown={handleEscape}
       aria-label={navLabel}
+      data-vf-google-analytics-region={analyticsRegion || undefined}
     >
       <TopBar
         isMobile={isMobile}
+        openMobileSection={index => {
+          setInitialSection(index);
+          setShowSidebar(true);
+        }}
         sidebarId={sidebarId}
         labels={resolvedLabels}
         sections={sections}
         handleItemHover={handleItemHover}
-        toggleShowSidebar={() => setShowSidebar(prev => !prev)}
+        toggleShowSidebar={() => {
+          setInitialSection(null);
+          setShowSidebar(prev => !prev);
+        }}
         showSidebar={showSidebar}
         activeItem={activeItem}
         activateItem={setActiveItem}
@@ -246,6 +269,10 @@ const MegaMenu = ({
         logoHref={logoHref}
         logoWidth={logoWidth}
         logoHeight={logoHeight}
+        enableFilter={enableFilter}
+        enableSiteSearch={enableSiteSearch}
+        searchUrl={searchUrl}
+        onNavigate={onNavigate}
       />
 
       {/* Backdrop overlay – closes sidebar on click */}
@@ -255,18 +282,23 @@ const MegaMenu = ({
           aria-hidden={!showSidebar}
           aria-label={closeMobileNavLabel}
           tabIndex={-1}
+          data-vf-analytics-label="Mega menu: Close"
           onClick={() => setShowSidebar(false)}
         />
       )}
 
       {/* Keep the controller mounted so close and reopen reset predictably. */}
       <Sidebar
+        initialSection={initialSection}
         id={sidebarId}
         labels={resolvedLabels}
         onClose={() => setShowSidebar(false)}
         present={present}
         open={showSidebar}
         sections={sections}
+        enableFilter={enableFilter}
+        enableSiteSearch={enableSiteSearch}
+        searchUrl={searchUrl}
       />
     </nav>
   );
@@ -312,7 +344,17 @@ MegaMenu.propTypes = {
   logoWidth: PropTypes.number,
   /** Explicit height for the logo (CLS prevention). */
   logoHeight: PropTypes.number,
-  /** Translated UI labels. All keys are optional; existing label objects remain supported. */
+  /** Enable live filtering of navigation items in desktop and mobile menus. */
+  enableFilter: PropTypes.bool,
+  /** Offer full-site search fallback option when filtering (default: true). */
+  enableSiteSearch: PropTypes.bool,
+  /** Base URL for full-site search (default: '/search', which routes to syndicated search #query=). */
+  searchUrl: PropTypes.string,
+  /** UI language tag; selects the built-in catalogue, with English fallback. */
+  lang: PropTypes.string,
+  /** Explicit text direction; otherwise known catalogue languages select their direction. */
+  dir: PropTypes.oneOf(['ltr', 'rtl', 'auto']),
+  /** Explicit UI label overrides; omitted keys use the selected catalogue, then English. */
   labels: PropTypes.shape({
     navLabel: PropTypes.string,
     closeMobileNavLabel: PropTypes.string,
@@ -322,7 +364,18 @@ MegaMenu.propTypes = {
     closeLabel: PropTypes.string,
     overviewLabel: PropTypes.string,
     toggleMobileNavLabel: PropTypes.string,
+    menuFilterLabel: PropTypes.string,
+    filterPlaceholder: PropTypes.string,
+    clearFilterLabel: PropTypes.string,
+    noFilterResultsLabel: PropTypes.string,
+    searchSiteLabel: PropTypes.string,
+    filterMatchesCount: PropTypes.string,
   }),
+  /**
+   * Click-tracker region (`data-vf-google-analytics-region`) on the root nav.
+   * Pass `null` or an empty string to inherit the host's region.
+   */
+  analyticsRegion: PropTypes.string,
 };
 
 export default MegaMenu;

@@ -35,6 +35,11 @@ const BUNDLES = [
 ];
 
 const INPUT_HOOKS = {
+  '--mg-tab-sticky-offset':
+    'Consumer docking offset for the sticky Tab variant, with a 0px fallback',
+  '--mg-tab-sticky-background':
+    'Consumer complete-colour override for the sticky Tab rail, with a neutral-0 fallback',
+
   '--mg-on-this-page-nav-scroll-padding-base':
     "A site's own scroll padding, set on :root, that the On this page bar adds itself to",
   '--mg-on-this-page-nav-block-size':

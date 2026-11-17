@@ -6,6 +6,8 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Breadcrumbs/Breadcrumbs.mdx
  */
+@use "../../assets/scss/mixins" as *;
+
 .mg-breadcrumb {
   font-family: var(--mg-font-family-ui);
   font-weight: 400;

@@ -21,7 +21,7 @@ You are writing documentation for **Mangrove**, UNDRR's Storybook-powered React 
 - **Writing style**: Follow `docs/WRITING-SHORT.md` — plain language, front-load key info, sentence case, gender-neutral terms (UN guidelines)
 - **Component API docs**: JSDoc on each prop, PropTypes for validation, documented in MDX with usage examples
 - **Gold standard**: `stories/Components/Pager/` — has excellent MDX, JSDoc, and story coverage
-- **4 themes**: UNDRR, PreventionWeb, IRP, MCR2030 — document theme-specific behavior when relevant
+- **5 themes**: UNDRR, PreventionWeb, IRP, MCR2030, DELTA — document theme-specific behavior when relevant
 - **Drupal integration**: Components are consumed via `data-mg-*` attributes and wrapper scripts — document the data contract
 
 ### Existing docs structure
@@ -126,7 +126,7 @@ This component is hydrated via `data-mg-component-name` attributes.
 
 ## Theme behavior
 
-Note any differences across UNDRR, PreventionWeb, IRP, and MCR2030 themes.
+Note any differences across UNDRR, PreventionWeb, IRP, MCR2030, and DELTA themes.
 ```
 
 ## Developer guide template

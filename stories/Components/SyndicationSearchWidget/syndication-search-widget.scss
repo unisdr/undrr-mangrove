@@ -6,7 +6,10 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/SyndicationSearchWidget/SyndicationSearchWidget.mdx
  */
-@import "deprecated-teaser-hide";
+@use "../Forms/form-base";
+@use "deprecated-teaser-hide" as *;
+@use "../../assets/scss/mixins" as *;
+@use "../../assets/scss/config" as *;
 
 // Component-specific variables (using Mangrove tokens)
 // Colors
@@ -570,7 +573,6 @@ $search-input-padding-x: mg-rem(44);
   padding: var(--mg-spacing-25) var(--mg-spacing-50);
   background: $search-chip-bg;
   border-radius: $search-radius;
-  text-transform: uppercase;
   letter-spacing: 0.025em;
 }
 
@@ -855,12 +857,60 @@ $search-input-padding-x: mg-rem(44);
   // The book card's existing start alignment keeps cover rows intrinsic.
   .mg-card__book {
     block-size: 100%;
+    max-width: none;
+    inline-size: 100%;
   }
 
   // Remove list-style dividers in grid/card mode
   .mg-search__result {
+    inline-size: 100%;
+    min-inline-size: 0;
     padding-bottom: 0;
     border-bottom: 0;
+  }
+}
+
+// A catalogue aligns captions through a shared media stage, without cropping
+// supplied artwork or inventing a cover for a result that has none. Only search
+// galleries use this staging; standalone publication teasers remain intrinsic.
+.mg-search__results-grid--book {
+  @media (min-width: $mg-breakpoint-tablet) {
+    &:has(.mg-card__visual) {
+      .mg-card__book > .mg-card__visual,
+      .mg-card__book:not(:has(.mg-card__visual))::before {
+        inline-size: 100%;
+        block-size: var(--mg-search-book-cover-height);
+      }
+
+      .mg-card__book:not(:has(.mg-card__visual))::before {
+        content: "";
+      }
+
+      .mg-card__book > .mg-card__visual {
+        aspect-ratio: auto;
+        border: 0;
+        align-items: flex-end;
+        justify-content: flex-start;
+
+        > a {
+          display: flex;
+          align-items: flex-end;
+          justify-content: flex-start;
+          inline-size: 100%;
+          block-size: 100%;
+        }
+
+        img {
+          align-self: flex-end;
+          inline-size: auto;
+          block-size: auto;
+          max-inline-size: 100%;
+          max-block-size: 100%;
+          object-fit: contain;
+          border: 1px solid rgb(var(--mg-color-neutral-600) / 0.2);
+        }
+      }
+    }
   }
 }
 
@@ -1245,6 +1295,40 @@ $search-input-padding-x: mg-rem(44);
   flex-shrink: 0;
   font-size: var(--mg-font-size-100);
   color: $search-text-muted;
+}
+
+// Inclusion inherited from a parent is distinct from an explicit selection.
+// A pale checked box inherits inclusion; an explicit selection has a solid box.
+.mg-select__option--inherited {
+  background-color: rgb(var(--mg-color-form-check--checked) / 0.05);
+
+  .mg-select__indicator {
+    background-color: rgb(var(--mg-color-form-check--checked) / 0.12);
+  }
+}
+
+.mg-select__option--inherited,
+.mg-select__option--partial {
+  .mg-select__indicator {
+    color: rgb(var(--mg-color-form-check--checked));
+  }
+
+  @media (forced-colors: active) {
+    .mg-select__indicator {
+      border-color: CanvasText;
+      color: CanvasText;
+    }
+  }
+}
+
+// Preserve the pale/solid distinction using system colours in high contrast.
+@media (forced-colors: active) {
+  .mg-select__option--selected .mg-select__indicator {
+    forced-color-adjust: none;
+    border-color: Highlight;
+    background-color: Highlight;
+    color: HighlightText;
+  }
 }
 
 // Subtype options (indented children under parent content types)
@@ -1662,7 +1746,6 @@ $search-input-padding-x: mg-rem(44);
   margin-inline-end: var(--mg-spacing-25);
   color: $search-text-muted;
   font-weight: 600;
-  text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
@@ -1683,5 +1766,330 @@ $search-input-padding-x: mg-rem(44);
 
   .mg-search__drawer {
     border-inline-end: 1px solid CanvasText;
+  }
+}
+
+// A result scope is one required choice, distinct from removable filters.
+.mg-search__scope-tabs {
+  border: 0;
+  padding: 0;
+  margin-block: 0 var(--mg-spacing-100);
+  margin-inline: 0;
+  min-inline-size: 0;
+}
+
+.mg-search__scope-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mg-spacing-25);
+  border-block-end: 1px solid rgb(var(--mg-color-neutral-200));
+}
+
+.mg-search__scope-option {
+  position: relative;
+  cursor: pointer;
+  margin: 0;
+
+  input {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    opacity: 0;
+  }
+
+  span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: mg-rem(44);
+    min-block-size: mg-rem(44);
+    box-sizing: border-box;
+    padding: var(--mg-spacing-75) var(--mg-spacing-100);
+    border-block-end: 3px solid transparent;
+    font-family: var(--mg-font-family-ui);
+    color: rgb(var(--mg-color-text));
+  }
+
+  input:checked + span {
+    border-block-end-color: rgb(var(--mg-color-interactive));
+    font-weight: 700;
+  }
+
+  input:focus-visible + span {
+    @include mg-focus-ring-inset;
+  }
+
+  input:disabled + span {
+    cursor: not-allowed;
+    color: rgb(var(--mg-color-neutral-600));
+  }
+
+  @media (forced-colors: active) {
+    input:not(:checked) + span {
+      border-block-end-color: Canvas;
+    }
+
+    input:checked + span {
+      border-block-end-color: Highlight;
+    }
+
+    input:disabled + span {
+      color: GrayText;
+    }
+  }
+}
+
+.mg-search__export {
+  display: flex;
+  justify-content: flex-start;
+  margin-block-start: var(--mg-spacing-100);
+}
+
+.mg-search__export-dialog {
+  p {
+    margin-block: 0 var(--mg-spacing-100);
+  }
+
+  a {
+    text-decoration: underline;
+
+    &:focus-visible {
+      @include mg-focus-ring;
+    }
+  }
+}
+
+.mg-search__export-dialog.mg-dialog {
+  inline-size: min(48rem, calc(100% - var(--mg-spacing-400)));
+}
+
+.mg-search__export-dialog .mg-search__export-header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+}
+
+.mg-search__export-header-icon {
+  display: grid;
+  place-items: center;
+  inline-size: var(--mg-spacing-400);
+  block-size: var(--mg-spacing-400);
+  border-radius: var(--mg-radius-button);
+  color: rgb(var(--mg-color-interactive));
+  background: rgb(var(--mg-color-interactive) / 0.08);
+}
+
+.mg-search__export-scope {
+  grid-column: 1 / -1;
+  color: rgb(var(--mg-color-neutral-500));
+}
+
+.mg-search__export-range {
+  min-inline-size: 0;
+  display: grid;
+  gap: var(--mg-spacing-150);
+  margin-block-end: var(--mg-spacing-100);
+  padding: var(--mg-spacing-150);
+  border: 1px solid rgb(var(--mg-color-neutral-100));
+  border-radius: var(--mg-radius-form-input);
+  background: rgb(var(--mg-color-neutral-25));
+
+  > legend {
+    max-inline-size: 100%;
+    min-inline-size: 0;
+
+    > span {
+      overflow-wrap: anywhere;
+    }
+  }
+
+  > .mg-form-field {
+    margin: 0;
+    min-inline-size: 0;
+  }
+}
+
+.mg-search__export-preview {
+  grid-column: 1 / -1;
+  min-inline-size: 0;
+  margin: 0;
+}
+
+.mg-search__export-preview-track {
+  position: relative;
+  block-size: var(--mg-spacing-100);
+  overflow: hidden;
+  border: 1px solid rgb(var(--mg-color-neutral-500));
+  border-radius: var(--mg-radius-form-input);
+  background: rgb(var(--mg-color-neutral-50));
+
+  &--window {
+    margin-inline-end: var(--mg-spacing-150);
+    overflow: visible;
+    border-style: dashed;
+
+    &::after {
+      content: "…";
+      position: absolute;
+      inset-inline-start: 100%;
+      inset-block-start: 50%;
+      padding-inline-start: var(--mg-spacing-25);
+      transform: translateY(-50%);
+    }
+  }
+}
+
+.mg-search__export-preview-selection {
+  position: absolute;
+  inset-block: 0;
+  min-inline-size: 1px;
+  color: rgb(var(--mg-color-interactive));
+  background: currentColor;
+  outline: 1px solid currentColor;
+}
+
+@media (forced-colors: active) {
+  .mg-search__export-preview-track {
+    background: Canvas;
+    border-color: CanvasText;
+  }
+
+  .mg-search__export-preview-selection {
+    color: Highlight;
+    background: Highlight;
+    outline-color: Highlight;
+    forced-color-adjust: none;
+  }
+}
+
+.mg-search__export-count,
+.mg-search__export-start {
+  input {
+    inline-size: 10ch;
+    max-inline-size: 100%;
+  }
+}
+
+.mg-search__export-field-options {
+  margin-block-end: var(--mg-spacing-100);
+  border: 1px solid rgb(var(--mg-color-neutral-100));
+  border-radius: var(--mg-radius-form-input);
+
+  summary {
+    padding: var(--mg-spacing-150);
+    border-radius: inherit;
+    background: rgb(var(--mg-color-interactive) / 0.06);
+    cursor: pointer;
+
+    &:focus-visible {
+      @include mg-focus-ring;
+    }
+  }
+}
+
+.mg-search__export-fields {
+  min-inline-size: 0;
+  border: 0;
+  padding: var(--mg-spacing-150);
+  margin: 0;
+
+  p {
+    color: rgb(var(--mg-color-neutral-500));
+  }
+}
+
+.mg-search__export-field-grid {
+  display: grid;
+  gap: var(--mg-spacing-75) var(--mg-spacing-150);
+  min-inline-size: 0;
+}
+
+.mg-search__export-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mg-spacing-75);
+
+  .mg-button {
+    min-block-size: 44px;
+  }
+}
+
+.mg-search__export-footer {
+  padding: 0 var(--mg-spacing-200) var(--mg-spacing-200);
+  overflow-wrap: anywhere;
+
+  .mg-search__export-help {
+    padding-block-start: var(--mg-spacing-150);
+    margin-block: var(--mg-spacing-200) 0;
+    border-block-start: 1px solid rgb(var(--mg-color-neutral-100));
+  }
+
+  .mg-search__export-status:empty {
+    margin: 0;
+  }
+}
+
+.mg-search__export-format-title {
+  margin: 0 0 var(--mg-spacing-75);
+}
+
+@media (width >= 48rem) {
+  .mg-search__export-range--paged {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .mg-search__export-field-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (width <= 28rem) {
+  .mg-search__export-header-icon {
+    display: none;
+  }
+
+  .mg-search__export-dialog {
+    .mg-search__export-header {
+      grid-template-columns: minmax(0, 1fr);
+      padding: var(--mg-spacing-100);
+
+      .mg-dialog__close {
+        grid-row: 1;
+        justify-self: end;
+        inline-size: 44px;
+        block-size: 44px;
+        min-inline-size: 44px;
+        min-block-size: 44px;
+      }
+
+      .mg-dialog__title {
+        grid-row: 2;
+      }
+    }
+
+    .mg-dialog__body,
+    .mg-search__export-footer {
+      padding-inline: var(--mg-spacing-100);
+    }
+
+    .mg-search__export-range,
+    .mg-search__export-fields,
+    .mg-search__export-field-options summary {
+      padding: var(--mg-spacing-100);
+    }
+
+    .mg-search__export-field-grid > *,
+    .mg-form-check__label {
+      min-inline-size: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .mg-search__export-actions .mg-button {
+      flex-wrap: wrap;
+      inline-size: 100%;
+      min-inline-size: 0;
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
   }
 }

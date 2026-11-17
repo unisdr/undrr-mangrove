@@ -11,9 +11,10 @@
  * @module SearchWidget/components/FacetSelect
  */
 
-import React, { memo, useMemo, useCallback } from 'react';
+import React, { memo, useMemo, useCallback, useRef } from 'react';
 import {
   useSearchDispatch,
+  useSearchConfig,
   useSearchLabels,
   interpolateLabel,
   actions,
@@ -21,6 +22,7 @@ import {
 
 const EMPTY_BUCKETS = [];
 import { SelectDropdown } from './SelectDropdown';
+import { useSearchEvents, selectionChange } from '../hooks/useSearchEvents';
 import {
   ALWAYS_OR_FACETS,
   FACET_SEARCH_THRESHOLD,
@@ -66,7 +68,10 @@ function FacetSelectComponent({
   operator = 'OR',
 }) {
   const dispatch = useSearchDispatch();
+  const shared = !!useSearchConfig().sharedControls?.id;
   const labels = useSearchLabels();
+  const emit = useSearchEvents();
+  const fieldsetRef = useRef(null);
 
   const { key, label, vocabulary, type, labelSource } = field;
 
@@ -100,8 +105,16 @@ function FacetSelectComponent({
   const handleOperatorChange = useCallback(
     newOperator => {
       dispatch(actions.setFacetOperator(key, newOperator));
+      emit(fieldsetRef.current, 'filter-change', {
+        kind: 'field',
+        key,
+        action: 'operator',
+        changed: [],
+        values: selectedValues,
+        operator: newOperator.toLowerCase(),
+      });
     },
-    [dispatch, key]
+    [dispatch, key, emit, selectedValues]
   );
 
   /**
@@ -203,7 +216,7 @@ function FacetSelectComponent({
         return {
           value: bucketKey,
           label: optionLabel,
-          count: bucket.doc_count,
+          count: shared ? undefined : bucket.doc_count,
           isSelected,
           isSubtype: isSubtype || bucket.isSubtype || false,
           parentType,
@@ -242,7 +255,7 @@ function FacetSelectComponent({
         return {
           value,
           label: optionLabel,
-          count: 0, // Not in current results
+          count: shared ? undefined : 0, // Not in current results
           isSelected: true,
           isSubtype,
           parentType,
@@ -252,15 +265,47 @@ function FacetSelectComponent({
     // Combine options
     const allOptions = [...bucketOptions, ...missingSelectedOptions];
 
-    // For type facet, preserve hierarchical order (parent-child grouping)
-    // Only float selected items to top, don't re-sort by count
+    // Keep the aggregation's group order, including retained selections that
+    // have no bucket in the latest response. Never synthesize a missing parent.
     if (isTypeFacet) {
-      return allOptions.sort((a, b) => {
-        // Selected items float to top
-        if (a.isSelected && !b.isSelected) return -1;
-        if (!a.isSelected && b.isSelected) return 1;
-        // Keep original hierarchical order for same selection state
-        return 0;
+      const groups = new Map();
+      for (const option of allOptions) {
+        const groupKey =
+          option.isSubtype && option.parentType
+            ? option.parentType
+            : option.value;
+        if (!groups.has(groupKey)) groups.set(groupKey, []);
+        groups.get(groupKey).push(option);
+      }
+      return Array.from(groups.values()).flatMap(group => {
+        const parentSelected = group.some(
+          option => !option.isSubtype && option.isSelected
+        );
+        const childSelected = group.some(
+          option => option.isSubtype && option.isSelected
+        );
+        return [
+          ...group.filter(option => !option.isSubtype),
+          ...group.filter(option => option.isSubtype),
+        ].map(option => {
+          const inherited =
+            option.isSubtype && !option.isSelected && parentSelected;
+          const partial =
+            !option.isSubtype && !option.isSelected && childSelected;
+          return {
+            ...option,
+            selectionState: inherited
+              ? 'inherited'
+              : partial
+                ? 'partial'
+                : undefined,
+            description: inherited
+              ? labels.typeIncludedThroughParent
+              : partial
+                ? labels.typeSubtypesSelected
+                : undefined,
+          };
+        });
       });
     }
 
@@ -287,6 +332,8 @@ function FacetSelectComponent({
     allowedTypes,
     selectedValues,
     hideUnlabelled,
+    shared,
+    labels,
   ]);
 
   /**
@@ -310,8 +357,23 @@ function FacetSelectComponent({
           dispatch(actions.setFacet(key, newValue, true));
         }
       }
+      const next = isMultiple
+        ? [newValue].flat()
+        : [newValue].filter(
+            value => value !== null && value !== undefined && value !== ''
+          );
+      const change = selectionChange(selectedValues, next);
+      if (change) {
+        emit(fieldsetRef.current, 'filter-change', {
+          kind: 'field',
+          key,
+          ...change,
+          values: next,
+          operator: next.length ? operator.toLowerCase() : 'or',
+        });
+      }
     },
-    [dispatch, key, isMultiple]
+    [dispatch, key, isMultiple, emit, selectedValues, operator]
   );
 
   // Don't render if no options
@@ -322,7 +384,11 @@ function FacetSelectComponent({
   const selectId = `facet-${key}-${widgetId}`;
 
   return (
-    <fieldset className="mg-search__facet" data-facet-key={key}>
+    <fieldset
+      ref={fieldsetRef}
+      className="mg-search__facet"
+      data-facet-key={key}
+    >
       <legend id={`${selectId}-label`}>{label}</legend>
       <SelectDropdown
         id={selectId}
@@ -337,6 +403,7 @@ function FacetSelectComponent({
         searchThreshold={FACET_SEARCH_THRESHOLD}
         searchInputPlaceholder={labels.dropdownSearchPlaceholder}
         noOptionsText={labels.dropdownNoOptions}
+        analyticsLabel={`Search filter: ${key}`}
       />
       {showOperatorToggle && (
         <div className="mg-search__facet-operator">
@@ -355,11 +422,13 @@ function FacetSelectComponent({
                     ? 'mg-search__facet-operator-option--active'
                     : ''
                 }`}
+                data-vf-analytics-label="Search: Match any"
               >
                 <input
                   type="radio"
                   name={`${key}-operator`}
                   value="OR"
+                  data-vf-analytics-label="Search: Match any"
                   checked={currentOperator === 'OR'}
                   onChange={() => handleOperatorChange('OR')}
                 />
@@ -371,11 +440,13 @@ function FacetSelectComponent({
                     ? 'mg-search__facet-operator-option--active'
                     : ''
                 }`}
+                data-vf-analytics-label="Search: Match all"
               >
                 <input
                   type="radio"
                   name={`${key}-operator`}
                   value="AND"
+                  data-vf-analytics-label="Search: Match all"
                   checked={currentOperator === 'AND'}
                   onChange={() => handleOperatorChange('AND')}
                 />

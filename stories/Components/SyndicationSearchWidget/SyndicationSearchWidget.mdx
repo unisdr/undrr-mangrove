@@ -5,6 +5,8 @@ import * as DisplayModesStories from './SyndicationSearchWidget.DisplayModes.sto
 import * as FiltersStories from './SyndicationSearchWidget.Filters.stories';
 import * as IntegrationsStories from './SyndicationSearchWidget.Integrations.stories';
 import * as TogglesStories from './SyndicationSearchWidget.Toggles.stories';
+import * as ExportStories from './SyndicationSearchWidget.Export.stories';
+import * as ExportFixtureStories from './SyndicationSearchWidget.Export.fixtures.stories';
 import * as MotionStories from './SyndicationSearchWidget.Motion.stories';
 
 <Meta of={SyndicationSearchWidgetStories} />
@@ -81,9 +83,13 @@ Renders search results as vertical cards in a responsive grid. `gridColumns` con
 
 ## Card book display
 
-Renders search results as vertical book cards in a grid. Uses `mg-card__vc mg-card__book` classes. Drupal image styles are automatically rewritten to `por` (3:4 portrait) to match the book card aspect ratio.
+Renders publication teasers in a grid using `mg-card__vc mg-card__book`. Book mode preserves supplied image URLs; the endpoint must provide complete, uncropped cover artwork. It does not infer artwork roles or turn general content into publications. Use an explicit publication filter and set `gridColumns` independently of page size: two columns suit a typical sidebar search, while wider catalogues can support more. Hide summaries and redundant content-type labels through `visibleTeaserFields` when browsing covers.
+
+Desktop covers retain their natural proportions within a shared media stage, bottom-aligned without an extra frame around the stage. The `--mg-search-book-cover-height` token defaults to 20rem and aligns captions even when artwork is missing. Missing media leaves empty space without a fabricated image; that space collapses on mobile. Explicitly hiding images, or receiving a result set with no artwork at all, disables the staging. This is specific to search grids; standalone book cards keep their natural cover height.
 
 <Canvas of={DisplayModesStories.CardBookDisplay} meta={DisplayModesStories} />
+
+<Canvas of={DisplayModesStories.BookGridEdgeCases} meta={DisplayModesStories} />
 
 ## Hidden teaser fields
 
@@ -154,6 +160,12 @@ customFacets: [
 
 <Canvas of={FiltersStories.CustomFacets} meta={FiltersStories} />
 
+### One search across result tabs
+
+A single-select custom facet with `display: 'tabs'` appears above the results as a labelled native radio group, styled as tabs. Set `defaultValue` to its initial option index (`'0'` for the first option). Switching keeps the search term and other filters, resets pagination, and scopes both results and facet counts. Clear all filters retains the selected tab. Give each option a unique, stable URL-safe `value` (`A–Z`, `a–z`, digits, `_` or `-`, up to 80 characters) such as `'upcoming'` or `'past'` to preserve the selection in links and browser history (`t.<facetId>=<value>`). Options without unique URL-safe values still work as controls but are omitted from links. Editing scope options preserves the reader’s non-default choice by value; changing an untouched default changes the scope and returns to page 1, without clearing other filters. Ordinary dropdown facets remain unchanged.
+
+<Canvas of={FiltersStories.EventPeriods} meta={FiltersStories} />
+
 **Structure:**
 
 ```json
@@ -173,6 +185,12 @@ customFacets: [
 | `weight`      | number  | Sort order (lower = higher)     |
 | `multiSelect` | boolean | Allow multiple selections       |
 | `options`     | array   | Array of `{label, query}` pairs |
+
+## Shared controls for separate result lists
+
+Opt into a group by giving each participating widget the same `sharedControls` object with an `id`, `visibleFilters`, `allowedTypes`, `customFacets`, `defaultFilters`, and `defaultQuery`. Its search term and selected filters update all members, including hidden and newly mounted displays. Each display retains its content restrictions, required result tabs, date basis, layout, sort, page size, and non-offered default filters. Changing shared selections or moving a display to another group resets it to page 1; Clear all keeps the search term and restores group defaults. Editing shared defaults preserves a visitor-selected sort unless the display’s configured sort changes.
+
+Place search and filter controls with the usual `searchTarget` and `facetsTarget` selectors. The shared filter options are the union of the members' available values, without misleading combined result counts. Each display retains its own Sort control. Group selections survive same-document remounts; stale options are removed when a member leaves, while selected values remain available even with no matching results. Integrations can build server snapshots with `buildInitialSearchQuery(config)`, which reads configuration defaults rather than live group selections. Grouped hydration uses the live group state and disables URL hash sync, avoiding competing per-display URL state. Existing widgets without `sharedControls` keep their previous behaviour.
 
 ## Custom filters and facets
 
@@ -244,6 +262,14 @@ The UNDRR index holds `event_start` and `event_end` date fields for `event` and 
 
 The Sort dropdown offers the two event date sorts when `defaultSort` is one of them or the widget has encountered one during the current session (for example through a shared URL). Once available, both choices remain available after selecting a different sort or moving between layouts. Ordinary listings that have never used an event sort keep the standard choices, so they don't show sorts that would push every non-event to the end. To limit a listing to a date window, add a `customFilters` range such as `event_start:[2026-01-01 TO 2026-03-31]`.
 
+Set `yearField: 'display_date'` when the endpoint supplies each result's reader-facing date. This supports mixed listings: the same year can include an event that takes place that year, a document with that publication year, and news released that year. Both the selected-year filter and year counts use `display_date`. The endpoint owns which editorial field supplies it. Missing public dates stay absent; the widget does not substitute CMS publication timestamps.
+
+For the no-teaser fallback, supply `display_date_precision: 'year'` for year-only publications or `'day'` for complete dates. Search API may wrap these values in arrays. A year-only publication is displayed as `2020`, even though its indexed date uses January 1 for year filtering. Public dates are displayed in UTC to match year buckets; historical dates before 1970 are supported. Pre-rendered teaser HTML must use the same editorial date. Reindex existing documents before selecting this field.
+
+`newest` / `oldest` sorting and recency scoring continue to use `published_at`, independently of the reader-facing Year filter.
+
+Set `yearField: 'event_start'` on event-only endpoints that expose event dates but do not supply `display_date`. The default is `'published_at'` for general content. Event year means the UTC calendar year in which an event starts: a December–January event belongs to its starting year, regardless of its publication date. Events without a start date do not match a selected event year; the filter does not substitute publication metadata. Use a date-range query when you need events that overlap a period rather than events that start in it.
+
 In list mode without teaser HTML, event results show their event date (a range when the event runs over several days) instead of the publish date.
 
 <Canvas of={FiltersStories.UpcomingEvents} meta={FiltersStories} />
@@ -273,7 +299,7 @@ markup. This is deliberate: Elasticsearch wraps matched terms in `<em>`, and
 escaping the response would print those tags instead of emphasising the match.
 
 Point `searchEndpoint` only at a service you trust to return safe HTML. The
-default, `https://www.undrr.org/search-endpoint`, is UNDRR's own proxy over the
+default, `https://www.undrr.org/search-endpoint`, is a proxy that UNDRR runs over the
 syndication index. If you point it at your own service — through the
 `searchEndpoint` config value or the `data-search-endpoint` attribute — then
 whatever that service returns is rendered on your page, and you own what comes
@@ -575,64 +601,195 @@ Rules:
   window (for the configured `resultsPerPage`) is ignored, and page 1 is shown.
 - **History.** Choosing a filter, a match mode, a sort order or a page adds a
   history entry. Typing a search query updates the current entry instead.
-- **Custom facets are not included.** Editor-defined facets (`customFacets`)
-  store selections by option position, so a link would select a different
-  option after an editor reorders, adds or removes options. They need stable
-  option IDs before they can be shared in the URL.
+- **Custom dropdown facets are not included.** They store selections by option position. Result tabs can use stable option `value` identifiers and sync through `t.<facetId>` parameters.
 
 Pages with more than one widget should leave hash sync on for at most one of
 them; the Drupal block's `auto` setting does this.
+
+## Download search metadata
+
+Let visitors download matching content metadata as CSV for spreadsheets or JSON for software. Downloads use the configured search and the visitor’s current terms, filters and sort, independently of the visible page. They contain metadata, not publication files or a complete bibliographic record.
+
+Enable the optional **Download results** action with `config.showExport`:
+
+```jsx
+<SyndicationSearchWidget
+  config={{
+    showExport: true,
+    exportDefaultCount: 100,
+    exportContactUrl: 'https://www.preventionweb.net/contact',
+    customFilters: ['type:publication'],
+    defaultSort: 'newest',
+  }}
+/>
+```
+
+The action appears beneath pagination, or beneath the results when pagination is hidden. Its modal offers both **Download CSV** and **Download JSON**. Set `exportDefaultCount: 10` for an initial quantity of ten; visitors can change it within the available range. `exportContactUrl` supplies the contact route for larger exports or API-access enquiries. Downloads use `searchEndpoint` unless `exportEndpoint` is set; hydrated widgets accept `data-export-endpoint`.
+
+<Canvas
+  of={ExportStories.DownloadResults}
+  story={{ inline: false, height: '850px' }}
+/>
+
+<span id="number-of-results" />
+
+### Choose a range
+
+Visitors choose **Number of results**, then **Start at result** when at least 1,000 matches are known. Start is one-based and initially 1. Smaller sets always start at result 1. Downloads are limited to 1,000 records per file and the first 10,000 matching positions:
+
+- With 25 exact matches, quantity is at most 25 and there is no start control.
+- With 1,000 exact matches, start 996 allows five records.
+- With at least 1,899 matches, start 900 and quantity 1,000 select results 900–1,899.
+
+Availability appears once above the inputs. Lower-bound totals say “At least”. The read-only strip shows the selected range; it is not a slider. Exact totals scale the whole matching set. For lower bounds, a continuation cue and screen-reader description identify the 1–10,000 preview window.
+
+Numeric edits immediately cap start and quantity together, so a later start can reduce quantity. Keyboard and paste entry block letters and exponent notation. A blank input remains editable until blur or Download: start then resets to 1 and quantity uses the bounded configured default. Corrections are announced to assistive technology. Editing makes no request; Download uses the corrected values.
+
+Separate downloads are independent searches. Index changes and equal sort values can cause overlaps or gaps between chunks. Use the contact/API route for larger or stable datasets; these downloads do not provide a snapshot or bulk-export protocol.
+
+Try the [result range example](?path=/story/components-syndicated-search-downloads--download-range) with a query that has enough matches.
+
+<span id="formats-and-fields" />
+
+### Choose fields and format
+
+**Fields to include** offers up to nine choices: title, summary, content type, language, website posting date, date shown in results, countries/regions, hazards and themes. Summary starts unchecked; the other choices start selected. Record ID and URL are always included. The date shown in results and its precision metadata stay paired. Choices apply to both formats and reset when the modal reopens.
+
+Omit `exportFields` (or use `null`) to make every supported optional field available. Supply an array of output keys to restrict the choices, for example `exportFields: ['title', 'summary', 'theme_ids']`. An empty array allows only the mandatory record ID and URL. Date/precision and taxonomy ID/name pairs stay together when either key is allowed. Restrictions apply to the modal and both downloaded formats; they do not restrict backend access. Changing the policy closes the modal and cancels any pending download.
+
+**Summary** is the plain-text description shown in the indexed search teaser. It may be shortened and is not a full abstract. It excludes query-specific highlights, surrounding teaser metadata and the full body. Records without a teaser description have an empty summary. Teaser HTML is requested only when Summary is selected.
+
+Countries/regions, hazards and themes each export paired ID and name arrays in the same order. Names use the configured taxonomy endpoint’s language, independently of the record’s content language. The lookup loads all pages, including terms outside the visible facets. An unresolved ID triggers one shared refresh to recover from an older cached list. If the term still cannot be resolved or the lookup fails, no file is produced: retry or clear the affected taxonomy choices.
+
+| Field                                                 | Meaning                                                                                                                        |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `id`                                                  | Search document identifier, falling back to the node ID.                                                                       |
+| `title`                                               | Indexed title with character entities decoded.                                                                                 |
+| `summary`                                             | Plain-text indexed teaser description; optional and empty when unavailable.                                                    |
+| `url`                                                 | Absolute HTTP(S) content URL, resolved using the result’s domain.                                                              |
+| `type`                                                | Content type, or vocabulary for taxonomy results.                                                                              |
+| `language`                                            | Content language, independent of the interface language.                                                                       |
+| `posted_at`                                           | Indexed `published_at` as a UTC ISO timestamp: the website posting date, not necessarily the publication’s bibliographic date. |
+| `display_date`                                        | Reader-facing date as `YYYY-MM-DD`, or `YYYY` for year precision. No posting-date fallback.                                    |
+| `display_date_precision`                              | Precision of the reader-facing date.                                                                                           |
+| `country_region_ids`, `hazard_ids`, `theme_ids`       | Taxonomy identifier arrays.                                                                                                    |
+| `country_region_names`, `hazard_names`, `theme_names` | Corresponding name arrays, in ID order.                                                                                        |
+
+Missing scalar values are empty strings; missing multi-value fields are empty arrays. Columns and keys keep the order above. Raw teaser/body HTML, scoring fields and other index internals are excluded.
+
+CSV uses a UTF-8 byte order mark, quoted cells and CRLF record endings. Taxonomy ID and name cells contain JSON arrays of strings. Cells that could be spreadsheet formulas receive a leading apostrophe; JSON preserves the original text.
+
+JSON contains `schemaVersion`, `exportedAt` (UTC), `records` and `scope`:
+
+| Scope key        | Meaning                                                         |
+| ---------------- | --------------------------------------------------------------- |
+| `limit`          | Requested quantity.                                             |
+| `from`           | Zero-based requested offset.                                    |
+| `start`, `end`   | Actual one-based returned range.                                |
+| `count`, `total` | Returned count and fresh exact matching total.                  |
+| `limited`        | Whether the slice excludes matching records before or after it. |
+| `fields`         | Included record keys.                                           |
+
+A shorter slice caused by fewer remaining matches is valid. An empty response creates no file. Timed-out, failed-shard, malformed or unexpectedly incomplete responses produce an error instead of a partial download. “Download prepared” confirms that the browser was asked to download, not that the file was saved.
+
+<span id="website-teaser-sample-and-live-results" />
+
+### Use the examples
+
+The primary **Downloads** examples call the public APIs. Choose **Download results** to open the modal; no download starts automatically. Endpoint configuration is editable in Controls, and access or network errors remain visible.
+
+- [Latest website results (live)](?path=/story/components-syndicated-search-downloads--latest-website-results-live) queries English PreventionWeb content, newest first, with an initial page and download quantity of ten.
+- **Website teaser sample**, below, uses ten records captured from a sanitized local index on 10 November 2026. It exercises the standard pre-rendered teaser path. Its images use source-site URLs and depend on remote availability.
+- [Preparing](?path=/story/components-syndicated-search-downloads-fixtures--download-preparing), [empty](?path=/story/components-syndicated-search-downloads-fixtures--download-empty) and [failure](?path=/story/components-syndicated-search-downloads-fixtures--download-failure) states use deterministic data under **Downloads / Fixtures**.
+- [Local Drupal API](?path=/story/components-syndicated-search-downloads--local-drupal-api) requires a running local Drupal deployment and the [development guide’s trusted-CA setup](https://github.com/unisdr/undrr-mangrove/blob/main/docs/DEVELOPMENT.md#api-backed-download-examples).
+
+<Canvas
+  of={ExportFixtureStories.LatestWebsiteTeasers}
+  story={{ inline: false, height: '850px' }}
+/>
+
+The sample is a fixed fixture, not a current website listing. Its provenance is recorded in `stories/assets/fixtures/website-teaser-sample/results.json`. Network-dependent stories are excluded from deterministic CI and do not substitute fixtures when requests fail.
+
+### Integrate and localize
+
+Hydration accepts `data-show-export="true"`, `data-export-default-count="100"`, `data-export-contact-url="/contact"` and JSON `data-export-fields='["title","summary","theme_ids"]'`. Omit individual attributes to inherit shared defaults. An explicit empty field array permits ID and URL only; invalid field policies also fall back to those mandatory columns. Drupal wrappers that construct their own config must forward these options before editors can enable downloads. No backend export service is required for the indexed metadata above; release/configuration integration and any editor controls belong to the consumer.
+
+Export labels use the existing `lang` and `labels` override contract. The component’s `_labels.js` catalogue defines the `export*` keys, including function-valued range and status messages. New translations require native-speaker review.
+
+<span id="interaction-and-limits" />
+
+### Interaction and implementation
+
+> **Implementation note (for contributors):** Export state belongs to the modal session. The shared query builder retains search constraints; metadata projection, range bounds, request identity and file saving use separate utilities.
+
+The action is unavailable during loading, unsettled input, a failed search or when no matches are known. Opening the native dialog focuses its heading and makes the background inert. Close, Escape and a backdrop press followed by release outside dismiss it. Closing or changing the search cancels pending work and restores focus to the action, or the connected results area if the action is unavailable. Pagination alone does not change the chosen range. Reopening restores start 1, the bounded configured quantity and the default field choices, with Summary unchecked.
+
+During preparation, range and field controls are disabled. Format buttons remain focusable with `aria-disabled`; repeated activation is ignored. Progress and failures are announced beside the actions. Success leaves the modal open for confirmation or another format; failures allow retry. Scroll locking is shared with other Mangrove dialogs and respects the widget’s owner document.
+
+The request asks for exact totals and allowlisted metadata, without facets or highlights. Selecting Summary also requests the indexed teaser; an inert template extracts only its description as plain text. Taxonomy names reuse the shared paginated lookup and cache. Closing while that shared lookup is pending prevents a late file without cancelling other consumers’ lookup. Field choices project the result after retrieval. Client-side limits are not access control; endpoint owners must enforce server-side access and resource limits.
+
+The outline action, native controls and shared Dialog/button typography follow Mangrove conventions. Layout wraps for small screens and RTL; no motion or component-specific type overrides are added. The CSV action is primary, JSON is outlined, and contact help follows the controls. The contact prompt offers assistance with exports or API access; it does not provision access.
 
 ## Props
 
 ### Config object
 
-| Prop                    | Type           | Default                                 | Description                                                                                                                                                                      |
-| ----------------------- | -------------- | --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `searchEndpoint`        | string         | `https://www.undrr.org/search-endpoint` | API endpoint for Elasticsearch queries. Its HTML is rendered unsanitised — see [Endpoint trust contract](#endpoint-trust-contract)                                               |
-| `taxonomyEndpoint`      | string         | PreventionWeb v1 taxonomy URL           | Taxonomy API for country, hazard and theme facet labels. See [Taxonomy endpoint](#taxonomy-endpoint)                                                                             |
-| `resultsPerPage`        | number         | 50                                      | Number of results to display per page                                                                                                                                            |
-| `debounceDelay`         | number         | 500                                     | Milliseconds to wait after typing before searching. Only typing is debounced: the first search, Enter, Clear, back/forward and filter, sort, page and config changes run at once |
-| `minSearchLength`       | number         | 3                                       | Minimum characters required to trigger search                                                                                                                                    |
-| `defaultQuery`          | string         | `''`                                    | Initial search query                                                                                                                                                             |
-| `defaultSort`           | string         | `'relevance'`                           | Initial sort order: `relevance`, `newest`, `oldest`, `eventDateAsc` or `eventDateDesc`. See [Event listings](#event-listings)                                                    |
-| `defaultFilters`        | array          | `[]`                                    | Default facet filters (array of `{key, value}`)                                                                                                                                  |
-| `showSearchBox`         | boolean        | `true`                                  | Show the search input                                                                                                                                                            |
-| `showResultsCount`      | boolean        | `true`                                  | Show "Showing X of Y results"                                                                                                                                                    |
-| `showSearchTimer`       | boolean        | `true`                                  | Show search execution time                                                                                                                                                       |
-| `showFacets`            | boolean        | `true`                                  | Show the facets sidebar                                                                                                                                                          |
-| `showActiveFilters`     | boolean        | `true`                                  | Show active filter chips                                                                                                                                                         |
-| `showSearchMetrics`     | boolean        | `false`                                 | Show debug metrics (score, etc.)                                                                                                                                                 |
-| `enableHashSync`        | string/boolean | `'auto'`                                | Sync search state to URL hash (see [URL hash](#url-hash))                                                                                                                        |
-| `visibleFilters`        | object         | `null`                                  | Control which filters are visible                                                                                                                                                |
-| `allowedTypes`          | object         | `null`                                  | Restrict content types shown                                                                                                                                                     |
-| `customFilters`         | array          | `[]`                                    | Additional Elasticsearch filters                                                                                                                                                 |
-| `customFacets`          | array          | `[]`                                    | Custom facet definitions                                                                                                                                                         |
-| `displayMode`           | string         | `'list'`                                | Result rendering style: `'list'`, `'card'`, or `'card-book'`                                                                                                                     |
-| `gridColumns`           | number         | `null`                                  | Grid columns for card modes (2-6). `null` = use `resultsPerPage`                                                                                                                 |
-| `visibleTeaserFields`   | object         | `null`                                  | Toggle teaser field visibility (`{image: false, ...}`). `null` = all visible                                                                                                     |
-| `requireImage`          | boolean        | `false`                                 | Only return results that have an image (`has_image:true` ES filter)                                                                                                              |
-| `interestingnessTiers`  | array          | `[]`                                    | Restrict by editorial weight tiers (e.g., `['promoted', 'announced']`)                                                                                                           |
-| `longevityTiers`        | array          | `[]`                                    | Restrict by content freshness tiers (e.g., `['year', 'longtime', 'always']`)                                                                                                     |
-| `analyticsRegionPrefix` | string         | `'undrr-search'`                        | Stem for the analytics regions (`<prefix>-form`, `-results`, `-facets`). See [Analytics regions](#analytics-regions)                                                             |
-| `onResults`             | function       | —                                       | Called after each completed search with `{ total, query, page }`. See [Results notification](#results-notification)                                                              |
-| `sourceFields`          | array          | `SOURCE_FIELDS`                         | `_source` fields requested per hit; the default is what the widget renders. Set only for an endpoint whose hits need other fields                                                |
-| `ssrResults`            | Element        | —                                       | Server-rendered results to keep on screen until the first client results. See [Server-rendered results](#server-rendered-results)                                                |
-| `facetsTarget`          | string         | `null`                                  | CSS selector for an element outside the widget to render the facets into (Drupal: `data-facets-target`)                                                                          |
-| `searchTarget`          | string         | `null`                                  | CSS selector for an element outside the widget to render the search input into (Drupal: `data-search-target`)                                                                    |
+| Prop                    | Type           | Default                                 | Description                                                                                                                                                                                              |
+| ----------------------- | -------------- | --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `searchEndpoint`        | string         | `https://www.undrr.org/search-endpoint` | API endpoint for Elasticsearch queries. Its HTML is rendered unsanitised — see [Endpoint trust contract](#endpoint-trust-contract)                                                                       |
+| `taxonomyEndpoint`      | string         | PreventionWeb v1 taxonomy URL           | Taxonomy API for country, hazard and theme facet labels. See [Taxonomy endpoint](#taxonomy-endpoint)                                                                                                     |
+| `showExport`            | boolean        | `false`                                 | Show the outlined Download results utility and native modal with CSV/JSON, visitor quantity and optional metadata fields.                                                                                |
+| `exportDefaultCount`    | number         | 100                                     | Initial requested download quantity, not a visitor maximum. Opening bounds the default by exact availability; ranges stay within 1,000 per file and the 10,000-result window.                            |
+| `exportFields`          | array or null  | `null` (all supported fields)           | Available optional output keys. Date/precision and taxonomy IDs/names stay paired. `[]` permits only mandatory ID and URL. Does not change backend access.                                               |
+| `exportContactUrl`      | string         | `https://www.preventionweb.net/contact` | Contact route for larger data requests or ongoing API-access discussions.                                                                                                                                |
+| `exportEndpoint`        | string         | `searchEndpoint`                        | Endpoint for download requests. Omit to use `searchEndpoint`. A consumer can give downloads a distinct URL, for example to tell them apart from browsing requests.                                       |
+| `resultsPerPage`        | number         | 50                                      | Number of results to display per page                                                                                                                                                                    |
+| `debounceDelay`         | number         | 500                                     | Milliseconds to wait after typing before searching. Only typing is debounced: the first search, Enter, Clear, back/forward and filter, sort, page and config changes run at once                         |
+| `minSearchLength`       | number         | 3                                       | Minimum characters required to trigger search                                                                                                                                                            |
+| `defaultQuery`          | string         | `''`                                    | Initial search query                                                                                                                                                                                     |
+| `yearField`             | string         | `'published_at'`                        | Date field used for Year filtering and counts: `'published_at'`, `'event_start'`, or `'display_date'`. The latter also supplies fallback result dates, with `display_date_precision: 'year'` or `'day'`. |
+| `defaultSort`           | string         | `'relevance'`                           | Initial sort order: `relevance`, `newest`, `oldest`, `eventDateAsc` or `eventDateDesc`. See [Event listings](#event-listings)                                                                            |
+| `defaultFilters`        | array          | `[]`                                    | Default facet filters (array of `{key, value}`)                                                                                                                                                          |
+| `showSearchBox`         | boolean        | `true`                                  | Show the search input                                                                                                                                                                                    |
+| `showResultsCount`      | boolean        | `true`                                  | Show "Showing X of Y results"                                                                                                                                                                            |
+| `showSearchTimer`       | boolean        | `true`                                  | Show search execution time                                                                                                                                                                               |
+| `showFacets`            | boolean        | `true`                                  | Show the facets sidebar                                                                                                                                                                                  |
+| `showActiveFilters`     | boolean        | `true`                                  | Show active filter chips                                                                                                                                                                                 |
+| `showSearchMetrics`     | boolean        | `false`                                 | Show debug metrics (score, etc.)                                                                                                                                                                         |
+| `enableHashSync`        | string/boolean | `'auto'`                                | Sync search state to URL hash (see [URL hash](#url-hash))                                                                                                                                                |
+| `visibleFilters`        | object         | `null`                                  | Control which filters are visible                                                                                                                                                                        |
+| `allowedTypes`          | object         | `null`                                  | Restrict content types shown                                                                                                                                                                             |
+| `customFilters`         | array          | `[]`                                    | Additional Elasticsearch filters                                                                                                                                                                         |
+| `customFacets`          | array          | `[]`                                    | Custom facet definitions                                                                                                                                                                                 |
+| `displayMode`           | string         | `'list'`                                | Result rendering style: `'list'`, `'card'`, or `'card-book'`                                                                                                                                             |
+| `gridColumns`           | number         | `null`                                  | Grid columns for card modes (2-6). `null` = use `resultsPerPage`                                                                                                                                         |
+| `visibleTeaserFields`   | object         | `null`                                  | Toggle teaser field visibility (`{image: false, ...}`). `null` = all visible                                                                                                                             |
+| `requireImage`          | boolean        | `false`                                 | Only return results that have an image (`has_image:true` ES filter)                                                                                                                                      |
+| `interestingnessTiers`  | array          | `[]`                                    | Restrict by editorial weight tiers (e.g., `['promoted', 'announced']`)                                                                                                                                   |
+| `longevityTiers`        | array          | `[]`                                    | Restrict by content freshness tiers (e.g., `['year', 'longtime', 'always']`)                                                                                                                             |
+| `analyticsRegionPrefix` | string         | `'undrr-search'`                        | Stem for the analytics regions (`<prefix>-form`, `-results`, `-facets`). See [Analytics regions](#analytics-regions)                                                                                     |
+| `onResults`             | function       | —                                       | Called after each completed search with `{ total, query, page }`. See [Results notification](#results-notification)                                                                                      |
+| `sourceFields`          | array          | `SOURCE_FIELDS`                         | `_source` fields requested per hit; the default is what the widget renders. Set only for an endpoint whose hits need other fields                                                                        |
+| `ssrResults`            | Element        | —                                       | Server-rendered results to keep on screen until the first client results. See [Server-rendered results](#server-rendered-results)                                                                        |
+| `facetsTarget`          | string         | `null`                                  | CSS selector for an element outside the widget to render the facets into (Drupal: `data-facets-target`)                                                                                                  |
+| `searchTarget`          | string         | `null`                                  | CSS selector for an element outside the widget to render the search input into (Drupal: `data-search-target`)                                                                                            |
 
 `facetsTarget` and `searchTarget` are matched in the document the widget is mounted in, not the global `document`. On a normal page these are the same document. They differ when the widget renders inside an iframe while its script runs in the parent window, as in a block editor canvas (Drupal's Gutenberg 4 editor, for example): the targets are found in the iframe, next to the widget. The same applies to the widget's other document lookups: the pager's scroll back to the results, the dropdown backdrop, and the mobile filter drawer's scroll lock and Escape key handling. A target that exists only in another document is not found, and the widget falls back to its in-widget layout with a console warning.
 
+When widgets share a target, only the first visible widget in document order renders controls there. Hidden tab and disclosure widgets keep their state and resume ownership when shown. Use separate targets when two result lists must be controlled at once. Visibility follows `hidden`, `aria-hidden`, and ancestor display/visibility styles, rather than viewport position. Missing targets retain the in-widget fallback.
+
+Compatibility: earlier versions rendered controls from every widget sharing a target. If an existing page intentionally places controls for several simultaneously visible lists in one container, give each widget its own target before upgrading. Single-widget targets and in-widget controls keep their existing behaviour. Existing year filters continue to use CMS publication dates unless `yearField: 'event_start'` or `'display_date'` is explicitly configured. Select `display_date` only after the endpoint has indexed the reader-facing dates and aligned its teaser HTML; a missing public date produces no year bucket or fallback date.
+
 ## Analytics regions
 
-The widget marks its search form, results and facets with `data-vf-google-analytics-region`: `undrr-search-form`, `undrr-search-results` and `undrr-search-facets`. The shared UNDRR analytics script reports each click with the innermost region around it, so a region set on a section around the widget is never reported for clicks inside it.
+The widget marks its search form, results and facets with `data-vf-google-analytics-region`: `undrr-search-form`, `undrr-search-results` and `undrr-search-facets`. With downloads on, the Download results action and its dialog are `undrr-search-download`. The shared UNDRR analytics script reports each click with the innermost region around it, so a region set on a section around the widget is never reported for clicks inside it.
 
-When a page has more than one widget, give each its own `analyticsRegionPrefix` (data attribute `data-analytics-region-prefix`). The prefix replaces `undrr-search` in all three names:
+When a page has more than one widget, give each its own `analyticsRegionPrefix` (data attribute `data-analytics-region-prefix`). The prefix replaces `undrr-search` in every name:
 
 ```js
 const config = { analyticsRegionPrefix: 'collection-related' };
-// Regions: collection-related-form, collection-related-results and
-// collection-related-facets
+// Regions: collection-related-form, collection-related-results,
+// collection-related-facets and collection-related-download
 ```
 
 ```html
@@ -643,6 +800,80 @@ const config = { analyticsRegionPrefix: 'collection-related' };
 ```
 
 Without it, nothing changes. A Drupal block wrapper that builds the config itself needs to pass the setting through.
+
+### Click labels
+
+The shared click tracker names a click after the element's visible text unless `data-vf-analytics-label` is set, so icon-only controls report nothing and translated ones split by language. The widget's controls set fixed English labels instead: `Search: Query` (the search input and its label), `Search: Clear`, `Search: Submit`, `Search: Remove filter` (each filter chip), `Search: Clear all filters`, `Search: Sort`, `Search filter: <key>` (each filter dropdown, by field key or custom facet `id`, for example `Search filter: field_hazard`; its option search input adds `: Search`), `Search: Match any` and `Search: Match all`, `Search tab: <id>: <value>` (result tabs, by custom facet `id` and each option's stable URL value, or its position when it has none), `Search: Open filters`, `Search: Close filters` and `Search: View results` (the mobile filter drawer). The pager adds `Pager: Previous`, `Pager: Next`, `Pager: Page`, `Pager: Jump to page`, `Pager: Jump` and `Pager: Notice action`. Labels never include the search text or the selected values.
+
+### Download analytics
+
+The shared click tracker names a click after the element's visible text unless `data-vf-analytics-label` is set. Like ShareButtons and Cite this, the download controls set fixed English labels, so reports do not split by language: `Search download: Open`, `Search download: Close`, `Search download: Quantity` and `Search download: Start` (on each input and its label), `Search download: Fields` (the field panel), `Search download: Field <field>` (for example `Search download: Field title`, on the checkbox and its label), `Search download: CSV`, `Search download: JSON` and `Search download: Contact`. These clicks count pointer attempts only: the tracker listens for mouse and touch presses, so keyboard activation is not counted. The events below cover both.
+
+Outcomes are bubbling events dispatched from the download area, so they reach `document`:
+
+| Event                       | When                                                                |
+| --------------------------- | ------------------------------------------------------------------- |
+| `mg-search-export:open`     | The dialog opens.                                                   |
+| `mg-search-export:download` | A file is generated.                                                |
+| `mg-search-export:empty`    | The selected range returned no records; no file is generated.       |
+| `mg-search-export:error`    | The request or a taxonomy-name lookup failed; no file is generated. |
+
+Every event's `detail` has `region`, the widget's download analytics region (`undrr-search-download` unless `analyticsRegionPrefix` is set). `open` adds `total` and `totalRelation` (`eq` for an exact count, `gte` for a lower bound). The other three add `format` (`csv` or `json`), the requested `start` and `count`, and `fields`, the selected optional field groups in the dialog's order (for example `['title', 'hazard']`; record ID and URL are always included). `download` adds `returned`, `total` and `limited` (the file is a slice of the matching set: it starts after the first result or stops before the last); `empty` adds `total`; `error` adds `reason`: `taxonomy` when taxonomy names could not be resolved, otherwise `request`, covering the request, its response and building the file. A download cancelled by closing the dialog or changing the search dispatches nothing, and closing the dialog has no event of its own.
+
+The details never include the visitor's search text or filter values. The consuming site maps these events to its consent-aware analytics; Mangrove sends nothing to Google.
+
+```js
+document.addEventListener('mg-search-export:download', event => {
+  const { format, returned, region } = event.detail;
+  analytics.track('search_download', { format, records: returned, region });
+});
+```
+
+### Filter and sort events
+
+The click labels above record that a visitor opened a filter, not what they chose: the options are list items the shared tracker does not name, and keyboard use is not counted at all. Two bubbling events report the choice itself, for pointer and keyboard alike. Each is dispatched from the control that changed (the filter, sort or result tab `fieldset`, or the active filters bar for chips and Clear all), so it also bubbles through an external `facetsTarget` and reaches `document`.
+
+| Event                     | When                                                                                                                                                  |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `mg-search:filter-change` | A visitor selects or clears a filter value, switches a result tab, changes a filter's match mode, removes a filter chip or chooses Clear all filters. |
+| `mg-search:sort-change`   | A visitor chooses a different sort order.                                                                                                             |
+
+One action dispatches one event. Neither event fires when the widget loads, for `defaultFilters`, `customFilters`, `defaultSort` or the default tab, for filters and sort restored from the URL (on load or with back and forward), for configuration changes in an editor preview, when the widget resets a filter or the sort itself, or when the visitor chooses the value that is already selected. Controls shared by a group of widgets (`sharedControls`) report one change, from the widget that renders them, however many lists it updates. Each list in a group keeps its own Sort control and reports its own sort.
+
+The `detail` of `mg-search:filter-change`:
+
+| Field      | Value                                                                                                                                                          |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `region`   | The widget's facets analytics region: `undrr-search-facets`, or `<analyticsRegionPrefix>-facets`. It names the widget whichever control was used.              |
+| `kind`     | `field` for a standard filter, `custom` for an editor-defined dropdown filter, `tab` for a result tab, `null` for Clear all.                                   |
+| `key`      | The field key (for example `field_hazard`, `type` or `year`) or the custom facet `id`; `null` for Clear all.                                                   |
+| `action`   | `select`, `clear`, `operator` (match mode changed) or `clear-all`. A choice that replaces another, in a single-choice filter or a result tab, is one `select`. |
+| `changed`  | The values this action selected or cleared; empty for `operator` and `clear-all`.                                                                              |
+| `values`   | The filter's selection after the action; empty for `clear-all`.                                                                                                |
+| `operator` | `or` or `and` for a standard filter after the action; `null` for custom filters, result tabs and Clear all.                                                    |
+
+Values are the stable codes the search uses: term, node and domain IDs, language codes, content type machine names, subtype values such as `field_news_type:751`, and the year. A custom filter or result tab option reports its authored `value` when that is a unique URL-safe string, otherwise its position, as in the `Search tab` click label. Removing the chip of a custom filter clears that whole filter, so `changed` lists every value it held. After Clear all, configured `defaultFilters` apply again and the result tab is kept; the event does not list them.
+
+The `detail` of `mg-search:sort-change` is `region` and `sort`: `relevance`, `newest`, `oldest`, `eventDateAsc` or `eventDateDesc`.
+
+The details never include the visitor's search text, the text typed into a filter's option search, translated labels, option queries, result counts or anything that identifies the visitor. The consuming site maps these events to its consent-aware analytics; Mangrove sends nothing to Google.
+
+```js
+document.addEventListener('mg-search:filter-change', event => {
+  const { region, key, action, changed } = event.detail;
+  analytics.track('search_filter', {
+    region,
+    filter: key ?? 'all',
+    action,
+    value: changed.join(','),
+  });
+});
+
+document.addEventListener('mg-search:sort-change', event => {
+  const { region, sort } = event.detail;
+  analytics.track('search_sort', { region, sort });
+});
+```
 
 ## Results notification
 
@@ -769,6 +1000,7 @@ SyndicationSearchWidget supports [layered hydration](https://github.com/Preventi
 | `data-debounce-delay`          |         | Milliseconds before executing search                                                                                                |
 | `data-min-search-length`       |         | Minimum characters to trigger search                                                                                                |
 | `data-default-query`           |         | Initial search query                                                                                                                |
+| `data-year-field`              |         | Year filter date basis: `published_at` (default), `event_start`, or `display_date`                                                  |
 | `data-default-sort`            |         | Initial sort order                                                                                                                  |
 | `data-display-mode`            |         | `'list'`, `'card'`, or `'card-book'`                                                                                                |
 | `data-grid-columns`            |         | Grid columns for card modes (2-6)                                                                                                   |
@@ -797,10 +1029,10 @@ SyndicationSearchWidget supports [layered hydration](https://github.com/Preventi
 All attributes are optional. Only attributes present on the container are included in the config; the component uses its own defaults for anything missing.
 
 ```js
-import createHydrator from 'https://assets.undrr.org/mangrove/2.1.1/components/hydrate.js';
+import createHydrator from 'https://assets.undrr.org/mangrove/2.5.0/components/hydrate.js';
 import SyndicationSearchWidget, {
   fromElement,
-} from 'https://assets.undrr.org/mangrove/2.1.1/components/SyndicationSearchWidget.js';
+} from 'https://assets.undrr.org/mangrove/2.5.0/components/SyndicationSearchWidget.js';
 createHydrator({
   selector: '[data-mg-search-widget]',
   component: SyndicationSearchWidget,
@@ -817,12 +1049,12 @@ See the [hydration guide](https://github.com/PreventionWeb/undrr-mangrove/blob/m
 
 ## UI labels
 
-Every user-visible string can be overridden via `labels`. Unspecified keys fall
-back to `DEFAULT_LABELS`.
+Select built-in interface copy with `lang`, then override individual strings via `labels`. Unspecified keys use the selected catalogue, then English `DEFAULT_LABELS`.
 
 ```jsx
 <SyndicationSearchWidget
   config={config}
+  lang="fr"
   labels={{
     searchPlaceholder: 'Rechercher…',
     submitSearchText: 'Rechercher',
@@ -834,29 +1066,30 @@ back to `DEFAULT_LABELS`.
 />
 ```
 
-The full list of keys and their English defaults is in `DEFAULT_LABELS` (exported from `SearchContext.jsx`). See the **Translations** stories for complete label sets in Spanish, French, Japanese, Simplified Chinese, Arabic, and Russian.
+The full list of keys and their English defaults is in `DEFAULT_LABELS` (exported from `SearchContext.jsx`). The same runtime catalogue supplies Spanish, French, Japanese, Simplified Chinese, Arabic and Russian through `lang`; consumers can also call the published `getSyndicationSearchWidgetLabels` resolver.
 
 ### Drupal / server-rendered usage
 
-In a Drupal Twig template, supply translated labels via the `data-labels` JSON attribute:
+In a Drupal Twig template, select built-in copy with `data-lang` or inherited HTML language, and supply optional overrides through `data-labels`:
 
 ```html
 <div
   data-mg-search-widget
   data-search-endpoint="/search-endpoint"
+  data-lang="fr"
   data-labels='{"searchPlaceholder":"Rechercher…","submitSearchText":"Rechercher","noResults":"Aucun résultat trouvé pour \"{query}\"."}'
 ></div>
 ```
 
-`fromElement` parses the JSON and passes it through as the `labels` prop. Unspecified keys fall back to English.
+`fromElement` returns language metadata and optional JSON label overrides alongside `config`. Forward all extracted props to retain language selection. Unspecified label keys use the selected catalogue, then English.
 
-> **Important:** Function-valued labels (needed for Arabic/Russian plural forms)
-> cannot be expressed in JSON. Use a custom JS labels object, or accept fallback
-> plural strings and handle pluralization server-side.
+> Built-in Arabic and Russian plural functions are bundled and work when `lang`
+> selects their catalogue, including through hydration. Custom function-valued
+> overrides cannot be expressed in JSON; supply them through JavaScript.
 
 > **Drupal Twig note:** Use single quotes for the `data-labels` attribute value so that the JSON's double quotes remain unescaped. If any translated string itself contains an apostrophe (common in French), encode it as `’` (the Unicode right single quotation mark) in the JSON, or escape it as `&#39;` in the HTML attribute.
 
-> **RTL layout:** Supplying Arabic labels via `data-labels` or the `labels` prop translates the text content only. The widget's CSS currently uses physical properties and does not flip for right-to-left scripts. RTL layout support is tracked as a separate issue.
+> **RTL layout:** `lang="ar"` sets Arabic UI copy and RTL direction. Passing custom `labels` alone does not select a language or direction. An explicit `dir` overrides automatic direction. This translation contract does not change the widget's existing layout behaviour.
 
 ### `labels` prop vs `config` prop
 
@@ -900,6 +1133,28 @@ The facet dropdowns use a custom `SelectDropdown` component instead of Chosen.js
 
 This works in Drupal, Storybook, and standalone usage without Chosen.js.
 
+Search availability is decided when a dropdown opens and stays stable until it
+closes, so asynchronous count changes cannot remove a focused search field or
+hide an active search query. After selecting an option, keyboard focus stays in
+the dropdown. Escape closes the dropdown first; another Escape can close the
+surrounding mobile filter drawer.
+
+The Type dropdown keeps each available parent followed by its indented subtypes,
+regardless of selection. Selected values missing from the current results remain
+available for removal, beside their parent when it is available. Selection alone
+does not change group order; a new response can still change aggregation order.
+The collapsed summary retains the parent name for a selected subtype. Type
+selections continue to use OR: selecting News and Update includes all News.
+
+When a parent is selected, unselected children have a tinted row and pale checked
+indicator to show inherited inclusion. Explicitly selected children retain a full
+checkmark. A parent with explicitly selected subtypes, but no parent selection,
+has a dash to show partial selection. These states have localized screen-reader
+descriptions. Clicking an inherited child explicitly selects it, so it remains
+selected when the parent is cleared. Clearing a child does not exclude it while
+its parent remains selected. The summary and active filters count explicit
+selections only.
+
 ### Mobile filter drawer
 
 On screens ≤800px, the sidebar is replaced with a drawer that slides in from the inline start — the left edge in English, the right edge in Arabic:
@@ -911,7 +1166,44 @@ On screens ≤800px, the sidebar is replaced with a drawer that slides in from t
 
 UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pencilandpaper.io/articles/ux-pattern-analysis-mobile-filters).
 
+## Runtime UI translations
+
+Use `lang` for built-in copy and `labels` for individual overrides. The
+[shared translation guide](?path=/docs/contributing-ui-translations--docs)
+explains language matching, fallback, direction and hydration precedence.
+
+`components/SyndicationSearchWidget.js` exports `getSyndicationSearchWidgetLabels(lang, labels)`
+for consumers needing the same strings outside React.
+
+Built-in Arabic and Russian plural functions work through hydration; custom
+function overrides need JavaScript. Interface language remains separate from
+content-language filters and date formatting. For unsupported custom languages,
+pass `dir` explicitly when external search or facet portals cross direction
+boundaries: a DOM portal cannot inherit direction from the widget's ancestors.
+
 ## Changelog
+
+- **1.10.0**, 2026-11-13 ([mangrove#1477](https://github.com/unisdr/undrr-mangrove/issues/1477)): Add bubbling `mg-search:filter-change` and `mg-search:sort-change` events, dispatched once when a visitor selects or clears a filter value, switches a result tab, changes a match mode, removes a chip, clears all filters or changes the sort, by pointer or keyboard. They carry field keys and stable values, never the search text or translated labels, and do not fire for defaults, URL restoration or configuration changes. See [Filter and sort events](#filter-and-sort-events). Existing behaviour, markup and events are unchanged.
+
+- **1.9.1**, 2026-11-12 ([undrr/web-backlog#3270](https://gitlab.com/undrr/web-backlog/-/work_items/3270)): Label the PreventionWeb `short_update` bundle as Short update in the Type filter and result badges, and bind it to the article/news teaser pattern. Existing widgets are unaffected.
+
+- **1.9.0**, 2026-11-10 ([undrr/web-backlog#3314](https://gitlab.com/undrr/web-backlog/-/work_items/3314)): Add an opt-in Download results action opening a native modal with both bounded CSV/JSON metadata downloads, a conditional one-based start for matched sets of at least 1,000 and dynamically bounded quantity, a grouped quantity row with a read-only range preview and jointly corrected whole-number inputs, open-by-default field panel, primary CSV/outlined JSON actions and quiet icon Close, optional choices from a fixed field allowlist with an inheritable consumer field policy, an outlined utility action beneath pagination aligned to the reading direction, explicit scope and cap reporting, request cancellation, translated controls and status messages, hydration settings and a contact route for larger data needs. Existing widgets retain their current behaviour.
+
+  - Export readable taxonomy names alongside IDs and an optional plain-text teaser summary ([undrr/web-backlog#3314](https://gitlab.com/undrr/web-backlog/-/work_items/3314)). Summary is initially unchecked; unresolved selected taxonomy names block the file with retry guidance.
+  - Add download analytics ([undrr/web-backlog#3320](https://gitlab.com/undrr/web-backlog/-/work_items/3320)): an `undrr-search-download` region, fixed `data-vf-analytics-label` values on the download controls (using new `analyticsLabel` props on Checkbox and TextInput), and bubbling `mg-search-export:open`, `download`, `empty` and `error` events describing the file but never the search text.
+  - Add fixed `data-vf-analytics-label` values to the search form, filter chips, filter and sort dropdowns, result tabs, mobile filter drawer and pager ([undrr/web-backlog#3320](https://gitlab.com/undrr/web-backlog/-/work_items/3320)), so icon-only and translated controls report one English name. See [Click labels](#click-labels). `SelectDropdown` takes an optional `analyticsLabel`.
+
+- **1.8.1**, 2026-11-10 ([#1468](https://github.com/unisdr/undrr-mangrove/issues/1468)): Keep Type parents and subtypes together when selections change, including retained selections missing from current results. Selected subtypes retain their indentation and summary context. Keyboard highlighting follows the option value through asynchronous updates. Inherited children show a tint and pale checked indicator; parents with selected subtypes show a dash, with localized accessible descriptions. Search fields persist for the open dropdown session, pointer selection retains keyboard focus, and Escape dismisses the dropdown before its enclosing filter drawer.
+
+- **1.8.0**, 2026-11-09 ([undrr/web-backlog#3310](https://gitlab.com/undrr/web-backlog/-/work_items/3310)): Set `showSort: false` to hide the visitor sort selector while retaining the configured order. Opt-in shared controls connect independently scoped displays to one query and filter selection without sharing sort or hidden defaults. Shared-default edits retain visitor sorting unless the configured sort changes; switching groups resets pagination even when their revision numbers match. Required result tabs keep a single search and filter configuration across Upcoming/Previous or other scopes. Stable option values support links and browser history; selected scopes remain in place when filters are cleared. Scope configuration edits retain other filters and sort order, preserve non-default selections by value, and reset pagination when the scope changes. Radio targets are at least 44px, with visible keyboard focus and disabled states.
+
+- **1.7.0**, 2026-11-09 ([undrr/web-backlog#3310](https://gitlab.com/undrr/web-backlog/-/work_items/3310)): Listings can use `yearField: 'display_date'` to align Year filters, counts, and fallback dates with reader-facing editorial dates across content types. Year-only publications preserve year precision, and missing public dates do not fall back to CMS timestamps. Historical public event ranges retain both dates. Event-only endpoints can still select `event_start`; the default remains `published_at` for existing consumers. Shared external controls render only for the first visible owner and transfer between tabs without resetting each widget's search state. Pages that need controls for several visible lists must provide separate targets.
+
+- **1.6.1**, 2026-10-29 ([#1432](https://github.com/unisdr/undrr-mangrove/issues/1432)): Result-type labels, filter connectors and example headings preserve authored case instead of forcing uppercase. Query operators retain their required authored syntax.
+
+- **1.6**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance.
+
+- **1.5.0**, 2026-10-16: Book display preserves supplied artwork URLs instead of forcing portrait crops. Publication examples use an explicit content filter, independent column count and concise metadata. Search-only cover stages align desktop captions and collapse missing-artwork space on mobile; no-image configurations remain unstaged.
 
 - **1.4.32**, 2026-10-16: Isolate the open filter-drawer documentation example in a narrow iframe so its body scroll lock and focus management cannot affect the surrounding docs page. Search-grid book cards now fill their row height while retaining intrinsic cover proportions.
 - **1.4.31**, 2026-10-16: Keep dropdown dismissal backdrops inside the mobile filter drawer so taps reach filter and sort options. Desktop dropdowns retain their document-body backdrop, including in iframe consumers.

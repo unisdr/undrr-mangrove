@@ -75,11 +75,15 @@ There are two override paths; choose based on whether Mangrove already ships the
 }
 ```
 
-**Override a face — build time, all brands, bring your own font.** Assigning a `$mg-font-face-*` variable before importing Mangrove is the only way to introduce a typeface Mangrove does not ship, and you must load that typeface yourself. Faces are declared outside the brand mixins, so in the combined `style-all.css` one assignment applies to every brand.
+**Override a face — build time, all brands, bring your own font.** Configuring a `$mg-font-face-*` variable with `@use ... with (...)` is the only way to introduce a typeface Mangrove does not ship, and you must load that typeface yourself. Faces are declared outside the brand mixins, so in the combined `style-all.css` one assignment applies to every brand.
 
 ```scss
-$mg-font-face-sans-condensed: 'Barlow Condensed', sans-serif;
-@import '@undrr/undrr-mangrove/scss/assets/scss/style';
+@use '@undrr/undrr-mangrove/scss/assets/scss/style' with (
+  $mg-font-face-sans-condensed: (
+    'Barlow Condensed',
+    sans-serif,
+  )
+);
 ```
 
 Per-brand typefaces from `tokens/*.yaml` are not available yet; faces stay in Sass because `@font-face` and interpolation are compile-time concerns.

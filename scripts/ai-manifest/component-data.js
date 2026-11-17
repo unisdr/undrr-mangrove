@@ -54,11 +54,15 @@
 // ---------------------------------------------------------------------------
 
 export const REQUIRES_REACT = {
+  'patterns-publication-record':
+    'Story-only React composition, not a published renderer/import. Its included PageHeader/MegaMenu shell retains React/hydration requirements; the record content and native resource links can be emitted as static HTML without JavaScript. Consumers supply an approved host shell.',
   'design-decisions-language-boundaries':
     'Storybook integration demo measuring rendered font families across nested Arabic and Latin language boundaries. Requires React and browser layout APIs for live measurements; this is a documentation specimen, not a reusable production component.',
 
   'components-syndicated-search':
-    'SyndicationSearchWidget is a complex search interface querying an Elasticsearch API. Requires React 19. After each completed search it calls config.onResults({ total, query, page }) and dispatches a bubbling mg-search-widget:results event with the same detail, so a host can hide an empty section. Can be hydrated on a vanilla HTML page using the createHydrator pattern with data-mg-search-widget attributes. Supports full UI string translation via the labels prop (or data-labels JSON attribute in Drupal). Ships with label sets for ES, FR, JA, ZH (Simplified), AR, and RU. See the hydration documentation.',
+    'SyndicationSearchWidget is a complex search interface querying an Elasticsearch API. Requires React 19. After each completed search it calls config.onResults({ total, query, page }) and dispatches a bubbling mg-search-widget:results event with the same detail, so a host can hide an empty section. For site analytics it dispatches bubbling mg-search:filter-change ({ region, kind, key, action, changed, values, operator }) and mg-search:sort-change ({ region, sort }) events once per visitor action, never for defaults, URL restoration or configuration changes, and never with the search text or translated labels. Can be hydrated on a vanilla HTML page using the createHydrator pattern with data-mg-search-widget attributes. Supports full UI string translation via the labels prop (or data-labels JSON attribute in Drupal). Ships with label sets for ES, FR, JA, ZH (Simplified), AR, and RU. See the hydration documentation.',
+  'components-syndicated-search-downloads':
+    'SyndicationSearchWidget download examples grouped for discovery. Requires the same React search widget and hydration integration as the main component; these are not a separate export component.',
   'components-syndicated-search-translations':
     'SyndicationSearchWidget translation label sets for ES, FR, JA, ZH-Hans, AR, and RU. Pass via the labels prop (React) or data-labels JSON attribute (Drupal). String keys support {token} substitution; function keys handle Intl.PluralRules plural forms for Arabic (6-form) and Russian (3-form). Function keys cannot be serialized to JSON for data-labels.',
   'components-syndicated-search-display-modes':
@@ -72,9 +76,9 @@ export const REQUIRES_REACT = {
   'components-syndicated-search-toggles':
     'SyndicationSearchWidget UI visibility toggles (showPager, showSearchMetrics). Requires React 19. Same hydration pattern as the main widget.',
   'components-navigation-megamenu':
-    'MegaMenu manages complex open/close state and keyboard navigation. Closing panels become inert and hidden from assistive technology immediately while visual exits finish; decorative category pulses, flashes and link staggering are not used. Below 900px it provides bounded progressive navigation (minimum 400px where space permits, maximum min(700px, 90dvh)) with Back above the title, a separate Close control and outside-click dismissal, nested groups, section headings linked to their landing pages and immediately visible authored banner content. Existing sections and hydration attributes remain supported; additional optional labels are menuLabel, backLabel, allSectionsLabel, closeLabel, overviewLabel and toggleMobileNavLabel. Requires React. Can be hydrated via createHydrator. Adds mg-mega-wrapper--js-active on mount so pointer-events restrictions only apply when the sidebar is available; plain HTML nav markup and failed-hydration states remain fully clickable on mobile.',
+    'MegaMenu manages complex open/close state and keyboard navigation. Closing panels become inert and hidden from assistive technology immediately while visual exits finish; decorative category pulses, flashes and link staggering are not used. Below 900px it provides bounded progressive navigation (minimum 400px where space permits, maximum min(700px, 90dvh)) with Back above the title, a separate Close control and outside-click dismissal, nested groups, section headings linked to their landing pages and immediately visible authored banner content. Existing sections and hydration attributes remain supported; additional optional labels are menuLabel, backLabel, allSectionsLabel, closeLabel, overviewLabel and toggleMobileNavLabel. Requires React. Can be hydrated via createHydrator. The mobile topbar scrolls horizontally in both logo variants with native touch swipes and mouse click-and-drag (dragging does not activate a label); tapping a label opens its section directly and the hamburger opens all sections. Close restores the opener, and Back returns to all sections. Adds mg-mega-wrapper--js-active on mount; plain HTML nav markup and failed-hydration states remain clickable on mobile.',
   'components-gallery':
-    'Gallery provides a lightbox image viewer. Requires React for modal state and keyboard navigation. Can be hydrated via createHydrator.',
+    'Gallery provides a lightbox image viewer. Requires React for modal state and keyboard navigation. Can be hydrated via createHydrator. Dispatches a bubbling mg-gallery:change event from its root when a visitor changes the visible item; detail is { region, index, count, method }, with a zero-based index and method click, thumbnail, swipe or key.',
   'components-navigation-pager':
     'Pager manages pagination state. Requires React. Import via npm. Supports translated labels via props: prevLabel, nextLabel, goPrevLabel, goNextLabel, pageLabel, currentPageLabel, pageOfLabel (all string or function). Can be hydrated via createHydrator using data-prev-label, data-next-label, etc. attributes.',
   'components-notice-cookieconsentbanner':
@@ -85,6 +89,10 @@ export const REQUIRES_REACT = {
     'ScrollContainer manages horizontal scroll state with navigation buttons. Requires React. Can be hydrated via createHydrator.',
   'components-user-feedback':
     'UserFeedback manages a binary page response, confirmation state and focus. Requires React for button behavior and can be hydrated via createHydrator with data-mg-user-feedback. Place it as a separate sibling immediately before Footer when the pattern is used.',
+  'components-quiz-quiz-question':
+    'QuizQuestion grades answers, shows feedback and publishes its state in the browser. Requires React; hydrate server-rendered markup via createHydrator with data-mg-quiz-question. A correct answer locks the question. Optional: a hint shown after a wrong answer, and a Show answer button that appears after the first wrong answer, puts the answer on screen and locks the question as revealed. The static renderedHtml has a check button that does nothing. After other code removes or replaces quiz markup without unmounting it, call refreshQuiz().',
+  'components-quiz-quiz-score':
+    'QuizScore counts the mounted QuizQuestion components that share its scope and updates as answers are checked. Requires React; hydrate an empty data-mg-quiz-score container via createHydrator. After other code removes or replaces quiz markup without unmounting it, call refreshQuiz() or ensureQuizScoreHost().',
   'components-navigation-tree':
     'Tree needs JavaScript: keyboard navigation and expand/collapse come from React, so the static renderedHtml is not a working tree. On non-React pages, hydrate a nested list inside a data-mg-tree container; see the hydration field for the full contract.',
   'components-buttons-sharebuttons':
@@ -399,6 +407,9 @@ export const COMPONENT_DATA = {
       selector: '[data-mg-copy-button]',
       modules: hydrationModules('CopyButton'),
       dataAttributes: {
+        dir: 'Explicit direction on the hydration container: ltr, rtl or auto. Overrides the direction inferred from a supported UI language.',
+        'data-lang':
+          'UI language tag: en, ar, es, fr, ja, ru or zh, including regional tags. Takes precedence over nearest HTML lang, then English. Preserves custom language metadata.',
         'data-mg-copy-button': 'Marks the container to hydrate (required).',
         'data-text-to-copy':
           'Text written to the clipboard. data-text and data-copy-text are accepted aliases.',
@@ -455,10 +466,15 @@ export const COMPONENT_DATA = {
       'mg-share__visually-hidden',
     ],
     hydration: {
-      note: 'The share row is rendered in renderedHtml but inert: no share opens, the QR modal never appears and the copy button does nothing. Render an empty data-mg-share-buttons container and hydrate it. Only these four strings can be set from the DOM — the other thirteen labels (the QR modal copy and every social button aria-label) stay English on the hydration path, because there is no data-labels attribute; use the React labels prop if you need them translated. Omitted attributes fall back to values fromElement supplies, not always to the component defaults: data-sharing-body defaults to an empty string, so the email body has no lead-in text unless you set it. The component reads the current page URL itself — a link[rel="shortlink"] in the head if there is one, otherwise window.location.href — so there is no URL attribute.',
+      note: 'The share row is rendered in renderedHtml but inert: no share opens, the QR modal never appears and the copy button does nothing. Render an empty data-mg-share-buttons container and hydrate it. data-lang or inherited HTML lang selects the built-in UI catalogue, including the QR dialog and social button names. data-labels provides partial overrides; individual label attributes win. Omitted attributes fall back to values fromElement supplies, not always to the component defaults: data-sharing-body defaults to an empty string, so the email body has no lead-in text unless you set it. The component reads the current page URL itself — a link[rel="shortlink"] in the head if there is one, otherwise window.location.href — so there is no URL attribute.',
       selector: '[data-mg-share-buttons]',
       modules: hydrationModules('ShareButtons'),
       dataAttributes: {
+        'data-labels':
+          'JSON object of UI label overrides. Missing keys use the selected catalogue, then English. Existing individual label attributes win.',
+        dir: 'Explicit direction on the hydration container: ltr, rtl or auto. Overrides the direction inferred from a supported UI language.',
+        'data-lang':
+          'UI language tag: en, ar, es, fr, ja, ru or zh, including regional tags. Takes precedence over nearest HTML lang, then English. Preserves custom language metadata.',
         'data-mg-share-buttons': 'Marks the container to hydrate (required).',
         'data-main-label':
           'Heading above the share row (default "Share this").',
@@ -484,7 +500,7 @@ export const COMPONENT_DATA = {
   // --- Cards ---
   'components-cards-vertical-card': {
     description:
-      'Card with stacked image, labels, title, summary, and optional CTA button. Four color variants.',
+      'Card with an edge-to-edge top photo, inset labels, title, summary, and optional CTA button. Four color variants. Text-only cards retain their inset.',
     cssClasses: [
       'mg-card',
       'mg-card__vc',
@@ -587,7 +603,7 @@ export const COMPONENT_DATA = {
 
   'components-cards-horizontal-card': {
     description:
-      'Side-by-side card with image left and content right. Labels, title, summary, and CTA button.',
+      'Responsive card with an edge-to-edge leading photo (mirrored in RTL; above content on mobile) and inset labels, title, summary, and CTA button.',
     cssClasses: [
       'mg-card',
       'mg-card__hc',
@@ -628,7 +644,7 @@ export const COMPONENT_DATA = {
     summary:
       'Card with icon or image, title, summary and optional CTA. Vertical or horizontal orientation, in default, centered or negative (dark) variants.',
     description:
-      'Card with icon or image, title, summary, and optional CTA. Variants: default, centered, negative (dark background). Orientation: vertical (icon above the content) or horizontal (icon beside it, for route rows); horizontal sizes the visual itself, so imageScale does not apply. Image scale options: small, medium, large, full. Supports custom icon background/foreground colors (iconColor, iconFgColor), border color, and label position (top or content area).',
+      'Card with icon or image, title, summary, and optional CTA. Variants: default, centered, negative (dark background). Orientation: vertical (icon above the content) or horizontal (icon beside it, for route rows); horizontal sizes the visual itself, so imageScale does not apply. Image scale options: small (recommended for navigation glyphs), medium, large, full. Small glyphs do not reserve an illustration frame. Supports custom icon background/foreground colors (iconColor, iconFgColor), border color, and label position (top or content area).',
     hydration: {
       note: "The whole card set comes from one JSON attribute, so renderedHtml is only a preview of the markup the component produces. Render an empty data-mg-icon-card container carrying data-items and hydrate it. Malformed JSON is swallowed and renders an empty set, so validate the attribute server-side. The orientation prop has no data attribute, so the horizontal layout is React-only. Each item's summaryText accepts inline HTML and is sanitised with DOMPurify.",
       selector: '[data-mg-icon-card]',
@@ -654,12 +670,13 @@ export const COMPONENT_DATA = {
     },
   },
   'components-cards-book-card': {
-    description: 'Minimal card for publications: cover image and title only.',
+    description:
+      'Publication teaser with a complete natural-ratio cover, one square border and a title below. Unboxed by default; publication surface tokens retain theme control. No cover zoom.',
   },
 
   'components-cards-horizontal-book-card': {
     description:
-      'Horizontal card for publications: cover image left, title and summary right.',
+      'Publication listing with complete natural-ratio covers and one square border. Beside text on desktop, stacked on mobile and mirrored in RTL. Unboxed by default; surface tokens retain theme control.',
     cssClasses: [
       'mg-card',
       'mg-card__hc',
@@ -695,8 +712,10 @@ export const COMPONENT_DATA = {
   },
 
   'components-cards-stats-card': {
+    summary:
+      'Grid of statistics with optional icons, labels, summaries and links. Compact, highlighted and negative variants support different densities and surfaces.',
     description:
-      'Grid of numeric statistics with optional icons, dual labels (label above the value, bottomLabel below it), descriptions, and call-to-action links. Variants: default, compact, highlighted, negative.',
+      'Grid of numeric statistics with optional icons, dual labels (label above the value, bottomLabel below it), descriptions, and call-to-action links. Variants: default, compact (reduced padding and gaps without stacked child margins), highlighted, negative.',
     hydration: {
       note: 'The figures come from one JSON attribute, so renderedHtml is a preview of the markup, not a template to fill in. Render an empty data-mg-stats-card container carrying data-stats and hydrate it. Malformed JSON is swallowed and renders an empty card, so validate the attribute server-side.',
       selector: '[data-mg-stats-card]',
@@ -955,7 +974,7 @@ export const COMPONENT_DATA = {
     summary:
       'Page-level gate that hides an unfinished page behind a PIN prompt until a reviewer enters the code. Editorial signalling, not a security mechanism.',
     description:
-      'Page-level gate that hides an unfinished page behind a PIN-prompt modal until a reviewer enters the right code. Drop <div data-mg-preview-access> into a page and load js/preview-access.js. Unlock persists in sessionStorage for the browser session. CSS-first anti-flash via :has(). Editorial signalling only — not a security mechanism, since the PIN sits in the DOM. The React export renders a static preview of the modal for docs; pass `live` to run the real body-level gate, which appends the overlay to document.body and restores the body siblings on unmount.',
+      'Page-level gate that hides an unfinished page behind a PIN-prompt modal until a reviewer enters the right code. Drop <div data-mg-preview-access> into a page and load js/preview-access.js. By default the unlock persists in sessionStorage for the tab; data-mg-preview-persist="local" keeps it in localStorage across tabs and visits, with optional data-mg-preview-max-age (days), and a PIN change invalidates the local entry. Existing session unlocks still count in both modes, including after local expiry or a PIN change; open pages are not relocked automatically. Dispatches a bubbling mg-preview-access:unlock CustomEvent (detail: id, persist, source "pin" or "storage") on the trigger, and moves focus to <main> after unlock. CSS-first anti-flash via :has(). Editorial signalling only — not a security mechanism, since the PIN sits in the DOM. The React export renders a static preview of the modal for docs; pass `live` to run the real body-level gate, which appends the overlay to document.body and restores the body siblings on unmount.',
     cssClasses: [
       'mg-preview-access--unlocked',
       'mg-preview-access__overlay',
@@ -984,6 +1003,13 @@ export const COMPONENT_DATA = {
      data-mg-preview-eyebrow="DELTA Resilience · Preview"
      data-mg-preview-title="This page is a preview"
      data-mg-preview-message="The DELTA Resilience country dashboard is in active development and is not yet ready for public review. Enter the preview PIN to continue, or contact UNDRR if you need access."></div>`,
+      },
+      {
+        name: 'Remembered across tabs and visits for 30 days',
+        html: `<div data-mg-preview-access
+     data-mg-preview-id="gar-2026-preview"
+     data-mg-preview-persist="local"
+     data-mg-preview-max-age="30"></div>`,
       },
     ],
   },
@@ -1035,6 +1061,7 @@ export const COMPONENT_DATA = {
       'mg-tabs',
       'mg-tabs--horizontal',
       'mg-tabs--stacked',
+      'mg-tabs--sticky',
       'mg-tabs__rail',
       'mg-tabs__scroll',
       'mg-tabs__list',
@@ -1048,9 +1075,9 @@ export const COMPONENT_DATA = {
       'mg-tabs__section',
     ],
     summary:
-      'Tabbed content: centred horizontal tabs that scroll at every width, with opt-in stacked disclosures below 480px. Requires tabs.js for ARIA semantics, keyboard navigation and selection.',
+      'Tabs with horizontal scrolling, opt-in sticky controls and mobile disclosures. Requires tabs.js for keyboard navigation, selection and ARIA semantics.',
     description:
-      "Tabbed content with centred, softly filled horizontal tabs that scroll at every viewport width, or explicit stacked disclosures. Opt into disclosures below 480px with stackOnMobile (React) or the presence-based data-mg-js-tabs-stack-on-mobile attribute (HTML); horizontal scrolling remains the default. Only the horizontal rail scrolls; panels sit outside the tablist. Requires tabs.js as an ES module for ARIA semantics, keyboard navigation, selection and overflow indicators. Without JavaScript, panel content remains visible. Set labels.tabListLabel (React) or data-mg-js-tabs-label (HTML) to name the tablist. Existing interleaved HTML is enhanced at runtime. Before removing dynamically initialised markup, call mgTabsDestroy(scope), or pass { signal } as the third argument to mgTabs or mgTabsRuntime and abort it. A tab set removed without either is suspended, not destroyed: once a rail resize observer notification (horizontal sets, usually within a frame in Chromium), a window resize or hash change (the runtime keeps one listener for each while any set is initialised), an orientation change or font load, or a later mgTabs/mgTabsRuntime call finds it detached, its window, document.fonts and ResizeObserver registrations are released while markup, in-container listeners and selection stay intact. A re-attached set resumes on the next pointer press, focus, key press or click inside it, window resize or hash change, or mgTabs/mgTabsRuntime call; an interaction resume also resumes other re-attached sets, including nested ones. On resume, a URL hash changed while suspended selects its panel (also on React re-render or mgTabsDestroy(container, true) plus re-init), and a stackOnMobile breakpoint crossed while suspended switches layout; after an interaction both wait until it has been handled, so a tap acts on the visible layout and its selection wins. Until a removal is found its listeners stay registered. Security (React path only): a tab object's data string is injected as raw HTML and is NOT sanitised — unlike TextCta, Drawer and the card components, Tab does not run DOMPurify, because a panel legitimately carries tables, forms and embeds that a sanitiser would strip. Sanitise it where tabdata is built. The vanilla HTML path has no equivalent: the panel markup is already in the page and tabs.js only enhances it.",
+      "Tabbed content with centred, softly filled horizontal tabs that scroll at every viewport width, or explicit stacked disclosures. Opt into disclosures below 480px with stackOnMobile (React) or the presence-based data-mg-js-tabs-stack-on-mobile attribute (HTML); horizontal scrolling remains the default. Only the horizontal rail scrolls; panels sit outside the tablist. Opt into sticky controls with sticky (React) or mg-tabs--sticky on the HTML root; both first ship in 2.5.0 and are not in 2.4.0, so use matching 2.5.0 or later CSS and tabs.js. The rail is confined to its tab set and returns to normal flow in stacked layouts or viewports at most 400px tall. --mg-tab-sticky-offset defaults to 0px; compose a measured page-navigation height when needed. --mg-tab-sticky-background is an opaque complete-colour override. tabs.js measures rail height for focus/anchor clearance and restores its internal property on destroy. User selection that hides its focused sticky trigger brings the rail back into view; native Tab navigation within the set recovers focus hidden behind the rail. Valid scroll positions, initialization and consumer focus({ preventScroll: true }) are unchanged. Requires tabs.js as an ES module for ARIA semantics, keyboard navigation, selection and overflow indicators. Without JavaScript, panel content remains visible. Set labels.tabListLabel (React) or data-mg-js-tabs-label (HTML) to name the tablist. Existing interleaved HTML is enhanced at runtime. Before removing dynamically initialised markup, call mgTabsDestroy(scope), or pass { signal } as the third argument to mgTabs or mgTabsRuntime and abort it. A tab set removed without either is suspended, not destroyed: once a rail resize observer notification (horizontal sets, usually within a frame in Chromium), a window resize or hash change (the runtime keeps one listener for each while any set is initialised), an orientation change or font load, or a later mgTabs/mgTabsRuntime call finds it detached, its window, document.fonts and ResizeObserver registrations are released while markup, in-container listeners and selection stay intact. A re-attached set resumes on the next pointer press, focus, key press or click inside it, window resize or hash change, or mgTabs/mgTabsRuntime call; an interaction resume also resumes other re-attached sets, including nested ones. On resume, a URL hash changed while suspended selects its panel (also on React re-render or mgTabsDestroy(container, true) plus re-init), and a stackOnMobile breakpoint crossed while suspended switches layout; after an interaction both wait until it has been handled, so a tap acts on the visible layout and its selection wins. Until a removal is found its listeners stay registered. Security (React path only): a tab object's data string is injected as raw HTML and is NOT sanitised — unlike TextCta, Drawer and the card components, Tab does not run DOMPurify, because a panel legitimately carries tables, forms and embeds that a sanitiser would strip. Sanitise it where tabdata is built. The vanilla HTML path has no equivalent: the panel markup is already in the page and tabs.js only enhances it.",
   },
 
   // --- Highlight box (auto-rendered) ---
@@ -1287,7 +1314,7 @@ npm run build</code></pre>
     summary:
       'Standalone page-usefulness prompt, generally placed as the sibling immediately before Footer. Response storage and consent remain product-owned.',
     description:
-      'Standalone page-usefulness prompt generally paired as the sibling immediately before Footer. Response storage and consent remain product-owned: keep the response callback separate from the report link, so a product can send the binary response to its own analytics service without Mangrove owning storage or consent decisions.',
+      'Standalone page-usefulness prompt generally paired as the sibling immediately before Footer. The lang prop selects built-in translations; explicit labels override them and unsupported languages fall back to English. Response storage and consent remain product-owned: keep the response callback separate from the report link, so a product can send the binary response to its own analytics service without Mangrove owning storage or consent decisions.',
     cssClasses: [
       'mg-user-feedback',
       'mg-user-feedback__prompt',
@@ -1301,7 +1328,12 @@ npm run build</code></pre>
       selector: '[data-mg-user-feedback]',
       modules: hydrationModules('UserFeedback'),
       dataAttributes: {
+        'data-labels':
+          'JSON object of UI label overrides; individual label attributes take precedence.',
+        dir: 'Explicit direction on the hydration container: ltr, rtl or auto. Overrides the direction inferred from a supported UI language.',
         'data-mg-user-feedback': 'Marks the container to hydrate (required).',
+        'data-lang':
+          'Language tag (en, ar, es, fr, ja, ru, zh), including regional variants. Defaults to the nearest HTML lang attribute, then English. Explicit label attributes override the selected translation.',
         'data-feedback-url':
           'Where the "report an issue" link points (default https://www.undrr.org/contact/website-feedback).',
         'data-question': 'The prompt, e.g. "Is this page useful?".',
@@ -1320,11 +1352,141 @@ npm run build</code></pre>
         name: 'UserFeedback',
         selector: '[data-mg-user-feedback]',
         markup: `<div data-mg-user-feedback
+  data-lang="fr"
   data-feedback-url="/contact/website-feedback"
-  data-question="Is this page useful?"
-  data-yes-label="Yes"
-  data-no-label="No"
-  data-report-issue-label="Report an issue on this page"></div>`,
+></div>`,
+      }),
+    },
+  },
+
+  // --- Quiz question (auto-rendered + hydration) ---
+  'components-quiz-quiz-question': {
+    summary:
+      'One self-checking quiz question in the page flow: multiple choice (one or several answers), true or false, short answer or fill in the blank. Engagement only; the answer key is in the page.',
+    description:
+      'One self-checking quiz question in the page flow: multiple choice (one or several answers), true or false, short answer or fill in the blank with inline blanks written as [1], [2] in the prompt. Engagement only: answers are graded in the browser against the key in the props or data-question, the component stores and sends nothing and the key is readable in the page, so never use it for assessed quizzes. The visitor answers and selects Check answer. Feedback is a Notice in a polite live region: positive for a correct answer ("Correct", with an optional plain-text explanation) and info for a wrong answer ("Not correct yet. Try again.", with the optional hint), for an empty attempt, which is not graded, and for a revealed answer ("Here is the answer.", with the explanation). After a wrong answer visitors can retry without limit, and changing the answer clears the feedback and returns the question to unanswered. A correct answer locks the question: radios and checkboxes get aria-disabled="true", text fields become readonly, the buttons are removed and focus moves to the result Notice, which is then a group named by its title with tabindex="-1"; the live region itself is never focused. Two optional parts help after a wrong answer. hint is plain text shown inside the "Not correct yet. Try again." Notice after an incorrect attempt only. showAnswer (boolean, default false) adds a Show answer button after Check answer from the first incorrect attempt; an empty attempt does not earn it, and once earned it stays while the visitor edits the answer, until the question is answered correctly, revealed or started again. It is a secondary outline button beside the primary check button of a lone question, and the same button without its edge and underlined (mg-quiz-question__reveal--quiet) beside the outline check button on a page of questions. Show answer selects the correct option or options and clears the selection the visitor made, or fills the short-answer field or each blank with its first accepted answer; the question then locks as a correct answer locks it, in the revealed state. onCheck is not called for it; onReveal is called, with questionId when the question has one. The answer-key fields are optional. Without a usable key no answer is marked correct and Show answer is never offered: no option flagged correct, a single-answer question with more than one option flagged, a true_false question with no answer, or a text field or blank with no non-blank accepted answer. A true_false answer is the boolean true or false, or the string "true" or "false" in any letter case; anything else is no key. Text matching normalizes Unicode to NFKC (full-width digits and letters match their ordinary forms), removes zero-width characters, trims and collapses whitespace and ignores case unless caseSensitive is set. There is no language-specific case folding (ß does not match SS, dotted İ does not match i), accents count and digits of other scripts are not converted. A multiple-answer question needs exactly the correct set; options are graded by position, so repeated or empty option values still work. In fill_blank each blank appears once at its first marker, a repeated marker or one with no blank is not shown, blanks the prompt does not mention are listed after the sentence, and a question with no blanks has no check button and is not counted. Each mounted question numbers itself among the mounted questions sharing its scope (the nearest data-mg-quiz ancestor, or the page) and publishes data-mg-quiz-state (unanswered, correct, incorrect, revealed) on its root for QuizScore, which counts revealed as answered and not correct. An optional id in data-question (questionId in React) is reflected as data-mg-quiz-id on the root and passed to onCheck and onReveal; it is not used for DOM ids or radio names. When the props change to a different question (another questionId, or other content when there is none) the answer and result are cleared. lang selects built-in labels (en, ar, es, fr, ja, ru, zh) including True and False; labels overrides individual strings; prompts, options, explanations and hints are consumer content. Every option, text input and blank and both buttons carry a fixed data-vf-analytics-label (Quiz: Answer option, Quiz: Answer field, Quiz: Blank, Quiz: Check answer, Quiz: Show answer) that never contains an option value, a position or typed text, so a site click tracker can record that a control was used but not which answer was given. For server-rendered use, the hydration field gives the data-question fields, the fallback markup and the mounting calls.',
+    cssClasses: [
+      'mg-quiz-question',
+      'mg-quiz-question--multiple-choice',
+      'mg-quiz-question--true-false',
+      'mg-quiz-question--text',
+      'mg-quiz-question--fill-blank',
+      'mg-quiz-question--correct',
+      'mg-quiz-question--incorrect',
+      'mg-quiz-question--revealed',
+      'mg-quiz-question__header',
+      'mg-quiz-question__number',
+      'mg-quiz-question__group',
+      'mg-quiz-question__group--sentence',
+      'mg-quiz-question__prompt',
+      'mg-quiz-question__hint',
+      'mg-quiz-question__media',
+      'mg-quiz-question__media-slot',
+      'mg-quiz-question__options',
+      'mg-quiz-question__option',
+      'mg-quiz-question__sentence',
+      'mg-quiz-question__blank-unit',
+      'mg-quiz-question__blank',
+      'mg-quiz-question__note',
+      'mg-quiz-question__fields',
+      'mg-quiz-question__field',
+      'mg-quiz-question__actions',
+      'mg-quiz-question__check',
+      'mg-quiz-question__reveal',
+      'mg-quiz-question__reveal--quiet',
+      'mg-quiz-question__feedback',
+      'mg-quiz-question__feedback-title',
+      'mg-quiz-question__feedback-hint',
+      'mg-quiz-question__explanation',
+    ],
+    hydration: {
+      note: 'renderedHtml is static: its check button does nothing. Render a data-mg-quiz-question container (with data-mg-ssr) that carries the whole question in data-question, put a no-JavaScript fallback inside it, then hydrate. The JSON is the source of truth: the fallback is replaced on mount and only its media element is kept. Fallback: the prompt, optional media and native controls, with no button, no hint, no feedback and no id attributes; the markup is the same with or without hint and showAnswer. Each option is a label.mg-form-check.mg-form-check--row.mg-quiz-question__option (the Forms option row) that wraps its input and a span.mg-form-check__label. The radios of one question MUST share a name attribute that no other question on the page uses, generated for each rendering (a counter or random token, not the question id), or they are not a radio group without JavaScript; checkboxes need no name. Give each fallback option label and input data-vf-analytics-label="Quiz: Answer option" and each text input "Quiz: Blank" or "Quiz: Answer field". In a fill_blank fallback wrap each blank input and the punctuation after it in a span.mg-quiz-question__blank-unit, render each blank once at its first marker and leave out any other marker. End the fallback with a noscript note (p.mg-form-help.mg-quiz-question__note) in the page language saying that checking answers needs JavaScript. With showAnswer, put the spelling to show first in each expected list, because the first accepted answer is the one revealed, and give a single-answer multiple_choice question exactly one correct option. On mount the component discards the fallback name and generates its own ids and radio name, so the same question can appear twice. The fallback .mg-quiz-question__media element is moved into the mounted component as the same DOM nodes, so listeners attached before hydration keep working; on unmount the container gets its server markup back. If data-question cannot be used (missing, not valid JSON, unknown type, prompt missing or not text, multiple_choice with no usable option, fill_blank with no blanks or a blank that is not an object) the component does not mount and the fallback stays; a malformed option or accepted answer is dropped; if rendering still fails the fallback is put back. A question that does not mount is not numbered or counted. Hydrate QuizScore as well for a page score. When other code removes or replaces quiz markup without unmounting it (Drupal AJAX), call prune() on the hydrator and then refreshQuiz(context), or refreshQuiz(context, { defer: true }) from a Drupal behavior detach; refreshQuiz is exported from the QuizQuestion and QuizScore modules.',
+      selector: '[data-mg-quiz-question]',
+      modules: hydrationModules('QuizQuestion'),
+      dataAttributes: {
+        'data-mg-quiz-question': 'Marks the container to hydrate (required).',
+        'data-question':
+          'JSON object (required). All types: type ("multiple_choice", "true_false", "text", "fill_blank"), prompt (plain text, line breaks as \\n), optional explanation (plain text), optional hint (plain-text string shown after an incorrect attempt; any other type is ignored), optional showAnswer (the boolean true offers Show answer after the first incorrect attempt; any other value, including the string "true", is ignored), optional id (string or number, a stable identifier reflected as data-mg-quiz-id). multiple_choice: options [{value, label, correct}], optional multiple. true_false: answer, the boolean true or false or the string "true" or "false" in any letter case; any other value, or none, is no key and no answer is marked correct. text: expected (list of accepted answers), optional caseSensitive. fill_blank: prompt containing [1], [2] and blanks [{label, expected, caseSensitive}].',
+        'data-mg-ssr':
+          'Keeps the fallback markup on screen until the component replaces it (recommended).',
+        'data-lang':
+          'Language tag for the interface labels (en, ar, es, fr, ja, ru, zh), including regional variants. Defaults to the nearest HTML lang attribute, then English.',
+        dir: 'Explicit direction on the hydration container: ltr, rtl or auto.',
+        'data-labels':
+          'JSON object of UI label overrides. A value that is not a non-empty string is ignored.',
+        'data-number':
+          'Position of the question. Counted automatically when absent.',
+        'data-total': 'Number of questions. Counted automatically when absent.',
+        'data-show-number': '"false" to leave out "Question 2 of 5".',
+      },
+      events: [
+        {
+          name: 'mg-quiz:change',
+          target: 'The document',
+          bubbles: true,
+          when: 'A question mounts, unmounts, is graded or returns to unanswered because its answer changed or the quiz was started again. Batched: all the changes of one task share one event, dispatched in a microtask after that task; refreshQuiz() and ensureQuizScoreHost() dispatch it at once. The event does not say what changed. Read data-mg-quiz-state on the .mg-quiz-question[data-mg-quiz-state] roots for the current results.',
+        },
+      ],
+      example: hydrationExample({
+        name: 'QuizQuestion',
+        selector: '[data-mg-quiz-question]',
+        markup: `<div data-mg-quiz-question data-mg-ssr
+  data-question='{"type":"true_false","prompt":"A storm tide is the same thing as a tsunami.","answer":false,"explanation":"A storm tide is the predicted tide plus a storm surge."}'>
+  <div class="mg-quiz-question mg-quiz-question--true-false">
+    <fieldset class="mg-form-group mg-quiz-question__group">
+      <legend class="mg-form-group__legend">A storm tide is the same thing as a tsunami.</legend>
+      <div class="mg-quiz-question__options">
+        <label class="mg-form-check mg-form-check--row mg-quiz-question__option" data-vf-analytics-label="Quiz: Answer option">
+          <input class="mg-form-check__input mg-form-check__input--radio" type="radio" name="quiz-c41e-answer" value="true" data-vf-analytics-label="Quiz: Answer option">
+          <span class="mg-form-check__label">True</span>
+        </label>
+        <label class="mg-form-check mg-form-check--row mg-quiz-question__option" data-vf-analytics-label="Quiz: Answer option">
+          <input class="mg-form-check__input mg-form-check__input--radio" type="radio" name="quiz-c41e-answer" value="false" data-vf-analytics-label="Quiz: Answer option">
+          <span class="mg-form-check__label">False</span>
+        </label>
+      </div>
+    </fieldset>
+    <noscript><p class="mg-form-help mg-quiz-question__note">Checking your answers needs JavaScript.</p></noscript>
+  </div>
+</div>`,
+      }),
+    },
+  },
+
+  // --- Quiz score (auto-rendered + hydration) ---
+  'components-quiz-quiz-score': {
+    summary:
+      'Running score and end summary for the quiz questions on a page or in a data-mg-quiz wrapper. Empty until the first answer is checked.',
+    description:
+      'Running score and end summary for the QuizQuestion components that share its scope (the nearest data-mg-quiz ancestor, or the page). Empty until the first answer is checked, then a short role="status" sentence ("1 of 5 correct so far.") with a ProgressBar of questions answered, or a longer sentence with the answered count when the bar is off, and the final score with a Start again button once every question is answered. Start again unlocks and clears every question in the scope. A question is answered when its state is correct, incorrect or revealed, and only correct adds to the score, so a question ended with Show answer lets the quiz complete and counts as not correct. Only mounted questions are counted: a server-rendered question that did not mount, or a question with nothing to answer, is left out. The component stores and sends nothing; the Start again button carries the fixed data-vf-analytics-label "Quiz: Start again" for a site click tracker.',
+    cssClasses: [
+      'mg-quiz-score',
+      'mg-quiz-score--active',
+      'mg-quiz-score--complete',
+      'mg-quiz-score__summary',
+      'mg-quiz-score__progress',
+      'mg-quiz-score__actions',
+      'mg-quiz-score__reset',
+    ],
+    hydration: {
+      note: 'Render an empty data-mg-quiz-score container after the last question, or call ensureQuizScoreHost(context), exported from the QuizScore module, before hydrating: for each scope with a data-mg-quiz-question inside context (the document by default) it adds the container after the last question container of that scope, keeps it there when more questions arrive, marks it data-mg-quiz-score-auto and ends by asking every question and score to count again. Put data-mg-quiz on an ancestor to make a separate scope. When other code removes or replaces quiz markup without unmounting it, call ensureQuizScoreHost(context) again or refreshQuiz(context), also exported from the module. renderedHtml is the empty state before any answer is checked.',
+      selector: '[data-mg-quiz-score]',
+      modules: hydrationModules('QuizScore'),
+      dataAttributes: {
+        'data-mg-quiz-score': 'Marks the container to hydrate (required).',
+        'data-lang':
+          'Language tag for the labels (en, ar, es, fr, ja, ru, zh), including regional variants. Defaults to the nearest HTML lang attribute, then English.',
+        dir: 'Explicit direction on the hydration container: ltr, rtl or auto.',
+        'data-labels':
+          'JSON object of UI label overrides: scoreSoFar (with the progress bar), scoreSoFarWithAnswered (without it), scoreFinal, progressLabel, progressValue, reset. Placeholders: {correct}, {total}, {answered}.',
+        'data-show-progress': '"false" to leave out the progress bar.',
+        'data-show-reset': '"false" to leave out the Start again button.',
+      },
+      events: [],
+      example: hydrationExample({
+        name: 'QuizScore',
+        selector: '[data-mg-quiz-score]',
+        markup: `<div data-mg-quiz-score></div>`,
       }),
     },
   },
@@ -1359,6 +1521,9 @@ npm run build</code></pre>
           'https://assets.undrr.org/mangrove/{{version}}/components/ServiceNotice.js',
       },
       dataAttributes: {
+        dir: 'Explicit direction on the hydration container: ltr, rtl or auto. Overrides the direction inferred from a supported UI language.',
+        'data-lang':
+          'UI language tag: en, ar, es, fr, ja, ru or zh, including regional tags. Takes precedence over nearest HTML lang, then English. Preserves custom language metadata.',
         'data-mg-service-notice': 'Marks the container to hydrate (required).',
         'data-title':
           'Heading text (plain text). Falls back to the text of a child .mg-notice__title.',
@@ -1544,9 +1709,9 @@ npm run build</code></pre>
   },
   'components-forms-checkbox': {
     summary:
-      'Styled checkbox with label, plus the CSS-only .mg-switch toggle. Error, disabled and pending states, and a vanilla helper for switches that save a setting.',
+      'Styled checkbox with label and an optional full-width option row, plus the CSS-only .mg-switch toggle. Error, disabled and pending states, and a vanilla helper for switches that save a setting.',
     description:
-      'Styled checkbox with label. Error and disabled states available. Also documents the CSS-only .mg-switch toggle (role="switch"), including a pending state set with aria-busy="true" on the input or .mg-switch--pending on the label. The switch has an error state, set the same way as on any other control: aria-invalid="true" on the input (preferred, and the only form assistive technology sees), or mg-switch__input--error on the input, or mg-switch--error on the label, each giving the track a red boundary; put the message in a sibling p.mg-form-error with role="alert" OUTSIDE the label (inside it would join the switch\'s accessible name) and join the two with aria-describedby, exactly as with a text input, so FormErrorSummary can link to the switch by id. The error state does not move the thumb: use it for "the thing this switch controls failed", and the pending helper when the save itself failed and the switch must revert. The switch is sized and coloured with the --mg-switch-* custom properties in this entry, set on the switch or any ancestor, and never by overriding the thumb transform, which also breaks RTL. The thumb travel, its RTL counterpart and the pending ring all derive from the size properties, so setting those is enough in both directions. .mg-switch--small sets --mg-switch-size: 1.125rem and a tighter row gap, and re-declares no length inside the switch; prefer it to a size of your own for a toolbar, table row or panel header. Do not paint a switch state with box-shadow or outline on the track: the focus ring owns both, and a consumer rule of equal specificity replaces its separator band. For a switch that saves a setting, load the dependency-free js/switch-pending.js module (no React): it announces "Saving…", "Still saving…" and the outcome in a role="status" region, ignores presses while saving, sets aria-busy a frame after the change, honours only the latest request, and times out (10s) and reverts on failure. Use mgSwitchPending(input, { save }) where save(checked, signal) returns a Promise, or mark switches with data-mg-switch-pending and answer one document-level mg-switch:save listener. Both defaults can be switched off: revert: false keeps the position the user asked for and sets aria-invalid="true" instead (which also turns on the error state above, so supply the .mg-form-error message too), and timeout: 0 or Infinity removes the deadline. mgSwitchAnnouncer(element, { status, labels }) exports the announcements on their own, for apps that run their own save.',
+      'Styled checkbox with label. Error and disabled states available. Add mg-form-check--row to the wrapper (the row prop in React) to draw the option as a full-width row at least 48px tall: the label is stretched over the row so the whole row selects, and the row shows hover, keyboard focus (:has(:focus-visible)), the checked state, disabled and forced colours; the same modifier works on radios, and on a label.mg-form-check--row that wraps the input with the text in span.mg-form-check__label. Use rows when options are sentences or the choice is the main task on screen, not in dense forms. Also documents the CSS-only .mg-switch toggle (role="switch"), including a pending state set with aria-busy="true" on the input or .mg-switch--pending on the label. The switch has an error state, set the same way as on any other control: aria-invalid="true" on the input (preferred, and the only form assistive technology sees), or mg-switch__input--error on the input, or mg-switch--error on the label, each giving the track a red boundary; put the message in a sibling p.mg-form-error with role="alert" OUTSIDE the label (inside it would join the switch\'s accessible name) and join the two with aria-describedby, exactly as with a text input, so FormErrorSummary can link to the switch by id. The error state does not move the thumb: use it for "the thing this switch controls failed", and the pending helper when the save itself failed and the switch must revert. The switch is sized and coloured with the --mg-switch-* custom properties in this entry, set on the switch or any ancestor, and never by overriding the thumb transform, which also breaks RTL. The thumb travel, its RTL counterpart and the pending ring all derive from the size properties, so setting those is enough in both directions. .mg-switch--small sets --mg-switch-size: 1.125rem and a tighter row gap, and re-declares no length inside the switch; prefer it to a size of your own for a toolbar, table row or panel header. Do not paint a switch state with box-shadow or outline on the track: the focus ring owns both, and a consumer rule of equal specificity replaces its separator band. For a switch that saves a setting, load the dependency-free js/switch-pending.js module (no React): it announces "Saving…", "Still saving…" and the outcome in a role="status" region, ignores presses while saving, sets aria-busy a frame after the change, honours only the latest request, and times out (10s) and reverts on failure. Use mgSwitchPending(input, { save }) where save(checked, signal) returns a Promise, or mark switches with data-mg-switch-pending and answer one document-level mg-switch:save listener. Both defaults can be switched off: revert: false keeps the position the user asked for and sets aria-invalid="true" instead (which also turns on the error state above, so supply the .mg-form-error message too), and timeout: 0 or Infinity removes the deadline. mgSwitchAnnouncer(element, { status, labels }) exports the announcements on their own, for apps that run their own save.',
     vanillaModule: {
       note: 'Plain ES module: no React, no hydrate.js, no import map. renderedHtml switches toggle but do not save. Marked switches are enhanced on load; an explicit mgSwitchPending or mgSwitchPendingInit call takes over those switches with its options. Without a save function, each change dispatches a cancelable mg-switch:save event; a listener must call event.detail.respondWith(promise) synchronously (wrap awaited work in an async function and pass its promise), or call event.preventDefault() synchronously and respondWith later. Otherwise the switch reverts with a console warning. Call mgSwitchPendingDestroy(scope), or abort the { signal } passed to mgSwitchPendingInit, before removing switches. Exports: mgSwitchPending(input, { save, status, timeout, revert, labels, signal }) returning { destroy() }, mgSwitchPendingInit(scope, options) returning the new helpers, mgSwitchPendingDestroy(scope), and mgSwitchAnnouncer(element, { status, labels }). The announcer is the announcements without the save state machine, for an app that owns the switch position and its own requests: it adds no listeners and sets no attributes, and returns { status, labels, label(), announce(text), pending(), stillSaving(force), settled(checked), failed(), destroy() }, where announce() takes a string with {label} or a function (labelText, input). mgSwitchPending runs the same announcer.',
       selector: '[data-mg-switch-pending]',
@@ -1624,6 +1789,7 @@ npm run build</code></pre>
     },
     cssClasses: [
       'mg-form-check',
+      'mg-form-check--row',
       'mg-form-check__input',
       'mg-form-check__input--checkbox',
       'mg-form-check__input--disabled',
@@ -1643,7 +1809,19 @@ npm run build</code></pre>
   },
   'components-forms-radio': {
     description:
-      'Styled radio button with label. Error and disabled states available.',
+      'Styled radio button with label. Error and disabled states available. Add mg-form-check--row to the wrapper (the row prop in React) to draw each option as a full-width row: the whole row selects and shows hover, keyboard focus, the checked state and disabled. Use rows when options are sentences or the choice is the main task on screen.',
+    summary:
+      'Styled radio button with label and an optional full-width option row. Error and disabled states available.',
+    cssClasses: [
+      'mg-form-check',
+      'mg-form-check--row',
+      'mg-form-check__input',
+      'mg-form-check__input--radio',
+      'mg-form-check__input--disabled',
+      'mg-form-check__input--error',
+      'mg-form-check__label',
+      'mg-form-error',
+    ],
   },
   'components-forms-segmented-control': {
     summary:
@@ -2068,6 +2246,64 @@ npm run build</code></pre>
     ],
   },
 
+  'components-dialog': {
+    description:
+      'Experimental native modal enhancement for authored disclosures, first shipped in 2.4.0 under js/dialog.js with matching CSS. Versioned CDN assets require npm publication and the shared-web-assets production deployment; verify matching paths before use. Short messages and long reading share focus return, Escape/backdrop dismissal, viewport scrolling and cleanup. Content stays available without JavaScript; server-rendered labels own translation. No shipped Gutenberg block or validated editor round trip.',
+    summary:
+      'Experimental native dialog, available from 2.4.0, for optional messages and long reading, with a disclosure fallback and no React dependency.',
+    cssClasses: [
+      'mg-dialog',
+      'mg-dialog--sticky-header',
+      'mg-dialog__header',
+      'mg-dialog__title',
+      'mg-dialog__body',
+      'mg-dialog__close',
+    ],
+    examples: [
+      {
+        name: 'Progressive disclosure',
+        html: `<div data-mg-dialog>
+  <button type="button" class="mg-button mg-button-primary" data-mg-dialog-trigger hidden>Read the case study</button>
+  <details data-mg-dialog-fallback><summary>Read the case study</summary>
+    <div data-mg-dialog-content>
+      <header class="mg-dialog__header">
+        <h2 id="case-study-title" class="mg-dialog__title" data-mg-dialog-title data-mg-dialog-initial-focus tabindex="-1">Community resilience</h2>
+        <button type="button" class="mg-button mg-button-secondary mg-dialog__close" data-mg-dialog-close hidden>Close</button>
+      </header>
+      <div class="mg-dialog__body mg-content"><p>The case study goes here.</p></div>
+    </div>
+  </details>
+</div>`,
+      },
+    ],
+    vanillaModule: {
+      note: 'First shipped in 2.4.0. Run yarn build and serve dist/assets as the local web root; the relative css/style.css and js/dialog.js paths in this example refer to that assembled build, not to the Storybook site. Versioned CDN paths require npm publication and the shared-web-assets production deployment; verify matching pinned CSS and JavaScript before use. Enhances authored markup; does not generate content or translate labels. Call mgDialog(scope) after inserting markup and mgDialogDestroy(scope) before replacing it. Uses native showModal; unsupported browsers retain the disclosure. Nested roots retain their disclosures without enhancement. The enhancer alone owns mg-dialog--sticky-header: it makes the header sticky only when ResizeObserver measurements leave at least half the dialog viewport for reading; otherwise it stays in normal flow with keyboard/Escape dismissal. Do not author that state class or combine overlay lifecycles.',
+      selector: '[data-mg-dialog]',
+      modules: { script: 'js/dialog.js' },
+      dataAttributes: {
+        'data-mg-dialog': 'Root; owns one authored disclosure and trigger.',
+        'data-mg-dialog-trigger': 'Initially hidden opening button.',
+        'data-mg-dialog-fallback':
+          'Authored details element available before enhancement.',
+        'data-mg-dialog-content':
+          'Content moved into the modal and restored on destroy.',
+        'data-mg-dialog-title': 'Required heading with an authored unique id.',
+        'data-mg-dialog-close':
+          'Initially hidden Close controls, translated in the page; every marked control dismisses the dialog.',
+        'data-mg-dialog-initial-focus':
+          'Optional focus target; a heading needs tabindex=-1. Otherwise Close receives focus.',
+      },
+      example: `<link rel="stylesheet" href="css/style.css">
+<div data-mg-dialog>
+  <button type="button" class="mg-button mg-button-primary" data-mg-dialog-trigger hidden>Read more</button>
+  <details data-mg-dialog-fallback><summary>Read more</summary><div data-mg-dialog-content>
+    <header class="mg-dialog__header"><h2 id="reading-title" class="mg-dialog__title" data-mg-dialog-title>Optional reading</h2><button type="button" class="mg-button mg-button-secondary mg-dialog__close" data-mg-dialog-close hidden>Close</button></header>
+    <div class="mg-dialog__body mg-content"><p>Supporting information.</p></div>
+  </div></details>
+</div>
+<script type="module" src="js/dialog.js"></script>`,
+    },
+  },
   'components-cite-this': {
     description:
       'Vanilla citation button and native dialog for detail pages. An empty data-mg-cite-this element uses the page title and URL; server-rendered disclosure markup preserves a no-JavaScript fallback. Prefer an approved citation, then configured metadata, a matching JSON-LD CreativeWork, or a page-title fallback. The script supplies copy feedback and bubbling analytics events; the host owns GA4 and consent. Event id is null for automatically URL-derived IDs containing a query: supply an approved data-mg-cite-this-id for per-work reporting without forwarding query values or merging distinct works.',
@@ -2147,7 +2383,7 @@ npm run build</code></pre>
     summary:
       'A named group of pages inside the parent site — a programme, a monitor, a guidance collection — carrying the same identity and section links on every page.',
     description:
-      'A named group of pages inside the parent site — a programme, a monitor, a guidance collection — carrying the same identity and section links on every page so readers move sideways without returning to a landing page. Composes HubHeader with shipped cards, hero and contents components.',
+      'Landing page hub-home variant, plus persistent identity and section navigation shared with detail pages. Detail pages retain their own editorial meaning. Composes HubHeader with shipped cards, hero and contents components.',
     vanillaModule: {
       note: 'For static HubHeader markup on pages without React. js/hub-header.js enhances every [data-mg-js-hub-header] on load: it keeps the marked section in view and sets data-overflow-start and data-overflow-end on the nav for the edge fades. With data-mg-hub-header-detect-current it also marks the current section from the URL, so identical markup can be copied to every page of the hub: an exact match gets aria-current="page", otherwise the longest section whose path contains the page gets mg-hub-header__nav-item--ancestor and no aria-current. A section linking to the hub home or to / only matches exactly. Markup that already marks a section is left alone. For headers inserted later, import { mgHubHeader } from ".../js/hub-header.js" and call mgHubHeader(scope); initialized headers are skipped and the returned function undoes the call. Without JavaScript the links work and nothing is marked.',
       selector: '[data-mg-js-hub-header]',
@@ -2256,18 +2492,71 @@ npm run build</code></pre>
     ],
   },
 
+  'patterns-content-card': {
+    summary:
+      'Compact content cards with separately selected metadata and vertical/book layouts across content archetypes.',
+    description:
+      'Experimental card presentation selected by archetype/profile, separate from teaser and full-page projections. Vertical and book are geometry choices over the same card field selection. Drupal card modes inform selection; event and job cards deliberately add labelled decision dates, supplied status and optional separately labelled publication dates. Missing dates have no fallback and status is never clock-derived. Profiles without a source card mode are explicit Mangrove proposals. Complete covers and logos are preserved. See content-patterns.json for profile references, layout inputs and status.',
+    cssClasses: [
+      'mg-content-card',
+      'mg-content-card--vertical',
+      'mg-content-card--book',
+      'mg-content-pattern--logo',
+      'mg-content-card-grid',
+      'mg-content-meta__before-title',
+      'mg-content-meta__group',
+      'mg-content-meta__metadata-link',
+    ],
+  },
+
+  'patterns-content-teaser': {
+    summary:
+      'Shared experimental teaser renderer; content families own separate page, teaser and card presentations.',
+    description:
+      'Shared experimental horizontal teaser renderer with an enclosed standard-card surface, inset text, edge-aligned photographs and complete inset covers/logos. Independent content-teaser surface tokens default to the standard card tokens. Content-family specifications select fields. Its input is a presentation projection, not a canonical domain model. Cards use the separate ContentCard renderer and field projection. See content-patterns.json for family-specific full-page, teaser and card status; stubs are not implemented.',
+    cssClasses: [
+      'mg-content-teaser',
+      'mg-content-meta__before-title',
+      'mg-content-meta__group',
+      'mg-content-meta__metadata',
+      'mg-content-meta__metadata-link',
+      'mg-content-meta__attribution',
+      'mg-content-pattern--logo',
+      'mg-content-teaser-list',
+    ],
+  },
+
   'patterns-article-story': {
     summary:
-      'A news or event article page: headline, header image, reading body and related content cards.',
+      'Article full-page reference within the Article archetype: headline, hero image, reading body and related content.',
     description:
-      'A news or event article page: headline, header image, reading body and related content cards. imageProminence controls the header treatment: bleeds full width (large), stays in the reading column (compact), or runs a two-column Hero split band (split). heroImage controls whether the header shows the same image used for teasers/social cards, a different one, or none. Composes VerticalCard, TableOfContents and mg-reading.',
+      'Article full-page reference within the Article archetype: headline, hero image, reading body and related content. imageProminence controls the header treatment: bleeds full width (large), stays in the reading column (compact), or runs a two-column Hero split band (split). heroImage controls whether the header shows the same image used for teasers/social cards, a different one, or none. Composes VerticalCard, TableOfContents and mg-reading.',
+  },
+
+  'patterns-publication-record': {
+    summary:
+      'Experimental story-only bibliographic publication record with early access links, optional complete cover and distinct metadata roles.',
+    description:
+      'Experimental story-only publication record using the news-entry shell and reading layout, with early primary/backup links, optional complete cover and bibliography. No published PublicationRecord import or production CMS adapter exists. Record content works as static HTML; PageHeader/MegaMenu navigation needs its documented hydration. Requires shared Mangrove CSS and consumer-owned publication-record.scss, which is not included in css/style.css. Use rendered-HTML Show code rather than private JSX fixtures. Citation and resource metadata are supplied, never inferred. Docs: https://mangrove.undrr.org/?path=/docs/patterns-publication-record--docs . Composition: https://raw.githubusercontent.com/PreventionWeb/undrr-mangrove/main/stories/Patterns/Content/Publication/PublicationRecord.jsx ; stylesheet: https://raw.githubusercontent.com/PreventionWeb/undrr-mangrove/main/stories/Patterns/Content/Publication/publication-record.scss . These moving-main discovery links must be matched to the loaded library build before adoption.',
+    cssClasses: [
+      'mg-publication-record',
+      'mg-publication-record__metadata',
+      'mg-publication-record__resources',
+      'mg-publication-record__reading',
+      'mg-publication-record__layout',
+      'mg-publication-record__header',
+      'mg-publication-record__identity',
+      'mg-publication-record__main',
+      'mg-publication-record__aside',
+      'mg-publication-record__cover',
+    ],
   },
 
   'patterns-landing-pages': {
     summary:
-      'Three UNDRR landing page shapes: topic or initiative, report or publication, and collection index.',
+      'Full-page references grouped by archetype: topic under Landing page, report under Publication, and collection index under Collection.',
     description:
-      'Three UNDRR landing page shapes: topic or initiative (hero, route cards, supporting band), report or publication (feature band and a reading column with contents), and collection index (grouped rows of covers).',
+      'Full-page composition references: topic or initiative under Landing page, curated report landing under Publication and collection index under Collection. The report examples do not implement an ordinary bibliographic publication record. An experimental story-only record composition is documented at https://mangrove.undrr.org/?path=/docs/patterns-publication-record--docs ; production integration and a published renderer remain unimplemented. Its provisional specification is at https://mangrove.undrr.org/?path=/docs/patterns-content-publication-record-specification--docs ; fetchable source: https://raw.githubusercontent.com/PreventionWeb/undrr-mangrove/main/docs/PUBLICATION-RECORD-SPEC.md . These demonstrate composition, not a one-to-one mapping from Drupal bundles to domain models. The publication branding examples are story-only compositions, not published component imports; their generated JSX snippets call a private renderPublication helper and are not standalone. Publication guide: https://mangrove.undrr.org/?path=/docs/patterns-content-publication-full-page--docs . Full example source: https://raw.githubusercontent.com/PreventionWeb/undrr-mangrove/main/stories/Patterns/LandingPages/PublicationPage.stories.jsx . Required consumer-owned stylesheet: https://raw.githubusercontent.com/PreventionWeb/undrr-mangrove/main/stories/Patterns/LandingPages/publication-example.scss . These moving-main source links are discovery aids; match the source and component contracts to the loaded library build before adapting them.',
   },
 
   'example-page-template-example': {
@@ -2617,12 +2906,17 @@ npm run build</code></pre>
     summary:
       'Media gallery with thumbnails, navigation, captions and accessible pending-media indicators.',
     description:
-      'Media gallery with a main stage, optional thumbnail rail, navigation arrows, captions and keyboard support. Handles images, videos and embedded players. Pending media uses the shared inline Loader; thumbnail navigation scrolls instantly under reduced motion.',
+      'Media gallery with a main stage, optional thumbnail rail, navigation arrows, captions and keyboard support. Handles images, videos and embedded players. Pending media uses the shared inline Loader; thumbnail navigation scrolls instantly under reduced motion. Each change of the visible item by a visitor dispatches a bubbling mg-gallery:change event for site analytics, with the analytics region, zero-based index, item count and method (click, thumbnail, swipe or key) and no content.',
     hydration: {
       note: 'renderedHtml contains the arrows and the thumbnail rail, but they are inert markup: slide changing, thumbnail selection and keyboard navigation are all React behaviour. Render an empty data-mg-gallery container carrying data-media and hydrate it. Every media object whose type is "image" (or has no type) needs an alt value — WCAG 1.1.1. Validate data-media server-side: the JSON parse failure itself is swallowed, but the component has no empty-media guard, so an empty or malformed list throws during render and leaves the container blank. Security: an item of type "html" is injected unsanitised, so never build one from untrusted input.',
       selector: '[data-mg-gallery]',
       modules: hydrationModules('Gallery'),
       dataAttributes: {
+        'data-labels':
+          'JSON object of UI label overrides. Missing keys use the selected catalogue, then English. Existing individual label attributes win.',
+        dir: 'Explicit direction on the hydration container: ltr, rtl or auto. Overrides the direction inferred from a supported UI language.',
+        'data-lang':
+          'UI language tag: en, ar, es, fr, ja, ru or zh, including regional tags. Takes precedence over nearest HTML lang, then English. Preserves custom language metadata.',
         'data-mg-gallery': 'Marks the container to hydrate (required).',
         'data-media':
           'JSON array of media objects (required): { id, type, src, alt, title, description, thumbnail, poster, embedUrl, html }. The caption text comes from description; there is no caption key. type is "image" (default), "video", "embed" or "html". Invalid or empty JSON throws during render.',
@@ -2657,10 +2951,15 @@ npm run build</code></pre>
     description:
       'Horizontally scrolling rail for a row of cards or media, with optional arrow controls, drag scrolling, scroll snapping and equal-height items.',
     hydration: {
-      note: 'Unusually, this hydrator reads your server-rendered content rather than a JSON attribute: put the items inside a .mg-scroll__content wrapper in the container and each child becomes a slide. Without that wrapper the whole container innerHTML becomes a single item. The markup is re-rendered from HTML strings, so any event handlers bound to it before hydration are lost, and it is re-injected unsanitised — unlike Drawer, this component does not run DOMPurify, so only ever hand it markup you control. renderedHtml scrolls natively and snapping works from the stylesheet; the arrow markup is present but dead until hydration. The scrollLeftLabel and scrollRightLabel strings have no data attribute, so a hydrated container keeps the English arrow labels.',
+      note: 'Unusually, this hydrator reads your server-rendered content rather than a JSON attribute: put the items inside a .mg-scroll__content wrapper in the container and each child becomes a slide. Without that wrapper the whole container innerHTML becomes a single item. The markup is re-rendered from HTML strings, so any event handlers bound to it before hydration are lost, and it is re-injected unsanitised — unlike Drawer, this component does not run DOMPurify, so only ever hand it markup you control. renderedHtml scrolls natively and snapping works from the stylesheet; the arrow markup is present but dead until hydration. data-lang or inherited HTML lang selects translated arrow and navigation names. data-labels overrides ariaLabel, navigationLabel (with a {label} token), scrollLeftLabel and scrollRightLabel; data-aria-label supplies a content-specific region name.',
       selector: '[data-mg-scroll-container]',
       modules: hydrationModules('ScrollContainer'),
       dataAttributes: {
+        'data-labels':
+          'JSON object of UI label overrides. Missing keys use the selected catalogue, then English. Existing individual label attributes win. Keys: ariaLabel, navigationLabel (with {label}), scrollLeftLabel and scrollRightLabel.',
+        dir: 'Explicit direction on the hydration container: ltr, rtl or auto. Overrides the direction inferred from a supported UI language.',
+        'data-lang':
+          'UI language tag: en, ar, es, fr, ja, ru or zh, including regional tags. Takes precedence over nearest HTML lang, then English. Preserves custom language metadata.',
         'data-mg-scroll-container':
           'Marks the container to hydrate (required).',
         'data-height': 'Container height as a CSS value (default "auto").',
@@ -2698,15 +2997,46 @@ npm run build</code></pre>
     },
   },
   'components-syndicated-search': {
+    cssClasses: [
+      'mg-search__export',
+      'mg-search__export-actions',
+      'mg-search__export-dialog',
+      'mg-search__export-field-options',
+      'mg-search__export-fields',
+      'mg-search__export-header',
+      'mg-search__export-header-icon',
+      'mg-search__export-scope',
+      'mg-search__export-field-grid',
+      'mg-search__export-count',
+      'mg-search__export-range',
+      'mg-search__export-range--paged',
+      'mg-search__export-preview',
+      'mg-search__export-preview-track',
+      'mg-search__export-preview-track--window',
+      'mg-search__export-preview-selection',
+      'mg-search__export-start',
+      'mg-search__export-footer',
+      'mg-search__export-format-title',
+      'mg-search__export-help',
+      'mg-search__export-status',
+      'mg-select__option--inherited',
+      'mg-select__option--partial',
+      'mg-search__scope-tabs',
+      'mg-search__scope-options',
+      'mg-search__scope-option',
+    ],
     summary:
-      'Search interface over the UNDRR syndication API: query box, facets, active filters, result list or cards, pager and search metrics.',
+      'Search with facets, result lists, photo cards or publication catalogues. Book mode preserves artwork URLs; use publication filters and explicit grid columns.',
     description:
-      'Search interface over the UNDRR syndication API: query box, facets, active filters, result list or cards, pager and search metrics. Teaser HTML is inserted directly into the result article when metrics are disabled; the metrics-enabled view keeps a separate teaser container alongside the scoring panel. Loading uses the shared flush ProgressBar in the results region and inline Loader on refresh. Skeletons remain static; optional motion uses shared timing tokens, with a dashed progress strip under reduced motion and visible outlines in forced colours. UI strings are translatable through the labels prop; most of them can also be set from a data-labels JSON attribute, but function-valued plural forms cannot be serialized to JSON and need the prop. The widget renders the search response as unsanitised HTML so Elasticsearch highlight markup survives, which puts the configured searchEndpoint inside its trust boundary: point it only at a service trusted to return safe HTML.',
+      'Search interface over the UNDRR syndication API: query box, facets, active filters, result list or cards, pager and search metrics. Opt-in showExport adds an outlined Download results utility at inline start beneath pagination (or results when pagination is hidden), opening a native modal with a one-based start only for matched totals of at least 1,000, quantity and optional fields followed by a distinct Download as section for CSV/JSON actions and status, then quieter larger-data help. Close uses the shared quiet icon-button contract. Fields open by default in a responsive grid. CSV is the primary action and JSON uses the outline variant. Both downloads are generated in the browser, with a range bounded by 1,000 per file, exact remaining matches and the 10,000-result window; opening bounds config.exportDefaultCount or 100 by availability; numeric edits immediately cap together, with blank drafts resolved on blur or Download and nonnumeric keyboard/paste entry blocked; availability names the range fieldset once, and a read-only range strip uses the exact full total or a continuation cue plus screen-reader window description for lower bounds, and localized settled-search availability that distinguishes exact totals from lower bounds, preserving filters and sort, with actual returned-range messages and exportContactUrl for larger data requests. config.exportFields inherits all supported optional columns when omitted or null; an explicit array restricts the available choices and both files, with ID/URL always mandatory, paired date/precision and taxonomy ID/name columns, and [] or malformed policies allowing core columns only. Policy changes close the modal and abort pending downloads. This is a file/UI policy, not backend authorization. A native Fields to include disclosure offers up to nine optional metadata choices, including an initially unchecked plain-text teaser summary. Taxonomy choices pair IDs with names from the complete paginated taxonomy lookup; failed or unresolved names block the file with retry guidance. Raw teaser HTML and full body are excluded from files. ID and URL are always included, date precision is paired, the same stable selected keys in CSV and JSON, and fresh defaults on reopening. Primary Downloads examples always use the normal public APIs. A separate Local Drupal API story explicitly opts into the sanitized local deployment; there is no hostname-based switching, automatic fallback or download. Endpoint configuration remains editable. Deterministic states and the captured Website teaser sample are grouped separately under Fixtures. Type selections retain parent/subtype grouping and indentation; selected subtypes keep parent context in the collapsed summary. Unselected children included through a selected parent show a pale checked indicator; an unselected parent with selected subtypes shows a dash. These states describe inclusion without changing explicit selections or Type OR semantics. Search availability stays stable while a facet dropdown is open; selection retains keyboard focus, and Escape closes the dropdown before its enclosing mobile drawer. Custom facets with display tabs provide required native radio scopes above results, preserving other filters and scoping facet counts. Unique URL-safe option values synchronize selections with browser history; Clear all retains the scope. Book grids preserve supplied artwork URLs and use a shared desktop media stage; choose publication filters, explicit columns and concise fields for a cover catalogue. Teaser HTML is inserted directly into the result article when metrics are disabled; the metrics-enabled view keeps a separate teaser container alongside the scoring panel. Loading uses the shared flush ProgressBar in the results region and inline Loader on refresh. Skeletons remain static; optional motion uses shared timing tokens, with a dashed progress strip under reduced motion and visible outlines in forced colours. lang selects the bundled UI catalogue, independently of content-language filters. labels and data-labels provide explicit overrides. Built-in plural functions are bundled and work through hydration; custom functions require a JavaScript labels prop. The widget renders the search response as unsanitised HTML so Elasticsearch highlight markup survives, which puts the configured searchEndpoint inside its trust boundary: point it only at a service trusted to return safe HTML.',
     hydration: {
-      note: 'The widget queries an Elasticsearch-backed API and owns all of its state, so renderedHtml is only the empty initial shell — no results, facets or pager are in it. Render an empty data-mg-search-widget container and hydrate it. fromElement returns { config }, plus a labels key only when a valid data-labels attribute is present, so destructure defensively. Only attributes you set are included in config, so every unset option keeps its default. Malformed JSON in any of the JSON attributes is ignored and that option falls back to its default.',
+      note: 'The widget queries an Elasticsearch-backed API and owns all of its state, so renderedHtml is only the empty initial shell — no results, facets or pager are in it. Render an empty data-mg-search-widget container and hydrate it. fromElement returns config plus optional lang, dir and labels, so forward the full extracted props to retain language selection. Only attributes you set are included in config, so every unset option keeps its default. Malformed JSON falls back to the attribute default, except data-export-fields: invalid JSON or a non-array value permits only mandatory ID/URL columns. Omit data-export-fields to inherit all supported fields.',
       selector: '[data-mg-search-widget]',
       modules: hydrationModules('SyndicationSearchWidget'),
       dataAttributes: {
+        dir: 'Explicit direction on the hydration container: ltr, rtl or auto. Overrides the direction inferred from a supported UI language.',
+        'data-lang':
+          'UI language tag: en, ar, es, fr, ja, ru or zh, including regional tags. Takes precedence over nearest HTML lang, then English. Preserves custom language metadata.',
         'data-mg-search-widget': 'Marks the container to hydrate (required).',
         'data-search-endpoint':
           "Search API URL. Trust boundary: the widget renders this endpoint's HTML unsanitised, because Elasticsearch highlight markup (<em> around matched terms) has to survive. Point it only at a service trusted to return safe HTML; if you point it at your own service, you own what it returns.",
@@ -2716,7 +3046,12 @@ npm run build</code></pre>
         'data-min-search-length': 'Minimum query length before a search runs.',
         'data-default-query': 'Query the widget starts with.',
         'data-default-sort': 'Initial sort key.',
-        'data-display-mode': 'Result layout: list, card or card-book.',
+        'data-show-sort':
+          '"false" hides the sort selector and keeps the configured order, including when restoring URL or history state.',
+        'data-year-field':
+          'Year filter date basis: published_at (default), event_start, or display_date. With display_date, fallback results use the reader-facing date and display_date_precision (year or day); the endpoint must index these fields before selection.',
+        'data-display-mode':
+          'Result layout: list, card or card-book. Book mode preserves supplied artwork URLs; use publication filters and explicit columns for a cover catalogue.',
         'data-grid-columns': 'Columns in the card grid.',
         'data-query-append': 'Extra query string appended to every search.',
         'data-facets':
@@ -2727,6 +3062,16 @@ npm run build</code></pre>
           'CSS selector of an element to portal the search box into.',
         'data-analytics-region-prefix':
           'Stem for the analytics regions (<prefix>-form, -results, -facets). Defaults to undrr-search. Give each widget on a page its own prefix, because the analytics script reports only the innermost region.',
+        'data-show-export':
+          '"true" to show Download results, opening a native modal that always offers CSV and JSON metadata downloads; disabled by default.',
+        'data-export-default-count':
+          'Initial requested quantity: default 100, normalized to 1–1,000. Visitors may choose 1–1,000 independently of page size.',
+        'data-export-fields':
+          'Optional JSON array of output keys restricting available metadata fields. Omit to inherit all supported fields; [] permits only mandatory ID/URL. Paired date/precision and taxonomy IDs/names stay together. Invalid policies allow only ID/URL.',
+        'data-export-contact-url':
+          'Contact route for larger data requests or API access discussions; defaults to the PreventionWeb contact page.',
+        'data-export-endpoint':
+          'Endpoint for download requests; omit to use data-search-endpoint. Lets a consumer tell downloads apart from browsing requests.',
         'data-show-search-box': '"false" to hide the search box.',
         'data-show-results-count': '"false" to hide the result count.',
         'data-show-facets': '"false" to hide the facets.',
@@ -2741,7 +3086,8 @@ npm run build</code></pre>
           'JSON object of filters applied to every search.',
         'data-allowed-types': 'JSON array of content types to include.',
         'data-custom-filters': 'JSON array of extra filter definitions.',
-        'data-custom-facets': 'JSON array of extra facet definitions.',
+        'data-custom-facets':
+          'JSON array of custom facets. display: tabs creates a required native radio scope above results; defaultValue is an option index. Unique URL-safe option values enable t.<facetId> history links. Labels and queries are consumer supplied.',
         'data-visible-teaser-fields':
           'JSON array of teaser fields to show on each result.',
         'data-interestingness-tiers': 'JSON tier configuration for ranking.',
@@ -2795,12 +3141,41 @@ npm run build</code></pre>
     summary:
       'Site-wide mega menu: a desktop navigation strip with multi-column panels, and a bounded progressive overlay below 900px.',
     description:
-      'Site-wide mega menu: a desktop nav strip with multi-column panels and a bounded progressive mobile overlay below 900px. The menu structure comes from a sections array, normally built server-side or fetched from an API. Below 900px the overlay is bounded (minimum 400px where space permits, maximum min(700px, 90dvh)) with Back above the title, a separate Close control and outside-click dismissal, nested groups, and section headings linked to their landing pages. Optional label props are menuLabel, backLabel, allSectionsLabel, closeLabel, overviewLabel and toggleMobileNavLabel. mg-mega-wrapper--js-active is added on mount, so pointer-events restrictions apply only once the sidebar is available; plain HTML nav markup and failed-hydration states stay clickable on mobile.',
+      'Site-wide mega menu: a desktop nav strip with multi-column panels and a bounded progressive mobile overlay below 900px. The menu structure comes from a sections array, normally built server-side or fetched from an API. Below 900px the overlay is bounded (minimum 400px where space permits, maximum min(700px, 90dvh)) with Back above the title, a separate Close control and outside-click dismissal, nested groups, and section headings linked to their landing pages. Optional enableFilter adds a menu-wide native finder dialog opened by a fixed footer utility in desktop panels with left columns and a menu-wide mobile drawer finder. The existing Search navigation item is unchanged; no second top-level search entry or global shortcut is added. Results use wrapping breadcrumb rows, rank title matches first and combine duplicate URLs. Query words can appear in any order across titles and breadcrumb paths; all words are required, with English and/& treated as optional conjunctions between other terms. Matching words highlight separately. Word/CamelCase initials match automatically: GAR or G-A-R finds Global Assessment Report; PW finds PreventionWeb. Whole-label acronyms require at least two letters; English connector words and numeric years may be omitted. Exact titles and word prefixes rank first, then exact acronyms before incidental inside-word matches (RO favours Regional Offices over Conference Proceedings). Aliases do not combine separate breadcrumb levels. Acronym aliases are precomputed with the flattened menu. Full-site search uses shared outlined secondary button styles and a decorative mg-icon-arrow-right that mirrors in RTL, without underlining the arrow. If literal matching finds nothing, single-word queries of at least four characters tolerate one edit or adjacent transposition against title and breadcrumb words. Counts are screen-reader-only. Close or Escape restores the footer focus; underlying navigation and scroll positions remain mounted. Composing IME keys do not dismiss either menu. Responsive/configuration changes that remove the finder utility clear its state and focus its surviving top-level control, without reopening later. The platform-aware Cmd/Ctrl+K hint applies only with focus in the expanded menu outside editors; Clear stays in the dialog. Finder controls and result rows use fast token-timed pointer hover tints only with no motion preference and outside forced colours; keyboard focus, dialog open/close and result updates remain immediate. The desktop dialog has an icon-only localized Close button and keeps full-site search visible in a separate footer while results scroll. enableSiteSearch offers a contextual full-site fallback (searchUrl defaults to /search#query=). menuFilterLabel names the utility and dialog; closeLabel names dismissal; other finder labels retain runtime translations and consumer overrides. mg-mega-wrapper--js-active is added on mount, so pointer-events restrictions apply only once the sidebar is available; plain HTML nav markup and failed-hydration states stay clickable on mobile.',
+    cssClasses: [
+      'mg-mega-content--filterable',
+      'mg-mega-menu-finder',
+      'mg-mega-menu-finder__header',
+      'mg-mega-menu-finder__heading',
+      'mg-mega-menu-finder__action',
+      'mg-mega-content__left-scroll',
+      'mg-mega-content__left-contents',
+      'mg-mega-content__finder-footer',
+      'mg-mega-content__finder-trigger',
+      'mg-mega-content__finder-shortcut',
+      'mg-mega-menu-finder__label',
+      'mg-mega-menu-finder__results',
+      'mg-mega-menu-finder__footer',
+      'mg-mega-filter',
+      'mg-mega-mobile-sidebar--filtering',
+      'mg-mega-filter__input',
+      'mg-mega-filter__mobile-list',
+      'mg-mega-filter__mobile-link',
+      'mg-mega-filter__item-title',
+      'mg-mega-filter__trail',
+      'mg-mega-filter__trail-step',
+      'mg-mega-filter__highlight',
+    ],
     hydration: {
-      note: "MegaMenu needs React: open and close state, keyboard navigation and the mobile drill-down are all component behaviour, so renderedHtml is not a working menu. This is a complex-tier component — fromElement reads only timing, logo and an optional inline data-sections attribute, and most integrations pass sections from an API in a consumer wrapper instead. Security: a section's bannerDescription is injected as raw HTML at the desktop banner, the no-items call-to-action panel and the mobile sidebar, and is NOT sanitised — unlike TextCta, Drawer and the card components, MegaMenu does not run DOMPurify. Sanitise it in the wrapper that builds sections, and never build it from untrusted input. bannerHeading and every title are rendered as text. Plain nav markup stays clickable before hydration and if hydration fails; the mg-mega-wrapper--js-active class is added on mount, so pointer-events restrictions apply only once the sidebar exists.",
+      note: "MegaMenu needs React: open and close state, keyboard navigation and the mobile drill-down are all component behaviour, so renderedHtml is not a working menu. This is a complex-tier component — fromElement reads timing, logo, finder/search options, language, labels and an optional inline data-sections attribute, and most integrations pass sections from an API in a consumer wrapper instead. Security: a section's bannerDescription is injected as raw HTML at the desktop banner, the no-items call-to-action panel and the mobile sidebar, and is NOT sanitised — unlike TextCta, Drawer and the card components, MegaMenu does not run DOMPurify. Sanitise it in the wrapper that builds sections, and never build it from untrusted input. bannerHeading and every title are rendered as text. Plain nav markup stays clickable before hydration and if hydration fails; the mg-mega-wrapper--js-active class is added on mount, so pointer-events restrictions apply only once the sidebar exists.",
       selector: '[data-mg-mega-menu]',
       modules: hydrationModules('MegaMenu'),
       dataAttributes: {
+        'data-lang':
+          'UI language tag, selected before nearest HTML lang, then English. Supports en, ar, es, fr, ja, ru and zh with regional variants.',
+        dir: 'Explicit direction on the hydration container: ltr, rtl or auto. Overrides inferred direction.',
+        'data-labels':
+          'JSON object of UI label overrides; omitted keys use the selected catalogue, then English.',
         'data-mg-mega-menu': 'Marks the container to hydrate (required).',
         'data-sections':
           "JSON array of menu sections: [{ title, items: [{ title, url }] }]. Note the item keys are title and url, not label and href. Required unless a consumer wrapper passes the sections prop itself — sections has no default and is required, so hydrating with neither throws and leaves the container empty. Invalid JSON is swallowed and also leaves the container empty. Trust boundary: a section's bannerDescription is rendered as unsanitised HTML (unlike TextCta, Drawer and the cards, MegaMenu does not run DOMPurify), so sanitise that field where you build this array.",
@@ -2815,6 +3190,12 @@ npm run build</code></pre>
           'Where the logo links to, e.g. /ar/ for a language-prefixed root (default /).',
         'data-logo-width': 'Explicit logo width, to avoid layout shift.',
         'data-logo-height': 'Explicit logo height, to avoid layout shift.',
+        'data-enable-filter':
+          'Set to "true" for a menu-wide desktop dialog opened from the expanded left-column footer and the mobile drawer finder.',
+        'data-enable-site-search':
+          'Set to "false" to disable full-site search fallback (default "true").',
+        'data-search-url':
+          'Base URL for full-site search fallback (default /search, formatting to #query=).',
       },
       events: [],
       example: hydrationExample({
@@ -3002,6 +3383,11 @@ npm run build</code></pre>
       selector: '[data-mg-drawer]',
       modules: hydrationModules('Drawer'),
       dataAttributes: {
+        'data-labels':
+          'JSON object of UI label overrides. Missing keys use the selected catalogue, then English. Existing individual label attributes win.',
+        dir: 'Explicit direction on the hydration container: ltr, rtl or auto. Overrides the direction inferred from a supported UI language.',
+        'data-lang':
+          'UI language tag: en, ar, es, fr, ja, ru or zh, including regional tags. Takes precedence over nearest HTML lang, then English. Preserves custom language metadata.',
         id: 'Required, so data-mg-drawer-trigger buttons can find the drawer.',
         'data-mg-drawer': 'Marks the container to hydrate (required).',
         'data-position':

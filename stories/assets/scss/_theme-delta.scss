@@ -3,7 +3,8 @@
 // ---------------------------------------------------------------------
 // Every token in this block is generated from tokens/delta.yaml, merged over
 // tokens/mangrove.yaml and tokens/undrr.yaml.
-@import "./generated/tokens-delta";
+@use "generated/tokens-delta" as *;
+@use "tokens-tabs" as *;
 
 .mg-theme-delta {
   @include mg-tokens-tabs;

@@ -83,6 +83,86 @@ describe('SyndicationSearchWidget', () => {
   });
 
   describe('rendering', () => {
+    it.each(['list', 'card'])(
+      'aligns mixed result dates with the selected reader-facing year in %s mode',
+      async displayMode => {
+        const source = {
+          field_domain_access: ['www_undrr_org'],
+          published_at: '2026-05-01T12:00:00Z',
+        };
+        const hits = [
+          {
+            _id: 'publication',
+            _source: {
+              ...source,
+              type: 'publication',
+              title: 'Older report',
+              display_date: '2020-01-01T12:00:00Z',
+              display_date_precision: ['year'],
+            },
+          },
+          {
+            _id: 'news',
+            _source: {
+              ...source,
+              type: 'news',
+              title: 'Earlier release',
+              display_date: '2020-06-15T12:00:00Z',
+              display_date_precision: ['day'],
+            },
+          },
+          {
+            _id: 'event',
+            _source: {
+              ...source,
+              type: 'event',
+              title: 'Past event',
+              display_date: '2020-11-12T12:00:00Z',
+              display_date_precision: ['day'],
+            },
+          },
+        ];
+        global.fetch = mockFetch({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              hits: { hits, total: { value: 3 } },
+              aggregations: {},
+              took: 1,
+            }),
+        });
+        const { container } = render(
+          <SyndicationSearchWidget
+            config={{
+              yearField: 'display_date',
+              displayMode,
+              defaultFilters: [{ key: 'year', value: '2020' }],
+              enableHashSync: false,
+            }}
+          />
+        );
+        await waitFor(() =>
+          expect(
+            container.querySelectorAll('time.mg-search__result-date')
+          ).toHaveLength(3)
+        );
+        expect(
+          [...container.querySelectorAll('time.mg-search__result-date')].map(
+            date => date.textContent
+          )
+        ).toEqual(['2020', 'Jun 15, 2020', 'Nov 12, 2020']);
+        const [, options] = global.fetch.mock.calls.find(([url]) =>
+          url.includes('search-endpoint')
+        );
+        const query = JSON.parse(options.body);
+        expect(query.post_filter.range.display_date).toEqual({
+          gte: '2020-01-01T00:00:00Z',
+          lt: '2021-01-01T00:00:00Z',
+        });
+        expect(query.aggs.year.date_histogram.field).toBe('display_date');
+      }
+    );
+
     it('renders the widget container', () => {
       render(<SyndicationSearchWidget config={{}} />);
 

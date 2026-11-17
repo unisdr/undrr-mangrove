@@ -6,9 +6,16 @@
  */
 
 import React from 'react';
-import { render, waitFor, act, cleanup } from '@testing-library/react';
+import {
+  render,
+  waitFor,
+  act,
+  cleanup,
+  fireEvent,
+} from '@testing-library/react';
 import { StrictMode } from 'react';
 import { SyndicationSearchWidget } from '../SyndicationSearchWidget';
+import { useExternalTarget } from '../hooks/useExternalTarget';
 
 const originalError = console.error;
 beforeAll(() => {
@@ -72,6 +79,31 @@ describe('target re-resolution', () => {
     added.push(el);
     return el;
   };
+
+  it('ignores unrelated DOM changes and batches shared ownership checks', async () => {
+    add('settled-target');
+    function Probe() {
+      const rootRef = React.useRef(null);
+      useExternalTarget('#settled-target', true, rootRef);
+      return <div ref={rootRef} />;
+    }
+    render(Array.from({ length: 8 }, (_, i) => <Probe key={i} />));
+    await act(async () => {});
+    const styleSpy = jest.spyOn(window, 'getComputedStyle');
+    try {
+      await act(async () => {
+        add('unrelated-content');
+      });
+      expect(styleSpy).not.toHaveBeenCalled();
+      await act(async () => {
+        window.dispatchEvent(new Event('resize'));
+      });
+      expect(styleSpy).toHaveBeenCalled();
+      expect(styleSpy.mock.calls.length).toBeLessThanOrEqual(40);
+    } finally {
+      styleSpy.mockRestore();
+    }
+  });
 
   it('portals the search input into a target added after mount', async () => {
     render(<SyndicationSearchWidget config={{ searchTarget: '#late-hero' }} />);
@@ -248,5 +280,220 @@ describe('target re-resolution', () => {
       String(message).includes('searchTarget selector "#strict-missing"')
     );
     expect(targetWarnings).toHaveLength(1);
+  });
+});
+
+describe('shared target ownership', () => {
+  let searchTarget;
+  let facetsTarget;
+  const sharedConfig = {
+    searchTarget: '#shared-search',
+    facetsTarget: '#shared-facets',
+    facets: 'horizontal',
+    enableHashSync: false,
+  };
+
+  beforeEach(() => {
+    searchTarget = addTarget(document, 'shared-search');
+    facetsTarget = addTarget(document, 'shared-facets');
+  });
+
+  afterEach(() => {
+    cleanup();
+    searchTarget.remove();
+    facetsTarget.remove();
+  });
+
+  function Pair({ secondActive = false, hiddenProps = { hidden: true } }) {
+    return (
+      <>
+        <section {...(secondActive ? hiddenProps : {})}>
+          <SyndicationSearchWidget
+            config={{ ...sharedConfig, defaultQuery: 'Bonn' }}
+          />
+        </section>
+        <section {...(secondActive ? {} : hiddenProps)}>
+          <SyndicationSearchWidget
+            config={{ ...sharedConfig, defaultQuery: 'training' }}
+          />
+        </section>
+      </>
+    );
+  }
+
+  const input = () => searchTarget.querySelector('input');
+
+  it('transfers shared controls between tabs while preserving each query', async () => {
+    const view = render(<Pair />);
+    await waitFor(() => expect(input()).toHaveValue('Bonn'));
+    expect(searchTarget.querySelectorAll('form')).toHaveLength(1);
+    expect(
+      facetsTarget.querySelectorAll('.mg-search__facets-external')
+    ).toHaveLength(1);
+    expect(document.querySelectorAll('.mg-search__facets-strip')).toHaveLength(
+      0
+    );
+
+    fireEvent.change(input(), { target: { value: 'Bonn edited' } });
+    view.rerender(<Pair secondActive />);
+    await waitFor(() => expect(input()).toHaveValue('training'));
+    expect(searchTarget.querySelectorAll('form')).toHaveLength(1);
+    expect(
+      facetsTarget.querySelectorAll('.mg-search__facets-external')
+    ).toHaveLength(1);
+
+    view.rerender(<Pair />);
+    await waitFor(() => expect(input()).toHaveValue('Bonn edited'));
+  });
+
+  it.each([
+    ['find-in-page disclosure', { hidden: 'until-found' }],
+    ['ARIA hidden region', { 'aria-hidden': 'true' }],
+    ['display style', { style: { display: 'none' } }],
+    ['visibility style', { style: { visibility: 'hidden' } }],
+  ])('excludes widgets in a hidden ancestor (%s)', async (_, hiddenProps) => {
+    const view = render(<Pair hiddenProps={hiddenProps} />);
+    await waitFor(() => expect(input()).toHaveValue('Bonn'));
+    expect(searchTarget.querySelectorAll('form')).toHaveLength(1);
+    view.rerender(<Pair secondActive hiddenProps={hiddenProps} />);
+    await waitFor(() => expect(input()).toHaveValue('training'));
+    expect(searchTarget.querySelectorAll('form')).toHaveLength(1);
+  });
+
+  it('rechecks CSS visibility on resize without requiring an attribute mutation', async () => {
+    const style = document.createElement('style');
+    style.textContent = '.shared-resize-test { display: block; }';
+    document.head.append(style);
+    try {
+      render(
+        <>
+          <div className="shared-resize-test">
+            <SyndicationSearchWidget
+              config={{ ...sharedConfig, defaultQuery: 'first' }}
+            />
+          </div>
+          <SyndicationSearchWidget
+            config={{ ...sharedConfig, defaultQuery: 'second' }}
+          />
+        </>
+      );
+      await waitFor(() => expect(input()).toHaveValue('first'));
+      await act(async () => {
+        style.sheet.cssRules[0].style.display = 'none';
+        window.dispatchEvent(new Event('resize'));
+      });
+      await waitFor(() => expect(input()).toHaveValue('second'));
+    } finally {
+      style.remove();
+    }
+  });
+
+  it('allows the owning widget to put both control regions in the same target', async () => {
+    render(
+      <SyndicationSearchWidget
+        config={{ ...sharedConfig, facetsTarget: '#shared-search' }}
+      />
+    );
+    await waitFor(() =>
+      expect(searchTarget.querySelectorAll('form')).toHaveLength(1)
+    );
+    expect(
+      searchTarget.querySelectorAll('.mg-search__facets-external')
+    ).toHaveLength(1);
+  });
+
+  it('transfers controls when native disclosures open and close', async () => {
+    const view = render(
+      <>
+        <details>
+          <summary>First</summary>
+          <SyndicationSearchWidget
+            config={{ ...sharedConfig, defaultQuery: 'first' }}
+          />
+        </details>
+        <details open>
+          <summary>Second</summary>
+          <SyndicationSearchWidget
+            config={{ ...sharedConfig, defaultQuery: 'second' }}
+          />
+        </details>
+      </>
+    );
+    await waitFor(() => expect(input()).toHaveValue('second'));
+    const disclosures = view.container.querySelectorAll('details');
+    await act(async () => {
+      disclosures[0].open = true;
+      disclosures[1].open = false;
+    });
+    await waitFor(() => expect(input()).toHaveValue('first'));
+    expect(searchTarget.querySelectorAll('form')).toHaveLength(1);
+  });
+
+  it('uses document order rather than mount order and transfers on unmount', async () => {
+    const firstSlot = document.createElement('div');
+    const secondSlot = document.createElement('div');
+    document.body.append(firstSlot, secondSlot);
+    try {
+      render(
+        <SyndicationSearchWidget
+          config={{ ...sharedConfig, defaultQuery: 'second' }}
+        />,
+        { container: secondSlot }
+      );
+      await waitFor(() => expect(input()).toHaveValue('second'));
+      const first = render(
+        <SyndicationSearchWidget
+          config={{ ...sharedConfig, defaultQuery: 'first' }}
+        />,
+        { container: firstSlot }
+      );
+      await waitFor(() => expect(input()).toHaveValue('first'));
+      expect(searchTarget.querySelectorAll('form')).toHaveLength(1);
+      first.unmount();
+      await waitFor(() => expect(input()).toHaveValue('second'));
+      expect(searchTarget.querySelectorAll('form')).toHaveLength(1);
+    } finally {
+      cleanup();
+      firstSlot.remove();
+      secondSlot.remove();
+    }
+  });
+
+  it('respects an outer hidden ancestor even when an inner region has aria-hidden=false', async () => {
+    render(
+      <>
+        <div hidden>
+          <div aria-hidden="false">
+            <SyndicationSearchWidget
+              config={{ ...sharedConfig, defaultQuery: 'hidden' }}
+            />
+          </div>
+        </div>
+        <SyndicationSearchWidget
+          config={{ ...sharedConfig, defaultQuery: 'visible' }}
+        />
+      </>
+    );
+    await waitFor(() => expect(input()).toHaveValue('visible'));
+    expect(searchTarget.querySelectorAll('form')).toHaveLength(1);
+  });
+
+  it('observes classes that change ancestor visibility without depending on viewport geometry', async () => {
+    const style = document.createElement('style');
+    style.textContent = '.shared-test-hidden { display: none; }';
+    document.head.append(style);
+    try {
+      const view = render(
+        <Pair hiddenProps={{ className: 'shared-test-hidden' }} />
+      );
+      await waitFor(() => expect(input()).toHaveValue('Bonn'));
+      view.rerender(
+        <Pair secondActive hiddenProps={{ className: 'shared-test-hidden' }} />
+      );
+      await waitFor(() => expect(input()).toHaveValue('training'));
+      expect(searchTarget.querySelectorAll('form')).toHaveLength(1);
+    } finally {
+      style.remove();
+    }
   });
 });

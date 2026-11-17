@@ -45,10 +45,12 @@ Decide what the page is for before choosing blocks. Most UNDRR landing pages are
 | The page… | Shape | Start from |
 | --- | --- | --- |
 | Introduces a subject and points several ways into it | Topic or initiative | A split hero, an on-this-page bar, then routes and recent material |
-| Is one long document that people cite sections of | Report or publication | A coloured header with a contents sidebar, or a hero with an on-this-page bar; see [Publication landing page](#publication-landing-page) |
+| Curates report findings, web reading sections and document actions | Report landing page | A coloured header with a contents sidebar, or a hero with an on-this-page bar; see [Publication landing page](#publication-landing-page) |
 | Exists to reach many items | Collection index | A plain H1, a contents block and rows of book cards; see [Card grid rows](#card-grid-rows) |
 | Presents several charts about one place or theme | Data page | See [Data chart page](#data-chart-page) |
 | Is returned to repeatedly, with movement between sections | Content hub | See [Content hub](https://mangrove.undrr.org/?path=/docs/patterns-content-hub--docs) |
+
+An ordinary **publication record / catalogue entry** is a different full-page purpose within the Publication archetype: identify one work, read its description, inspect bibliographic details and find available files or citation information. It is not a landing-page shape and does not require a hero, statistics or a section tour. See the [provisional publication record specification](PUBLICATION-RECORD-SPEC.md). An experimental story-only [record prototype](https://mangrove.undrr.org/?path=/docs/patterns-publication-record--docs) demonstrates that hierarchy. Production integration remains unimplemented; this guide does not replace the existing Drupal publication template with a working record block or package renderer.
 
 The inserter's **UNDRR pages** pattern category has starting points for a reading page, an initiative overview, a publication collection and a frequently asked questions section.
 
@@ -272,7 +274,7 @@ Book card markup is in [Drupal Gutenberg integration: Card](DRUPAL-GUTENBERG.md#
 
 ### Publication landing page
 
-For annual reports and other PDF-led publications, the web page is a guided tour that sends readers to the full document, not a copy of it:
+This is a curated report landing page, not the default treatment of every publication record. For flagship annual reports and other publications that warrant an editorial tour, it can guide readers to the full document:
 
 1. A hero with the cover image or a video.
 2. An on-this-page bar with a download call to action.
@@ -362,10 +364,12 @@ Icon card markup is in [Drupal Gutenberg integration: Card](DRUPAL-GUTENBERG.md#
 | Publications and documents with a cover | Book card (`book`), or horizontal book card (`hc_book`) in a list |
 | Partner logos and short route links | Icon card (`icon`) |
 
-- Always give vertical and horizontal cards an image. Without one they lose their border, background and padding and render as bare text.
-- Keep summaries to two or three sentences. Long summaries make rows ragged, because each card grows to its own content.
+- Use meaningful photographs for vertical and horizontal cards when available. Text-only cards retain their surface and inset; omit the visual instead of adding an empty image frame.
+- Keep summaries to two or three sentences. Grouped cards can share row heights, but concise copy still improves scanning.
 - Cover images are decorative when the title is beside them: set `mediaAlt` to an empty string. Photographs in content cards need descriptive alt text.
-- Publication cover scans (the generated document thumbnails in the media library) look wrong in a vertical card; use a photograph.
+- Use book cards for publication cover scans: they keep the complete cover with one square border and an unboxed caption. Photo cards crop to their frame.
+- Use small icons for short route links. Reserve proportional icon/image scales for illustrations and partner logos.
+- Without labels, a photo card title starts at one content inset. Avoid adding a second top padding or empty metadata row.
 
 ### Figures and statistics
 

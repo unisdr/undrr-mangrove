@@ -1,3 +1,5 @@
+import { getLanguageProps } from '../../../src/i18n';
+import { getOnThisPageNavLabels } from './_labels';
 import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -5,9 +7,8 @@ import {
   mgOnThisPageNavDestroy,
 } from '../../assets/js/on-this-page-nav';
 
-export const DEFAULT_ON_THIS_PAGE_LABELS = {
-  label: 'On this page',
-};
+export { getOnThisPageNavLabels } from './_labels';
+export { DEFAULT_ON_THIS_PAGE_LABELS } from './_labels';
 
 /**
  * Storybook wrapper for the OnThisPageNav vanilla JS component.
@@ -21,16 +22,20 @@ export const DEFAULT_ON_THIS_PAGE_LABELS = {
  * @param {Array<{href: string, text: string}>} [props.items] Explicit nav items (skips auto-detect)
  * @param {string} [props.ctaHref]          CTA link URL
  * @param {string} [props.ctaText]          CTA link text
+ * @param {string} [props.analyticsRegion]  Click-tracking region; defaults to "on-this-page"
  */
 export default function OnThisPageNav({
   depth = '2',
   contentSelector = null,
-  labels = {},
+  lang,
+  dir,
+  labels,
   items = null,
   ctaHref = null,
   ctaText = null,
+  analyticsRegion,
 }) {
-  const { label } = { ...DEFAULT_ON_THIS_PAGE_LABELS, ...labels };
+  const { label } = getOnThisPageNavLabels(lang, labels);
   const navRef = useRef(null);
 
   useEffect(() => {
@@ -42,10 +47,11 @@ export default function OnThisPageNav({
     return () => {
       if (nav) mgOnThisPageNavDestroy(nav);
     };
-  }, [depth, contentSelector, label, items, ctaHref, ctaText]);
+  }, [depth, contentSelector, label, items, ctaHref, ctaText, analyticsRegion]);
 
   return (
     <nav
+      {...getLanguageProps(lang, dir)}
       ref={navRef}
       data-mg-on-this-page-nav
       data-mg-on-this-page-nav-depth={depth}
@@ -53,6 +59,8 @@ export default function OnThisPageNav({
         'data-mg-on-this-page-nav-content': contentSelector,
       })}
       data-mg-on-this-page-nav-label={label}
+      aria-label={label}
+      data-vf-google-analytics-region={analyticsRegion}
       className="mg-on-this-page-nav"
     >
       {items && (
@@ -80,7 +88,11 @@ OnThisPageNav.propTypes = {
   depth: PropTypes.string,
   /** CSS selector to scope heading scan (defaults to document.body) */
   contentSelector: PropTypes.string,
-  /** UI label overrides */
+  /** UI language tag; selects the built-in catalogue, with English fallback. */
+  lang: PropTypes.string,
+  /** Explicit text direction; otherwise known catalogue languages select their direction. */
+  dir: PropTypes.oneOf(['ltr', 'rtl', 'auto']),
+  /** Explicit UI label overrides; omitted keys use the selected catalogue, then English. */
   labels: PropTypes.shape({
     label: PropTypes.string,
   }),
@@ -95,4 +107,6 @@ OnThisPageNav.propTypes = {
   ctaHref: PropTypes.string,
   /** CTA button text */
   ctaText: PropTypes.string,
+  /** `data-vf-google-analytics-region`; the script sets "on-this-page" when omitted. */
+  analyticsRegion: PropTypes.string,
 };

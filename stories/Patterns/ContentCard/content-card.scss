@@ -1,0 +1,79 @@
+/**
+ * Content card projections with vertical and book layouts; shared card interaction and metadata.
+ * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Patterns/ContentCard/ContentCard.mdx
+ */
+@use "../../assets/scss/mixins" as *;
+
+.mg-card.mg-content-card {
+  inline-size: 100%;
+  min-inline-size: 0;
+  max-inline-size: none;
+}
+
+.mg-card.mg-content-card--vertical {
+  .mg-card__title {
+    font-size: var(--mg-content-card-title-font-size);
+  }
+}
+
+.mg-card.mg-content-card--book {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+
+  .mg-card__title {
+    font-size: var(--mg-content-card-book-title-font-size);
+  }
+
+  > .mg-card__content {
+    padding: var(--mg-spacing-100) 0 0;
+  }
+  > .mg-card__content:only-child {
+    padding-block-start: 0;
+  }
+  > .mg-card__visual {
+    border-radius: 0;
+    outline: none;
+  }
+
+  &:not(.mg-card__book) {
+    background: var(--mg-content-card-book-background);
+    padding: var(--mg-content-card-book-padding);
+    border-radius: var(--mg-content-card-book-border-radius);
+    box-shadow: var(--mg-content-card-book-shadow);
+
+    &:hover {
+      box-shadow: var(--mg-content-card-book-shadow-hover);
+    }
+  }
+}
+
+.mg-content-card.mg-content-pattern--logo .mg-card__image {
+  object-fit: contain;
+  transform: none;
+  opacity: 1;
+}
+
+.mg-content-card.mg-content-pattern--logo > .mg-card__visual {
+  // Brand marks need clear space; photographs intentionally meet the edge.
+  padding: var(--mg-card-padding);
+  outline: none;
+}
+
+.mg-content-card-grid {
+  @include mg-list-unmarked;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+  gap: var(--mg-spacing-200);
+  margin: 0;
+  padding: 0;
+  align-items: start;
+
+  > li {
+    min-inline-size: 0;
+  }
+  .mg-content-card {
+    margin-block-end: 0;
+  }
+}

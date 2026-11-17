@@ -6,6 +6,8 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Atom/Typography/Links/Links.mdx
  */
+@use "../../../assets/scss/mixins" as *;
+
 // * menu item row start *//
 .menu li {
   a {

@@ -6,7 +6,6 @@ import TableOfContents from '../../Components/TableOfContents/TableOfContents';
 import ShareButtons from '../../Components/Buttons/ShareButtons/ShareButtons';
 import { LABELS_AR as SHARE_LABELS_AR } from '../../Components/Buttons/ShareButtons/_labels';
 import UserFeedback from '../../Components/UserFeedback/UserFeedback';
-import { LABELS_AR as FEEDBACK_LABELS_AR } from '../../Components/UserFeedback/_labels';
 import { Imagecaption } from '../../Molecules/ImageCaption/ImageCaption';
 import { HighlightBox } from '../../Components/HighlightBox/HighlightBox';
 import QuoteHighlight from '../../Components/QuoteHighlight/QuoteHighlight';
@@ -293,8 +292,8 @@ const words = {
             لتوليد جمل تشبه الجمل الحقيقية من حيث طول الفقرة وعدد الكلمات.
           </>,
           <>
-            فيبدو التصميم مألوفاً وواضحاً للعميل بشكل أفضل من الاعتماد على نصوص
-            لا تشبه في شكلها النص الطبيعي.{' '}
+            فيبدو التصميم مألوفاً وواضحاً للعميل بشكل أفضل من الاعتماد على نصوص لا
+            تشبه في شكلها النص الطبيعي.{' '}
             <a href="https://www.undrr.org/publication/thematic-report-local-indigenous-and-traditional-knowledge-disaster-risk-reduction">
               يمكن أن تجد العديد من الأدوات الحرة
             </a>{' '}
@@ -580,7 +579,7 @@ export function ArticleStory({
           </section>
         </main>
       </div>
-      <UserFeedback labels={arabic ? FEEDBACK_LABELS_AR : undefined} />
+      <UserFeedback lang={arabic ? 'ar' : 'en'} />
     </div>
   );
 }

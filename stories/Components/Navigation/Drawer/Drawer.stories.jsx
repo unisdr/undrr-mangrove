@@ -1,24 +1,7 @@
+import { withLanguage } from '../../../../.storybook/withLanguage';
 import React, { useEffect, useRef, useState } from 'react';
 import { Drawer } from './Drawer';
 import { Checkbox } from '../../Forms/Checkbox/Checkbox';
-import {
-  DEFAULT_DRAWER_LABELS,
-  LABELS_ES,
-  LABELS_FR,
-  LABELS_JA,
-  LABELS_ZH,
-  LABELS_AR,
-  LABELS_RU,
-} from './_labels';
-
-const LOCALE_LABELS = {
-  spanish: LABELS_ES,
-  french: LABELS_FR,
-  japanese: LABELS_JA,
-  chinese: LABELS_ZH,
-  arabic: LABELS_AR,
-  russian: LABELS_RU,
-};
 
 const HAZARDS = [
   'Drought',
@@ -139,17 +122,7 @@ const DrawerDemo = ({ args, triggerLabel, footer, children }) => {
 export default {
   title: 'Components/Navigation/Drawer',
   component: Drawer,
-  decorators: [
-    (Story, context) => (
-      <Story
-        args={{
-          ...context.args,
-          labels:
-            LOCALE_LABELS[context.globals?.locale] || DEFAULT_DRAWER_LABELS,
-        }}
-      />
-    ),
-  ],
+  decorators: [withLanguage],
   argTypes: {
     position: { control: 'inline-radio', options: ['start', 'end', 'bottom'] },
   },

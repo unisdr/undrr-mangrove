@@ -1,3 +1,4 @@
+import { languageFromElement, labelsFromElement } from '../../../../src/i18n';
 /**
  * Layer 2: Extract CopyButton props from a DOM container.
  *
@@ -17,46 +18,41 @@
 export default function copyButtonFromElement(container) {
   const { dataset } = container;
 
-  let parsedLabels = {};
-  if (dataset.labels) {
-    try {
-      parsedLabels = JSON.parse(dataset.labels);
-    } catch {
-      parsedLabels = {};
-    }
-  }
+  const parsedLabels = labelsFromElement(container) ?? {};
 
   // `aria-label` first: it is what the docs teach and what the vanilla path
   // reads, so markup that names the button the standard way keeps its name
   // when it is hydrated instead (WCAG 4.1.2). The `data-*` spellings stay
   // supported for markup written against the older reference table.
   const ariaLabel =
-    container.getAttribute('aria-label') ||
-    dataset.ariaLabel ||
-    dataset.label ||
-    dataset.copyLabel ||
-    parsedLabels.ariaLabel ||
+    container.getAttribute('aria-label') ??
+    dataset.ariaLabel ??
+    dataset.label ??
+    dataset.copyLabel ??
+    parsedLabels.ariaLabel ??
     undefined;
   const copiedLabel =
-    dataset.copiedLabel ||
-    dataset.ariaLiveText ||
-    parsedLabels.copiedLabel ||
+    dataset.copiedLabel ??
+    dataset.ariaLiveText ??
+    parsedLabels.copiedLabel ??
     undefined;
   const tooltipLabel =
-    dataset.tooltipLabel ||
-    dataset.feedbackText ||
-    parsedLabels.tooltipLabel ||
+    dataset.tooltipLabel ??
+    dataset.feedbackText ??
+    parsedLabels.tooltipLabel ??
     undefined;
 
   return {
+    ...languageFromElement(container),
     textToCopy: dataset.textToCopy || dataset.text || dataset.copyText || '',
     ariaLabel,
     copiedLabel,
     tooltipLabel,
     labels: (() => {
       const merged = { ...parsedLabels };
-      if (dataset.failedLabel) merged.failedLabel = dataset.failedLabel;
-      if (dataset.failedTooltipLabel) {
+      if (dataset.failedLabel !== undefined)
+        merged.failedLabel = dataset.failedLabel;
+      if (dataset.failedTooltipLabel !== undefined) {
         merged.failedTooltipLabel = dataset.failedTooltipLabel;
       }
       return Object.keys(merged).length > 0 ? merged : undefined;

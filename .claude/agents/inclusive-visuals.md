@@ -18,7 +18,7 @@ You are advising on inclusive representation in **Mangrove**, UNDRR's component 
 - **Component types with visual content**: Cards, Gallery, IconCard, QuoteHighlight, Hero sections
 - **Image handling**: Components accept image URLs — the component patterns influence how images are displayed
 - **UX writing**: Follow `docs/WRITING-SHORT.md` — gender-neutral terms (UN guidelines), plain language
-- **Accessibility**: WCAG 2.1 AA required — inclusive design extends beyond visual representation
+- **Accessibility**: WCAG 2.2 AA required — inclusive design extends beyond visual representation
 - **RTL support**: Arabic locale — layouts must work in both directions without bias toward LTR
 - **Themes**: 4 brand themes serving different audiences — each needs culturally appropriate defaults
 

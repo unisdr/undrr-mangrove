@@ -1,3 +1,5 @@
+@use "breakpoints" as *;
+
 // background image gradient
 @mixin background-image($deg, $colorname, $opacity) {
   background: linear-gradient($deg, $colorname, $opacity);

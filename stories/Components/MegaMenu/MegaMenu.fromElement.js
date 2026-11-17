@@ -1,3 +1,4 @@
+import { languageFromElement, labelsFromElement } from '../../../src/i18n';
 /**
  * Extract MegaMenu props from a DOM container.
  *
@@ -17,10 +18,27 @@
  */
 export default function megaMenuFromElement(container) {
   const { dataset } = container;
+  const labels = labelsFromElement(container);
   const props = {
+    ...languageFromElement(container),
+    ...(labels ? { labels } : {}),
     delay: dataset.delay ? parseInt(dataset.delay, 10) : 300,
     hoverDelay: dataset.hoverDelay ? parseInt(dataset.hoverDelay, 10) : 180,
   };
+
+  if (dataset.enableFilter !== undefined) {
+    props.enableFilter = dataset.enableFilter !== 'false';
+  }
+  if (dataset.enableSiteSearch !== undefined) {
+    props.enableSiteSearch = dataset.enableSiteSearch !== 'false';
+  }
+  if (dataset.searchUrl) props.searchUrl = dataset.searchUrl;
+
+  // A region on the host wins over the component default, so the nav reports
+  // under the host's name rather than shadowing it with `mega-menu`.
+  if (dataset.vfGoogleAnalyticsRegion) {
+    props.analyticsRegion = dataset.vfGoogleAnalyticsRegion;
+  }
 
   // Logo props (optional — Drupal wrapper also resolves logos via SITE_LOGOS body class lookup)
   if (dataset.logoSrc) props.logoSrc = dataset.logoSrc;

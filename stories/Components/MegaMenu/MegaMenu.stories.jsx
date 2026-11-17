@@ -1,36 +1,14 @@
+import { withLanguage } from '../../../.storybook/withLanguage';
 import { useEffect, useRef } from 'react';
-import { expect, userEvent, within } from 'storybook/test';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 import createHydrator from '../../../src/hydrate';
 import fromElement from './MegaMenu.fromElement';
 import MegaMenu from './MegaMenu';
-import {
-  LABELS_ES,
-  LABELS_FR,
-  LABELS_JA,
-  LABELS_ZH,
-  LABELS_AR,
-  LABELS_RU,
-} from './_labels';
-
-const LOCALE_LABELS = {
-  spanish: LABELS_ES,
-  french: LABELS_FR,
-  japanese: LABELS_JA,
-  chinese: LABELS_ZH,
-  arabic: LABELS_AR,
-  russian: LABELS_RU,
-};
-
-const withLocaleLabels = (Story, context) => {
-  const labels = LOCALE_LABELS[context.globals?.locale];
-  if (!labels) return <Story />;
-  return <Story {...context} args={{ ...context.args, labels }} />;
-};
 
 export default {
   title: 'Components/Navigation/MegaMenu',
   component: MegaMenu,
-  decorators: [withLocaleLabels],
+  decorators: [withLanguage],
   parameters: {
     layout: 'fullscreen',
   },
@@ -552,6 +530,29 @@ export const WithLogo = {
   },
 };
 
+export const WithQuickFilter = {
+  render: ({ brand, ...args }) => (
+    <MegaMenu {...args} {...(brand ? brandLogos[brand] : {})} />
+  ),
+  args: {
+    delay: 5000,
+    sections: sections,
+    enableFilter: true,
+    enableSiteSearch: true,
+    searchUrl: '/search',
+    brand: 'PreventionWeb',
+  },
+  argTypes: brandArgType,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Open Knowledge Hub or About Us, then choose Find in menu in the fixed left-column footer. The dialog searches all menu destinations, including other sections. Try news from Knowledge Hub. Close or Escape returns to the same panel and footer button. The displayed ⌘K / Ctrl K shortcut works only with focus in the expanded menu, outside text fields. The Search tab stays unchanged; mobile retains its drawer finder.',
+      },
+    },
+  },
+};
+
 // Sections with icons on top-level items
 const sectionsWithIcons = sections.map((section, i) => ({
   ...section,
@@ -641,7 +642,7 @@ export const ProgressiveMobile = {
     docs: {
       description: {
         story:
-          'At widths below 900px, tap anywhere on the navigation strip. Open a section, continue into a nested group, then use the labelled back control or Close. Existing section data is used unchanged.',
+          'At widths below 900px, scroll the navigation strip and tap a label to open its section, or use the hamburger for all sections. Open a section, continue into a nested group, then use the labelled back control or Close. Existing section data is used unchanged.',
       },
     },
   },
@@ -741,9 +742,13 @@ export const MobileMotionReview = {
       within(dialog).getByRole('button', { name: 'Guidance' })
     );
     await expect(within(dialog).getAllByRole('link')).toHaveLength(31);
-    await expect(
-      within(dialog).getByRole('link', { name: 'Guidance 30' })
-    ).toBeVisible();
+    // The new page begins its entry animation at opacity zero. Wait for
+    // visible content rather than racing its first animation frame in CI.
+    await waitFor(() =>
+      expect(
+        within(dialog).getByRole('link', { name: 'Guidance 30' })
+      ).toBeVisible()
+    );
   },
 };
 

@@ -1,8 +1,15 @@
 # Mangrove documentation index
 
-This directory holds the source files for documentation published in Storybook.
+Find integration instructions, contributor guides and technical references here.
+Many guides also appear in [Storybook](https://mangrove.undrr.org/); agent
+instructions and some maintenance records are available only in the repository.
 
 ## Start here
+
+To use Mangrove in a site, start with the [README quick start](../README.md#quick-start)
+and [choose an integration path](../README.md#choose-an-integration-path).
+
+To contribute to the library:
 
 1. [Development setup](DEVELOPMENT.md)
 2. [Component guide](COMPONENT-GUIDE.md)
@@ -29,10 +36,10 @@ This directory holds the source files for documentation published in Storybook.
 - [ANALYTICS.md](ANALYTICS.md)
 - [CRITICAL-MESSAGING.md](CRITICAL-MESSAGING.md)
 - [BROWSER-SUPPORT.md](BROWSER-SUPPORT.md)
-- [AI-MCP-INTEGRATION.md](AI-MCP-INTEGRATION.md)
+- [AI and MCP integration](AI-MCP-INTEGRATION.md): component discovery and metadata for consuming agents
 - [FIGMA-INTEGRATION.md](FIGMA-INTEGRATION.md)
-- [AI-CODING-AGENTS.md](AI-CODING-AGENTS.md)
-- [AGENTS.md](AGENTS.md)
+- [AI coding agent guidelines](AI-CODING-AGENTS.md): rules for agents contributing to Mangrove
+- [Agent prompts](AGENTS.md): specialist audit and review prompts
 - [DESIGN-SYSTEM-RESEARCH.md](DESIGN-SYSTEM-RESEARCH.md)
 
 ## Historical release notes

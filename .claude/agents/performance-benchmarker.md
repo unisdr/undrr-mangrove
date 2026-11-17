@@ -20,12 +20,12 @@ You are benchmarking performance in **Mangrove**, UNDRR's React component librar
 - **Global audience**: Users on slow connections in developing countries — performance is equity
 - **Build commands**: `yarn build` (production), `yarn scss` (SCSS only)
 - **Test commands**: `yarn test` (Jest), `yarn lint` (ESLint + Stylelint)
-- **4 themes**: Each compiles a separate CSS bundle — total CSS size matters
-- **SCSS variables**: Design tokens in `_variables.scss` — theme overrides via `!default` flags
+- **5 themes**: Each compiles a separate CSS bundle — total CSS size matters
+- **SCSS variables**: Design tokens in `tokens/*.yaml`, generated as runtime `--mg-*` custom properties
 
 ### Performance-critical areas
 1. **Bundle sizes**: Each component JS file loads individually — keep each small
-2. **CSS size**: 4 theme stylesheets compiled from shared SCSS — avoid bloat
+2. **CSS size**: 5 theme stylesheets compiled from shared SCSS — avoid bloat
 3. **Initial render**: Components hydrate on Drupal pages — time to interactive matters
 4. **Re-renders**: React components on data-heavy pages (charts, maps, search widgets)
 5. **Image/asset loading**: Components like Gallery, Cards, IconCard load images
@@ -49,7 +49,7 @@ You are benchmarking performance in **Mangrove**, UNDRR's React component librar
 ### Measure component performance
 - Benchmark individual component bundle sizes and track trends
 - Profile component rendering and hydration time
-- Measure CSS compilation output across all 4 themes
+- Measure CSS compilation output across all 5 themes
 - Identify heavy dependencies and their impact on bundle size
 - **Default requirement**: All measurements include statistical confidence intervals
 
@@ -57,7 +57,7 @@ You are benchmarking performance in **Mangrove**, UNDRR's React component librar
 - Optimize for Core Web Vitals: LCP < 2.5s, INP < 200ms, CLS < 0.1
 - Consider users on slow networks (3G) in developing countries
 - Minimize JavaScript payload per page — components load individually
-- Optimize CSS delivery — 4 themes mean 4x the CSS rules
+- Optimize CSS delivery — 5 themes mean 5x the CSS rules
 - Ensure lazy-loaded components don't cause layout shifts
 
 ### Monitor and prevent regressions
@@ -142,7 +142,7 @@ time yarn build
 
 ### Step 1: Baseline measurement
 - Measure current bundle sizes for all components
-- Profile CSS output across all 4 themes
+- Profile CSS output across all 5 themes
 - Record Core Web Vitals from consumer sites
 - Document dependency tree and sizes
 

@@ -1,3 +1,5 @@
+import { DEFAULT_LABELS, getSyndicationSearchWidgetLabels } from '../_labels';
+export { DEFAULT_LABELS } from '../_labels';
 /**
  * @file SearchContext.jsx
  * @description React Context and reducer for SearchWidget state management.
@@ -8,130 +10,23 @@
  * @module SearchWidget/context/SearchContext
  */
 
-import React, { createContext, use, useReducer, useMemo } from 'react';
-
-/**
- * Default English UI labels for the search widget.
- * Pass a partial object via the `labels` prop to SyndicationSearchWidget to
- * override any subset of keys. Unspecified keys fall back to these defaults.
- *
- * String keys may contain `{token}` placeholders; pass `vars` to
- * `interpolateLabel(key, vars)` to substitute values at render time.
- *
- * Function keys receive a `vars` object and return a string. Use this form for
- * languages with plural rules requiring more than two forms (Russian, Arabic).
- * NOTE: function-valued keys cannot be serialized to JSON and are therefore
- * not usable via the `data-labels` HTML attribute — they must be provided as
- * a React prop or bundled JS module.
- *
- * @type {Object<string, string|function(Object): string>}
- */
-export const DEFAULT_LABELS = {
-  // SearchForm
-  searchFormLabel: 'Search content',
-  searchLabel: 'Search',
-  searchPlaceholder: 'Search...',
-  searchHint: 'Enter search terms',
-  searchHintMin: 'Enter at least {min} characters to search',
-  clearSearch: 'Clear search',
-  submitSearch: 'Submit search',
-  submitSearchText: 'Search',
-
-  // SearchResults — status messages
-  initializing: 'Loading search…',
-  searchError: 'Search could not be completed.',
-  searchErrorRetry: 'Please try again or use different search terms.',
-  enterSearchTerm: 'Enter a search term to begin searching.',
-  minimumCharacters: 'Minimum {min} characters required.',
-  noResults: 'No results found for “{query}”.',
-  noResultsHint: 'Try different search terms or adjust your filters.',
-
-  // SearchResults — visible count
-  showingResults: 'Showing {start}–{end} of {total} results',
-  // Used when Elasticsearch caps the total (relation === 'gte'); {total} is the cap value
-  showingResultsApprox: 'Showing {start}–{end} of more than {total} results',
-  forQuery: 'for “{query}”',
-
-  // SearchResults — screen-reader live region announcements
-  // srSearching fires while a search is in progress (between submit and results)
-  srSearching: 'Searching…',
-  srNoResults: 'No results found',
-  srNoResultsForQuery: 'No results found for {query}',
-  // count === 1 uses srResultsFound; count !== 1 uses srResultsFoundPlural
-  srResultsFound: '{count} result found',
-  srResultsFoundPlural: '{count} results found',
-  // count === 1 uses srResultsFoundForQuery; count !== 1 uses srResultsFoundPluralForQuery
-  srResultsFoundForQuery: '{count} result found for {query}',
-  srResultsFoundPluralForQuery: '{count} results found for {query}',
-  // Used when Elasticsearch caps the total (relation === 'gte')
-  srResultsFoundApprox: 'More than {count} results found',
-  srResultsFoundApproxForQuery: 'More than {count} results found for {query}',
-
-  // SearchResults — mobile filter button
-  filtersButton: 'Filters',
-  // filtersButtonActive always receives {count}; no separate singular key (count is inline)
-  filtersButtonActive: 'Filters, {count} active',
-  searchResultsLabel: 'Search results',
-  searchResultsPaginationLabel: 'Search results pagination',
-
-  // ActiveFilters
-  filteredBy: 'Filtered by:',
-  activeFiltersRegion: 'Active filters',
-  andConnector: 'and',
-  removeFilter: 'Remove filter: {field} is {value}',
-  clearAllFilters: 'Clear all filters',
-  clearAllFiltersLabel: 'Clear all {count} active filters',
-  // count === 1 uses activeFiltersCount; count !== 1 uses activeFiltersCountPlural
-  activeFiltersCount: '{count} active filter',
-  activeFiltersCountPlural: '{count} active filters',
-
-  // MobileFilterDrawer
-  drawerTitle: 'Filters',
-  closeFilters: 'Close filters',
-  viewResults: 'View results',
-  // count === 1 uses filtersApplied; count !== 1 uses filtersAppliedPlural
-  filtersApplied: '{count} filter applied',
-  filtersAppliedPlural: '{count} filters applied',
-
-  // FacetSelect — boolean operator (any/all) for multi-select filters
-  selectPlaceholder: 'Select {label}',
-  matchModeLabel: 'Search type for {label}',
-  matchModeGroupLabel: 'Search type:',
-  matchModeAny: 'Match any of these',
-  matchModeAll: 'Match all of these',
-
-  // SelectDropdown internals (passed as props)
-  dropdownSearchPlaceholder: 'Search...',
-  dropdownNoOptions: 'No matches found',
-
-  // SortOptions
-  sortLegend: 'Sort',
-  sortPlaceholder: 'Sort by',
-  sortRelevance: 'Relevance',
-  sortNewest: 'Newest',
-  sortOldest: 'Oldest',
-  sortEventDateAsc: 'Event date (earliest first)',
-  sortEventDateDesc: 'Event date (latest first)',
-
-  // FacetsSidebar
-  loadingFilters: 'Loading filters…',
-
-  // Pager (prev/next/page labels passed to PagerList via SearchPager)
-  pagerPrevious: 'Previous',
-  pagerNext: 'Next',
-  pagerGoToPrevious: 'Go to previous page',
-  pagerGoToNext: 'Go to next page',
-  pagerPage: 'Page {page}',
-  pagerCurrentPage: 'Page {page}, current page',
-  // Used in the sr-only live region: 'Page {page} of {total}'
-  pagerPageOf: 'Page {page} of {total}',
-
-  // ResultItem — content unavailable (no domain assignment in CMS)
-  // This is an admin/configuration error state; end users see a friendly message.
-  // The {nid} token is available for debug builds but omit it in production labels.
-  domainAccessError: 'This content is currently unavailable.',
-  reportErrorLink: 'Report this issue',
-};
+import React, {
+  createContext,
+  use,
+  useReducer,
+  useMemo,
+  useState,
+  useRef,
+  useLayoutEffect,
+  useEffect,
+  useCallback,
+  useSyncExternalStore,
+} from 'react';
+import {
+  withSharedControls,
+  getSharedStore,
+  sharedKeys,
+} from './sharedControls';
 
 /**
  * Resolve a label value and substitute `{key}` tokens.
@@ -169,6 +64,11 @@ export function interpolateLabel(template, vars = {}) {
 }
 import { DEFAULT_CONFIG, EVENT_SORT_VALUES } from '../utils/constants';
 import { facetsFromDefaults } from '../utils/hashState';
+import {
+  isTabFacet,
+  tabSelections,
+  tabOptionValue,
+} from '../utils/customFacetTabs';
 
 /**
  * Normalise aggregations from Elasticsearch. The year facet comes from a
@@ -213,6 +113,9 @@ const initialState = {
   // hasn't been changed by the reader, so a new defaultQuery replaces it.
   appliedDefaultQuery: '',
 
+  // Preserve a grouped display's reader sort unless its configured order changes.
+  appliedDefaultSort: null,
+
   // Active facet filters: { [key]: [values] }
   facets: {},
 
@@ -221,6 +124,7 @@ const initialState = {
 
   // Custom facet selections: { [facetId]: [selectedOptionIndices] }
   customFacets: {},
+  tabFacetConfigs: [],
 
   // Sort order: one of SORT_VALUES in utils/constants.js
   sortBy: 'relevance',
@@ -276,6 +180,7 @@ export const ActionTypes = {
   SET_LOADING: 'SET_LOADING',
   SET_ERROR: 'SET_ERROR',
   INITIALIZE: 'INITIALIZE',
+  CONFIGURE_TAB_FACETS: 'CONFIGURE_TAB_FACETS',
   RESTORE_STATE: 'RESTORE_STATE',
   RESET: 'RESET',
 };
@@ -288,6 +193,8 @@ export const ActionTypes = {
  */
 function searchReducer(state, action) {
   switch (action.type) {
+    case 'SHARED_PAGE_RESET':
+      return state.page === 1 ? state : { ...state, page: 1 };
     case ActionTypes.SET_QUERY:
       // Same query: keep the page. The input re-syncing a query restored from
       // the URL must not reset a restored page to 1.
@@ -371,7 +278,7 @@ function searchReducer(state, action) {
         ...state,
         facets: facetsFromDefaults(action.payload?.defaultFilters),
         facetOperators: {},
-        customFacets: {},
+        customFacets: tabSelections(state.tabFacetConfigs, state.customFacets),
         page: 1,
       };
 
@@ -387,15 +294,64 @@ function searchReducer(state, action) {
       };
     }
 
+    case ActionTypes.CONFIGURE_TAB_FACETS: {
+      const { configs = [], initialSelections = null } = action.payload;
+      const previousConfigs = state.tabFacetConfigs;
+      const nextConfigs = (configs || []).filter(isTabFacet);
+      const previous = tabSelections(previousConfigs, state.customFacets);
+      const defaults = tabSelections(previousConfigs);
+      const retained = {};
+      for (const facet of previousConfigs) {
+        const index = previous[facet.id][0];
+        if (index === defaults[facet.id][0]) continue;
+        const option = facet.options[Number(index)];
+        const value = tabOptionValue(facet, Number(index));
+        const next = nextConfigs.find(candidate => candidate.id === facet.id);
+        const nextIndex = next?.options.findIndex((candidate, index) =>
+          value
+            ? tabOptionValue(next, index) === value
+            : candidate.query === option.query
+        );
+        if (nextIndex >= 0) retained[facet.id] = [String(nextIndex)];
+      }
+      const selected = tabSelections(
+        nextConfigs,
+        initialSelections ?? retained
+      );
+      const scope = (facets, selections) =>
+        facets.map(facet => [
+          facet.id,
+          facet.options[Number(selections[facet.id][0])].query,
+        ]);
+      const scopeChanged =
+        JSON.stringify(scope(previousConfigs, previous)) !==
+        JSON.stringify(scope(nextConfigs, selected));
+      return {
+        ...state,
+        tabFacetConfigs: nextConfigs,
+        configuredCustomFacets: configs,
+        customFacets: {
+          ...Object.fromEntries(
+            Object.entries(state.customFacets).filter(
+              ([id]) => !previousConfigs.some(facet => facet.id === id)
+            )
+          ),
+          ...selected,
+        },
+        page: state.isInitialized && scopeChanged ? 1 : state.page,
+      };
+    }
+
     case ActionTypes.SET_CUSTOM_FACET: {
       const { facetId, value } = action.payload;
       const valueArray = Array.isArray(value) ? value : [value];
+      const selected = { ...state.customFacets, [facetId]: valueArray };
 
       return {
         ...state,
         customFacets: {
-          ...state.customFacets,
-          [facetId]: valueArray,
+          ...selected,
+          ...tabSelections(state.tabFacetConfigs, selected),
         },
         page: 1,
       };
@@ -403,6 +359,8 @@ function searchReducer(state, action) {
 
     case ActionTypes.REMOVE_CUSTOM_FACET: {
       const { facetId } = action.payload;
+      if (state.tabFacetConfigs.some(facet => facet.id === facetId))
+        return state;
       const { [facetId]: removed, ...remainingCustomFacets } =
         state.customFacets;
 
@@ -464,6 +422,7 @@ function searchReducer(state, action) {
         defaultQuery = '',
         initialQuery = null,
         defaultSort = 'relevance',
+        preserveSort = false,
         // State read from the URL hash; takes precedence over the defaults.
         // initialFacets replaces defaultFilters entirely when present.
         initialFacets = null,
@@ -490,10 +449,17 @@ function searchReducer(state, action) {
         ...state,
         query,
         appliedDefaultQuery: nextDefaultQuery,
+        appliedDefaultSort: defaultSort,
         // A re-initialise that swaps the query starts again from page 1. The
         // first INITIALIZE keeps a page restored from the URL hash.
         page: state.isInitialized && query !== state.query ? 1 : state.page,
-        sortBy: initialSort || defaultSort,
+        sortBy:
+          preserveSort &&
+          state.isInitialized &&
+          state.appliedDefaultSort === defaultSort &&
+          !initialSort
+            ? state.sortBy
+            : initialSort || defaultSort,
         hasEventSorts:
           state.hasEventSorts ||
           EVENT_SORT_VALUES.includes(defaultSort) ||
@@ -516,6 +482,7 @@ function searchReducer(state, action) {
         sortBy = 'relevance',
         facets = {},
         facetOperators = {},
+        customFacets = null,
       } = action.payload;
       return {
         ...state,
@@ -526,6 +493,10 @@ function searchReducer(state, action) {
           state.hasEventSorts || EVENT_SORT_VALUES.includes(sortBy),
         facets,
         facetOperators,
+        customFacets: {
+          ...state.customFacets,
+          ...tabSelections(state.tabFacetConfigs, customFacets || {}),
+        },
         // Back/forward: search at once.
         queryIsTyped: false,
       };
@@ -534,6 +505,8 @@ function searchReducer(state, action) {
     case ActionTypes.RESET:
       return {
         ...initialState,
+        tabFacetConfigs: state.tabFacetConfigs,
+        customFacets: tabSelections(state.tabFacetConfigs),
         hasEventSorts: state.hasEventSorts,
         isInitialized: true,
       };
@@ -549,7 +522,7 @@ function searchReducer(state, action) {
 const SearchConfigContext = createContext(null);
 
 /**
- * Context for UI labels (static, merged with DEFAULT_LABELS).
+ * Context for resolved UI labels (English defaults, selected catalogue, overrides).
  */
 const SearchLabelsContext = createContext(DEFAULT_LABELS);
 
@@ -574,37 +547,135 @@ const SearchDispatchContext = createContext(null);
 export function SearchProvider({
   config: userConfig,
   labels: userLabels,
+  lang,
   children,
+  rootRef,
 }) {
-  // Merge user config with defaults
-  const config = useMemo(
-    () => ({
-      ...DEFAULT_CONFIG,
-      ...userConfig,
-    }),
+  // Merge user config with defaults.
+  const mergedConfig = useMemo(
+    () =>
+      withSharedControls({
+        ...DEFAULT_CONFIG,
+        ...userConfig,
+      }),
     [userConfig]
+  );
+  // Group configuration derives a new defaults array. Only changed values
+  // should reinitialize filters/sort; editing a local scope must not do so.
+  const groupedDefaultsKey = mergedConfig.sharedControls?.id
+    ? JSON.stringify(mergedConfig.defaultFilters)
+    : null;
+  const groupedDefaults = useMemo(
+    () => (groupedDefaultsKey === null ? null : JSON.parse(groupedDefaultsKey)),
+    [groupedDefaultsKey]
+  );
+  const config = useMemo(
+    () =>
+      groupedDefaults === null
+        ? mergedConfig
+        : { ...mergedConfig, defaultFilters: groupedDefaults },
+    [mergedConfig, groupedDefaults]
   );
 
   // Merge user labels with defaults
   const labels = useMemo(
-    () => ({
-      ...DEFAULT_LABELS,
-      ...userLabels,
-    }),
-    [userLabels]
+    () => getSyndicationSearchWidgetLabels(lang, userLabels),
+    [lang, userLabels]
   );
 
   // Initialize reducer with config-based initial state
   const [state, dispatch] = useReducer(searchReducer, initialState);
+  // Reconcile before children read config and state together. An effect would
+  // briefly pair new option positions with old selections, issuing a stale
+  // request and writing the wrong scope to browser history.
+  if (state.configuredCustomFacets !== config.customFacets) {
+    dispatch(actions.configureTabFacets(config.customFacets));
+  }
 
-  // Memoize the state value to prevent unnecessary re-renders
-  const stateValue = useMemo(() => state, [state]);
+  const [ownerDocument, setOwnerDocument] = useState(null);
+  useLayoutEffect(() => {
+    if (config.sharedControls?.id)
+      setOwnerDocument(
+        rootRef?.current?.ownerDocument || globalThis.document || null
+      );
+  }, [config.sharedControls?.id, rootRef]);
+  const store = useMemo(
+    () => getSharedStore(ownerDocument, config),
+    [ownerDocument, config]
+  );
+  const shared = useSyncExternalStore(
+    store.subscribe,
+    store.getSnapshot,
+    store.getSnapshot
+  );
+  const member = useRef(Symbol('search member'));
+  // Revision numbers belong to a store; another group may have the same number.
+  const seenSharedState = useRef({ store, revision: shared?.revision });
+  useLayoutEffect(() => {
+    store.configure?.(config);
+  }, [store, config]);
+  useLayoutEffect(() => {
+    if (
+      seenSharedState.current.store === store &&
+      seenSharedState.current.revision === shared?.revision
+    )
+      return;
+    seenSharedState.current = { store, revision: shared?.revision };
+    if (shared) dispatch({ type: 'SHARED_PAGE_RESET' });
+  }, [shared, store]);
+  useEffect(() => {
+    store.report?.(member.current, state.error ? null : state.aggregations);
+  }, [store, state.aggregations, state.error]);
+  useEffect(() => {
+    const id = member.current;
+    return () => store.remove?.(id);
+  }, [store]);
+
+  // Joining a group must not look like a new input dispatcher: replaying a
+  // late widget's empty input would overwrite the existing group's query.
+  const storeRef = useRef(store);
+  storeRef.current = store;
+  const dispatchAction = useCallback(action => {
+    const handled = storeRef.current.dispatch?.(action);
+    if (!handled || action.type === ActionTypes.CLEAR_FACETS) dispatch(action);
+  }, []);
+
+  const stateValue = useMemo(() => {
+    if (!shared) return state;
+    const keys = sharedKeys(config);
+    const privateValues = values =>
+      Object.fromEntries(
+        Object.entries(values).filter(([key]) => !keys.has(key))
+      );
+    const localTabs = Object.fromEntries(
+      Object.entries(state.customFacets).filter(([id]) =>
+        state.tabFacetConfigs.some(facet => facet.id === id)
+      )
+    );
+    return {
+      ...state,
+      query: shared.query,
+      queryIsTyped: shared.queryIsTyped,
+      facets: { ...privateValues(state.facets), ...shared.facets },
+      facetOperators: {
+        ...privateValues(state.facetOperators),
+        ...shared.facetOperators,
+      },
+      customFacets: { ...shared.customFacets, ...localTabs },
+      page:
+        seenSharedState.current.store === store &&
+        seenSharedState.current.revision === shared.revision
+          ? state.page
+          : 1,
+      sharedAggregations: shared.aggregations,
+    };
+  }, [state, shared, config, store]);
 
   return (
     <SearchConfigContext.Provider value={config}>
       <SearchLabelsContext.Provider value={labels}>
         <SearchStateContext.Provider value={stateValue}>
-          <SearchDispatchContext.Provider value={dispatch}>
+          <SearchDispatchContext.Provider value={dispatchAction}>
             {children}
           </SearchDispatchContext.Provider>
         </SearchStateContext.Provider>
@@ -637,7 +708,7 @@ export function useOptionalSearchConfig() {
 }
 
 /**
- * Hook to access UI labels (merged with DEFAULT_LABELS).
+ * Hook to access resolved UI labels.
  * @returns {Object} Labels object
  */
 export function useSearchLabels() {
@@ -682,6 +753,11 @@ export function useSearch() {
  * Action creators for common operations.
  */
 export const actions = {
+  configureTabFacets: (configs, initialSelections = null) => ({
+    type: ActionTypes.CONFIGURE_TAB_FACETS,
+    payload: { configs, initialSelections },
+  }),
+
   /**
    * @param {string} query
    * @param {Object} [options]

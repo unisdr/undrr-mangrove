@@ -6,6 +6,8 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Atom/BaseTypography/BaseTypography.mdx
  */
+@use "../../../assets/scss/config" as *;
+
 .mg-code,
 code {
   background: rgb(var(--mg-color-interactive) / 0.08);
@@ -74,7 +76,6 @@ pre:has(> code[class*="language-"]) {
     font-family: var(--mg-font-family-text);
     font-size: var(--mg-font-size-100);
     font-weight: 600;
-    text-transform: uppercase;
     letter-spacing: 0.1em;
     color: rgb(var(--mg-color-neutral-300));
     line-height: 1;

@@ -7,6 +7,8 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Utilities/Loader/Loader.mdx
  */
+@use "../../assets/scss/breakpoints" as *;
+
 // * loader start *//
 
 @keyframes mg-spin {

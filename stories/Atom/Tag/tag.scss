@@ -6,6 +6,9 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Atom/Tag/Tag.mdx
  */
+@use "../../assets/scss/mixins" as *;
+@use "../../assets/scss/config" as *;
+
 // Compact taxonomy labels. Keep legacy theme overrides and container markup.
 // :where() gives auto-styled children the same specificity as .mg-tag, so
 // explicit modifiers win regardless of which markup a Drupal view emits.
@@ -110,7 +113,6 @@
   font-family: var(--mg-font-family-code);
   font-size: var(--mg-font-size-200);
   letter-spacing: 0.04em;
-  text-transform: uppercase;
 }
 
 // Only destinations are interactive. No hover affordance on static metadata

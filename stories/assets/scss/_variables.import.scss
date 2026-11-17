@@ -1,0 +1,11 @@
+// Legacy globals configure forwarded modules on first load (Sass semantics).
+@use "sass:meta";
+@use "legacy-warnings";
+@forward "variables";
+
+// Evaluate in the legacy caller scope, after all module forwards.
+@each $_name in legacy-warnings.$legacy-names {
+  @if meta.variable-exists($_name) {
+    @include legacy-warnings.warn-override($_name);
+  }
+}

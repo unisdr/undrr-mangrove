@@ -7,5 +7,5 @@
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/TextCta/TextCta.mdx
  */
 // textcta.scss — DEPRECATED, use text-cta.scss
-@import "./text-cta";
+@forward "./text-cta";
 @warn "textcta.scss is deprecated. Import text-cta.scss instead.";

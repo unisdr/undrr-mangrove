@@ -1,0 +1,110 @@
+/**
+ * Experimental publication record composition, built on the ArticleStory shell and reading layout.
+ * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Patterns/Content/Publication/PublicationRecord.mdx
+ */
+@use "../../../assets/scss/mixins" as *;
+
+.mg-publication-record {
+  overflow-wrap: anywhere;
+
+  main a:not(.mg-tag) {
+    text-decoration-line: underline;
+  }
+}
+
+.mg-publication-record__layout {
+  max-inline-size: var(--mg-reading-with-contents-width);
+  padding-block-end: var(--mg-spacing-400);
+}
+
+.mg-publication-record__header {
+  margin-block-end: var(--mg-spacing-300);
+
+  h1 {
+    max-inline-size: 49rem;
+  }
+}
+
+.mg-publication-record__metadata {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--mg-spacing-200);
+
+  dt {
+    font-weight: 700;
+    margin-block-end: var(--mg-spacing-50);
+  }
+
+  dd {
+    overflow-wrap: anywhere;
+    margin-inline-start: 0;
+  }
+
+  ul {
+    @include mg-list-unmarked;
+
+    margin-block: 0;
+    padding-inline-start: 0;
+  }
+}
+
+.mg-publication-record__identity {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mg-spacing-200) var(--mg-spacing-300);
+
+  > div {
+    min-inline-size: 0;
+    max-inline-size: 100%;
+  }
+}
+
+.mg-publication-record__resources {
+  @include mg-list-unmarked;
+
+  padding-inline-start: 0;
+
+  li {
+    padding-block: var(--mg-spacing-150);
+    border-block-end: 1px solid rgb(var(--mg-color-neutral-200));
+  }
+
+  li:first-child {
+    padding-block-start: var(--mg-spacing-50);
+  }
+
+  p {
+    margin-block: var(--mg-spacing-50) 0;
+  }
+}
+
+.mg-publication-record__reading {
+  align-items: start;
+}
+
+.mg-publication-record__main,
+.mg-publication-record__aside {
+  min-inline-size: 0;
+
+  > * + * {
+    margin-block-start: var(--mg-spacing-300);
+  }
+
+  > :first-child,
+  > section > h2:first-child {
+    margin-block-start: 0;
+  }
+}
+
+.mg-publication-record__cover {
+  margin: 0;
+  max-inline-size: 14rem;
+
+  img {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+    padding: 0;
+    border: 1px solid rgb(var(--mg-color-neutral-600) / 0.2);
+  }
+}

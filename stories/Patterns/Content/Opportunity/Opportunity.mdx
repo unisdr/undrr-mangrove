@@ -1,0 +1,38 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import { ContentFamilyGuide } from '../_shared/ContentFamilyGuide';
+import { opportunityPatterns } from './patterns';
+import * as CardStories from '../../ContentCard/ContentCard.stories';
+import * as TeaserStories from '../../ContentTeaser/ContentTeaser.stories';
+
+<Meta title="Patterns/Content/Opportunity" />
+
+# Opportunity patterns
+
+> See the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) before modifying this archetype.
+
+<ContentFamilyGuide
+  family={opportunityPatterns}
+  cardExamples={
+    <>
+      <h3>Vertical</h3>
+      <Canvas of={CardStories.Job} />
+      <h3>Book</h3>
+      <Canvas of={CardStories.JobBook} />
+      <h3>Decision and publication dates</h3>
+      <p>
+        See the shared card examples for separately labelled decision and
+        publication dates, including both layouts and supplied availability
+        states.
+      </p>
+      <Canvas of={CardStories.JobWithPublished} />
+    </>
+  }
+>
+  <Canvas of={TeaserStories.Vacancy} />
+</ContentFamilyGuide>
+
+## Changelog
+
+- **0.1.0**, 2026-10-17 ([#1383](https://github.com/unisdr/undrr-mangrove/pull/1383)): Define the source-independent archetype, its editorial profiles and presentation coverage. Keep Drupal bindings in Mangrove's integration layer and group each presentation with its previews. Add experimental vertical/book card layouts from audited selections, with explicit proposals where no Drupal card display exists.
+
+  - Include decision dates, supplied status and optional labelled publication dates in card presentations as deliberate improvements on the Drupal selection.

@@ -1,3 +1,4 @@
+import { languageFromElement, labelsFromElement } from '../../../../src/i18n';
 /**
  * Layer 2: Extract Drawer props from a DOM container.
  *
@@ -23,6 +24,7 @@
  */
 export default function drawerFromElement(container) {
   const { dataset } = container;
+  const labels = labelsFromElement(container);
 
   const isFloatingPanel =
     dataset.isFloatingPanel === 'true' ||
@@ -43,6 +45,7 @@ export default function drawerFromElement(container) {
   }
 
   return {
+    ...languageFromElement(container),
     isOpen:
       dataset.isOpen === 'true' || container.classList.contains('is-open'),
     position: dataset.position || 'start',
@@ -51,7 +54,10 @@ export default function drawerFromElement(container) {
     isFloatingPanel,
     bodyHtml: bodyHtml || undefined,
     footerHtml: footerEl ? footerEl.innerHTML.trim() : undefined,
-    labels: dataset.closeLabel ? { closeLabel: dataset.closeLabel } : undefined,
+    labels:
+      dataset.closeLabel === undefined
+        ? labels
+        : { ...labels, closeLabel: dataset.closeLabel },
     controlsId: container.id || undefined,
     className: dataset.className || undefined,
   };

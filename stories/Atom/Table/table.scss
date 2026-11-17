@@ -6,6 +6,10 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Atom/Table/Table.mdx
  */
+@use "../../assets/scss/breakpoints" as *;
+@use "../../assets/scss/mixins" as *;
+@use "../../assets/scss/config" as *;
+
 /* table tag start */
 .mg-table {
   border-collapse: collapse;
@@ -166,7 +170,6 @@
     font-size: var(--mg-font-size-200);
     font-weight: 600;
     letter-spacing: 0.04em;
-    text-transform: uppercase;
     white-space: nowrap;
   }
 

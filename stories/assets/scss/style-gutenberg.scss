@@ -9,20 +9,23 @@
  * https://git.un.org/undrr/web-backlog/-/issues/545
  */
 
-@import "./variables";
-@import "./fonts";
-@import "./breakpoints";
-@import "./mixins";
-@import "./utility";
+@forward "font-paths";
+@forward "variables";
+@use "variables" as *;
+@forward "fonts";
+@use "fonts" as *;
+@forward "breakpoints";
+@forward "mixins";
+@use "utility" as *;
 
 // @import './base';
 
 // We only bring in a limited set of components needed for gutenberg
 // @import './components';
-@import "../../Atom/Layout/Container/container";
-@import "../../Atom/Layout/Grid/grid";
-@import "../../Components/Buttons/CtaButton/cta-button";
-@import "../../Components/Cards/Card/card";
-@import "../../Components/Hero/hero";
-@import "../../Components/Tab/tab";
-@import "../../Utilities/FullWidth/full-width";
+@use "../../Atom/Layout/Container/container" as *;
+@use "../../Atom/Layout/Grid/grid" as *;
+@use "../../Components/Buttons/CtaButton/cta-button" as *;
+@use "../../Components/Cards/Card/card" as *;
+@use "../../Components/Hero/hero" as *;
+@use "../../Components/Tab/tab" as *;
+@use "../../Utilities/FullWidth/full-width" as *;

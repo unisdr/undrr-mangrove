@@ -28,6 +28,7 @@ import PropTypes from 'prop-types';
  * @param {boolean} [props.error=false]    Whether the textarea is in an error state
  * @param {string} [props.errorText]       Error message displayed below the textarea
  * @param {string} [props.className]       Additional CSS class for the wrapper
+ * @param {string} [props.analyticsLabel]  Fixed `data-vf-analytics-label` for the textarea and its label, so click tracking does not report the visible text or a generated id
  */
 export function Textarea({
   id,
@@ -46,6 +47,7 @@ export function Textarea({
   error = false,
   errorText,
   className,
+  analyticsLabel,
   ...rest
 }) {
   const autoId = useId();
@@ -74,7 +76,11 @@ export function Textarea({
   return (
     <div className={['mg-form-field', className].filter(Boolean).join(' ')}>
       {label && (
-        <label className={labelClassName} htmlFor={textareaId}>
+        <label
+          className={labelClassName}
+          htmlFor={textareaId}
+          data-vf-analytics-label={analyticsLabel}
+        >
           {label}
         </label>
       )}
@@ -94,6 +100,7 @@ export function Textarea({
         aria-describedby={describedBy}
         aria-invalid={error || undefined}
         {...(!label ? { 'aria-label': placeholder } : {})}
+        data-vf-analytics-label={analyticsLabel}
         {...rest}
       />
 
@@ -129,6 +136,8 @@ Textarea.propTypes = {
   error: PropTypes.bool,
   errorText: PropTypes.string,
   className: PropTypes.string,
+  /** Fixed `data-vf-analytics-label` for the textarea and its label. */
+  analyticsLabel: PropTypes.string,
 };
 
 export default Textarea;

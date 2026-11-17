@@ -6,6 +6,8 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Atom/BaseTypography/BaseTypography.mdx
  */
+@use "../../../assets/scss/mixins" as *;
+
 small {
   @extend %paragraph-font-100;
 }

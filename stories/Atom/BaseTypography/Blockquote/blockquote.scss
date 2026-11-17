@@ -6,6 +6,8 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Atom/BaseTypography/BaseTypography.mdx
  */
+@use "../../../assets/scss/breakpoints" as *;
+
 .mg-body blockquote,
 .mg-content blockquote {
   font-size: var(--mg-font-size-600);

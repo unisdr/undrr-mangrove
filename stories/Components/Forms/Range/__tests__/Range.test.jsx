@@ -60,3 +60,43 @@ describe('Range', () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 });
+
+describe('Range analytics label', () => {
+  it('labels the input for click tracking', () => {
+    render(
+      <Range
+        id="r-analytics"
+        aria-label="Niveau"
+        defaultValue={1}
+        analyticsLabel="Scenario: Warming level"
+      />
+    );
+    expect(screen.getByRole('slider')).toHaveAttribute(
+      'data-vf-analytics-label',
+      'Scenario: Warming level'
+    );
+  });
+
+  it('lets a caller attribute win', () => {
+    render(
+      <Range
+        id="r-analytics-override"
+        aria-label="Level"
+        defaultValue={1}
+        analyticsLabel="Scenario: Warming level"
+        data-vf-analytics-label="Custom"
+      />
+    );
+    expect(screen.getByRole('slider')).toHaveAttribute(
+      'data-vf-analytics-label',
+      'Custom'
+    );
+  });
+
+  it('adds no attribute when unset', () => {
+    render(<Range id="r-plain" aria-label="Level" defaultValue={1} />);
+    expect(screen.getByRole('slider')).not.toHaveAttribute(
+      'data-vf-analytics-label'
+    );
+  });
+});

@@ -126,7 +126,7 @@ Multi-color only works with SVGs that have explicit fill/stroke color values in 
 - **Lucide icons** use `currentColor` in their source SVGs, so `mg-icon--multicolor` won't produce a visible difference — the icon remains a single-color silhouette.
 - **OCHA icons** don't respond to the `mg-icon--multicolor` modifier — they always render in their built-in navy color, regardless of the current theme. Avoid `mg-icon--multicolor` with OCHA icons; use the default (single-color) mode so they follow the theme color.
 
-> **Implementation note (for contributors):** OCHA icons contain hardcoded fill values from OCHA's brand palette (`#011E41` navy) in their source SVGs. Because `mg-icon--multicolor` switches from `mask-image` (which ignores fill colors) to `background-image` (which preserves them), OCHA icons always render in navy when the modifier is applied.
+> **Implementation note (for contributors):** OCHA icons contain hardcoded fill values from the OCHA brand palette (`#011E41` navy) in their source SVGs. Because `mg-icon--multicolor` switches from `mask-image` (which ignores fill colors) to `background-image` (which preserves them), OCHA icons always render in navy when the modifier is applied.
 
 - **Custom icons** (social logos, SDG wheel) have explicit brand colors and are the intended use case for `mg-icon--multicolor`.
 
@@ -202,6 +202,8 @@ Custom CSS using `font-family: FontAwesome` and private-use `content` codepoints
 ## Changelog
 
 - **3.0**, 2026-10-16 ([unisdr/undrr-mangrove#906](https://github.com/unisdr/undrr-mangrove/issues/906)): **Breaking:** Removed the legacy icon font, FontAwesome aliases and React `fa-*` name support. Use `mg-icon-*` classes or Mangrove icon names. Removed `$mgIconFontPath` and the published icon-font files. SVG masks now apply directly to `.mg-icon::before`.
+
+- **2.3.2**, 2026-10-29 ([#1432](https://github.com/unisdr/undrr-mangrove/issues/1432)): Gallery status labels preserve authored case instead of forcing uppercase. The known `new` status displays as "New" without changing its machine-readable enum; other supplied labels retain their case.
 
 - **2.3.1**, 2026-10-12 ([#1337](https://github.com/unisdr/undrr-mangrove/pull/1337)): `pen-nib` follows Lucide 1.55, which redraws its source icon (`pen-tool`) with a rounder nib and handle. Same overall shape; no icons were renamed or removed.
 - **2.3**, 2026-09-25 ([#1296](https://github.com/unisdr/undrr-mangrove/issues/1296)): Added `plus`, `minus`, `pause`, `play`, `circle-minus`, `expand`, `shrink` and `layers` Lucide icons for map and media controls.

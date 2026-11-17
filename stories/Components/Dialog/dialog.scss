@@ -1,0 +1,87 @@
+/**
+ * Dialog: native modal reading surface with an authored disclosure fallback.
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Dialog/Dialog.mdx
+ */
+@use "../../assets/scss/mixins" as *;
+
+.mg-dialog {
+  box-sizing: border-box;
+  position: fixed;
+  inline-size: min(40rem, calc(100% - var(--mg-spacing-400)));
+  max-block-size: calc(100% - var(--mg-spacing-400));
+  padding: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  background: rgb(var(--mg-color-white));
+  border: 1px solid rgb(var(--mg-color-neutral-500));
+  border-radius: var(--mg-radius-button);
+  color: rgb(var(--mg-color-text));
+  font-family: var(--mg-font-family-text);
+
+  &::backdrop {
+    background: var(--mg-color-modal-scrim);
+  }
+
+  &__header {
+    // Normal flow stays readable when a viewport or enlarged text leaves too
+    // little reading space. The enhancer enables sticky mode only when it fits.
+    z-index: 1;
+    inset-block-start: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: start;
+    justify-content: space-between;
+    gap: var(--mg-spacing-200);
+    padding: var(--mg-spacing-200);
+    background: rgb(var(--mg-color-white));
+    border-block-end: 1px solid rgb(var(--mg-color-neutral-300));
+  }
+
+  &--sticky-header &__header {
+    // Local stacking keeps Close visible without covering the reading region.
+    position: sticky;
+  }
+
+  &__title {
+    flex: 1 1 12rem;
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+    margin: 0;
+    font-family: var(--mg-font-family-ui);
+    font-size: var(--mg-font-size-400);
+
+    &:focus-visible {
+      // Header padding leaves room for an outward ring without covering text.
+      @include mg-focus-ring;
+    }
+  }
+
+  &__body {
+    padding: var(--mg-spacing-200);
+    overflow-wrap: anywhere;
+  }
+
+  &__close {
+    flex: 0 1 auto;
+    max-inline-size: 100%;
+    margin-inline-start: auto;
+    overflow-wrap: anywhere;
+    min-block-size: 44px;
+    min-inline-size: 44px;
+  }
+
+  @media (forced-colors: active) {
+    border-color: CanvasText;
+
+    &__header {
+      border-color: CanvasText;
+    }
+  }
+}
+
+// Button presentation can override the user-agent hidden rule. Preserve the
+// authored no-JavaScript state before the enhancement reveals these controls.
+[data-mg-dialog-trigger][hidden],
+[data-mg-dialog-close][hidden] {
+  display: none;
+}

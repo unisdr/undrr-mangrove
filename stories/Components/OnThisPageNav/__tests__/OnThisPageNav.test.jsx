@@ -5,6 +5,7 @@ import {
   mgOnThisPageNav,
   mgOnThisPageNavDestroy,
 } from '../../../assets/js/on-this-page-nav';
+import OnThisPageNav from '../OnThisPageNav';
 
 // Track observer callbacks so we can fire mock entries in tests
 let observerCallbacks = [];
@@ -1204,6 +1205,58 @@ describe('OnThisPageNav', () => {
       expect(callOrder).toEqual(['outer', 'inner']);
 
       window.scrollTo.mockRestore();
+    });
+  });
+
+  describe('analytics attributes', () => {
+    const REGION = 'data-vf-google-analytics-region';
+
+    it('labels the icon-only scroll buttons with fixed names', () => {
+      const nav = setupAutoDetect();
+      expect(
+        nav.querySelector('.mg-on-this-page-nav__scroll-btn--prev')
+      ).toHaveAttribute('data-vf-analytics-label', 'On this page: Previous');
+      expect(
+        nav.querySelector('.mg-on-this-page-nav__scroll-btn--next')
+      ).toHaveAttribute('data-vf-analytics-label', 'On this page: Next');
+    });
+
+    it('leaves section links named by their heading text', () => {
+      const nav = setupAutoDetect();
+      nav.querySelectorAll('.mg-on-this-page-nav__link').forEach(link => {
+        expect(link).not.toHaveAttribute('data-vf-analytics-label');
+      });
+    });
+
+    it('sets a default region and removes it on destroy', () => {
+      const nav = setupExplicit([{ id: 'a', text: 'A' }]);
+      expect(nav).toHaveAttribute(REGION, 'on-this-page');
+      mgOnThisPageNavDestroy(nav);
+      expect(nav).not.toHaveAttribute(REGION);
+    });
+
+    it('keeps a region set by the host, including after destroy', () => {
+      document.body.innerHTML = `
+        <nav data-mg-on-this-page-nav class="mg-on-this-page-nav" ${REGION}="report-nav">
+          <ul class="mg-on-this-page-nav__list">
+            <li class="mg-on-this-page-nav__item"><a href="#a" class="mg-on-this-page-nav__link">A</a></li>
+          </ul>
+        </nav>
+        <main><h2 id="a">A</h2></main>`;
+      const nav = document.querySelector('nav');
+      mgOnThisPageNav([nav]);
+      expect(nav).toHaveAttribute(REGION, 'report-nav');
+      mgOnThisPageNavDestroy(nav);
+      expect(nav).toHaveAttribute(REGION, 'report-nav');
+    });
+
+    it('passes the React analyticsRegion prop through to the nav', () => {
+      const items = [{ href: '#a', text: 'A' }];
+      const { container, rerender } = render(<OnThisPageNav items={items} />);
+      const nav = () => container.querySelector('nav');
+      expect(nav()).toHaveAttribute(REGION, 'on-this-page');
+      rerender(<OnThisPageNav items={items} analyticsRegion="report-nav" />);
+      expect(nav()).toHaveAttribute(REGION, 'report-nav');
     });
   });
 

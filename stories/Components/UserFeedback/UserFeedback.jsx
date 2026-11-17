@@ -1,17 +1,12 @@
+import { getLanguageProps } from '../../../src/i18n';
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
+import { getUserFeedbackLabels } from './UserFeedback.labels';
 
-export const DEFAULT_USER_FEEDBACK_LABELS = {
-  question: 'Is this page useful?',
-  yes: 'Yes',
-  no: 'No',
-  reportIssue: 'Report an issue on this page',
-  confirmationBeforeLink:
-    'Thank you for your feedback. If you would like, you can also',
-  confirmationSeparator: ' ',
-  confirmationLink: 'tell us more',
-  confirmationAfterLink: '.',
-};
+export {
+  DEFAULT_USER_FEEDBACK_LABELS,
+  getUserFeedbackLabels,
+} from './UserFeedback.labels';
 
 const joinClasses = (...classes) => classes.filter(Boolean).join(' ');
 
@@ -24,14 +19,16 @@ const joinClasses = (...classes) => classes.filter(Boolean).join(' ');
  */
 const UserFeedback = ({
   feedbackUrl = 'https://www.undrr.org/contact/website-feedback',
-  labels = {},
+  lang,
+  dir,
+  labels,
   onResponse,
   className,
   ...args
 }) => {
   const [response, setResponse] = useState(null);
   const confirmationRef = useRef(null);
-  const resolvedLabels = { ...DEFAULT_USER_FEEDBACK_LABELS, ...labels };
+  const resolvedLabels = getUserFeedbackLabels(lang, labels);
 
   useEffect(() => {
     if (response) confirmationRef.current?.focus();
@@ -52,6 +49,7 @@ const UserFeedback = ({
         className
       )}
       aria-label={resolvedLabels.question}
+      {...getLanguageProps(lang, dir)}
       data-vf-google-analytics-region="undrr-feedback-container"
       {...args}
     >
@@ -114,7 +112,11 @@ const UserFeedback = ({
 UserFeedback.propTypes = {
   /** Destination for both detailed-feedback links. */
   feedbackUrl: PropTypes.string,
-  /** Localised visible copy. Missing keys fall back to English. */
+  /** UI language tag; selects the built-in catalogue, with English fallback. */
+  lang: PropTypes.string,
+  /** Explicit text direction; otherwise known catalogue languages select their direction. */
+  dir: PropTypes.oneOf(['ltr', 'rtl', 'auto']),
+  /** Explicit UI label overrides; omitted keys use the selected catalogue, then English. */
   labels: PropTypes.shape({
     question: PropTypes.string,
     yes: PropTypes.string,
