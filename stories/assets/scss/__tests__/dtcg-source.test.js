@@ -212,6 +212,170 @@ describe('typed sources through the generator', () => {
     expect(() => output()).toThrow(/type|dimension|color/i);
   });
 
+  test.each(['runtime', 'literal'])(
+    'dimension aliases preserve inherited rem output in %s mode',
+    mode => {
+      const document = baseDocument();
+      document.spacing = {
+        ...extension({ format: 'rem' }),
+        gap: { $type: 'dimension', $value: { value: 8, unit: 'px' } },
+        redteam: {
+          $type: 'dimension',
+          $value: '{spacing.gap}',
+          ...(mode === 'literal' ? extension({ resolve: 'literal' }) : {}),
+        },
+      };
+      write('mangrove', document);
+      expect(output()).toContain('--mg-spacing-gap: 0.5rem;');
+      expect(output()).toContain(
+        `--mg-spacing-redteam: ${mode === 'literal' ? '0.5rem' : 'var(--mg-spacing-gap)'};`
+      );
+    }
+  );
+
+  test('literal dimension aliases use their own requested output units', () => {
+    const document = baseDocument();
+    document.spacing.redteam = {
+      $type: 'dimension',
+      $value: '{spacing.gap}',
+      ...extension({ format: 'rem', resolve: 'literal' }),
+    };
+    write('mangrove', document);
+    expect(output()).toContain('--mg-spacing-gap: 8px;');
+    expect(output()).toContain('--mg-spacing-redteam: 0.5rem;');
+  });
+
+  test.each(['runtime', 'literal'])(
+    'derived colour components can reference a complete CSS colour in %s mode',
+    mode => {
+      const document = baseDocument();
+      document.color.derived = {
+        $value: {
+          colorSpace: 'srgb',
+          components: [0, 1, 2].map(index => ({
+            $ref: `#/color/button/$value/components/${index}`,
+          })),
+          alpha: 0.5,
+        },
+        ...extension({
+          format: 'srgb-rgb-function',
+          ...(mode === 'literal' ? { resolve: 'literal' } : {}),
+        }),
+      };
+      write('mangrove', document);
+      // The source CSS property is a complete rgb(), not bare channels.
+      // The typed components still describe the merged brand's exact colour.
+      expect(output()).toContain('--mg-color-derived: rgb(0 79 145 / 0.5);');
+    }
+  );
+
+  test.each(['public', 'private-literal'])(
+    'structured shadow references resolve nested colour and dimension values (%s)',
+    mode => {
+      const document = baseDocument();
+      document.brand = {
+        primary: {
+          $type: 'color',
+          $value: colour([1, 0, 0]),
+          ...extension({ private: true }),
+        },
+      };
+      document.shadow = {
+        redteam: {
+          $type: 'shadow',
+          $value: {
+            color:
+              mode === 'public' ? '{color.interactive}' : '{brand.primary}',
+            offsetX: { value: 0, unit: 'px' },
+            offsetY: '{spacing.gap}',
+            blur: { value: 12, unit: 'px' },
+            spread: { value: 0, unit: 'px' },
+          },
+          ...(mode === 'private-literal'
+            ? extension({ resolve: 'literal' })
+            : {}),
+        },
+      };
+      write('mangrove', document);
+      expect(output()).toContain(
+        mode === 'public'
+          ? '--mg-shadow-redteam: 0 var(--mg-spacing-gap) 12px 0 rgb(var(--mg-color-interactive));'
+          : '--mg-shadow-redteam: 0 8px 12px 0 rgb(255 0 0);'
+      );
+      expect(output()).not.toContain('--mg-brand-primary:');
+    }
+  );
+
+  test('unsupported shadow member pointers fail before CSS serialization', () => {
+    const document = baseDocument();
+    document.shadow = {
+      redteam: {
+        $type: 'shadow',
+        $value: {
+          color: '{color.interactive}',
+          offsetX: { $ref: '#/spacing/gap/$value' },
+          offsetY: { value: 0, unit: 'px' },
+          blur: { value: 12, unit: 'px' },
+          spread: { value: 0, unit: 'px' },
+        },
+      },
+    };
+    write('mangrove', document);
+    // The current authored profile supports whole-token aliases for shadow
+    // lengths. Unsupported property pointers must fail before CSS lowering.
+    expect(() => output()).toThrow(/shadow.*structured shadow values/i);
+  });
+
+  test.each([
+    [['__proto__'], 'redteamPrototypeToken'],
+    [['constructor', 'prototype'], 'redteamPrototypeToken'],
+    [['safe'], '__proto__'],
+  ])(
+    'exchange preserves legal JSON names without prototype effects: %j / %s',
+    (groups, leaf) => {
+      const document = baseDocument();
+      let group = document;
+      for (const name of groups) {
+        Object.defineProperty(group, name, {
+          value: {},
+          enumerable: true,
+          writable: true,
+          configurable: true,
+        });
+        group = group[name];
+      }
+      Object.defineProperty(group, leaf, {
+        value: { $type: 'number', $value: 42 },
+        enumerable: true,
+        writable: true,
+        configurable: true,
+      });
+      // write() serialises this as literal JSON; the loader must preserve these
+      // names rather than treating an object-literal __proto__ setter as data.
+      write('mangrove', document);
+      try {
+        const exported = JSON.parse(
+          JSON.stringify(
+            buildDtcgDocuments({ tokensDir: dir }).get('mangrove.tokens.json')
+          )
+        );
+        let value = exported;
+        for (const name of [...groups, leaf]) {
+          expect(Object.hasOwn(value, name)).toBe(true);
+          value = value[name];
+        }
+        expect(value).toEqual({ $type: 'number', $value: 42 });
+        expect(Object.hasOwn(Object.prototype, 'redteamPrototypeToken')).toBe(
+          false
+        );
+        expect(Object.hasOwn(Object, 'redteamPrototypeToken')).toBe(false);
+      } finally {
+        delete Object.prototype.redteamPrototypeToken;
+        delete Object.redteamPrototypeToken;
+      }
+    }
+  );
+
   test('a standard alias cannot target an extension-only output recipe', () => {
     const document = baseDocument();
     document.paint = extension({

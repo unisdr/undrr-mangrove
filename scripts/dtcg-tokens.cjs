@@ -457,20 +457,38 @@ function normalizeTokens(tokens, label) {
       .join('.');
     return raw.colorSpace === literal(target).colorSpace ? target : null;
   };
-  const colorCss = (raw, from) => {
-    if (typeof raw === 'string' && ALIAS.test(raw)) {
-      const target = get(raw.slice(1, -1), from);
-      return ['srgb-rgb-function', 'literal'].includes(target.format)
-        ? raw
-        : `{rgb(${raw.slice(1, -1)})}`;
-    }
-    const source = colorSource(raw);
-    if (source)
-      return `{rgb(${source}${raw.alpha !== undefined ? ` / ${raw.alpha}` : ''})}`;
+  const emitsChannels = token =>
+    token.format === undefined || token.format === 'srgb-channels';
+  const completeColor = (raw, from) => {
     const v = expand(raw, from);
     if (v.colorSpace !== 'srgb')
       fail(label, from, 'shadow CSS currently requires sRGB colours');
     return `rgb(${v.components.map(c => Math.round(c * 255)).join(' ')}${v.alpha !== undefined && v.alpha !== 1 ? ` / ${v.alpha}` : ''})`;
+  };
+  const colorCss = (raw, from, flatten) => {
+    if (typeof raw === 'string' && ALIAS.test(raw)) {
+      const target = get(raw.slice(1, -1), from);
+      if (flatten || target.private) return completeColor(raw, from);
+      return emitsChannels(target) ? `{rgb(${raw.slice(1, -1)})}` : raw;
+    }
+    const source = colorSource(raw);
+    if (
+      source &&
+      !flatten &&
+      !get(source, from).private &&
+      emitsChannels(get(source, from))
+    )
+      return `{rgb(${source}${raw.alpha !== undefined ? ` / ${raw.alpha}` : ''})}`;
+    return completeColor(raw, from);
+  };
+  const dimensionCss = (raw, from, flatten) => {
+    if (typeof raw === 'string' && ALIAS.test(raw)) {
+      const target = get(raw.slice(1, -1), from);
+      return flatten || target.private ? scalarDim(expand(raw, from)) : raw;
+    }
+    // Property pointers carry structured dimensions too. Resolve them before
+    // serialising their value/unit fields instead of emitting undefined units.
+    return scalarDim(expand(raw, from));
   };
   const result = new Map();
   for (const [id, t] of tokens) {
@@ -494,11 +512,26 @@ function normalizeTokens(tokens, label) {
     }
 
     let value = t.dtcgValue;
-    if (typeof value === 'string' && ALIAS.test(value))
-      value = m.resolve === 'literal' ? `{=${value.slice(1, -1)}}` : value;
-    else if (t.dtcgType === 'color' && colorSource(t.dtcgValue))
-      value = `{${m.resolve === 'literal' ? '=' : ''}${colorSource(t.dtcgValue)}}`;
-    else {
+    let format = t.format;
+    const wholeAlias = typeof value === 'string' && ALIAS.exec(value);
+    const componentSource = t.dtcgType === 'color' && colorSource(value);
+    if (wholeAlias) {
+      const target = get(wholeAlias[1], id);
+      value =
+        m.resolve === 'literal' || target.private
+          ? `{=${wholeAlias[1]}}`
+          : value;
+      // Runtime targets already supply their units; do not pass a var()
+      // through numeric conversion. An explicit literal rem output instead
+      // converts the resolved typed dimension, independently of target format.
+      if (t.dtcgType === 'dimension') {
+        if (t.format === 'rem' && (m.resolve === 'literal' || target.private)) {
+          value = portable.unit === 'px' ? portable.value : portable.value * 16;
+        } else format = 'literal';
+      }
+    } else if (componentSource && emitsChannels(get(componentSource, id))) {
+      value = `{${m.resolve === 'literal' || get(componentSource, id).private ? '=' : ''}${componentSource}}`;
+    } else {
       switch (t.dtcgType) {
         case 'color':
           if (
@@ -566,19 +599,24 @@ function normalizeTokens(tokens, label) {
               const shape = Array.isArray(portable)
                 ? portable[index]
                 : portable;
-              if (typeof sh === 'string') return sh;
+              const flatten = m.resolve === 'literal';
+              if (typeof sh === 'string') {
+                const target = get(sh.slice(1, -1), id);
+                if (!flatten && !target.private) return sh;
+              }
+              const source = typeof sh === 'string' ? shape : sh;
               const offsets = [
-                sh.offsetX,
-                sh.offsetY,
-                sh.blur,
+                source.offsetX,
+                source.offsetY,
+                source.blur,
                 ...(m.omitSpread && shape.spread.value === 0
                   ? []
-                  : [sh.spread]),
+                  : [source.spread]),
               ]
-                .map(scalarDim)
+                .map(v => dimensionCss(v, id, flatten))
                 .join(' ');
-              const color = colorCss(sh.color, id);
-              return `${sh.inset ? 'inset ' : ''}${m.colorFirst ? `${color} ${offsets}` : `${offsets} ${color}`}`;
+              const color = colorCss(source.color, id, flatten);
+              return `${source.inset ? 'inset ' : ''}${m.colorFirst ? `${color} ${offsets}` : `${offsets} ${color}`}`;
             })
             .join(', ');
           break;
@@ -590,6 +628,7 @@ function normalizeTokens(tokens, label) {
     result.set(id, {
       ...t,
       type: m.cssType || t.dtcgType,
+      format,
       value,
       alpha: t.dtcgType === 'color' ? portable.alpha : t.alpha,
     });

@@ -46,6 +46,12 @@ These settings describe generated output. They do not introduce additional DTCG 
 
 A runtime alias resolves on the element where its custom property is declared. Re-declare theme-dependent aliases inside the relevant theme selector when a theme can change below the document root. Flattening every alias at build time would break supported runtime overrides.
 
+### References inside composites
+
+Public colour and dimension references inside shadows can remain CSS variable links. References to private values, or composites with `resolve: "literal"`, are materialised recursively during the build.
+
+A derived colour can retain a runtime link when its referenced colour emits RGB channels. If the referenced property already emits a complete CSS colour, the compiler materialises the derived colour from typed source data instead of extracting channels from the CSS string. Source edits propagate on rebuild; runtime overrides of that complete-colour property do not propagate into the materialised derivative. A consumer needing that runtime relationship requires an explicit output mapping.
+
 ## CSS-only recipes
 
 Some existing output is CSS syntax rather than a portable design value: multi-value padding, a theme-loaded string marker, or the keyword `none`. These are represented as explicit output recipes within the Mangrove extension on groups, rather than inventing a DTCG `string` type or labelling a shorthand as one dimension.

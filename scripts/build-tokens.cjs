@@ -756,14 +756,19 @@ function buildDtcgDocuments({ tokensDir = TOKENS_DIR } = {}) {
     const merged = mergeLayers(layersFor(brand, base, byId));
     // Validate the complete reference graph before offering an exchange file.
     normalizeTokens(merged, brand.meta.id);
-    const document = {
+    // Token/group names are data, including legal JSON names such as
+    // "__proto__" and "constructor". Never traverse an inherited property.
+    const document = Object.assign(Object.create(null), {
       $description: `${brand.meta.title} design tokens, DTCG 2025.10. CSS-only output recipes are not part of this exchange.`,
-    };
+    });
     for (const token of merged.values()) {
       if (!token.dtcgType) continue;
       const trail = token.id.split('.');
       let group = document;
-      for (const key of trail.slice(0, -1)) group = group[key] ||= {};
+      for (const key of trail.slice(0, -1)) {
+        if (!Object.hasOwn(group, key)) group[key] = Object.create(null);
+        group = group[key];
+      }
       group[trail.at(-1)] = {
         $type: token.dtcgType,
         $value: structuredClone(token.dtcgValue),

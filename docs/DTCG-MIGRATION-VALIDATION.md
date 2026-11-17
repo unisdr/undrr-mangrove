@@ -10,8 +10,8 @@ Before the token sources changed, the validation agent captured generated Sass, 
 
 ## Automated checks
 
-- Full Jest run: 223 suites passed, 5,078 tests passed and one existing test skipped.
-- Focused typed-source, source-baseline, assembly and published-path checks: 95 tests passed.
+- Full Jest run: 223 suites passed, 5,089 tests passed and one existing test skipped.
+- Focused typed-source, source-baseline, assembly and published-path checks: 106 tests passed.
 - Repository formatting and lint checks pass; lint reports 26 existing warnings and no errors.
 - Production build, dependency consistency and manifest validation pass.
 - A watcher smoke test confirms a source save regenerates both Sass and portable exchange files.
@@ -37,6 +37,14 @@ Review and mutation tests found defects that initial output comparisons did not 
 - Exported JSON Pointers could target properties beneath an unresolved alias string.
 
 Regression tests cover the fixes. Matching the unchanged theme output alone does not establish that future authored edits behave correctly.
+
+## Follow-up red-team corrections
+
+A fresh review of commit `826c301b` found four additional compiler defects. Export construction followed inherited object properties for names such as `__proto__`; valid spacing aliases could be converted twice; component-derived colours failed when their source emitted a complete colour; and shadow references to private values did not honour literal resolution recursively. A related literal dimension alias also needed its own output-unit conversion.
+
+The fixes preserve special JSON names with safe dictionaries, retain unit-bearing runtime aliases, lower derived colours from typed values when necessary, and materialise private/literal composite members. Ten additional regression cases reproduced eight failures before correction. The focused post-fix run passes 106 tests across four suites. An additional profile guard confirms that unsupported whole-object dimension pointers inside shadows are rejected before CSS output. The final seven-bundle and twelve-recipe CSS equivalence checks also pass.
+
+Derived colours referencing a complete-colour CSS output are materialised at build time. Source edits propagate on rebuild, but runtime overrides of that complete-colour property do not propagate into the derivative. Channel-based references remain live. This boundary is documented in the source guide.
 
 ## Visual and runtime checks
 
