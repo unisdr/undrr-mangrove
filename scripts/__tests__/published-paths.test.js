@@ -76,7 +76,12 @@ describe('the published-path model', () => {
   });
 
   test('does not publish the retired icon font', () => {
-    expect([...paths].some(entry => entry.startsWith('fonts/'))).toBe(false);
+    expect(
+      [...paths]
+        .filter(entry => entry.startsWith('fonts/'))
+        .every(entry => entry.startsWith('fonts/delta-2027/'))
+    ).toBe(true);
+    expect([...paths].some(entry => entry.endsWith('.woff2'))).toBe(true);
     expect([...paths].some(entry => entry.includes('mangrove-icon-set'))).toBe(
       false
     );
@@ -102,8 +107,15 @@ describe('the published-path model', () => {
     expect(docsFileNames().every(name => /\.(md|txt)$/.test(name))).toBe(true);
   });
 
-  test('publishes composed token documents for all five distributed brands', () => {
-    for (const brand of ['mangrove', 'preventionweb', 'irp', 'mcr', 'delta'])
+  test('publishes composed token documents for all six distributed brands', () => {
+    for (const brand of [
+      'mangrove',
+      'preventionweb',
+      'irp',
+      'mcr',
+      'delta',
+      'delta-2027',
+    ])
       expect(paths.has(`tokens/${brand}.tokens.json`)).toBe(true);
     expect(paths.has('tokens/undrr.tokens.json')).toBe(false);
     expect(paths.has('tokens/output-baseline.json')).toBe(false);
@@ -128,6 +140,7 @@ describe('the published-path model', () => {
       for (const [from, to] of [
         ['assets/js', 'js'],
         ['assets/css', 'css'],
+        ['assets/fonts/delta-2027', 'fonts/delta-2027'],
         ['assets/error-pages', 'error-pages'],
         ['components', 'components'],
         ['docs', 'docs'],

@@ -158,6 +158,8 @@ Container children and individually classed tags share the same styling. Explici
 
 ## Changelog
 
+- **1.4.2**, 2026-11-17 ([#1495](https://github.com/unisdr/undrr-mangrove/issues/1495)): Adds opt-in Delta 2027 styling with a quiet inset fill, 24px minimum height, 4px corners and 12px text. Link and focus behaviour are preserved.
+
 - **1.4.1**, 2026-10-29 ([#1432](https://github.com/unisdr/undrr-mangrove/issues/1432)): Code tags and badges preserve authored case instead of forcing uppercase. Supply acronyms such as PDF and JSON in their correct case.
 
 - **1.4.0**, 2026-09-18 ([#1249](https://github.com/unisdr/undrr-mangrove/pull/1249)): Fixes [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196). `.mg-tag--accent` no longer sets a white label on the orange accent (2.95 resting, 2.65 on hover). The chip is `orange-50`, hover `orange-100`, with a `--mg-color-text` label at 15.7:1, and the Sendai orange moves to the border with a 4px leading edge. `--mg-color-tag-accent` keeps its value and now paints that border, held steady across states; `--mg-color-tag-accent--hover` is `orange-800`, lighter than the resting `orange-900`, so swapping it in on hover would have dropped the rule to 2.15 on the darker fill. The hover is the fill step and the label's underline. This is a visible change wherever `--accent` is used, in all five themes. A theme overriding `--tag-color-background-accent` with a dark fill should set `--mg-tag-foreground` too.

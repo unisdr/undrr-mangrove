@@ -39,7 +39,14 @@ const {
   readBaseline,
 } = require(path.join(ROOT, 'scripts/build-tokens.cjs'));
 
-const BRANDS = ['mangrove', 'preventionweb', 'irp', 'mcr', 'delta'];
+const BRANDS = [
+  'mangrove',
+  'preventionweb',
+  'irp',
+  'mcr',
+  'delta',
+  'delta-2027',
+];
 
 describe('design-token generator', () => {
   test('generated Sass partials are up to date with the YAML sources', () => {
@@ -160,7 +167,7 @@ describe('design-token generator', () => {
     // concern and is not migrated here.)
     const hardcoded = [];
     const guarded = [
-      ...['preventionweb', 'irp', 'mcr', 'delta'].map(
+      ...['preventionweb', 'irp', 'mcr', 'delta', 'delta-2027'].map(
         brand => `stories/assets/scss/_theme-${brand}.scss`
       ),
       'stories/assets/scss/_tokens-tabs.scss',

@@ -51,6 +51,7 @@ const BUNDLES = [
   'style-irp',
   'style-mcr',
   'style-delta',
+  'style-delta-2027',
   'style-all',
   'style-gutenberg',
 ];
@@ -861,7 +862,17 @@ describe('every component names the role it is meant to', () => {
   test.each(BUNDLES.filter(entry => entry !== 'style-gutenberg'))(
     '%s.css assigns exactly the roles the table records',
     entry => {
-      expect(sorted(roleBySelector(entry))).toEqual(sorted(ROLE_BY_SELECTOR));
+      const expected = new Map(ROLE_BY_SELECTOR);
+      if (['style-all', 'style-delta-2027'].includes(entry)) {
+        for (const selector of [
+          '.mg-theme-delta-2027',
+          '.mg-theme-delta-2027:lang(ar)',
+          '.mg-theme-delta-2027 :where(:not(:lang(ar))) > :where([lang]:not([lang=""]):lang(ar))',
+          '.mg-theme-delta-2027 :where(:lang(ar)) > :where([lang]:not([lang=""], :lang(ar)))',
+        ])
+          expected.set(selector, 'text');
+      }
+      expect(sorted(roleBySelector(entry))).toEqual(sorted(expected));
     }
   );
 

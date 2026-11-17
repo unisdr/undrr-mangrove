@@ -8,6 +8,7 @@ const compiled = {};
 const entries = [
   'style.scss',
   'style-delta.scss',
+  'style-delta-2027.scss',
   'style-irp.scss',
   'style-mcr.scss',
   'style-preventionweb.scss',

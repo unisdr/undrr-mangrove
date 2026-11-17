@@ -602,6 +602,8 @@ Keep the ring at 3:1 or more against the thumb, and the thumb at 3:1 or more aga
 
 ## Changelog
 
+- **2.6.3**, 2026-11-17 ([#1495](https://github.com/unisdr/undrr-mangrove/issues/1495)): Adds opt-in Delta 2027 styling with a 16px checkbox inside a target of at least 24px. The existing switch uses a 32px by 18px track. Focus, forced-colours and checked-state behaviour are preserved.
+
 - **2.6.2**, 2026-11-13 ([#1489](https://github.com/unisdr/undrr-mangrove/issues/1489)): Fixed an invalid checkbox looking the same as a valid one in forced-colours mode, with or without `mg-form-check--row`. Its edge is dashed there, checked or not, because system colours have no colour for errors. Rendering outside forced-colours mode is unchanged.
 - **2.6.1**, 2026-11-13 ([#1487](https://github.com/unisdr/undrr-mangrove/pull/1487)): Fixed a checked checkbox showing no tick in forced-colours mode, with or without `mg-form-check--row`. The checked box is filled with `Highlight` and the tick is cut out of the fill; a disabled checkbox uses `GrayText`. Rendering outside forced-colours mode is unchanged.
 - **2.6**, 2026-11-13 ([#1481](https://github.com/unisdr/undrr-mangrove/issues/1481)): Added option rows: the `row` prop and the `mg-form-check--row` modifier draw a checkbox as a full-width target that shows hover, keyboard focus, selection, disabled and error on the row, with forced-colours styles. Checkboxes without it render as before. Added the "Row" and "Row states" stories.

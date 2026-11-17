@@ -30,6 +30,7 @@ const BUNDLES = [
   'style-irp',
   'style-mcr',
   'style-delta',
+  'style-delta-2027',
   'style-all',
   'style-gutenberg',
 ];

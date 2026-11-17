@@ -1,0 +1,21 @@
+/**
+ * Delta 2027 theme: the Delta v0.7.2 handoff, adapted to Mangrove roles.
+ * Existing Delta remains available independently as .mg-theme-delta.
+ * Source and integration notes: docs/DELTA-TOKEN-MAPPING.md.
+ */
+@use "generated/tokens-delta-2027" as *;
+@use "tokens-tabs" as *;
+@use "delta-2027-components" as *;
+@use "fonts" as *;
+@use "../fonts/delta-2027/delta-2027";
+
+.mg-theme-delta-2027 {
+  @include mg-tokens-tabs;
+  @include mg-tokens-delta-2027;
+  @include mg-delta-2027-components;
+  @include mg-theme-font-routing(
+    var(--mg-delta-2027-typography-font-sans),
+    var(--mg-delta-2027-typography-font-sans),
+    var(--mg-delta-2027-typography-font-sans)
+  );
+}

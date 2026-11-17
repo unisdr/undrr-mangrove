@@ -457,8 +457,20 @@ function normalizeTokens(tokens, label) {
       .join('.');
     return raw.colorSpace === literal(target).colorSpace ? target : null;
   };
-  const emitsChannels = token =>
-    token.format === undefined || token.format === 'srgb-channels';
+  const emitsChannels = (token, seen = new Set()) => {
+    if (token.format === undefined || token.format === 'srgb-channels')
+      return true;
+    // Literal aliases inherit the target's emitted shape, including through
+    // adapters. Their declared format alone cannot tell channels from rgb().
+    const alias =
+      token.format === 'literal' &&
+      typeof token.dtcgValue === 'string' &&
+      ALIAS.exec(token.dtcgValue);
+    if (!alias) return false;
+    if (seen.has(alias[1])) fail(label, alias[1], 'circular reference');
+    seen.add(alias[1]);
+    return emitsChannels(get(alias[1], alias[1]), seen);
+  };
   const completeColor = (raw, from) => {
     const v = expand(raw, from);
     if (v.colorSpace !== 'srgb')
@@ -527,6 +539,17 @@ function normalizeTokens(tokens, label) {
       if (t.dtcgType === 'dimension') {
         if (t.format === 'rem' && (m.resolve === 'literal' || target.private)) {
           value = portable.unit === 'px' ? portable.value : portable.value * 16;
+        } else format = 'literal';
+      }
+      // A complete CSS colour is already wrapped. Reusing it as a colour must
+      // not produce rgb(rgb(...)); adapting it to the legacy channel contract
+      // instead needs the typed sRGB value at build time. The latter cannot
+      // retain a runtime var() link because CSS has no channel-unwrapping step.
+      if (t.dtcgType === 'color' && !emitsChannels(target)) {
+        if (emitsChannels(t)) {
+          if (portable.colorSpace !== 'srgb')
+            fail(label, id, 'channel output requires an sRGB colour');
+          value = toHex(portable);
         } else format = 'literal';
       }
     } else if (componentSource && emitsChannels(get(componentSource, id))) {

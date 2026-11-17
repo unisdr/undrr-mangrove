@@ -1,0 +1,665 @@
+/**
+ * Delta 2027 expression for existing Mangrove components.
+ *
+ * The v0.7.2 handoff owns this theme's surfaces and compact control treatment.
+ * Shared components retain their markup, behaviour and accessibility contracts.
+ * https://github.com/unisdr/undrr-mangrove/blob/main/docs/DELTA-2027.md
+ */
+@use "mixins" as *;
+
+@function delta($name) {
+  @return var(--mg-delta-2027-#{$name});
+}
+
+// Included only inside .mg-theme-delta-2027, after its generated token block.
+// This supports a themed body or wrapper; use separate wrappers for brands.
+@mixin mg-delta-2027-components {
+  background-color: delta(semantic-background-default);
+  color: delta(semantic-text-primary);
+  color-scheme: light;
+  font-family: var(--mg-font-family-text);
+  font-size: delta(typography-scale-14);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+
+  h1 {
+    font-size: delta(typography-scale-20);
+    font-weight: 500;
+    line-height: 1.25;
+  }
+
+  h2 {
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.25;
+  }
+
+  h3 {
+    font-size: delta(typography-scale-14);
+    font-weight: 500;
+    line-height: 1.5;
+  }
+
+  .mg-button:not(.mg-button-cta) {
+    box-sizing: border-box;
+    min-block-size: 2rem;
+    min-inline-size: 1.5rem;
+    font-size: delta(typography-scale-14);
+    font-weight: 400;
+    line-height: 1.25;
+    padding: 0.125rem 0.75rem 0.25rem;
+  }
+
+  .mg-button-primary:not(.mg-button-outline, .mg-button-cta) {
+    background-color: delta(semantic-action-default);
+    border-color: transparent;
+    color: delta(semantic-text-inverse);
+
+    &:hover {
+      background-color: delta(semantic-action-hover);
+    }
+
+    &:active {
+      background-color: delta(semantic-action-active);
+    }
+  }
+
+  .mg-button-secondary:not(.mg-button-cta),
+  .mg-button-primary.mg-button-outline {
+    background-color: delta(semantic-background-surface);
+    border-color: delta(semantic-border-control);
+    color: delta(semantic-text-primary);
+
+    &:hover {
+      background-color: delta(semantic-background-inset);
+      border-color: delta(semantic-text-secondary);
+      color: delta(semantic-text-primary);
+    }
+
+    &:active {
+      background-color: delta(semantic-background-inset);
+      border-color: delta(semantic-text-primary);
+    }
+  }
+
+  .mg-button:not(.mg-button-cta):is(
+      :disabled,
+      .disabled,
+      [aria-disabled="true"]
+    ) {
+    background-color: delta(semantic-action-disabled);
+    border-color: transparent;
+    color: delta(semantic-text-inverse);
+    cursor: not-allowed;
+    opacity: 1;
+    scale: 1;
+  }
+
+  .mg-button.mg-button--small:not(.mg-button-cta) {
+    min-block-size: 1.75rem;
+  }
+
+  .mg-button.mg-button--large:not(.mg-button-cta) {
+    min-block-size: 2.5rem;
+  }
+
+  .mg-icon-button,
+  .mg-button.mg-button--icon {
+    block-size: 2rem;
+    inline-size: 2rem;
+    min-block-size: 2rem;
+    min-inline-size: 2rem;
+    padding: 0;
+  }
+
+  .mg-icon-button {
+    color: delta(semantic-text-secondary);
+
+    &:hover {
+      background-color: delta(semantic-background-inset);
+      color: delta(semantic-text-primary);
+    }
+
+    &:is(:disabled, [aria-disabled="true"]) {
+      background-color: transparent;
+      color: delta(semantic-text-placeholder);
+    }
+  }
+
+  .mg-form-label {
+    color: delta(semantic-text-primary);
+    font-size: delta(typography-scale-14);
+    font-weight: 400;
+  }
+
+  .mg-form-input,
+  .mg-form-textarea,
+  .mg-form-select {
+    background-color: delta(semantic-background-surface);
+    border-color: delta(semantic-border-control);
+    color: delta(semantic-text-primary);
+    margin-block-start: 0.375rem;
+    line-height: 1.25;
+    padding: var(--mg-form-input-padding);
+
+    &:hover:not(:disabled) {
+      border-color: delta(semantic-text-secondary);
+    }
+
+    // Placeholder is actual input help, so it must remain readable. The handoff's
+    // placeholder colour is reserved for decorative/disabled content only.
+    &::placeholder {
+      color: delta(semantic-text-secondary);
+      opacity: 1;
+    }
+
+    &:focus-visible {
+      --mg-focus-ring-offset: 0px;
+      --mg-focus-ring-width: 1px;
+
+      @include mg-focus-ring-inset;
+
+      background-color: delta(semantic-background-surface);
+      border-color: delta(semantic-focus-ring);
+    }
+
+    &:is(:disabled, [class*="--disabled"]) {
+      background-color: delta(semantic-background-inset);
+      border-color: delta(semantic-border-default);
+      color: delta(semantic-text-placeholder);
+      opacity: 1;
+
+      &[placeholder]:not(:placeholder-shown) {
+        background-color: delta(semantic-background-inset);
+      }
+    }
+
+    &:is([aria-invalid="true"], [class*="--error"]) {
+      border-color: delta(semantic-status-critical-text);
+    }
+  }
+
+  .mg-form-input[placeholder]:not(
+      :placeholder-shown,
+      :disabled,
+      .mg-form-input--disabled
+    ) {
+    background-color: delta(semantic-background-surface);
+  }
+
+  .mg-form-select {
+    line-height: 1.25;
+    padding-block: 0;
+    padding-inline: 0.75rem 1.5rem;
+  }
+
+  // Explicit direction boundaries also work when English is previewed in RTL.
+  // The production CSS transform approximates :dir() with language selectors.
+  &[dir="rtl"] .mg-form-select,
+  [dir="rtl"] & .mg-form-select,
+  & [dir="rtl"] .mg-form-select,
+  & .mg-form-select[dir="rtl"] {
+    padding-left: 1.5rem;
+    padding-right: 0.75rem;
+  }
+
+  .mg-form-input[type="date"] {
+    color: delta(semantic-text-primary);
+  }
+
+  .mg-form-textarea {
+    min-block-size: 5rem;
+    padding-block-start: 0.5rem;
+    resize: vertical;
+  }
+
+  .mg-form-help,
+  .mg-form-error {
+    font-size: delta(typography-scale-12);
+    margin-block-start: 0.375rem;
+  }
+
+  .mg-form-help {
+    color: delta(semantic-text-secondary);
+  }
+
+  .mg-form-error,
+  .mg-form-label--required::after {
+    color: delta(semantic-status-critical-text);
+  }
+
+  .mg-form-check {
+    min-block-size: 1.5rem;
+  }
+
+  .mg-form-check__input {
+    block-size: 1rem;
+    inline-size: 1rem;
+    border-width: 1px;
+    border-color: delta(semantic-border-control);
+  }
+
+  .mg-form-check__input--checkbox {
+    border-radius: delta(radius-sm);
+  }
+
+  .mg-form-check__input:checked {
+    border-color: delta(semantic-action-default);
+  }
+
+  @media (forced-colors: none) {
+    .mg-form-check__input:is(
+      [aria-invalid="true"],
+      .mg-form-check__input--error
+    ) {
+      border-color: delta(semantic-status-critical-text);
+    }
+
+    .mg-form-check__input:is(:disabled, .mg-form-check__input--disabled) {
+      border-color: delta(semantic-border-default);
+      background-color: delta(semantic-background-inset);
+    }
+
+    .mg-form-check__input:is(
+        :disabled,
+        .mg-form-check__input--disabled
+      ):checked {
+      background-color: delta(semantic-action-disabled);
+    }
+  }
+
+  .mg-form-check__label,
+  .mg-switch__label {
+    color: delta(semantic-text-primary);
+    font-size: delta(typography-scale-14);
+  }
+
+  .mg-switch {
+    --mg-switch-size: 1.125rem;
+    --mg-switch-track-block-size: 1.125rem;
+    --mg-switch-track-inline-size: 2rem;
+    --mg-switch-track-inset: 0.125rem;
+    --mg-switch-track-background: #{delta(semantic-border-control)};
+    --mg-switch-track-background--checked: #{delta(semantic-action-default)};
+    --mg-switch-thumb-background: #{delta(semantic-background-surface)};
+  }
+
+  .mg-segmented-control {
+    --mg-segmented-control-min-block-size: 2rem;
+
+    .mg-segmented-control__label {
+      min-block-size: 2rem;
+      font-size: delta(typography-scale-14);
+      font-weight: 400;
+      padding: 0.125rem 0.75rem 0.25rem;
+    }
+  }
+
+  @media (forced-colors: none) {
+    .mg-segmented-control__label {
+      background-color: delta(semantic-background-surface);
+      border-color: delta(semantic-border-control);
+      color: delta(semantic-text-primary);
+
+      &:hover {
+        background-color: color-mix(
+          in srgb,
+          #{delta(semantic-background-inset)} 55%,
+          transparent
+        );
+      }
+    }
+
+    .mg-segmented-control__input:checked + .mg-segmented-control__label,
+    .mg-segmented-control__input:checked + .mg-segmented-control__label:hover {
+      background-color: delta(semantic-background-inset);
+      border-color: delta(semantic-border-control);
+      color: delta(semantic-text-primary);
+    }
+
+    .mg-segmented-control__input:disabled + .mg-segmented-control__label,
+    .mg-segmented-control__input:disabled + .mg-segmented-control__label:hover {
+      background-color: delta(semantic-background-surface);
+      border-color: delta(semantic-border-default);
+      color: delta(semantic-text-placeholder);
+    }
+
+    .mg-segmented-control__input:disabled:checked
+      + .mg-segmented-control__label,
+    .mg-segmented-control__input:disabled:checked
+      + .mg-segmented-control__label:hover {
+      background-color: delta(semantic-background-inset);
+      border-color: delta(semantic-border-default);
+      color: delta(semantic-text-placeholder);
+    }
+  }
+
+  .mg-form-action .mg-form-action__control {
+    margin-block-start: 0;
+  }
+
+  .mg-form-action > .mg-button.mg-form-action__action {
+    min-height: 2rem;
+  }
+
+  .mg-card {
+    border: 1px solid delta(semantic-border-subtle);
+  }
+
+  .mg-card__title,
+  .mg-card__icon .mg-card__title {
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.25;
+  }
+
+  .mg-card__summary,
+  .mg-card__label {
+    font-weight: 400;
+  }
+
+  .mg-status-label {
+    --mg-status-label-indicator-size: 0.5rem;
+    --mg-status-label-gap: 0.5rem;
+    --mg-status-label-font-size: 0.875rem;
+    --mg-status-label-color: #{delta(semantic-text-primary)};
+  }
+
+  // Visible labels carry status meaning. Keep the existing silhouettes in
+  // forced colours, where colour no longer separates the workflow states.
+  @media (forced-colors: none) {
+    .mg-status-label .mg-status-label__indicator {
+      inline-size: 0.5rem;
+      block-size: 0.5rem;
+      margin-inline: 0;
+      border: 0;
+      border-radius: 50%;
+      clip-path: none;
+      transform: none;
+      background-color: delta(semantic-text-placeholder);
+
+      &::before {
+        content: none;
+      }
+    }
+
+    .mg-status-label--published .mg-status-label__indicator {
+      background-color: delta(semantic-status-positive-text);
+    }
+
+    .mg-status-label--waiting-validation .mg-status-label__indicator,
+    .mg-status-label--warning .mg-status-label__indicator {
+      background-color: delta(semantic-status-warning-text);
+    }
+
+    .mg-status-label--waiting-information .mg-status-label__indicator {
+      background-color: delta(semantic-status-informational-text);
+    }
+
+    .mg-status-label--negative .mg-status-label__indicator {
+      background-color: delta(semantic-status-critical-text);
+    }
+  }
+
+  .mg-tabs--horizontal {
+    --mg-tab-radius: #{delta(radius-full)};
+    --mg-tab-background--active: #{delta(semantic-background-inset)};
+    --mg-tab-background--hover: color-mix(
+      in srgb,
+      #{delta(semantic-background-inset)} 55%,
+      transparent
+    );
+    --mg-tab-color: #{delta(semantic-text-secondary)};
+    --mg-tab-color--hover: #{delta(semantic-text-primary)};
+    --mg-tab-color--active: #{delta(semantic-text-primary)};
+    --mg-tab-rail-background: #{delta(semantic-background-default)};
+    --mg-tab-min-block-size: 2rem;
+
+    > .mg-tabs__rail {
+      border-color: transparent;
+      border-radius: 0;
+      margin-inline: 0;
+    }
+
+    > .mg-tabs__rail
+      > .mg-tabs__scroll
+      > .mg-tabs__list
+      > .mg-tabs__item
+      > .mg-tabs__link {
+      font-size: delta(typography-scale-14);
+      font-weight: 400;
+      padding: 0.125rem 0.75rem 0.25rem;
+
+      &.is-active,
+      &.is-active:hover {
+        border-color: transparent;
+      }
+    }
+  }
+
+  .mg-tag,
+  .mg-badge,
+  .mg-tag-container > :where(span, div, a, li) {
+    --mg-tag-background: #{delta(semantic-background-inset)};
+    --mg-tag-background-hover: #{delta(semantic-background-inset)};
+    --mg-tag-foreground: #{delta(semantic-text-primary)};
+
+    min-block-size: 1.5rem;
+    border-color: transparent;
+    border-radius: delta(radius-sm);
+    font-size: delta(typography-scale-12);
+    font-weight: 400;
+    padding: 0 0.5rem;
+  }
+
+  .mg-table.mg-table {
+    color: delta(semantic-text-primary);
+    background-color: delta(semantic-background-surface);
+
+    th,
+    td {
+      block-size: 2.5rem;
+      box-sizing: border-box;
+      padding: 0.5rem 1rem;
+      border-inline: 0;
+      border-block-end: 1px solid delta(semantic-border-subtle);
+      font-size: delta(typography-scale-14);
+      vertical-align: middle;
+    }
+
+    thead tr th {
+      background-color: delta(semantic-background-surface);
+      color: delta(semantic-text-secondary);
+      font-size: delta(typography-scale-12);
+      font-weight: 500;
+      letter-spacing: normal;
+      text-transform: none;
+    }
+
+    tbody tr,
+    tbody tr:hover,
+    &.mg-table--striped tr:nth-child(even) {
+      background-color: transparent;
+      cursor: auto;
+    }
+
+    // Only rows whose authored behaviour makes them interactive receive fill.
+    tbody tr:is([tabindex], [aria-selected]):hover {
+      background-color: delta(semantic-background-inset);
+      cursor: pointer;
+    }
+
+    tbody tr[aria-selected="true"] {
+      background-color: delta(semantic-action-selected);
+    }
+
+    &.mg-table--small :is(th, td) {
+      block-size: 2rem;
+      padding-block: 0.25rem;
+    }
+  }
+
+  .mg-notice:not(.mg-notice--overlay) {
+    --mg-notice-bg: #{delta(semantic-status-informational-background)};
+    --mg-notice-border-color: #{delta(semantic-status-informational-border)};
+    --mg-notice-icon-color: #{delta(semantic-status-informational-text)};
+    --mg-notice-border-width: 1px;
+
+    border-radius: delta(radius-lg);
+    color: delta(semantic-text-primary);
+    padding: 0.75rem 1rem;
+  }
+
+  @each $modifier,
+    $tone in (positive: positive, warning: warning, negative: critical)
+  {
+    .mg-notice--#{$modifier}:not(.mg-notice--overlay) {
+      --mg-notice-bg: #{delta(semantic-status-#{$tone}-background)};
+      --mg-notice-border-color: #{delta(semantic-status-#{$tone}-border)};
+      --mg-notice-icon-color: #{delta(semantic-status-#{$tone}-text)};
+    }
+  }
+
+  .mg-notice__title {
+    font-size: delta(typography-scale-14);
+    font-weight: 500;
+  }
+
+  .mg-notice__description,
+  .mg-notice__meta {
+    color: delta(semantic-text-secondary);
+    font-size: delta(typography-scale-14);
+  }
+
+  .mg-notice__icon {
+    font-size: 1rem;
+  }
+
+  .mg-notice.mg-snackbar {
+    background: delta(semantic-background-toast);
+    border-color: transparent;
+    color: delta(semantic-text-inverse);
+    max-inline-size: 20rem;
+
+    .mg-notice__title,
+    .mg-notice__description,
+    .mg-notice__meta,
+    .mg-notice__dismiss {
+      color: delta(semantic-text-inverse);
+    }
+  }
+
+  .mg-empty-state {
+    --mg-empty-state-text-color: #{delta(semantic-text-secondary)};
+    --mg-empty-state-title-color: #{delta(semantic-text-primary)};
+    --mg-empty-state-panel-background: #{delta(semantic-background-surface)};
+    --mg-empty-state-media-color: #{delta(semantic-text-secondary)};
+    --mg-empty-state-title-font-size: #{delta(typography-scale-20)};
+    --mg-empty-state-text-font-size: #{delta(typography-scale-14)};
+
+    background-color: delta(semantic-background-surface);
+    border: 1px solid delta(semantic-border-subtle);
+    border-radius: delta(radius-lg);
+    padding: 1rem;
+  }
+
+  .mg-empty-state__title {
+    color: delta(semantic-text-primary);
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .mg-empty-state__description {
+    color: delta(semantic-text-secondary);
+    font-size: delta(typography-scale-14);
+  }
+
+  .mg-empty-state__media {
+    inline-size: 1.5rem;
+    block-size: 1.5rem;
+  }
+
+  .mg-dialog {
+    inline-size: min(30rem, calc(100% - 2rem));
+    background: delta(semantic-background-surface);
+    border-color: delta(semantic-border-default);
+    border-radius: delta(radius-xl);
+    box-shadow: delta(shadow-lg);
+  }
+
+  .mg-dialog__header {
+    background: delta(semantic-background-surface);
+    padding: 1.5rem 1.5rem 0.5rem;
+    border-block-end: 0;
+  }
+
+  .mg-dialog__title {
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.25;
+  }
+
+  .mg-dialog__body {
+    padding: 1.5rem;
+  }
+
+  @media (width < 48rem) {
+    .mg-dialog {
+      inline-size: 100%;
+      block-size: 100%;
+      max-block-size: 100%;
+      margin: 0;
+      border-radius: 0;
+    }
+  }
+
+  .mg-tree {
+    --mg-tree-item-background--hover: #{delta(semantic-background-inset)};
+    --mg-tree-item-background--selected: #{delta(semantic-action-selected)};
+    --mg-tree-item-color--selected: #{delta(semantic-action-default)};
+  }
+
+  .mg-tree__label-container {
+    min-block-size: 2rem;
+    box-sizing: border-box;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .mg-tree__item--selected > .mg-tree__label-container {
+    font-weight: 400;
+  }
+
+  // System colours and existing semantic state cues must beat theme expression.
+  @media (forced-colors: active) {
+    .mg-button,
+    .mg-form-input,
+    .mg-form-textarea,
+    .mg-form-select {
+      &:is(:disabled, .disabled, [aria-disabled="true"]) {
+        background-color: Canvas;
+        border-color: GrayText;
+        color: GrayText;
+      }
+    }
+
+    .mg-form-input:focus-visible,
+    .mg-form-textarea:focus-visible,
+    .mg-form-select:focus-visible {
+      outline: 2px solid Highlight;
+      outline-offset: -2px;
+    }
+
+    .mg-status-label {
+      --mg-status-label-indicator-size: 0.875rem;
+    }
+
+    .mg-tabs--horizontal
+      > .mg-tabs__rail
+      > .mg-tabs__scroll
+      > .mg-tabs__list
+      > .mg-tabs__item
+      > .mg-tabs__link.is-active {
+      border-color: Highlight;
+    }
+  }
+}

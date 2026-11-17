@@ -30,7 +30,7 @@
  * entry point is published at `scss/assets/scss/style.scss` — the doubled
  * segment is an artefact of that, but it is the supported public path and the
  * documentation names it (unisdr/undrr-mangrove#1266). Nothing is published
- * under `stories/`, `src/`, `dist/` or `tokens/`, whatever a doc may say;
+ * under `stories/`, `src/` or `dist/`, whatever a doc may say;
  * `scripts/__tests__/docs-package-paths.test.js` enforces that against
  * `scripts/published-paths.cjs`, a fast model of this script's output.
  *
@@ -61,6 +61,7 @@ export const PACKAGE_FILES = [
   'error-pages/**/*',
   'docs/**/*',
   'tokens/*.tokens.json',
+  'fonts/delta-2027/**/*',
   // Second line of defence: even if a development-only file reaches the
   // assembled directory, npm leaves it out of the tarball.
   '!**/__tests__/**',
@@ -113,6 +114,8 @@ const DIST_COPIES = [
   ['dist/docs', 'docs'],
   // Self-contained portable token data, not the brand authoring fragments.
   ['dist/tokens', 'tokens'],
+  // Theme-local, licensed webfonts; CSS resolves ../fonts/delta-2027/.
+  ['dist/assets/fonts/delta-2027', 'fonts/delta-2027'],
 ];
 
 // Top-level names in the repo that must never be used as (or contain) the

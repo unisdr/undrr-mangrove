@@ -21,6 +21,10 @@ const themes = {
     load: () => import('../stories/assets/scss/style-delta.scss?inline'),
     className: 'mg-theme-delta',
   },
+  'Delta 2027 Theme': {
+    load: () => import('../stories/assets/scss/style-delta-2027.scss?inline'),
+    className: 'mg-theme-delta-2027',
+  },
 };
 
 export const themeNames = Object.keys(themes);

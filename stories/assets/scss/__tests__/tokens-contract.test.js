@@ -11,6 +11,7 @@
 const fs = require('fs');
 const path = require('path');
 const sass = require('sass');
+const postcss = require('postcss');
 const {
   perceptualContrast,
   THRESHOLD,
@@ -18,7 +19,7 @@ const {
 const { version } = require('../../../../package.json');
 
 const SCSS_DIR = path.resolve(__dirname, '..');
-const BRANDS = ['preventionweb', 'irp', 'mcr', 'delta'];
+const BRANDS = ['preventionweb', 'irp', 'mcr', 'delta', 'delta-2027'];
 /**
  * Mangrove's v2 tab colours are var() chains onto theme-owned values, so they
  * are re-emitted inside every runtime theme block rather than declared once at
@@ -85,10 +86,12 @@ describe('Mangrove 2.0 token contract (compiled CSS)', () => {
       const css = brandCss[brand];
       // The marker proves the brand's _theme-*.scss block compiled in — this is
       // the guard against a theme block silently vanishing from the build.
-      expect(css).toMatch(new RegExp(`--mg-theme-loaded:\\s*${brand}\\b`));
+      expect(css).toMatch(
+        new RegExp(`--mg-theme-loaded:\\s*${brand}(?=\\s*;)`)
+      );
       BRANDS.filter(other => other !== brand).forEach(other => {
         expect(css).not.toMatch(
-          new RegExp(`--mg-theme-loaded:\\s*${other}\\b`)
+          new RegExp(`--mg-theme-loaded:\\s*${other}(?=\\s*;)`)
         );
       });
     });
@@ -131,8 +134,10 @@ describe('Mangrove 2.0 token contract (compiled CSS)', () => {
 
   test('combined style-all bundle carries every brand theme', () => {
     BRANDS.forEach(brand => {
-      expect(allCss).toMatch(new RegExp(`--mg-theme-loaded:\\s*${brand}\\b`));
-      expect(allCss).toMatch(new RegExp(`\\.mg-theme-${brand}\\b`));
+      expect(allCss).toMatch(
+        new RegExp(`--mg-theme-loaded:\\s*${brand}(?=\\s*;)`)
+      );
+      expect(allCss).toMatch(new RegExp(`\\.mg-theme-${brand}\\s*\\{`));
     });
   });
 
@@ -307,8 +312,9 @@ const WHITE = { r: 255, g: 255, b: 255, a: 1 };
 
 // The base theme plus every brand. Every contrast pair is measured in all
 // five, because a brand can retint one end of a pair and not the other.
-const ALL_THEMES = ['base', ...BRANDS];
-const THEME_BLOCK = /\.mg-theme-[a-z0-9-]+\s*\{[^}]*\}/g;
+// Delta 2027 has theme-specific component recipes; its actual rendered pairs
+// are checked separately instead of measuring the older component formulas.
+const ALL_THEMES = ['base', ...BRANDS.filter(brand => brand !== 'delta-2027')];
 
 /**
  * Resolve a theme's token table the way a browser would.
@@ -323,7 +329,13 @@ const THEME_BLOCK = /\.mg-theme-[a-z0-9-]+\s*\{[^}]*\}/g;
  */
 const themeVars = theme => {
   const css = compile('style-all');
-  const vars = declarations(css.replace(THEME_BLOCK, ''), null);
+  const globalRules = postcss.parse(css);
+  // A theme can now have descendant component rules as well as a token block.
+  // None of those declarations belongs in the base theme's property table.
+  globalRules.walkRules(rule => {
+    if (rule.selector.includes('.mg-theme-')) rule.remove();
+  });
+  const vars = declarations(globalRules.toString(), null);
   if (theme === 'base') return vars;
   const block =
     css.match(new RegExp(`\\.mg-theme-${theme}\\s*\\{([^}]*)\\}`))?.[1] ?? '';

@@ -65,6 +65,8 @@ The select component wraps a native `<select>` dropdown with consistent styling,
 
 ## Changelog
 
+- **2.2.2**, 2026-11-17 ([#1495](https://github.com/unisdr/undrr-mangrove/issues/1495)): Adds the opt-in Delta 2027 field treatment. This remains a native select; custom popup/checkmark behaviour belongs to the separate React Aria integration.
+
 - **2.2.1**, 2026-11-13 ([#1489](https://github.com/unisdr/undrr-mangrove/issues/1489)): Fixed two problems in forced-colours mode: the arrow was close to invisible in a dark palette, and an invalid select looked the same as a valid one. The browser now draws the arrow in the forced text colour, and an invalid select has a dashed edge. Rendering outside forced-colours mode is unchanged.
 - **2.2**, 2026-11-12 ([undrr/web-backlog#3320](https://gitlab.com/undrr/web-backlog/-/work_items/3320)): Added an optional `analyticsLabel` prop, which sets the same `data-vf-analytics-label` on the select and its label. Selects without it render as before.
 - **2.1.1**, 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a select whose own language is not Arabic.
