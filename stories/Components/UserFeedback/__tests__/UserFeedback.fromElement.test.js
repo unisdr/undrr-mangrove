@@ -22,4 +22,37 @@ describe('userFeedbackFromElement', () => {
     );
     expect(props.labels).toEqual({});
   });
+
+  it('takes data-lang before the container or surrounding HTML language', () => {
+    const parent = document.createElement('section');
+    parent.lang = 'ar';
+    const container = parent.appendChild(document.createElement('div'));
+    container.lang = 'fr';
+    container.dataset.lang = 'es-MX';
+
+    expect(userFeedbackFromElement(container).lang).toBe('es-MX');
+    delete container.dataset.lang;
+    expect(userFeedbackFromElement(container).lang).toBe('fr');
+    container.removeAttribute('lang');
+    expect(userFeedbackFromElement(container).lang).toBe('ar');
+  });
+
+  it('inherits the document language without reading a global document', () => {
+    const document = window.document.implementation.createHTMLDocument();
+    document.documentElement.lang = 'zh-Hans';
+    const container = document.body.appendChild(document.createElement('div'));
+
+    expect(userFeedbackFromElement(container).lang).toBe('zh-Hans');
+  });
+
+  it('keeps an explicit empty language as an English fallback boundary', () => {
+    const parent = document.createElement('section');
+    parent.lang = 'ar';
+    const container = parent.appendChild(document.createElement('div'));
+    container.lang = '';
+
+    expect(userFeedbackFromElement(container).lang).toBe('');
+    container.dataset.lang = '';
+    expect(userFeedbackFromElement(container).lang).toBe('');
+  });
 });

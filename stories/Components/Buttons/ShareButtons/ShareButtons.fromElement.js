@@ -1,3 +1,4 @@
+import { languageFromElement, labelsFromElement } from '../../../../src/i18n';
 /**
  * Layer 2: Extract ShareButtons props from a DOM container.
  *
@@ -14,10 +15,20 @@
  */
 export default function shareButtonsFromElement(container) {
   const { dataset } = container;
+  const language = languageFromElement(container);
   return {
+    ...language,
     labels: {
-      mainLabel: dataset.mainLabel || 'Share this',
-      onCopy: dataset.onCopyLabel || 'Link copied',
+      ...(language.lang === undefined
+        ? { mainLabel: 'Share this', onCopy: 'Link copied' }
+        : {}),
+      ...labelsFromElement(container),
+      ...(dataset.mainLabel === undefined
+        ? {}
+        : { mainLabel: dataset.mainLabel }),
+      ...(dataset.onCopyLabel === undefined
+        ? {}
+        : { onCopy: dataset.onCopyLabel }),
     },
     SharingSubject: dataset.sharingSubject || 'Sharing Link',
     SharingTextBody: dataset.sharingBody || '',

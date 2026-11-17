@@ -1,0 +1,54 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
+import * as Stories from './PublicationRecord.stories';
+
+<Meta of={Stories} />
+
+# Publication record prototype
+
+**Experimental, story-only composition.** Identifies a publication and puts access links before its full description. Curated reports use the separate <LinkTo kind="patterns-landing-pages" story="report-landing">report landing page</LinkTo>.
+
+There is no published package import or production Drupal adapter. The [record specification](?path=/docs/patterns-content-publication-record-specification--docs) documents source evidence, public-field selection and proposed departures from Drupal.
+
+## Standard record
+
+<Canvas of={Stories.Standard} story={{ inline: false, height: '700px' }} />
+
+The [news-entry reference](?path=/docs/patterns-article-story--docs) supplies the masthead, plain-title introduction, optional lede and reading layout. Publication-specific elements are:
+
+- Separate author/source lists and a publication year, distinct from other date roles.
+- Early access links, full description and an optional cover/bibliography rail.
+- Complete, uncropped covers with a thin neutral border.
+
+The fixture is synthetic. Its HTML/plain-text resources are usable demonstration files; its backup is an identical local copy, not evidence of a verified external edition. Citation text is supplied verbatim. Resource language, format and size are supplied facts; unknown values are omitted.
+
+The optional standfirst requires approved content: do not automatically promote Drupal’s hidden short description or trim its body. The cover is decorative here because its title/year repeat adjacent text; supply meaningful alternative text for covers that convey additional information.
+
+## Missing content
+
+<Canvas of={Stories.NoCover} story={{ inline: false, height: '700px' }} />
+<Canvas of={Stories.NoFile} story={{ inline: false, height: '700px' }} />
+
+Missing data leaves no empty sections or placeholders. No public file does not imply unavailability; any explanation must be supplied by the editor or adapter.
+
+## Original and backup access
+
+<Canvas of={Stories.LocalBackup} story={{ inline: false, height: '700px' }} />
+
+Backups have their own labels and metadata and never replace an invalid primary link. Root-relative and HTTP(S) URLs follow the shared ContentPattern URL contract; unsafe and protocol-relative URLs are omitted. Identifiers remain opaque text rather than guessed DOI links.
+
+## Long content
+
+<Canvas of={Stories.LongCopy} story={{ inline: false, height: '700px' }} />
+
+Long text and identifiers wrap in DOM reading order. Use the standard toolbar for interface language and direction. Record labels have seven draft translations requiring native-speaker review. Work, body and resource languages remain separate from interface language. The demonstration shell supports English/Arabic; other interface locales use an explicitly English-labelled shell.
+
+## Adapting the prototype
+
+The composition needs its own `publication-record.scss`, shared Mangrove CSS and `pattern-demo.scss`; its styles are not included in `css/style.css`. Show code provides rendered HTML. Record content and access links work without JavaScript; the PageHeader/MegaMenu shell still needs its documented hydration. Supply an approved localized host shell when integrating.
+
+`recordProjection.js` filters presentation data; it is not a canonical schema or CMS adapter. Consumers must select approved public/domain content, sanitize CMS prose, and validate dates, language and primary/backup provenance against the pinned source audit. Consumer integration and editorial/accessibility review remain outstanding; this prototype does not establish Drupal rendering parity.
+
+## Changelog
+
+- **0.1.0**, 2026-10-29 ([#1437](https://github.com/unisdr/undrr-mangrove/pull/1437), [#1432](https://github.com/unisdr/undrr-mangrove/issues/1432)): Add an experimental ordinary publication-record story composition, separate from report landing references. Give complete covers a thin neutral border consistent with book cards. Remove the title-only minimal, external-only and dedicated RTL stories; retain missing-content and resource regression coverage. Preserve work-language tags on related links. Production adapter and reusable API remain unimplemented.

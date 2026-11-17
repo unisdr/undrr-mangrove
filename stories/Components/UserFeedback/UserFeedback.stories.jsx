@@ -1,32 +1,11 @@
+import { withLanguage } from '../../../.storybook/withLanguage';
 import UserFeedback from './UserFeedback';
-import {
-  LABELS_AR,
-  LABELS_ES,
-  LABELS_FR,
-  LABELS_JA,
-  LABELS_RU,
-  LABELS_ZH,
-} from './_labels';
-
-const LOCALE_LABELS = {
-  arabic: LABELS_AR,
-  chinese: LABELS_ZH,
-  french: LABELS_FR,
-  japanese: LABELS_JA,
-  russian: LABELS_RU,
-  spanish: LABELS_ES,
-};
-
-const withLocaleLabels = (Story, context) => {
-  const labels = LOCALE_LABELS[context.globals?.locale];
-  if (!labels) return <Story />;
-  return <Story {...context} args={{ ...context.args, labels }} />;
-};
+import { expect, userEvent, within } from 'storybook/test';
 
 export default {
   title: 'Components/User feedback',
   component: UserFeedback,
-  decorators: [withLocaleLabels],
+  decorators: [withLanguage],
   parameters: {
     layout: 'fullscreen',
     docs: {
@@ -39,6 +18,24 @@ export default {
 };
 
 export const Default = {};
+
+export const ArabicConfirmation = {
+  args: { lang: 'ar' },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const region = canvas.getByRole('region', {
+      name: 'هل كانت هذه الصفحة مفيدة؟',
+    });
+    await expect(region).toHaveAttribute('lang', 'ar');
+    await expect(getComputedStyle(region).direction).toBe('rtl');
+    canvas.getByRole('button', { name: 'نعم' }).focus();
+    await userEvent.keyboard('{Enter}');
+    await expect(canvas.getByText(/شكراً لملاحظاتك/)).toHaveFocus();
+    await expect(
+      canvas.getByRole('link', { name: 'إخبارنا بالمزيد' })
+    ).toHaveAttribute('target', '_blank');
+  },
+};
 
 export const LongLabels = {
   args: {

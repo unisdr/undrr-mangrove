@@ -33,3 +33,6 @@ debug-storybook.log
 
 # Local and CI motion regression evidence
 /artifacts/motion/
+
+# Rich-content browser gate evidence
+/artifacts/rich-content/

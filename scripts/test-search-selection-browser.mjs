@@ -4,6 +4,7 @@ import { chromium, webkit } from 'playwright-core';
 
 const base = process.env.SEARCH_STORYBOOK_URL || 'http://127.0.0.1:6099';
 const engine = process.env.SEARCH_BROWSER || 'chromium';
+const forcedColors = process.env.SEARCH_FORCED_COLORS || 'none';
 assert(['chromium', 'webkit'].includes(engine));
 const browser = await { chromium, webkit }[engine].launch();
 const themes = [
@@ -56,11 +57,11 @@ try {
             hits: Array.from({ length: 4 }, (_, index) => ({
               _id: String(index),
               _source: {
-                type: 'news',
+                type: 'publication',
                 field_domain_access: ['www_undrr_org'],
                 teaser: `<div class="mg-card mg-card__hc">${
                   index > 1
-                    ? '<div class="mg-card__visual"><img class="mg-card__image" src="/test-cover.svg" alt="Test publication cover" /></div>'
+                    ? `<div class="mg-card__visual"><img class="mg-card__image" src="/test-cover-${index}.svg" alt="Test publication cover" /></div>`
                     : ''
                 }<div class="mg-card__content"><h3 class="mg-card__title"><a href="#result-${index}">Publication ${index}</a></h3><p>${
                   index % 2
@@ -79,10 +80,12 @@ try {
     await page.route('**/api/**', route =>
       route.fulfill({ json: { results: [] } })
     );
-    await page.route('**/test-cover.svg', route =>
+    await page.route('**/test-cover-*.svg', route =>
       route.fulfill({
         contentType: 'image/svg+xml',
-        body: '<svg xmlns="http://www.w3.org/2000/svg" width="60" height="80"><rect width="60" height="80" fill="navy"/></svg>',
+        body: route.request().url().endsWith('3.svg')
+          ? '<svg xmlns="http://www.w3.org/2000/svg" width="240" height="160"><rect width="240" height="160" fill="navy"/></svg>'
+          : '<svg xmlns="http://www.w3.org/2000/svg" width="160" height="240"><rect width="160" height="240" fill="navy"/></svg>',
       })
     );
     await page.goto(
@@ -102,18 +105,48 @@ try {
       Math.max(...heights) - Math.min(...heights) < 1,
       'Search book cards must fill their grid row'
     );
-    const coverRatios = await cards
-      .locator('.mg-card__visual')
-      .evaluateAll(elements =>
-        elements.map(el => {
-          const rect = el.getBoundingClientRect();
-          return rect.width / rect.height;
-        })
-      );
-    assert.equal(coverRatios.length, 2);
+    const covers = cards.locator('.mg-card__visual img');
+    await covers.evaluateAll(images =>
+      Promise.all(images.map(image => image.decode()))
+    );
+    const coverGeometry = await covers.evaluateAll(images =>
+      images.map(image => {
+        const rect = image.getBoundingClientRect();
+        const style = getComputedStyle(image);
+        const width =
+          rect.width -
+          parseFloat(style.borderLeftWidth) -
+          parseFloat(style.borderRightWidth);
+        const height =
+          rect.height -
+          parseFloat(style.borderTopWidth) -
+          parseFloat(style.borderBottomWidth);
+        return {
+          ratio: width / height,
+          naturalRatio: image.naturalWidth / image.naturalHeight,
+        };
+      })
+    );
+    assert.equal(coverGeometry.length, 2);
     assert(
-      coverRatios.every(ratio => Math.abs(ratio - 3 / 4) < 0.01),
-      'Cover proportions must remain 3:4'
+      coverGeometry.every(
+        ({ ratio, naturalRatio }) => Math.abs(ratio - naturalRatio) < 0.01
+      ),
+      'Portrait and landscape artwork must retain natural proportions'
+    );
+    assert(
+      Math.abs(coverGeometry[0].naturalRatio - coverGeometry[1].naturalRatio) >
+        0.1
+    );
+    const captions = await cards
+      .locator('.mg-card__content')
+      .evaluateAll(elements =>
+        elements.map(el => el.getBoundingClientRect().top)
+      );
+    assert(
+      Math.abs(captions[0] - captions[1]) < 1 &&
+        Math.abs(captions[2] - captions[3]) < 1,
+      'Search book captions align within rows, including missing artwork'
     );
     const standaloneHeight = await cards.first().evaluate(el => {
       const wrapper = document.createElement('div');
@@ -141,7 +174,12 @@ try {
     );
     await page.close();
     for (const mobile of [true, false]) {
-      for (const reducedMotion of ['no-preference', 'reduce']) {
+      for (const { reducedMotion, locale } of [
+        'no-preference',
+        'reduce',
+      ].flatMap(reducedMotion =>
+        ['english', 'arabic'].map(locale => ({ reducedMotion, locale }))
+      )) {
         const page = await browser.newPage({
           viewport: mobile
             ? { width: 390, height: 844 }
@@ -149,10 +187,15 @@ try {
           isMobile: mobile,
           hasTouch: mobile,
           reducedMotion,
+          forcedColors,
         });
         const input = locator => (mobile ? locator.tap() : locator.click());
         await page.goto(
-          `${base}/iframe.html?id=components-syndicated-search--filter-selection&viewMode=story&globals=${encodeURIComponent(`theme:${theme}`)}`
+          `${base}/iframe.html?id=components-syndicated-search--filter-selection&viewMode=story&globals=${encodeURIComponent(`theme:${theme};locale:${locale}`)}`
+        );
+        await page.waitForFunction(
+          expected => document.documentElement.dir === expected,
+          locale === 'arabic' ? 'rtl' : 'ltr'
         );
         if (mobile)
           await input(
@@ -161,6 +204,114 @@ try {
         const surface = page.locator(
           mobile ? '.mg-search__drawer' : '.mg-search__sidebar'
         );
+        const type = surface
+          .locator('[data-facet-key="type"]')
+          .getByRole('button');
+        // Parent and child selections must retain the same order in the real
+        // mobile drawer and desktop sidebar, across all themes and motion modes.
+        await input(type);
+        const optionLabels = () =>
+          page
+            .locator('[role="listbox"] .mg-select__option-label')
+            .allTextContents();
+        const original = await optionLabels();
+        assert.equal(original.length, 5);
+        await input(page.getByRole('option', { name: /^News 10$/ }));
+        assert.deepEqual(await optionLabels(), original);
+        const inherited = page.getByRole('option', { name: /Update 7$/ });
+        assert(
+          await inherited.evaluate(el =>
+            el.classList.contains('mg-select__option--inherited')
+          )
+        );
+        assert.equal(await inherited.getAttribute('aria-selected'), 'false');
+        assert.equal(
+          (await inherited.getAttribute('aria-describedby')) !== null,
+          true
+        );
+        assert(
+          await inherited.locator('svg').evaluate(el => {
+            const rect = el.getBoundingClientRect();
+            return (
+              rect.width > 0 &&
+              rect.height > 0 &&
+              getComputedStyle(el).color !== 'rgba(0, 0, 0, 0)'
+            );
+          })
+        );
+        await input(inherited);
+        const selectedLabels = await optionLabels();
+        assert.deepEqual(
+          selectedLabels,
+          original.map(label => (label === 'Update' ? 'News: Update' : label))
+        );
+        const subtype = page.getByRole('option', { name: /News: Update 7$/ });
+        assert.equal(await subtype.getAttribute('aria-selected'), 'true');
+        assert(
+          await subtype.evaluate(el =>
+            el.classList.contains('mg-select__option--subtype')
+          )
+        );
+        const indent = await subtype.evaluate(
+          el => getComputedStyle(el).paddingInlineStart
+        );
+        assert(parseFloat(indent) > 0);
+        if (theme === themes[0] && reducedMotion === 'no-preference') {
+          await page.screenshot({
+            path: `/tmp/mangrove-1468-${mobile ? 'mobile' : 'desktop'}-${locale}.png`,
+            fullPage: true,
+          });
+        }
+        assert.equal(
+          await type.evaluate(el => el === document.activeElement),
+          true
+        );
+        await page.keyboard.press('Escape');
+        assert.equal(await type.getAttribute('aria-expanded'), 'false');
+        if (mobile) assert.equal(await surface.isVisible(), true);
+        await input(type);
+        assert.deepEqual(await optionLabels(), selectedLabels);
+        await input(page.getByRole('option', { name: /^News 10$/ }));
+        const partialParent = page.getByRole('option', { name: /^News 10$/ });
+        assert(
+          await partialParent.evaluate(el =>
+            el.classList.contains('mg-select__option--partial')
+          )
+        );
+        assert.equal(
+          await partialParent.getAttribute('aria-selected'),
+          'false'
+        );
+        assert(
+          await partialParent.locator('svg').evaluate(el => {
+            const rect = el.getBoundingClientRect();
+            return (
+              rect.width > 0 &&
+              rect.height > 0 &&
+              getComputedStyle(el).color !== 'rgba(0, 0, 0, 0)'
+            );
+          })
+        );
+        assert.equal(
+          (await partialParent.getAttribute('aria-describedby')) !== null,
+          true
+        );
+        assert.equal(
+          await page
+            .getByRole('option', { name: /News: Update 7$/ })
+            .getAttribute('aria-selected'),
+          'true'
+        );
+        await input(page.getByRole('option', { name: /News: Update 7$/ }));
+        assert.deepEqual(await optionLabels(), original);
+        assert.equal(
+          await type.evaluate(el => el === document.activeElement),
+          true
+        );
+        await page.keyboard.press('Escape');
+        assert.equal(await type.getAttribute('aria-expanded'), 'false');
+        if (mobile) assert.equal(await surface.isVisible(), true);
+
         const region = surface.getByRole('button', {
           name: 'Region',
           exact: true,
@@ -175,7 +326,7 @@ try {
           exact: true,
         });
         await input(topics);
-        const search = page.getByRole('textbox', { name: 'Search Topics' });
+        const search = page.getByRole('combobox', { name: 'Search Topics' });
         await search.fill('Topic 12');
         const option = page.getByRole('option', {
           name: 'Topic 12',
@@ -217,7 +368,7 @@ try {
           assert.equal(await surface.count(), 0);
         }
         console.log(
-          `${engine}: ${theme}, ${mobile ? 'touch drawer' : 'desktop mouse'}, ${reducedMotion}: passed`
+          `${engine}: ${theme}, ${mobile ? 'touch drawer' : 'desktop mouse'}, ${reducedMotion}, ${locale}, forced colours ${forcedColors}: passed`
         );
         await page.close();
       }

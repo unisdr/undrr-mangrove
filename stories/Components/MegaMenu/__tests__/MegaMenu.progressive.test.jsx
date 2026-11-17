@@ -38,6 +38,44 @@ describe('mobile progressive menu', () => {
     ).toHaveAttribute('hidden');
   });
 
+  it.each([undefined, '/logo.svg'])(
+    'opens a rail section and restores its opener (logo: %s)',
+    logoSrc => {
+      const original = window.matchMedia;
+      window.matchMedia = jest.fn(() => ({
+        matches: false,
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+      }));
+      try {
+        render(<MegaMenu sections={sections} logoSrc={logoSrc} />);
+        const trigger = document.querySelector('.mg-mega-topbar__item-link');
+        trigger.focus();
+        fireEvent.click(trigger);
+        const dialog = screen.getByRole('dialog');
+        expect(
+          within(dialog).getByRole('heading', { name: 'About' })
+        ).toHaveFocus();
+        fireEvent.click(within(dialog).getByRole('button', { name: 'Back' }));
+        expect(
+          within(dialog).getByRole('heading', { name: 'All sections' })
+        ).toBeInTheDocument();
+        fireEvent.keyDown(dialog, { key: 'Escape' });
+        expect(trigger).toHaveFocus();
+        fireEvent.click(
+          screen.getByRole('button', { name: 'Open navigation menu' })
+        );
+        expect(
+          within(screen.getByRole('dialog')).getByRole('heading', {
+            name: 'All sections',
+          })
+        ).toHaveFocus();
+      } finally {
+        window.matchMedia = original;
+      }
+    }
+  );
+
   it('drills into nested groups without losing parent destinations or authored content', () => {
     const { dialog } = openMenu();
     fireEvent.click(within(dialog).getByRole('button', { name: 'About' }));

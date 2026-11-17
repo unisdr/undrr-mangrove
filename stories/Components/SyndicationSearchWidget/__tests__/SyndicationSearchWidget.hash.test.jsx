@@ -202,3 +202,47 @@ describe('SyndicationSearchWidget URL hash state', () => {
     expect(window.location.hash).toContain('sort=eventDateDesc');
   });
 });
+
+it('groups a URL-restored subtype missing from the response beside its parent', async () => {
+  const baseFetch = mockFetch();
+  global.fetch = jest.fn(url =>
+    String(url).includes('/api/v1/taxonomy')
+      ? baseFetch(url)
+      : Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              hits: { hits: [], total: { value: 10 } },
+              aggregations: {
+                type: {
+                  buckets: [
+                    { key: 'news', doc_count: 10 },
+                    { key: 'publication', doc_count: 5 },
+                  ],
+                },
+                field_news_type: { buckets: [{ key: '751', doc_count: 8 }] },
+              },
+            }),
+        })
+  );
+  window.history.replaceState(
+    null,
+    '',
+    '/search#query=climate&f.type=field_news_type%3A754'
+  );
+  render(<SyndicationSearchWidget config={CONFIG} />);
+  await waitFor(() => expect(chipLabels()).toContain('News: Feature'));
+  const trigger = document.querySelector('[data-facet-key="type"] button');
+  fireEvent.click(trigger);
+  await waitFor(() => expect(screen.getAllByRole('option')).toHaveLength(4));
+  expect(
+    Array.from(
+      document.querySelectorAll('[role="option"] .mg-select__option-label')
+    ).map(el => el.textContent)
+  ).toEqual(['News', 'Update', 'News: Feature', 'Publication']);
+  const restored = screen.getByRole('option', { name: /News: Feature/ });
+  expect(restored).toHaveAttribute('aria-selected', 'true');
+  expect(restored).toHaveClass('mg-select__option--subtype');
+  fireEvent.click(restored);
+  expect(chipLabels()).not.toContain('News: Feature');
+});

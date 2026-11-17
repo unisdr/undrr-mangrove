@@ -1,3 +1,4 @@
+import { isTabFacet, tabSelections, tabOptionValue } from './customFacetTabs';
 /**
  * @file hashState.js
  * @description Read and write search state in the URL hash.
@@ -10,8 +11,8 @@
  *
  * Facet keys become Elasticsearch field names in queryBuilder, so only keys
  * of the active facet fields are accepted and values are checked before
- * they reach state. Custom facets are not stored: their selections are
- * option positions, which change meaning when an editor edits the options.
+ * they reach state. Tab scopes use stable option values in `t.*` parameters.
+ * Dropdown custom facets remain unsynced because their option positions can change.
  *
  * @module SearchWidget/utils/hashState
  */
@@ -20,6 +21,7 @@ import { SORT_VALUES, SUBTYPE_FIELD_TO_PARENT } from './constants';
 
 const FACET_PREFIX = 'f.';
 const OPERATOR_PREFIX = 'op.';
+const TAB_PREFIX = 't.';
 const OPERATORS = ['OR', 'AND'];
 const SEARCH_PARAMS = ['query', 'page', 'sort', 'label'];
 export const MAX_VALUES_PER_FACET = 50;
@@ -40,7 +42,8 @@ export function isSearchHash(hash) {
     if (
       SEARCH_PARAMS.includes(name) ||
       name.startsWith(FACET_PREFIX) ||
-      name.startsWith(OPERATOR_PREFIX)
+      name.startsWith(OPERATOR_PREFIX) ||
+      name.startsWith(TAB_PREFIX)
     ) {
       return true;
     }
@@ -79,7 +82,10 @@ function isValidFacetValue(key, value) {
  *   `facets` is null when the hash has no valid `f.*` params, meaning
  *   "use the configured defaults".
  */
-export function parseHashState(hash, { facetFields, maxPage = Infinity }) {
+export function parseHashState(
+  hash,
+  { facetFields, maxPage = Infinity, tabFacets = [] }
+) {
   const raw = (hash || '').replace(/^#/, '');
   const params = new URLSearchParams(raw);
   const allowed = new Set(facetFields.map(field => field.key));
@@ -105,7 +111,20 @@ export function parseHashState(hash, { facetFields, maxPage = Infinity }) {
     if (OPERATORS.includes(operator)) facetOperators[key] = operator;
   }
 
+  const selectedTabs = {};
+  for (const facet of (tabFacets || []).filter(isTabFacet)) {
+    const value = params.get(`${TAB_PREFIX}${facet.id}`);
+    const index = facet.options.findIndex(
+      (option, index) =>
+        value !== null && tabOptionValue(facet, index) === value
+    );
+    if (index >= 0) selectedTabs[facet.id] = [String(index)];
+  }
+
   return {
+    ...((tabFacets || []).some(isTabFacet)
+      ? { customFacets: tabSelections(tabFacets, selectedTabs) }
+      : {}),
     query: params.get('query'),
     page:
       Number.isInteger(pageParam) && pageParam > 1 && pageParam <= maxPage
@@ -166,8 +185,8 @@ export function facetsEqual(a, b) {
  * @returns {string} Hash string
  */
 export function buildHashString(
-  { query, page, sortBy, facets, facetOperators },
-  { facetFields, defaultFacets, defaultSort }
+  { query, page, sortBy, facets, facetOperators, customFacets },
+  { facetFields, defaultFacets, defaultSort, tabFacets = [] }
 ) {
   const params = new URLSearchParams();
   if (query) params.set('query', query);
@@ -192,5 +211,14 @@ export function buildHashString(
     }
   }
 
+  const selectedTabs = tabSelections(tabFacets, customFacets);
+  const defaultTabs = tabSelections(tabFacets);
+  for (const facet of (tabFacets || []).filter(isTabFacet)) {
+    const selected = selectedTabs[facet.id][0];
+    const value = tabOptionValue(facet, Number(selected));
+    if (selected !== defaultTabs[facet.id][0] && value !== null) {
+      params.set(`${TAB_PREFIX}${facet.id}`, value);
+    }
+  }
   return params.toString();
 }

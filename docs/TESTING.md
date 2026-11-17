@@ -2,52 +2,59 @@
 
 > Edits to this file show up on both [GitHub](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/TESTING.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-testing--docs).
 
-This guide covers testing practices for the Mangrove component library. For development setup and commands, see [DEVELOPMENT.md](./DEVELOPMENT.md).
+Choose checks for the behaviour you changed. Complete [development setup](DEVELOPMENT.md)
+first; [Contributing](../CONTRIBUTING.md#submitting-changes) lists the submission
+checks.
 
 ## Testing strategy
 
-We use multiple testing approaches to ensure component quality:
+| Change or question | Check | What it establishes |
+|---|---|---|
+| Component logic, props or DOM output | `yarn test path/to/file` | Jest assertions in jsdom |
+| Story interactions, focus or layout | `yarn scss`, then `yarn test-storybook` | Render and play assertions in Chromium |
+| Published assets or iframe integration | [Production-build gates](#checks-against-the-production-build) | Behaviour of the built Storybook |
+| Visual appearance | [Chromatic](#visual-testing-with-chromatic) | Screenshots for review |
+| Accessibility | [Automated and manual checks](#accessibility-testing) | Automated findings plus keyboard and assistive-technology review |
 
-1. **Unit tests** - Jest for component logic and behavior
-2. **Visual tests** - Chromatic for visual regression testing
-3. **Accessibility tests** - Built into our test suite
-4. **Manual testing** - Storybook for interactive testing
+Jest does not load external SCSS. Passing unit tests cannot establish spacing,
+contrast, overflow or visible focus; use a real browser for those checks.
 
 ## Unit testing with Jest
 
 ### Writing tests
 
-Test files should be placed in `__tests__` directories within component folders:
+Place tests in a component's `__tests__` directory. For example:
 
-```
-stories/Components/Button/
-  ├── Button.jsx
-  ├── Button.stories.jsx
-  └── __tests__/
-      └── Button.test.jsx
+```text
+stories/Components/Buttons/CtaButton/
+├── CtaButton.jsx
+├── CtaButton.stories.jsx
+└── __tests__/
+    └── CtaButton.test.jsx
 ```
 
 ### Basic test structure
 
-```javascript
-import { render, screen, fireEvent } from '@testing-library/react';
-import { Button } from '../Button';
+This example uses the existing `CtaButton` API. Save it in that component's
+`__tests__` directory so the relative import resolves:
 
-describe('Button', () => {
-  it('renders with text', () => {
-    render(<Button>Click me</Button>);
-    expect(screen.getByText('Click me')).toBeInTheDocument();
-  });
+```jsx
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import { CtaButton } from '../CtaButton';
 
-  it('handles click events', () => {
-    const handleClick = jest.fn();
-    render(<Button onClick={handleClick}>Click me</Button>);
+it('uses the supplied destination when enabled', () => {
+  render(<CtaButton label="Read the report" href="/report" />);
 
-    fireEvent.click(screen.getByText('Click me'));
-    expect(handleClick).toHaveBeenCalledTimes(1);
-  });
+  expect(screen.getByRole('link', { name: 'Read the report' })).toHaveAttribute(
+    'href',
+    '/report'
+  );
 });
 ```
+
+The [maintained CtaButton suite](https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Buttons/CtaButton/__tests__/CtaButton.test.jsx)
+also covers disabled links, class composition and automated accessibility.
 
 ### Running tests
 
@@ -59,7 +66,7 @@ yarn test
 yarn test:watch
 
 # Run tests for a specific file
-yarn test Button.test.jsx
+yarn test stories/Components/Buttons/CtaButton/__tests__/CtaButton.test.jsx
 
 # Generate coverage report
 yarn test:coverage
@@ -79,90 +86,73 @@ yarn test --verbose
 
 #### Testing props
 
-```javascript
-it('applies custom className', () => {
-  render(<Button className="custom-class">Test</Button>);
-  expect(screen.getByRole('button')).toHaveClass('custom-class');
-});
-```
+Assert a consumer-visible result of the prop. The
+[CtaButton suite](https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Buttons/CtaButton/__tests__/CtaButton.test.jsx)
+checks that a supplied `href` becomes the link destination and that a disabled
+link has no destination.
 
 #### Testing state changes
 
-```javascript
-it('shows tab content when clicked', () => {
-  render(<Tab tabdata={tabdata} />);
-  const tab = screen.getByText('Tab title 2');
-
-  fireEvent.click(tab);
-  expect(screen.getByText(/Sendai Framework/)).toBeInTheDocument();
-});
-```
+Exercise the control and assert the resulting output. The
+[Tab suite](https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Tab/__tests__/Tab.test.jsx) shows the runtime
+initialization needed before asserting panel changes. Use browser play functions
+when the outcome depends on geometry or focus visibility.
 
 #### Testing async behavior
 
-```javascript
-it('loads data on mount', async () => {
-  render(<DataComponent />);
+Await the visible outcome rather than adding a fixed delay. The
+[ShareButtons dialog suite](https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Buttons/ShareButtons/__tests__/ShareButtons.dialog.test.jsx)
+uses `findByRole` and `waitFor` for dialog and asynchronous sharing behaviour.
+Keep service responses deterministic unless the purpose is a live integration
+check, such as the consent-banner story described below.
 
-  expect(screen.getByText('Loading...')).toBeInTheDocument();
+## Play functions with Vitest Browser Mode
 
-  await waitFor(() => {
-    expect(screen.getByText('Data loaded')).toBeInTheDocument();
-  });
-});
-```
+`yarn test-storybook` runs each story's render check and existing `play`
+assertions in real headless Chromium through `@storybook/addon-vitest` and
+Vitest's Playwright provider. Computed styles, box geometry, overflow and
+keyboard focus are tested in the browser. Jest unit tests remain a separate
+`yarn test` command using jsdom.
 
-## Play functions with the Storybook test runner
-
-A story's `play` function runs in a real browser, so it can assert the things
-jsdom cannot represent: computed style, box geometry, scroll overflow, focus
-order after a real click. Most of the play functions in this library exist for
-exactly that reason — a jsdom copy of them would pass on a completely unstyled
-component.
-
-The test runner drives a headless Chromium over a served Storybook. It runs
-every story twice over: a smoke test that the story renders without error, and,
-where one exists, the `play` function with its assertions.
-
-```bash
-# Build the Storybook the runner will drive
-yarn build
-
-# Serve it, then run the play functions against it
-yarn serve-storybook &
+```sh
+# Generate the Sass tokens once in a fresh checkout
+yarn scss
+# Install Chromium once per machine (CI also installs its system libraries)
+yarn playwright install --with-deps chromium
+# Run all stories, without building or serving Storybook
 yarn test-storybook
-
-# One story or one file
+# Filter by file or test name
 yarn test-storybook Table.stories
-
-# Stop the server when you are done
-kill %1
+yarn test-storybook -t 'Rendering check'
+# Keep a browser test session watching for changes
+yarn test-storybook:watch
 ```
 
-Arguments go straight after the script name. Yarn 4 does not need `npm`'s `--`
-separator and passes one through literally, so `yarn test-storybook -- Table`
-hands the runner a bare `--` and does not filter anything.
+Arguments go directly after the Yarn script name. The Storybook testing widget
+uses the same Vitest project. Storybook 10.6 applies preview/addon annotations
+automatically; do not add a second `setProjectAnnotations` setup file.
 
-`yarn test-storybook` needs a Storybook already running; it will not start one.
-`yarn serve-storybook` serves the built Storybook on port **6099** and
-`yarn test-storybook` points there, so the two pair up with no arguments. 6006
-is deliberately left to `yarn storybook`: sharing the port would make the server
-fail on `EADDRINUSE` while the runner quietly tested the dev server instead of
-the build. To run the play functions against a dev server on purpose:
+Storybook's global loader awaits the selected theme's lazy Sass chunk before
+rendering and assertions. Theme toolbar changes also update docs-only pages.
 
-```bash
-yarn storybook           # in one shell
-yarn test-storybook --url http://127.0.0.1:6006
+### Checks against the production build
+
+Vitest tests source modules, so the standalone browser gates still exercise
+the built site, its asset delivery and iframe integration:
+
+```sh
+yarn build
+yarn serve-storybook                       # port 6099, in another terminal
+yarn test:search-selection-browser
+yarn test:motion-browser
+yarn test:rich-content-browser
 ```
 
-The runner needs its browser once per machine:
+Port 6006 belongs to `yarn storybook`. The built-site server fails on
+`EADDRINUSE` so these gates cannot silently test a development server.
 
-```bash
-yarn run playwright install --with-deps chromium
-```
-
-CI runs the same commands in the `Build and Deploy` workflow, on every push to a
-pull request. A failing assertion fails the build.
+CI runs both the Vitest story suite and the production-build gates. A failed
+assertion fails the build.
 
 ### What cannot be asserted this way
 
@@ -175,8 +165,8 @@ they call, and one here does.
 and `getComputedStyle('#cc-main').position`. That is a deliberate trade: it is
 the only check in the repository that can tell a working consent bar from a
 broken one, and measured over three full runs it took about 978ms with no
-flakes behind Cloudflare. It is also the reason the runner's test timeout is
-raised to 60 seconds.
+flakes behind Cloudflare. Vitest's story test and hook timeouts are 60 seconds to preserve this live
+integration check.
 
 **Know what it costs before you debug a mystery red build.** `storybook.yml`
 has no `paths:` filter on its pull-request trigger, so this story gates *every*
@@ -190,28 +180,39 @@ is in the CDN bundle or in this story's selectors, not in the component.
 If a story genuinely cannot run headlessly, give it the `!test` tag and record
 the reason in the story rather than leaving a silent failure.
 
+## Storybook builder migration
+
+The [Vite migration report](STORYBOOK-VITE-SPIKE.md) records the #1355 spike,
+the 3.0 cutover and verification evidence. Storybook uses Vite; the published
+library bundles continue to use Webpack.
+
 ## Visual testing with Chromatic
 
 Visual testing is handled automatically through our CI/CD pipeline.
 
 ### Quick overview
 
-- Chromatic runs on PRs and main branch pushes
+- Open visual-change PRs as drafts. Chromatic runs when a draft is marked ready for review, and on matching main/develop pushes. Routine PR pushes and reopening do not request snapshots.
+- After a material visual revision, run **Chromatic Visual Testing** from the Actions tab and select the PR branch, or use `gh workflow run chromatic.yml --ref <branch>`. Manual dispatch becomes available once this workflow change is on the default branch; select a branch that contains the updated workflow. Review the selected commit and the run's Chromatic link; a manual run does not add a PR comment.
 - Visual changes are highlighted for review
 - Changes on main are auto-accepted as baseline
-- Skip with `[skip chromatic]` in commit message
+- Automatic builds honour `[skip chromatic]` in a push commit message or a ready-for-review PR title. Deliberate manual dispatch does not read those markers.
+- Review builds check out the exact PR head commit; manual builds use the selected branch commit. Both pass explicit branch and commit metadata to Chromatic for baseline selection.
+- Matching paths include story/theme sources, design tokens, token generation and the dependency lockfile.
 
 ## Accessibility testing
 
 ### Automated testing
 
-We use jest-axe for automated accessibility testing. The `toHaveNoViolations` matcher is globally configured in `jest.setup.js`, so you only need to import `axe`:
+We use jest-axe for automated accessibility testing. The `toHaveNoViolations` matcher is globally configured in `jest.setup.js`, so add `axe` to the imports in the CtaButton example above:
 
 ```javascript
 import { axe } from 'jest-axe';
 
 it('has no accessibility violations', async () => {
-  const { container } = render(<Button>Click me</Button>);
+  const { container } = render(
+    <CtaButton label="Read the report" href="/report" />
+  );
   const results = await axe(container);
   expect(results).toHaveNoViolations();
 });
@@ -220,41 +221,31 @@ it('has no accessibility violations', async () => {
 ### Manual testing
 
 1. **Keyboard navigation:** tab through interactive elements and verify visible focus.
-2. **Screen reader testing:** check announcements and form labeling in NVDA or VoiceOver.
-3. **Color contrast:** verify WCAG AA using browser tooling.
+2. **Screen reader testing:** check announcements and form labelling in NVDA or VoiceOver.
+3. **Colour contrast:** verify WCAG AA using browser tooling.
 
 ## Testing components with external dependencies
 
 ### Mocking modules
 
-```javascript
-// Mock an external library
-jest.mock('react-leaflet', () => ({
-  MapContainer: ({ children }) => <div>{children}</div>,
-  TileLayer: () => <div>Tile Layer</div>,
-}));
-```
+Mock the boundary the test does not exercise. The
+[Tab suite](https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Tab/__tests__/Tab.test.jsx)
+mocks automatic initialization, then calls the real runtime to control when it
+runs. Preserve real behaviour when it is the subject of the assertion.
 
 ### Mocking API calls
 
-```javascript
-import { rest } from 'msw';
-import { setupServer } from 'msw/node';
-
-const server = setupServer(
-  rest.get('/api/data', (req, res, ctx) => {
-    return res(ctx.json({ data: 'test' }));
-  })
-);
-
-beforeAll(() => server.listen());
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
-```
+Use Jest fetch mocks for isolated unit tests. Start with the [ShareButtons dialog suite](https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Buttons/ShareButtons/__tests__/ShareButtons.dialog.test.jsx)
+for a scoped mock that restores the original `global.fetch`, or the
+[search sorting suite](https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/SyndicationSearchWidget/__tests__/sorting.test.jsx)
+for deterministic responses and request assertions. Cover failure and empty
+responses as well as success, and restore global replacements after the test.
 
 ## Coverage requirements
 
-While we don't enforce strict coverage thresholds, aim for:
+`jest.config.js` enforces a global floor of 10% for statements, branches,
+functions and lines. That floor is a regression gate, not a component-quality
+target. For new and changed code, aim for:
 
 - 80% statement coverage
 - 70% branch coverage
@@ -309,41 +300,23 @@ Failed tests will block merging and deployment.
 
 ### Test structure
 
-```javascript
-describe('ComponentName', () => {
-  describe('rendering', () => {
-    it('renders without crashing', () => {});
-    it('displays correct content', () => {});
-  });
-
-  describe('interactions', () => {
-    it('handles user input', () => {});
-    it('responds to events', () => {});
-  });
-
-  describe('edge cases', () => {
-    it('handles empty data', () => {});
-    it('shows error state', () => {});
-  });
-});
-```
+Group tests by behaviour when the suite needs it. Keep setup close to the tests
+that depend on it; use the
+[CtaButton suite](https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Buttons/CtaButton/__tests__/CtaButton.test.jsx)
+as a small example and the
+[Tab suite](https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Tab/__tests__/Tab.test.jsx)
+for a larger suite with runtime setup.
 
 ## Performance testing
 
-For performance-sensitive components:
+Reproduce the slow interaction in a browser and record the component, fixture,
+viewport and measurement method. Profile the render or interaction before and
+after the change using the same conditions. A jsdom render time is not evidence
+of browser layout or interaction performance.
 
-```javascript
-import { render } from '@testing-library/react';
-import { measureRender } from './test-utils';
-
-it('renders efficiently', () => {
-  const renderTime = measureRender(() => {
-    render(<LargeList items={manyItems} />);
-  });
-
-  expect(renderTime).toBeLessThan(100); // ms
-});
-```
+For an automated performance gate, define the measured operation, environment
+and threshold explicitly. Keep the measurement repeatable enough to distinguish
+a regression from run-to-run variation.
 
 ## Related documentation
 
@@ -365,7 +338,7 @@ After `yarn build`, serve the built Storybook with `yarn serve-storybook`, then 
 
 Deterministic `Quality/Motion` fixtures cover Loader, ProgressBar, Gallery, MegaMenu, SyndicationSearchWidget, Drawer and Details. The gate emulates reduced motion, forced colours and both together **before mounting** each fixture, across all five brand themes at desktop LTR and 375px RTL. It checks loading shapes, normal-motion rotation, static labelled Loaders under reduced motion, static dashed indeterminate progress, explicit instant Gallery scrolling even with consumer smooth-scroll CSS, keyboard access and focus return, and visible menu destinations. Search states use local context fixtures with explicit complete/fail controls; media requests are local and external network requests are blocked.
 
-`artifacts/motion/` contains screenshots and a JSON result log; override its location with `MOTION_ARTIFACT_DIR`. CI uploads these artifacts even when the gate fails. The existing Storybook workflow runs the gate on every pull-request update, and Chromatic also reruns on synchronisation and reopening. Screenshots support review; computed-style and interaction assertions decide pass/fail.
+`artifacts/motion/` contains screenshots and a JSON result log; override its location with `MOTION_ARTIFACT_DIR`. CI uploads these artifacts even when the gate fails. The existing Storybook workflow runs the gate on every pull-request update. Chromatic runs when a draft PR is marked ready for review; request a manual run on its branch after material visual revisions. Screenshots support review; computed-style and interaction assertions decide pass/fail.
 
 Stylelint's `mangrove/no-unapproved-motion-timing` rule rejects new literal transition/animation times, including longhands, vendor prefixes, variable fallbacks and transition mixins. `scripts/motion-timing-baseline.json` permits only the recorded legacy declaration counts. Prune removed timings with `node scripts/prune-motion-baseline.mjs --write` when migrating them; baseline changes require reviewed justification. The prune command can only remove exemptions and cannot grow the baseline. Zero lifecycle delays, the exact foundational reduced-motion reset and component properties for repeating progress cycles are intentional exceptions. Run `yarn test scripts/__tests__/stylelint-motion.test.js` for adversarial examples.
 

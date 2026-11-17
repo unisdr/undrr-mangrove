@@ -3,7 +3,8 @@
 // ---------------------------------------------------------------------
 // Every token in this block is generated from tokens/irp.yaml, merged over
 // tokens/mangrove.yaml and tokens/undrr.yaml.
-@import "./generated/tokens-irp";
+@use "generated/tokens-irp" as *;
+@use "tokens-tabs" as *;
 
 .mg-theme-irp {
   @include mg-tokens-tabs;

@@ -6,6 +6,9 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Cards/StatsCard/StatsCard.mdx
  */
+@use "../../../assets/scss/breakpoints" as *;
+@use "../../../assets/scss/mixins" as *;
+
 /* Stats Card Component */
 .mg-stats-card {
   width: 100%;
@@ -43,7 +46,6 @@
     font-size: var(--mg-font-size-200);
     font-weight: 600;
     color: rgb(var(--mg-color-tag));
-    text-transform: uppercase;
     letter-spacing: 0.05em;
     line-height: 1.2;
   }
@@ -142,10 +144,19 @@
 /* Variant: Compact */
 .mg-stats-card--compact {
   .mg-stats-card-item {
-    padding: var(--mg-spacing-300);
+    padding: var(--mg-spacing-150);
+    gap: var(--mg-spacing-50);
 
     @include devicebreak(small) {
-      padding: var(--mg-spacing-200);
+      padding: var(--mg-spacing-100);
+    }
+
+    // Compact spacing is owned by the gap, without child margins stacking up.
+    &__icon,
+    &__value,
+    &__bottom-label,
+    &__summary {
+      margin: 0;
     }
 
     &__value {

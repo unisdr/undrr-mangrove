@@ -6,6 +6,11 @@ A step-by-step tutorial for building a new component in Mangrove from scratch. F
 
 For component motion, follow [Motion and animation](MOTION.md): purpose, timing tokens, reduced motion, progress indicators, forced colours and RTL.
 
+For built-in interface copy, follow [UI translations](UI-TRANSLATIONS.md):
+runtime `lang` selection, component-owned catalogues, explicit label overrides,
+HTML language boundaries and hydration. Keep consumer content separate from
+translated control labels, and exercise the runtime contract in locale stories.
+
 ## Decision tree: what files do I need?
 
 ```
@@ -25,9 +30,9 @@ Does the component need React?
           + fromElement tests + AI manifest SAMPLE_PROPS (optional)
 ```
 
-A webpack entry is what publishes a component. The npm tarball ships
-`dist/components/`, not `src/`, so an export added to `src/index.js` alone
-reaches no consumer — see unisdr/undrr-mangrove#1252.
+A webpack entry is what publishes a component. The build writes `dist/components/`; the npm tarball publishes those bundles
+as `components/`, without `src/`. An export added to `src/index.js` alone
+reaches no npm consumer — see unisdr/undrr-mangrove#1252.
 
 ## Reference component: Pager
 
@@ -77,7 +82,7 @@ Every component stylesheet must begin with a docblock comment containing a conci
 **Then add the import to `stories/assets/scss/_components.scss`:**
 
 ```scss
-@import "../../Components/{Category}/{ComponentName}/component-name";
+@use "../../Components/{Category}/{ComponentName}/component-name";
 ```
 
 This is required — without it, your styles won't be included in any theme's compiled CSS.
@@ -237,6 +242,13 @@ If your component uses browser APIs or the example is a multi-component composit
 
 **React-only component:**
 1. Add an entry to `REQUIRES_REACT` in `scripts/ai-manifest/component-data.js` with a note explaining why React is needed
+
+For a new public CSS-property prefix, add its owner in `OWNERS`, its property
+count in `MIN_PROPERTIES` and descriptions in
+`scripts/ai-manifest/custom-properties.js`. Names and defaults come from compiled
+CSS; the descriptions are maintained by hand. Follow the
+[manifest review checklist](REVIEW-CHECKLIST.md#ai-discoverability-and-manifests)
+when adding or changing markup, utilities or public properties.
 
 Run `yarn validate-manifest` to verify your entries.
 

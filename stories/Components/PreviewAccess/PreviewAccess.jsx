@@ -25,7 +25,9 @@ const DEFAULT_MESSAGE =
  * @param {Object}  props
  * @param {boolean} [props.live]            When true, mounts the real gate.
  * @param {string}  [props.pin]             Unlock PIN.
- * @param {string}  [props.id]              sessionStorage scope key.
+ * @param {string}  [props.id]              Storage scope key for the unlock.
+ * @param {string}  [props.persist]         Where the unlock is kept: 'session' or 'local'.
+ * @param {number}  [props.maxAge]          Days a 'local' unlock lasts.
  * @param {string}  [props.eyebrow]         Small label above the title.
  * @param {string}  [props.title]           Modal heading.
  * @param {string}  [props.message]         Modal body copy.
@@ -39,6 +41,8 @@ export default function PreviewAccess({
   live = false,
   pin = '5498',
   id = null,
+  persist = 'session',
+  maxAge = null,
   eyebrow = 'UNDRR · Preview',
   title = 'Preview access required',
   message = DEFAULT_MESSAGE,
@@ -72,6 +76,8 @@ export default function PreviewAccess({
         data-mg-preview-access=""
         data-mg-preview-pin={pin}
         {...(id && { 'data-mg-preview-id': id })}
+        data-mg-preview-persist={persist}
+        {...(maxAge !== null && { 'data-mg-preview-max-age': maxAge })}
         data-mg-preview-eyebrow={eyebrow}
         data-mg-preview-title={title}
         data-mg-preview-message={message}
@@ -151,8 +157,15 @@ PreviewAccess.propTypes = {
   live: PropTypes.bool,
   /** PIN that unlocks the page. */
   pin: PropTypes.string,
-  /** sessionStorage scope key. Defaults to location.pathname when null. */
+  /** Storage scope key for the unlock. Defaults to location.pathname when null. */
   id: PropTypes.string,
+  /**
+   * Where the unlock is kept. `session` (default) lasts for the tab;
+   * `local` lasts across tabs and visits until `maxAge` or a PIN change.
+   */
+  persist: PropTypes.oneOf(['session', 'local']),
+  /** Days a `local` unlock lasts. Omit for no expiry. Ignored for `session`. */
+  maxAge: PropTypes.number,
   /** Small label above the title. */
   eyebrow: PropTypes.string,
   /** Modal heading. */

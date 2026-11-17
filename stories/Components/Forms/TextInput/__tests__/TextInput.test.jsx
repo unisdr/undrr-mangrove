@@ -125,3 +125,26 @@ describe('TextInput', () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 });
+
+describe('TextInput analytics label', () => {
+  it('labels the input and its label for click tracking', () => {
+    render(
+      <TextInput label="Nombre" analyticsLabel="Search download: Quantity" />
+    );
+    expect(screen.getByLabelText('Nombre')).toHaveAttribute(
+      'data-vf-analytics-label',
+      'Search download: Quantity'
+    );
+    expect(screen.getByText('Nombre')).toHaveAttribute(
+      'data-vf-analytics-label',
+      'Search download: Quantity'
+    );
+  });
+
+  it('adds no attribute when unset', () => {
+    render(<TextInput label="Name" />);
+    expect(screen.getByLabelText('Name')).not.toHaveAttribute(
+      'data-vf-analytics-label'
+    );
+  });
+});

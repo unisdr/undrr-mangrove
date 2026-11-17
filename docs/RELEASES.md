@@ -13,16 +13,16 @@ version, update `package.json`, tag, and let CI publish.
 
 GitHub Actions run on `unisdr/undrr-mangrove` again (2.0.1 was the first release published through CI since the organisation was flagged), but mangrove.undrr.org and the CDN still deploy from the public fork [`PreventionWeb/undrr-mangrove`](https://github.com/PreventionWeb/undrr-mangrove). So a release uses both:
 
-- **`unisdr/undrr-mangrove`:** pull requests are reviewed and merged here, and their checks run here ("Build and Deploy", "PR Title Check", and Chromatic when a pull request is opened). Pushing a `v*` tag runs "Publish to NPM Registry", which publishes with a provenance attestation through npm's trusted publisher. Its "Build and Deploy" also deploys Storybook to `unisdr.github.io/undrr-mangrove`, which has no custom domain; that copy is not the public site.
+- **`unisdr/undrr-mangrove`:** pull requests are reviewed and merged here, and their checks run here ("Build and Deploy", "PR Title Check", and Chromatic when a draft pull request is marked ready for review or a maintainer requests a manual run). Pushing a `v*` tag runs "Publish to NPM Registry", which publishes with a provenance attestation through npm's trusted publisher. Its "Build and Deploy" also deploys Storybook to `unisdr.github.io/undrr-mangrove`, which has no custom domain; that copy is not the public site.
 - **`PreventionWeb/undrr-mangrove`:** after merging, sync the fork. Its "Build and Deploy" workflow publishes Storybook to mangrove.undrr.org, and "Build and Push dist to dist branch" rebuilds its `dist` branch. npm publishing and Chromatic are disabled on the fork.
 
   ```bash
   gh repo sync PreventionWeb/undrr-mangrove --source unisdr/undrr-mangrove --branch main
   ```
 
-- **The asset library** (`assets.undrr.org/mangrove/latest/`) is rebuilt from the fork's `dist` branch, not this repository's, whenever the GitLab [shared-web-assets](https://gitlab.com/undrr/common/shared-web-assets/) pipeline runs.
+- **The asset library** (`assets.undrr.org/mangrove/latest/`) is built from the fork's `dist` branch, with an npm fallback if the clone fails. The GitLab [shared-web-assets](https://gitlab.com/undrr/common/shared-web-assets/) pipeline builds a snapshot; production changes only after a tagged pipeline's manual `deploy-production-job` deploys that build. A routine pipeline updates testing, not production.
 
-If Actions stop on `unisdr/undrr-mangrove` again, run the pull request checks locally before merging (`yarn lint:check`, `yarn prettier:check`, `yarn test`, `yarn build`, `yarn validate-manifest` and, for component changes, `yarn test-storybook` against the built site; see `storybook.yml` for the exact steps), and publish with the [break-glass steps](#break-glass-fully-local-release-ciactions-unavailable), as 2.0.0 was, without a provenance attestation.
+If Actions stop on `unisdr/undrr-mangrove` again, run the pull request checks locally before merging (`yarn lint:check`, `yarn prettier:check`, `yarn test`, `yarn build`, `yarn validate-manifest` and, for component changes, `yarn test-storybook` in Chromium Browser Mode plus the built-site browser gates; see `storybook.yml` for the exact steps), and publish with the [break-glass steps](#break-glass-fully-local-release-ciactions-unavailable), as 2.0.0 was, without a provenance attestation.
 
 ### Why not automated semantic-release?
 
@@ -98,7 +98,7 @@ This updates CDN URLs in README.md, MDX docs, and story files from the old versi
 
 #### Re-point the `latest` guidance
 
-`yarn update-cdn-version` rewrites *pinned* version URLs. It does not touch `assets.undrr.org/mangrove/latest/`, and neither does any test: `scripts/__tests__/docs-package-paths.test.js` skips `latest/` on purpose, because the tag is a moving pointer at the newest stable release and cannot be resolved against this branch's sources. So `latest/` guidance is checked here, by hand, every release.
+`yarn update-cdn-version` rewrites *pinned* version URLs. It does not touch `assets.undrr.org/mangrove/latest/`, and neither does any test: `scripts/__tests__/docs-package-paths.test.js` skips `latest/` on purpose, because `latest/` serves the last deployed shared-web-assets build's snapshot of the PreventionWeb fork's `dist` branch (or its npm fallback) and cannot be resolved against this branch's sources. So `latest/` guidance is checked here, by hand, every release.
 
 A release that changes the major is the one that matters. When `latest` moves to a new major, every `latest/` URL in the docs silently starts serving a different tree: paths that 404ed begin resolving, and paths that resolved begin 404ing. Work through this list:
 
@@ -223,7 +223,7 @@ gh release create vX.Y.Z --title X.Y.Z --verify-tag --notes-file release-notes.m
 - [npm package page](https://www.npmjs.com/package/@undrr/undrr-mangrove) shows the new version
 - The release on `unisdr/undrr-mangrove` has the release notes: `gh release view --repo unisdr/undrr-mangrove vX.Y.Z`
 - `npm view @undrr/undrr-mangrove dist-tags` shows `latest` on the new version for a stable release, or `next` for a prerelease. A stable release that closes a prerelease line (such as 2.0.0 after the 2.0 release candidates) leaves `next` on the last release candidate, so point it at the stable version too: `npm dist-tag add @undrr/undrr-mangrove@X.Y.Z next`
-- **CDN `latest/`: confirm it picked up the release.** `assets.undrr.org/mangrove/latest/` is not moved by hand and doesn't follow npm's `latest` tag. The GitLab [shared-web-assets](https://gitlab.com/undrr/common/shared-web-assets/) pipeline rebuilds it from the `dist` branch of the PreventionWeb fork each time it runs (on the testing site for every push to its `main`, and in production for a tagged release there), falling back to the latest npm version if the clone fails. So sync the fork, let `dist` rebuild, then run the shared-web-assets pipeline and confirm `latest/` serves the new version (a `200` status alone does not prove that):
+- **CDN `latest/`: confirm it picked up the release.** `assets.undrr.org/mangrove/latest/` is not moved by hand and doesn't follow npm's `latest` tag. The GitLab [shared-web-assets](https://gitlab.com/undrr/common/shared-web-assets/) pipeline rebuilds it from the `dist` branch of the PreventionWeb fork each time it runs (on the testing site for every push to its `main`, and in production for a tagged release there), falling back to the latest npm version if the clone fails. So sync the fork and let `dist` rebuild before building the shared-web-assets candidate. Create a tag in shared-web-assets, wait for its tagged pipeline to build, then manually run `deploy-production-job` to deploy those artifacts. Routine pipelines update testing only; the manual job deploys the tagged build's snapshot rather than fetching the current `dist` branch again. Confirm production `latest/` serves the intended version (a `200` status alone does not prove that):
 
   ```bash
   curl -s https://assets.undrr.org/mangrove/latest/css/style.css | grep -m1 'Version:'   # expect: Version: X.Y.Z
@@ -360,7 +360,7 @@ curl -s https://assets.undrr.org/mangrove/latest/css/style.css | grep -m1 'Versi
 curl -sI https://assets.undrr.org/mangrove/X.Y.Z/css/style.css  | head -1   # versioned path
 ```
 
-The versioned `X.Y.Z/` URL will **404 until the GitLab shared-web-assets pipeline publishes it**: that pipeline, not this repo's `dist` push, creates versioned paths, and under the org flag it may need to be checked or triggered manually on the GitLab side. `latest/` serves the new build once the shared-web-assets pipeline has run after the fork's `dist` branch was rebuilt.
+The versioned `X.Y.Z/` URL will **404 until the shared-web-assets production deployment publishes it**. After the fork's `dist` rebuild and npm publication, create a tag in shared-web-assets, wait for that pipeline's build, then manually run `deploy-production-job`. This deploys the tagged build's versioned assets and `latest/` snapshot; a routine pipeline or a `dist` push alone does not update production. See [Verify](#8-verify).
 
 Finally, delete the local `npm-package/` once the version is live.
 
@@ -425,13 +425,13 @@ Example CDN URLs:
 
 ```
 # Latest (rebuilt from the fork's dist branch each time the shared-web-assets pipeline runs)
-https://assets.undrr.org/testing/static/mangrove/latest/css/style.css
-https://assets.undrr.org/testing/static/mangrove/latest/components/MegaMenu.js
+https://assets.undrr.org/mangrove/latest/css/style.css
+https://assets.undrr.org/mangrove/latest/components/MegaMenu.js
 
 # Versioned (from tagged releases)
-https://assets.undrr.org/mangrove/2.1.1/css/style.css
-https://assets.undrr.org/mangrove/2.1.1/components/MegaMenu.js
-https://assets.undrr.org/mangrove/2.1.1/js/tabs.js
+https://assets.undrr.org/mangrove/2.5.0/css/style.css
+https://assets.undrr.org/mangrove/2.5.0/components/MegaMenu.js
+https://assets.undrr.org/mangrove/2.5.0/js/tabs.js
 ```
 
 ## CI/CD configuration

@@ -134,6 +134,37 @@ describe('tabs lifecycle', () => {
     jest.restoreAllMocks();
   });
 
+  describe('analytics region', () => {
+    const REGION = 'data-vf-google-analytics-region';
+
+    it('adds no region of its own, including for nested sets', () => {
+      const { container } = mount(horizontalMarkup('outer-region'));
+      container
+        .querySelector('#outer-region-1')
+        .insertAdjacentHTML('beforeend', stackedMarkup('inner-region'));
+      const inner = container.querySelector(
+        '#outer-region-1 [data-mg-js-tabs]'
+      );
+      mgTabs(container);
+      mgTabs(inner);
+      expect(container).not.toHaveAttribute(REGION);
+      expect(inner).not.toHaveAttribute(REGION);
+      mgTabsDestroy(container);
+      expect(container).not.toHaveAttribute(REGION);
+      expect(inner).not.toHaveAttribute(REGION);
+    });
+
+    it('keeps a region the host set', () => {
+      const { container } = mount(
+        horizontalMarkup('host-region', `${REGION}="faq"`)
+      );
+      mgTabs(container);
+      expect(container).toHaveAttribute(REGION, 'faq');
+      mgTabsDestroy(container);
+      expect(container).toHaveAttribute(REGION, 'faq');
+    });
+  });
+
   describe('signal option', () => {
     it('removes window and document.fonts listeners when the signal aborts', () => {
       const windowListeners = trackListeners(window, GLOBAL_EVENTS);

@@ -1,6 +1,11 @@
+import { getLanguageProps } from '../../../src/i18n';
+import { getSnackbarLabels } from './_labels';
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Notice } from '../Notice/Notice';
+
+export { getSnackbarLabels } from './_labels';
+export { DEFAULT_SNACKBAR_LABELS } from './_labels';
 
 /**
  * snackbar component, should be used with react state to control the opened prop and the onClose callback
@@ -12,10 +17,6 @@ import { Notice } from '../Notice/Notice';
  * @param {Number} openedMiliseconds time after opening before the snackbar automatically disappears (in milliseconds)
  * @returns Component that renders a snackbar based on opened, severity, message and onClose props
  */
-export const DEFAULT_SNACKBAR_LABELS = {
-  closeLabel: 'Close',
-  closeAriaLabel: 'Close notification',
-};
 
 // Longer than the wrapper's slide transition; unmounts the body when no
 // transitionend fires (reduced motion, or the element never painted).
@@ -76,12 +77,11 @@ const Snackbar = ({
   message,
   onClose,
   openedMiliseconds,
-  labels = {},
+  lang,
+  dir,
+  labels,
 }) => {
-  const { closeLabel, closeAriaLabel } = {
-    ...DEFAULT_SNACKBAR_LABELS,
-    ...labels,
-  };
+  const { closeLabel, closeAriaLabel } = getSnackbarLabels(lang, labels);
   const closeButtonRef = useRef(null);
   const wrapperRef = useRef(null);
   const returnFocusRef = useRef(null);
@@ -160,6 +160,7 @@ const Snackbar = ({
 
   return (
     <aside
+      {...getLanguageProps(lang, dir)}
       ref={wrapperRef}
       className={`mg-snackbar-wrapper ${
         opened ? 'mg-snackbar-wrapper__open' : ''
@@ -189,7 +190,9 @@ export const ShowOffSnackbar = ({
   severity = 'info',
   message = 'Showing off an example of the snackbar',
   openedMiliseconds,
-  labels = {},
+  lang,
+  dir,
+  labels,
 }) => {
   const [SnackbarOpen, setSnackbarOpen] = React.useState(false);
   return (
@@ -209,6 +212,8 @@ export const ShowOffSnackbar = ({
           opened={SnackbarOpen}
           message={message}
           labels={labels}
+          lang={lang}
+          dir={dir}
           onClose={() => {
             setSnackbarOpen(false);
           }}
@@ -219,10 +224,12 @@ export const ShowOffSnackbar = ({
 };
 
 // Static display component for documentation purposes only
-export const SnackbarPreview = ({ severity, message }) => {
+export const SnackbarPreview = ({ severity, message, labels, lang, dir }) => {
+  const t = getSnackbarLabels(lang, labels);
   return (
     <div style={{ position: 'relative', marginBottom: '20px' }}>
       <div
+        {...getLanguageProps(lang, dir)}
         className="mg-snackbar-wrapper mg-snackbar-wrapper__open"
         style={{
           position: 'relative',
@@ -236,8 +243,8 @@ export const SnackbarPreview = ({ severity, message }) => {
           severity={severity}
           message={message}
           onClose={() => {}}
-          closeLabel={DEFAULT_SNACKBAR_LABELS.closeLabel}
-          closeAriaLabel={DEFAULT_SNACKBAR_LABELS.closeAriaLabel}
+          closeLabel={t.closeLabel}
+          closeAriaLabel={t.closeAriaLabel}
           role={null}
         />
       </div>
@@ -256,7 +263,11 @@ Snackbar.propTypes = {
   onClose: PropTypes.func.isRequired,
   /** Auto-dismiss delay in milliseconds. Omit to keep the snackbar open until dismissed. */
   openedMiliseconds: PropTypes.number,
-  /** Translated UI labels. Keys: closeLabel, closeAriaLabel. */
+  /** UI language tag; selects the built-in catalogue, with English fallback. */
+  lang: PropTypes.string,
+  /** Explicit text direction; otherwise known catalogue languages select their direction. */
+  dir: PropTypes.oneOf(['ltr', 'rtl', 'auto']),
+  /** Explicit UI label overrides; omitted keys use the selected catalogue, then English. */
   labels: PropTypes.shape({
     closeLabel: PropTypes.string,
     closeAriaLabel: PropTypes.string,

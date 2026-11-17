@@ -1,0 +1,148 @@
+import { DrupalPatternTable } from './DrupalPatternTable';
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
+import * as TeaserStories from './ContentTeaser.stories';
+
+<Meta of={TeaserStories} />
+
+> If you are creating or modifying this pattern, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs).
+
+# Shared content teaser implementation
+
+Content-family specifications live under <LinkTo kind="Patterns/Content/Overview" story="docs">Content patterns</LinkTo>, alongside their full-page and card presentations. This page documents the shared teaser renderer and its presentation-only input. It is not the canonical content model or the organizing hierarchy for every view. Existing story routes remain available for compatibility.
+
+**Experimental, for review in [#1381](https://github.com/unisdr/undrr-mangrove/issues/1381).** These patterns cover all 15 node bundles selected by the inspected Drupal search index. They share the horizontal `teaser_3_9` layout, content hierarchy and omission rules, rather than introducing 15 visual card variants. Drupal is one source; normalized data also supports other publishing systems.
+
+See the [source audit](https://github.com/unisdr/undrr-mangrove/blob/main/docs/CONTENT-TEASER-DRUPAL-AUDIT.md) for the inspected revision, exact field mappings, hidden fields and deliberate departures. People use a conservative title/summary baseline because their configured teaser does not use Display Suite.
+
+## When to use
+
+Use these patterns for structured search results, related content and listings. Existing syndicated search still renders indexed Drupal HTML. Production adoption needs verified adapters, domain policy, parity, server output and performance acceptance. This draft changes no Elasticsearch queries or Drupal files.
+
+<Canvas of={TeaserStories.MixedContent} />
+
+## Content patterns
+
+All metadata is optional. The title and resolved destination are always required. Fields absent from a pattern's hierarchy are omitted even if present on an upstream record. The caller selects labels and supplies translated text; Mangrove does not infer a type label or taxonomy visibility from the theme.
+
+<DrupalPatternTable />
+
+The separately exported `DRUPAL_CONTENT_PATTERNS` maps bundle identifiers to `{ type, profile }` selections in the Mangrove Drupal integration layer. Spread a binding into the normalized content record. Use an own-property lookup before selecting a mapped value. It does not extract Drupal fields, sanitize body HTML, choose labels or resolve URLs. Unknown bundles keep the existing renderer during migration. Taxonomy-term results remain outside this node-pattern contract.
+
+## Event date ranges
+
+Use concise date ranges for discovery listings: **4–5 November 2026**. Show the month once within the same month, include both months when they differ and include both years when crossing a year boundary. Use an unspaced en dash. Include times and an explicit time zone when readers need them to plan participation, as in programme sessions or a detailed event view.
+
+The caller supplies localized endpoint text and complete machine-readable dates; the renderer does not parse or abbreviate display strings. For the compact example, `start` is `{ dateTime: '2026-11-04', text: '4' }` and `end` is `{ dateTime: '2026-11-05', text: '5 November 2026' }`. Each endpoint retains its own native `time` element. Keep the full schedule in the source record when supplying a date-only listing projection.
+
+<Canvas of={TeaserStories.Event} />
+
+<Canvas of={TeaserStories.EventWithTimes} />
+
+## Shared content contract
+
+Select a source-independent `type` and optional editorial `profile`. Omitting a profile selects the archetype's documented `defaultProfile`; an unknown or incompatible profile throws. General/default profiles have their own audited omission rules.
+
+Pass one `content` record and a contextual `headingLevel` (default 3, supported 2–6). All strings are plain text, including summaries, attribution and metadata. HTML is escaped. Supply localized display strings and HTML-valid machine-readable dates; no browser-locale or client-clock decisions occur during rendering.
+
+| Field                      | Meaning                                                                                                                                                                                                                                                                                                                                       |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `type`, `title`, `link`    | Required supported normalized type, non-empty full title and resolved HTTP(S) or root-relative destination. Invalid required inputs throw. Relative URLs require confirmed availability on the consuming site.                                                                                                                                |
+| `profile`                  | Optional editorial profile within `type`. See the archetype guide for defaults; incompatible or unknown values throw.                                                                                                                                                                                                                         |
+| `shortTitle`               | Optional news editorial title, falling back to the full title. Other patterns use `title`.                                                                                                                                                                                                                                                    |
+| `image: { src, alt }`      | Optional image on the patterns listed above. Supply meaningful alt text or an explicit empty string when redundant with the title. No image means no frame or reserved column. Cover and logo URLs are preserved; no derived crop is invented.                                                                                                |
+| `typeLabel`, `labels`      | Optional translated type label and ordered labels. Labels accept strings or `{ label, link? }`. Resolved links retain native keyboard behaviour; unsupported link schemes degrade to text. Duplicate label/destination pairs are omitted. Select relevant taxonomy values upstream, including domain visibility.                              |
+| `summary`                  | Optional concise editorial plain text. No automatic truncation, clamping or HTML interpretation.                                                                                                                                                                                                                                              |
+| `published`                | `{ dateTime, text, label? }`: news release date, publication/blog date or commitment publication date. It is not used for collections, vacancies or events.                                                                                                                                                                                   |
+| `sources`, `authors`       | Ordered arrays of organization names or author names. Rendered as semantic lists without fabricated links. Empty values and duplicate names are omitted. `authors` appears on blogs; `sources` appears on news, publications and resources. The first draft's scalar `source` remains a compatibility fallback only when `sources` is absent. |
+| `location`                 | Resource location, vacancy location or organization country. String, `{ label, link? }`, or an ordered array of these values; only supply a link where appropriate (Drupal links organization country). Events use `event.location`.                                                                                                          |
+| `delivery`, `resourceType` | Caller-localized resource/event delivery string and resource category label. False resource `field_online` means no label; event false means In person. Source adapters own that distinction.                                                                                                                                                 |
+| `identifier`               | Publication document symbol after the title, or hazard notation before it.                                                                                                                                                                                                                                                                    |
+| `language`, `lang`         | Optional visible language label for the original four patterns, plus optional BCP 47 language for the entire record's visible text. Language labels are an extension to the inspected Drupal teasers.                                                                                                                                         |
+| `organizationType`         | Organization category or ordered array of categories below the summary.                                                                                                                                                                                                                                                                       |
+| `scope`, `status`          | Commitment geographic scope and scalar or ordered-array status. Vacancy status is an optional extension; callers supply a translated Closed/Open label if needed. No client clock derives it from a deadline.                                                                                                                                 |
+| `classification`, `topics` | Arrays of string or linked labels: hazard classifications before the title, conference session type/theme links after the summary.                                                                                                                                                                                                            |
+
+### Distinct dates
+
+A date value is `{ dateTime, text, label? }`, with a valid HTML year/date/timestamp and a localized equivalent. A translated `label` precedes the native `time` element. It is optional for contextually clear publication/occurrence dates, but required for displayed vacancy deadlines and collection freshness. Exhibitions always require a role label, as do session schedules displayed alongside them. Missing required role labels throw a descriptive TypeError; the entire metadata field remains optional. No English label is invented. There are separate inputs for separate meanings:
+
+- `event: { start, end?, timeZone?, location?, label? }` uses date values for occurrence dates. Start is required to display the range; an end alone is omitted. Provide full dates where needed to disambiguate multi-day ranges, and explicit time zones for timed events.
+- `deadline` is a date value for vacancy closing dates. A non-empty localized label, such as Closing date, is required. Publication time is never substituted.
+- `freshness: { kind: 'updated' | 'created', date }` is explicit collection freshness. The adapter supplies the newest linked content date, or creation date when no linked content exists, with a required localized Last updated/Created date label. No fallback to `published` occurs in the component.
+- `session: { bucket?, schedule?, exhibitions?, room?, format? }` retains conference-specific metadata. Schedule and exhibitions are arrays of `{ start, end?, timeZone?, label? }`, so multiple ranges are preserved. Every exhibition range requires a role label. When exhibitions coexist with schedules, each schedule range also requires a label. Resolve time zone precedence (session, parent conference, fallback) upstream; the renderer does not reconstruct it. Supply the resolved room hierarchy and format text, without leaking Drupal taxonomy IDs into the UI.
+
+This proposal reuses `title`, `image`, `summary`, `labels` and `link` from [#885](https://github.com/unisdr/undrr-mangrove/pull/885). Metadata additions are provisional, not a second canonical schema. The summary is a plain-text subset of the schema's HTML-capable field. Reconcile these extensions with [#891](https://github.com/unisdr/undrr-mangrove/pull/891) before graduation; this draft does not rename the legacy card APIs.
+
+## Omission and responsive behaviour
+
+No metadata or image creates no empty container. Resource/event images and hidden people profile fields remain omitted even if supplied. Minimum records still have useful native heading links. The shared horizontal layout places configured media beside text on wider screens, then stacks it at narrow widths; media-free records use the whole reading width. Horizontal content teasers use the standard card enclosure by default, through independent `--mg-content-teaser-*` surface tokens. Text is inset, photographs meet the leading edge (top edge on narrow screens) and complete covers/logos remain inset and uncropped. Forced colours use an explicit boundary. Publication book cards retain their separate surface defaults.
+
+Use `ul.mg-content-teaser-list` with one teaser per `li` for a responsive reading list. The class preserves list semantics, spaces rows and removes duplicate card bottom margins. Choose a suitable reading width rather than forcing these detailed teasers into a narrow card gallery. Covers are not forced into equal-height stages.
+
+<Canvas of={TeaserStories.MissingOptionalFields} />
+<Canvas of={TeaserStories.MissingCovers} />
+<Canvas of={TeaserStories.Arabic} />
+
+## Source-specific examples
+
+<Canvas of={TeaserStories.Blog} />
+<Canvas of={TeaserStories.Organization} />
+<Canvas of={TeaserStories.Collection} />
+<Canvas of={TeaserStories.CollectionCreated} />
+<Canvas of={TeaserStories.Vacancy} />
+<Canvas of={TeaserStories.ClosedVacancy} />
+<Canvas of={TeaserStories.HazardProfile} />
+<Canvas of={TeaserStories.ConferenceSession} />
+<Canvas of={TeaserStories.Commitment} />
+<Canvas of={TeaserStories.Person} />
+
+Fixture values are illustrative. They represent audited field selection and hierarchy, not captured API records or evidence of runtime parity. Conference, focal point and other unselected node bundles are not claimed as indexed content support; preserve their existing renderer if search scope changes.
+
+## Card presentation
+
+Cards have separate field selections audited from Drupal's `card` mode. They are implemented by `ContentCard`, with vertical and book layouts. Changing geometry does not turn a full teaser into a compact card. See [Content card](?path=/docs/patterns-content-card--docs).
+
+## Metadata typography
+
+Dates, attribution and supporting metadata use the UI font role and `--mg-content-meta-font-size`, which defaults to the 14px scale step. Labels inherit that metadata size and retain their existing weight and colour. Summaries retain body typography. Themes and consumers can override the metadata token without changing field selection or summary text.
+
+## Drupal adapter and link boundary
+
+Map source fields before rendering. Do not pass entity objects or Display Suite HTML. The audit records each bundle's visible fields, summary formatters and conditional labels. Confirm actual indexed fields and active rendered teasers before adopting an adapter, especially collection freshness, multiple source organizations, conference schedules and hidden profile fields.
+
+`link` and optional metadata destinations arrive already resolved. Proposed policy keeps readers on the current site when content is published there, then follows an agreed deterministic fallback. Domain aliases, fallback order, authoritative external URLs and ownership remain open. Do not infer authority from `field_domain_access[0]`, array order, source attribution or a theme name.
+
+`topics` is a presentation-only selection of session type and conference-theme labels. Keep those taxonomies distinct in canonical source data and filters; this combined display field must not replace their semantic contracts. Publication ARISE/IRP/UNDRR taxonomy visibility is selected upstream; linked labels preserve the supplied destination. Source organization and author names remain unlinked as configured. Search highlighting needs a reviewed structured contract before integration; raw HTML is not accepted by this pattern.
+
+## Accessibility and server output
+
+The title is a native anchor within a semantic heading and article. Metadata links are separate siblings above the shared stretched-link overlay, with permanent underlines and dual-band focus rings. They do not nest inside the title anchor or trigger its destination. Sources/authors and result lists preserve native list semantics. Shared focus, hover, reduced-motion and forced-colour behaviour apply; there is no extra client interaction or new animation. Content wraps without fixed text heights. Real text boundaries separate metadata fields, authors, values and ranges; CSS gaps are not the sole separation. RTL follows document direction and shared card rules.
+
+Static React rendering includes complete titles, destinations and metadata. Native links remain usable without JavaScript. Drupal can implement the same semantic class contract in Twig without adding a JavaScript runtime. This draft tests static React output, not a Drupal SSR integration. An interactive React consumer must use its matching SSR/hydration pipeline rather than hydrating `renderToStaticMarkup` output. Non-JavaScript output must remain usable for people as well as crawlers.
+
+## CSS and JavaScript references
+
+- Published React import: `import { ContentTeaser } from "@undrr/undrr-mangrove/components/ContentTeaser.js"`; Drupal bindings use `import { DRUPAL_CONTENT_PATTERNS } from "@undrr/undrr-mangrove/components/DrupalContentPatterns.js"`. The repository barrel `src/index.js` also re-exports them for repository development; the published npm package has no root entry.
+- Pattern selection: each `Content/{Family}/patterns.js` owns its teaser projection alongside full-page/card status. `contentTeaserPatterns.js` assembles those projections for the shared renderer.
+- Styles: `content-teaser.scss` adds wrapping, metadata rhythm, list semantics, independent metadata-link focus and logo framing. The independent `--mg-content-teaser-*` surface tokens default to the standard card tokens; publication-only overrides do not style these results. `--mg-content-teaser-padding` controls the inner text and complete-media inset, with zero outer padding for edge-aligned photographs. Shared metadata uses `--mg-content-meta-font-size`.
+- No hydration registration: the complete teaser markup needs no client initialization.
+
+## Review gates before production adoption
+
+Approve the canonical content contract and domain policy, verify live source adapters and representative multilingual parity fixtures, then test actual server/non-JavaScript output and measurable payload/render performance. Include conditional taxonomy, missing media, dates/time zones, attribution, native link destinations, keyboard access and all five themes. Keep indexed HTML until those criteria are met. Taxonomy result patterns, index freshness, prompt unpublishing, federation and Views replacement remain separate work.
+
+## Changelog
+
+- **0.1.0**, 2026-10-17 ([#1383](https://github.com/unisdr/undrr-mangrove/pull/1383)): Generate adapter selection cells from the Drupal bindings and keep date-role labels with their values as one metadata flex item.
+
+  - Unify metadata typography across dates, authors, sources and other supporting fields with a themeable size token; keep summaries at body size.
+
+  - Organize specifications under content families with separate full-page, teaser and card status; keep the shared renderer and existing story routes.
+  - Add experimental horizontal content patterns for all 15 indexed Drupal node bundles, with audited field order and media rules, structured attribution, optional taxonomy links, semantic dates and plain-text summaries.
+
+  - Use a compact date-only event listing example, preserve a separate timed example and join range endpoints with an unspaced en dash.
+
+  - Match linked category labels to the resting label style; retain native taxonomy links, hover underlines and keyboard-focus underlines with a visible focus ring. Other metadata links and title links remain underlined.
+
+  - Enclose horizontal teasers using themeable standard-card surface defaults, inset text and complete covers/logos, and edge-aligned photographs. Preserve forced-colour boundaries and native focus rings.

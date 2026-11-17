@@ -104,6 +104,7 @@ export const CONTENT_TYPES = [
   { id: 'hazard_information_profile', name: 'Hazard information profile' },
   { id: 'conference', name: 'Conference' },
   { id: 'commitment', name: 'Commitment' },
+  { id: 'short_update', name: 'Short update' },
   { id: 'focal_point', name: 'Focal point' },
   { id: 'people', name: 'People' },
 ];
@@ -581,6 +582,8 @@ export const SOURCE_FIELDS = [
   'vid',
   'field_domain_access',
   'published_at',
+  'display_date',
+  'display_date_precision',
   'event_start',
   'event_end',
   'field_meta_interestingness',
@@ -611,14 +614,20 @@ export const DEFAULT_CONFIG = {
   // URL Hash Sync
   enableHashSync: 'auto',
 
-  // Analytics: regions are `${analyticsRegionPrefix}-form|results|facets`
+  // Analytics: regions are `${analyticsRegionPrefix}-form|results|facets|download`
   analyticsRegionPrefix: 'undrr-search',
 
   // Default search query and sort
   defaultQuery: '',
   defaultSort: 'relevance',
+  yearField: 'published_at',
 
   // UI element visibility
+  showSort: true,
+  showExport: false,
+  exportFields: null,
+  exportDefaultCount: 100,
+  exportContactUrl: 'https://www.preventionweb.net/contact',
   showSearchBox: true,
   showResultsCount: true,
   showSearchTimer: false,
@@ -1031,7 +1040,7 @@ export function buildTierFilter(field, tierNames, tierRanges) {
  * with two widgets gives each its own prefix to tell their clicks apart.
  *
  * @param {Object} config - Widget config
- * @param {'form'|'results'|'facets'} part - Part of the widget
+ * @param {'form'|'results'|'facets'|'download'} part - Part of the widget
  * @returns {string} For example `undrr-search-results`
  */
 export function analyticsRegion(config, part) {

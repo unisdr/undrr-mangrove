@@ -58,6 +58,44 @@ describe('scrollContainerFromElement', () => {
     expect(scrollContainerFromElement(emptyContainer).showArrows).toBe(false);
   });
 
+  it('selects a translated default from the nearest language boundary', () => {
+    const ancestor = document.createElement('section');
+    ancestor.lang = 'fr-CA';
+    const container = createContainer();
+    ancestor.append(container);
+
+    expect(scrollContainerFromElement(container)).toMatchObject({
+      lang: 'fr-CA',
+      ariaLabel: 'Contenu défilant',
+    });
+    container.dataset.lang = 'ar';
+    expect(scrollContainerFromElement(container)).toMatchObject({
+      lang: 'ar',
+      ariaLabel: 'محتوى قابل للتمرير',
+    });
+  });
+
+  it('preserves label overrides below the dedicated aria-label attribute', () => {
+    const container = createContainer({
+      lang: 'fr',
+      labels: JSON.stringify({
+        ariaLabel: 'Publications',
+        navigationLabel: 'Parcourir {label}',
+      }),
+    });
+    expect(scrollContainerFromElement(container).ariaLabel).toBe(
+      'Publications'
+    );
+    container.dataset.ariaLabel = 'Rapports';
+    expect(scrollContainerFromElement(container)).toMatchObject({
+      ariaLabel: 'Rapports',
+      labels: {
+        ariaLabel: 'Publications',
+        navigationLabel: 'Parcourir {label}',
+      },
+    });
+  });
+
   it('parses stepSize as integer, null when missing', () => {
     const withStep = createContainer({ 'step-size': '450' });
     expect(scrollContainerFromElement(withStep).stepSize).toBe(450);

@@ -71,6 +71,7 @@ export function Pager({
                 type="button"
                 className="mg-pager__notice-action"
                 onClick={emptyAction.onClick}
+                data-vf-analytics-label="Pager: Notice action"
               >
                 {emptyAction.label}
               </button>

@@ -6,10 +6,15 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/MegaMenu/MegaMenu.mdx
  */
+@use "../../assets/scss/mixins" as *;
+@use "../../assets/scss/config" as *;
+
 .mg-mega-wrapper {
   position: relative;
   background: rgb(var(--mg-color-white));
-  box-shadow: inset 0 -1px 0 rgb(var(--mg-color-neutral-600) / 0.24);
+
+  // Paint below the header so opaque logo/trigger surfaces cannot cover it.
+  box-shadow: 0 1px 0 rgb(var(--mg-color-neutral-600) / 0.24);
   z-index: var(--mg-z-index-nav);
 }
 
@@ -19,9 +24,7 @@
   align-items: flex-start;
   z-index: var(--mg-z-index-nav);
 
-  // In the default variant this class is on the nav <ul> itself (the branded
-  // variant puts it on a wrapping <div> and uses &__nav for the list), so it
-  // is a list class and carries the house rule.
+  // Plain HTML consumers can use this class directly on a navigation list.
   @include mg-list-unmarked;
 
   padding: 0;
@@ -33,17 +36,38 @@
   }
 
   // Kept max-width based to avoid a Firefox glitch with .mg-container-full-width.
-  @media screen and (max-width: $mg-breakpoint-tablet) {
-    padding-left: mg-rem(40); // space for the icon button
-    overflow-x: hidden; // primarily for mobile
+  @media screen and (width < $mg-breakpoint-tablet) {
+    position: relative;
+    padding-inline-start: mg-rem(40); // space for the icon button
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+  }
+
+  // React keeps the hamburger outside the scrolling rail in both variants.
+  // Avoid sticky flex children: WebKit can scroll them out of view in RTL.
+  @media screen and (width < $mg-breakpoint-tablet) {
+    &:has(> .mg-mega-topbar__nav) {
+      padding-inline-start: 0;
+      overflow: hidden;
+    }
+
+    > .mg-mega-topbar-mobile__icon-button {
+      position: relative;
+      inset: auto;
+      width: mg-rem(40);
+      flex-shrink: 0;
+      align-self: stretch;
+      background: rgb(var(--mg-color-white));
+    }
   }
 
   // --- Branded variant (with inline logo) ---
   &--branded {
     align-items: center;
 
-    @media screen and (max-width: $mg-breakpoint-tablet) {
-      padding-left: 0; // logo replaces the left padding
+    @media screen and (width < $mg-breakpoint-tablet) {
+      padding-inline-start: 0; // logo replaces the left padding
       overflow-x: hidden;
     }
 
@@ -69,6 +93,10 @@
     justify-content: flex-end;
     flex: 1;
 
+    @media screen and (width < $mg-breakpoint-tablet) {
+      justify-content: flex-start;
+    }
+
     @include mg-list-unmarked;
 
     margin: 0;
@@ -91,6 +119,14 @@
     max-width: 100%;
     width: auto;
 
+    // Keep proportions when max-width caps the width below the fixed height's ratio.
+    object-fit: contain;
+    object-position: left center;
+
+    [dir="rtl"] & {
+      object-position: right center;
+    }
+
     @media screen and (min-width: $mg-breakpoint-tablet) {
       height: mg-rem(35);
     }
@@ -106,11 +142,23 @@
 
     @include mg-list-unmarked;
 
-    // Clip overflow on mobile so the scrolling content hint works correctly.
-    // pointer-events is left as auto here — it is restricted only when JS has
-    // initialised the full mega menu (see .mg-mega-wrapper--js-active below).
-    @media screen and (max-width: $mg-breakpoint-tablet) {
-      overflow: hidden;
+    // The branded rail scrolls independently of the logo and hamburger.
+    @media screen and (width < $mg-breakpoint-tablet) {
+      overflow-x: auto;
+      overscroll-behavior-inline: contain;
+      scrollbar-width: none;
+      cursor: grab;
+      user-select: none;
+
+      &:active {
+        cursor: grabbing;
+      }
+
+      .mg-mega-topbar__item-link {
+        cursor: inherit;
+      }
+
+      justify-content: flex-start;
       flex: 1;
       min-width: 0;
     }
@@ -145,6 +193,7 @@
       }
     }
 
+    flex-shrink: 0;
     font-size: var(--mg-font-size-300);
     color: rgb(var(--mg-color-interactive));
     font-weight: bold;
@@ -685,6 +734,7 @@
 .mg-mega-topbar-mobile__icon-button {
   // Mobile-first: Display by default
   position: absolute;
+  inset-block: 0;
 
   // Anchored to both edges of the topbar rather than assumed to be
   // viewport-wide: a `100vw` overlay overhangs and is clipped by the parent's
@@ -698,7 +748,8 @@
   color: rgb(var(--mg-color-interactive));
   font-size: mg-rem(20);
   width: auto;
-  height: 100%;
+  height: auto;
+  min-height: mg-rem(44);
   padding: var(--mg-spacing-100);
   border: none;
   cursor: pointer;
@@ -790,24 +841,8 @@
   box-shadow: 3px 0 6px -2px rgb(0 0 0 / 0.15);
 }
 
-// Full JS mega menu — sidebar handles mobile nav, so topbar items must NOT be
-// interactive on small screens. This class is added by the React component on
-// mount (useEffect), so it is absent when JS fails or has not yet hydrated,
-// preserving a clickable fallback for server-rendered nav markup.
-.mg-mega-wrapper--js-active {
-  @media screen and (max-width: $mg-breakpoint-tablet) {
-    .mg-mega-topbar__nav {
-      pointer-events: none;
-    }
-
-    .mg-mega-topbar__item {
-      pointer-events: none;
-    }
-  }
-}
-
 // Mobile progressive navigation: one stable surface at every depth. Existing
-// desktop classes and the full-strip opening target remain compatible.
+// desktop classes remain compatible; the rail opens individual sections.
 .mg-mega-mobile-sidebar--progressive {
   position: fixed;
   inset: 0 0 auto;
@@ -1091,7 +1126,7 @@
 
 // Existing plain HTML navigation needs no hamburger gutter or JS enhancement.
 // Keep overflow local to the rail so every destination remains reachable.
-@media screen and (max-width: $mg-breakpoint-tablet) {
+@media screen and (width < $mg-breakpoint-tablet) {
   .mg-mega-topbar:not(
     .mg-mega-topbar--branded,
     :has(.mg-mega-topbar-mobile__icon-button)
@@ -1107,6 +1142,409 @@
 
     .mg-mega-topbar__item-link:focus-visible {
       @include mg-focus-ring-inset;
+    }
+  }
+}
+
+// =============================================================================
+// Contextual menu finding: desktop sections and mobile drawer
+// =============================================================================
+
+// Quick navigation shares geometry and readable type across every theme.
+// Override these properties on .mg-mega-wrapper in consumer theme CSS.
+:where(.mg-mega-wrapper) {
+  --mg-mega-filter-font-size: var(--mg-font-size-300);
+  --mg-mega-filter-meta-font-size: var(--mg-font-size-250);
+}
+
+.mg-mega-mobile-sidebar__filter-container {
+  padding: var(--mg-spacing-100) var(--mg-spacing-150);
+  border-bottom: 1px solid rgb(var(--mg-color-neutral-200));
+  background: rgb(var(--mg-color-white));
+  flex-shrink: 0;
+}
+
+.mg-mega-filter {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background: rgb(var(--mg-color-white));
+  border: 1px solid rgb(var(--mg-color-neutral-300));
+  border-radius: var(--mg-radius-form-input);
+
+  &:focus-within {
+    @include mg-focus-ring;
+  }
+
+  &__icon {
+    position: absolute;
+    inset-inline-start: var(--mg-spacing-100);
+    color: rgb(var(--mg-color-neutral-600));
+    pointer-events: none;
+    font-size: var(--mg-font-size-300);
+  }
+
+  &__input {
+    width: 100%;
+    min-width: 0;
+    height: mg-rem(44);
+    padding: var(--mg-spacing-50) mg-rem(44);
+    border: none;
+    background: transparent;
+    font-family: var(--mg-font-family-text);
+    font-size: var(--mg-mega-filter-font-size);
+    color: rgb(var(--mg-color-neutral-900));
+
+    &::placeholder {
+      color: rgb(var(--mg-color-neutral-600));
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &::-webkit-search-cancel-button,
+    &::-webkit-search-decoration {
+      appearance: none;
+    }
+  }
+
+  &__clear {
+    position: absolute;
+    inset-inline-end: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: mg-rem(44);
+    height: mg-rem(44);
+    padding: 0;
+    border: none;
+    border-radius: var(--mg-radius-form-input);
+    background: transparent;
+    color: rgb(var(--mg-color-neutral-800));
+    font-family: var(--mg-font-family-text);
+    font-size: var(--mg-font-size-500);
+    cursor: pointer;
+
+    &:focus-visible {
+      @include mg-focus-ring-inset;
+    }
+  }
+
+  &__status {
+    font-size: var(--mg-mega-filter-meta-font-size);
+    color: rgb(var(--mg-color-neutral-600));
+    margin-bottom: var(--mg-spacing-100);
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__highlight {
+    // Match the card title's search-hit treatment. Reset the global editorial
+    // mark padding and size so the match stays inline, including in breadcrumbs.
+    padding: 0;
+    background: rgb(var(--mg-color-neutral-50));
+    color: inherit;
+    font-size: inherit;
+    font-weight: 700;
+    line-height: inherit;
+  }
+
+  &__empty-container {
+    padding-block: var(--mg-spacing-100);
+  }
+
+  &__empty-search-btn,
+  &__site-search-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--mg-spacing-100);
+    min-height: mg-rem(44);
+    max-inline-size: 100%;
+    font-size: var(--mg-mega-filter-font-size);
+    line-height: inherit;
+    text-align: start;
+    text-decoration: none;
+    white-space: normal;
+    overflow-wrap: anywhere;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  &__fallback {
+    margin-top: var(--mg-spacing-100);
+    padding-top: var(--mg-spacing-100);
+    border-top: 1px solid rgb(var(--mg-color-neutral-200));
+  }
+
+  &__fallback-arrow {
+    margin-inline-start: auto;
+
+    &:dir(rtl) {
+      transform: scaleX(-1);
+    }
+  }
+
+  &__mobile-list {
+    @include mg-list-unmarked;
+
+    padding: 0;
+    margin: 0;
+  }
+
+  &__mobile-item {
+    border-bottom: 1px solid rgb(var(--mg-color-neutral-200));
+
+    &:last-child {
+      border-bottom: 0; // The site-search footer owns the closing separator.
+    }
+  }
+
+  &__mobile-link {
+    transition: none;
+    display: flex;
+    align-items: center;
+    min-height: mg-rem(44);
+    padding: var(--mg-spacing-100);
+    border-radius: var(--mg-radius-form-input);
+    font-family: var(--mg-font-family-ui);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+
+    &:focus-visible {
+      @include mg-focus-ring-inset;
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        background: rgb(var(--mg-color-interactive) / 0.06);
+      }
+    }
+  }
+
+  // Same chevron geometry and logical direction as .mg-breadcrumb, without
+  // creating a navigation landmark or nested links for every search result.
+  &__trail {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    row-gap: var(--mg-spacing-25);
+    flex: 1;
+    min-width: 0;
+    font-size: var(--mg-mega-filter-meta-font-size);
+    color: rgb(var(--mg-color-neutral-600));
+  }
+
+  &__trail-step {
+    display: inline;
+    max-inline-size: 100%;
+    overflow-wrap: anywhere;
+
+    + .mg-mega-filter__trail-step::before {
+      content: "";
+      display: inline-block;
+      inline-size: 0.35em;
+      block-size: 0.35em;
+      border-inline-end: 0.125em solid currentColor;
+      border-block-start: 0.125em solid currentColor;
+      transform: rotate(45deg);
+      margin-inline: 0.65em 0.75em;
+      vertical-align: middle;
+      color: rgb(var(--mg-color-neutral-600));
+    }
+
+    &:dir(rtl) + .mg-mega-filter__trail-step::before {
+      transform: rotate(-45deg);
+    }
+  }
+
+  &__item-title {
+    font-size: var(--mg-mega-filter-font-size);
+    font-weight: 600;
+    color: rgb(var(--mg-color-interactive));
+  }
+}
+
+.mg-mega-mobile-sidebar--progressive.mg-mega-mobile-sidebar--filtering {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  .mg-mega-mobile-sidebar__header {
+    flex-shrink: 0;
+  }
+}
+
+.mg-mega-mobile-sidebar__filter-results {
+  padding: var(--mg-spacing-100) var(--mg-spacing-150);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  min-height: 0;
+
+  .mg-mega-filter__site-search-link {
+    width: 100%;
+  }
+}
+
+.mg-mega-content__left-contents {
+  display: contents;
+}
+
+.mg-mega-content--filterable > .mg-mega-content__left {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.mg-mega-content__left-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.mg-mega-content__finder-footer {
+  flex-shrink: 0;
+  padding-block: var(--mg-spacing-100);
+  border-top: 1px solid rgb(var(--mg-color-neutral-200));
+}
+
+.mg-mega-menu-finder__action.mg-mega-content__finder-trigger {
+  width: 100%;
+  justify-content: space-between;
+  padding-inline: var(--mg-spacing-250);
+  border-radius: 0;
+
+  @media (hover: hover) {
+    &:hover {
+      background: rgb(var(--mg-color-interactive) / 0.15);
+    }
+  }
+
+  &:focus-visible {
+    background: rgb(var(--mg-color-interactive) / 0.15);
+  }
+
+  > span {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+}
+
+.mg-mega-content__finder-shortcut {
+  font-size: var(--mg-mega-filter-meta-font-size);
+  padding-inline: var(--mg-spacing-50);
+  border: 1px solid rgb(var(--mg-color-neutral-300));
+  border-radius: var(--mg-spacing-25);
+  background: rgb(var(--mg-color-white));
+  color: rgb(var(--mg-color-neutral-600));
+}
+
+.mg-mega-menu-finder {
+  flex-direction: column;
+  max-block-size: min(75vh, 600px);
+  margin-block: min(10vh, 80px) auto;
+  margin-inline: auto;
+  overflow: hidden;
+  font-weight: 400;
+
+  &[open] {
+    display: flex;
+  }
+
+  &__action {
+    transition: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    min-inline-size: mg-rem(44);
+    min-height: mg-rem(44);
+    padding: 0 var(--mg-spacing-50);
+    border: 0;
+    border-radius: var(--mg-radius-form-input);
+    background: transparent;
+    color: rgb(var(--mg-color-interactive));
+    font-family: var(--mg-font-family-text);
+    font-size: var(--mg-mega-filter-meta-font-size);
+    font-weight: 400;
+    cursor: pointer;
+    text-decoration: none;
+
+    @media (hover: hover) {
+      &:hover {
+        background: rgb(var(--mg-color-neutral-100));
+      }
+    }
+
+    &:focus-visible {
+      @include mg-focus-ring;
+    }
+  }
+
+  &__header {
+    padding: var(--mg-spacing-100) var(--mg-spacing-250) var(--mg-spacing-150);
+    border-bottom: 1px solid rgb(var(--mg-color-neutral-200));
+    flex-shrink: 0;
+
+    .mg-mega-filter {
+      max-inline-size: mg-rem(480);
+    }
+  }
+
+  &__heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--mg-spacing-100);
+  }
+
+  &__label {
+    font-family: var(--mg-font-family-ui);
+    font-size: var(--mg-mega-filter-font-size);
+    color: rgb(var(--mg-color-neutral-800));
+  }
+
+  &__results {
+    padding: var(--mg-spacing-100) var(--mg-spacing-250);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    min-height: 0;
+  }
+
+  &__footer {
+    flex-shrink: 0;
+    padding: var(--mg-spacing-100) var(--mg-spacing-250);
+    border-top: 1px solid rgb(var(--mg-color-neutral-200));
+
+    .mg-mega-filter__site-search-link {
+      width: fit-content;
+      max-inline-size: 100%;
+    }
+  }
+}
+
+// Keep the finder body scrolling independently of its input, Close control and site-search footer.
+.mg-dialog.mg-mega-menu-finder {
+  max-block-size: min(75vh, 600px);
+  margin-block: min(10vh, 80px) auto;
+  margin-inline: auto;
+  overflow: hidden;
+}
+
+// A brief tint confirms pointer targeting without delaying navigation or focus.
+// Base states remain immediate; keyboard, touch and forced colours stay instant.
+@media (hover: hover) and (prefers-reduced-motion: no-preference) and (forced-colors: none) {
+  .mg-mega-menu-finder__action,
+  .mg-mega-filter__mobile-link {
+    transition: background-color var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
+
+    &:focus-visible {
+      transition: none;
     }
   }
 }

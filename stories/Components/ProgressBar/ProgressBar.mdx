@@ -209,6 +209,10 @@ Core's progress bar (`progress-bar.html.twig`, and `Drupal.theme.progressBar` fo
 | `--mg-progress-bar-indicator`  | interactive colour         | Colour of the fill and the scanner |
 | `--mg-progress-bar-track`      | `neutral-50`               | Colour of the empty track          |
 
+## Verification
+
+The [2.2 loading-indicator verification record](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/LOADING-INDICATOR-VERIFICATION.md) describes the Firefox/Safari rendering checks and their limits. VoiceOver/NVDA listening checks, native Safari reduced motion and Windows forced-colour verification remain outstanding under [#1387](https://github.com/unisdr/undrr-mangrove/issues/1387). The available browser results do not establish spoken announcement behaviour.
+
 ## See also
 
 - [Loader](?path=/docs/components-loader--docs): use it instead for short waits, a single busy control or a blocking operation. Its docs have a table of which indicator suits which wait.
@@ -216,6 +220,8 @@ Core's progress bar (`progress-bar.html.twig`, and `Drupal.theme.progressBar` fo
 - [Accessibility](?path=/docs/getting-started-accessibility--docs): the loading states guidance, including announcing loading and its outcome through a live region that is already in the page.
 
 ## Changelog
+
+- **1.0.1**, 2026-10-17 ([#1387](https://github.com/unisdr/undrr-mangrove/issues/1387)): Document representative Firefox/Safari rendering verification and the remaining screen-reader, reduced-motion and Windows checks. No component behaviour changes.
 
 - **1.0**, 2026-10-12 ([#1332](https://github.com/unisdr/undrr-mangrove/pull/1332)): Released component.
   - ([#1331](https://github.com/unisdr/undrr-mangrove/issues/1331)) Determinate and indeterminate bar on the native `progress` element, with a visible label, value and help text, a flush variant for the top edge of a region or the viewport, a still state under reduced motion, right-to-left support and forced colours support.

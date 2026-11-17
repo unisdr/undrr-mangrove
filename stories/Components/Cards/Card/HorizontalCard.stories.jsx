@@ -1,3 +1,4 @@
+import { checkPhotoCardEdges } from './cardGeometryChecks';
 import { expect } from 'storybook/test';
 import { HorizontalCard } from './HorizontalCard';
 
@@ -97,6 +98,7 @@ export default {
 };
 
 export const DefaultHorizontalCard = {
+  play: checkPhotoCardEdges,
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
     return (
@@ -185,4 +187,34 @@ export const LongContent = {
     expect(Math.abs(frame.bottom - image.bottom)).toBeLessThan(1);
     expect(Math.abs(frame.height - image.height)).toBeLessThan(1);
   },
+};
+
+export const NoImageHorizontalCard = {
+  name: 'Horizontal card without image',
+  render: (args, { globals: { locale } }) => {
+    const data = getCaptionForLocale(locale).contentdata.map(item => ({
+      ...item,
+      imgback: null,
+      imgalt: null,
+    }));
+    return <HorizontalCard {...args} data={data} />;
+  },
+  play: checkPhotoCardEdges,
+};
+
+export const NoLabels = {
+  name: 'Without labels',
+  render: (args, { globals: { locale } }) => {
+    const data = getCaptionForLocale(locale).contentdata.map(item => ({
+      ...item,
+      label1: null,
+      label2: null,
+    }));
+    return (
+      <div style={{ maxWidth: '900px' }}>
+        <HorizontalCard {...args} data={data} />
+      </div>
+    );
+  },
+  play: checkPhotoCardEdges,
 };

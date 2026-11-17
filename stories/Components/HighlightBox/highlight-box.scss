@@ -6,6 +6,9 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/HighlightBox/HighlightBox.mdx
  */
+@use "../../assets/scss/breakpoints" as *;
+@use "../../assets/scss/config" as *;
+
 // Highlight box component (RTL-safe)
 // https://gitlab.com/undrr/web-backlog/-/issues/1678
 // Variables and mixins are imported at the theme level via @use in mangrove.scss

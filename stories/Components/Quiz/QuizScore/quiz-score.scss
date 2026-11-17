@@ -1,0 +1,54 @@
+/**
+ * Quiz score (QuizScore)
+ *
+ * Running score, progress and end summary for the quiz questions on a page. Empty until the first
+ * answer is checked. Composes ProgressBar and the secondary button.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Quiz/QuizScore/QuizScore.mdx
+ */
+@use "../../../assets/scss/mixins" as *;
+@use "../../../assets/scss/config" as *;
+
+.mg-quiz-score {
+  box-sizing: border-box;
+  color: rgb(var(--mg-color-neutral-900));
+
+  // The status paragraph is always in the page so its first message is
+  // announced. Until then it is empty and takes no space.
+  &__summary {
+    @extend %paragraph-font-300;
+
+    font-weight: 700;
+    line-height: var(--mg-font-line-height-500);
+    margin: 0;
+  }
+
+  &--active {
+    background-color: rgb(var(--mg-color-neutral-50) / 0.65);
+    border: 1px solid rgb(var(--mg-color-neutral-600) / 0.18);
+    border-radius: var(--mg-radius-form-input);
+    display: grid;
+    gap: var(--mg-spacing-150);
+    margin-block: var(--mg-spacing-300);
+    padding: var(--mg-spacing-200);
+
+    @media (min-width: $mg-breakpoint-tablet) {
+      padding: var(--mg-spacing-250) var(--mg-spacing-300);
+    }
+  }
+
+  &__progress {
+    max-inline-size: mg-rem(480);
+  }
+
+  &__reset.mg-button {
+    min-block-size: mg-rem(44);
+  }
+
+  @media print {
+    &__actions {
+      display: none;
+    }
+  }
+}

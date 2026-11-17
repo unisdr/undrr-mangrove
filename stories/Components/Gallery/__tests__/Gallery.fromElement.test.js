@@ -68,4 +68,12 @@ describe('galleryFromElement', () => {
     expect(props.showDescription).toBe(true);
     expect(props.enableKeyboard).toBe(true);
   });
+
+  it('carries a host analytics region over to the gallery root', () => {
+    expect(galleryFromElement(makeContainer()).analyticsRegion).toBeUndefined();
+    const props = galleryFromElement(
+      makeContainer({ 'vf-google-analytics-region': 'photo-essay' })
+    );
+    expect(props.analyticsRegion).toBe('photo-essay');
+  });
 });

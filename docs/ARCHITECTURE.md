@@ -60,7 +60,7 @@ stories/assets/scss/
 
 **How it works:** component SCSS files are imported into `_components.scss`, `_components.scss` is imported by each theme entry file, and `yarn scss` compiles all theme outputs to `stories/assets/css/`.
 
-**When adding a new component SCSS file:** add its `@import` to `_components.scss` so it ships in all theme builds.
+**When adding a new component SCSS file:** add its `@use` to `_components.scss` so it ships in all theme builds.
 
 **Important:** Color and spacing tokens are CSS custom properties overridden at runtime by a `.mg-theme-{name}` selector block in each theme's `_theme-{name}.scss` file. The type scale and line heights are also custom properties (`--mg-font-size-*`, `--mg-font-line-height-*`). Build-time-only tokens (breakpoints, font faces, `$mg-html-font-size`, `$mg-tabs-border-bottom`) remain as SCSS `!default` variables and are resolved at compile time.
 

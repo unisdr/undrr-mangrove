@@ -186,3 +186,41 @@ describe('SegmentedControl', () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 });
+
+describe('SegmentedControl analytics label', () => {
+  it('labels each segment with the group label and its value', () => {
+    renderControl({ analyticsLabel: 'Map layer' });
+    options.forEach(option => {
+      const expected = `Map layer: ${option.value}`;
+      expect(screen.getByRole('radio', { name: option.label })).toHaveAttribute(
+        'data-vf-analytics-label',
+        expected
+      );
+      expect(screen.getByText(option.label)).toHaveAttribute(
+        'data-vf-analytics-label',
+        expected
+      );
+    });
+  });
+
+  it('does not use the translated option text', () => {
+    renderControl({
+      analyticsLabel: 'Map layer',
+      options: [{ label: 'Profondeur', value: 'depth' }],
+    });
+    expect(screen.getByText('Profondeur')).toHaveAttribute(
+      'data-vf-analytics-label',
+      'Map layer: depth'
+    );
+  });
+
+  it('adds no attribute when unset', () => {
+    renderControl();
+    screen.getAllByRole('radio').forEach(radio => {
+      expect(radio).not.toHaveAttribute('data-vf-analytics-label');
+    });
+    expect(screen.getByText('Depth')).not.toHaveAttribute(
+      'data-vf-analytics-label'
+    );
+  });
+});

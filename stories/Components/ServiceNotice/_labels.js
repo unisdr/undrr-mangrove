@@ -1,3 +1,6 @@
+/** Runtime UI labels for ServiceNotice; shared by production and Storybook. */
+import { createLabelResolver } from '../../../src/i18n';
+
 // Non-English strings are draft translations and need review by native
 // speakers before release. "Degraded" is rendered as "reduced performance"
 // in every language so the badge reads the same across locales.
@@ -83,3 +86,15 @@ export const LABELS_RU = {
   autoRetryStopped:
     'Автоматические попытки остановлены. Используйте кнопку повтора',
 };
+
+export const getServiceNoticeLabels = createLabelResolver(
+  DEFAULT_SERVICE_NOTICE_LABELS,
+  {
+    ar: LABELS_AR,
+    es: LABELS_ES,
+    fr: LABELS_FR,
+    ja: LABELS_JA,
+    ru: LABELS_RU,
+    zh: LABELS_ZH,
+  }
+);

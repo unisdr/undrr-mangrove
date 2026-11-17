@@ -156,8 +156,13 @@ const hydrator = createHydrator({
 - The dismiss button has an accessible name (`dismissLabel`) and a visible 2px focus outline using `--mg-color-focus-ring`. The notice hides itself when dismissed, whether or not `onDismiss` is supplied.
 - `headingLevel` lets the title fit the page's heading outline instead of forcing `h3`.
 
+## Analytics
+
+UNDRR sites load a shared GA4 click tracker that names each click after the element's visible text unless `data-vf-analytics-label` is set, and reports the innermost `data-vf-google-analytics-region`. The icon-only dismiss button carries `Notice: Dismiss`. Notice sets no region of its own.
+
 ## Changelog
 
+- **1.2.2**, 2026-11-12 ([undrr/web-backlog#3320](https://gitlab.com/undrr/web-backlog/-/work_items/3320)): The dismiss button carries a fixed `data-vf-analytics-label` (`Notice: Dismiss`) for the UNDRR click tracker. No visual or behavioural change.
 - **1.2.1**, 2026-09-19 ([#1252](https://github.com/unisdr/undrr-mangrove/issues/1252)): The React example imports `@undrr/undrr-mangrove/components/Notice.js` instead of the package root. The root has never resolved on any published version (the tarball ships no `dist/` and no `src/`, and its `main` named a file it does not contain), and 2.0.0 stops advertising it, so the subpath is the only form that works. Documentation only; the component is unchanged. The Drupal hydration snippet is corrected in the same pass: it reached into `@undrr/undrr-mangrove/src/hydrate` and `@undrr/undrr-mangrove/stories/…/Notice.hydrate`, and the tarball ships no `src/` or `stories/` directory at all; `components/hydrate.js` and `components/Notice.js` are the published files, and the latter carries `fromElement` alongside the component.
 - **1.2.0**, 2026-09-17 ([#1190](https://github.com/unisdr/undrr-mangrove/pull/1190)): Dismissing a notice no longer drops focus on `<body>` (WCAG 2.4.3 Focus Order). Focus returns to whatever was focused when the notice appeared, or failing that to the nearest focusable neighbour, searched outwards one ancestor at a time so it lands near where the user was. Matches the focus handling Snackbar already had.
 - **1.1.0**, 2026-09-17 ([#1175](https://github.com/unisdr/undrr-mangrove/pull/1175)): Outline secondary actions inside a notice read the new `--mg-notice-action-secondary` token, so a theme can darken them for the tinted surfaces. DELTA sets it to its darker teal, which lifts the offline notice's status link from 4.26:1 to 5.44:1 (WCAG 1.4.3). Other themes keep their outline secondary colour.

@@ -1,17 +1,11 @@
 /**
- * Serve a built Storybook over HTTP so the Storybook test runner has something
- * to point a browser at.
+ * Serve the production Storybook for standalone browser regression gates
+ * and manual delivery checks. Vitest story tests start their own browser
+ * server and do not use this script.
  *
- * `test-storybook` needs a running Storybook; it will not build or serve one.
- * A dependency-free server keeps that requirement from pulling `http-server`,
- * `wait-on` and `concurrently` into the tree for the sake of three lines of CI.
- *
- * Usage: node scripts/serve-storybook.mjs <directory> [port]
- *
- * The default port is deliberately not 6006. That is `yarn storybook`'s own
- * port, and defaulting here would give two bad outcomes on a machine with the
- * dev server up: this script dies on EADDRINUSE, and `yarn test-storybook`
- * then quietly runs against the dev server instead of the build under test.
+ * Usage: node scripts/serve-storybook.mjs [directory] [port]
+ * The default port is 6099; 6006 belongs to the development Storybook.
+ * Fail on EADDRINUSE so a gate cannot silently test another checkout.
  */
 
 import fs from 'node:fs';

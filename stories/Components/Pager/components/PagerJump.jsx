@@ -49,7 +49,11 @@ export function PagerJump({
 
   return (
     <form className="mg-pager__jump" onSubmit={handleSubmit}>
-      <label className="mg-pager__jump-label" htmlFor={inputId}>
+      <label
+        className="mg-pager__jump-label"
+        htmlFor={inputId}
+        data-vf-analytics-label="Pager: Jump to page"
+      >
         {jumpToLabel}
       </label>
       <input
@@ -66,11 +70,13 @@ export function PagerJump({
         onChange={e => setInputValue(e.target.value)}
         disabled={isLoading}
         aria-label={jumpToLabel}
+        data-vf-analytics-label="Pager: Jump to page"
       />
       <button
         type="submit"
         className="mg-pager__jump-btn"
         disabled={isLoading || !inputValue}
+        data-vf-analytics-label="Pager: Jump"
       >
         {jumpToAction}
       </button>

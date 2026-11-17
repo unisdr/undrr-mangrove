@@ -123,6 +123,9 @@ export default [
       ScrollContainer:
         './stories/Components/ScrollContainer/ScrollContainer.hydrate.js',
       UserFeedback: './stories/Components/UserFeedback/UserFeedback.hydrate.js',
+      QuizQuestion:
+        './stories/Components/Quiz/QuizQuestion/QuizQuestion.hydrate.js',
+      QuizScore: './stories/Components/Quiz/QuizScore/QuizScore.hydrate.js',
       QuoteHighlight:
         './stories/Components/QuoteHighlight/QuoteHighlight.hydrate.js',
       SyndicationSearchWidget:
@@ -153,6 +156,9 @@ export default [
       FormErrorSummary:
         './stories/Components/Forms/FormErrorSummary/FormErrorSummary.jsx',
       FormAction: './stories/Components/Forms/FormAction/FormAction.jsx',
+      ContentTeaser: './stories/Patterns/ContentTeaser/ContentTeaser.jsx',
+      ContentCard: './stories/Patterns/ContentCard/ContentCard.jsx',
+      DrupalContentPatterns: './stories/Integrations/Drupal/contentPatterns.js',
       VerticalCard: './stories/Components/Cards/Card/VerticalCard.jsx',
       HorizontalCard: './stories/Components/Cards/Card/HorizontalCard.jsx',
       BookCard: './stories/Components/Cards/Card/BookCard.jsx',

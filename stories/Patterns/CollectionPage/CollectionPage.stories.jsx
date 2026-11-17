@@ -3,7 +3,8 @@ import { CollectionPage } from './CollectionPage';
 import '../_shared/pattern-demo.scss';
 
 export default {
-  title: 'Patterns/Collection page',
+  id: 'patterns-collection-page',
+  title: 'Patterns/Content/Collection/Full page/Curated collection',
   component: CollectionPage,
   parameters: { layout: 'fullscreen' },
   argTypes: {

@@ -93,12 +93,17 @@ export function SearchResults({
     displayMode,
     visibleTeaserFields,
     gridColumns,
+    yearField,
   } = config;
 
   const isCardMode = displayMode === 'card' || displayMode === 'card-book';
   const cardGridCols = isCardMode
     ? Math.min(Math.max(gridColumns ?? resultsPerPage, 2), 6)
     : undefined;
+  const bookMediaGrid =
+    displayMode === 'card-book' && visibleTeaserFields?.image !== false
+      ? ' mg-search__results-grid--book'
+      : '';
   const hiddenFieldClasses = useMemo(
     () => buildHiddenFieldClasses(visibleTeaserFields),
     [visibleTeaserFields]
@@ -343,6 +348,7 @@ export function SearchResults({
             type="button"
             className="mg-search__filter-btn"
             onClick={onOpenFilters}
+            data-vf-analytics-label="Search: Open filters"
             aria-label={
               activeFilterCount > 0
                 ? interpolateLabel(labels.filtersButtonActive, {
@@ -379,7 +385,7 @@ export function SearchResults({
       {/* Results list or grid */}
       {isCardMode ? (
         <div
-          className={`mg-search__results-grid mg-grid mg-grid__col-${cardGridCols} ${hiddenFieldClasses}${enter}`.trim()}
+          className={`mg-search__results-grid${bookMediaGrid} mg-grid mg-grid__col-${cardGridCols} ${hiddenFieldClasses}${enter}`.trim()}
           role="list"
           aria-label={labels.searchResultsLabel}
         >
@@ -390,6 +396,7 @@ export function SearchResults({
                 displayMode={displayMode}
                 showMetrics={showSearchMetrics}
                 visibleTeaserFields={visibleTeaserFields}
+                yearField={yearField}
               />
             </div>
           ))}
@@ -406,6 +413,7 @@ export function SearchResults({
                 hit={hit}
                 showMetrics={showSearchMetrics}
                 visibleTeaserFields={visibleTeaserFields}
+                yearField={yearField}
               />
             </div>
           ))}

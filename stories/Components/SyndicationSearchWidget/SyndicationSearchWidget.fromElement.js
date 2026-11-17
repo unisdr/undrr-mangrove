@@ -1,3 +1,4 @@
+import { languageFromElement, labelsFromElement } from '../../../src/i18n';
 /**
  * Extract SyndicationSearchWidget config from a DOM container.
  *
@@ -25,6 +26,7 @@ export default function syndicationSearchWidgetFromElement(container) {
     config.minSearchLength = parseInt(dataset.minSearchLength, 10);
   if (dataset.defaultQuery) config.defaultQuery = dataset.defaultQuery;
   if (dataset.defaultSort) config.defaultSort = dataset.defaultSort;
+  if (dataset.yearField) config.yearField = dataset.yearField;
   if (dataset.displayMode) config.displayMode = dataset.displayMode;
   if (dataset.gridColumns)
     config.gridColumns = parseInt(dataset.gridColumns, 10);
@@ -34,7 +36,25 @@ export default function syndicationSearchWidgetFromElement(container) {
   if (dataset.analyticsRegionPrefix)
     config.analyticsRegionPrefix = dataset.analyticsRegionPrefix;
 
+  if (dataset.showExport !== undefined)
+    config.showExport = dataset.showExport === 'true';
+  if (dataset.exportDefaultCount !== undefined)
+    config.exportDefaultCount = Number(dataset.exportDefaultCount);
+  if (dataset.exportContactUrl)
+    config.exportContactUrl = dataset.exportContactUrl;
+  if (dataset.exportEndpoint) config.exportEndpoint = dataset.exportEndpoint;
+  if (dataset.exportFields !== undefined) {
+    try {
+      const fields = JSON.parse(dataset.exportFields);
+      config.exportFields = Array.isArray(fields) ? fields : [];
+    } catch {
+      config.exportFields = [];
+    }
+  }
+
   // Boolean props (only set if explicitly present)
+  if (dataset.showSort !== undefined)
+    config.showSort = dataset.showSort !== 'false';
   if (dataset.showSearchBox !== undefined)
     config.showSearchBox = dataset.showSearchBox !== 'false';
   if (dataset.showResultsCount !== undefined)
@@ -71,6 +91,16 @@ export default function syndicationSearchWidgetFromElement(container) {
   }
   if (dataset.requireImage !== undefined)
     config.requireImage = dataset.requireImage === 'true';
+
+  if (dataset.sharedControls) {
+    try {
+      const shared = JSON.parse(dataset.sharedControls);
+      if (shared && typeof shared.id === 'string' && shared.id.trim())
+        config.sharedControls = shared;
+    } catch {
+      /* ignore malformed JSON */
+    }
+  }
 
   // JSON-encoded complex props
   if (dataset.defaultFilters) {
@@ -128,14 +158,11 @@ export default function syndicationSearchWidgetFromElement(container) {
   const ssrResults = container.querySelector('[data-mg-search-ssr]');
   if (ssrResults) config.ssrResults = ssrResults;
 
-  let labels;
-  if (dataset.labels) {
-    try {
-      labels = JSON.parse(dataset.labels);
-    } catch {
-      /* ignore malformed JSON */
-    }
-  }
+  const labels = labelsFromElement(container);
 
-  return labels ? { config, labels } : { config };
+  return {
+    config,
+    ...(labels ? { labels } : {}),
+    ...languageFromElement(container),
+  };
 }

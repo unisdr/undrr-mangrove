@@ -1,33 +1,10 @@
+import { withLanguage } from '../../../.storybook/withLanguage';
 import { ServiceNotice } from './ServiceNotice';
-import {
-  DEFAULT_SERVICE_NOTICE_LABELS,
-  LABELS_ES,
-  LABELS_FR,
-  LABELS_JA,
-  LABELS_ZH,
-  LABELS_AR,
-  LABELS_RU,
-} from './_labels';
-
-const LOCALE_LABELS = {
-  spanish: LABELS_ES,
-  french: LABELS_FR,
-  japanese: LABELS_JA,
-  chinese: LABELS_ZH,
-  arabic: LABELS_AR,
-  russian: LABELS_RU,
-};
-
-const withLocaleLabels = (Story, context) => {
-  const labels =
-    LOCALE_LABELS[context.globals?.locale] || DEFAULT_SERVICE_NOTICE_LABELS;
-  return <Story {...context} args={{ ...context.args, labels }} />;
-};
 
 const meta = {
   title: 'Components/Notice/Service notice',
   component: ServiceNotice,
-  decorators: [withLocaleLabels],
+  decorators: [withLanguage],
   tags: ['autodocs'],
   argTypes: {
     title: { control: 'text' },

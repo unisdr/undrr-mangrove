@@ -87,6 +87,8 @@ export const GLOBAL_PREFIXES = {
 // in the validate log, and in the count — rather than only shrinking a JSON
 // file nobody diffs.
 export const NOT_PUBLIC = {
+  '--mg-tab-sticky-rail-size':
+    'Internal rail height measured by tabs.js for sticky focus and anchor clearance. Restored on teardown; consumers set the docking offset instead.',
   '--mg-list-item-indent-rtl':
     'Internal hook between the RTL list rules in _foundational.scss and the mg-list-unmarked mixin: a list with no bullets sets it to 0 so its items lose the RTL bullet indent. Use the mixin rather than setting it.',
   '--mg-gutenberg-spacer':
@@ -115,7 +117,7 @@ export const MIN_PROPERTIES = {
   'components-images-author-image': 3,
   'components-loader': 1,
   'components-navigation-drawer': 2,
-  'components-navigation-megamenu': 2,
+  'components-navigation-megamenu': 4,
   'components-navigation-on-this-page-nav': 1,
   'components-navigation-tree': 5,
   'components-notice-notice': 4,
@@ -123,7 +125,7 @@ export const MIN_PROPERTIES = {
   'components-reading-column': 1,
   'components-showmore': 1,
   'components-status-label': 15,
-  'components-tabs': 14,
+  'components-tabs': 16,
   'components-tag': 3,
   'patterns-content-hub': 11,
 };
@@ -186,7 +188,7 @@ export const PROPERTY_DOCS = {
   '--mg-card-border':
     'Colour of the 2px border on .mg-card__icon--bordered. The borderColor prop sets it as an inline style.',
   '--mg-card-icon-size':
-    'Size of the card visual on the variants that own it, such as the horizontal card. The iconSize prop sets it as an inline style.',
+    'Size of the card visual on the variants that own it, such as the horizontal card. Set it in CSS on the card or an ancestor; iconSize supplies image attributes and does not set this property.',
   '--mg-icon-bg':
     'Background colour of .mg-card__icon-wrap--colored. The iconColor prop sets it as an inline style; unset, the badge paints no fill.',
   '--mg-icon-fg':
@@ -286,6 +288,10 @@ export const PROPERTY_DOCS = {
     'Horizontal offset of the mobile filter drawer shadow. Flipped per text direction alongside the drawer itself, so the shadow always falls towards the page content.',
 
   // MegaMenu
+  '--mg-mega-filter-font-size':
+    'Input and destination title size in the section finder and mobile navigation finder. Defaults to font-size-300 (16px). Override on .mg-mega-wrapper.',
+  '--mg-mega-filter-meta-font-size':
+    'Breadcrumb, status and secondary control size in navigation finders. Defaults to font-size-250 (14px). Override on .mg-mega-wrapper.',
   '--mg-mega-enter-offset':
     'Inline distance the mobile sidebar slides in from. The component flips its sign in RTL.',
   '--mg-mega-mobile-viewport':
@@ -374,6 +380,10 @@ export const PROPERTY_DOCS = {
     'Derived from --mg-status-label-indicator-border-width and carried into the inner polygons of the two clip-path shapes. Set the border width instead: setting this one alone leaves the ring on those two shapes disagreeing with the other five.',
 
   // Tabs
+  '--mg-tab-sticky-offset':
+    'Docking offset of the opt-in sticky horizontal rail, default 0px. Compose the site header and measured page-navigation height here; accepts a CSS length expression.',
+  '--mg-tab-sticky-background':
+    'Opaque complete colour for the sticky rail and its overflow fades; defaults to rgb(var(--mg-color-neutral-0)). Override with a surface that retains tab and focus contrast.',
   '--mg-tab-color': 'Label colour of a tab at rest.',
   '--mg-tab-color--hover': 'Label colour of a tab on hover.',
   '--mg-tab-color--active': 'Label colour of the active tab.',

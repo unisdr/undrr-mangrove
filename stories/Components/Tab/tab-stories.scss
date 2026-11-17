@@ -1,0 +1,18 @@
+/**
+ * Scrolling space and host-navigation offset for the sticky Tab story only.
+ * Component documentation: https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/Tab/Tab.mdx
+ */
+.mg-tabs-sticky-example__intro {
+  min-block-size: 70vh;
+  padding-block: var(--mg-spacing-300);
+}
+
+.mg-tabs-sticky-example__after {
+  min-block-size: 140vh;
+  padding-block: var(--mg-spacing-300);
+}
+
+.mg-tabs-sticky-example__tabs > .mg-tabs {
+  // prettier-ignore
+  --mg-tab-sticky-offset: calc(var(--mg-on-this-page-nav-offset, 0px) + var(--mg-on-this-page-nav-block-size, 0px) + var(--mg-spacing-75));
+}

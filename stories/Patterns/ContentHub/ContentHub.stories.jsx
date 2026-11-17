@@ -3,7 +3,8 @@ import { ContentHub } from './ContentHub';
 import '../_shared/pattern-demo.scss';
 
 export default {
-  title: 'Patterns/Content hub',
+  id: 'patterns-content-hub',
+  title: 'Patterns/Content/Landing page/Full page/Content hub',
   component: ContentHub,
   parameters: { layout: 'fullscreen' },
   args: { showOnThisPage: true, withHero: false, routeCards: 'icon' },

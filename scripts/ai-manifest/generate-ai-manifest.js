@@ -23,6 +23,7 @@
  *
  * Flags:
  *   --validate   Check curated data keys and a11y lint. Exits non-zero on failure.
+ *   --metadata-file  Read a compatible metadata file instead of the build manifest.
  *   --docs-base  Public Storybook/docs base URL used in generated links.
  *                Can also be set with MANGROVE_DOCS_BASE_URL.
  *
@@ -43,6 +44,11 @@ import path from 'path';
 import { createRequire } from 'module';
 import htmlExamples, { REQUIRES_REACT } from './component-data.js';
 import cssUtilities from './css-utilities.js';
+import { readComponentMetadata } from './component-metadata.js';
+import {
+  buildContentPatterns,
+  validateContentReferences,
+} from './content-patterns.js';
 import {
   selectPublishedComponents,
   propTypesCoverage,
@@ -151,6 +157,22 @@ const LOGOS = {
 
 const VANILLA_SCRIPTS = [
   {
+    name: 'Dialog',
+    file: 'js/dialog.js',
+    url: 'js/dialog.js',
+    selector: '[data-mg-dialog]',
+    initFunction: 'mgDialog(scope)',
+    description:
+      'First shipped experimentally in 2.4.0. The relative URL is for the local dist/assets web root after yarn build; versioned CDN URLs require npm publication and the shared-web-assets production deployment. Enhances authored disclosures into native modal dialogs. Call mgDialog(scope) for inserted content and mgDialogDestroy(scope) before removing it. Labels and content stay in the authored HTML; unsupported browsers keep the disclosure.',
+  },
+  {
+    name: 'Dialog scroll lock support',
+    file: 'js/dialog-scroll-lock.js',
+    url: 'js/dialog-scroll-lock.js',
+    description:
+      'Internal support imported by the native Dialog enhancer and React search export modal. lockDialogScroll(document) coordinates reference-counted scroll locks and returns an idempotent release function that restores existing overflow declarations and priorities. It is not a standalone enhancer and does not auto-initialize.',
+  },
+  {
     name: 'Tabs',
     file: 'js/tabs.js',
     url: `${CDN_BASE}/js/tabs.js`,
@@ -239,7 +261,7 @@ const VANILLA_SCRIPTS = [
     selector: '[data-mg-preview-access]',
     initFunction: 'mgPreviewAccess(scope)',
     description:
-      'Password gate and preview notice bar for staging and pre-publication review.',
+      'Page-level editorial PIN gate with session or optional local persistence, max-age in days and a bubbling mg-preview-access:unlock event. Not access control.',
   },
   {
     name: 'UNDRR shared constants',
@@ -269,6 +291,8 @@ const VANILLA_SCRIPTS = [
 const COMPONENT_IDS = {
   CtaButton: 'components-buttons-buttons',
   VerticalCard: 'components-cards-vertical-card',
+  ContentCard: 'patterns-content-card',
+  ContentTeaser: 'patterns-content-teaser',
   HorizontalCard: 'components-cards-horizontal-card',
   BookCard: 'components-cards-book-card',
   HorizontalBookCard: 'components-cards-horizontal-book-card',
@@ -303,6 +327,8 @@ const COMPONENT_IDS = {
   Pager: 'components-navigation-pager',
   ShareButtons: 'components-buttons-sharebuttons',
   UserFeedback: 'components-user-feedback',
+  QuizQuestion: 'components-quiz-quiz-question',
+  QuizScore: 'components-quiz-quiz-score',
   CopyButton: 'components-buttons-copybutton',
   Drawer: 'components-navigation-drawer',
   Tree: 'components-navigation-tree',
@@ -314,6 +340,29 @@ const COMPONENT_IDS = {
 
 function buildSampleProps(React) {
   return {
+    ContentCard: {
+      layout: 'book',
+      content: {
+        type: 'publication',
+        profile: 'default',
+        title: 'Understanding disaster risk',
+        link: '/publications/disaster-risk',
+        typeLabel: 'Report',
+        image: { src: '/images/teaser-publication-cover.svg', alt: '' },
+      },
+    },
+    ContentTeaser: {
+      content: {
+        type: 'article',
+        profile: 'news',
+        title: 'Communities strengthen resilience',
+        link: '/news/community-resilience',
+        typeLabel: 'News',
+        summary:
+          'Local knowledge and shared planning help communities prepare for changing risks.',
+      },
+    },
+
     Chips: { label: 'Flood' },
     CtaButton: { label: 'Take action' },
     TextInput: {
@@ -682,6 +731,17 @@ function buildSampleProps(React) {
       ],
     },
     UserFeedback: {},
+    QuizQuestion: {
+      type: 'multiple_choice',
+      prompt: 'Which of these hazards is water-related?',
+      options: [
+        { value: 'flood', label: 'Flood', correct: true },
+        { value: 'earthquake', label: 'Earthquake' },
+      ],
+      number: 1,
+      total: 3,
+    },
+    QuizScore: {},
     Gallery: {
       media: [
         {
@@ -714,7 +774,12 @@ const docsBaseInput =
   docsBaseArg || process.env.MANGROVE_DOCS_BASE_URL || DEFAULT_DOCS_BASE;
 const DOCS_BASE = normalizeDocsBase(docsBaseInput);
 
-const manifestPath = path.join(buildDir, 'manifests', 'components.json');
+const metadataFileArg = args
+  .find(a => a.startsWith('--metadata-file='))
+  ?.slice('--metadata-file='.length);
+const manifestPath = metadataFileArg
+  ? path.resolve(process.cwd(), metadataFileArg)
+  : path.join(buildDir, 'manifests', 'components.json');
 const outputDir = path.join(buildDir, 'ai-components');
 const llmsTxtPath = path.join(buildDir, 'llms.txt');
 const distDir = path.resolve(process.cwd(), 'dist/components');
@@ -728,7 +793,7 @@ if (!fs.existsSync(manifestPath)) {
 const pkg = JSON.parse(
   fs.readFileSync(path.resolve(process.cwd(), 'package.json'), 'utf8')
 );
-const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+const manifest = readComponentMetadata(manifestPath);
 // Filter once, before curated validation, PropTypes coverage and catalog output.
 // The raw Storybook manifest is left intact for its QA routes and test runner.
 manifest.components = selectPublishedComponents(manifest.components);
@@ -2395,6 +2460,18 @@ async function main() {
   });
   const releasesJson = JSON.stringify(releasesData, null, 2);
   fs.writeFileSync(path.join(buildDir, 'releases.json'), releasesJson);
+  validateContentReferences(
+    JSON.parse(fs.readFileSync(path.join(buildDir, 'index.json'), 'utf8'))
+      .entries
+  );
+  fs.writeFileSync(
+    path.join(buildDir, 'content-patterns.json'),
+    JSON.stringify(
+      buildContentPatterns({ docsBase: DOCS_BASE, packageName: pkg.name }),
+      null,
+      2
+    )
+  );
   fs.writeFileSync(path.join(outputDir, 'releases.json'), releasesJson);
 
   // -------------------------------------------------------------------------
@@ -2403,7 +2480,7 @@ async function main() {
 
   const llmsTxt = `# UNDRR Mangrove
 
-> UI component library for UNDRR's disaster risk reduction websites (undrr.org, preventionweb.net, mcr2030.undrr.org). Provides both React components and vanilla HTML/CSS patterns. Built with Storybook.
+> UI component library for UNDRR disaster risk reduction websites (undrr.org, preventionweb.net, mcr2030.undrr.org). Provides both React components and vanilla HTML/CSS patterns. Built with Storybook.
 
 - Version: ${pkg.version}
 - Package: ${pkg.name}
@@ -2411,10 +2488,14 @@ async function main() {
 
 ## Links
 
+Content families organize full-page, teaser and card presentations. Read content-patterns.json before choosing a presentation: experimental teaser and card presentations are implemented, references are examples, and stubs are not designed or implemented. Card field selection is separate from teaser selection; vertical and book are card layouts. Never invent a callable component or import for a stub. Teaser inputs are projections, not canonical content schemas.
+
 - Storybook: ${DOCS_BASE}
 - Repository (public mirror of ${REPO_URL.replace('https://github.com/', '')}, which is not publicly readable): ${PUBLIC_REPO_URL}
 - Report a problem with a component or a guide: ${PUBLIC_ISSUES_URL}
 - npm: https://www.npmjs.com/package/${pkg.name}
+- Content families and presentation status (machine-readable): ${DOCS_BASE}content-patterns.json
+- Content pattern overview: ${DOCS_BASE}?path=/docs/patterns-content-overview--docs
 - Release changelog (machine-readable): ${DOCS_BASE}releases.json
 - Project changelog (markdown): ${PUBLIC_REPO_BLOB_MAIN}CHANGELOG.md
 - v2.0 Release notes: ${DOCS_BASE}?path=/docs/getting-started-release-notes-v2-0--docs
@@ -2449,6 +2530,14 @@ ${DOCS_BASE}?path=/docs/components-icons--docs
 
 Static icon inventory (machine-readable):
 ${DOCS_BASE}ai-components/components-icons.json
+
+### Choose the shortest discovery path
+
+- UI prototype: fetch the index, make a small page-section-to-component map, then follow selected entries' \`detailsUrl\` for HTML and interaction requirements. Do not guess IDs from component display names.
+- Gutenberg page: start with ${DOCS_BASE}llms-page-building.txt for page shapes, block support and Hero versus HubHeader, then selected component details.
+- Copy: start with ${DOCS_BASE}llms-editorial-manual.txt and the relevant content guide.
+- Search configuration: start with ${DOCS_BASE}llms-search-widget.txt. For structured metadata, use the dedicated manifest URL named in llms.json.
+- CSS-property validation: combine the theme dictionary, selected component \`customProperties.properties\`, and exact global declarations from the matching release sources. Keep source versions with the result; index.json uses \`library.version\`, while component detail files carry no individual release version. Use the exact npm release archive or a verified immutable source commit for global declarations, not moving main or guessed tags. A missing record, failed fetch or mismatched version is unresolved, not proof of invalid CSS. Follow \`format\`/\`wrapInRgb\`, never a colour-name prefix; a default value is not a value grammar. Full recipe (fetchable Markdown): ${PUBLIC_REPO_RAW_MAIN}docs/AI-MCP-INTEGRATION.md#consumer-validation-recipe
 
 ### Vanilla HTML quick start
 
@@ -2485,7 +2574,7 @@ Mangrove provides standalone vanilla JavaScript utilities under \`/js/\` (\`${cd
 - **Table of Contents** (\`js/table-of-contents.js\`): Call \`mgTableOfContents(scope)\` to generate an article TOC with scrollspy tracking.
 - **On This Page Nav** (\`js/on-this-page-nav.js\`): Call \`mgOnThisPageNav(scope)\` for in-page jump nav with horizontal scrolling.
 - **Switch pending** (\`js/switch-pending.js\`): Call \`mgSwitchPendingInit(scope)\` for new \`[data-mg-switch-pending]\` switches, or \`mgSwitchPending(input, { save })\` for one switch. Call \`mgSwitchPendingDestroy(scope)\` before removing them.
-- **Preview Access** (\`js/preview-access.js\`): Call \`mgPreviewAccess(scope)\` to initialize password gating for staging environments.
+- **Preview Access** (\`js/preview-access.js\`): Call \`mgPreviewAccess(scope)\` to initialize the PIN preview gate. Add \`data-mg-preview-persist="local"\` (optionally \`data-mg-preview-max-age\` in days) to remember an unlock across tabs and visits, and listen for the bubbling \`mg-preview-access:unlock\` event rather than polling the \`mg-preview-access--unlocked\` class.
 - **Shared constants** (\`js/undrr.js\`): Key codes and breakpoints on \`window.UNDRR\`. It does not bundle the other modules.
 
 ### CSS utilities
@@ -2511,6 +2600,15 @@ Use the --mg-z-index-* custom properties for global stacking contexts (fixed, st
 ### Rich editorial content
 
 For trusted rendered editorial HTML, use \`mg-content\` on the actual body field and follow ${DOCS_BASE}?path=/docs/patterns-rich-content--docs. It supplies scoped semantic defaults, not sanitisation or a layout/font reset. Keep navigation, controls, cards and embeds outside the prose boundary where practical; classed component islands own their presentation. Existing paragraph links retain their cue through CMS classes. Preserve native table headers/captions and provide named keyboard-accessible local overflow only when content is genuinely wide. \`mg-body\` remains supported without deprecation.
+
+### Visual decisions and card composition
+
+Read ${DOCS_BASE}?path=/docs/design-decisions-experience-principles--docs before visual refinements. Shared components own semantics, geometry and interactions; themes own surface expression. Verify all five themes, optional content and supported CMS markup. Design review is not user research.
+
+- Photo cards have edge images and inset content; text-only cards retain their enclosure. Without labels, the title uses one content inset rather than stacked metadata spacing.
+- Publication teasers preserve complete natural-ratio covers with a square hairline and default to an unboxed caption/listing. Theme their surface with the five \`--mg-card-publication-*\` tokens in \`tokens.json\`; do not assume general card surface overrides also style publications. Gutenberg's book shape is \`mg-card mg-card__book\`, without \`mg-card__vc\`.
+- Choose \`imageScale: 'small'\` for navigation glyphs, reserving proportional sizes for illustrations and logos. \`iconSize\` supplies image attributes, not CSS glyph sizing. For horizontal visual sizing, set \`--mg-card-icon-size\` in CSS.
+- Compact stats reduce both padding and internal spacing. Do not reintroduce child margins that duplicate their gap.
 
 ### Motion and animation
 
@@ -2637,12 +2735,12 @@ Icons:
 - stories/Molecules/     SectionHeader, FooterNavigation, BodyColumn
 - stories/Components/    MegaMenu, Cards, Charts, Map, Gallery
 - stories/Utilities/     CSS utilities, loaders, show/more
-- stories/Patterns/      Full-page compositions (ArticleStory, ContentHub, LandingPages) — demonstrate assembling components into a page, not reusable exports themselves. See "Composing a page pattern" below.
+- stories/Patterns/      Full-page compositions (ArticleStory, ContentHub, LandingPages) — demonstrate assembling components into a page. ContentTeaser and ContentCard are explicit reusable-export exceptions. See "Composing a page pattern" below.
 - stories/assets/scss/   Theme stylesheets and design tokens
 
 ### Composing a page pattern
 
-stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions) are not components: nothing there is exported from the npm package or hydrated. Each one demonstrates how existing components and layout primitives assemble into a full page. Before laying out a new pattern, pick the right layout system for the shape you need — reusing the wrong one is the most expensive mistake to unwind:
+Full-page examples under stories/Patterns/* (ArticleStory, ContentHub, LandingPages) are compositions rather than published components. ContentTeaser and ContentCard are explicit exceptions: their reusable renderers are published as components/ContentTeaser.js and components/ContentCard.js. Drupal bindings are data in components/DrupalContentPatterns.js; canonical models and full-page stubs are not callable exports. Each one demonstrates how existing components and layout primitives assemble into a full page. Before laying out a new pattern, pick the right layout system for the shape you need — reusing the wrong one is the most expensive mistake to unwind:
 
 - **mg-grid** (\`stories/Atom/Layout/Grid/grid.scss\`, classes \`mg-grid mg-grid__col-{2..6}\`): equal-fraction repeating columns — every numbered track is \`1fr\`. Use it for repeating card grids. \`mg-grid--article\` (below) is a different, asymmetric variant on the same base class — the numbered/span classes are still equal-fraction only.
 - **mg-grid's \`--article\` variant** (\`mg-grid mg-grid--article\`, defined in \`stories/Atom/Layout/Grid/grid.scss\`): the asymmetric rail/article split — a flexible \`minmax(0, 1fr)\` column plus a fixed 16rem rail. This is what \`mg-reading--with-contents\` (\`stories/Utilities/PagePatterns/page-patterns.scss\`) pairs with for a long-form reading column with a sticky table-of-contents rail from 48rem up, stacking above the article below that; \`page-patterns.scss\` itself only supplies the item-placement rules (which child is the sidebar vs. the article), not the column shape. Reach for \`mg-grid--article\` directly if you need the same asymmetric shape outside that pattern.
@@ -2711,6 +2809,7 @@ stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions
         changelog: `${PUBLIC_REPO_BLOB_MAIN}CHANGELOG.md`,
         releaseNotesV2: `${DOCS_BASE}?path=/docs/getting-started-release-notes-v2-0--docs`,
         componentIndex: `${DOCS_BASE}ai-components/index.json`,
+        contentPatterns: `${DOCS_BASE}content-patterns.json`,
         utilities: `${DOCS_BASE}ai-components/utilities.json`,
         tokens: `${DOCS_BASE}tokens.json`,
         editorialManual: `${DOCS_BASE}llms-editorial-manual.txt`,
@@ -2745,6 +2844,7 @@ stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions
         total: customPropertyCount,
         components: Object.keys(customProperties.byComponent).length,
         componentIndex: `${DOCS_BASE}ai-components/index.json`,
+        contentPatterns: `${DOCS_BASE}content-patterns.json`,
       },
       conventions: {
         cssPrefix: 'mg-',

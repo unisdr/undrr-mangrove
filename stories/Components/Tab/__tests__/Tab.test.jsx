@@ -1358,3 +1358,44 @@ describe('Tab', () => {
     });
   });
 });
+
+describe('Tab analytics attributes', () => {
+  const REGION = 'data-vf-google-analytics-region';
+
+  afterEach(() => {
+    mgTabsDestroy(document);
+    cleanup();
+  });
+
+  it('sets no region by default, so panel content keeps the page region', () => {
+    const { tabContainer } = renderAndInit('horizontal');
+    expect(tabContainer).not.toHaveAttribute(REGION);
+    mgTabsDestroy(tabContainer);
+    expect(tabContainer).not.toHaveAttribute(REGION);
+  });
+
+  it('keeps a region passed through the analyticsRegion prop', () => {
+    const { tabContainer } = renderAndInit('horizontal', false, {
+      analyticsRegion: 'faq',
+    });
+    expect(tabContainer).toHaveAttribute(REGION, 'faq');
+    mgTabsDestroy(tabContainer);
+    expect(tabContainer).toHaveAttribute(REGION, 'faq');
+  });
+
+  it('leaves tab triggers named by their tab text', () => {
+    const { tabContainer } = renderAndInit('horizontal');
+    tabContainer.querySelectorAll('.mg-tabs__link').forEach(link => {
+      expect(link).not.toHaveAttribute('data-vf-analytics-label');
+    });
+  });
+
+  it('labels the filter input with a fixed name', () => {
+    const { tabContainer } = renderAndInit('stacked', false, {
+      filterable: true,
+    });
+    expect(
+      tabContainer.querySelector('.mg-tabs__filter-input')
+    ).toHaveAttribute('data-vf-analytics-label', 'Tabs: Filter');
+  });
+});

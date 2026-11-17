@@ -1,0 +1,257 @@
+{
+  "baselineRef": "ed107d51fa5e76d99ea8381f020d96cde4f057a6",
+  "sass": "dart-sass\t1.105.1\t(Sass Compiler)\t[Dart]\ndart2js\t3.13.5\t(Dart Compiler)\t[Dart]",
+  "results": [
+    {
+      "bundle": "style",
+      "bytes": 397689,
+      "exact": false,
+      "selectorPermutations": 4,
+      "beforeSha256": "641f8780f5e0341539d4b63974f786d491532ddf3dcd7d311058bb2c39e9d61c",
+      "afterSha256": "6863196ed868d6fb04ada80ef53e8903b4f65ff6cf80e333476f5ff5158ef6f5"
+    },
+    {
+      "bundle": "style-all",
+      "bytes": 409409,
+      "exact": false,
+      "selectorPermutations": 4,
+      "beforeSha256": "fc78040f13a9d7a7f3b4aae75fbef230aca1fc3fc6f4c4b8aaf4c4c29e2d5208",
+      "afterSha256": "e2e2f7f504fe8a8787507381d5d86df04f228c3709d1a486e81b8d89d65d44a8"
+    },
+    {
+      "bundle": "style-delta",
+      "bytes": 401268,
+      "exact": false,
+      "selectorPermutations": 4,
+      "beforeSha256": "d7ad2ebdf421c97ef17beb70bf8046f005857227ff6175924785c0ce32f072f0",
+      "afterSha256": "6ab16987d94940687a6d69e16f4ab8dc39978f78a56034d01a98987381b2fc27"
+    },
+    {
+      "bundle": "style-gutenberg",
+      "bytes": 103141,
+      "exact": true,
+      "selectorPermutations": 0,
+      "beforeSha256": "3a0de46d9885e822a5b55326c4dc53da4dd4624e177c0d2bbf3f4506167ea8f7",
+      "afterSha256": "3a0de46d9885e822a5b55326c4dc53da4dd4624e177c0d2bbf3f4506167ea8f7"
+    },
+    {
+      "bundle": "style-irp",
+      "bytes": 400270,
+      "exact": false,
+      "selectorPermutations": 4,
+      "beforeSha256": "dc98dccbefa913b28e8c4a1d964b9e5676e498d7f1df06cd5280214eadc3d09b",
+      "afterSha256": "07c7688abfdb49b2d024787cb381a7fc1968e37aeb20d51e2291461da837c4d0"
+    },
+    {
+      "bundle": "style-mcr",
+      "bytes": 400642,
+      "exact": false,
+      "selectorPermutations": 4,
+      "beforeSha256": "69cc92a7d16f23ae29273f9dddc43ef5a3ef0a5543f3462dc006fb6808952479",
+      "afterSha256": "58d88271f545d13d94f8ee187a16a613faffbf05a3fe06802552c4af707d1d8d"
+    },
+    {
+      "bundle": "style-preventionweb",
+      "bytes": 400296,
+      "exact": false,
+      "selectorPermutations": 4,
+      "beforeSha256": "e2165b01f52c09f7f68a792c65d9b9fd45fb6395ab37f53a0526c8d9cc73f8b0",
+      "afterSha256": "85d16993243f118a8996009e36cd41847ba0af41bbc92a6896c3e43e7fe6ebb0"
+    }
+  ],
+  "consumers": [
+    {
+      "name": "drupal-use-default",
+      "bytes": 99774,
+      "exact": true,
+      "beforeSha256": "233a430627a70922b045dc0c04a91394d565168b8a6cd2f4e6eb944ee8810714",
+      "afterSha256": "233a430627a70922b045dc0c04a91394d565168b8a6cd2f4e6eb944ee8810714"
+    },
+    {
+      "name": "drupal-use-irp",
+      "bytes": 102355,
+      "exact": true,
+      "beforeSha256": "95952e4fee2e4a7eccfe631405d90a8d65a020ad6059ab749f180cd49e280ea4",
+      "afterSha256": "95952e4fee2e4a7eccfe631405d90a8d65a020ad6059ab749f180cd49e280ea4"
+    },
+    {
+      "name": "drupal-use-mcr",
+      "bytes": 102727,
+      "exact": true,
+      "beforeSha256": "3725400f795abbea18cedb077c99c1b1e43e2b24b66bfd3ef3f900ced05d0063",
+      "afterSha256": "3725400f795abbea18cedb077c99c1b1e43e2b24b66bfd3ef3f900ced05d0063"
+    },
+    {
+      "name": "drupal-use-preventionweb",
+      "bytes": 102381,
+      "exact": true,
+      "beforeSha256": "9044fa6ff2fb291ce5670c3a95d83364d38505a9d4ddf7fe42e628e45bb3df6d",
+      "afterSha256": "9044fa6ff2fb291ce5670c3a95d83364d38505a9d4ddf7fe42e628e45bb3df6d"
+    },
+    {
+      "name": "drupal-use-delta",
+      "bytes": 103353,
+      "exact": true,
+      "beforeSha256": "8a1dda51c2cadcb71ac697d7a29c29b09dd726922b5bd2bd1f8a7788e83be011",
+      "afterSha256": "8a1dda51c2cadcb71ac697d7a29c29b09dd726922b5bd2bd1f8a7788e83be011"
+    },
+    {
+      "name": "intervening-override-use",
+      "bytes": 99802,
+      "exact": true,
+      "beforeSha256": "c9d3313b50972ec505316baa5601cf09e834b2f7b6f0cb2a78da099551161551",
+      "afterSha256": "c9d3313b50972ec505316baa5601cf09e834b2f7b6f0cb2a78da099551161551"
+    },
+    {
+      "name": "drupal-import-default",
+      "bytes": 99774,
+      "exact": true,
+      "beforeSha256": "233a430627a70922b045dc0c04a91394d565168b8a6cd2f4e6eb944ee8810714",
+      "afterSha256": "233a430627a70922b045dc0c04a91394d565168b8a6cd2f4e6eb944ee8810714"
+    },
+    {
+      "name": "drupal-import-irp",
+      "bytes": 102355,
+      "exact": true,
+      "beforeSha256": "95952e4fee2e4a7eccfe631405d90a8d65a020ad6059ab749f180cd49e280ea4",
+      "afterSha256": "95952e4fee2e4a7eccfe631405d90a8d65a020ad6059ab749f180cd49e280ea4"
+    },
+    {
+      "name": "drupal-import-mcr",
+      "bytes": 102727,
+      "exact": true,
+      "beforeSha256": "3725400f795abbea18cedb077c99c1b1e43e2b24b66bfd3ef3f900ced05d0063",
+      "afterSha256": "3725400f795abbea18cedb077c99c1b1e43e2b24b66bfd3ef3f900ced05d0063"
+    },
+    {
+      "name": "drupal-import-preventionweb",
+      "bytes": 102381,
+      "exact": true,
+      "beforeSha256": "9044fa6ff2fb291ce5670c3a95d83364d38505a9d4ddf7fe42e628e45bb3df6d",
+      "afterSha256": "9044fa6ff2fb291ce5670c3a95d83364d38505a9d4ddf7fe42e628e45bb3df6d"
+    },
+    {
+      "name": "drupal-import-delta",
+      "bytes": 103353,
+      "exact": true,
+      "beforeSha256": "8a1dda51c2cadcb71ac697d7a29c29b09dd726922b5bd2bd1f8a7788e83be011",
+      "afterSha256": "8a1dda51c2cadcb71ac697d7a29c29b09dd726922b5bd2bd1f8a7788e83be011"
+    },
+    {
+      "name": "intervening-override-import",
+      "bytes": 99802,
+      "exact": true,
+      "beforeSha256": "c9d3313b50972ec505316baa5601cf09e834b2f7b6f0cb2a78da099551161551",
+      "afterSha256": "c9d3313b50972ec505316baa5601cf09e834b2f7b6f0cb2a78da099551161551"
+    }
+  ],
+  "helperApis": [
+    {
+      "bundle": "style",
+      "mode": "use",
+      "exact": false,
+      "selectorPermutations": 4
+    },
+    {
+      "bundle": "style",
+      "mode": "import",
+      "exact": false,
+      "selectorPermutations": 4
+    },
+    {
+      "bundle": "style-all",
+      "mode": "use",
+      "exact": false,
+      "selectorPermutations": 4
+    },
+    {
+      "bundle": "style-all",
+      "mode": "import",
+      "exact": false,
+      "selectorPermutations": 4
+    },
+    {
+      "bundle": "style-delta",
+      "mode": "use",
+      "exact": false,
+      "selectorPermutations": 4
+    },
+    {
+      "bundle": "style-delta",
+      "mode": "import",
+      "exact": false,
+      "selectorPermutations": 4
+    },
+    {
+      "bundle": "style-gutenberg",
+      "mode": "use",
+      "exact": true,
+      "selectorPermutations": 0
+    },
+    {
+      "bundle": "style-gutenberg",
+      "mode": "import",
+      "exact": true,
+      "selectorPermutations": 0
+    },
+    {
+      "bundle": "style-irp",
+      "mode": "use",
+      "exact": false,
+      "selectorPermutations": 4
+    },
+    {
+      "bundle": "style-irp",
+      "mode": "import",
+      "exact": false,
+      "selectorPermutations": 4
+    },
+    {
+      "bundle": "style-mcr",
+      "mode": "use",
+      "exact": false,
+      "selectorPermutations": 4
+    },
+    {
+      "bundle": "style-mcr",
+      "mode": "import",
+      "exact": false,
+      "selectorPermutations": 4
+    },
+    {
+      "bundle": "style-preventionweb",
+      "mode": "use",
+      "exact": false,
+      "selectorPermutations": 4
+    },
+    {
+      "bundle": "style-preventionweb",
+      "mode": "import",
+      "exact": false,
+      "selectorPermutations": 4
+    }
+  ],
+  "reassignments": [
+    {
+      "name": "tab",
+      "bytes": 36455,
+      "exact": true,
+      "beforeSha256": "2154b3b1f5d98250921a136a6c6d78b20bcdfdcedca4df70aaad17b309086584",
+      "afterSha256": "2154b3b1f5d98250921a136a6c6d78b20bcdfdcedca4df70aaad17b309086584"
+    },
+    {
+      "name": "tag",
+      "bytes": 20673,
+      "exact": true,
+      "beforeSha256": "c89748caaadd0e7a8a756e39a5ba8784c0e1ddc20ef06f341ed0ce94a6375277",
+      "afterSha256": "c89748caaadd0e7a8a756e39a5ba8784c0e1ddc20ef06f341ed0ce94a6375277"
+    },
+    {
+      "name": "arabic-face",
+      "bytes": 30296,
+      "exact": true,
+      "beforeSha256": "b81324d818df30498fb1fa4ac4d756903c768c36139448565a1c623a2824b293",
+      "afterSha256": "b81324d818df30498fb1fa4ac4d756903c768c36139448565a1c623a2824b293"
+    }
+  ]
+}
