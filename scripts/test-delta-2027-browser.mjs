@@ -142,6 +142,16 @@ try {
     (await css(publish, ['backgroundColor'])).backgroundColor,
     'rgb(196, 202, 217)'
   );
+  assert.equal(
+    (await css(save, ['transitionDuration'])).transitionDuration
+      .split(',')[0]
+      .trim(),
+    '0.1s'
+  );
+  assert.match(
+    (await css(save, ['transitionTimingFunction'])).transitionTimingFunction,
+    /cubic-bezier\(0.16, 1, 0.3, 1\)/
+  );
   const impact = page.getByRole('tab', { name: 'Impact', exact: true });
   await impact.click();
   await page.keyboard.press('ArrowRight');
@@ -158,7 +168,7 @@ try {
     const probe = document.createElement('section');
     probe.id = 'delta-contract-probes';
     probe.innerHTML =
-      '<article class="mg-card mg-card--tertiary"><h2 class="mg-card__title">Title</h2><span class="mg-card__label">Event summary</span></article><section lang="ar" id="arabic-probe"><p>مرحبا</p><section lang="en" id="latin-probe"><p>Latin island</p></section></section>';
+      '<article class="mg-card mg-card--tertiary"><h2 class="mg-card__title">Title</h2><span class="mg-card__label">Event summary</span></article><ul class="mg-tree mg-tree--guides" role="tree"><li class="mg-tree__item" role="treeitem"><div class="mg-tree__label-container">Parent</div><ul class="mg-tree__group" role="group"><li class="mg-tree__item" role="treeitem"><div class="mg-tree__label-container">Child one</div></li><li class="mg-tree__item" role="treeitem"><div class="mg-tree__label-container">Child two</div></li></ul></li></ul><section lang="ar" id="arabic-probe"><p>مرحبا</p><section lang="en" id="latin-probe"><p>Latin island</p></section></section>';
     document.body.append(probe);
   });
   assert.equal(
@@ -186,6 +196,77 @@ try {
     (await css(page.locator('#latin-probe p'), ['fontFamily'])).fontFamily,
     /Inter/
   );
+  const treeGeometry = await page
+    .locator('#delta-contract-probes .mg-tree__group')
+    .evaluate(group => {
+      const style = getComputedStyle(group);
+      const rows = [...group.querySelectorAll('.mg-tree__label-container')].map(
+        node => node.getBoundingClientRect()
+      );
+      return {
+        indent:
+          parseFloat(style.paddingInlineStart) +
+          parseFloat(style.marginInlineStart),
+        pitch: rows[1].top - rows[0].top,
+      };
+    });
+  assert.equal(treeGeometry.indent, 16);
+  assert.equal(treeGeometry.pitch, 32);
+
+  // Changing token data or public adapter roles must change actual rendering.
+  // Default screenshots alone cannot establish this authoring contract.
+  const overrides = {
+    '--mg-delta-2027-typography-weight-medium': '600',
+    '--mg-delta-2027-typography-weight-regular': '500',
+    '--mg-delta-2027-typography-line-height-tight': '2',
+    '--mg-delta-2027-typography-scale-14': '15px',
+    '--mg-delta-2027-spacing-3': '18px',
+    '--mg-delta-2027-spacing-6': '28px',
+    '--mg-font-size-button': '22px',
+    '--mg-padding-button': '1px 21px',
+  };
+  await page.evaluate(
+    values =>
+      Object.entries(values).forEach(([key, value]) =>
+        document.body.style.setProperty(key, value)
+      ),
+    overrides
+  );
+  try {
+    assert.deepEqual(
+      await css(page.locator('.mg-delta-review__intro h1'), [
+        'fontWeight',
+        'lineHeight',
+      ]),
+      { fontWeight: '600', lineHeight: '40px' }
+    );
+    assert.deepEqual(
+      await css(save, ['fontSize', 'fontWeight', 'paddingLeft']),
+      { fontSize: '22px', fontWeight: '500', paddingLeft: '21px' }
+    );
+    assert.equal(
+      (
+        await css(page.locator('#delta-contract-probes .mg-card__title'), [
+          'fontWeight',
+        ])
+      ).fontWeight,
+      '600'
+    );
+    assert.equal(
+      (await css(page.locator('.mg-status-label').first(), ['fontSize']))
+        .fontSize,
+      '15px'
+    );
+    assert.deepEqual(await css(select, ['paddingLeft', 'paddingRight']), {
+      paddingLeft: '18px',
+      paddingRight: '28px',
+    });
+  } finally {
+    await page.evaluate(
+      keys => keys.forEach(key => document.body.style.removeProperty(key)),
+      Object.keys(overrides)
+    );
+  }
   await page.locator('#delta-contract-probes').evaluate(node => node.remove());
 
   await page.emulateMedia({ forcedColors: 'active', reducedMotion: 'reduce' });
@@ -229,7 +310,7 @@ try {
     'Mobile RTL review must not overflow horizontally'
   );
   console.log(
-    'Delta 2027 passed: local fonts, 32px controls, field padding, hover/pressed/disabled states, keyboard focus, editing, tabs, card ink, Arabic/Latin routing, forced colours with reduced motion, and mobile RTL.'
+    'Delta 2027 passed: local fonts, 32px controls, field padding, hover/pressed/disabled states, keyboard focus, editing, tabs, card ink, token propagation, motion mapping, 16px/32px Tree geometry, Arabic/Latin routing, forced colours with reduced motion, and mobile RTL.'
   );
 } finally {
   clearTimeout(deadline);

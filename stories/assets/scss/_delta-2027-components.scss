@@ -19,35 +19,46 @@
   color-scheme: light;
   font-family: var(--mg-font-family-text);
   font-size: delta(typography-scale-14);
-  line-height: 1.5;
+  font-weight: delta(typography-weight-regular);
+  line-height: delta(typography-line-height-normal);
   -webkit-font-smoothing: antialiased;
 
   h1 {
     font-size: delta(typography-scale-20);
-    font-weight: 500;
-    line-height: 1.25;
+    font-weight: delta(typography-weight-medium);
+    line-height: delta(typography-line-height-tight);
   }
 
   h2 {
     font-size: 1rem;
-    font-weight: 500;
-    line-height: 1.25;
+    font-weight: delta(typography-weight-medium);
+    line-height: delta(typography-line-height-tight);
   }
 
   h3 {
     font-size: delta(typography-scale-14);
-    font-weight: 500;
-    line-height: 1.5;
+    font-weight: delta(typography-weight-medium);
+    line-height: delta(typography-line-height-normal);
   }
 
   .mg-button:not(.mg-button-cta) {
     box-sizing: border-box;
     min-block-size: 2rem;
     min-inline-size: 1.5rem;
-    font-size: delta(typography-scale-14);
-    font-weight: 400;
-    line-height: 1.25;
-    padding: 0.125rem 0.75rem 0.25rem;
+    font-size: var(--mg-font-size-button);
+    font-weight: delta(typography-weight-regular);
+    line-height: delta(typography-line-height-tight);
+    padding: var(--mg-padding-button);
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition:
+        background-color var(--mg-motion-duration-fast)
+          var(--mg-motion-easing-standard),
+        border-color var(--mg-motion-duration-fast)
+          var(--mg-motion-easing-standard),
+        color var(--mg-motion-duration-fast) var(--mg-motion-easing-standard),
+        scale var(--mg-motion-duration-fast) var(--mg-motion-easing-standard);
+    }
   }
 
   .mg-button-primary:not(.mg-button-outline, .mg-button-cta) {
@@ -129,7 +140,7 @@
   .mg-form-label {
     color: delta(semantic-text-primary);
     font-size: delta(typography-scale-14);
-    font-weight: 400;
+    font-weight: delta(typography-weight-regular);
   }
 
   .mg-form-input,
@@ -139,7 +150,7 @@
     border-color: delta(semantic-border-control);
     color: delta(semantic-text-primary);
     margin-block-start: 0.375rem;
-    line-height: 1.25;
+    line-height: delta(typography-line-height-tight);
     padding: var(--mg-form-input-padding);
 
     &:hover:not(:disabled) {
@@ -188,9 +199,9 @@
   }
 
   .mg-form-select {
-    line-height: 1.25;
+    line-height: delta(typography-line-height-tight);
     padding-block: 0;
-    padding-inline: 0.75rem 1.5rem;
+    padding-inline: delta(spacing-3) delta(spacing-6);
   }
 
   // Explicit direction boundaries also work when English is previewed in RTL.
@@ -199,8 +210,8 @@
   [dir="rtl"] & .mg-form-select,
   & [dir="rtl"] .mg-form-select,
   & .mg-form-select[dir="rtl"] {
-    padding-left: 1.5rem;
-    padding-right: 0.75rem;
+    padding-left: delta(spacing-6);
+    padding-right: delta(spacing-3);
   }
 
   .mg-form-input[type="date"] {
@@ -290,7 +301,7 @@
     .mg-segmented-control__label {
       min-block-size: 2rem;
       font-size: delta(typography-scale-14);
-      font-weight: 400;
+      font-weight: delta(typography-weight-regular);
       padding: 0.125rem 0.75rem 0.25rem;
     }
   }
@@ -349,19 +360,19 @@
   .mg-card__title,
   .mg-card__icon .mg-card__title {
     font-size: 1rem;
-    font-weight: 500;
-    line-height: 1.25;
+    font-weight: delta(typography-weight-medium);
+    line-height: delta(typography-line-height-tight);
   }
 
   .mg-card__summary,
   .mg-card__label {
-    font-weight: 400;
+    font-weight: delta(typography-weight-regular);
   }
 
   .mg-status-label {
     --mg-status-label-indicator-size: 0.5rem;
     --mg-status-label-gap: 0.5rem;
-    --mg-status-label-font-size: 0.875rem;
+    --mg-status-label-font-size: #{delta(typography-scale-14)};
     --mg-status-label-color: #{delta(semantic-text-primary)};
   }
 
@@ -427,7 +438,7 @@
       > .mg-tabs__item
       > .mg-tabs__link {
       font-size: delta(typography-scale-14);
-      font-weight: 400;
+      font-weight: delta(typography-weight-regular);
       padding: 0.125rem 0.75rem 0.25rem;
 
       &.is-active,
@@ -448,7 +459,7 @@
     border-color: transparent;
     border-radius: delta(radius-sm);
     font-size: delta(typography-scale-12);
-    font-weight: 400;
+    font-weight: delta(typography-weight-regular);
     padding: 0 0.5rem;
   }
 
@@ -471,7 +482,7 @@
       background-color: delta(semantic-background-surface);
       color: delta(semantic-text-secondary);
       font-size: delta(typography-scale-12);
-      font-weight: 500;
+      font-weight: delta(typography-weight-medium);
       letter-spacing: normal;
       text-transform: none;
     }
@@ -522,7 +533,7 @@
 
   .mg-notice__title {
     font-size: delta(typography-scale-14);
-    font-weight: 500;
+    font-weight: delta(typography-weight-medium);
   }
 
   .mg-notice__description,
@@ -566,7 +577,7 @@
   .mg-empty-state__title {
     color: delta(semantic-text-primary);
     font-size: 1rem;
-    font-weight: 500;
+    font-weight: delta(typography-weight-medium);
   }
 
   .mg-empty-state__description {
@@ -595,8 +606,8 @@
 
   .mg-dialog__title {
     font-size: 1rem;
-    font-weight: 500;
-    line-height: 1.25;
+    font-weight: delta(typography-weight-medium);
+    line-height: delta(typography-line-height-tight);
   }
 
   .mg-dialog__body {
@@ -619,6 +630,23 @@
     --mg-tree-item-color--selected: #{delta(semantic-action-default)};
   }
 
+  .mg-tree .mg-tree__group {
+    padding-inline-start: delta(spacing-4);
+  }
+
+  .mg-tree.mg-tree--guides .mg-tree__group {
+    --mg-tree-guide-offset: calc(#{delta(spacing-2)} + 0.5rem - 0.5px);
+    --mg-tree-group-indent: #{delta(spacing-4)};
+
+    padding-inline-start: calc(
+      var(--mg-tree-group-indent) - var(--mg-tree-guide-offset)
+    );
+  }
+
+  .mg-tree__item {
+    margin-block: 0;
+  }
+
   .mg-tree__label-container {
     min-block-size: 2rem;
     box-sizing: border-box;
@@ -626,7 +654,7 @@
   }
 
   .mg-tree__item--selected > .mg-tree__label-container {
-    font-weight: 400;
+    font-weight: delta(typography-weight-regular);
   }
 
   // System colours and existing semantic state cues must beat theme expression.

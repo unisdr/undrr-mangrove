@@ -2434,11 +2434,26 @@
       "$extensions": {
         "org.undrr.mangrove": {
           "output": {
-            "value": "0 {delta-2027.spacing.3}",
+            "value": "2px {delta-2027.spacing.3} {delta-2027.spacing.1}",
             "type": "dimension"
           }
         }
-      }
+      },
+      "$description": "Horizontal control padding with the component optical adjustment; consumers can override the complete padding role."
+    }
+  },
+  "motion": {
+    "duration-fast": {
+      "$type": "duration",
+      "$value": "{delta-2027.motion.duration.fast}"
+    },
+    "duration-medium": {
+      "$type": "duration",
+      "$value": "{delta-2027.motion.duration.normal}"
+    },
+    "easing-standard": {
+      "$type": "cubicBezier",
+      "$value": "{delta-2027.motion.easing.default}"
     }
   }
 }
