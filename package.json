@@ -161,6 +161,7 @@
     "prettier": "3.10.1",
     "process": "^0.11.10",
     "react": "19.3.1",
+    "react-aria-components": "1.22.1",
     "react-dom": "19.3.1",
     "react-syntax-highlighter": "16.1.2",
     "remark-gfm": "^4.0.1",

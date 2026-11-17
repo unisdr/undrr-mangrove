@@ -1,0 +1,65 @@
+[
+  {
+    "focusEvents": [
+      {
+        "hiddenAtFocus": false
+      }
+    ],
+    "mode": "body",
+    "violations": [
+      {
+        "id": "aria-hidden-focus",
+        "impact": "serious",
+        "targets": [
+          [
+            ".mg-combobox[data-invalid=\"true\"][data-rac=\"\"]"
+          ]
+        ]
+      }
+    ],
+    "hiddenWhileOpen": true,
+    "afterTab": "popup closed; next field focused and not aria-hidden; closed-state axe passes"
+  },
+  {
+    "focusEvents": [
+      {
+        "hiddenAtFocus": false
+      }
+    ],
+    "mode": "wrapper",
+    "violations": [
+      {
+        "id": "aria-hidden-focus",
+        "impact": "serious",
+        "targets": [
+          [
+            ".mg-combobox[data-invalid=\"true\"][data-rac=\"\"]"
+          ]
+        ]
+      }
+    ],
+    "hiddenWhileOpen": true,
+    "afterTab": "popup closed; next field focused and not aria-hidden; closed-state axe passes"
+  },
+  {
+    "focusEvents": [
+      {
+        "hiddenAtFocus": false
+      }
+    ],
+    "mode": "unmodified #1088 body portal",
+    "violations": [
+      {
+        "id": "aria-hidden-focus",
+        "impact": "serious",
+        "targets": [
+          [
+            ".mg-combobox[data-invalid=\"true\"][data-rac=\"\"]"
+          ]
+        ]
+      }
+    ],
+    "hiddenWhileOpen": true,
+    "afterTab": "popup closed; next field focused and not aria-hidden; closed-state axe passes"
+  }
+]

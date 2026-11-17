@@ -1,0 +1,154 @@
+/**
+ * Isolated Delta 2027 integration proof for the #1088 ComboBox pilot.
+ * This branch does not publish or merge the wider React Aria research skin.
+ * Guide: docs/DELTA-2027-COMBOBOX-PROOF.md
+ */
+@use "combo-box";
+@use "../control-tokens" as *;
+@use "../mixins" as *;
+
+:root {
+  @include mg-control-tokens;
+}
+
+.mg-combobox__selection {
+  display: none;
+}
+
+.mg-theme-delta-2027 {
+  --mg-control-text: var(--mg-delta-2027-semantic-text-primary);
+  --mg-control-muted-text: var(--mg-delta-2027-semantic-text-secondary);
+  --mg-control-accent: var(--mg-delta-2027-semantic-action-default);
+  --mg-control-surface: var(--mg-delta-2027-semantic-background-surface);
+  --mg-control-surface-focus: var(--mg-delta-2027-semantic-background-surface);
+  --mg-control-border: var(--mg-delta-2027-semantic-border-control);
+  --mg-control-border-focus: var(--mg-delta-2027-semantic-focus-ring);
+  --mg-control-option-hover: var(--mg-delta-2027-semantic-background-inset);
+  --mg-control-option-selected: transparent;
+  --mg-control-error: var(--mg-delta-2027-semantic-status-critical-text);
+
+  .mg-combobox {
+    font-size: var(--mg-delta-2027-typography-scale-14);
+    font-weight: var(--mg-delta-2027-typography-weight-regular);
+    line-height: var(--mg-delta-2027-typography-line-height-tight);
+  }
+
+  .mg-combobox__label {
+    font-size: inherit;
+    margin-block-end: 6px;
+  }
+
+  .mg-combobox__input {
+    box-sizing: border-box;
+    block-size: 32px;
+    min-block-size: 32px;
+    padding: 0 var(--mg-delta-2027-spacing-3);
+
+    &[data-focused] {
+      outline: none;
+      box-shadow: none;
+      border-color: var(--mg-control-border-focus);
+    }
+
+    &[data-focus-visible] {
+      --mg-focus-ring-offset: 0px;
+      --mg-focus-ring-width: 1px;
+
+      @include mg-focus-ring-inset;
+    }
+  }
+
+  .mg-combobox[data-invalid] .mg-combobox__input {
+    border-color: var(--mg-control-error);
+  }
+
+  .mg-combobox__trigger {
+    box-sizing: border-box;
+    min-inline-size: 32px;
+    block-size: 32px;
+    padding: 0;
+
+    &[data-focus-visible] {
+      --mg-focus-ring-offset: 0px;
+      --mg-focus-ring-width: 1px;
+
+      @include mg-focus-ring-inset;
+    }
+  }
+
+  .mg-combobox[data-disabled] {
+    opacity: 1;
+
+    .mg-combobox__input,
+    .mg-combobox__trigger {
+      background: var(--mg-delta-2027-semantic-background-inset);
+      color: var(--mg-delta-2027-semantic-text-placeholder);
+      border-color: var(--mg-delta-2027-semantic-border-default);
+      cursor: not-allowed;
+    }
+  }
+
+  .mg-combobox__popover {
+    border-color: var(--mg-delta-2027-semantic-border-default);
+    border-radius: var(--mg-delta-2027-radius-xl);
+    box-shadow: var(--mg-delta-2027-shadow-md);
+    padding: var(--mg-delta-2027-spacing-2);
+    font-size: var(--mg-delta-2027-typography-scale-14);
+    font-weight: var(--mg-delta-2027-typography-weight-regular);
+    line-height: var(--mg-delta-2027-typography-line-height-tight);
+  }
+
+  .mg-combobox__option {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    gap: var(--mg-delta-2027-spacing-2);
+    box-sizing: border-box;
+    min-block-size: 32px;
+    padding: 0 var(--mg-delta-2027-spacing-2);
+    color: var(--mg-control-text);
+    font-weight: var(--mg-delta-2027-typography-weight-regular);
+
+    &[data-selected] {
+      background: transparent;
+      color: var(--mg-control-text);
+      font-weight: var(--mg-delta-2027-typography-weight-regular);
+    }
+
+    &[data-hovered] {
+      background: var(--mg-control-option-hover);
+    }
+
+    &[data-focus-visible] {
+      @include mg-focus-ring-inset;
+    }
+  }
+
+  .mg-combobox__selection {
+    display: inline-flex;
+    align-items: center;
+    inline-size: 16px;
+    block-size: 16px;
+    flex: 0 0 16px;
+  }
+
+  @media (forced-colors: active) {
+    .mg-combobox[data-disabled] .mg-combobox__input,
+    .mg-combobox[data-disabled] .mg-combobox__trigger {
+      background: Canvas;
+      border-color: GrayText;
+      color: GrayText;
+    }
+
+    .mg-combobox__input[data-focus-visible],
+    .mg-combobox__trigger[data-focus-visible],
+    .mg-combobox__option[data-focus-visible] {
+      outline: 2px solid Highlight;
+      outline-offset: -2px;
+    }
+
+    .mg-combobox__option[data-selected] {
+      color: CanvasText;
+    }
+  }
+}

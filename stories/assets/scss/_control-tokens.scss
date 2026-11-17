@@ -1,0 +1,17 @@
+/*
+ * Framework-neutral roles for interactive controls. These aliases are
+ * additive to the Mangrove 2 token contract and resolve inside each runtime
+ * theme. React Aria is one possible consumer, not their owner.
+ */
+@mixin mg-control-tokens {
+  --mg-control-text: rgb(var(--mg-color-text));
+  --mg-control-muted-text: rgb(var(--mg-color-neutral-500));
+  --mg-control-accent: rgb(var(--mg-color-interactive));
+  --mg-control-surface: var(--mg-form-input-background);
+  --mg-control-surface-focus: var(--mg-form-input-background--focus);
+  --mg-control-border: var(--mg-form-input-border-color);
+  --mg-control-border-focus: rgb(var(--mg-color-form-focus));
+  --mg-control-option-hover: rgb(var(--mg-color-interactive) / 0.06);
+  --mg-control-option-selected: rgb(var(--mg-color-interactive) / 0.12);
+  --mg-control-error: rgb(var(--mg-color-red-900));
+}
