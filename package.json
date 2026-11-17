@@ -22,7 +22,7 @@
     "prepare": "node scripts/setup-git-hooks.cjs",
     "prepack": "yarn scss",
     "hooks:install": "node scripts/setup-git-hooks.cjs",
-    "build:tokens": "node scripts/build-tokens.cjs",
+    "build:tokens": "node scripts/build-tokens.cjs && node scripts/build-tokens.cjs --export-dtcg",
     "build:icons": "node scripts/icon-build.cjs",
     "build:css-version": "node scripts/sync-css-version.js",
     "build": "NODE_ENV=production yarn run scss && storybook build -o docs-build-temp --stats-json && webpack --progress && node scripts/ai-manifest/generate-ai-manifest.js && node scripts/copy-docs-to-dist.mjs",

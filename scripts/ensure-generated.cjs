@@ -10,7 +10,7 @@
  *
  * Only MISSING files are written, deliberately:
  *
- *   - a partial that exists but disagrees with `tokens/*.yaml` is left alone,
+ *   - a partial that exists but disagrees with `tokens/*.tokens.json` is left alone,
  *     so `tokens-source.test.js` still fails loudly and names
  *     `yarn build:tokens` instead of being silently repaired underneath;
  *   - rewriting identical bytes bumps mtime, which rebuilds webpack and

@@ -1,0 +1,376 @@
+{
+  "$extensions": {
+    "org.undrr.mangrove": {
+      "brand": {
+        "id": "irp",
+        "extends": "undrr",
+        "title": "IRP",
+        "selector": ".mg-theme-irp"
+      }
+    }
+  },
+  "theme": {
+    "loaded": {
+      "$description": "Runtime marker: lets JS and tooling detect that this brand theme is active, guarding the sub-brand body-class trap. See docs/RELEASE-2.0.md.",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "output": {
+            "value": "irp",
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "brand": {
+    "$extensions": {
+      "org.undrr.mangrove": {
+        "private": true
+      }
+    },
+    "primary": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.058823529411764705, 0.47058823529411764, 0.7490196078431373
+        ]
+      },
+      "$description": "IRP blue. The interactive colour."
+    },
+    "blue-800": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.050980392156862744, 0.403921568627451, 0.6392156862745098
+        ]
+      },
+      "$description": "Deeper partner of the IRP interactive blue. Carries the secondary button fill and, since the primary button's hover left the orange accent, that hover too. White on it is 6.02:1 and 71.1 perceptually, so it clears AA either way, and it sits 6.6 dE2000 from the interactive blue \u2014 comfortably past the ~2.3 just-noticeable difference, and of the same order as the base theme's own blue-900 to blue-700 hover (12.2)."
+    },
+    "green": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.5490196078431373, 0.7764705882352941, 0.24705882352941178
+        ]
+      },
+      "$description": "IRP green, used only by the tab surface \u2014 the tabbar rail, the active tab fill and its borders."
+    }
+  },
+  "color": {
+    "interactive": {
+      "$type": "color",
+      "$value": "{brand.primary}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "resolve": "literal"
+        }
+      }
+    },
+    "interactive-active": {
+      "$type": "color",
+      "$value": "{brand.primary}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "resolve": "literal"
+        }
+      }
+    },
+    "tag": {
+      "$type": "color",
+      "$value": "{color.interactive}"
+    },
+    "tag--hover": {
+      "$type": "color",
+      "$value": "{color.interactive-active}"
+    },
+    "button-background": {
+      "$type": "color",
+      "$value": "{color.interactive}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function",
+          "resolve": "literal"
+        }
+      }
+    },
+    "button-background--hover": {
+      "$type": "color",
+      "$value": "{brand.blue-800}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function",
+          "resolve": "literal"
+        }
+      }
+    },
+    "button-secondary-background": {
+      "$type": "color",
+      "$value": "{brand.blue-800}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "resolve": "literal"
+        }
+      }
+    },
+    "button-secondary-background--hover": {
+      "$type": "color",
+      "$value": "{brand.primary}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "resolve": "literal"
+        }
+      }
+    },
+    "button-outline-primary": {
+      "$type": "color",
+      "$value": "{color.interactive}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "resolve": "literal"
+        }
+      }
+    },
+    "button-outline-primary--hover": {
+      "$type": "color",
+      "$value": "{brand.blue-800}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "resolve": "literal"
+        }
+      }
+    },
+    "button-outline-secondary": {
+      "$type": "color",
+      "$value": "{color.button-secondary-background}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "button-outline-secondary--hover": {
+      "$type": "color",
+      "$value": "{color.button-secondary-background--hover}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "form-check": {
+      "$type": "color",
+      "$value": "{color.interactive}"
+    },
+    "form-check--hover": {
+      "$type": "color",
+      "$value": "{color.interactive-active}"
+    },
+    "form-check--checked": {
+      "$type": "color",
+      "$value": "{color.interactive}"
+    },
+    "form-focus": {
+      "$type": "color",
+      "$value": "{color.interactive}"
+    },
+    "hero": {
+      "$type": "color",
+      "$value": "{color.interactive}"
+    },
+    "tabbar-background": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          {
+            "$ref": "#/brand/green/$value/components/0"
+          },
+          {
+            "$ref": "#/brand/green/$value/components/1"
+          },
+          {
+            "$ref": "#/brand/green/$value/components/2"
+          }
+        ],
+        "alpha": 0.1
+      },
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function",
+          "resolve": "literal"
+        }
+      }
+    },
+    "tab-background": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          {
+            "$ref": "#/brand/green/$value/components/0"
+          },
+          {
+            "$ref": "#/brand/green/$value/components/1"
+          },
+          {
+            "$ref": "#/brand/green/$value/components/2"
+          }
+        ],
+        "alpha": 0.3
+      },
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function",
+          "resolve": "literal"
+        }
+      }
+    },
+    "tab-background--inactive": {
+      "$type": "color",
+      "$value": "{color.tabbar-background}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "tab-background--hover": {
+      "$type": "color",
+      "$value": "{brand.green}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function",
+          "resolve": "literal"
+        }
+      }
+    },
+    "tab-border": {
+      "$type": "color",
+      "$value": "{color.neutral-300}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function"
+        }
+      }
+    },
+    "tab-border--hover": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          {
+            "$ref": "#/brand/green/$value/components/0"
+          },
+          {
+            "$ref": "#/brand/green/$value/components/1"
+          },
+          {
+            "$ref": "#/brand/green/$value/components/2"
+          }
+        ],
+        "alpha": 0.1
+      },
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function",
+          "resolve": "literal"
+        }
+      }
+    },
+    "tab-border--active": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          {
+            "$ref": "#/brand/green/$value/components/0"
+          },
+          {
+            "$ref": "#/brand/green/$value/components/1"
+          },
+          {
+            "$ref": "#/brand/green/$value/components/2"
+          }
+        ],
+        "alpha": 0.1
+      },
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function",
+          "resolve": "literal"
+        }
+      }
+    },
+    "text-tab": {
+      "$type": "color",
+      "$value": "{color.neutral-500}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function"
+        }
+      }
+    },
+    "text-tab-active": {
+      "$type": "color",
+      "$value": "{color.neutral-700}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function"
+        }
+      }
+    }
+  },
+  "notice": {
+    "action-secondary": {
+      "$type": "color",
+      "$value": "{color.button-outline-secondary}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function"
+        }
+      }
+    }
+  },
+  "radius": {
+    "tag": {
+      "$type": "dimension",
+      "$value": "{spacing.50}"
+    },
+    "button": {
+      "$type": "dimension",
+      "$value": "{spacing.50}"
+    },
+    "form-input": {
+      "$type": "dimension",
+      "$value": "{spacing.50}"
+    },
+    "tab": {
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "output": {
+            "value": "{spacing.0} {spacing.0} 0 0",
+            "type": "dimension"
+          }
+        }
+      }
+    }
+  },
+  "spacing": {
+    "hero-overlay": {
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal",
+          "output": {
+            "value": "{=spacing.200} 0",
+            "type": "dimension",
+            "format": "literal"
+          }
+        }
+      }
+    }
+  },
+  "$description": "DTCG 2025.10 token data. Mangrove output conventions are namespaced extensions. CSS-only group output recipes are not portable design tokens."
+}

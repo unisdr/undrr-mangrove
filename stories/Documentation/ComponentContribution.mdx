@@ -489,7 +489,7 @@ Components use these approaches for managing state:
 4. **Follow the existing design tokens**
 
    - Use the `var(--mg-*)` custom properties for colors, spacing and typography. The `$mg-color-*` and `$mg-spacing-*` SCSS aliases were removed in 2.0.
-   - Tokens are generated from `tokens/*.yaml` into `stories/assets/scss/generated/_tokens-<brand>.scss` by `yarn build:tokens`; SCSS variables from `_variables.scss` are only for values a custom property cannot carry (breakpoints in `@media`, `@if`, `@font-face`).
+   - Tokens are generated from `tokens/*.tokens.json` into `stories/assets/scss/generated/_tokens-<brand>.scss` by `yarn build:tokens`; SCSS variables from `_variables.scss` are only for values a custom property cannot carry (breakpoints in `@media`, `@if`, `@font-face`).
    - Color tokens hold sRGB channel triples, so wrap them in `rgb(...)`.
    - Never use hardcoded values for colors, fonts, or spacing
    - Example:

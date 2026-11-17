@@ -107,7 +107,7 @@ Font families work the same way. The five `--mg-font-family-*` roles are custom 
 }
 ```
 
-A role can only point at a typeface Mangrove already emits a `@font-face` for. Introducing a new typeface means overriding a `$mg-font-face-*` Sass variable before the import and loading the font yourself — and because faces sit outside the brand mixins, that applies to every brand in `style-all.css`. Per-brand typefaces are not yet available from `tokens/*.yaml`.
+A role can only point at a typeface Mangrove already emits a `@font-face` for. Introducing a new typeface means overriding a `$mg-font-face-*` Sass variable before the import and loading the font yourself — and because faces sit outside the brand mixins, that applies to every brand in `style-all.css`. Per-brand typefaces are not yet available from `tokens/*.tokens.json`.
 
 This is plain CSS. You can put it in a stylesheet that loads after Mangrove, in a SCSS partial you compile yourself, or in a `<style>` block — there is no import-order requirement and no rebuild of Mangrove. Semantic tokens derive from each other with live `var()` chains, so overriding `--mg-color-interactive` also moves the tag, form, hero and button colours that reference it.
 
@@ -147,12 +147,12 @@ Mangrove declares more than 350 distinct custom properties across the five theme
 
 | To find                              | Look at                                                                                                                                                                                                                                                                                      |
 | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| The authoritative value of any token | `tokens/mangrove.yaml` (brand-neutral base) and `tokens/undrr.yaml`, `tokens/preventionweb.yaml`, `tokens/irp.yaml`, `tokens/mcr.yaml`, `tokens/delta.yaml`                                                                                                                                  |
+| The authoritative value of any token | `tokens/mangrove.tokens.json` (brand-neutral base) and `tokens/undrr.tokens.json`, `tokens/preventionweb.tokens.json`, `tokens/irp.tokens.json`, `tokens/mcr.tokens.json`, `tokens/delta.tokens.json`                                                                                        |
 | What a theme actually emits          | `stories/assets/scss/generated/_tokens-{brand}.scss`, or the `.mg-theme-{brand}` block in the compiled `stories/assets/css/style-{brand}.css`                                                                                                                                                |
 | Swatches and scales you can browse   | <LinkTo kind="design-decisions-colors" story="docs">Colors</LinkTo>, <LinkTo kind="design-decisions-spacing" story="docs">Spacing</LinkTo>, <LinkTo kind="design-decisions-typography" story="docs">Typography</LinkTo>, <LinkTo kind="design-decisions-widths" story="docs">Widths</LinkTo> |
 | Which token a component reads        | that component's `.scss` file                                                                                                                                                                                                                                                                |
 
-The YAML sources are the truth. `yarn build:tokens` compiles them into the generated partials; `yarn scss` runs it first. Editing a generated partial is pointless — the next build overwrites it. A brand file is merged _over_ the base before references resolve, so overriding one primitive cascades to everything derived from it.
+The DTCG JSON sources are the truth. `yarn build:tokens` compiles them into the generated partials; `yarn scss` runs it first. Editing a generated partial is pointless — the next build overwrites it. A brand file is merged _over_ the base before references resolve, so overriding one primitive cascades to everything derived from it.
 
 ### The tokens you are most likely to change
 
@@ -176,38 +176,54 @@ Verified against the compiled output. Every one is a channel triple unless marke
 
 ### Step 1: Add a token source
 
-Create `tokens/myorg.yaml`. Declare the brand block, then only the tokens that differ from the base — everything else is inherited, and anything derived from what you change moves with it.
+Create `tokens/myorg.tokens.json`. Set brand metadata in the Mangrove extension, then declare the typed values that differ from the base. A brand is merged over its parent before references resolve.
 
-```yaml
-$brand:
-  id: myorg
-  extends: undrr
-  title: My Org
-  selector: '.mg-theme-myorg'
-
-brand:
-  $type: color
-  $private: true
-  primary:
-    $value: '#2e7d32'
-    $description: The one primitive this brand states.
-
-color:
-  $type: color
-  interactive: { $value: '{=brand.primary}' }
-  interactive-active: { $value: '{=brand.primary}' }
-  # $format states the shape at the point of use — this token is consumed
-  # as a finished colour, not as channels.
-  button-background:
-    $value: '{=color.interactive}'
-    $format: srgb-rgb-function
-
-radius:
-  $type: dimension
-  button: { $value: '{spacing.50}' }
+```json
+{
+  "$extensions": {
+    "org.undrr.mangrove": {
+      "brand": {
+        "id": "myorg",
+        "extends": "undrr",
+        "title": "My Org",
+        "selector": ".mg-theme-myorg"
+      }
+    }
+  },
+  "color": {
+    "$type": "color",
+    "interactive": {
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.18, 0.49, 0.2]
+      },
+      "$description": "The interactive colour for this brand."
+    },
+    "interactive-active": {
+      "$value": "{color.interactive}"
+    },
+    "button-background": {
+      "$value": "{color.interactive}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "srgb-rgb-function"
+        }
+      }
+    }
+  },
+  "radius": {
+    "button": {
+      "$type": "dimension",
+      "$value": {
+        "value": 6,
+        "unit": "px"
+      }
+    }
+  }
+}
 ```
 
-`{path}` emits a live `var()` chain, so the token follows whatever the referenced token becomes; `{=path}` resolves the value at build time. `$private` keeps a token out of the CSS output. The conventions are documented in the header of `tokens/mangrove.yaml`, and `tokens/preventionweb.yaml` is the shortest complete example to copy.
+Standard `{path}` aliases identify related values. The `org.undrr.mangrove` extension controls CSS output: `format` selects channels versus a finished colour, `private` omits a custom property, and `resolve: "literal"` resolves an alias at build time. Without that option, an alias to a public token emits a live `var()` chain. See [the token source guide](https://github.com/unisdr/undrr-mangrove/blob/release/3.0/docs/DESIGN-TOKENS.md) for the source format and output recipes. `tokens/preventionweb.tokens.json` is a small complete brand example.
 
 Run `yarn build:tokens` to emit `stories/assets/scss/generated/_tokens-myorg.scss`. The generator fails the build on an unknown reference, a circular reference, a duplicate output name or a wrong token shape, so a malformed source cannot quietly produce a stylesheet with missing colours.
 

@@ -4,12 +4,12 @@
  *
  * ONE source per brand, ONE generator, every downstream form emitted from it.
  *
- *   tokens/mangrove.yaml       brand-neutral base (system defaults only)
- *   tokens/undrr.yaml          UNDRR identity — a sub-brand like any other
- *   tokens/preventionweb.yaml
- *   tokens/irp.yaml
- *   tokens/mcr.yaml
- *   tokens/delta.yaml
+ *   tokens/mangrove.tokens.json       brand-neutral base (system defaults only)
+ *   tokens/undrr.tokens.json          UNDRR identity — a sub-brand like any other
+ *   tokens/preventionweb.tokens.json
+ *   tokens/irp.tokens.json
+ *   tokens/mcr.tokens.json
+ *   tokens/delta.tokens.json
  *
  * A brand layer is merged OVER the base and only then are references
  * resolved, so a brand that overrides one primitive cascades to everything
@@ -41,6 +41,11 @@ const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 const YAML = require('yaml');
+const {
+  decodeDocument,
+  normalizeTokens,
+  validateDocument,
+} = require('./dtcg-tokens.cjs');
 
 const ROOT = path.resolve(__dirname, '..');
 const TOKENS_DIR = path.join(ROOT, 'tokens');
@@ -225,6 +230,16 @@ function flatten(node, trail, inherited, tokens, file) {
 
 function loadSource(dir, fileName) {
   const absolute = path.join(dir, fileName);
+  if (fileName.endsWith('.tokens.json')) {
+    try {
+      return decodeDocument(
+        JSON.parse(fs.readFileSync(absolute, 'utf8')),
+        `tokens/${fileName}`
+      );
+    } catch (error) {
+      throw new TokenError(error.message);
+    }
+  }
   let document;
   try {
     document = YAML.parse(fs.readFileSync(absolute, 'utf8'));
@@ -248,22 +263,22 @@ function loadSource(dir, fileName) {
 function loadSources(dir) {
   const names = fs
     .readdirSync(dir)
-    .filter(name => name.endsWith('.yaml'))
+    .filter(name => name.endsWith('.tokens.json') || name.endsWith('.yaml'))
     .sort();
   if (names.length === 0) {
-    throw new TokenError(`no *.yaml token sources found in ${dir}`);
+    throw new TokenError(`no *.tokens.json token sources found in ${dir}`);
   }
 
   const sources = names.map(name => loadSource(dir, name));
   const base = sources.find(source => source.meta.base);
   if (!base) {
     throw new TokenError(
-      'no base source: exactly one tokens/*.yaml must set `$brand.base: true`'
+      'no base source: exactly one tokens/*.tokens.json must set `$brand.base: true`'
     );
   }
   if (sources.filter(source => source.meta.base).length > 1) {
     throw new TokenError(
-      'more than one tokens/*.yaml sets `$brand.base: true`'
+      'more than one tokens/*.tokens.json sets `$brand.base: true`'
     );
   }
 
@@ -310,7 +325,7 @@ function loadSources(dir) {
  *   - `format`: a sub-brand that re-values a colour without restating
  *     `$format: srgb-rgb-function` reverted it to bare channels. That is
  *     precisely the `.mg-button-outline` failure documented in
- *     tokens/mangrove.yaml — a triplet in a colour position is invalid CSS
+ *     tokens/mangrove.tokens.json — a triplet in a colour position is invalid CSS
  *     and is discarded without a word;
  *   - `name`: an override that omitted `$name` stopped writing the property
  *     its consumers actually read and wrote `--mg-<id>` instead, so the
@@ -336,6 +351,17 @@ function mergeLayers(layers) {
         continue;
       }
       const next = { ...inherited, ...token };
+      if (token.dtcgMetadata && inherited.dtcgMetadata) {
+        next.dtcgMetadata = {
+          ...inherited.dtcgMetadata,
+          ...token.dtcgMetadata,
+        };
+        // Resolution is part of the authored value's reference semantics,
+        // not output identity. Replacing an eager alias with a live one wins.
+        if (!Object.hasOwn(token.dtcgMetadata, 'resolve'))
+          delete next.dtcgMetadata.resolve;
+      }
+
       for (const key of CARRIED) {
         if (token[key] === undefined) next[key] = inherited[key];
       }
@@ -426,6 +452,11 @@ function parseReference(body) {
  * wrong output is the failure mode this whole architecture exists to prevent.
  */
 function resolve(tokens, brandLabel) {
+  try {
+    tokens = normalizeTokens(tokens, brandLabel);
+  } catch (error) {
+    throw new TokenError(error.message);
+  }
   const emitted = new Map(); // id -> { name, value, literal, token }
   const visiting = new Set();
 
@@ -630,7 +661,7 @@ function renderBrand(brand, resolved, ownIds, label) {
   lines.push(...comment(brand.meta.description || '', '// '));
   lines.push(`// Source: ${brand.file}`);
   lines.push('// Regenerate: yarn build:tokens');
-  lines.push('// Edit the YAML source, never this file.');
+  lines.push('// Edit the DTCG JSON source, never this file.');
   lines.push('// `npx jest tokens-source` fails if the two disagree.');
 
   const own = ownIds
@@ -680,7 +711,7 @@ function build({ tokensDir = TOKENS_DIR } = {}) {
   const defaultBrand = brands.find(brand => brand.meta.default);
   if (!defaultBrand) {
     throw new TokenError(
-      'no default brand: exactly one tokens/*.yaml must set `$brand.default: true`'
+      'no default brand: exactly one tokens/*.tokens.json must set `$brand.default: true`'
     );
   }
   const byId = new Map(brands.map(brand => [brand.meta.id, brand]));
@@ -709,6 +740,91 @@ function build({ tokensDir = TOKENS_DIR } = {}) {
   }
 
   return files;
+}
+
+/**
+ * Self-contained standard token documents for generic DTCG consumers. Source
+ * files are brand fragments; this composes each brand with its inherited base.
+ * CSS-only group recipes and output metadata are intentionally not tokens in
+ * this exchange. Standard aliases and JSON Pointers remain portable and local.
+ */
+function buildDtcgDocuments({ tokensDir = TOKENS_DIR } = {}) {
+  const { base, brands } = loadSources(tokensDir);
+  const byId = new Map(brands.map(brand => [brand.meta.id, brand]));
+  const documents = new Map();
+  for (const brand of brands) {
+    const merged = mergeLayers(layersFor(brand, base, byId));
+    // Validate the complete reference graph before offering an exchange file.
+    normalizeTokens(merged, brand.meta.id);
+    // Token/group names are data, including legal JSON names such as
+    // "__proto__" and "constructor". Never traverse an inherited property.
+    const document = Object.assign(Object.create(null), {
+      $description: `${brand.meta.title} design tokens, DTCG 2025.10. CSS-only output recipes are not part of this exchange.`,
+    });
+    for (const token of merged.values()) {
+      if (!token.dtcgType) continue;
+      const trail = token.id.split('.');
+      let group = document;
+      for (const key of trail.slice(0, -1)) {
+        if (!Object.hasOwn(group, key)) group[key] = Object.create(null);
+        group = group[key];
+      }
+      group[trail.at(-1)] = {
+        $type: token.dtcgType,
+        $value: structuredClone(token.dtcgValue),
+        ...(token.description ? { $description: token.description } : {}),
+      };
+    }
+    // RFC 6901 traverses the document literally: a pointer cannot descend
+    // through a $value which is an alias string. Follow whole-token aliases
+    // before writing a property pointer into the self-contained exchange.
+    const canonicalPointer = reference => {
+      const parts = reference.slice(2).split('/');
+      const split = parts.indexOf('$value');
+      if (!reference.startsWith('#/') || split < 1) return reference;
+      let target = parts
+        .slice(0, split)
+        .map(k => k.replace(/~1/g, '/').replace(/~0/g, '~'))
+        .join('.');
+      let token = merged.get(target);
+      const seen = new Set();
+      while (
+        token &&
+        typeof token.dtcgValue === 'string' &&
+        /^\{[^{}]+\}$/.test(token.dtcgValue)
+      ) {
+        if (seen.has(target))
+          throw new TokenError(
+            `${brand.meta.id}: circular pointer target ${target}`
+          );
+        seen.add(target);
+        target = token.dtcgValue.slice(1, -1);
+        token = merged.get(target);
+      }
+      return (
+        '#/' +
+        target
+          .split('.')
+          .map(k => k.replace(/~/g, '~0').replace(/\//g, '~1'))
+          .join('/') +
+        '/' +
+        parts.slice(split).join('/')
+      );
+    };
+    const canonicalize = node => {
+      if (!node || typeof node !== 'object') return;
+      if (typeof node.$ref === 'string')
+        node.$ref = canonicalPointer(node.$ref);
+      for (const value of Object.values(node)) canonicalize(value);
+    };
+    canonicalize(document);
+    validateDocument(document, brand.meta.id);
+    documents.set(
+      `${brand.meta.output || brand.meta.id}.tokens.json`,
+      document
+    );
+  }
+  return documents;
 }
 
 /**
@@ -812,13 +928,13 @@ function buildTokensDictionary({ globalPropertyCount = null } = {}) {
       'Mangrove 2.0 Theme Token Dictionary and Format Specifications. Theme tokens only — see `scope` for what is not here.',
     scope: {
       includes:
-        'Every --mg-* custom property emitted by the theme stylesheets from the tokens/*.yaml sources. Each one is defined on :root (or a .mg-theme-* block) in the bundles listed under `brands`, so it resolves on any element on the page.',
+        'Every --mg-* custom property emitted by the theme stylesheets from the tokens/*.tokens.json sources. Each one is defined on :root (or a .mg-theme-* block) in the bundles listed under `brands`, so it resolves on any element on the page.',
       excludes:
         'Mostly component-scoped custom properties. These are public API, several of them announced in the release notes, but none of them appear in `tokens` — they are documented per component instead; see `componentProperties`. Two kinds: properties a component stylesheet defines itself, with its own default, such as --mg-empty-state-*, --mg-notice-* (except --mg-notice-action-secondary, which is a theme token), --mg-tree-* and --mg-drawer-size; and input hooks a component reads but no stylesheet defines, so a wrapper, an inline style or a consuming page supplies the value — such as the --mg-switch-track-* set, --mg-card-border, --mg-icon-fg, --mg-icon-bg, --mg-cta-bg, --mg-legend-tick-pos and --mg-on-this-page-nav-offset. Also absent: ' +
         (globalPropertyCount === null
           ? 'the properties'
           : `${globalPropertyCount} properties`) +
-        ' that are global like a theme token but declared straight in SCSS rather than by a tokens/*.yaml source, so they are in neither place — the data visualisation palettes (--mg-dataviz-*) and the Sendai Framework ramps (--mg-sendai-*) from stories/assets/scss/_tokens-data-viz.scss, and the five typography roles (--mg-font-family-*) and ten legacy one-off brand colours (--mg-color-azure, -ebony-clay, -green, -yellow and their light and dark variants) from _variables.scss. llms.txt names every group and says where each is defined.',
+        ' that are global like a theme token but declared straight in SCSS rather than by a tokens/*.tokens.json source, so they are in neither place — the data visualisation palettes (--mg-dataviz-*) and the Sendai Framework ramps (--mg-sendai-*) from stories/assets/scss/_tokens-data-viz.scss, and the five typography roles (--mg-font-family-*) and ten legacy one-off brand colours (--mg-color-azure, -ebony-clay, -green, -yellow and their light and dark variants) from _variables.scss. llms.txt names every group and says where each is defined.',
       componentProperties: {
         where:
           'A component\'s own custom properties are in its ai-components/{id}.json entry, under `customProperties`: one record per property, each carrying its `type` ("default" if a plain, unconditional rule already gives it a value, "hook" if nothing unconditional does — no rule at all, or only a modifier or a media query — so it holds its fallback until you set it), its resting value in `default`, a `description` of what it does, and `format: "srgb-channels"` with `wrapInRgb: true` where the value is channels rather than a colour, exactly as a token here carries them. The component index says which components have them and how many. They are also documented on each component\'s Storybook page.',
@@ -874,7 +990,7 @@ const BASELINE_NOTE =
   'scripts/build-tokens.cjs emits. The generated partials are not committed, ' +
   'so this is the only committed record of what the generator produces. ' +
   'Regenerate with `node scripts/build-tokens.cjs --baseline` in the same ' +
-  'commit as the tokens/*.yaml change that moved it. ' +
+  'commit as the tokens/*.tokens.json change that moved it. ' +
   'MERGE CONFLICTS: never resolve one by hand or by picking a side on ' +
   'merit - these values are a function of the generator and the token ' +
   "sources, not of either branch's intent, so a hand-merged digest is " +
@@ -925,6 +1041,30 @@ function writeBaseline(files = build()) {
  * Entry point
  * ------------------------------------------------------------------ */
 function main(argv) {
+  if (argv.includes('--export-dtcg')) {
+    const index = argv.indexOf('--export-dtcg');
+    const outputDir = path.resolve(
+      ROOT,
+      argv[index + 1] && !argv[index + 1].startsWith('--')
+        ? argv[index + 1]
+        : 'dist/tokens'
+    );
+    fs.mkdirSync(outputDir, { recursive: true });
+    for (const [file, document] of buildDtcgDocuments()) {
+      const target = path.join(outputDir, file);
+      const contents = `${JSON.stringify(document, null, 2)}\n`;
+      if (
+        !fs.existsSync(target) ||
+        fs.readFileSync(target, 'utf8') !== contents
+      )
+        fs.writeFileSync(target, contents);
+    }
+    process.stdout.write(
+      `build-tokens: exported self-contained DTCG documents to ${outputDir}\n`
+    );
+    return;
+  }
+
   if (argv.includes('--baseline')) {
     const relative = path.relative(ROOT, BASELINE_PATH);
     process.stdout.write(
@@ -977,6 +1117,7 @@ if (require.main === module) {
 }
 
 module.exports = {
+  validateDocument,
   loadSources,
   layersFor,
   mergeLayers,
@@ -985,6 +1126,7 @@ module.exports = {
   TOKENS_DIR,
   build,
   buildTokensDictionary,
+  buildDtcgDocuments,
   TokenError,
   BASELINE_PATH,
   baselineOf,

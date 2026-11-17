@@ -1541,7 +1541,7 @@ const customPropertyCount = Object.values(customProperties.byComponent).reduce(
 
 // The --mg-* properties that are in neither tokens.json nor a component's
 // customProperties: global like a theme token, but declared straight in SCSS
-// rather than generated from tokens/*.yaml, so the dictionary never saw them.
+// rather than generated from tokens/*.tokens.json, so the dictionary never saw them.
 // Written out from the data rather than by hand, because naming only the
 // data-viz palette left 29 properties unsaid — including the five typography
 // roles that #1210 had just established as the public font API.
@@ -1979,7 +1979,7 @@ if (validateOnly) {
       `Validation failed: ${customProperties.unattributed.length} custom ` +
         'property(ies) belong to no component. Claim each in OWNERS in ' +
         'custom-properties.js, or — if it is a theme token — add it to a ' +
-        'tokens/*.yaml source so tokens.json documents it:'
+        'tokens/*.tokens.json source so tokens.json documents it:'
     );
     for (const name of customProperties.unattributed) {
       console.error(`  - ${name}`);
@@ -2523,7 +2523,7 @@ ${DOCS_BASE}ai-components/utilities.json
 Theme token dictionary (~${tokensDict.totalTokens} tokens with type, format & wrapping metadata):
 ${DOCS_BASE}tokens.json
 
-This dictionary covers theme tokens only — the --mg-* properties the theme stylesheets define from the tokens/*.yaml sources. Component-scoped custom properties are public API but are not in it. They are in each component's own entry instead: ${customPropertyCount} properties across ${Object.keys(customProperties.byComponent).length} components, under \`customProperties\` in ai-components/{id}.json, each with its type, its resting value and what it does. The index says which components have them and how many. ${globalGroupsTotal} --mg-* properties are in neither list: they are global like a theme token, but declared straight in SCSS rather than generated from tokens/*.yaml, so the dictionary never saw them. ${globalGroupsCountPhrase} — ${globalGroupsSentence}. The dictionary's own \`scope\` field says the same thing.
+This dictionary covers theme tokens only — the --mg-* properties the theme stylesheets define from the tokens/*.tokens.json sources. Component-scoped custom properties are public API but are not in it. They are in each component's own entry instead: ${customPropertyCount} properties across ${Object.keys(customProperties.byComponent).length} components, under \`customProperties\` in ai-components/{id}.json, each with its type, its resting value and what it does. The index says which components have them and how many. ${globalGroupsTotal} --mg-* properties are in neither list: they are global like a theme token, but declared straight in SCSS rather than generated from tokens/*.tokens.json, so the dictionary never saw them. ${globalGroupsCountPhrase} — ${globalGroupsSentence}. The dictionary's own \`scope\` field says the same thing.
 
 Icons gallery:
 ${DOCS_BASE}?path=/docs/components-icons--docs
@@ -2621,13 +2621,13 @@ Colour, spacing, radii and component tokens are CSS custom properties, so they a
 Where they come from:
 
 - Compiled theme token dictionary: ${DOCS_BASE}tokens.json — theme tokens only; see its \`scope\` field
-- \`tokens/mangrove.yaml\` — the brand-neutral base: ${PUBLIC_REPO_RAW_MAIN}tokens/mangrove.yaml
-- \`tokens/undrr.yaml\`, \`preventionweb.yaml\`, \`irp.yaml\`, \`mcr.yaml\`, \`delta.yaml\` — brand layers merged over the base, same directory.
+- \`tokens/mangrove.tokens.json\` — the brand-neutral base: ${PUBLIC_REPO_RAW_MAIN}tokens/mangrove.tokens.json
+- \`tokens/undrr.tokens.json\`, \`preventionweb.tokens.json\`, \`irp.tokens.json\`, \`mcr.tokens.json\`, \`delta.tokens.json\` — brand layers merged over the base, same directory.
 - \`stories/assets/scss/_tokens-data-viz.scss\` — the chart and map palette: ${PUBLIC_REPO_RAW_MAIN}stories/assets/scss/_tokens-data-viz.scss
 
-Those YAML files carry a \`$description\` on the tokens that need one, which is the reasoning behind the value. For automated and tooling integrations, fetch the machine-readable \`${DOCS_BASE}tokens.json\` dictionary which includes token types, formats, descriptions, and rgb() wrapping requirements.
+Those DTCG JSON files carry a \`$description\` on the tokens that need one, which is the reasoning behind the value. For automated and tooling integrations, fetch the machine-readable \`${DOCS_BASE}tokens.json\` dictionary which includes token types, formats, descriptions, and rgb() wrapping requirements.
 
-\`tokens.json\` is a THEME token dictionary. It lists the \`--mg-*\` properties the theme stylesheets define from the YAML sources, and nothing else. A component's own properties live in its manifest entry instead, under \`customProperties\` in \`ai-components/{id}.json\` — ${customPropertyCount} of them across ${Object.keys(customProperties.byComponent).length} components, each with what it does and the value it holds at rest. They come in two kinds: \`type: "default"\`, which a plain, unconditional rule already gives a value (\`--mg-empty-state-*\`, \`--mg-notice-*\`, \`--mg-status-label-*\`, \`--mg-tab-*\`), and \`type: "hook"\`, which nothing unconditional defines — either no rule at all, or only a modifier or a media query — so it holds its fallback until a wrapper, an inline style or a React prop sets it (\`--mg-switch-track-*\`, \`--mg-switch-size\`, \`--mg-card-border\`, \`--mg-icon-fg\`, \`--mg-cta-bg\`, \`--mg-legend-tick-pos\`, \`--mg-on-this-page-nav-offset\`, \`--mg-tree-guide-offset\`). A record with \`wrapInRgb: true\` takes sRGB channels (\`255 255 255\`) rather than a colour, the same way tokens.json marks \`format: "srgb-channels"\`; a hex or a keyword there makes the declaration invalid and it drops with no warning. Restyle a component by setting these, not by writing rules against its classes: a class rule of equal specificity replaces what the component draws, and several components build their geometry on a property whose value your rule would then be fighting.
+\`tokens.json\` is a THEME token dictionary. It lists the \`--mg-*\` properties the theme stylesheets define from the DTCG JSON sources, and nothing else. A component's own properties live in its manifest entry instead, under \`customProperties\` in \`ai-components/{id}.json\` — ${customPropertyCount} of them across ${Object.keys(customProperties.byComponent).length} components, each with what it does and the value it holds at rest. They come in two kinds: \`type: "default"\`, which a plain, unconditional rule already gives a value (\`--mg-empty-state-*\`, \`--mg-notice-*\`, \`--mg-status-label-*\`, \`--mg-tab-*\`), and \`type: "hook"\`, which nothing unconditional defines — either no rule at all, or only a modifier or a media query — so it holds its fallback until a wrapper, an inline style or a React prop sets it (\`--mg-switch-track-*\`, \`--mg-switch-size\`, \`--mg-card-border\`, \`--mg-icon-fg\`, \`--mg-cta-bg\`, \`--mg-legend-tick-pos\`, \`--mg-on-this-page-nav-offset\`, \`--mg-tree-guide-offset\`). A record with \`wrapInRgb: true\` takes sRGB channels (\`255 255 255\`) rather than a colour, the same way tokens.json marks \`format: "srgb-channels"\`; a hex or a keyword there makes the declaration invalid and it drops with no warning. Restyle a component by setting these, not by writing rules against its classes: a class rule of equal specificity replaces what the component draws, and several components build their geometry on a property whose value your rule would then be fighting.
 
 What you actually write against is the compiled result: the \`--mg-*\` custom properties in the theme stylesheets above.
 

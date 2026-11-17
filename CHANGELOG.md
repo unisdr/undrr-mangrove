@@ -11,6 +11,8 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 ## Unreleased
 
+- **Token source format:** Migrated the six authored brand sources from custom YAML to typed DTCG JSON (`tokens/*.tokens.json`). Mangrove-specific CSS/Sass output rules live in the `org.undrr.mangrove` extension. Existing CSS names, theme selectors and compiled appearance remain the compatibility target. See [the source guide](docs/DESIGN-TOKENS.md) and [#1495](https://github.com/unisdr/undrr-mangrove/issues/1495).
+
 - **Breaking, pending the Drupal migration:** Retired the FontAwesome icon-font fallback, `fa-*` aliases (including `.fa-before` and `.fa-2x`), React `fa-*` icon names, `$mgIconFontPath` and the published `fonts/mangrove-icon-set/` assets. SVG icons continue through `mg-icon-*`. This must ship in a release that explicitly announces the breaking change, after [undrr/web-backlog#3185](https://gitlab.com/undrr/web-backlog/-/issues/3185) is deployed and verified in production. See [migration and release gate](docs/ICON-FONT-RETIREMENT.md) and [unisdr/undrr-mangrove#906](https://github.com/unisdr/undrr-mangrove/issues/906).
 - Established `release/3.0` as an integration branch with build/test coverage, isolated Storybook artifacts and Chromatic previews. Stable Pages/dist publication remains on main and npm remains tag/manual. Scope and release gates: [unisdr/undrr-mangrove#1379](https://github.com/unisdr/undrr-mangrove/issues/1379).
 

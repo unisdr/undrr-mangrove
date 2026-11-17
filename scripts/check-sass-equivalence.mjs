@@ -37,7 +37,10 @@ try {
   mkdirSync(baseline);
   const archive = execFileSync(
     'git',
-    ['archive', ref, 'stories', 'tokens', 'scripts/build-tokens.cjs'],
+    // Token compilation can use helper modules beside build-tokens.cjs. Keep
+    // each revision's helpers with its engine, rather than accidentally using
+    // the candidate's decoder to compile a historical source tree.
+    ['archive', ref, 'stories', 'tokens', 'scripts'],
     { maxBuffer: 100 * 1024 * 1024 }
   );
   execFileSync('tar', ['-x', '-C', baseline], { input: archive });
