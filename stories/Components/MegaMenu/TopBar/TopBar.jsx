@@ -9,6 +9,7 @@ export function TopBar({
   sidebarId,
   labels,
   handleItemHover,
+  handleItemActivate,
   toggleShowSidebar,
   showSidebar,
   sections,
@@ -79,6 +80,7 @@ export function TopBar({
       onMouseEnter={() => {
         if (!isMobile) handleItemHover(index);
       }}
+      onDesktopActivate={event => handleItemActivate?.(index, event)}
       activeItem={activeItem}
       section={section}
       sections={sections}

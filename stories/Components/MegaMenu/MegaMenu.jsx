@@ -185,6 +185,18 @@ const MegaMenu = ({
     }, hoverDelay);
   };
 
+  // Activating a desktop trigger opens its panel straight away rather than
+  // waiting for the hover delay. Keyboard activation (Enter or Space, which
+  // report no pointer clicks) toggles, matching the announced expanded state.
+  // A pointer click only opens: hovering has usually opened the panel already,
+  // and closing it under the cursor would undo what the visitor just asked for.
+  const handleItemActivate = (item, event) => {
+    clearTimeout(closeTimeoutRef.current);
+    clearTimeout(openTimeoutRef.current);
+    const isKeyboard = event?.detail === 0;
+    setActiveItem(current => (isKeyboard && current === item ? null : item));
+  };
+
   const handleEscape = e => {
     if (e.key === 'Escape') {
       // Return keyboard focus before the exiting desktop panel becomes inert.
@@ -255,6 +267,7 @@ const MegaMenu = ({
         labels={resolvedLabels}
         sections={sections}
         handleItemHover={handleItemHover}
+        handleItemActivate={handleItemActivate}
         toggleShowSidebar={() => {
           setInitialSection(null);
           setShowSidebar(prev => !prev);

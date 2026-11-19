@@ -94,8 +94,6 @@ export default function Section({
     </button>
   );
   const [itemIndex, setItemIndex] = useState(0);
-  const [focusIndex, setFocusIndex] = useState(0);
-  const [focusableElements, setFocusableElements] = useState([]);
 
   // Landmarks inside every section share a name unless it is derived from the
   // section itself, which leaves a screen-reader landmark list unusable.
@@ -104,81 +102,80 @@ export default function Section({
   const asideRef = useRef(null);
   const contentRef = useRef(null);
 
-  const handleArrowFocus = e => {
-    if (e.target.closest('.mg-mega-menu-finder')) return;
-    if (enableFilter && e.key === 'Tab') return;
-    // Prevent default browser scrolling behavior for arrow keys
-    if (['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
+  // The panel renders both a mobile and a desktop destination list and CSS
+  // hides one of them. Arrow keys must only land on the list that is shown,
+  // otherwise focus() on a hidden link fails silently and the key does nothing.
+  const isListShown = list =>
+    !list ||
+    list.ownerDocument.defaultView.getComputedStyle(list).display !== 'none';
 
-    if (e.key === 'ArrowDown' || e.key === 'Tab') {
-      if (focusIndex < focusableElements?.length - 1) {
-        setFocusIndex(prevIndex => prevIndex + 1);
-      } else {
-        setFocusIndex(0);
-        itemListRef.current?.[index + 1]?.focus();
-      }
-    }
-
-    if (e.key === 'ArrowUp' || (e.shiftKey && e.key === 'Tab')) {
-      if (focusIndex > 0) {
-        setFocusIndex(prevIndex => prevIndex - 1);
-      } else {
-        itemListRef.current?.[index]?.focus();
-        setFocusIndex(0);
-      }
-    }
-
-    if (asideRef.current) {
-      if (e.key === 'ArrowLeft') {
-        setFocusIndex(0);
-      }
-
-      // Focus on first element on right side in content area
-      // only if aside element exists
-      if (e.key === 'ArrowRight') {
-        const rightSection = contentRef.current;
-
-        const firstLink = rightSection?.querySelector('ul > li > a');
-
-        if (firstLink) {
-          rightSection.setAttribute('tabindex', '-1');
-
-          firstLink.focus();
-
-          const firstLinkIndex = focusableElements.findIndex(
-            el => el === firstLink
-          );
-          if (firstLinkIndex !== -1) {
-            setFocusIndex(firstLinkIndex);
-          }
-        } else {
-          contentRef.current?.focus();
-          const firstContentElement = focusableElements.filter(
-            item => item === contentRef.current
-          );
-          firstContentElement[0] &&
-            setFocusIndex(focusableElements.indexOf(firstContentElement[0]));
-        }
-      }
-    }
+  const getArrowTargets = () => {
+    const panel = sectionListRef?.current?.[index];
+    if (!panel) return [];
+    const hiddenLists = Array.from(
+      panel.querySelectorAll(
+        '.mg-mega-content__menu--mobile, .mg-mega-content__menu--desktop'
+      )
+    ).filter(list => !isListShown(list));
+    return Array.from(
+      panel.querySelectorAll(
+        'audio, button, a, canvas, details, iframe, input, select, summary, textarea, video, [tabindex]'
+      )
+    ).filter(
+      element =>
+        // The two columns take focus so Tab users can scroll them; arrow keys
+        // step between the links and controls inside them instead.
+        element !== asideRef.current &&
+        element !== contentRef.current &&
+        !hiddenLists.some(list => list.contains(element))
+    );
   };
 
-  useEffect(() => {
-    const tabableElements = sectionListRef?.current?.[index]?.querySelectorAll(
-      'audio, button, a, canvas, details, iframe, input, select, summary, textarea, video, [tabindex]'
-    );
+  const handleArrowFocus = e => {
+    if (e.target.closest('.mg-mega-menu-finder')) return;
+    // Tab and Shift+Tab follow the browser's own order. The panel sits
+    // directly after its trigger, so leaving either end reaches the
+    // neighbouring top-bar items without help.
+    if (!['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(e.key))
+      return;
+    // Prevent default browser scrolling behavior for arrow keys
+    e.preventDefault();
+    e.stopPropagation();
 
-    setFocusableElements(Array.from(tabableElements || []));
-  }, [sectionListRef, index, itemIndex, filtering]);
+    // Work from where focus actually is, so pointer clicks and Tab presses
+    // between arrow presses do not leave a stale position behind.
+    const targets = getArrowTargets();
+    const current = targets.indexOf(e.target.ownerDocument.activeElement);
 
-  useEffect(() => {
-    if (focusableElements.length > 0 && focusIndex >= 0) {
-      focusableElements[focusIndex]?.focus();
+    if (e.key === 'ArrowDown') {
+      if (current < targets.length - 1) targets[current + 1].focus();
+      else itemListRef.current?.[index + 1]?.focus();
     }
-  }, [focusIndex]);
+
+    if (e.key === 'ArrowUp') {
+      if (current > 0) targets[current - 1].focus();
+      else itemListRef.current?.[index]?.focus();
+    }
+
+    // Left and right cross between the category column and the
+    // destinations column, only when there is a category column.
+    if (!asideRef.current) return;
+
+    if (e.key === 'ArrowLeft') {
+      (
+        asideRef.current.querySelector(
+          '.mg-mega-content__section-list-link--active'
+        ) || asideRef.current
+      ).focus();
+    }
+
+    if (e.key === 'ArrowRight') {
+      const firstLink = Array.from(
+        contentRef.current?.querySelectorAll('ul > li > a') || []
+      ).find(link => targets.includes(link));
+      (firstLink || contentRef.current)?.focus();
+    }
+  };
 
   return (
     <>

@@ -8,6 +8,7 @@ export function TopBarItem({
   title,
   icon,
   onMouseEnter,
+  onDesktopActivate,
   activeItem,
   link,
   bannerDescription,
@@ -101,8 +102,10 @@ export function TopBarItem({
         </a>
       ) : (
         <button
+          type="button"
           className="mg-mega-topbar__item-link"
           ref={ref}
+          onClick={hasPanel ? onDesktopActivate : undefined}
           aria-expanded={hasPanel ? String(isActive) : undefined}
           data-vf-analytics-label="Mega menu: Section"
         >
