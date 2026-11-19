@@ -6,7 +6,7 @@
  * `scripts/test-megamenu-keyboard-browser.mjs` checks the same paths against
  * the real stylesheet.
  */
-import { render, screen, fireEvent, within } from '@testing-library/react';
+import { render, screen, fireEvent, within, act } from '@testing-library/react';
 import MegaMenu from '../MegaMenu';
 
 const sections = [
@@ -46,10 +46,15 @@ const sections = [
       },
     ],
   },
+  {
+    title: 'Promo',
+    bannerDescription:
+      '<p>Banner-only panel with <a href="/promo">a link</a>.</p>',
+  },
 ];
 
-const renderDesktop = () => {
-  render(<MegaMenu sections={sections} />);
+const renderDesktop = (props = {}, data = sections) => {
+  render(<MegaMenu sections={data} {...props} />);
   document.querySelectorAll('.mg-mega-content__menu--mobile').forEach(list => {
     list.style.display = 'none';
   });
@@ -99,11 +104,60 @@ describe('MegaMenu desktop trigger activation', () => {
   });
 
   it('keeps a hover-opened panel open when the pointer clicks its trigger', () => {
-    const { trigger } = renderDesktop();
-    fireEvent.click(trigger, { detail: 1 });
-    expect(trigger).toHaveAttribute('aria-expanded', 'true');
-    fireEvent.click(trigger, { detail: 1 });
-    expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    jest.useFakeTimers();
+    try {
+      const { trigger } = renderDesktop();
+      fireEvent.mouseEnter(trigger.closest('li'));
+      act(() => jest.advanceTimersByTime(500));
+      expect(trigger).toHaveAttribute('aria-expanded', 'true');
+      fireEvent.click(trigger, { detail: 1 });
+      expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    } finally {
+      jest.useRealTimers();
+    }
+  });
+
+  it('keeps a focus-opened panel open on Enter after a pause, then closes on the next', () => {
+    jest.useFakeTimers();
+    try {
+      const { trigger, panel } = renderDesktop();
+      act(() => trigger.focus());
+      // Focus opens the panel once the hover delay has passed.
+      act(() => jest.advanceTimersByTime(500));
+      expect(trigger).toHaveAttribute('aria-expanded', 'true');
+
+      keyboardClick(trigger);
+      expect(trigger).toHaveAttribute('aria-expanded', 'true');
+      expect(panel).not.toHaveAttribute('inert');
+
+      keyboardClick(trigger);
+      expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    } finally {
+      jest.useRealTimers();
+    }
+  });
+
+  it('keeps open a panel that hovering opened when Enter is pressed on it', () => {
+    jest.useFakeTimers();
+    try {
+      const { trigger } = renderDesktop({ hoverDelay: 0 });
+      fireEvent.mouseEnter(trigger.closest('li'));
+      act(() => jest.advanceTimersByTime(10));
+      act(() => trigger.focus());
+      act(() => jest.advanceTimersByTime(10));
+      keyboardClick(trigger);
+      expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    } finally {
+      jest.useRealTimers();
+    }
+  });
+
+  it('opens a banner-only panel with Enter and announces its state', () => {
+    renderDesktop();
+    const promo = screen.getByRole('button', { name: 'Promo' });
+    expect(promo).toHaveAttribute('aria-expanded', 'false');
+    keyboardClick(promo);
+    expect(promo).toHaveAttribute('aria-expanded', 'true');
   });
 });
 
@@ -185,5 +239,77 @@ describe('MegaMenu desktop panel arrow keys', () => {
     // fireEvent returns false when the handler called preventDefault.
     expect(tab).toBe(true);
     expect(panel).toHaveFocus();
+  });
+  it('steps over links that cannot take focus', () => {
+    const data = [
+      {
+        ...sections[0],
+        items: [
+          {
+            title: 'Publications',
+            url: '/publications',
+            items: [
+              { title: 'Global report', url: '/global-report' },
+              { title: 'No address' },
+              { title: 'Policy briefs', url: '/policy-briefs' },
+            ],
+          },
+        ],
+      },
+    ];
+    const { trigger, panel } = renderDesktop({}, data);
+    act(() => trigger.focus());
+    keyboardClick(trigger);
+    const desktop = panel.querySelector('.mg-mega-content__menu--desktop');
+    within(desktop).getByRole('menuitem', { name: 'Global report' }).focus();
+    fireEvent.keyDown(document.activeElement, { key: 'ArrowDown' });
+    expect(document.activeElement).toBe(
+      within(desktop).getByRole('menuitem', { name: 'Policy briefs' })
+    );
+  });
+
+  it('starts from inside a focused column rather than the top of the panel', () => {
+    const { panel } = openPanel();
+    const right = panel.querySelector('.mg-mega-content__right');
+    const desktop = panel.querySelector('.mg-mega-content__menu--desktop');
+    right.focus();
+    fireEvent.keyDown(right, { key: 'ArrowDown' });
+    expect(document.activeElement).toBe(
+      within(desktop).getByRole('menuitem', { name: 'Global report' })
+    );
+    right.focus();
+    fireEvent.keyDown(right, { key: 'ArrowUp' });
+    // The item before the destinations column is the last category.
+    expect(document.activeElement).toHaveTextContent('Risk information');
+  });
+
+  it('keeps ArrowRight inside the destinations column where it is', () => {
+    const { panel } = openPanel();
+    const desktop = panel.querySelector('.mg-mega-content__menu--desktop');
+    const guidelines = within(desktop).getByRole('menuitem', {
+      name: 'Guidelines',
+    });
+    guidelines.focus();
+    fireEvent.keyDown(guidelines, { key: 'ArrowRight' });
+    expect(guidelines).toHaveFocus();
+  });
+
+  it('swaps left and right in right-to-left layouts', () => {
+    const { panel } = openPanel();
+    panel.style.direction = 'rtl';
+    const desktop = panel.querySelector('.mg-mega-content__menu--desktop');
+    const publications = within(panel)
+      .getAllByRole('menuitem', { name: 'Publications' })
+      .find(link => link.closest('.mg-mega-content__section-list'));
+    publications.focus();
+    // In RTL the destinations column sits to the left of the categories.
+    fireEvent.keyDown(publications, { key: 'ArrowRight' });
+    expect(publications).toHaveFocus();
+    fireEvent.keyDown(publications, { key: 'ArrowLeft' });
+    expect(document.activeElement).toBe(
+      within(desktop).getByRole('menuitem', { name: 'Global report' })
+    );
+    fireEvent.keyDown(document.activeElement, { key: 'ArrowRight' });
+    expect(document.activeElement).toBe(publications);
   });
 });

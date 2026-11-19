@@ -29,7 +29,10 @@ export function TopBarItem({
   const isActive = index === activeItem;
   // The panel below is a disclosure, not a menu: announce expanded state
   // only where a panel actually exists.
-  const hasPanel = Boolean(section && section.items);
+  // Section renders a panel for child items, or for banner copy alone.
+  const hasPanel = Boolean(
+    section && (section.items || section.bannerDescription)
+  );
 
   const label = (
     <>

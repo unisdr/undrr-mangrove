@@ -103,23 +103,28 @@ export default function Section({
   const contentRef = useRef(null);
 
   // The panel renders both a mobile and a desktop destination list and CSS
-  // hides one of them. Arrow keys must only land on the list that is shown,
-  // otherwise focus() on a hidden link fails silently and the key does nothing.
-  const isListShown = list =>
-    !list ||
-    list.ownerDocument.defaultView.getComputedStyle(list).display !== 'none';
+  // hides one of them. Arrow keys must only land on elements that can take
+  // focus: focus() on a hidden link, a link without an address or a disabled
+  // control fails silently, and the key would then do nothing.
+  const isShown = element => {
+    if (typeof element.checkVisibility === 'function')
+      return element.checkVisibility({ visibilityProperty: true });
+    // Without checkVisibility, at least honour the hidden destination list.
+    const list = element.closest(
+      '.mg-mega-content__menu--mobile, .mg-mega-content__menu--desktop'
+    );
+    return (
+      !list ||
+      list.ownerDocument.defaultView.getComputedStyle(list).display !== 'none'
+    );
+  };
 
   const getArrowTargets = () => {
     const panel = sectionListRef?.current?.[index];
     if (!panel) return [];
-    const hiddenLists = Array.from(
-      panel.querySelectorAll(
-        '.mg-mega-content__menu--mobile, .mg-mega-content__menu--desktop'
-      )
-    ).filter(list => !isListShown(list));
     return Array.from(
       panel.querySelectorAll(
-        'audio, button, a, canvas, details, iframe, input, select, summary, textarea, video, [tabindex]'
+        'a[href], area[href], button, input, select, textarea, summary, iframe, audio[controls], video[controls], [tabindex]'
       )
     ).filter(
       element =>
@@ -127,9 +132,22 @@ export default function Section({
         // step between the links and controls inside them instead.
         element !== asideRef.current &&
         element !== contentRef.current &&
-        !hiddenLists.some(list => list.contains(element))
+        !element.disabled &&
+        element.getAttribute('tabindex') !== '-1' &&
+        !element.closest('[inert]') &&
+        isShown(element)
     );
   };
+
+  // Document order, so a focused column or the panel itself still has a
+  // place: the next target is the first one after focus, including inside it.
+  const follows = (element, reference) =>
+    Boolean(
+      // compareDocumentPosition returns a bitmask; this is its documented use.
+      // eslint-disable-next-line no-bitwise
+      reference.compareDocumentPosition(element) &
+      Node.DOCUMENT_POSITION_FOLLOWING
+    );
 
   const handleArrowFocus = e => {
     if (e.target.closest('.mg-mega-menu-finder')) return;
@@ -144,36 +162,50 @@ export default function Section({
 
     // Work from where focus actually is, so pointer clicks and Tab presses
     // between arrow presses do not leave a stale position behind.
+    const focused = e.target.ownerDocument.activeElement;
     const targets = getArrowTargets();
-    const current = targets.indexOf(e.target.ownerDocument.activeElement);
 
     if (e.key === 'ArrowDown') {
-      if (current < targets.length - 1) targets[current + 1].focus();
-      else itemListRef.current?.[index + 1]?.focus();
+      const next = targets.find(target => follows(target, focused));
+      (next || itemListRef.current?.[index + 1])?.focus();
     }
 
     if (e.key === 'ArrowUp') {
-      if (current > 0) targets[current - 1].focus();
-      else itemListRef.current?.[index]?.focus();
+      const previous = targets
+        .filter(
+          target =>
+            target !== focused &&
+            !follows(target, focused) &&
+            !target.contains(focused)
+        )
+        .pop();
+      (previous || itemListRef.current?.[index])?.focus();
     }
 
     // Left and right cross between the category column and the
-    // destinations column, only when there is a category column.
+    // destinations column, only when there is a category column. The
+    // destinations sit on the inline-end side, so the keys swap in RTL.
     if (!asideRef.current) return;
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    const rtl =
+      e.currentTarget.ownerDocument.defaultView.getComputedStyle(
+        e.currentTarget
+      ).direction === 'rtl';
+    const towardsDestinations = (e.key === 'ArrowRight') !== rtl;
 
-    if (e.key === 'ArrowLeft') {
+    if (towardsDestinations) {
+      if (contentRef.current?.contains(focused)) return;
+      const firstLink = Array.from(
+        contentRef.current?.querySelectorAll('ul > li > a') || []
+      ).find(link => targets.includes(link));
+      (firstLink || contentRef.current)?.focus();
+    } else {
+      if (asideRef.current.contains(focused)) return;
       (
         asideRef.current.querySelector(
           '.mg-mega-content__section-list-link--active'
         ) || asideRef.current
       ).focus();
-    }
-
-    if (e.key === 'ArrowRight') {
-      const firstLink = Array.from(
-        contentRef.current?.querySelectorAll('ul > li > a') || []
-      ).find(link => targets.includes(link));
-      (firstLink || contentRef.current)?.focus();
     }
   };
 

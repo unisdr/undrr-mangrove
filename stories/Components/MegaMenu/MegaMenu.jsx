@@ -187,14 +187,34 @@ const MegaMenu = ({
 
   // Activating a desktop trigger opens its panel straight away rather than
   // waiting for the hover delay. Keyboard activation (Enter or Space, which
-  // report no pointer clicks) toggles, matching the announced expanded state.
-  // A pointer click only opens: hovering has usually opened the panel already,
-  // and closing it under the cursor would undo what the visitor just asked for.
+  // report no pointer clicks) closes only a panel that activation opened.
+  // Focus and hover also open panels, so a visitor who pauses on a trigger
+  // and then presses Enter is asking for the panel they already see: closing
+  // it would leave Tab to skip the now-inert panel. A pointer click only
+  // opens, since hovering has usually opened the panel already.
+  const activatedItemRef = useRef(null);
+  useEffect(() => {
+    // Any other open or close (hover, focus, arrows, Escape, outside click)
+    // means activation no longer owns the open panel.
+    if (activeItem !== activatedItemRef.current)
+      activatedItemRef.current = null;
+  }, [activeItem]);
+
   const handleItemActivate = (item, event) => {
     clearTimeout(closeTimeoutRef.current);
     clearTimeout(openTimeoutRef.current);
     const isKeyboard = event?.detail === 0;
-    setActiveItem(current => (isKeyboard && current === item ? null : item));
+    if (
+      isKeyboard &&
+      activeItem === item &&
+      activatedItemRef.current === item
+    ) {
+      activatedItemRef.current = null;
+      setActiveItem(null);
+      return;
+    }
+    activatedItemRef.current = item;
+    setActiveItem(item);
   };
 
   const handleEscape = e => {

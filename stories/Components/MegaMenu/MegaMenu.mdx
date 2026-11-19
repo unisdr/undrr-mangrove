@@ -131,13 +131,17 @@ text wrapper or HTML rendering; it is not a filter. `bannerHeading` is plain tex
 ### Keyboard navigation
 
 - **← / →** move between top-level items; focusing an item opens its panel.
-- **Enter / Space** on a top-level button opens its panel straight away, or
-  closes it when it is already open.
+- **Enter / Space** on a top-level button with a panel opens it straight away.
+  If focus or hover has already opened the panel, it stays open; a second
+  press closes a panel that Enter or Space opened. Top-level links follow
+  their address instead; use **↓** to open their panel.
 - **↓** enters the desktop panel. **Tab / Shift+Tab** move through its controls
   in the browser's own order.
-- Inside the panel, **↓ / ↑** step through visible links and controls, starting
-  from wherever focus is. **→** moves from the category column to the first
-  destination of the highlighted category; **←** returns to that category.
+- Inside the panel, **↓ / ↑** step through the links and controls that can take
+  focus, starting from wherever focus is, including a focused column. **→**
+  moves from the category column to the first destination of the highlighted
+  category and **←** returns to that category; the two swap in right-to-left
+  layouts, where the destinations sit on the left.
 - **Escape** closes the current surface and restores its trigger. Inactive
   panels are inert and hidden from assistive technology.
 - Mobile dialogs contain Tab focus; arrows retain native behaviour. Entering a
@@ -326,7 +330,7 @@ for consumers needing the same strings outside React.
 
 ## Changelog
 
-- **1.7.2**, 2026-11-19 ([#1499](https://github.com/unisdr/undrr-mangrove/issues/1499)): Desktop keyboard fixes. Enter or Space on a top-level button opens its panel at once and closes it on a second press; previously only focus opened a panel, after the hover delay, so Enter did nothing after Escape and Tab could skip the closed panel. Inside a panel, → reaches the destinations of the highlighted category, so nested links under the first category can be reached by keyboard. ↓ / ↑ skip the destination list that is hidden on desktop and continue from the focused element after a click or Tab. Tab is no longer intercepted. A pointer click on an open panel's button keeps it open.
+- **1.7.2**, 2026-11-20 ([#1499](https://github.com/unisdr/undrr-mangrove/issues/1499)): Desktop keyboard fixes. Enter or Space on a top-level button opens its panel at once, including panels with banner copy only, which now also announce their expanded state. A panel that focus or hover has already opened stays open on Enter, and a second press closes a panel that Enter opened. Previously only focus opened a panel, after the hover delay, so Enter did nothing after Escape and Tab could skip the closed panel. Inside a panel, → (← in right-to-left layouts) reaches the destinations of the highlighted category, so nested links under every category can be reached by keyboard. ↓ / ↑ skip the destination list hidden on desktop, links without an address and disabled controls, and continue from the focused element after a click or Tab. Tab is no longer intercepted. A pointer click on an open panel's button keeps it open.
 
 - **1.7.1**, 2026-11-13 ([web-backlog#3328](https://gitlab.com/undrr/web-backlog/-/work_items/3328)): The logo in the branded variant keeps its proportions when the top bar is too narrow for its full width. It previously kept its height while its width shrank, so it was drawn squeezed. It now scales down inside its box, aligned to the inline start in left-to-right and right-to-left layouts.
 
