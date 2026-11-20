@@ -54,7 +54,7 @@ function accessibleNameRequired(props, propName, componentName) {
  * @param {Object} props
  * @param {number} [props.value]              Current progress, from 0 to `max`. Leave out (or pass null) for an indeterminate bar
  * @param {number} [props.max=100]            Value at which the task is complete
- * @param {string} props.label                Accessible name, shown above the bar unless hidden. Required unless `aria-label` or `aria-labelledby` is passed
+ * @param {string} [props.label]              Accessible name, shown above the bar unless hidden. Required unless `aria-label` or `aria-labelledby` is passed
  * @param {boolean} [props.hideLabel=false]   Keep the label as the accessible name without showing it
  * @param {string} [props.helpText]           Text under the bar, linked to it with `aria-describedby`
  * @param {boolean} [props.showValue=false]   Show the value next to the label (determinate only)

@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
  * variants for color treatment and layout variants for positioning.
  *
  * @param {Object} props
- * @param {React.ReactNode} props.children                   Content to display inside the box
+ * @param {React.ReactNode} [props.children]                 Content to display inside the box
  * @param {string} [props.variant='default']                 Tone variant: 'default', 'primary', or 'secondary'
  * @param {boolean} [props.centered=false]                   Whether to center the box at 80% width
  * @param {string|null} [props.float=null]                   Float direction: 'start', 'end', or null
