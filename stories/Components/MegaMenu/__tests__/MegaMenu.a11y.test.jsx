@@ -61,21 +61,34 @@ describe('MegaMenu desktop accessibility', () => {
     expect(new Set(names).size).toBe(names.length);
   });
 
-  it('exposes top-level items as ordinary links, not menu items', () => {
+  it('exposes top-level items as disclosure buttons, not menu items', () => {
     render(<MegaMenu sections={sections} />);
     expect(screen.queryByRole('menubar')).not.toBeInTheDocument();
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+    expect(screen.queryByRole('menuitem')).not.toBeInTheDocument();
     const bar = document.querySelector('.mg-mega-topbar');
-    const topLevel = within(bar).getByRole('link', { name: 'About' });
-    expect(topLevel).toHaveAttribute('href', '/about');
+    const topLevel = within(bar).getByRole('button', { name: 'About' });
     // The panel is a disclosure: collapsed state is announced, not implied.
     expect(topLevel).toHaveAttribute('aria-expanded', 'false');
+    const panel = document.getElementById(
+      topLevel.getAttribute('aria-controls')
+    );
+    expect(panel).toHaveClass('mg-mega-content');
+    // The section's landing page stays one step away, inside the panel.
+    fireEvent.click(topLevel);
+    expect(topLevel).toHaveAttribute('aria-expanded', 'true');
+    expect(
+      within(screen.getByRole('region', { name: 'About' })).getByRole('link', {
+        name: 'About overview',
+      })
+    ).toHaveAttribute('href', '/about');
   });
 
   it('keeps arrow-key movement across the bar and down into a panel', () => {
     render(<MegaMenu sections={sections} />);
     const bar = document.querySelector('.mg-mega-topbar');
-    const first = within(bar).getByRole('link', { name: 'About' });
-    const second = within(bar).getByRole('link', { name: 'Our work' });
+    const first = within(bar).getByRole('button', { name: 'About' });
+    const second = within(bar).getByRole('button', { name: 'Our work' });
 
     first.focus();
     fireEvent.keyDown(first, { key: 'ArrowRight' });
@@ -93,7 +106,7 @@ describe('MegaMenu desktop accessibility', () => {
   it('keeps arrow movement inside an open section panel', () => {
     render(<MegaMenu sections={sections} />);
     const bar = document.querySelector('.mg-mega-topbar');
-    const first = within(bar).getByRole('link', { name: 'About' });
+    const first = within(bar).getByRole('button', { name: 'About' });
 
     first.focus();
     fireEvent.keyDown(first, { key: 'ArrowDown' });
@@ -105,8 +118,13 @@ describe('MegaMenu desktop accessibility', () => {
       within(panel).getByRole('link', { name: 'About overview' })
     ).toHaveFocus();
 
-    // Right crosses from the category column into the destinations column.
-    fireEvent.keyDown(panel, { key: 'ArrowRight' });
+    // Down continues to the category, then to the chosen category's
+    // destinations, in document order.
+    fireEvent.keyDown(document.activeElement, { key: 'ArrowDown' });
+    expect(
+      within(panel).getByRole('button', { name: 'Who we are' })
+    ).toHaveFocus();
+    fireEvent.keyDown(document.activeElement, { key: 'ArrowDown' });
     expect(panel.querySelector('.mg-mega-content__right')).toContainElement(
       document.activeElement
     );
@@ -117,7 +135,7 @@ it('makes closing desktop panels inert immediately and returns Escape focus befo
   jest.useFakeTimers();
   try {
     render(<MegaMenu sections={sections} />);
-    const opener = screen.getByRole('link', { name: 'About' });
+    const opener = screen.getByRole('button', { name: 'About' });
     fireEvent.keyDown(opener, { key: 'ArrowDown' });
     const panel = screen.getByRole('region', { name: 'About' });
     fireEvent.keyDown(panel, { key: 'ArrowDown' });

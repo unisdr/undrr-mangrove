@@ -11,18 +11,15 @@ function makeContainer(attrs = {}) {
 describe('megaMenuFromElement', () => {
   it('returns defaults when no data attributes are set', () => {
     const props = megaMenuFromElement(makeContainer());
-    expect(props).toEqual({
-      delay: 300,
-      hoverDelay: 180,
-    });
+    expect(props).toEqual({});
   });
 
-  it('extracts timing props from data attributes', () => {
+  it('ignores the timing attributes deprecated in MegaMenu 2.0', () => {
     const props = megaMenuFromElement(
       makeContainer({ delay: '500', 'hover-delay': '250' })
     );
-    expect(props.delay).toBe(500);
-    expect(props.hoverDelay).toBe(250);
+    expect(props).not.toHaveProperty('delay');
+    expect(props).not.toHaveProperty('hoverDelay');
   });
 
   it('parses sections from JSON data attribute', () => {

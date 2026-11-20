@@ -20,6 +20,10 @@ const sections = [
     bannerHeading: 'Knowledge Hub',
     bannerDescription:
       "<p>Access resources and <strong>insights</strong> on <a href='/knowledge-hub'>disaster risk reduction</a>.</p>",
+    // Representative structure (#1499): each destination appears once, under
+    // the category a visitor would look in. Publications stays long enough to
+    // exercise scrolling, and practical guidance has its own category rather
+    // than repeating under unrelated publication types.
     items: [
       {
         title: 'Publications',
@@ -28,24 +32,24 @@ const sections = [
           {
             title: 'Global Assessment Report',
             url: '/knowledge-hub/publications/global-assessment-report',
-          },
-          {
-            title: 'Policy Briefs',
-            url: '/knowledge-hub/publications/policy-briefs',
             items: [
               {
-                title: 'Words into Action Guidelines',
-                url: '/knowledge-hub/publications/words-into-action',
+                title: 'GAR 2025',
+                url: '/knowledge-hub/publications/gar-2025',
               },
               {
-                title: 'Annual Reports',
-                url: '/knowledge-hub/publications/annual-reports',
+                title: 'GAR 2022',
+                url: '/knowledge-hub/publications/gar-2022',
+              },
+              {
+                title: 'Past editions',
+                url: '/knowledge-hub/publications/gar-archive',
               },
             ],
           },
           {
-            title: 'Technical Reports',
-            url: '/knowledge-hub/publications/technical-reports',
+            title: 'Policy Briefs',
+            url: '/knowledge-hub/publications/policy-briefs',
           },
           {
             title: 'Case Studies',
@@ -56,22 +60,8 @@ const sections = [
             url: '/knowledge-hub/publications/research-papers',
           },
           {
-            title: 'Best Practices',
-            url: '/knowledge-hub/publications/best-practices',
-          },
-          {
             title: 'Working Papers',
             url: '/knowledge-hub/publications/working-papers',
-            items: [
-              {
-                title: 'Words into Action Guidelines',
-                url: '/knowledge-hub/publications/words-into-action',
-              },
-              {
-                title: 'Annual Reports',
-                url: '/knowledge-hub/publications/annual-reports',
-              },
-            ],
           },
           {
             title: 'Country Reports',
@@ -86,42 +76,70 @@ const sections = [
             url: '/knowledge-hub/publications/special-reports',
           },
           {
-            title: 'Methodology Guides',
-            url: '/knowledge-hub/publications/methodology-guides',
-          },
-          {
             title: 'Conference Proceedings',
             url: '/knowledge-hub/publications/conference-proceedings',
-          },
-          {
-            title: 'Training Materials',
-            url: '/knowledge-hub/publications/training-materials',
           },
           {
             title: 'Impact Studies',
             url: '/knowledge-hub/publications/impact-studies',
           },
           {
-            title: 'Risk Analysis Reports',
-            url: '/knowledge-hub/publications/risk-analysis',
+            title: 'Technical Reports',
+            url: '/knowledge-hub/publications/technical-reports',
             items: [
               {
-                title: 'Words into Action Guidelines',
-                url: '/knowledge-hub/publications/words-into-action',
+                title: 'Risk Analysis Reports',
+                url: '/knowledge-hub/publications/risk-analysis',
               },
               {
-                title: 'Annual Reports',
-                url: '/knowledge-hub/publications/annual-reports',
+                title: 'Statistical Yearbooks',
+                url: '/knowledge-hub/publications/statistical-yearbooks',
               },
             ],
           },
           {
-            title: 'Statistical Yearbooks',
-            url: '/knowledge-hub/publications/statistical-yearbooks',
+            title: 'Annual Reports',
+            url: '/knowledge-hub/publications/annual-reports',
           },
           {
             title: 'Policy Frameworks',
             url: '/knowledge-hub/publications/policy-frameworks',
+          },
+        ],
+      },
+      {
+        title: 'Practical guidance',
+        url: '/knowledge-hub/guidance',
+        items: [
+          {
+            title: 'Words into Action Guidelines',
+            url: '/knowledge-hub/guidance/words-into-action',
+            items: [
+              {
+                title: 'National strategies',
+                url: '/knowledge-hub/guidance/words-into-action/national',
+              },
+              {
+                title: 'Local strategies',
+                url: '/knowledge-hub/guidance/words-into-action/local',
+              },
+              {
+                title: 'Hazard-specific guides',
+                url: '/knowledge-hub/guidance/words-into-action/hazards',
+              },
+            ],
+          },
+          {
+            title: 'Methodology Guides',
+            url: '/knowledge-hub/guidance/methodology',
+          },
+          {
+            title: 'Training Materials',
+            url: '/knowledge-hub/guidance/training',
+          },
+          {
+            title: 'Best Practices',
+            url: '/knowledge-hub/guidance/best-practices',
           },
         ],
       },
@@ -402,38 +420,11 @@ const sections = [
       url: '/directory',
     },
     items: [
-      {
-        title: 'Latest News',
-        url: '/news',
-      },
-      {
-        title: 'Press Releases',
-        url: '/news/press-releases',
-      },
-      {
-        title: 'Blog Posts',
-        url: '/news/blog',
-      },
-      {
-        title: 'Media Coverage',
-        url: '/news/media',
-      },
-      {
-        title: 'Events Calendar',
-        url: '/events',
-      },
-      {
-        title: 'Upcoming Conferences',
-        url: '/events/conferences',
-      },
-      {
-        title: 'Workshops',
-        url: '/events/workshops',
-      },
-      {
-        title: 'Webinars',
-        url: '/events/webinars',
-      },
+      { title: 'National focal points', url: '/directory/focal-points' },
+      { title: 'Regional platforms', url: '/directory/regional-platforms' },
+      { title: 'Partner organisations', url: '/directory/partners' },
+      { title: 'Experts and specialists', url: '/directory/experts' },
+      { title: 'Stakeholder groups', url: '/directory/stakeholders' },
     ],
   },
   {
@@ -452,14 +443,6 @@ export const Default = {
   render: args => <MegaMenu {...args} />,
 
   args: {
-    delay: 5000,
-    sections: sections,
-  },
-};
-
-export const WithCustomDelay = {
-  args: {
-    delay: 800000,
     sections: sections,
   },
 };
@@ -471,7 +454,6 @@ export const RTL = {
     </div>
   ),
   args: {
-    delay: 5000,
     sections: sections,
   },
   parameters: {
@@ -515,7 +497,6 @@ const brandArgType = {
 export const WithLogo = {
   render: ({ brand, ...args }) => <MegaMenu {...args} {...brandLogos[brand]} />,
   args: {
-    delay: 5000,
     sections: sections,
     brand: 'PreventionWeb',
   },
@@ -535,7 +516,6 @@ export const WithQuickFilter = {
     <MegaMenu {...args} {...(brand ? brandLogos[brand] : {})} />
   ),
   args: {
-    delay: 5000,
     sections: sections,
     enableFilter: true,
     enableSiteSearch: true,
@@ -566,7 +546,6 @@ const sectionsWithIcons = sections.map((section, i) => ({
 export const WithIcons = {
   render: args => <MegaMenu {...args} />,
   args: {
-    delay: 5000,
     sections: sectionsWithIcons,
   },
   parameters: {
@@ -642,7 +621,7 @@ export const ProgressiveMobile = {
     docs: {
       description: {
         story:
-          'At widths below 900px, scroll the navigation strip and tap a label to open its section, or use the hamburger for all sections. Open a section, continue into a nested group, then use the labelled back control or Close. Existing section data is used unchanged.',
+          'At widths below 900px, scroll the navigation strip and tap a label to open its section, or use the hamburger for all sections. Open a section, continue into a nested group, then use the labelled back control or Close. Knowledge Hub keeps a long Publications list to exercise scrolling; practical guidance has its own category.',
       },
     },
   },
@@ -666,7 +645,7 @@ const motionSections = [
 
 export const MotionReview = {
   name: 'Motion: open and category swap',
-  args: { sections: motionSections, hoverDelay: 0, delay: 300 },
+  args: { sections: motionSections },
   parameters: {
     docs: {
       description: {
@@ -681,25 +660,29 @@ export const MotionReview = {
     // Vanilla hydration mounts a separate React root after this story commits.
     // Wait for the rendered control rather than racing its hydration effect.
     const trigger = await canvas.findByRole('button', { name: 'Resources' });
-    await userEvent.hover(trigger);
-    const category = await canvas.findByRole('menuitem', { name: 'Guidance' });
+    await userEvent.click(trigger);
+    const category = await canvas.findByRole('button', { name: 'Guidance' });
     for (const title of ['Guidance', 'Publications', 'Guidance']) {
       // eslint-disable-next-line no-await-in-loop -- exercise successive, interrupting category changes
-      await userEvent.hover(canvas.getByRole('menuitem', { name: title }));
+      await userEvent.hover(canvas.getByRole('button', { name: title }));
       const list = canvasElement.querySelector(
         '.mg-mega-content__menu--desktop'
       );
-      const styles = Array.from(list.children, item => {
+      // The first entry links to the category's own page.
+      const destinations = Array.from(list.children).slice(1);
+      const styles = destinations.map(item => {
         const style =
           canvasElement.ownerDocument.defaultView.getComputedStyle(item);
         return { animation: style.animationName, opacity: style.opacity };
       });
       // eslint-disable-next-line no-await-in-loop -- assert each category before changing to the next
       await expect({
-        count: list.children.length,
+        overview: list.firstElementChild.textContent,
+        count: destinations.length,
         last: list.lastElementChild.textContent,
         styles,
       }).toEqual({
+        overview: title,
         count: 30,
         last: `${title} 30`,
         styles: Array.from({ length: 30 }, () => ({
@@ -708,7 +691,7 @@ export const MotionReview = {
         })),
       });
     }
-    await expect(category).toHaveAttribute('aria-current', 'page');
+    await expect(category).toHaveAttribute('aria-expanded', 'true');
   },
 };
 
@@ -767,7 +750,6 @@ function HydratedMotionExample() {
       ref={hostRef}
       data-mg-mega-menu
       data-sections={JSON.stringify(motionSections)}
-      data-hover-delay="0"
     >
       <nav aria-label="Navigation fallback">
         <a href="#publications">Publications</a>

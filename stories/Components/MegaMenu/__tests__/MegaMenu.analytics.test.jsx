@@ -91,10 +91,22 @@ describe('MegaMenu analytics attributes', () => {
   });
 
   it('labels desktop section buttons without the section name', () => {
-    const { container } = render(<MegaMenu sections={sections} />);
-    const button = container.querySelector('button.mg-mega-topbar__item-link');
-    expect(button).toHaveTextContent('About');
-    expect(label(button)).toBe('Mega menu: Section');
+    render(<MegaMenu sections={sections} />);
+    // Every top-level item with a panel is a disclosure button, including
+    // one whose section has a landing page.
+    for (const name of ['Knowledge Base', 'About']) {
+      const button = screen.getByRole('button', { name, exact: true });
+      expect(label(button)).toBe('Mega menu: Section');
+    }
+  });
+
+  it('labels desktop category buttons without the category name', () => {
+    render(<MegaMenu sections={sections} />);
+    const category = screen.getByRole('button', {
+      name: 'Hazards',
+      hidden: true,
+    });
+    expect(label(category)).toBe('Mega menu: Category');
   });
 
   it('keeps typed queries out of mobile filter labels', () => {
@@ -120,9 +132,9 @@ describe('MegaMenu analytics attributes', () => {
   });
 
   it('labels the desktop finder controls with fixed text', async () => {
-    render(<MegaMenu sections={sections} enableFilter hoverDelay={0} />);
-    fireEvent.focus(
-      screen.getByRole('link', { name: 'Knowledge Base', exact: true })
+    render(<MegaMenu sections={sections} enableFilter />);
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Knowledge Base', exact: true })
     );
     const panel = await screen.findByRole('region', {
       name: 'Knowledge Base',

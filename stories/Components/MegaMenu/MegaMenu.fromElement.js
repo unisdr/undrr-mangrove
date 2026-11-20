@@ -10,7 +10,6 @@ import { languageFromElement, labelsFromElement } from '../../../src/i18n';
  *
  * @example
  * <div data-mg-mega-menu
- *   data-delay="300"
  *   data-logo-src="https://assets.undrr.org/logos/pw/pw-logo.svg"
  *   data-logo-alt="PreventionWeb"
  *   data-logo-href="/ar/">
@@ -22,8 +21,6 @@ export default function megaMenuFromElement(container) {
   const props = {
     ...languageFromElement(container),
     ...(labels ? { labels } : {}),
-    delay: dataset.delay ? parseInt(dataset.delay, 10) : 300,
-    hoverDelay: dataset.hoverDelay ? parseInt(dataset.hoverDelay, 10) : 180,
   };
 
   if (dataset.enableFilter !== undefined) {

@@ -23,8 +23,8 @@ import { getMegaMenuLabels } from './_labels';
  * @param {string} sections[].items[].title - Title of the menu item
  * @param {string} sections[].items[].url - URL for the menu item
  * @param {Object[]} sections[].items[].items - Optional nested items
- * @param {number} [delay=300] - Delay in milliseconds before closing menu on mouse leave
- * @param {number} [hoverDelay=180] - Delay in milliseconds before opening menu on hover (prevents accidental opens)
+ * @param {number} [delay] - Deprecated and ignored since 2.0 (panels no longer close on mouse leave)
+ * @param {number} [hoverDelay] - Deprecated and ignored since 2.0 (panels no longer open on hover)
  * @param {string} [logoSrc] - Image URL for a logo at inline-start of the nav strip (enables branded variant)
  * @param {string} [logoAlt=''] - Alt text for the logo image
  * @param {string} [logoHref='/'] - Where the logo links to. Defaults to `/`; on multilingual sites, pass the language-prefixed root from the CMS (e.g. `/ar/`)
@@ -46,8 +46,6 @@ export { DEFAULT_MEGAMENU_LABELS } from './_labels';
 
 const MegaMenu = ({
   sections,
-  delay = 300,
-  hoverDelay = 180,
   logoSrc,
   logoAlt = '',
   logoHref = '/',
@@ -113,89 +111,48 @@ const MegaMenu = ({
     return () => clearTimeout(timeout);
   }, [showSidebar, retained]);
 
-  // Refs for timeout management
-  const closeTimeoutRef = useRef(null);
-  const openTimeoutRef = useRef(null);
-
   // Signal that JS has mounted and the sidebar is available to handle mobile nav.
   // Retain the enhancement marker for consumers of the navigation markup.
   useEffect(() => {
     setJsActive(true);
   }, []);
 
-  // Clear all timeouts on unmount
-  useEffect(() => {
-    return () => {
-      clearTimeout(closeTimeoutRef.current);
-      clearTimeout(openTimeoutRef.current);
-    };
-  }, []);
+  // Move focus from inside a desktop panel to that panel's trigger.
+  const focusTriggerOf = element =>
+    element
+      ?.closest('.mg-mega-content')
+      ?.closest('.mg-mega-topbar__item')
+      ?.querySelector('.mg-mega-topbar__item-link')
+      ?.focus();
 
   const releaseDesktopFocus = () => {
     const focused = wrapperRef.current?.ownerDocument.activeElement;
-    if (
-      wrapperRef.current?.contains(focused) &&
-      focused.closest('.mg-mega-content')
-    ) {
-      focused
-        .closest('.mg-mega-topbar__item')
-        ?.querySelector('.mg-mega-topbar__item-link')
-        ?.focus();
-      clearTimeout(openTimeoutRef.current);
-    }
+    if (wrapperRef.current?.contains(focused)) focusTriggerOf(focused);
   };
 
-  const handleMouseLeave = () => {
-    // Clear any pending open timeout
-    clearTimeout(openTimeoutRef.current);
-
-    // Set timeout to close the menu
-    closeTimeoutRef.current = setTimeout(() => {
-      if (
-        wrapperRef.current?.ownerDocument.activeElement?.closest(
-          '.mg-mega-menu-finder'
-        )
-      )
-        return;
-      releaseDesktopFocus();
-      setActiveItem(null);
-    }, delay);
-  };
-
-  const handleItemHover = item => {
-    // Clear any pending close timeout
-    clearTimeout(closeTimeoutRef.current);
-
-    // Clear any pending open timeout
-    clearTimeout(openTimeoutRef.current);
-
-    // Set timeout before opening (prevents accidental opens)
-    openTimeoutRef.current = setTimeout(() => {
-      const focused = wrapperRef.current?.ownerDocument.activeElement;
-      if (
-        wrapperRef.current?.contains(focused) &&
-        focused.closest('.mg-mega-content') &&
-        focused.closest('.mg-mega-topbar__item') !==
-          itemListRef.current[item]?.closest('.mg-mega-topbar__item')
-      ) {
-        itemListRef.current[item]?.focus();
-        clearTimeout(openTimeoutRef.current);
-      }
-      setActiveItem(item);
-    }, hoverDelay);
+  // Desktop panels follow the WAI-ARIA APG disclosure navigation pattern:
+  // a panel opens and closes only when its button is activated (click,
+  // Enter or Space), never on hover or focus. See "Design principles" in
+  // MegaMenu.mdx for the sources and the reasons.
+  const toggleItem = item => {
+    setActiveItem(current => (current === item ? null : item));
   };
 
   const handleEscape = e => {
     if (e.key === 'Escape') {
       // Return keyboard focus before the exiting desktop panel becomes inert.
-      const panel = e.target.closest('.mg-mega-content');
-      panel
-        ?.closest('.mg-mega-topbar__item')
-        ?.querySelector('.mg-mega-topbar__item-link')
-        ?.focus();
-      clearTimeout(openTimeoutRef.current);
+      focusTriggerOf(e.target);
       setActiveItem(null);
     }
+  };
+
+  // Close the open panel when keyboard focus moves to something outside the
+  // navigation. A null relatedTarget (a click on non-focusable content, or
+  // the window losing focus) is left to the outside-click handler, so a
+  // Safari click on the trigger, which does not focus it, still toggles.
+  const handleFocusOut = e => {
+    const next = e.relatedTarget;
+    if (next && !wrapperRef.current?.contains(next)) setActiveItem(null);
   };
 
   // Close menu when clicking outside
@@ -240,8 +197,8 @@ const MegaMenu = ({
       {...getLanguageProps(lang, dir)}
       ref={wrapperRef}
       className={`mg-mega-wrapper${jsActive ? ' mg-mega-wrapper--js-active' : ''}${present ? ' mg-mega-wrapper--mobile-open' : ''}`}
-      onMouseLeave={handleMouseLeave}
       onKeyDown={handleEscape}
+      onBlur={handleFocusOut}
       aria-label={navLabel}
       data-vf-google-analytics-region={analyticsRegion || undefined}
     >
@@ -254,7 +211,7 @@ const MegaMenu = ({
         sidebarId={sidebarId}
         labels={resolvedLabels}
         sections={sections}
-        handleItemHover={handleItemHover}
+        toggleItem={toggleItem}
         toggleShowSidebar={() => {
           setInitialSection(null);
           setShowSidebar(prev => !prev);
@@ -330,9 +287,15 @@ MegaMenu.propTypes = {
       ),
     })
   ).isRequired,
-  /** Delay in ms before closing menu on mouse leave. */
+  /**
+   * Deprecated and ignored since MegaMenu 2.0: panels no longer close when
+   * the pointer leaves. Accepted so existing integrations keep working.
+   */
   delay: PropTypes.number,
-  /** Delay in ms before opening menu on hover (prevents accidental opens). */
+  /**
+   * Deprecated and ignored since MegaMenu 2.0: panels no longer open on
+   * hover. Accepted so existing integrations keep working.
+   */
   hoverDelay: PropTypes.number,
   /** Logo image URL. Enables the branded nav variant with logo at inline-start. */
   logoSrc: PropTypes.string,

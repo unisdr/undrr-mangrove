@@ -2,6 +2,8 @@
 import { chromium, webkit } from 'playwright';
 import assert from 'node:assert/strict';
 const baseUrl = process.env.STORYBOOK_URL || 'http://localhost:6006';
+const storyUrl = (story, query = '') =>
+  `${baseUrl}/iframe.html?id=components-navigation-megamenu--${story}&viewMode=story${query}`;
 const themes = [
   'Global UNDRR Theme',
   'PreventionWeb Theme',
@@ -20,7 +22,7 @@ for (const engine of [chromium, webkit]) {
     for (const direction of ['ltr', 'rtl'])
       for (const story of ['default', 'with-logo']) {
         await page.goto(
-          `${baseUrl}/iframe.html?id=components-navigation-megamenu--${story}&viewMode=story&globals=theme:${encodeURIComponent(theme)}`
+          storyUrl(story, `&globals=theme:${encodeURIComponent(theme)}`)
         );
         const button = page.getByRole('button', {
           name: 'Open navigation menu',
@@ -161,9 +163,7 @@ for (const engine of [chromium, webkit]) {
   for (const width of [320, 768, 899]) {
     await page.setViewportSize({ width, height: 844 });
     for (const story of ['default', 'with-logo']) {
-      await page.goto(
-        `${baseUrl}/iframe.html?id=components-navigation-megamenu--${story}&viewMode=story`
-      );
+      await page.goto(storyUrl(story));
       const button = page.getByRole('button', { name: 'Open navigation menu' });
       await button.waitFor();
       const nav = await page.locator('.mg-mega-topbar').boundingBox();
@@ -186,9 +186,7 @@ for (const engine of [chromium, webkit]) {
   }
   for (const width of [900, 901, 1280]) {
     await page.setViewportSize({ width, height: 800 });
-    await page.goto(
-      `${baseUrl}/iframe.html?id=components-navigation-megamenu--default&viewMode=story`
-    );
+    await page.goto(storyUrl('default'));
     await page.locator('.mg-mega-topbar__item-link').first().waitFor();
     assert.equal(
       await page
@@ -212,6 +210,112 @@ for (const engine of [chromium, webkit]) {
       'desktop rail must not scroll vertically'
     );
     console.log(engine.name(), width, 'desktop passed');
+  }
+  // Long nested list (#1499 check 2). Chromium sends a synthetic touch scroll
+  // gesture; Playwright cannot synthesise one in WebKit, which uses the wheel
+  // over the drawer instead. Neither replaces a physical phone.
+  const phonePage = page;
+  {
+    // Mobile WebKit has no wheel input in Playwright, so WebKit runs this in
+    // a touch page without mobile emulation.
+    const page =
+      engine === webkit
+        ? await browser.newPage({
+            viewport: { width: 393, height: 852 },
+            hasTouch: true,
+          })
+        : phonePage;
+    await page.setViewportSize({ width: 393, height: 852 });
+    await page.goto(storyUrl('progressive-mobile'));
+    const drawer = page.getByRole('dialog');
+    // A tall page, so "the page does not scroll" is a real check.
+    await page.evaluate(() => {
+      document.body.style.minHeight = '300vh';
+    });
+    await page.getByRole('button', { name: 'Open navigation menu' }).tap();
+    await drawer.getByRole('button', { name: 'Knowledge Hub' }).tap();
+    await drawer.getByRole('button', { name: 'Publications' }).tap();
+    await drawer.getByRole('heading', { name: 'Publications' }).waitFor();
+    const metrics = () =>
+      drawer.evaluate(element => ({
+        top: element.scrollTop,
+        max: element.scrollHeight - element.clientHeight,
+        page: window.scrollY,
+      }));
+    // The trial's phone size; the drawer is capped at 700px tall.
+    assert((await metrics()).max > 40, 'the list overflows the drawer');
+    const box = await drawer.boundingBox();
+    const cdp =
+      engine === chromium ? await page.context().newCDPSession(page) : null;
+    const swipeUp = async distance => {
+      const before = (await metrics()).top;
+      if (cdp) {
+        await cdp.send('Input.synthesizeScrollGesture', {
+          x: Math.round(box.x + box.width / 2),
+          y: Math.round(box.y + box.height * 0.7),
+          yDistance: -distance,
+          gestureSourceType: 'touch',
+          speed: 1200,
+        });
+      } else {
+        await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+        await page.mouse.wheel(0, distance);
+      }
+      // Wait for the scroll to land rather than for a fixed time.
+      await drawer.evaluate(
+        (element, start) =>
+          new Promise(resolve => {
+            let last = element.scrollTop;
+            let tries = 40; // give up after about 2s; the asserts then fail
+            const check = () => {
+              const now = element.scrollTop;
+              if ((now !== start && now === last) || --tries === 0) resolve();
+              else {
+                last = now;
+                setTimeout(check, 50);
+              }
+            };
+            setTimeout(check, 50);
+          }),
+        before
+      );
+    };
+    await swipeUp(60);
+    let scroll = await metrics();
+    assert(scroll.top > 20, `the swipe scrolls the drawer (${scroll.top})`);
+    assert.equal(scroll.page, 0, 'the page behind does not scroll');
+    // Past the end, the gesture stays in the drawer rather than chaining.
+    await swipeUp(2000);
+    scroll = await metrics();
+    assert(scroll.top >= scroll.max - 1, 'the drawer reaches its last entry');
+    assert.equal(scroll.page, 0, 'over-scroll does not move the page');
+    const last = drawer.getByRole('link', { name: 'Policy Frameworks' });
+    const lastBox = await last.boundingBox();
+    assert(
+      lastBox.y + lastBox.height <= box.y + box.height + 1,
+      'the last entry is fully visible'
+    );
+    // Entering a lower group and returning restores the position and focus.
+    const group = drawer.getByRole('button', { name: 'Technical Reports' });
+    await group.tap();
+    await drawer.getByRole('heading', { name: 'Technical Reports' }).waitFor();
+    await drawer.getByRole('button', { name: 'Back', exact: true }).tap();
+    await drawer.getByRole('heading', { name: 'Publications' }).waitFor();
+    assert(
+      Math.abs((await metrics()).top - scroll.top) <= 1,
+      'Back restores the scroll position'
+    );
+    assert(
+      await group.evaluate(element => element === document.activeElement),
+      'Back restores focus to the group'
+    );
+    await drawer.getByRole('button', { name: 'Close mobile navigation' }).tap();
+    await drawer.waitFor({ state: 'hidden' });
+    await page.getByRole('button', { name: 'Open navigation menu' }).tap();
+    await drawer.getByRole('heading', { name: 'All sections' }).waitFor();
+    assert.equal((await metrics()).top, 0, 'reopening starts at the top');
+    console.log(engine.name(), 'long nested list touch scrolling passed');
+    if (page !== phonePage) await page.close();
   }
   await browser.close();
 }

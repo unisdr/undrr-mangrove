@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useId } from 'react';
 import Section from '../Section/Section.jsx';
+import Chevron from '../Chevron';
 
 export function TopBarItem({
   isMobile,
@@ -7,10 +8,9 @@ export function TopBarItem({
   onMobileClick,
   title,
   icon,
-  onMouseEnter,
+  onToggle,
   activeItem,
   link,
-  bannerDescription,
   handleOnKeyDown,
   ref,
   section,
@@ -26,9 +26,19 @@ export function TopBarItem({
   labels,
 }) {
   const isActive = index === activeItem;
-  // The panel below is a disclosure, not a menu: announce expanded state
-  // only where a panel actually exists.
-  const hasPanel = Boolean(section && section.items);
+  const panelId = useId();
+  // The panel below is a disclosure, not a menu (WAI-ARIA APG disclosure
+  // navigation). Section renders a panel for child items or for banner copy
+  // alone; only those triggers announce an expanded state.
+  const hasPanel = Boolean(
+    section?.items?.length > 0 || section?.bannerDescription
+  );
+
+  const trigger = {
+    className: 'mg-mega-topbar__item-link',
+    ref,
+    onKeyDown: handleOnKeyDown,
+  };
 
   const label = (
     <>
@@ -45,8 +55,8 @@ export function TopBarItem({
   return (
     <li
       className={`mg-mega-topbar__item ${isActive ? 'mg-mega-topbar__item--active' : ''}`}
-      onMouseEnter={section || bannerDescription ? onMouseEnter : undefined}
-      onFocus={isMobile ? undefined : onMouseEnter}
+      // Only the finder shortcut listens here, because it must also work from
+      // inside the open panel; bar navigation keys belong to the trigger.
       onKeyDown={event => {
         const isEditable =
           event.target.isContentEditable ||
@@ -64,25 +74,23 @@ export function TopBarItem({
           !event.isComposing &&
           !event.defaultPrevented
         ) {
-          const trigger = sectionListRef.current[index]?.querySelector(
+          const finder = sectionListRef.current[index]?.querySelector(
             '.mg-mega-content__finder-trigger'
           );
-          if (trigger) {
+          if (finder) {
             event.preventDefault();
-            trigger.click();
-            return;
+            finder.click();
           }
         }
-        handleOnKeyDown(event);
       }}
     >
-      {/* Render link if no children and link URL exists, otherwise just show title */}
-      {/* {!children && link && link.url ? <a href={link.url}>{title}</a> : title} */}
+      {/* A trigger with a panel is always a disclosure button, even when the
+          section has a landing page; the landing link is inside the panel.
+          See "Design principles" in MegaMenu.mdx. */}
       {isMobile ? (
         <button
           type="button"
-          className="mg-mega-topbar__item-link"
-          ref={ref}
+          {...trigger}
           onClick={onMobileClick}
           aria-haspopup="dialog"
           aria-controls={sidebarId}
@@ -90,20 +98,31 @@ export function TopBarItem({
         >
           {label}
         </button>
-      ) : link && link.url ? (
-        <a
-          className="mg-mega-topbar__item-link"
-          href={link.url}
-          ref={ref}
-          aria-expanded={hasPanel ? String(isActive) : undefined}
+      ) : hasPanel ? (
+        <button
+          type="button"
+          {...trigger}
+          onClick={event => {
+            // Safari does not focus buttons on click; without this, focus
+            // left in the closing panel would be lost when it turns inert.
+            event.currentTarget.focus({ preventScroll: true });
+            onToggle();
+          }}
+          aria-expanded={String(isActive)}
+          aria-controls={panelId}
+          data-vf-analytics-label="Mega menu: Section"
         >
+          {label}
+          <Chevron className="mg-mega-topbar__item-chevron" />
+        </button>
+      ) : link && link.url ? (
+        <a {...trigger} href={link.url}>
           {label}
         </a>
       ) : (
         <button
-          className="mg-mega-topbar__item-link"
-          ref={ref}
-          aria-expanded={hasPanel ? String(isActive) : undefined}
+          type="button"
+          {...trigger}
           data-vf-analytics-label="Mega menu: Section"
         >
           {label}
@@ -115,6 +134,7 @@ export function TopBarItem({
         sections={sections}
         isActive={isActive}
         index={index}
+        panelId={panelId}
         sectionListRef={sectionListRef}
         itemListRef={itemListRef}
         enableFilter={enableFilter}

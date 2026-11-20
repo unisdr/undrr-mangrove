@@ -646,8 +646,12 @@ describe('MegaMenu Mobile Filter UI', () => {
   });
 });
 
+// Finder results live in its modal dialog; the menu underneath also has
+// ordinary links, which a modal dialog makes inert in a real browser.
+const finderIn = panel => within(panel).getByRole('dialog');
+
 async function openDesktopSection(name = 'Knowledge Base') {
-  fireEvent.focus(screen.getByRole('link', { name, exact: true }));
+  fireEvent.click(screen.getByRole('button', { name, exact: true }));
   return screen.findByRole('region', { name, exact: true });
 }
 
@@ -666,7 +670,6 @@ describe('MegaMenu contextual desktop finder', () => {
           { title: 'Search', bannerButton: { url: '/search' } },
         ]}
         enableFilter
-        hoverDelay={0}
       />
     );
     expect(screen.getByRole('link', { name: 'Search' })).toHaveAttribute(
@@ -696,12 +699,14 @@ describe('MegaMenu contextual desktop finder', () => {
   });
 
   it('filters descendants in a modal and preserves the underlying menu', async () => {
-    render(<MegaMenu sections={sampleSections} enableFilter hoverDelay={0} />);
+    render(<MegaMenu sections={sampleSections} enableFilter />);
     const panel = await openDesktopFinder();
     const input = within(panel).getByRole('searchbox');
     fireEvent.change(input, { target: { value: 'doc' } });
     expect(
-      within(panel).getByRole('link', { name: /Documents and publications/ })
+      within(finderIn(panel)).getByRole('link', {
+        name: /Documents and publications/,
+      })
     ).toHaveAttribute('href', '/documents');
     expect(within(panel).getByRole('status')).toHaveClass('mg-u-sr-only');
     expect(
@@ -727,13 +732,13 @@ describe('MegaMenu contextual desktop finder', () => {
   });
 
   it('searches the entire menu regardless of the entry section and resets on Back', async () => {
-    render(<MegaMenu sections={sampleSections} enableFilter hoverDelay={0} />);
+    render(<MegaMenu sections={sampleSections} enableFilter />);
     const panel = await openDesktopFinder();
     fireEvent.change(within(panel).getByRole('searchbox'), {
       target: { value: 'terminology' },
     });
     expect(
-      within(panel).getByRole('link', { name: /^Terminology/ })
+      within(finderIn(panel)).getByRole('link', { name: /^Terminology/ })
     ).toHaveAttribute('href', '/terminology');
     fireEvent.click(within(panel).getByRole('button', { name: 'Close' }));
     expect(
@@ -747,7 +752,7 @@ describe('MegaMenu contextual desktop finder', () => {
       target: { value: 'doc' },
     });
     expect(
-      within(otherPanel).getByRole('link', {
+      within(finderIn(otherPanel)).getByRole('link', {
         name: /Documents and publications/,
       })
     ).toHaveAttribute('href', '/documents');
@@ -755,21 +760,17 @@ describe('MegaMenu contextual desktop finder', () => {
 
   it('dismisses and clears the finder when filtering is disabled, without reopening when enabled', async () => {
     const { rerender } = render(
-      <MegaMenu sections={sampleSections} enableFilter hoverDelay={0} />
+      <MegaMenu sections={sampleSections} enableFilter />
     );
     const panel = await openDesktopFinder();
     fireEvent.change(within(panel).getByRole('searchbox'), {
       target: { value: 'doc' },
     });
-    rerender(
-      <MegaMenu sections={sampleSections} enableFilter={false} hoverDelay={0} />
-    );
+    rerender(<MegaMenu sections={sampleSections} enableFilter={false} />);
     expect(within(panel).queryByRole('dialog')).not.toBeInTheDocument();
     expect(document.body.style.overflow).not.toBe('hidden');
     expect(document.querySelector('.mg-mega-topbar__item-link')).toHaveFocus();
-    rerender(
-      <MegaMenu sections={sampleSections} enableFilter hoverDelay={0} />
-    );
+    rerender(<MegaMenu sections={sampleSections} enableFilter />);
     expect(within(panel).queryByRole('dialog')).not.toBeInTheDocument();
     fireEvent.click(
       within(panel).getByRole('button', { name: 'Find in menu' })
@@ -779,7 +780,7 @@ describe('MegaMenu contextual desktop finder', () => {
 
   it('dismisses when a data update removes its left-column utility', async () => {
     const { rerender } = render(
-      <MegaMenu sections={sampleSections} enableFilter hoverDelay={0} />
+      <MegaMenu sections={sampleSections} enableFilter />
     );
     const panel = await openDesktopFinder();
     rerender(
@@ -788,20 +789,17 @@ describe('MegaMenu contextual desktop finder', () => {
           i === 0 ? { ...s, bannerDescription: '' } : s
         )}
         enableFilter
-        hoverDelay={0}
       />
     );
     expect(within(panel).queryByRole('dialog')).not.toBeInTheDocument();
     expect(document.body.style.overflow).not.toBe('hidden');
     expect(document.querySelector('.mg-mega-topbar__item-link')).toHaveFocus();
-    rerender(
-      <MegaMenu sections={sampleSections} enableFilter hoverDelay={0} />
-    );
+    rerender(<MegaMenu sections={sampleSections} enableFilter />);
     expect(within(panel).queryByRole('dialog')).not.toBeInTheDocument();
   });
 
   it('leaves composing Escape to the IME without closing either menu', async () => {
-    render(<MegaMenu sections={sampleSections} enableFilter hoverDelay={0} />);
+    render(<MegaMenu sections={sampleSections} enableFilter />);
     const panel = await openDesktopFinder();
     const input = within(panel).getByRole('searchbox');
     fireEvent.change(input, { target: { value: '文書' } });
@@ -819,7 +817,7 @@ describe('MegaMenu contextual desktop finder', () => {
   });
 
   it('moves focus through result links without hijacking text editing or browser shortcuts', async () => {
-    render(<MegaMenu sections={sampleSections} enableFilter hoverDelay={0} />);
+    render(<MegaMenu sections={sampleSections} enableFilter />);
     expect(fireEvent.keyDown(window, { key: '/' })).toBe(true);
     expect(fireEvent.keyDown(window, { key: 'k', ctrlKey: true })).toBe(true);
     const panel = await openDesktopFinder();
@@ -828,7 +826,7 @@ describe('MegaMenu contextual desktop finder', () => {
     expect(fireEvent.keyDown(input, { key: 'ArrowLeft' })).toBe(true);
     expect(input).toHaveFocus();
     fireEvent.change(input, { target: { value: 'hazard' } });
-    const links = within(panel).getAllByRole('link');
+    const links = within(finderIn(panel)).getAllByRole('link');
     fireEvent.keyDown(input, { key: 'ArrowDown' });
     expect(links[0]).toHaveFocus();
     fireEvent.keyDown(links[0], { key: 'ArrowDown' });
@@ -858,7 +856,7 @@ describe('MegaMenu contextual desktop finder', () => {
   });
 
   it('offers Ctrl+K only while focus is inside the expanded menu', async () => {
-    render(<MegaMenu sections={sampleSections} enableFilter hoverDelay={0} />);
+    render(<MegaMenu sections={sampleSections} enableFilter />);
     expect(fireEvent.keyDown(window, { key: 'k', ctrlKey: true })).toBe(true);
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     const panel = await openDesktopSection();
@@ -885,7 +883,7 @@ describe('MegaMenu contextual desktop finder', () => {
       <MegaMenu
         sections={sampleSections}
         enableFilter
-        hoverDelay={0}
+
         onNavigate={onNavigate}
       />
     );
@@ -898,7 +896,7 @@ describe('MegaMenu contextual desktop finder', () => {
       <MegaMenu
         sections={sampleSections}
         enableFilter
-        hoverDelay={0}
+
         enableSiteSearch={false}
       />
     );
@@ -916,7 +914,7 @@ describe('MegaMenu contextual desktop finder', () => {
       <MegaMenu
         sections={sampleSections}
         enableFilter
-        hoverDelay={0}
+
         lang="fr-CA"
         labels={{ menuFilterLabel: 'Chercher dans le menu' }}
       />
@@ -939,7 +937,7 @@ describe('MegaMenu contextual desktop finder', () => {
   });
 
   it('passes axe in normal, filtered and empty states', async () => {
-    render(<MegaMenu sections={sampleSections} enableFilter hoverDelay={0} />);
+    render(<MegaMenu sections={sampleSections} enableFilter />);
     const panel = await openDesktopFinder();
     expect(await axe(panel)).toHaveNoViolations();
     fireEvent.change(within(panel).getByRole('searchbox'), {

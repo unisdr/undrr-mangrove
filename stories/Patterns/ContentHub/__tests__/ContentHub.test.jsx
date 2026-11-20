@@ -55,15 +55,18 @@ test('uses page links for lateral navigation and keeps Reporting active on a chi
 test('keeps the standard UNDRR header and global navigation above the hub', () => {
   render(<ContentHub initialPage="how-to-report" />);
   const global = screen.getByRole('navigation', { name: 'UNDRR navigation' });
-  // The section title also names the panel's banner button, so pick the
-  // top-level bar link rather than matching on the accessible name alone.
-  const topLevelLink = within(global)
-    .getAllByRole('link', { name: 'Our work' })
-    .find(link => link.classList.contains('mg-mega-topbar__item-link'));
-  expect(topLevelLink).toHaveAttribute(
-    'href',
-    'https://www.undrr.org/our-work'
-  );
+  // A top-level item with a panel is a disclosure button; its landing page
+  // is the panel's banner link.
+  const topLevel = within(global).getByRole('button', {
+    name: 'Our work',
+    exact: true,
+  });
+  expect(topLevel).toHaveAttribute('aria-expanded', 'false');
+  expect(
+    within(
+      document.getElementById(topLevel.getAttribute('aria-controls'))
+    ).getByRole('link', { name: 'Our work', hidden: true })
+  ).toHaveAttribute('href', 'https://www.undrr.org/our-work');
   // The hub's own navigation stays a separate landmark with its own label.
   expect(
     within(global).queryByRole('link', { name: 'Reporting' })

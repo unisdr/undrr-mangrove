@@ -13,12 +13,6 @@ A multi-level navigation component for site navigation.
 
 <Canvas of={MegaMenuStories.Default} meta={MegaMenuStories} />
 
-## With custom delay
-
-Custom hover delay timings.
-
-<Canvas of={MegaMenuStories.WithCustomDelay} meta={MegaMenuStories} />
-
 ## RTL (Right-to-Left)
 
 RTL layout mirroring.
@@ -83,8 +77,8 @@ wrapper resolves `logoSrc` and `logoAlt` from body class; it does not infer
 | Prop             | Type    | Default     | Description                                                                                                             |
 | ---------------- | ------- | ----------- | ----------------------------------------------------------------------------------------------------------------------- |
 | sections         | array   | []          | Array of menu sections to display                                                                                       |
-| delay            | number  | 300         | Delay in milliseconds before closing menu on mouse leave                                                                |
-| hoverDelay       | number  | 180         | Delay in milliseconds before opening menu (prevents accidental opens)                                                   |
+| delay            | number  | —           | Deprecated and ignored since 2.0: panels no longer close when the pointer leaves                                        |
+| hoverDelay       | number  | —           | Deprecated and ignored since 2.0: panels no longer open on hover                                                        |
 | logoSrc          | string  | —           | Image URL for the logo. When provided, enables the branded variant                                                      |
 | logoAlt          | string  | ''          | Alt text for the logo image                                                                                             |
 | logoHref         | string  | '/'         | Where the logo links to. For multilingual sites, pass the language-prefixed root from the CMS (e.g. `/ar/`)             |
@@ -103,7 +97,7 @@ wrapper resolves `logoSrc` and `logoAlt` from body class; it does not infer
 | icon              | string | No       | Icon class name shown before the title (e.g., `"mg-icon mg-icon-chart-bar"`). Desktop topbar only; hidden in mobile sidebar.              |
 | bannerHeading     | string | No       | Heading text shown in the mega content panel                                                                                              |
 | bannerDescription | string | No       | Description shown in the mega content panel. Rendered as unsanitised HTML — see [Banner HTML trust contract](#banner-html-trust-contract) |
-| bannerButton      | object | No       | `{ url, label }` — when present, the top-level item renders as an `<a>` link                                                              |
+| bannerButton      | object | No       | `{ url, label }`. The section's landing page. A section with a panel offers it inside the panel; one without a panel renders as a link    |
 | items             | array  | No       | Array of sub-items (triggers mega dropdown when present)                                                                                  |
 
 ### Banner HTML trust contract
@@ -126,25 +120,147 @@ const sections = apiSections.map(section => ({
 Mangrove does not sanitise this field. The desktop check for `<` selects a
 text wrapper or HTML rendering; it is not a filter. `bannerHeading` is plain text.
 
+## Design principles
+
+The desktop menu follows the
+[WAI-ARIA Authoring Practices disclosure navigation pattern](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/).
+This section records what that means here and why, so changes can be judged
+against a reference rather than against the last bug report.
+
+### Why disclosure, not a menu
+
+ARIA `menu` and `menubar` roles describe application menus, such as a desktop
+app's File menu. They switch screen readers into a mode where only arrow keys
+move, which site visitors do not expect. The APG
+[menubar example](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/examples/menubar-navigation/)
+itself warns that it is unnecessarily complex for typical site navigation and
+points to disclosure instead, and practitioners agree
+([Adrian Roselli](https://adrianroselli.com/2017/10/dont-use-aria-menu-roles-for-site-nav.html),
+[Inclusive Components](https://inclusive-components.design/menus-menu-buttons/)).
+So the navigation is a list of buttons and links, and each button shows or
+hides one panel.
+
+### Rules
+
+- **Open on activation only.** A top-level button opens and closes its panel
+  on click, Enter or Space, the same for every input. Panels never open on
+  focus or hover. The
+  [W3C fly-out menu tutorial](https://www.w3.org/WAI/tutorials/menus/flyout/)
+  says submenus should not open when tabbing, and opening on hover makes a
+  click on an already-open panel ambiguous. Hovering a top-level item still
+  shows a light tint and a faint underline bar, so it reads as clickable;
+  it changes nothing else.
+- **Show what a click will do.** Items that open a panel carry a down
+  chevron that turns over when the panel is open; items that go straight to
+  a page carry none. The chevron is always shown, not only on hover, so
+  keyboard and touch users get the same hint. It is decorative
+  (`aria-hidden`), because `aria-expanded` already tells assistive technology. GOV.UK reached the same model
+  after usability rounds and an A/B test
+  ([GOV.UK menu bar](https://insidegovuk.blog.gov.uk/2021/11/11/launching-gov-uks-new-menu-bar)),
+  as did the [Department for Education](https://design-histories.education.gov.uk/get-into-teaching/designing-dropdown-navigation).
+- **A trigger is either a button or a link, never both.** A section with a
+  panel renders a button with `aria-expanded` and `aria-controls`; its landing
+  page (`bannerButton.url`) is offered inside the panel. A section without a
+  panel renders a plain link. A link that also expands leaves Enter able to do
+  only one of the two, and `aria-expanded` on a link misleads
+  ([Roselli](https://adrianroselli.com/2019/06/link-disclosure-widget-navigation.html)).
+- **Choosing a category is also a disclosure.** In two-column panels,
+  categories are buttons that show their destinations. Focus alone never
+  switches them, so Tab moves from a chosen category to its destinations, and a
+  screen reader announces which category is expanded. Hovering a category
+  still previews it for pointer users; that changes nothing for keyboard or
+  screen-reader users. Each category's own page leads its destinations.
+- **Tab reaches everything; arrow keys only help.** Tab and Shift+Tab follow
+  document order. Arrow keys, Home and End are optional shortcuts, as APG
+  describes: screen readers in reading mode use arrows themselves, so no
+  destination may depend on them.
+- **Easy to dismiss.** Escape closes the panel and returns focus to its
+  button, focus moving out of the navigation closes it, and so does a click
+  outside. The pointer leaving does not, since the visitor opened it on
+  purpose. This also meets
+  [WCAG 1.4.13 Content on Hover or Focus](https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html).
+
+- **On narrow screens, the menu is a modal dialog.** Below 900px the drawer
+  follows the
+  [APG modal dialog pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/):
+  it is labelled, keeps focus inside, closes on Escape and returns focus to
+  whatever opened it. The page behind does not scroll, and a swipe past the
+  end of a long list stays in the drawer (`overscroll-behavior: contain`).
+  Nested groups open on the same surface; Back restores the scroll position
+  and focus on the group the visitor came from.
+- **Each destination has one predictable home.** Navigation only helps when a
+  visitor can guess which category holds what they want. List a destination
+  once, under the category a visitor would look in, and name categories after
+  what they contain. Repeating a link under unrelated categories, or burying
+  it in a long list of a different kind of content, makes visitors scan
+  everything
+  ([Nielsen Norman Group on mega menus](https://www.nngroup.com/articles/mega-menus-work-well/)).
+  The component cannot enforce this; it belongs to each site's information
+  architecture. The stories model it: practical guidance has its own category
+  instead of repeating under publication types.
+
+### Evidence and limits
+
+The pattern choice rests mostly on expert consensus and the GOV.UK testing
+above, not on research with UNDRR audiences. APG examples are not tested with
+every screen reader. Some screen-reader users prefer menubar-style arrow
+navigation for large menus (see the comments on Roselli's 2017 post); the
+arrow shortcuts here offer that without changing the semantics.
+
+What has been checked, in Jest and in real Chromium and WebKit
+(`yarn test:megamenu-keyboard-browser`, `yarn test:megamenu-mobile-browser`):
+
+- Tab and Shift+Tab reach every desktop destination from a fresh load and
+  after pointer navigation and browser Back, and ArrowDown on a top-level
+  button opens the panel rather than scrolling the page. Arrow keys still
+  scroll the page when focus is on the page itself, as browsers do; that is
+  the likely cause of the page scroll seen in the
+  [#1499](https://github.com/unisdr/undrr-mangrove/issues/1499) trial.
+- On a phone-sized viewport, a long list scrolls inside the drawer, the page
+  behind stays put, the last entry is reachable, and Back and reopening
+  restore the expected position. Chromium uses a synthetic touch swipe and
+  WebKit the scroll wheel.
+
+Still to verify with people, devices and assistive technology: a physical
+phone and tablet (including tablets 900px or wider), NVDA, JAWS and VoiceOver
+with the two-column panels, voice control, whether visitors miss
+hover-to-open, and whether visitors find destinations in each site's real
+content structure. Treat any discovery difficulty seen so far as a research
+question, not a pass or a failure.
+
 ## Accessibility
 
 ### Keyboard navigation
 
-- **← / →** move between top-level items; focusing an item opens its panel.
-- **↓** enters the desktop panel. **Tab / Shift+Tab** move through its controls.
-- **Escape** closes the current surface and restores its trigger. Inactive
-  panels are inert and hidden from assistive technology.
+Desktop, following the [design principles](#design-principles):
+
+- **Tab / Shift+Tab** move through top-level items and, when a panel is open,
+  through its controls in document order. Every destination is reachable this
+  way.
+- **Enter / Space** on a top-level button opens or closes its panel. On a
+  category button they show that category's destinations, which Tab reaches
+  next.
+- **← / →** move between top-level items, mirrored in RTL; **Home / End** jump
+  to the first or last. **↓** on a top-level button opens its panel and moves
+  into it.
+- Inside a panel, **↓ / ↑** step through links and controls and **Home / End**
+  jump to the first or last; **↑** from the first returns to the panel's
+  button. These are shortcuts only, and they leave form fields alone.
+- **Escape** closes the panel and returns focus to its button. Moving focus
+  out of the navigation, or clicking outside it, also closes the panel.
+  Inactive panels are inert and hidden from assistive technology.
 - Mobile dialogs contain Tab focus; arrows retain native behaviour. Entering a
   level focuses its heading; Back restores the previous row and scroll position.
   See [mobile navigation](#mobile-progressive-navigation).
 
 ### ARIA attributes
 
-The root is a labelled `<nav>` containing a plain list, without a `menubar`
-role. Top-level links/buttons expose `aria-expanded` where a panel exists.
-Each panel is a labelled live region with section-specific category/submenu
-landmarks. Desktop nested lists retain `menu`/`menuitem` roles, and the selected
-category uses `aria-current="page"`.
+The root is a labelled `<nav>` containing a plain list, without `menubar`,
+`menu` or `menuitem` roles. Top-level buttons expose `aria-expanded` and
+`aria-controls` for their panel; sections without a panel are plain links.
+Each panel is a labelled region with section-specific category and submenu
+landmarks. Category buttons expose `aria-expanded` and control the
+destinations list, which is named after the chosen category.
 
 The mobile opener exposes `aria-expanded`, `aria-controls` and
 `aria-haspopup="dialog"`. The dialog is labelled by its current-level heading;
@@ -196,7 +312,7 @@ current drill-down level. Results scroll while the input and Close remain visibl
   outside editors. The hint follows the platform. **↑ / ↓** move between input
   and results; **Enter** in the input follows the first result, or site search
   if there are none. Tab retains native control order. IME composition keys do
-  not dismiss either surface. Finder focus prevents hover dismissal.
+  not dismiss either surface.
 
 Override `menuFilterLabel`, `filterPlaceholder`, `clearFilterLabel`,
 `noFilterResultsLabel`, `filterMatchesCount` (`{count}`), `searchSiteLabel`
@@ -223,18 +339,13 @@ it has not been validated through user research.
 MegaMenu supports [layered hydration](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md). This is a complex-tier component: in most integrations the `sections` prop comes from an API or server-side builder, not from static HTML. The `fromElement` function extracts timing, logo, finder/search options, language, labels and an optional inline JSON sections attribute. Consumer wrappers typically override `sections`.
 
 ```html
-<div
-  data-mg-mega-menu
-  data-delay="300"
-  data-hover-delay="180"
-  data-sections='[{"title":"About","items":[...]}]'
-></div>
+<div data-mg-mega-menu data-sections='[{"title":"About","items":[...]}]'></div>
 ```
 
 | Attribute                         | Default     | Description                                                                                                          |
 | --------------------------------- | ----------- | -------------------------------------------------------------------------------------------------------------------- |
-| `data-delay`                      | `300`       | Delay in ms before closing the menu on mouse leave                                                                   |
-| `data-hover-delay`                | `180`       | Delay in ms before opening the menu on hover                                                                         |
+| `data-delay`                      | —           | Deprecated and ignored since 2.0                                                                                     |
+| `data-hover-delay`                | —           | Deprecated and ignored since 2.0                                                                                     |
 | `data-sections`                   | —           | JSON array of menu sections (optional; most consumers provide this via API)                                          |
 | `data-logo-src`                   | —           | Logo image URL                                                                                                       |
 | `data-logo-alt`                   | `''`        | Alt text for the logo image                                                                                          |
@@ -271,7 +382,7 @@ close the menu and return focus to opener. The panel uses a translucent blurred
 surface with opaque fallback and switches to opaque/no-transition for reduced
 motion/transparency, increased contrast, and forced colors.
 
-This is a drop-in update: existing `sections`, logo/timing props, Drupal
+This is a drop-in update: existing `sections`, logo props, Drupal
 attributes, and hydration entry points are unchanged. `labels` also accepts
 `backLabel`, `allSectionsLabel`, `closeLabel`, `overviewLabel`,
 `toggleMobileNavLabel`; omitted keys use the selected catalogue, then English defaults. Legacy `menuLabel`
@@ -282,7 +393,8 @@ is still accepted but no longer displayed.
 ## Motion decisions
 
 Follow [Motion and animation](?path=/docs/design-decisions-motion--docs).
-Pointer intent delays (`hoverDelay`, `delay`) are separate from visual timing.
+Panels open on activation, so there are no pointer intent delays; the
+deprecated `hoverDelay` and `delay` props are ignored.
 
 - Destinations, category changes and finder open/close/results update immediately;
   there are no category pulses, panel flashes or staggered links. The public
@@ -305,7 +417,7 @@ current state usable; hydration and resting theme changes add no incidental moti
 
 ## Analytics
 
-UNDRR sites load a shared GA4 click tracker that names each click after the element's visible text unless `data-vf-analytics-label` is set. MegaMenu sets fixed English labels on its controls so reports do not split by language or record what visitors type: `Mega menu: Open` (hamburger), `Mega menu: Close` (hamburger while open, drawer Close and backdrop), `Mega menu: Back`, `Mega menu: Section` (section buttons in the nav strip and drawer; the section name is not included), `Mega menu: Finder` (the ⌘K/Ctrl K finder action), `Mega menu: Filter` (finder and drawer filter inputs, and the finder's label), `Mega menu: Clear filter`, `Mega menu: Close finder` and `Mega menu: Site search` (the site-search link, whose visible text contains the typed query). Navigation links keep their visible text. The site-search link's `href` leaves out the query, because the tracker also reports link URLs; the query is added only while the link is being followed (click or middle-click) and removed straight after, so copying the link gives the search page without the query.
+UNDRR sites load a shared GA4 click tracker that names each click after the element's visible text unless `data-vf-analytics-label` is set. MegaMenu sets fixed English labels on its controls so reports do not split by language or record what visitors type: `Mega menu: Open` (hamburger), `Mega menu: Close` (hamburger while open, drawer Close and backdrop), `Mega menu: Back`, `Mega menu: Section` (section buttons in the nav strip and drawer; the section name is not included), `Mega menu: Category` (category buttons in a desktop panel), `Mega menu: Finder` (the ⌘K/Ctrl K finder action), `Mega menu: Filter` (finder and drawer filter inputs, and the finder's label), `Mega menu: Clear filter`, `Mega menu: Close finder` and `Mega menu: Site search` (the site-search link, whose visible text contains the typed query). Navigation links keep their visible text. The site-search link's `href` leaves out the query, because the tracker also reports link URLs; the query is added only while the link is being followed (click or middle-click) and removed straight after, so copying the link gives the search page without the query.
 
 The root `<nav>` gets `data-vf-google-analytics-region="mega-menu"`, so menu clicks are reported separately from the rest of a site header. Set the `analyticsRegion` prop to use another name, or `null`/`''` to inherit an ancestor's region. When hydrating, the menu uses the host's region if the host element has a non-empty `data-vf-google-analytics-region`; an empty value is ignored and the default applies.
 
@@ -319,6 +431,16 @@ explains language matching, fallback, direction and hydration precedence.
 for consumers needing the same strings outside React.
 
 ## Changelog
+
+- **2.0.0**, 2026-11-20 ([#1499](https://github.com/unisdr/undrr-mangrove/issues/1499)): **Breaking:** the desktop menu now follows the WAI-ARIA disclosure navigation pattern; see [Design principles](#design-principles).
+  - Panels open and close only when their top-level button is clicked or activated with Enter or Space. They no longer open on hover or focus, or close when the pointer leaves. Hovering a top-level item shows a light tint and a faint underline bar instead, and items that open a panel carry a chevron so visitors can tell them from items that navigate. Focus moving out of the navigation, Escape and an outside click close them. `hoverDelay`, `delay`, `data-hover-delay` and `data-delay` are still accepted but ignored.
+  - Every top-level item with a panel is a button, including sections with a landing page (`bannerButton.url`). The landing page is offered inside the panel: the banner button, a leading link in the destinations when there is no banner, or a link after banner-only copy. Sections without a panel stay links.
+  - Categories in two-column panels are buttons with `aria-expanded` that show their destinations on click, Enter or Space, and still preview on hover. Focus no longer switches them, so Tab reaches the chosen category's destinations; previously only the last category's destinations could be reached by keyboard. Each category's own page leads its destinations.
+  - Removed `menu`, `menuitem`, `aria-haspopup` and the misused `aria-current="page"` from panels, and the panel live region.
+  - Markup that consumer CSS or scripts may target: `.mg-mega-topbar__item-link` is now a `<button>` for every section with a panel, so selectors such as `a.mg-mega-topbar__item-link` no longer match it; category links are `<button class="mg-mega-content__section-list-link">`; the panel and its two columns are no longer tab stops; the old "Categories" and "Submenu items" list names are replaced by the chosen category's title. A section whose `items` array is empty is treated as having no items: a plain link, or a banner-only panel when it has `bannerDescription`.
+  - Arrow keys are shortcuts only: ↓ / ↑ and Home / End inside a panel, ← / → and Home / End along the bar. They work from the focused element, skip anything that cannot take focus, and leave Tab, form fields and ← / → inside panels to the browser.
+  - Mobile and content: Design principles now cover the drawer as a modal dialog and one home per destination. The story data lists each destination once, with practical guidance in its own category, and Directory has its own entries instead of repeating News & Events. Browser checks cover the trial's Back path and long-list touch scrolling.
+  - Analytics: top-level clicks that used to navigate now report `Mega menu: Section`, and category clicks report the new `Mega menu: Category`. The `WithCustomDelay` story is removed.
 
 - **1.7.1**, 2026-11-13 ([web-backlog#3328](https://gitlab.com/undrr/web-backlog/-/work_items/3328)): The logo in the branded variant keeps its proportions when the top bar is too narrow for its full width. It previously kept its height while its width shrank, so it was drawn squeezed. It now scales down inside its box, aligned to the inline start in left-to-right and right-to-left layouts.
 
