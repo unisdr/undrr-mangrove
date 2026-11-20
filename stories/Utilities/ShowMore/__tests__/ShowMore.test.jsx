@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { axe } from 'jest-axe';
 import { ShowMore } from '../ShowMore';
 
@@ -188,5 +189,80 @@ describe('ShowMore', () => {
     );
 
     expect(await axe(container)).toHaveNoViolations();
+  });
+
+  describe('items mode', () => {
+    const files = {
+      collapsable_wrapper_class: 'files',
+      collapsable_items: ['One', 'Two', 'Three', 'Four', 'Five'],
+    };
+
+    it('hides whole items past visibleItems and toggles with aria-expanded', () => {
+      render(
+        <ShowMore
+          mode="items"
+          visibleItems={2}
+          data={[files]}
+          labelCollapsed="Show all 5"
+          labelOpen="Show fewer"
+        />
+      );
+      const button = screen.getByRole('button', { name: 'Show all 5' });
+      expect(button).toHaveAttribute('aria-expanded', 'false');
+      expect(screen.getAllByRole('listitem')).toHaveLength(2);
+      expect(
+        screen.getByText('Three', { ignore: false }).closest('li')
+      ).toHaveAttribute('hidden', 'until-found');
+      fireEvent.click(button);
+      expect(button).toHaveAttribute('aria-expanded', 'true');
+      expect(button).toHaveTextContent('Show fewer');
+      expect(screen.getAllByRole('listitem')).toHaveLength(5);
+    });
+
+    it('keeps the label in step with the state when labels change', () => {
+      const { rerender } = render(
+        <ShowMore mode="items" visibleItems={2} data={[files]} />
+      );
+      fireEvent.click(screen.getByRole('button', { name: 'Show more' }));
+      rerender(
+        <ShowMore
+          mode="items"
+          visibleItems={2}
+          data={[files]}
+          labelOpen="Afficher moins"
+          labelCollapsed="Afficher plus"
+        />
+      );
+      expect(screen.getByRole('button')).toHaveTextContent('Afficher moins');
+    });
+
+    it('server markup shows every item and hides the toggle', () => {
+      const html = renderToStaticMarkup(
+        <ShowMore mode="items" visibleItems={2} data={[files]} />
+      );
+      const document = new DOMParser().parseFromString(html, 'text/html');
+      expect(document.querySelectorAll('li[hidden]')).toHaveLength(0);
+      expect(
+        document.querySelectorAll('[data-mg-show-more-item]')
+      ).toHaveLength(3);
+      expect(document.querySelector('button').hasAttribute('hidden')).toBe(
+        true
+      );
+    });
+
+    it('the default mode is unchanged: no aria-expanded, no hidden toggle', () => {
+      render(<ShowMore data={[item('Show more', 'Body')]} />);
+      const button = screen.getByRole('button', { name: 'Show more' });
+      expect(button).not.toHaveAttribute('aria-expanded');
+      expect(button).not.toHaveAttribute('data-mg-show-more-mode');
+      expect(screen.getByText('Body')).toHaveClass('mg-show-more--collapsed');
+    });
+
+    it('passes axe', async () => {
+      const { container } = render(
+        <ShowMore mode="items" visibleItems={2} data={[files]} />
+      );
+      expect(await axe(container)).toHaveNoViolations();
+    });
   });
 });

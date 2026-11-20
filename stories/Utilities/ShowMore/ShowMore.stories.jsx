@@ -244,3 +244,34 @@ export const OnlyWhenLong = {
     </div>
   ),
 };
+
+// Items mode: a true disclosure over whole list items.
+const reports = [
+  'Global Assessment Report 2025',
+  'Words into Action: nature-based solutions',
+  'Early warnings for all: progress report',
+  'Sendai Framework midterm review',
+  'Scaling up disaster risk reduction in humanitarian action',
+  'Gender action plan to support the Sendai Framework',
+];
+
+export const ItemsMode = {
+  name: 'Items mode (true disclosure)',
+  render: () => (
+    <div style={{ maxWidth: '480px' }}>
+      <h3 className="mg-heading-300">Related reports</h3>
+      <ShowMore
+        mode="items"
+        visibleItems={3}
+        labelCollapsed="Show all 6 reports"
+        labelOpen="Show fewer reports"
+        data={[
+          {
+            collapsable_wrapper_class: 'show-more-items-list',
+            collapsable_items: reports,
+          },
+        ]}
+      />
+    </div>
+  ),
+};

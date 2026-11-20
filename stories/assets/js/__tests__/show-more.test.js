@@ -1,4 +1,4 @@
-import { mgShowMore } from '../show-more';
+import { mgShowMore, mgShowMoreSetOpen } from '../show-more';
 
 afterEach(() => {
   document.body.innerHTML = '';
@@ -623,6 +623,219 @@ describe('mgShowMore', () => {
       button.getBoundingClientRect = () => ({ top: 200, bottom: 240 });
       button.click();
       expect(heading.scrollIntoView).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('items mode (true disclosure)', () => {
+    const setupItems = ({ extra = '' } = {}) => {
+      document.body.innerHTML = `
+        <h2>Files</h2>
+        <ul id="files">
+          <li><a href="/1">One</a></li>
+          <li><a href="/2">Two</a></li>
+          <li data-mg-show-more-item><a href="/3">Three</a></li>
+          <li data-mg-show-more-item><a href="/4">Four</a></li>
+        </ul>
+        <button type="button" hidden data-mg-show-more data-mg-show-more-mode="items"
+          data-mg-show-more-target="#files"
+          data-mg-show-more-label-collapsed="Show all 4"
+          data-mg-show-more-label-open="Show fewer" ${extra}>
+          <span data-mg-show-more-label>Show all 4</span><span class="ctx"> files</span>
+        </button>`;
+      return {
+        button: document.querySelector('button'),
+        list: document.getElementById('files'),
+        hiddenItems: () =>
+          [...document.querySelectorAll('[data-mg-show-more-item]')].filter(
+            element => element.hasAttribute('hidden')
+          ),
+      };
+    };
+
+    it('ships open with the toggle hidden until initialised', () => {
+      const { button, hiddenItems } = setupItems();
+      expect(button.hidden).toBe(true);
+      expect(hiddenItems()).toHaveLength(0);
+    });
+
+    it('hides whole items with hidden="until-found" and is a real disclosure', () => {
+      const { button, list, hiddenItems } = setupItems();
+      mgShowMore(button);
+      expect(button.hidden).toBe(false);
+      expect(hiddenItems()).toHaveLength(2);
+      hiddenItems().forEach(element =>
+        expect(element.getAttribute('hidden')).toBe('until-found')
+      );
+      expect(button.getAttribute('aria-expanded')).toBe('false');
+      expect(button.getAttribute('aria-controls')).toBe(list.id);
+      // The visual-only mode's class is not used.
+      expect(list.classList.contains('mg-show-more--collapsed')).toBe(false);
+      expect(button.textContent.replace(/\s+/g, ' ').trim()).toBe(
+        'Show all 4 files'
+      );
+    });
+
+    it('opens and closes, keeping the label and aria-expanded in sync', () => {
+      const { button, hiddenItems } = setupItems();
+      mgShowMore(button);
+      button.focus();
+      button.click();
+      expect(hiddenItems()).toHaveLength(0);
+      expect(button.getAttribute('aria-expanded')).toBe('true');
+      expect(
+        button.querySelector('[data-mg-show-more-label]').textContent
+      ).toBe('Show fewer');
+      expect(document.activeElement).toBe(button); // no focus jump on open
+      button.click();
+      expect(hiddenItems()).toHaveLength(2);
+      expect(button.getAttribute('aria-expanded')).toBe('false');
+    });
+
+    it('keeps a focused toggle in view when opening pushes it down', () => {
+      const { button } = setupItems();
+      mgShowMore(button);
+      button.focus();
+      button.scrollIntoView = jest.fn();
+      button.getBoundingClientRect = () => ({ top: 2000, bottom: 2040 });
+      button.click();
+      expect(button.scrollIntoView).toHaveBeenCalledWith(
+        expect.objectContaining({ block: 'nearest' })
+      );
+    });
+
+    it('does not scroll when the opened toggle is still in view or not focused', () => {
+      const { button } = setupItems();
+      mgShowMore(button);
+      button.scrollIntoView = jest.fn();
+      button.getBoundingClientRect = () => ({ top: 200, bottom: 240 });
+      button.focus();
+      button.click();
+      mgShowMoreSetOpen(button, false);
+      button.getBoundingClientRect = () => ({ top: 2000, bottom: 2040 });
+      button.blur();
+      mgShowMoreSetOpen(button, true);
+      expect(button.scrollIntoView).not.toHaveBeenCalled();
+    });
+
+    it('moves focus to the toggle when closing hides the focused item', () => {
+      const { button } = setupItems();
+      mgShowMore(button);
+      button.click();
+      document.querySelector('a[href="/4"]').focus();
+      mgShowMoreSetOpen(button, false);
+      expect(document.activeElement).toBe(button);
+    });
+
+    it('opens the whole set on beforematch (find-in-page)', () => {
+      const { button, hiddenItems } = setupItems();
+      mgShowMore(button);
+      document
+        .querySelector('a[href="/4"]')
+        .closest('li')
+        .dispatchEvent(new Event('beforematch', { bubbles: true }));
+      expect(hiddenItems()).toHaveLength(0);
+      expect(button.getAttribute('aria-expanded')).toBe('true');
+      expect(
+        button.querySelector('[data-mg-show-more-label]').textContent
+      ).toBe('Show fewer');
+    });
+
+    it('falls back to plain hidden without until-found support', () => {
+      const descriptor = Object.getOwnPropertyDescriptor(
+        HTMLElement.prototype,
+        'onbeforematch'
+      );
+      delete HTMLElement.prototype.onbeforematch;
+      try {
+        expect('onbeforematch' in document.documentElement).toBe(false);
+        const { button, hiddenItems } = setupItems();
+        mgShowMore(button);
+        expect(hiddenItems()).toHaveLength(2);
+        hiddenItems().forEach(element =>
+          expect(element.getAttribute('hidden')).toBe('')
+        );
+      } finally {
+        Object.defineProperty(
+          HTMLElement.prototype,
+          'onbeforematch',
+          descriptor
+        );
+      }
+    });
+
+    it('mgShowMoreSetOpen opens without a click and ignores other toggles', () => {
+      const { button, hiddenItems } = setupItems();
+      const onClick = jest.fn();
+      button.addEventListener('click', onClick);
+      mgShowMore(button);
+      expect(mgShowMoreSetOpen(button, true)).toBe(true);
+      expect(hiddenItems()).toHaveLength(0);
+      expect(onClick).not.toHaveBeenCalled();
+      expect(mgShowMoreSetOpen(document.createElement('button'), true)).toBe(
+        false
+      );
+    });
+
+    it('reports per-state analytics labels, or keeps an author label', () => {
+      const first = setupItems();
+      mgShowMore(first.button);
+      expect(first.button.getAttribute('data-vf-analytics-label')).toBe(
+        'Show more'
+      );
+      first.button.click();
+      expect(first.button.getAttribute('data-vf-analytics-label')).toBe(
+        'Show less'
+      );
+      const second = setupItems({ extra: 'data-vf-analytics-label="nav_x"' });
+      mgShowMore(second.button);
+      second.button.click();
+      expect(second.button.getAttribute('data-vf-analytics-label')).toBe(
+        'nav_x'
+      );
+    });
+
+    it('is idempotent and cleanup restores the shipped markup', () => {
+      const { button, hiddenItems } = setupItems();
+      const cleanup = mgShowMore(button);
+      const noop = mgShowMore(button);
+      noop();
+      expect(button.dataset.mgShowMoreInitialized).toBe('true');
+      cleanup();
+      expect(hiddenItems()).toHaveLength(0);
+      expect(button.hidden).toBe(true);
+      expect(button.hasAttribute('aria-expanded')).toBe(false);
+      expect(button.hasAttribute('aria-controls')).toBe(false);
+      expect(button.dataset.mgShowMoreInitialized).toBeUndefined();
+      expect(mgShowMoreSetOpen(button, true)).toBe(false);
+      mgShowMore(button);
+      expect(hiddenItems()).toHaveLength(2);
+    });
+
+    it('leaves the toggle hidden when there are no items to hide', () => {
+      document.body.innerHTML = `<ul id="few"><li>One</li></ul>
+        <button hidden data-mg-show-more data-mg-show-more-mode="items" data-mg-show-more-target="#few">Show more</button>`;
+      const button = document.querySelector('button');
+      mgShowMore(button);
+      expect(button.hidden).toBe(true);
+    });
+
+    it('does not change the visual-only mode on the same page', () => {
+      document.body.innerHTML = `
+        <div id="body"><p>Text</p></div>
+        <button data-mg-show-more data-mg-show-more-target="#body">Show more</button>
+        <ul id="files"><li data-mg-show-more-item>Hidden</li></ul>
+        <button data-mg-show-more data-mg-show-more-mode="items" data-mg-show-more-target="#files">Show more</button>`;
+      mgShowMore();
+      const [visual] = document.querySelectorAll('button');
+      expect(document.getElementById('body').classList).toContain(
+        'mg-show-more--collapsed'
+      );
+      expect(visual.hasAttribute('aria-expanded')).toBe(false);
+      expect(mgShowMoreSetOpen(visual, true)).toBe(false);
+      visual.click();
+      expect(document.getElementById('body').classList).not.toContain(
+        'mg-show-more--collapsed'
+      );
     });
   });
 });

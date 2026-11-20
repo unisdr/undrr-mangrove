@@ -40,3 +40,12 @@
 .mg-show-more--button[hidden] {
   display: none;
 }
+
+// Items mode. `hidden="until-found"` hides an item's content with
+// `content-visibility: hidden` but keeps its box, so its padding, borders and
+// margins would still show as an empty row. Drop them while it is hidden.
+[data-mg-show-more-item][hidden] {
+  margin-block: 0;
+  padding-block: 0;
+  border-block-width: 0;
+}

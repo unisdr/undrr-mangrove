@@ -88,6 +88,56 @@ Collapsing a long block pulls the toggle up the page, often out of view. When th
 
 The toggle carries `data-vf-analytics-label`, which the UNDRR click tracker reads: "Show more" while collapsed and "Show less" while open, in English whatever the page language. Set `data-mg-show-more-analytics-collapsed` and `data-mg-show-more-analytics-open` for page-specific labels. A `data-vf-analytics-label` you set yourself, without those two, is left as it is.
 
+## Items mode (true disclosure)
+
+The default mode collapses by height and is **visual only**: the clipped content stays in the accessibility tree and the tab order (see [Accessibility](#accessibility)). For a list of whole elements, such as a long list of files or links, use **items mode**. It hides the extra items and makes the toggle a real disclosure button.
+
+<Canvas of={ShowMoreStories.ItemsMode} />
+
+|                        | Default (height)                                         | Items mode                                                                        |
+| ---------------------- | -------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| Use for                | A single run of text, such as a long body or description | A list of whole elements, such as files, links or results                         |
+| How it hides           | `max-height`, `overflow: hidden` and a fade; visual only | `hidden="until-found"` on each extra element, or plain `hidden` where unsupported |
+| Screen readers and Tab | Still reach the clipped content                          | Can't reach hidden items until the set is opened                                  |
+| Toggle                 | No `aria-expanded`                                       | `aria-expanded` and `aria-controls`                                               |
+| Find in page           | Matches hidden text but doesn't open it                  | Opens the set when a match is in a hidden item (`beforematch`)                    |
+| Partial content        | Fades out mid-line                                       | Never shows half an item                                                          |
+
+Mark each element to hide with `data-mg-show-more-item`, inside the target, and set `data-mg-show-more-mode="items"` on the toggle. Explicit markers let the server decide what collapses (for example, items 3 to N) and work for any structure. Ship the items visible and the toggle `hidden`: without JavaScript everything shows and there is no dead button.
+
+<Source
+  language="html"
+  code={`
+<ul id="report-files">
+  <li><a href="/a">Report</a></li>
+  <li><a href="/b">Annex 1</a></li>
+  <li data-mg-show-more-item><a href="/c">Annex 2</a></li>
+  <li data-mg-show-more-item><a href="/d">Annex 3</a></li>
+</ul>
+<button type="button" hidden
+   class="mg-button mg-button-secondary mg-show-more--button"
+   data-mg-show-more="true"
+   data-mg-show-more-mode="items"
+   data-mg-show-more-target="#report-files"
+   data-mg-show-more-label-collapsed="Show all 4 files"
+   data-mg-show-more-label-open="Show fewer files">
+  <span data-mg-show-more-label>Show all 4 files</span>
+</button>
+`}
+/>
+
+In React, pass `mode="items"`, `visibleItems` and `collapsable_items` (one list item each) instead of `collapsable_text`.
+
+How items mode behaves:
+
+- **Toggle.** The toggle must be a `<button>`. Opening leaves focus on it, and if the revealed items push a focused toggle off-screen, it is scrolled back into view (`block: "nearest"`, instant under reduced motion). Closing moves focus to it if focus was inside an item that is now hidden, so focus is never lost.
+- **Find in page.** When the browser's find-in-page or a text fragment reveals a hidden item, the whole set opens and the label and `aria-expanded` follow.
+- **Opening from code.** `mgShowMoreSetOpen(toggle, open)` opens or closes the set from page code, for example a "jump to the full list" link, without dispatching a click. It returns `false` for anything that isn't an initialised items-mode toggle.
+- **Labels, analytics and cleanup.** These work as in the default mode: `data-mg-show-more-label-*`, a `[data-mg-show-more-label]` child for hidden context, the analytics labels, idempotent initialisation and the returned cleanup.
+- **Ignored.** `data-mg-show-more-min-hidden-lines` doesn't apply. With no marked items, the toggle stays hidden.
+- **Hidden items' boxes.** `hidden="until-found"` keeps a hidden element's box, so ShowMore's CSS drops the block padding, margins and borders of hidden items. Without that, they would show as empty rows.
+- **Motion.** Nothing animates.
+
 ## How it works
 
 The `mgShowMore()` function finds all elements with `data-mg-show-more` and wires up click handlers. On click, the targeted container's `mg-show-more--collapsed` class is toggled, which controls `max-height`, `overflow`, and a CSS `mask-image` fade.
@@ -180,21 +230,24 @@ every consumer. Until that is decided, the component says nothing it cannot
 back up.
 
 If you need a true disclosure — content that is genuinely hidden until
-revealed — build it from whole elements and toggle `hidden` on them, rather
-than reaching for this utility.
+revealed — use [items mode](#items-mode-true-disclosure). It hides whole
+elements with `hidden="until-found"` and gives the toggle `aria-expanded`.
+The default mode is unchanged.
 
 ### Data attributes
 
-| Attribute                               | Required | Description                                                                                                                            |
-| --------------------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `data-mg-show-more`                     | Yes      | Set to `"true"` on the toggle button to register it                                                                                    |
-| `data-mg-show-more-target`              | No       | CSS selector for the content container, resolved nearest ancestor first. Defaults to `".mg-show-more--container"`                      |
-| `data-mg-show-more-label-collapsed`     | No       | Button text when content is collapsed. Defaults to "Show more"                                                                         |
-| `data-mg-show-more-label-open`          | No       | Button text when content is expanded. Defaults to "Show less"                                                                          |
-| `data-mg-show-more-skip-auto-init`      | No       | Presence-based. Skips this button during auto-init. Call `mgShowMore([element])` to initialize manually.                               |
-| `data-mg-show-more-min-hidden-lines`    | No       | Collapse only when the content runs at least this many lines past the collapsed height (empty means 1); otherwise the toggle is hidden |
-| `data-mg-show-more-analytics-collapsed` | No       | Analytics label while collapsed. Defaults to "Show more"                                                                               |
-| `data-mg-show-more-analytics-open`      | No       | Analytics label while open. Defaults to "Show less"                                                                                    |
+| Attribute                               | Required   | Description                                                                                                                            |
+| --------------------------------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `data-mg-show-more`                     | Yes        | Set to `"true"` on the toggle button to register it                                                                                    |
+| `data-mg-show-more-target`              | No         | CSS selector for the content container, resolved nearest ancestor first. Defaults to `".mg-show-more--container"`                      |
+| `data-mg-show-more-label-collapsed`     | No         | Button text when content is collapsed. Defaults to "Show more"                                                                         |
+| `data-mg-show-more-label-open`          | No         | Button text when content is expanded. Defaults to "Show less"                                                                          |
+| `data-mg-show-more-skip-auto-init`      | No         | Presence-based. Skips this button during auto-init. Call `mgShowMore([element])` to initialize manually.                               |
+| `data-mg-show-more-min-hidden-lines`    | No         | Collapse only when the content runs at least this many lines past the collapsed height (empty means 1); otherwise the toggle is hidden |
+| `data-mg-show-more-analytics-collapsed` | No         | Analytics label while collapsed. Defaults to "Show more"                                                                               |
+| `data-mg-show-more-analytics-open`      | No         | Analytics label while open. Defaults to "Show less"                                                                                    |
+| `data-mg-show-more-mode`                | No         | `"items"` for a true disclosure over elements marked `data-mg-show-more-item`; omit for the default visual-only mode                   |
+| `data-mg-show-more-item`                | Items mode | On each element inside the target that items mode hides                                                                                |
 
 ### JavaScript initialization
 
