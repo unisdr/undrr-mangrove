@@ -107,6 +107,9 @@ export const LongCopy = {
         ...exampleRecord.authors,
       ],
       identifiers: [
+        // Synthetic Arabic-script entry first, so the Latin DOI after it must
+        // keep its own direction rather than follow the list's first item.
+        'رقم الوثيقة التجريبي',
         // Real-world DOI that overflowed the Drupal sidebar in RTL
         // (https://gitlab.com/undrr/web-backlog/-/work_items/3362).
         '10.21953/researchonline.lse.ac.uk.00138625',

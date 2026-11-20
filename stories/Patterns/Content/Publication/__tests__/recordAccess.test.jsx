@@ -84,6 +84,48 @@ describe('cover target selection', () => {
     ]);
   });
 
+  test('an absolute URL with no origin is treated as hosted and warns', () => {
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      const [resource] = projectRecord({
+        title: 'Work',
+        resources: [
+          { label: 'A', href: 'https://www.undrr.org/media/123/download' },
+        ],
+      }).resources;
+      expect(resource.origin).toBe('hosted');
+      expect(coverAccess([resource])).toMatchObject({
+        icon: 'download',
+        analyticsLabel: 'download_internal_cover',
+      });
+      expect(warn).toHaveBeenCalledTimes(1);
+      expect(warn.mock.calls[0][0]).toMatch(/has no origin/);
+    } finally {
+      warn.mockRestore();
+    }
+  });
+
+  test('a root-relative URL or a supplied origin does not warn', () => {
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      projectRecord({
+        title: 'Work',
+        resources: [
+          { label: 'A', href: '/a' },
+          { label: 'B', href: 'https://example.org/b', origin: 'publisher' },
+          {
+            label: 'C',
+            href: 'https://example.org/c',
+            backup: { label: 'D', href: '/d' },
+          },
+        ],
+      });
+      expect(warn).not.toHaveBeenCalled();
+    } finally {
+      warn.mockRestore();
+    }
+  });
+
   test('a primary with a backup is the publisher copy; the backup is hosted', () => {
     const [resource] = projectRecord({
       title: 'Work',
@@ -130,11 +172,32 @@ describe('plural selection', () => {
     [3, 'جميع التنزيلات (3)'],
     [11, 'جميع التنزيلات (11)'],
     [100, 'جميع التنزيلات (100)'],
-  ])('Arabic %i uses its CLDR form', (count, expected) => {
-    // Digits follow Intl.NumberFormat('ar'); compare on the words.
-    const text = pluralLabel(ar, 'ar', count);
-    expect(text.replace(/\(.*\)/, '')).toBe(expected.replace(/\(.*\)/, ''));
-    expect(text).toMatch(/\(.+\)$/);
+  ])('Arabic %i gives the Drupal string', (count, expected) => {
+    expect(pluralLabel(ar, 'ar', count)).toBe(expected);
+  });
+
+  // The real Arabic strings repeat across categories, so check the category
+  // choice with distinct templates.
+  test.each([
+    [0, 'zero 0'],
+    [1, 'one 1'],
+    [2, 'two 2'],
+    [3, 'few 3'],
+    [11, 'many 11'],
+    [100, 'other 100'],
+    [102, 'other 102'],
+  ])('Arabic %i selects its CLDR category', (count, expected) => {
+    const forms = Object.fromEntries(
+      ['zero', 'one', 'two', 'few', 'many', 'other'].map(key => [
+        key,
+        `${key} {count}`,
+      ])
+    );
+    expect(pluralLabel(forms, 'ar', count)).toBe(expected);
+  });
+
+  test('counts use ASCII digits, as Drupal does, even for ar-EG', () => {
+    expect(pluralLabel({ other: '({count})' }, 'ar-EG', 12)).toBe('(12)');
   });
 
   test.each([
@@ -235,6 +298,19 @@ describe('rendered cover link and cue', () => {
     expect(
       container.querySelector('main [data-vf-google-analytics-region]')
     ).toBeNull();
+  });
+
+  test('each identifier, author and source resolves its own direction', () => {
+    const { container } = show({
+      ...exampleRecord,
+      identifiers: [
+        'رقم الوثيقة',
+        '10.21953/researchonline.lse.ac.uk.00138625',
+      ],
+    });
+    const items = container.querySelectorAll('dd li');
+    expect(items.length).toBeGreaterThan(3);
+    items.forEach(item => expect(item).toHaveAttribute('dir', 'auto'));
   });
 
   test('informative alt text stays exposed when the cover is linked', () => {

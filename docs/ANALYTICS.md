@@ -19,7 +19,7 @@ The script auto-detects GA4 and configures property IDs for UNDRR domains.
 
 ## Regions and labels
 
-The script reports each click with the innermost `data-vf-google-analytics-region` around it, and uses `data-vf-analytics-label` as the click's name when one is set. Keep labels as fixed English strings with no counts, so reports don't split by page language or by number.
+Mangrove components and patterns only emit the attributes. The behaviour comes from the sites' Google Analytics script, `google_analytics_enhancements.js`, which lives in drupal-base and the CDN bundle above, not in this repository. That script reports each click with the innermost `data-vf-google-analytics-region` around it, and uses `data-vf-analytics-label` as the click's name when one is set. Keep labels as fixed English strings with no counts, so reports don't split by page language or by number.
 
 Download links use one naming scheme, so reports can count them with a single match:
 

@@ -2,6 +2,27 @@ import { resolveContentUrl } from '../_shared/ContentPattern';
 
 const text = value => (typeof value === 'string' ? value.trim() : '');
 const list = value => (Array.isArray(value) ? value : []);
+/**
+ * Where a primary copy lives: `publisher` (external) or `hosted`. Adapters
+ * must supply it; a missing origin is an adapter error. Only two cases follow
+ * from the data: a primary with a hosted backup is the publisher copy, and a
+ * root-relative URL is hosted. An absolute URL could be either (a hosted file
+ * can be linked as https://www.undrr.org/media/123/download), so it falls back
+ * to `hosted`, which keeps analytics labels internal rather than claiming an
+ * external publisher, and warns in development.
+ */
+export function resourceOrigin(origin, href, backup) {
+  if (origin === 'publisher' || origin === 'hosted') return origin;
+  if (backup) return 'publisher';
+  if (/^https?:/i.test(href) && process.env.NODE_ENV !== 'production') {
+    console.warn(
+      `PublicationRecord: resource ${href} has no origin; treating it as hosted. ` +
+        "Adapters must set origin to 'publisher' or 'hosted'."
+    );
+  }
+  return 'hosted';
+}
+
 /** Experimental presentation selection only; not a CMS adapter or domain schema. */
 export function projectRecord(input) {
   const title = text(input?.title);
@@ -34,14 +55,7 @@ export function projectRecord(input) {
     if (!primary) return [];
     // A backup cannot silently become the primary/original access route.
     const backup = resource(item.backup);
-    // Adapters should state where the primary copy lives. Without that, a
-    // primary with a hosted backup, or an absolute URL, is treated as the
-    // publisher's copy, and a root-relative URL as the hosted copy.
-    const origin = ['publisher', 'hosted'].includes(item.origin)
-      ? item.origin
-      : backup || /^https?:/i.test(primary.href)
-        ? 'publisher'
-        : 'hosted';
+    const origin = resourceOrigin(item.origin, primary.href, backup);
     return [
       {
         ...primary,

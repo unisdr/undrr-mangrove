@@ -15,7 +15,11 @@ function RecordNames({ entries }) {
   return (
     <ul>
       {entries.map((entry, index) => (
-        <li key={index}>{entry}</li>
+        // Each name or identifier resolves its own direction, so a Latin DOI
+        // after an Arabic entry is not reordered.
+        <li key={index} dir="auto">
+          {entry}
+        </li>
       ))}
     </ul>
   );

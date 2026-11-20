@@ -50,19 +50,19 @@ export const showAllDownloads = resources => (resources?.length ?? 0) >= 2;
 /**
  * Pick the CLDR plural form for `count` in the interface language, falling back
  * to `other`, and fill `{count}`. Same approach as the search widget's labels:
- * Intl.PluralRules selects, the catalogue supplies every form.
+ * Intl.PluralRules selects, the catalogue supplies every form. The count is
+ * written in ASCII digits, as Drupal's @count is, so ar-EG does not switch to
+ * Arabic-Indic digits.
  */
 export function pluralLabel(forms, lang, count) {
   if (typeof forms === 'string') return forms.replace('{count}', String(count));
   if (!forms || typeof forms !== 'object') return '';
   let category = 'other';
-  let formatted = String(count);
   try {
     category = new Intl.PluralRules(lang).select(count);
-    formatted = new Intl.NumberFormat(lang).format(count);
   } catch {
-    // Unknown language tag: keep `other` and plain digits.
+    // Unknown language tag: keep `other`.
   }
   const template = forms[category] ?? forms.other ?? '';
-  return template.replace('{count}', formatted);
+  return template.replace('{count}', String(count));
 }
