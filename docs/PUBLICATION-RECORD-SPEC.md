@@ -105,9 +105,87 @@ This table records adapter decisions to implement and verify later; it does not 
 - **No public resource:** keep the bibliographic record useful. Omit the empty action region, or show a source-approved availability/access statement if supplied. Do not fabricate a disabled Download button, infer an embargo from the clock or expose an inaccessible media URL.
 - **Multiple resources:** preserve editorial order and distinguish language, edition and format without assuming one file per language. Keep each resource and its backup together in a semantic list.
 
-The inspected template opens resource links in new windows with `rel="noopener"` and an accessible warning. Preserve the host's reviewed policy and communicate the actual behaviour; this spec does not introduce a different global new-window rule. Retain meaningful action names and file context in accessible names, not icon/colour-only affordances. A format badge alone does not identify an available file.
+The inspected template opens resource links in new windows with `rel="noopener"` and an accessible warning. Preserve the host's reviewed policy and communicate the actual behaviour; this spec does not introduce a different global new-window rule. A linked cover follows the same policy as the first resource link; see [Cover link and download cues](#cover-link-and-download-cues). Retain meaningful action names and file context in accessible names, not icon/colour-only affordances. A format badge alone does not identify an available file.
 
 The source attachment template labels a status line “Last checked”, but the preprocessing value is media **creation time**, not a verified link-check event. The proposed record omits that assurance until a genuine check timestamp/process is supplied, or uses an accurately labelled source date after editorial approval. It must not turn creation time into a claim of verification.
+
+## Cover link and download cues
+
+Decided for [#1502](https://github.com/unisdr/undrr-mangrove/issues/1502), November 2026. Readers on PreventionWeb publication pages click the cover expecting the document ([web-backlog#3351](https://gitlab.com/undrr/web-backlog/-/work_items/3351)). Drupal ships an interim answer in [drupal-base!268](https://gitlab.com/undrr/drupal-base/-/merge_requests/268) (UNDRR-6.4). This section records what the record pattern does so the Drupal move to the record ([web-backlog#3362](https://gitlab.com/undrr/web-backlog/-/work_items/3362)) can implement it directly. Points 1, 3, 4 and 5 keep the interim's behaviour; point 2 adds the affordance the interim left out. Like the rest of this spec, it is demonstrated in the experimental story only.
+
+| Resources | Cover | "All downloads (N)" |
+| --- | --- | --- |
+| None | Not linked | Not shown |
+| 1 | Links to the first primary resource | Not shown |
+| 2 or more | Links to the first primary resource | Shown under the cover |
+
+### 1. The cover links to the first primary resource
+
+**Decision.** The cover links to the same URL as the first primary resource link: the publisher's copy when there is one, otherwise the hosted copy. It never links to a hosted backup when a publisher copy exists, and it is not linked when there are no resources.
+
+**Why.** The cover must not add a selection rule of its own; otherwise it can disagree with the resource list. In the story, `coverAccess()` in `recordAccess.js` reads the first item of the same projected resource list that the list renders, so they cannot drift apart. Drupal reaches the same result with one helper that both the cover and the download box call. The projection already keeps a backup out of the primary slot ("a backup cannot silently become the primary access route"), so "first primary" never resolves to a backup.
+
+**Origin.** Each primary resource is marked `publisher` (the external copy) or `hosted`. Adapters should supply it; Drupal knows which field each link came from. Without it, the story treats a primary with a backup, or an absolute URL, as the publisher copy, and a root-relative URL as the hosted copy. That fallback is a story convenience, not a rule for adapters.
+
+**Alt text.** The cover keeps the alt guidance above: empty alt when the cover only repeats the title, real alt text when it adds information. The link is drawn over the image instead of wrapping it, so informative alt text stays exposed even though the link itself is hidden (point 4).
+
+### 2. The cover shows a permanent badge
+
+**Decision.** A linked cover shows a small round badge in its bottom inline-end corner (bottom right in LTR, bottom left in RTL). It uses the existing `download` icon for a hosted copy and `external-link` for a publisher copy, in the interactive colour with a white ring. On devices that can hover, hovering the cover adds a focus-ring-width outline in the interactive colour and switches the badge to `interactive-active`, the hover colour tags already use.
+
+**Why.** The Drupal interim's only cue is a hover shadow, which touch readers never see. The badge is always visible, so it doesn't depend on hover. Matching the icon to the destination tells readers before they click whether they'll stay on the site or leave it. Both icons are Lucide icons already in the Mangrove set.
+
+- **Decorative.** The badge sits inside the hidden link, so it has no accessible name and adds no new strings.
+- **Forced colours.** The badge becomes a `Canvas` circle with a `LinkText` border and a `LinkText` icon, and the hover outline uses system colours.
+- **Motion.** Hover feedback changes instantly and nothing animates, so reduced motion needs no special case ([motion guidance](MOTION.md): hover feedback may be instant).
+- **RTL.** The badge uses logical insets. Neither icon is in the icon system's RTL mirror list, so neither flips.
+- **Size.** The badge is 2.25rem. The click target is the whole cover, not the badge.
+- **New windows.** The badge cues where the link goes, not how it opens. The story's resource links open in the same window, and so does the cover. A host that opens its labelled resource links in a new window should open the cover the same way (same `target` and `rel`), and keep the accessible new-window warning on the labelled link. The cover has no visible new-window cue, which is a known gap shared with the Drupal interim.
+- **Resource list.** The list has no destination icons, so the badge is the only place this cue appears. Adding the same icon to the first resource link is a possible follow-up; it is not part of this change.
+
+### 3. "All downloads (N)" under the cover
+
+**Decision.** With two or more resources, a text link under the cover reads "All downloads (N)" and jumps to the "Read or access this publication" heading. N counts primary resources; backups are not counted separately. There is no modal.
+
+**Why.** A reader who sees one cover can't tell that the record has several files, and the cover only reaches the first one. A modal or menu would be a second download interface to keep in step with the list. An in-page link keeps one list and only points at it. With one resource the cover already reaches everything, so the cue would be noise.
+
+**Plurals.** The string has CLDR plural forms, chosen with `Intl.PluralRules` for the interface language and filled with `Intl.NumberFormat`, as in the search widget's labels. Arabic supplies all six forms. The English, Arabic, Spanish, French, Japanese and Chinese strings are the drupal-base!268 translations. Russian is a draft that needs review. The `one` forms (and Arabic `zero`) are never shown by this rule, but they are kept so the catalogue matches Drupal's.
+
+**Placement.** The cue sits directly under the cover, in the same analytics region. On narrow screens the aside stacks after the main column, so the cue then points back up the page. That still works, but it matters less there because the resource list already comes first.
+
+### 4. Accessibility: the cover link duplicates the labelled link
+
+**Decision.** Keep the duplicate-link approach: the cover link has `aria-hidden="true"` and `tabindex="-1"`. Keyboard and screen-reader users use the labelled resource links, which come first in the reading order. "All downloads (N)" is an ordinary focusable link with visible text.
+
+**Why.** The cover link goes to the same place as the first resource link, which has a full name with title, language and format. Exposing both would add a tab stop and a second, weaker link name for the same action. The alternative, giving the cover link its own name such as "Download: [title]", would duplicate the labelled link for screen-reader users and still need a new translated string.
+
+**Known limits.**
+
+- Voice-control users can't target the cover by name, because hidden links have no name. They can say the visible name of the labelled resource link, or use grid or mouse-grid commands to click the cover. Nothing is lost, but the cover is not a voice target.
+- Because the link is drawn over the image, the image is no longer a separate click target, so a browser's "open image in new tab" menu applies to the link. A long-press on touch devices also acts on the link.
+- Without CSS the overlay link is empty and the cover is just an image; the labelled links still work.
+
+### 5. Analytics: `download_`, `_cover` and `nav_`
+
+**Decision.** Keep the drupal-base!268 names so reports carry over when the record replaces the interim. The access section is the region `undrr-download-box`; the cover and its cue are the region `undrr-download-box-cover`.
+
+| Link | Region | `data-vf-analytics-label` |
+| --- | --- | --- |
+| Primary resource, publisher copy | `undrr-download-box` | `download_publisher` |
+| Primary resource, hosted copy | `undrr-download-box` | `download_internal` |
+| Hosted backup | `undrr-download-box` | `download_backup` |
+| Cover, publisher copy | `undrr-download-box-cover` | `download_publisher_cover` |
+| Cover, hosted copy | `undrr-download-box-cover` | `download_internal_cover` |
+| "All downloads (N)" | `undrr-download-box-cover` | `nav_all_downloads_cover` |
+
+**Why.** Each rule needs only one match. Region `undrr-download-box` (a prefix match, which also catches `-cover`) or label prefix `download_` finds every download click. Excluding `cover` leaves only the resource list. In-page navigation starts `nav_`, so it never counts as a download. Labels are fixed English strings with no counts, as in the [Collection page](https://mangrove.undrr.org/?path=/docs/patterns-collection-page--docs), so reports don't split by language or by number. The shared script's behaviour is unchanged; see [analytics](ANALYTICS.md).
+
+### Checks recorded
+
+- **Unit tests** (`__tests__/recordAccess.test.jsx`) cover target selection (publisher, hosted, publisher with backup, explicit origin, unsafe primary, no resources), the two-resource threshold, plural selection for every bundled language and all six Arabic categories, the anchor target, the analytics attributes and their prefix rules, informative alt text staying exposed, and axe on linked covers.
+- **Browser checks** (play functions run by `yarn test-storybook`): on the standard story, the badge sits on the cover and a click in the middle of the image lands on the link. On the long-content story, which includes the DOI `10.21953/researchonline.lse.ac.uk.00138625`, the aside's boxes and text stay inside a 16rem rail in both LTR and RTL. The aside and its metadata use `minmax(0, 1fr)` tracks and the record sets `overflow-wrap: anywhere`, so a long identifier wraps instead of widening the column. With the metadata track and `overflow-wrap: anywhere` removed, the check fails.
+- **Manual screenshots** in LTR, Arabic RTL and emulated forced colours; see the pull request for what was and wasn't checked.
+- Not done: testing with screen readers, voice control or real Windows High Contrast. These remain part of the acceptance outcomes below.
 
 ## Responsive and accessibility requirements
 

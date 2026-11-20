@@ -24,6 +24,38 @@ The fixture is synthetic. Its HTML/plain-text resources are usable demonstration
 
 The optional standfirst requires approved content: do not automatically promote Drupal’s hidden short description or trim its body. The cover is decorative here because its title/year repeat adjacent text; supply meaningful alternative text for covers that convey additional information.
 
+## Cover link and download cues
+
+The cover links to the same place as the first resource link: the publisher's copy when there is one, otherwise the hosted copy, never a backup. A badge in its corner shows a download icon for a hosted copy or an external-link icon for a publisher copy, so the cue works without hover. With two or more resources, "All downloads (N)" under the cover jumps to the resource list. With no resources, the cover isn't linked. The [record specification](?path=/docs/patterns-content-publication-record-specification--docs) records each decision and its reasons ([#1502](https://github.com/unisdr/undrr-mangrove/issues/1502)).
+
+<Canvas of={Stories.HostedOnly} story={{ inline: false, height: '700px' }} />
+<Canvas of={Stories.ExternalOnly} story={{ inline: false, height: '700px' }} />
+
+| Resources | Cover                               | "All downloads (N)" |
+| --------- | ----------------------------------- | ------------------- |
+| None      | Not linked                          | Not shown           |
+| 1         | Links to the first primary resource | Not shown           |
+| 2 or more | Links to the first primary resource | Shown               |
+
+### Accessibility
+
+- The cover link repeats the first labelled resource link, so it has `aria-hidden="true"` and `tabindex="-1"`. Keyboard and screen-reader users reach the same file through the labelled link, which comes first.
+- The link is drawn over the image rather than wrapping it, so a cover with informative alt text still announces it.
+- Voice-control users can't name the hidden cover link. They can say the visible name of the labelled resource link instead.
+- "All downloads (N)" is an ordinary link with visible text. Its plural forms follow `Intl.PluralRules` for the interface language; Arabic has all six.
+- In forced-colours mode the badge keeps a `LinkText` border and icon. Hover feedback is instant, so reduced motion needs nothing extra.
+
+### Analytics
+
+| Link              | Region                     | `data-vf-analytics-label`                               |
+| ----------------- | -------------------------- | ------------------------------------------------------- |
+| Primary resource  | `undrr-download-box`       | `download_publisher` or `download_internal`             |
+| Backup            | `undrr-download-box`       | `download_backup`                                       |
+| Cover             | `undrr-download-box-cover` | `download_publisher_cover` or `download_internal_cover` |
+| All downloads (N) | `undrr-download-box-cover` | `nav_all_downloads_cover`                               |
+
+Every download label starts `download_`; cover clicks contain `cover`; in-page navigation starts `nav_`. The names match the Drupal interim ([drupal-base!268](https://gitlab.com/undrr/drupal-base/-/merge_requests/268)).
+
 ## Missing content
 
 <Canvas of={Stories.NoCover} story={{ inline: false, height: '700px' }} />
@@ -35,13 +67,13 @@ Missing data leaves no empty sections or placeholders. No public file does not i
 
 <Canvas of={Stories.LocalBackup} story={{ inline: false, height: '700px' }} />
 
-Backups have their own labels and metadata and never replace an invalid primary link. Root-relative and HTTP(S) URLs follow the shared ContentPattern URL contract; unsafe and protocol-relative URLs are omitted. Identifiers remain opaque text rather than guessed DOI links.
+Backups have their own labels and metadata and never replace an invalid primary link. The cover links to the original, not the backup. Root-relative and HTTP(S) URLs follow the shared ContentPattern URL contract; unsafe and protocol-relative URLs are omitted. Identifiers remain opaque text rather than guessed DOI links.
 
 ## Long content
 
 <Canvas of={Stories.LongCopy} story={{ inline: false, height: '700px' }} />
 
-Long text and identifiers wrap in DOM reading order. Use the standard toolbar for interface language and direction. Record labels have seven draft translations requiring native-speaker review. Work, body and resource languages remain separate from interface language. The demonstration shell supports English/Arabic; other interface locales use an explicitly English-labelled shell.
+Long text and identifiers wrap in DOM reading order. The fixture includes the DOI that overflowed Drupal's sidebar in RTL; here identifier lists keep their own text direction, so a DOI is not reordered on an Arabic page. Use the standard toolbar for interface language and direction. Record labels have seven draft translations requiring native-speaker review. Work, body and resource languages remain separate from interface language. The demonstration shell supports English/Arabic; other interface locales use an explicitly English-labelled shell.
 
 ## Adapting the prototype
 
@@ -50,5 +82,7 @@ The composition needs its own `publication-record.scss`, shared Mangrove CSS and
 `recordProjection.js` filters presentation data; it is not a canonical schema or CMS adapter. Consumers must select approved public/domain content, sanitize CMS prose, and validate dates, language and primary/backup provenance against the pinned source audit. Consumer integration and editorial/accessibility review remain outstanding; this prototype does not establish Drupal rendering parity.
 
 ## Changelog
+
+- **0.2.0**, 2026-11-20 ([#1502](https://github.com/unisdr/undrr-mangrove/issues/1502)): The cover links to the first primary resource (publisher copy, otherwise hosted copy) as a hidden duplicate of the labelled link, with a permanent download or external-link badge. Records with two or more resources show "All downloads (N)" under the cover, with plural forms in all bundled languages. Resource, backup, cover and jump links carry the `undrr-download-box` analytics regions and labels used by Drupal. Added one-hosted-file and publisher-only stories and a long-DOI fixture. Identifier and author lists no longer take `direction: rtl` from the page, so a Latin DOI reads correctly in Arabic.
 
 - **0.1.0**, 2026-10-29 ([#1437](https://github.com/unisdr/undrr-mangrove/pull/1437), [#1432](https://github.com/unisdr/undrr-mangrove/issues/1432)): Add an experimental ordinary publication-record story composition, separate from report landing references. Give complete covers a thin neutral border consistent with book cards. Remove the title-only minimal, external-only and dedicated RTL stories; retain missing-content and resource regression coverage. Preserve work-language tags on related links. Production adapter and reusable API remain unimplemented.
