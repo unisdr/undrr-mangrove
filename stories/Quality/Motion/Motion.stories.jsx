@@ -66,7 +66,7 @@ const sections = ['Resources', 'About'].map((title, index) => ({
   ],
 }));
 export const Navigation = {
-  render: () => <MegaMenu sections={sections} hoverDelay={0} delay={5000} />,
+  render: () => <MegaMenu sections={sections} />,
 };
 
 function DrawerFixture() {

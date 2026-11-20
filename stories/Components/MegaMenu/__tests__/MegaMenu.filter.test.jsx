@@ -646,8 +646,12 @@ describe('MegaMenu Mobile Filter UI', () => {
   });
 });
 
+// Finder results live in its modal dialog; the menu underneath also has
+// ordinary links, which a modal dialog makes inert in a real browser.
+const finderIn = panel => within(panel).getByRole('dialog');
+
 async function openDesktopSection(name = 'Knowledge Base') {
-  fireEvent.focus(screen.getByRole('link', { name, exact: true }));
+  fireEvent.click(screen.getByRole('button', { name, exact: true }));
   return screen.findByRole('region', { name, exact: true });
 }
 
@@ -701,7 +705,9 @@ describe('MegaMenu contextual desktop finder', () => {
     const input = within(panel).getByRole('searchbox');
     fireEvent.change(input, { target: { value: 'doc' } });
     expect(
-      within(panel).getByRole('link', { name: /Documents and publications/ })
+      within(finderIn(panel)).getByRole('link', {
+        name: /Documents and publications/,
+      })
     ).toHaveAttribute('href', '/documents');
     expect(within(panel).getByRole('status')).toHaveClass('mg-u-sr-only');
     expect(
@@ -733,7 +739,7 @@ describe('MegaMenu contextual desktop finder', () => {
       target: { value: 'terminology' },
     });
     expect(
-      within(panel).getByRole('link', { name: /^Terminology/ })
+      within(finderIn(panel)).getByRole('link', { name: /^Terminology/ })
     ).toHaveAttribute('href', '/terminology');
     fireEvent.click(within(panel).getByRole('button', { name: 'Close' }));
     expect(
@@ -747,7 +753,7 @@ describe('MegaMenu contextual desktop finder', () => {
       target: { value: 'doc' },
     });
     expect(
-      within(otherPanel).getByRole('link', {
+      within(finderIn(otherPanel)).getByRole('link', {
         name: /Documents and publications/,
       })
     ).toHaveAttribute('href', '/documents');
@@ -828,7 +834,7 @@ describe('MegaMenu contextual desktop finder', () => {
     expect(fireEvent.keyDown(input, { key: 'ArrowLeft' })).toBe(true);
     expect(input).toHaveFocus();
     fireEvent.change(input, { target: { value: 'hazard' } });
-    const links = within(panel).getAllByRole('link');
+    const links = within(finderIn(panel)).getAllByRole('link');
     fireEvent.keyDown(input, { key: 'ArrowDown' });
     expect(links[0]).toHaveFocus();
     fireEvent.keyDown(links[0], { key: 'ArrowDown' });

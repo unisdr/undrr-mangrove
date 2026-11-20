@@ -59,11 +59,9 @@ describe('MegaMenu panel overflow', () => {
       key: 'ArrowDown',
     });
 
-    // Hover group 5 (not the default first group) via the section-list link.
-    // setItemIndex is a direct state update — no timer needed here.
-    const groupFiveItem = screen
-      .getAllByRole('menuitem', { name: /^Group 5$/ })
-      .find(el => el.closest('.mg-mega-content__section-list-item'));
+    // Hover group 5 (not the default first group) via its category button.
+    // setItemIndex is a direct state update, so no timer is needed here.
+    const groupFiveItem = screen.getByRole('button', { name: /^Group 5$/ });
     fireEvent.mouseEnter(
       groupFiveItem.closest('.mg-mega-content__section-list-item')
     );

@@ -452,14 +452,6 @@ export const Default = {
   render: args => <MegaMenu {...args} />,
 
   args: {
-    delay: 5000,
-    sections: sections,
-  },
-};
-
-export const WithCustomDelay = {
-  args: {
-    delay: 800000,
     sections: sections,
   },
 };
@@ -471,7 +463,6 @@ export const RTL = {
     </div>
   ),
   args: {
-    delay: 5000,
     sections: sections,
   },
   parameters: {
@@ -515,7 +506,6 @@ const brandArgType = {
 export const WithLogo = {
   render: ({ brand, ...args }) => <MegaMenu {...args} {...brandLogos[brand]} />,
   args: {
-    delay: 5000,
     sections: sections,
     brand: 'PreventionWeb',
   },
@@ -535,7 +525,6 @@ export const WithQuickFilter = {
     <MegaMenu {...args} {...(brand ? brandLogos[brand] : {})} />
   ),
   args: {
-    delay: 5000,
     sections: sections,
     enableFilter: true,
     enableSiteSearch: true,
@@ -566,7 +555,6 @@ const sectionsWithIcons = sections.map((section, i) => ({
 export const WithIcons = {
   render: args => <MegaMenu {...args} />,
   args: {
-    delay: 5000,
     sections: sectionsWithIcons,
   },
   parameters: {
@@ -666,7 +654,7 @@ const motionSections = [
 
 export const MotionReview = {
   name: 'Motion: open and category swap',
-  args: { sections: motionSections, hoverDelay: 0, delay: 300 },
+  args: { sections: motionSections },
   parameters: {
     docs: {
       description: {
@@ -681,25 +669,29 @@ export const MotionReview = {
     // Vanilla hydration mounts a separate React root after this story commits.
     // Wait for the rendered control rather than racing its hydration effect.
     const trigger = await canvas.findByRole('button', { name: 'Resources' });
-    await userEvent.hover(trigger);
-    const category = await canvas.findByRole('menuitem', { name: 'Guidance' });
+    await userEvent.click(trigger);
+    const category = await canvas.findByRole('button', { name: 'Guidance' });
     for (const title of ['Guidance', 'Publications', 'Guidance']) {
       // eslint-disable-next-line no-await-in-loop -- exercise successive, interrupting category changes
-      await userEvent.hover(canvas.getByRole('menuitem', { name: title }));
+      await userEvent.hover(canvas.getByRole('button', { name: title }));
       const list = canvasElement.querySelector(
         '.mg-mega-content__menu--desktop'
       );
-      const styles = Array.from(list.children, item => {
+      // The first entry links to the category's own page.
+      const destinations = Array.from(list.children).slice(1);
+      const styles = destinations.map(item => {
         const style =
           canvasElement.ownerDocument.defaultView.getComputedStyle(item);
         return { animation: style.animationName, opacity: style.opacity };
       });
       // eslint-disable-next-line no-await-in-loop -- assert each category before changing to the next
       await expect({
-        count: list.children.length,
+        overview: list.firstElementChild.textContent,
+        count: destinations.length,
         last: list.lastElementChild.textContent,
         styles,
       }).toEqual({
+        overview: title,
         count: 30,
         last: `${title} 30`,
         styles: Array.from({ length: 30 }, () => ({
@@ -708,7 +700,7 @@ export const MotionReview = {
         })),
       });
     }
-    await expect(category).toHaveAttribute('aria-current', 'page');
+    await expect(category).toHaveAttribute('aria-expanded', 'true');
   },
 };
 
@@ -767,7 +759,6 @@ function HydratedMotionExample() {
       ref={hostRef}
       data-mg-mega-menu
       data-sections={JSON.stringify(motionSections)}
-      data-hover-delay="0"
     >
       <nav aria-label="Navigation fallback">
         <a href="#publications">Publications</a>

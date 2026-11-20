@@ -51,6 +51,7 @@
     "test:content-teaser-browser": "node scripts/test-content-teaser-browser.mjs",
     "test:search-selection-browser": "node scripts/test-search-selection-browser.mjs",
     "test:megamenu-mobile-browser": "node scripts/test-megamenu-mobile-browser.mjs",
+    "test:megamenu-keyboard-browser": "node scripts/test-megamenu-keyboard-browser.mjs",
     "test:motion-browser": "node scripts/test-motion-browser.mjs",
     "test:tabs-sticky-browser": "node scripts/test-tabs-sticky-browser.mjs",
     "test:rich-content-browser": "node scripts/test-rich-content-browser.mjs",

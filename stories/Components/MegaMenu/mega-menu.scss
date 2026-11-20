@@ -417,6 +417,19 @@
     text-decoration: none;
     display: block;
 
+    // Categories are disclosure buttons (they reveal destinations), so reset
+    // the native button look to match the former link styling. A block
+    // button does not stretch like a link, hence the explicit width that
+    // matches the negative inline margins below.
+    box-sizing: border-box;
+    width: calc(100% + 2 * var(--mg-spacing-200));
+    border: 0;
+    background: transparent;
+    font: inherit;
+    line-height: inherit;
+    text-align: start;
+    cursor: pointer;
+
     // RTL-friendly: Use logical properties for better improvements
     letter-spacing: 0.2px;
     position: relative;
@@ -555,6 +568,17 @@
       padding-inline: var(--mg-spacing-150);
       opacity: 0.8;
       break-inside: avoid;
+    }
+
+    // The chosen category's own page leads its destinations, across columns.
+    .mg-mega-content__overview {
+      column-span: all;
+      margin-block-end: var(--mg-spacing-100);
+      border-block-end: 1px solid rgb(var(--mg-color-neutral-600) / 0.24);
+
+      a::after {
+        content: " ›";
+      }
     }
 
     li {
@@ -1547,4 +1571,20 @@
       transition: none;
     }
   }
+}
+
+// A banner-only panel wraps its authored markup so a landing link can follow
+// it. `display: contents` keeps that markup laid out as a direct child of
+// the panel, as before the wrapper existed.
+.mg-mega-content__banner-only {
+  display: contents;
+}
+
+.mg-mega-content__banner-only-cta {
+  align-self: flex-start;
+  margin: var(--mg-spacing-200);
+}
+
+[dir="rtl"] .mg-mega-content__overview a::after {
+  content: " ‹";
 }

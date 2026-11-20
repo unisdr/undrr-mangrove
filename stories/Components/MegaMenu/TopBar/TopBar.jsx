@@ -8,7 +8,7 @@ export function TopBar({
   openMobileSection,
   sidebarId,
   labels,
-  handleItemHover,
+  toggleItem,
   toggleShowSidebar,
   showSidebar,
   sections,
@@ -36,13 +36,25 @@ export function TopBar({
   }, [activeItem, sectionListRef]);
 
   const handleFocusByArrows = (e, index) => {
-    if (e.target.closest('.mg-mega-menu-finder')) return;
-    // Prevent default browser scrolling for arrow keys
-    if (['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+    // Keys bubble here from inside the open panel; only the top-level item
+    // itself moves along the bar (APG disclosure navigation, optional keys).
+    const itemRef = itemListRef?.current;
+    if (e.target !== itemRef?.[index]) return;
+    if (
+      [
+        'ArrowDown',
+        'ArrowUp',
+        'ArrowLeft',
+        'ArrowRight',
+        'Home',
+        'End',
+      ].includes(e.key)
+    ) {
       e.preventDefault();
     }
 
-    const itemRef = itemListRef?.current;
+    if (e.key === 'Home') itemRef[0]?.focus();
+    if (e.key === 'End') itemRef[itemRef.length - 1]?.focus();
 
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
       const rtl = window.getComputedStyle(e.currentTarget).direction === 'rtl';
@@ -74,11 +86,8 @@ export function TopBar({
       }}
       title={section.title}
       icon={section.icon}
-      bannerDescription={section.bannerDescription}
       link={section.bannerButton}
-      onMouseEnter={() => {
-        if (!isMobile) handleItemHover(index);
-      }}
+      onToggle={() => toggleItem(index)}
       activeItem={activeItem}
       section={section}
       sections={sections}

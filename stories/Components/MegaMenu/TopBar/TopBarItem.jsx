@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useId } from 'react';
 import Section from '../Section/Section.jsx';
 
 export function TopBarItem({
@@ -7,10 +7,9 @@ export function TopBarItem({
   onMobileClick,
   title,
   icon,
-  onMouseEnter,
+  onToggle,
   activeItem,
   link,
-  bannerDescription,
   handleOnKeyDown,
   ref,
   section,
@@ -26,9 +25,13 @@ export function TopBarItem({
   labels,
 }) {
   const isActive = index === activeItem;
-  // The panel below is a disclosure, not a menu: announce expanded state
-  // only where a panel actually exists.
-  const hasPanel = Boolean(section && section.items);
+  const panelId = useId();
+  // The panel below is a disclosure, not a menu (WAI-ARIA APG disclosure
+  // navigation). Section renders a panel for child items or for banner copy
+  // alone; only those triggers announce an expanded state.
+  const hasPanel = Boolean(
+    section && (section.items || section.bannerDescription)
+  );
 
   const label = (
     <>
@@ -45,8 +48,6 @@ export function TopBarItem({
   return (
     <li
       className={`mg-mega-topbar__item ${isActive ? 'mg-mega-topbar__item--active' : ''}`}
-      onMouseEnter={section || bannerDescription ? onMouseEnter : undefined}
-      onFocus={isMobile ? undefined : onMouseEnter}
       onKeyDown={event => {
         const isEditable =
           event.target.isContentEditable ||
@@ -76,8 +77,10 @@ export function TopBarItem({
         handleOnKeyDown(event);
       }}
     >
-      {/* Render link if no children and link URL exists, otherwise just show title */}
-      {/* {!children && link && link.url ? <a href={link.url}>{title}</a> : title} */}
+      {/* A trigger with a panel is always a disclosure button, even when the
+          section has a landing page: a link that also expands is ambiguous
+          and Enter could do only one of the two. The landing link is offered
+          inside the panel instead. Sections without a panel stay links. */}
       {isMobile ? (
         <button
           type="button"
@@ -90,20 +93,27 @@ export function TopBarItem({
         >
           {label}
         </button>
-      ) : link && link.url ? (
-        <a
+      ) : hasPanel ? (
+        <button
+          type="button"
           className="mg-mega-topbar__item-link"
-          href={link.url}
           ref={ref}
-          aria-expanded={hasPanel ? String(isActive) : undefined}
+          onClick={onToggle}
+          aria-expanded={String(isActive)}
+          aria-controls={panelId}
+          data-vf-analytics-label="Mega menu: Section"
         >
+          {label}
+        </button>
+      ) : link && link.url ? (
+        <a className="mg-mega-topbar__item-link" href={link.url} ref={ref}>
           {label}
         </a>
       ) : (
         <button
+          type="button"
           className="mg-mega-topbar__item-link"
           ref={ref}
-          aria-expanded={hasPanel ? String(isActive) : undefined}
           data-vf-analytics-label="Mega menu: Section"
         >
           {label}
@@ -115,6 +125,7 @@ export function TopBarItem({
         sections={sections}
         isActive={isActive}
         index={index}
+        panelId={panelId}
         sectionListRef={sectionListRef}
         itemListRef={itemListRef}
         enableFilter={enableFilter}
