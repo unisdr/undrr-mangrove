@@ -1,4 +1,29 @@
 import { expect, userEvent, waitFor } from 'storybook/test';
+import { checkArticleGridGeometry } from '../../../Atom/Layout/Grid/gridGeometryChecks';
+
+/**
+ * A story-level play replaces the meta play, so record stories with their
+ * own checks run the article grid check (#1504) first through this wrapper.
+ * The marker lets a unit test prove every record story keeps it.
+ */
+export function withGridCheck(play) {
+  const combined = async context => {
+    await checkArticleGridGeometry(context);
+    await play(context);
+  };
+  combined.runsGridCheck = true;
+  return combined;
+}
+
+// Vitest Browser Mode can resize the viewport; Storybook's UI cannot.
+async function browserPage() {
+  try {
+    const { page } = await import('@vitest/browser/context');
+    return page?.viewport ? page : null;
+  } catch {
+    return null;
+  }
+}
 
 // jsdom cannot see SCSS: these assertions run against the rendered stories.
 const within = (inner, outer) =>
@@ -87,17 +112,22 @@ export async function checkCoverAffordance({ canvasElement }) {
 /**
  * Long identifiers wrap inside the aside in both directions. Drupal's sidebar
  * overflowed 73px in RTL on a long DOI
- * (https://gitlab.com/undrr/web-backlog/-/work_items/3362). The test viewport
- * is narrower than the two-column breakpoint, so the check forces the wide
- * layout's columns (Grid's `.mg-grid--article`: content plus a 16rem rail)
- * to measure the aside at rail width.
+ * (https://gitlab.com/undrr/web-backlog/-/work_items/3362). The aside is
+ * measured in the real two-column layout: in Vitest the viewport is set to
+ * 1164px, above the 900px article-grid breakpoint (#1504, #1508). Where the
+ * viewport can't be resized (Storybook's UI), the grid's columns are forced
+ * to the rail width instead.
  */
 export async function checkAsideContainment({ canvasElement }) {
   await canvasElement.ownerDocument.fonts.ready;
   const root = canvasElement.querySelector('.mg-publication-record');
   const original = root.getAttribute('dir');
   const reading = root.querySelector('.mg-publication-record__reading');
-  reading.style.gridTemplateColumns = 'minmax(0, 1fr) 16rem';
+  const view = canvasElement.ownerDocument.defaultView;
+  const page = await browserPage();
+  const size = [view.innerWidth, view.innerHeight];
+  if (page) await page.viewport(1164, 900);
+  else reading.style.gridTemplateColumns = 'minmax(0, 1fr) 16rem';
   try {
     for (const dir of ['ltr', 'rtl']) {
       root.setAttribute('dir', dir);
@@ -106,10 +136,16 @@ export async function checkAsideContainment({ canvasElement }) {
       expect(within(asideBox, reading.getBoundingClientRect())).toBe(true);
       expect(aside.scrollWidth).toBeLessThanOrEqual(aside.clientWidth + 1);
       expect(asideBox.width).toBeLessThan(16 * 16 + 1);
+      // In the real layout the aside is beside the main column.
+      if (page) {
+        const main = root
+          .querySelector('.mg-publication-record__main')
+          .getBoundingClientRect();
+        expect(asideBox.top).toBeLessThan(main.bottom);
+      }
       // Each identifier keeps the direction its own text resolves to, so a
       // Latin DOI is not reordered on an RTL page or after an Arabic entry.
       aside.querySelectorAll('dd li').forEach(item => {
-        const view = item.ownerDocument.defaultView;
         expect(view.getComputedStyle(item).direction).toBe(
           item.matches(':dir(rtl)') ? 'rtl' : 'ltr'
         );
@@ -130,6 +166,7 @@ export async function checkAsideContainment({ canvasElement }) {
   } finally {
     root.setAttribute('dir', original);
     reading.style.gridTemplateColumns = '';
+    if (page) await page.viewport(...size);
   }
 }
 

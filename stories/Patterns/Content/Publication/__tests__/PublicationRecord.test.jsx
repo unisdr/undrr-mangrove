@@ -10,7 +10,10 @@ import {
   exampleBody,
   severalFiles,
 } from '../recordFixtures';
-import meta, { LongCopy } from '../PublicationRecord.stories';
+import meta, * as stories from '../PublicationRecord.stories';
+import { checkArticleGridGeometry } from '../../../../Atom/Layout/Grid/gridGeometryChecks';
+
+const { LongCopy } = stories;
 
 // The stories import browser play checks; Jest renders the stories only.
 jest.mock('storybook/test', () => ({}));
@@ -244,4 +247,17 @@ test('invalid optional destinations remain text or disappear without leaking uns
   expect(record.sources).toEqual([{ label: 'Known organization', href: null }]);
   expect(record.related).toEqual([]);
   expect(() => projectRecord({ title: ' ' })).toThrow(/approved title/);
+});
+
+test('every record story runs the article grid check (#1504)', () => {
+  // A story-level play replaces the meta play, so it must wrap the check.
+  expect(meta.play).toBe(checkArticleGridGeometry);
+  const named = Object.entries(stories).filter(([name]) => name !== 'default');
+  expect(named.length).toBeGreaterThan(8);
+  named.forEach(([name, story]) => {
+    expect([name, story.play ? story.play.runsGridCheck : true]).toEqual([
+      name,
+      true,
+    ]);
+  });
 });

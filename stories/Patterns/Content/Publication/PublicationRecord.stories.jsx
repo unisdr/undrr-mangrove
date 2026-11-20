@@ -1,6 +1,7 @@
 import React from 'react';
 import { resolveLanguage } from '../../../../.storybook/language';
 import { PublicationRecord } from './PublicationRecord';
+import { checkArticleGridGeometry } from '../../../Atom/Layout/Grid/gridGeometryChecks';
 import {
   RECORD_LABELS,
   exampleRecord,
@@ -16,6 +17,7 @@ import {
   checkCollapsedList,
   checkCoverAffordance,
   checkLanguageSelect,
+  withGridCheck,
 } from './recordGeometryChecks';
 import './publication-record.scss';
 import '../../_shared/pattern-demo.scss';
@@ -26,6 +28,8 @@ export default {
   component: PublicationRecord,
   tags: ['!autodocs'],
   parameters: { layout: 'fullscreen', docs: { source: { html: true } } },
+  // A story's own play replaces this one, so every story-level play below is
+  // wrapped in withGridCheck to keep the article grid check (#1504).
   play: checkArticleGridGeometry,
   render: (args, context) => {
     const language = resolveLanguage(context.globals);
@@ -43,10 +47,10 @@ export const Standard = {
   name: 'Experimental publication record',
   args: { record: exampleRecord, children: exampleBody },
   // Tier 1: the access block is at most 160px wide, 200px narrow.
-  play: async context => {
+  play: withGridCheck(async context => {
     await checkCoverAffordance(context);
     await checkAccessBudget(160, 200)(context);
-  },
+  }),
 };
 // Resource cases (#1502, #1505). Standard is the usual Drupal shape: the
 // publisher's original plus a hosted backup. The cover links to the first
@@ -68,7 +72,7 @@ export const SeveralFiles = {
   },
   // Tier 3: filters plus three rows, at most 340px wide (the old three-file
   // list was 454px), 460px narrow.
-  play: checkAccessBudget(340, 460),
+  play: withGridCheck(checkAccessBudget(340, 460)),
 };
 // Tier 4, modelled on the largest Drupal record (34 files): language and
 // text filters, and the first 6 rows of the current view.
@@ -78,7 +82,7 @@ export const ManyFiles = {
     ...Standard.args,
     record: { ...exampleRecord, resources: manyFiles },
   },
-  play: checkCollapsedList,
+  play: withGridCheck(checkCollapsedList),
 };
 // Seven languages: the language filter is a select.
 export const ManyLanguages = {
@@ -87,7 +91,7 @@ export const ManyLanguages = {
     ...Standard.args,
     record: { ...exampleRecord, resources: manyLanguages },
   },
-  play: checkLanguageSelect,
+  play: withGridCheck(checkLanguageSelect),
 };
 export const HostedOnly = {
   name: 'Hosted copy only',
@@ -160,7 +164,7 @@ export const NoFile = {
 };
 export const LongCopy = {
   name: 'Long content',
-  play: checkAsideContainment,
+  play: withGridCheck(checkAsideContainment),
   args: {
     record: {
       ...exampleRecord,
