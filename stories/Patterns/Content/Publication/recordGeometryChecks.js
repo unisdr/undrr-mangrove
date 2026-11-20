@@ -134,77 +134,133 @@ export async function checkAsideContainment({ canvasElement }) {
 }
 
 /**
- * A long list shows two groups; ShowMore's items mode hides the rest with
- * hidden="until-found". The toggle is a disclosure button that works with
- * Enter and Space, opening leaves focus on it, closing pulls focus out of a
- * hidden group, and a find-in-page match opens the list.
+ * The access block stays compact so the Description starts high. The old
+ * stacked list measured 237px for one file and 454px for three at 1378px.
+ * Budgets are per width: the test runner is narrow.
+ */
+export const checkAccessBudget = (wide, narrow) =>
+  async function checkAccessHeight({ canvasElement }) {
+    const doc = canvasElement.ownerDocument;
+    await doc.fonts.ready;
+    const access = canvasElement.querySelector(
+      '.mg-publication-record__access'
+    );
+    await waitFor(() => expect(access).not.toBeNull());
+    const budget = doc.defaultView.innerWidth >= 768 ? wide : narrow;
+    expect(access.getBoundingClientRect().height).toBeLessThanOrEqual(budget);
+    // The Description follows the access block directly.
+    const sections = [...canvasElement.querySelectorAll('main section')];
+    const accessSection = access.closest('section');
+    expect(
+      sections[sections.indexOf(accessSection) + 1].querySelector('h2')
+    ).not.toBeNull();
+  };
+
+/**
+ * Tier 4 (34 files): language and text filters over one table, the first 6
+ * rows of the current view, and ShowMore items mode for the rest.
  */
 export async function checkCollapsedList({ canvasElement }) {
   const doc = canvasElement.ownerDocument;
-  const toggle = canvasElement.querySelector(
-    '.mg-publication-record__show-all'
-  );
-  const items = [
-    ...canvasElement.querySelectorAll('.mg-publication-record__resources > li'),
-  ];
-  const shown = () =>
-    items.filter(item => !item.hidden && item.offsetHeight > 0);
-  await waitFor(() => expect(toggle.hidden).toBe(false));
-  expect(items).toHaveLength(34);
-  expect(shown()).toHaveLength(2);
-  // A hidden group takes no space: its padding and border are dropped too.
-  expect(items[20].getBoundingClientRect().height).toBe(0);
-  // ...yet stays searchable: normalize's [hidden] { display: none } must not
-  // win over hidden="until-found", or find-in-page never reaches it.
   const view = doc.defaultView;
-  expect(view.getComputedStyle(items[20]).display).not.toBe('none');
-  expect(toggle).toHaveAttribute('aria-expanded', 'false');
-  expect(toggle.textContent).toBe('Show all 34 files');
+  const root = canvasElement.querySelector('.mg-publication-record');
+  const rows = () => [
+    ...root.querySelectorAll('.mg-publication-record__files tbody tr'),
+  ];
+  const shown = () => rows().filter(row => !row.hidden);
+  const toggle = () => root.querySelector('.mg-publication-record__show-all');
+  const live = () => root.querySelector('.mg-publication-record__status');
+  await waitFor(() => expect(toggle()?.hidden).toBe(false));
 
-  // Enter opens and focus moves to the first revealed control; Space on the
-  // toggle closes it.
-  toggle.focus();
+  expect(rows()).toHaveLength(34);
+  expect(shown()).toHaveLength(6);
+  // Table rows use plain hidden (until-found doesn't work on rows).
+  expect(rows()[6].getAttribute('hidden')).toBe('');
+  expect(toggle().textContent).toBe('Show all 34 files');
+  expect(toggle()).toHaveAttribute('aria-expanded', 'false');
+
+  // Enter opens and moves focus to row 7's first control.
+  toggle().focus();
   await userEvent.keyboard('{Enter}');
-  expect(toggle).toHaveAttribute('aria-expanded', 'true');
   expect(shown()).toHaveLength(34);
-  expect(toggle.textContent).toBe('Show fewer files');
-  // A reader's open lands on the first revealed group's first link.
-  expect(doc.activeElement).toBe(items[2].querySelector('a'));
-  toggle.focus();
+  expect(doc.activeElement).toBe(rows()[6].querySelector('a'));
+  toggle().focus();
   await userEvent.keyboard(' ');
-  expect(toggle).toHaveAttribute('aria-expanded', 'false');
-  expect(shown()).toHaveLength(2);
-  expect(doc.activeElement).toBe(toggle);
+  expect(shown()).toHaveLength(6);
+  expect(doc.activeElement).toBe(toggle());
 
-  // Closing while focus is in a group that is about to be hidden moves
-  // focus to the toggle, never to a hidden or off-screen control.
-  await userEvent.keyboard('{Enter}');
-  items[33].querySelector('a').focus();
-  toggle.click();
-  expect(doc.activeElement).toBe(toggle);
-
-  // Find-in-page revealing a hidden group opens the whole list.
-  // window.find() proves the hidden text is searchable; it doesn't fire
-  // beforematch the way the browser's find bar does, so dispatch that.
-  view.getSelection().removeAllRanges();
-  expect(view.find('Annex 20: country')).toBe(true);
-  view.getSelection().removeAllRanges();
-  items[20].dispatchEvent(new Event('beforematch', { bubbles: true }));
-  expect(toggle).toHaveAttribute('aria-expanded', 'true');
-  expect(shown()).toHaveLength(34);
-  view.getSelection().removeAllRanges();
-  toggle.click();
-
-  // "All downloads (34)" opens the list before jumping to it.
-  const jump = canvasElement.querySelector(
-    '.mg-publication-record__all-downloads a'
+  // A language filter: focus stays on the control, the count is announced,
+  // and four rows need no toggle.
+  const french = root.querySelector(
+    '.mg-publication-record__language-filter input[value="fr"]'
   );
+  french.focus();
+  await userEvent.click(french);
+  expect(doc.activeElement).toBe(french);
+  expect(rows()).toHaveLength(4);
+  expect(toggle()).toBeNull();
+  expect(live().textContent).toBe('Showing 4 of 34 files');
+  expect(
+    root.querySelector('.mg-publication-record__files thead').textContent
+  ).not.toMatch(/Language/);
+
+  // The text filter combines with the language filter.
+  const all = root.querySelector(
+    '.mg-publication-record__language-filter input[value="all"]'
+  );
+  await userEvent.click(all);
+  const input = root.querySelector('.mg-publication-record__text-filter input');
+  await userEvent.type(input, 'annex 2');
+  expect(doc.activeElement).toBe(input);
+  // Annex 2 and 20–29 (two are French or Spanish titles: Annexe 21, 28 /
+  // Anexo 27 don't contain "annex 2").
+  expect(rows().length).toBeGreaterThan(6);
+  expect(shown()).toHaveLength(6);
+  expect(toggle().textContent).toBe(`Show all ${rows().length} files`);
+  await userEvent.click(french);
+  expect(rows().every(row => row.textContent.includes('Annexe 2'))).toBe(true);
+
+  // "All downloads (34)" resets the filters and opens the list.
+  const jump = root.querySelector('.mg-publication-record__all-downloads a');
   expect(jump.textContent).toBe('All downloads (34)');
   jump.addEventListener('click', event => event.preventDefault(), {
     once: true,
   });
   await userEvent.click(jump);
-  expect(toggle).toHaveAttribute('aria-expanded', 'true');
-  toggle.click(); // Leave the story collapsed, as it loads.
-  expect(toggle).toHaveAttribute('aria-expanded', 'false');
+  expect(input.value).toBe('');
+  expect(all.checked).toBe(true);
+  expect(rows()).toHaveLength(34);
+  expect(shown()).toHaveLength(34);
+  // The cover still targets the first resource in source order.
+  expect(
+    root
+      .querySelector('.mg-publication-record__cover-link')
+      .getAttribute('href')
+  ).toBe(rows()[0].querySelector('a').getAttribute('href'));
+  toggle().click(); // Leave the story collapsed, as it loads.
+  expect(shown()).toHaveLength(6);
+  view.getSelection().removeAllRanges();
+}
+
+/** Seven languages: the language filter is a native select. */
+export async function checkLanguageSelect({ canvasElement }) {
+  const root = canvasElement.querySelector('.mg-publication-record');
+  await waitFor(() =>
+    expect(
+      root.querySelector('.mg-publication-record__language-select select')
+    ).not.toBeNull()
+  );
+  const select = root.querySelector(
+    '.mg-publication-record__language-select select'
+  );
+  expect(select.options[0].textContent).toBe('All languages (7)');
+  expect(select).toHaveAttribute(
+    'data-vf-analytics-label',
+    'nav_filter_language'
+  );
+  await userEvent.selectOptions(select, 'fr');
+  expect(
+    root.querySelectorAll('.mg-publication-record__files tbody tr')
+  ).toHaveLength(1);
+  await userEvent.selectOptions(select, 'all');
 }

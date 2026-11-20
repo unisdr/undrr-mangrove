@@ -22,6 +22,9 @@ export const ANALYTICS = {
   allDownloads: 'nav_all_downloads_cover',
   // Expanding or collapsing a long resource list: navigation, not a download.
   showAll: 'nav_show_all_downloads',
+  // Filtering the resource table.
+  filterLanguage: 'nav_filter_language',
+  filterText: 'nav_filter_text',
   // The backup explanation's contact link: not a download, so not download_.
   contact: 'contact_download_help',
 };
@@ -54,18 +57,108 @@ export function coverAccess(resources) {
 export const showAllDownloads = resources => (resources?.length ?? 0) >= 2;
 
 /**
- * Long resource lists collapse (unisdr/undrr-mangrove#1502 follow-up). Of
- * 27,839 published Drupal publications, 88% have one file and 2.5% have
- * three or more; the largest has 34. From COLLAPSE_FROM files, the first
- * VISIBLE groups stay in view and the rest are hidden by ShowMore's items
- * mode until the list is opened. Tune here.
+ * Adaptive presentation (tiers). Of 27,839 published Drupal publications,
+ * 88% have one file, 7.7% two, 1.8% three, 1.4% four or five, 0.9% six to
+ * ten, 57 eleven or more, and the largest 34. The presentation grows with
+ * the number of files and languages; tune the thresholds here.
  */
-export const COLLAPSE_FROM = 3;
-export const VISIBLE = 2;
+/** From this many resources, a table replaces the single access row. */
+export const TABLE_FROM = 2;
+/** From this many languages, the table gets language filters. */
+export const LANGUAGE_FILTER_FROM = 2;
+/** From this many resources, the table is tier 3 even in one language. */
+export const TIER3_FROM = 6;
+/** From this many resources, a text filter is added. */
+export const TEXT_FILTER_FROM = 11;
+/** From this many languages, the language filter is a select. */
+export const LANGUAGE_SELECT_FROM = 6;
+/** Rows in view before the rest of the current view is collapsed. */
+export const PREVIEW_ROWS = 6;
 
-/** Whether the resource at `index` of `total` is hidden until the list opens. */
-export const isCollapsible = (index, total) =>
-  total >= COLLAPSE_FROM && index >= VISIBLE;
+const languageKey = resource =>
+  (resource.lang || resource.language || '').toLowerCase() || null;
+
+/**
+ * Languages in first-appearance order, with counts. Resources with no known
+ * language appear only under "All".
+ */
+export function languageGroups(resources = []) {
+  const groups = new Map();
+  resources.forEach(resource => {
+    const key = languageKey(resource);
+    if (!key) return;
+    const group = groups.get(key) || {
+      key,
+      label: resource.language || resource.lang,
+      lang: resource.lang,
+      count: 0,
+    };
+    group.count += 1;
+    groups.set(key, group);
+  });
+  return [...groups.values()];
+}
+
+/**
+ * Which presentation a set of resources gets:
+ * - tier 0: none; 1: one access row; 2: a table (2–5 files, one language);
+ * - tier 3: a table with language filters (2+ languages, or 6+ files);
+ * - tier 4: tier 3 plus a text filter (11+ files).
+ * Language filters need 2+ languages to be useful, so a one-language tier 3
+ * or 4 has none. From 6 languages the filter is a select.
+ */
+export function presentation(resources = []) {
+  const count = resources.length;
+  const languages = languageGroups(resources);
+  const multilingual = languages.length >= LANGUAGE_FILTER_FROM;
+  let tier = 0;
+  if (count === 1) tier = 1;
+  else if (count >= TEXT_FILTER_FROM) tier = 4;
+  else if (count >= TIER3_FROM || multilingual) tier = 3;
+  else if (count >= TABLE_FROM) tier = 2;
+  let languageFilter = 'none';
+  if (tier >= 3 && multilingual)
+    languageFilter =
+      languages.length >= LANGUAGE_SELECT_FROM ? 'select' : 'buttons';
+  return {
+    tier,
+    count,
+    languages,
+    languageFilter,
+    textFilter: tier === 4,
+  };
+}
+
+const fold = value =>
+  String(value || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLocaleLowerCase();
+
+/**
+ * Indexes of the resources shown for a language key ("all" for every one)
+ * and a text query, which match together. Every word of the query must
+ * appear in the title, language or format, ignoring case and accents.
+ */
+export function filterResources(
+  resources = [],
+  { language = 'all', query = '' } = {}
+) {
+  const words = fold(query).split(/\s+/).filter(Boolean);
+  return resources.flatMap((resource, index) => {
+    if (language !== 'all' && languageKey(resource) !== language) return [];
+    // Title, language and format; not sizes, where "2" would match "422".
+    const format = resource.backup?.format || resource.format;
+    const haystack = fold(
+      [resource.label, resource.language, format].join(' ')
+    );
+    return words.every(word => haystack.includes(word)) ? [index] : [];
+  });
+}
+
+/** Whether row `position` of a view with `total` rows starts collapsed. */
+export const isCollapsedRow = (position, total) =>
+  total > PREVIEW_ROWS && position >= PREVIEW_ROWS;
 
 /**
  * Pick the CLDR plural form for `count` in the interface language, falling back
@@ -88,9 +181,9 @@ export function pluralLabel(forms, lang, count) {
 }
 
 /**
- * Resource presentation (unisdr/undrr-mangrove#1505), matching the Drupal
- * download box. A publisher copy reads "Access {title}", or "Watch {title}"
- * on a video host; a hosted-only copy shows the title alone.
+ * Link verbs (unisdr/undrr-mangrove#1505), matching the Drupal download box:
+ * "Access" for a publisher copy, "Watch" on a video host, and the title (in
+ * the single row) or "Download" (in a table) for a hosted-only copy.
  */
 const VIDEO_HOSTS = /^(www\.|m\.)?(youtube\.com|youtu\.be|vimeo\.com)$/i;
 
@@ -113,12 +206,12 @@ export function fileMeta({ format, size, language } = {}) {
 }
 
 /**
- * Which line carries the file facts. With a hosted backup they describe our
- * hosted file, so they sit on the backup line; otherwise on the primary.
- * Type and size never move between copies, because they describe one file.
- * Language is the document's, so the backup inherits it when it has none.
+ * The facts shown for a resource. With a hosted backup they describe our
+ * hosted file, so they come from the backup; type and size never move between
+ * copies, because each describes one file. Language is the document's, so the
+ * backup inherits it when it has none.
  */
-export function resourceMeta(resource) {
+export function fileFacts(resource) {
   const { backup } = resource;
   const file = backup
     ? {
@@ -130,14 +223,11 @@ export function resourceMeta(resource) {
       }
     : resource;
   return {
-    line: backup ? 'backup' : 'primary',
-    text: fileMeta(file),
     facts: fileMeta({ format: file.format, size: file.size }),
     language: file.language || '',
     lang: file.lang,
   };
 }
-
 /** Fill `{title}` while keeping the title separate for its own lang/dir. */
 export function splitTemplate(template, token = '{title}') {
   const index = template.indexOf(token);

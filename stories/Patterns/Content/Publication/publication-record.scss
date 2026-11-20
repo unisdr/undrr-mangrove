@@ -59,30 +59,10 @@
   }
 }
 
-.mg-publication-record__resources {
-  @include mg-list-unmarked;
-
-  padding-inline-start: 0;
-
-  li {
-    padding-block: var(--mg-spacing-150);
-    border-block-end: 1px solid rgb(var(--mg-color-neutral-200));
-  }
-
-  li:first-child {
-    padding-block-start: var(--mg-spacing-50);
-  }
-
-  p {
-    margin-block: var(--mg-spacing-50) 0;
-  }
-}
-
-// Resource presentation (#1505): the primary link, then the hosted backup
-// as a quieter, indented second route with its own file facts and the
-// "What is a backup copy?" disclosure.
-.mg-publication-record__primary {
-  font-weight: 600;
+// Adaptive resource presentation. Tier 1 is one access row; tiers 2–4 are
+// a table, with filters from tier 3. See PUBLICATION-RECORD-SPEC.md.
+.mg-publication-record__access > * + * {
+  margin-block-start: var(--mg-spacing-150);
 }
 
 .mg-publication-record__external {
@@ -90,15 +70,105 @@
   font-size: 0.875em;
 }
 
-.mg-publication-record__backup {
-  margin-block-start: var(--mg-spacing-100);
-  padding-inline-start: var(--mg-spacing-150);
-  border-inline-start: 2px solid rgb(var(--mg-color-neutral-200));
+// Tier 1: title link, facts, then the backup icon at the inline end.
+.mg-publication-record__access-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--mg-spacing-50) var(--mg-spacing-200);
+  padding-block: var(--mg-spacing-150);
+  border-block: 1px solid rgb(var(--mg-color-neutral-200));
+
+  .mg-publication-record__primary {
+    font-weight: 600;
+  }
+
+  .mg-publication-record__backup-link {
+    margin-inline-start: auto;
+  }
 }
 
-.mg-publication-record__backup-help {
-  margin-block-start: var(--mg-spacing-50);
+// The hosted backup: a quiet icon link with a 44px target. The short
+// visible label shows only on narrow screens.
+.mg-publication-record__backup-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--mg-spacing-50);
+  min-block-size: 2.75rem;
+  min-inline-size: 2.75rem;
+  text-decoration-line: none;
 
+  .mg-icon {
+    font-size: 1.25rem;
+  }
+}
+
+.mg-publication-record__backup-short {
+  display: none;
+}
+
+// Tiers 2–4: a compact table on the existing Mangrove table styles.
+.mg-publication-record__files {
+  font-size: var(--mg-font-size-250);
+
+  th,
+  td {
+    padding-block: var(--mg-spacing-50);
+    vertical-align: middle;
+  }
+
+  thead th {
+    white-space: nowrap;
+  }
+
+  tbody th {
+    font-weight: 400;
+  }
+
+  .mg-publication-record__file-facts,
+  .mg-publication-record__file-action,
+  .mg-publication-record__file-backup {
+    white-space: nowrap;
+  }
+
+  .mg-publication-record__file-action a {
+    font-weight: 600;
+  }
+
+  .mg-publication-record__file-backup {
+    text-align: center;
+  }
+
+  // Compact rows: 28px targets, above the 24px minimum (WCAG 2.5.8).
+  .mg-publication-record__backup-link {
+    min-block-size: 1.75rem;
+    min-inline-size: 1.75rem;
+  }
+}
+
+.mg-publication-record__filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--mg-spacing-150) var(--mg-spacing-300);
+
+  > * {
+    margin-block: 0;
+  }
+}
+
+.mg-publication-record__text-filter {
+  flex: 1 1 14rem;
+  max-inline-size: 22rem;
+}
+
+.mg-publication-record__no-match {
+  font-size: var(--mg-font-size-250);
+}
+
+// One shared explanation for all backups.
+.mg-publication-record__backup-help {
   > summary {
     inline-size: fit-content;
     color: rgb(var(--mg-color-interactive));
@@ -112,24 +182,97 @@
   }
 }
 
-@media (forced-colors: active) {
-  .mg-publication-record__backup {
-    border-inline-start-color: CanvasText;
+// Narrow screens: each table row becomes a stacked card. The table keeps
+// explicit ARIA table roles, so changing display does not drop its
+// semantics.
+@media (width < 48rem) {
+  .mg-publication-record__files {
+    // Column headers stay available to screen readers (as .mg-u-sr-only).
+    thead {
+      position: absolute;
+      inline-size: 1px;
+      block-size: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    &,
+    tbody,
+    tr {
+      display: block;
+    }
+
+    tr {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      grid-template-areas:
+        "title title backup"
+        "lang facts backup"
+        "action action backup";
+      column-gap: 0;
+      padding-block: var(--mg-spacing-100);
+      border-block-end: 1px solid rgb(var(--mg-color-neutral-200));
+    }
+
+    th,
+    td {
+      display: block;
+      padding: 0;
+      border: 0;
+    }
+
+    .mg-publication-record__file-title {
+      grid-area: title;
+      font-weight: 600;
+    }
+
+    // Language and facts share one line: "English · HTML, 360 bytes".
+    .mg-publication-record__file-language {
+      grid-area: lang;
+
+      &:not(:empty)::after {
+        content: "\00a0·\00a0" / "";
+      }
+    }
+
+    .mg-publication-record__file-facts {
+      grid-area: facts;
+    }
+
+    .mg-publication-record__file-action {
+      grid-area: action;
+    }
+
+    // Rows collapsed by ShowMore stay hidden: `display: grid` above would
+    // otherwise beat the [hidden] rule.
+    tr[hidden] {
+      display: none;
+    }
+
+    .mg-publication-record__file-backup {
+      grid-area: backup;
+      align-self: center;
+      padding-inline-start: var(--mg-spacing-150);
+    }
+
+    .mg-publication-record__backup-link {
+      min-block-size: 2.75rem;
+      min-inline-size: 2.75rem;
+    }
   }
 
+  .mg-publication-record__backup-short {
+    display: inline;
+    max-inline-size: 6rem;
+    white-space: normal;
+  }
+}
+
+@media (forced-colors: active) {
   .mg-publication-record__backup-help > summary {
     color: LinkText;
   }
-}
-
-// Long resource lists: ShowMore's items mode hides groups 3..N with
-// hidden="until-found"; show-more.scss drops their padding and border.
-.mg-publication-record__show-all {
-  margin-block-start: var(--mg-spacing-150);
-}
-
-.mg-publication-record__show-all + .mg-publication-record__added {
-  margin-block-start: var(--mg-spacing-150);
 }
 
 .mg-publication-record__reading {

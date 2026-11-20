@@ -7,11 +7,15 @@ import {
   exampleBody,
   severalFiles,
   manyFiles,
+  twoFiles,
+  manyLanguages,
 } from './recordFixtures';
 import {
+  checkAccessBudget,
   checkAsideContainment,
   checkCollapsedList,
   checkCoverAffordance,
+  checkLanguageSelect,
 } from './recordGeometryChecks';
 import './publication-record.scss';
 import '../../_shared/pattern-demo.scss';
@@ -38,20 +42,36 @@ export default {
 export const Standard = {
   name: 'Experimental publication record',
   args: { record: exampleRecord, children: exampleBody },
-  play: checkCoverAffordance,
+  // Tier 1: the access block is at most 160px wide, 200px narrow.
+  play: async context => {
+    await checkCoverAffordance(context);
+    await checkAccessBudget(160, 200)(context);
+  },
 };
 // Resource cases (#1502, #1505). Standard is the usual Drupal shape: the
 // publisher's original plus a hosted backup. The cover links to the first
 // primary resource and shows "All downloads (N)" for two or more resources.
+// Tier 2: a table without filters.
+export const TwoFiles = {
+  name: 'Two files, one language',
+  args: {
+    ...Standard.args,
+    record: { ...exampleRecord, resources: twoFiles },
+  },
+};
+// Tier 3: two languages, so the table gets language filters.
 export const SeveralFiles = {
-  name: 'Several files',
+  name: 'Several files, two languages',
   args: {
     ...Standard.args,
     record: { ...exampleRecord, resources: severalFiles },
   },
+  // Tier 3: filters plus three rows, at most 340px wide (the old three-file
+  // list was 454px), 460px narrow.
+  play: checkAccessBudget(340, 460),
 };
-// 34 files, as on the largest Drupal record: two groups show, the rest
-// collapse behind "Show all 34 files".
+// Tier 4, modelled on the largest Drupal record (34 files): language and
+// text filters, and the first 6 rows of the current view.
 export const ManyFiles = {
   name: 'Many files',
   args: {
@@ -59,6 +79,15 @@ export const ManyFiles = {
     record: { ...exampleRecord, resources: manyFiles },
   },
   play: checkCollapsedList,
+};
+// Seven languages: the language filter is a select.
+export const ManyLanguages = {
+  name: 'Many languages',
+  args: {
+    ...Standard.args,
+    record: { ...exampleRecord, resources: manyLanguages },
+  },
+  play: checkLanguageSelect,
 };
 export const HostedOnly = {
   name: 'Hosted copy only',

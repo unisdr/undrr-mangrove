@@ -28,7 +28,9 @@ const show = (record, lang = 'en') =>
 const coverLink = container =>
   container.querySelector('.mg-publication-record__cover-link');
 const firstResourceLink = container =>
-  container.querySelector('.mg-publication-record__primary a');
+  container.querySelector(
+    '.mg-publication-record__access-row .mg-publication-record__primary, .mg-publication-record__file-action a'
+  );
 
 const publisherWithBackup = {
   title: 'Work',

@@ -121,11 +121,12 @@ test('safe primary and backup keep distinct links; metadata is only supplied inf
   });
   expect(backup).toHaveAttribute('href', '/backup.html');
   expect(backup).toHaveAttribute('hreflang', 'fr');
+  // One file: the single access row, language first.
   expect(
-    container.querySelector('.mg-publication-record__meta').textContent
-  ).toBe('HTML · Français');
+    container.querySelector('.mg-publication-record__facts').textContent
+  ).toBe('Français · HTML');
   expect(
-    container.querySelector('.mg-publication-record__meta [lang]')
+    container.querySelector('.mg-publication-record__facts [lang]')
   ).toHaveAttribute('lang', 'fr');
   expect(container.querySelector('time')).toBeNull();
   expect(screen.getByRole('main').querySelectorAll('a')).toHaveLength(3); // category + primary + backup, never a guessed DOI
