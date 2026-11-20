@@ -66,15 +66,23 @@ const panelOf = button =>
   document.getElementById(button.getAttribute('aria-controls'));
 
 describe('top-level disclosure buttons', () => {
-  it('render as buttons for every section with a panel, and links otherwise', () => {
+  it('render as buttons with a chevron for every section with a panel, and plain links otherwise', () => {
     renderDesktop();
+    // Only items that open a panel carry the chevron, so a visitor can tell
+    // before clicking whether an item expands or navigates.
+    const chevron = '.mg-mega-topbar__item-chevron';
     for (const name of ['Knowledge', 'Directory', 'Promo']) {
       expect(trigger(name)).toHaveAttribute('aria-expanded', 'false');
       expect(panelOf(trigger(name))).toHaveClass('mg-mega-content');
+      expect(trigger(name).querySelector(chevron)).toHaveAttribute(
+        'aria-hidden',
+        'true'
+      );
     }
     const search = screen.getByRole('link', { name: 'Search' });
     expect(search).toHaveAttribute('href', '/search');
     expect(search).not.toHaveAttribute('aria-expanded');
+    expect(search.querySelector(chevron)).toBeNull();
   });
 
   it('do not open on focus or hover, even after the former delays', () => {

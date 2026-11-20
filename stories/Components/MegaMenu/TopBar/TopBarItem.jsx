@@ -104,6 +104,21 @@ export function TopBarItem({
           data-vf-analytics-label="Mega menu: Section"
         >
           {label}
+          {/* Tells a pointer user, before clicking, that this item opens a
+              panel; items without one navigate and carry no chevron. */}
+          <svg
+            className="mg-mega-topbar__item-chevron"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path d="m6 9 6 6 6-6" />
+          </svg>
         </button>
       ) : link && link.url ? (
         <a className="mg-mega-topbar__item-link" href={link.url} ref={ref}>

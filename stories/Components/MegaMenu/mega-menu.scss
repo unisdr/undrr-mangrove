@@ -302,6 +302,25 @@
   }
 }
 
+// A chevron marks the items that open a panel, so visitors can tell before
+// clicking whether an item expands or navigates. It turns over when open.
+.mg-mega-topbar__item-chevron {
+  display: inline-block;
+  inline-size: 0.7em;
+  block-size: 0.7em;
+  margin-inline-start: 0.3em;
+  vertical-align: middle;
+
+  [aria-expanded="true"] > & {
+    transform: rotate(180deg);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: transform var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
+  }
+}
+
 // Panels open on click only, so a pointer needs to see that a top-level item
 // is interactive before clicking it: a light tint, and a faint preview of the
 // active bar. Hover never opens anything. Text is not underlined, so link and
