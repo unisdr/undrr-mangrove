@@ -126,6 +126,15 @@
   }
 }
 
+// Strips the native button look so a <button> can be styled like the text or
+// row around it. Font, colour and padding stay with the caller.
+@mixin mg-button-reset {
+  border: 0;
+  background: transparent;
+  text-align: start;
+  cursor: pointer;
+}
+
 // Card image hover zoom — a subtle, modern "state affordance". Include inside
 // a card variant whose visual has `overflow: hidden` so the scale stays framed.
 // Motion is gated behind prefers-reduced-motion so it never animates for users
