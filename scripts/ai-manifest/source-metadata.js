@@ -52,6 +52,15 @@ export const extractSourceMetadata = async ({
   };
   await requireFreshTarget();
   const { presets, configType } = await loadPresets(path.resolve(configDir));
+  // Storybook 11's docgen server keeps props and snippets in service
+  // payloads that only a full build writes (services/core/docgen, ...);
+  // these presets return components without them. This research path cannot
+  // reach parity until it is ported to the open-service API.
+  if ((await presets.apply('features'))?.docgenServer) {
+    throw new Error(
+      'Storybook 11 docgen-server metadata is not supported by source extraction yet; see docs/MANIFEST-SOURCE-SPIKE.md.'
+    );
+  }
   const generator = await presets.apply('storyIndexGenerator');
   const index = await generator.getIndex();
   const manifestEntries = Object.values(index.entries).filter(entry =>
