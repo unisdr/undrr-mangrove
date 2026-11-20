@@ -13,7 +13,6 @@ export const RECORD_LABELS = {
     sources: 'Sources / issuing organizations',
     year: 'Publication year',
     access: 'Read or access this publication',
-    backup: 'Local backup',
     description: 'Description',
     details: 'Bibliographic details',
     identifiers: 'Identifiers',
@@ -26,6 +25,16 @@ export const RECORD_LABELS = {
       one: 'All downloads ({count})',
       other: 'All downloads ({count})',
     },
+    accessLink: 'Access {title}',
+    watchLink: 'Watch {title}',
+    opensInNewTab: 'opens in new tab',
+    backupLink: 'Download a backup copy hosted by this site',
+    backupHelp: 'What is a backup copy?',
+    backupExplanation:
+      'We keep a copy of many documents to improve long-term access. Use this if the publisher’s site is slow or unavailable.',
+    problems: 'Problems?',
+    contactUs: 'Contact us',
+    added: 'Added {date}',
   },
   french: {
     publication: 'Publication',
@@ -34,7 +43,6 @@ export const RECORD_LABELS = {
     sources: 'Sources / organismes émetteurs',
     year: 'Année de publication',
     access: 'Lire ou consulter cette publication',
-    backup: 'Copie locale de secours',
     description: 'Description',
     details: 'Données bibliographiques',
     identifiers: 'Identifiants',
@@ -47,6 +55,16 @@ export const RECORD_LABELS = {
       one: 'Téléchargement ({count})',
       other: 'Tous les téléchargements ({count})',
     },
+    accessLink: 'Accéder à {title}',
+    watchLink: 'Regarder {title}',
+    opensInNewTab: "s'ouvre dans un nouvel onglet",
+    backupLink: 'Télécharger une copie de sauvegarde hébergée sur ce site',
+    backupHelp: "Qu'est-ce qu'une copie de sauvegarde ?",
+    backupExplanation:
+      "Nous conservons une copie de nombreux documents afin d'en faciliter l'accès à long terme. Utilisez cette option si le site de l'éditeur est lent ou inaccessible.",
+    problems: 'Des problèmes ?',
+    contactUs: 'Nous contacter',
+    added: 'Ajouté le {date}',
   },
   arabic: {
     publication: 'منشور',
@@ -55,7 +73,6 @@ export const RECORD_LABELS = {
     sources: 'المصادر / الجهات المصدرة',
     year: 'سنة النشر',
     access: 'قراءة هذا المنشور أو الوصول إليه',
-    backup: 'نسخة احتياطية محلية',
     description: 'الوصف',
     details: 'البيانات الببليوغرافية',
     identifiers: 'المعرّفات',
@@ -72,6 +89,16 @@ export const RECORD_LABELS = {
       many: 'جميع التنزيلات ({count})',
       other: 'جميع التنزيلات ({count})',
     },
+    accessLink: 'الوصول إلى {title}',
+    watchLink: 'مشاهدة {title}',
+    opensInNewTab: 'يفتح في علامة تبويب جديدة',
+    backupLink: 'تنزيل نسخة احتياطية مستضافة على هذا الموقع',
+    backupHelp: 'ما هي النسخة الاحتياطية؟',
+    backupExplanation:
+      'نحتفظ بنسخة من كثير من الوثائق لتحسين إمكانية الوصول على المدى البعيد. استخدم هذا الخيار إذا كان موقع الناشر بطيئاً أو غير متاح.',
+    problems: 'هل تواجه مشكلة؟',
+    contactUs: 'اتصل بنا',
+    added: 'تاريخ الإضافة: {date}',
   },
   spanish: {
     publication: 'Publicación',
@@ -80,7 +107,6 @@ export const RECORD_LABELS = {
     sources: 'Fuentes / organizaciones emisoras',
     year: 'Año de publicación',
     access: 'Leer o consultar esta publicación',
-    backup: 'Copia de seguridad local',
     description: 'Descripción',
     details: 'Datos bibliográficos',
     identifiers: 'Identificadores',
@@ -93,6 +119,16 @@ export const RECORD_LABELS = {
       one: 'Descarga ({count})',
       other: 'Todas las descargas ({count})',
     },
+    accessLink: 'Acceder a {title}',
+    watchLink: 'Ver {title}',
+    opensInNewTab: 'se abre en una nueva pestaña',
+    backupLink: 'Descargar una copia de respaldo alojada en este sitio',
+    backupHelp: '¿Qué es una copia de respaldo?',
+    backupExplanation:
+      'Conservamos una copia de muchos documentos para facilitar el acceso a largo plazo. Use esta opción si el sitio del editor es lento o no está disponible.',
+    problems: '¿Problemas?',
+    contactUs: 'Contáctenos',
+    added: 'Añadido el {date}',
   },
   russian: {
     publication: 'Публикация',
@@ -101,7 +137,6 @@ export const RECORD_LABELS = {
     sources: 'Источники / выпускающие организации',
     year: 'Год публикации',
     access: 'Читать или открыть публикацию',
-    backup: 'Локальная резервная копия',
     description: 'Описание',
     details: 'Библиографические сведения',
     identifiers: 'Идентификаторы',
@@ -117,6 +152,16 @@ export const RECORD_LABELS = {
       many: 'Все файлы для скачивания ({count})',
       other: 'Все файлы для скачивания ({count})',
     },
+    accessLink: 'Открыть: {title}',
+    watchLink: 'Смотреть: {title}',
+    opensInNewTab: 'откроется в новой вкладке',
+    backupLink: 'Скачать резервную копию, размещённую на этом сайте',
+    backupHelp: 'Что такое резервная копия?',
+    backupExplanation:
+      'Мы храним копии многих документов, чтобы обеспечить долгосрочный доступ к ним. Воспользуйтесь этой копией, если сайт издателя работает медленно или недоступен.',
+    problems: 'Возникли проблемы?',
+    contactUs: 'Свяжитесь с нами',
+    added: 'Добавлено {date}',
   },
   japanese: {
     publication: '刊行物',
@@ -125,7 +170,6 @@ export const RECORD_LABELS = {
     sources: '情報源・発行機関',
     year: '発行年',
     access: 'この刊行物を読む・アクセスする',
-    backup: 'ローカルの予備コピー',
     description: '概要',
     details: '書誌情報',
     identifiers: '識別子',
@@ -135,6 +179,16 @@ export const RECORD_LABELS = {
     recordLink: '承認済みレコードを開く',
     related: '関連資料',
     allDownloads: { other: 'すべてのダウンロード ({count})' },
+    accessLink: '{title}にアクセス',
+    watchLink: '{title}を視聴する',
+    opensInNewTab: '新しいタブで開きます',
+    backupLink: 'このサイトが保管するバックアップコピーをダウンロード',
+    backupHelp: 'バックアップコピーとは？',
+    backupExplanation:
+      '長期的なアクセスを確保するため、多くの文書のコピーを保管しています。出版元のサイトが遅い場合や利用できない場合にご利用ください。',
+    problems: '問題がありますか？',
+    contactUs: 'お問い合わせ',
+    added: '{date}に追加',
   },
   chinese: {
     publication: '出版物',
@@ -143,7 +197,6 @@ export const RECORD_LABELS = {
     sources: '来源／发布机构',
     year: '出版年份',
     access: '阅读或访问本出版物',
-    backup: '本地备份',
     description: '说明',
     details: '书目信息',
     identifiers: '标识符',
@@ -153,10 +206,61 @@ export const RECORD_LABELS = {
     recordLink: '打开经批准的记录',
     related: '相关资源',
     allDownloads: { other: '所有下载文件 ({count})' },
+    accessLink: '访问{title}',
+    watchLink: '观看{title}',
+    opensInNewTab: '在新标签页中打开',
+    backupLink: '下载本站托管的备份副本',
+    backupHelp: '什么是备份副本？',
+    backupExplanation:
+      '我们保存了许多文件的副本，以便长期获取。如发布网站访问缓慢或无法访问，请使用此副本。',
+    problems: '遇到问题？',
+    contactUs: '联系我们',
+    added: '添加于{date}',
   },
 };
 
-// Entirely synthetic editorial fixture. Local readers are checked in, not real report downloads.
+// Entirely synthetic editorial fixture. The hosted copies are checked-in demo
+// files, not real report downloads; example.org is a reserved documentation
+// domain standing in for the publisher's site.
+const report = {
+  label: 'Understanding disaster risk',
+  href: 'https://example.org/understanding-disaster-risk',
+  origin: 'publisher',
+  language: 'English',
+  lang: 'en',
+  backup: {
+    href: '/publication-record/reading-en-backup.html',
+    format: 'HTML',
+    size: '360 bytes',
+    lang: 'en',
+  },
+};
+
+// Report plus supporting files, each in the shape Drupal uses.
+export const severalFiles = [
+  report,
+  {
+    label: 'Comprendre les risques de catastrophe : résumé',
+    href: '/publication-record/reading-fr.html',
+    origin: 'hosted',
+    language: 'Français',
+    labelLang: 'fr',
+    lang: 'fr',
+    format: 'HTML',
+    size: '422 bytes',
+  },
+  {
+    label: 'Understanding disaster risk: plain-text edition',
+    href: '/publication-record/reading-en.txt',
+    origin: 'hosted',
+    language: 'English',
+    lang: 'en',
+    format: 'Plain text',
+    size: '162 bytes',
+  },
+];
+
+// The standard case: the publisher's original plus a backup hosted here.
 export const exampleRecord = {
   title: 'Understanding disaster risk',
   lang: 'en',
@@ -168,33 +272,9 @@ export const exampleRecord = {
   cover: { src: '/images/teaser-publication-cover.svg', alt: '' },
   edition: 'Demonstration edition',
   identifiers: ['EXAMPLE / 2026 / 01'],
-  resources: [
-    {
-      label: 'Read Understanding disaster risk',
-      href: '/publication-record/reading-en.html',
-      language: 'English',
-      lang: 'en',
-      format: 'HTML',
-      origin: 'hosted',
-    },
-    {
-      label: 'Lire Comprendre les risques de catastrophe',
-      href: '/publication-record/reading-fr.html',
-      language: 'Français',
-      labelLang: 'fr',
-      lang: 'fr',
-      format: 'HTML',
-      origin: 'hosted',
-    },
-    {
-      label: 'Read the plain-text edition',
-      href: '/publication-record/reading-en.txt',
-      language: 'English',
-      lang: 'en',
-      format: 'Plain text',
-      origin: 'hosted',
-    },
-  ],
+  resources: [report],
+  resourcesAdded: '2026-03-15',
+  contactHref: 'https://www.undrr.org/contact-us',
   related: [
     {
       label: 'Explore UNDRR publications',

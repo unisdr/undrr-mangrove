@@ -2,12 +2,16 @@ import React, { useId } from 'react';
 import PropTypes from 'prop-types';
 import { SkipLink } from '../../../Utilities/SkipLink/SkipLink';
 import { projectRecord } from './recordProjection';
+import { Icon } from '../../../Atom/Icons/Icon';
 import {
   ANALYTICS,
   coverAccess,
+  linkVerb,
   pluralLabel,
   primaryAnalyticsLabel,
+  resourceMeta,
   showAllDownloads,
+  splitTemplate,
 } from './recordAccess';
 import { UndrrChrome } from '../../_shared/UndrrChrome';
 
@@ -26,6 +30,126 @@ function RecordNames({ entries }) {
 }
 RecordNames.propTypes = {
   entries: PropTypes.arrayOf(PropTypes.node).isRequired,
+};
+
+// Dates follow the editorial manual ("15 March 2026"), which en-US does not,
+// in Latin digits as Drupal prints them.
+function fillDate(template, isoDate, lang) {
+  const [before, after] = splitTemplate(template || '{date}', '{date}');
+  let text = isoDate;
+  try {
+    text = new Intl.DateTimeFormat(
+      `${lang === 'en' ? 'en-GB' : lang}-u-nu-latn`,
+      { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }
+    ).format(new Date(`${isoDate}T00:00:00Z`));
+  } catch {
+    // Unknown language tag: keep the ISO date.
+  }
+  return (
+    <>
+      {before}
+      <time dateTime={isoDate}>{text}</time>
+      {after}
+    </>
+  );
+}
+
+// File facts follow the interface direction so they line up under their
+// link; LTR runs such as "PDF, 1.6 MB" still read correctly inside RTL.
+function Meta({ text }) {
+  return text ? (
+    <p className="mg-publication-record__meta mg-u-font-size-250">{text}</p>
+  ) : null;
+}
+Meta.propTypes = { text: PropTypes.string };
+
+/** External links open in a new tab, with an icon and a spoken warning. */
+function NewTabCue({ label }) {
+  return (
+    <>
+      <Icon name="external-link" className="mg-publication-record__external" />
+      <span className="mg-u-sr-only"> ({label})</span>
+    </>
+  );
+}
+NewTabCue.propTypes = { label: PropTypes.string };
+
+/**
+ * One resource as Drupal's download box presents it (unisdr/undrr-mangrove#1505):
+ * A. publisher + backup: "Access {title}", then the backup line with the file
+ *    facts and the backup explanation;
+ * B. hosted only: the title, then the file facts;
+ * C. publisher only: "Access {title}", then the facts when known.
+ */
+function ResourceItem({ resource, labels, workLang, contactHref }) {
+  const verb = linkVerb(resource);
+  const external = resource.origin === 'publisher';
+  const [before, after] =
+    verb === 'title'
+      ? ['', '']
+      : splitTemplate(verb === 'watch' ? labels.watchLink : labels.accessLink);
+  const meta = resourceMeta(resource);
+  const titleLang = resource.labelLang || workLang;
+  const { backup } = resource;
+  return (
+    <li>
+      <p className="mg-publication-record__primary">
+        <a
+          href={resource.href}
+          hrefLang={resource.lang}
+          dir="auto"
+          {...(external ? { target: '_blank', rel: 'noopener' } : {})}
+          data-vf-analytics-label={primaryAnalyticsLabel(resource)}
+        >
+          {before}
+          <span lang={titleLang} dir="auto">
+            {resource.label}
+          </span>
+          {after}
+          {external && <NewTabCue label={labels.opensInNewTab} />}
+        </a>
+      </p>
+      {meta.line === 'primary' && <Meta text={meta.text} />}
+      {backup && (
+        <div className="mg-publication-record__backup">
+          <p>
+            <a
+              href={backup.href}
+              hrefLang={backup.lang}
+              data-vf-analytics-label={ANALYTICS.backup}
+            >
+              {labels.backupLink}
+            </a>
+          </p>
+          <Meta text={meta.text} />
+          <details className="mg-publication-record__backup-help">
+            <summary>{labels.backupHelp}</summary>
+            <p>
+              {labels.backupExplanation}
+              {contactHref && (
+                <>
+                  {' '}
+                  {labels.problems}{' '}
+                  <a
+                    href={contactHref}
+                    data-vf-analytics-label={ANALYTICS.contact}
+                  >
+                    {labels.contactUs}
+                  </a>
+                </>
+              )}
+            </p>
+          </details>
+        </div>
+      )}
+    </li>
+  );
+}
+ResourceItem.propTypes = {
+  resource: PropTypes.object.isRequired,
+  labels: PropTypes.object.isRequired,
+  workLang: PropTypes.string,
+  contactHref: PropTypes.string,
 };
 
 /** Experimental story-owned composition, not a published package renderer. */
@@ -141,71 +265,20 @@ export function PublicationRecord({
                   <h2 id={`${prefix}-access`}>{labels.access}</h2>
                   <ul className="mg-publication-record__resources">
                     {value.resources.map((resource, index) => (
-                      <li key={index}>
-                        <a
-                          href={resource.href}
-                          hrefLang={resource.lang}
-                          lang={resource.labelLang || value.lang}
-                          dir="auto"
-                          data-vf-analytics-label={primaryAnalyticsLabel(
-                            resource
-                          )}
-                        >
-                          {resource.label}
-                        </a>
-                        {[
-                          resource.language,
-                          resource.format,
-                          resource.size,
-                        ].filter(Boolean).length > 0 && (
-                          <p
-                            className="mg-u-font-size-250"
-                            lang={resource.labelLang || value.lang}
-                            dir="auto"
-                          >
-                            {[resource.language, resource.format, resource.size]
-                              .filter(Boolean)
-                              .join(' · ')}
-                          </p>
-                        )}
-                        {resource.backup && (
-                          <>
-                            <p>
-                              {labels.backup}:{' '}
-                              <a
-                                href={resource.backup.href}
-                                hrefLang={resource.backup.lang}
-                                lang={resource.backup.labelLang || value.lang}
-                                dir="auto"
-                                data-vf-analytics-label={ANALYTICS.backup}
-                              >
-                                {resource.backup.label}
-                              </a>
-                            </p>
-                            {[
-                              resource.backup.language,
-                              resource.backup.format,
-                              resource.backup.size,
-                            ].filter(Boolean).length > 0 && (
-                              <p
-                                className="mg-u-font-size-250"
-                                lang={resource.backup.labelLang || value.lang}
-                                dir="auto"
-                              >
-                                {[
-                                  resource.backup.language,
-                                  resource.backup.format,
-                                  resource.backup.size,
-                                ]
-                                  .filter(Boolean)
-                                  .join(' · ')}
-                              </p>
-                            )}
-                          </>
-                        )}
-                      </li>
+                      <ResourceItem
+                        key={index}
+                        resource={resource}
+                        labels={labels}
+                        workLang={value.lang}
+                        contactHref={value.contactHref}
+                      />
                     ))}
                   </ul>
+                  {value.resourcesAdded && (
+                    <p className="mg-publication-record__added mg-u-font-size-250">
+                      {fillDate(labels.added, value.resourcesAdded, lang)}
+                    </p>
+                  )}
                 </section>
               )}
               {children && (
@@ -282,6 +355,9 @@ export function PublicationRecord({
                           className="mg-publication-record__cover-link"
                           href={coverLink.href}
                           hrefLang={coverLink.lang}
+                          {...(coverLink.newWindow
+                            ? { target: '_blank', rel: 'noopener' }
+                            : {})}
                           aria-hidden="true"
                           tabIndex={-1}
                           data-vf-analytics-label={coverLink.analyticsLabel}

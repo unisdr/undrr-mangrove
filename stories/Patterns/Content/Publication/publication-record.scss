@@ -78,6 +78,50 @@
   }
 }
 
+// Resource presentation (#1505): the primary link, then the hosted backup
+// as a quieter, indented second route with its own file facts and the
+// "What is a backup copy?" disclosure.
+.mg-publication-record__primary {
+  font-weight: 600;
+}
+
+.mg-publication-record__external {
+  margin-inline-start: 0.25em;
+  font-size: 0.875em;
+}
+
+.mg-publication-record__backup {
+  margin-block-start: var(--mg-spacing-100);
+  padding-inline-start: var(--mg-spacing-150);
+  border-inline-start: 2px solid rgb(var(--mg-color-neutral-200));
+}
+
+.mg-publication-record__backup-help {
+  margin-block-start: var(--mg-spacing-50);
+
+  > summary {
+    inline-size: fit-content;
+    color: rgb(var(--mg-color-interactive));
+    font-size: var(--mg-font-size-250);
+    text-decoration-line: underline;
+  }
+
+  > p {
+    max-inline-size: 40rem;
+    font-size: var(--mg-font-size-250);
+  }
+}
+
+@media (forced-colors: active) {
+  .mg-publication-record__backup {
+    border-inline-start-color: CanvasText;
+  }
+
+  .mg-publication-record__backup-help > summary {
+    color: LinkText;
+  }
+}
+
 .mg-publication-record__reading {
   align-items: start;
 }

@@ -1,8 +1,12 @@
 import React from 'react';
 import { resolveLanguage } from '../../../../.storybook/language';
 import { PublicationRecord } from './PublicationRecord';
-import { checkArticleGridGeometry } from '../../../Atom/Layout/Grid/gridGeometryChecks';
-import { RECORD_LABELS, exampleRecord, exampleBody } from './recordFixtures';
+import {
+  RECORD_LABELS,
+  exampleRecord,
+  exampleBody,
+  severalFiles,
+} from './recordFixtures';
 import {
   checkAsideContainment,
   checkCoverAffordance,
@@ -34,27 +38,69 @@ export const Standard = {
   args: { record: exampleRecord, children: exampleBody },
   play: checkCoverAffordance,
 };
-// Cover link cases (#1502). The cover links to the first primary resource and
-// shows "All downloads (N)" only when there are two or more resources.
-export const HostedOnly = {
-  name: 'Cover: one hosted file',
+// Resource cases (#1502, #1505). Standard is the usual Drupal shape: the
+// publisher's original plus a hosted backup. The cover links to the first
+// primary resource and shows "All downloads (N)" for two or more resources.
+export const SeveralFiles = {
+  name: 'Several files',
   args: {
     ...Standard.args,
-    record: { ...exampleRecord, resources: [exampleRecord.resources[0]] },
+    record: { ...exampleRecord, resources: severalFiles },
   },
 };
-// example.org is a reserved documentation domain: the synthetic fixture does
-// not claim a real publisher copy exists.
-export const ExternalOnly = {
-  name: 'Cover: publisher copy only',
+export const HostedOnly = {
+  name: 'Hosted copy only',
   args: {
     ...Standard.args,
     record: {
       ...exampleRecord,
       resources: [
         {
-          label: "Read Understanding disaster risk on the publisher's website",
+          label: 'Understanding disaster risk',
+          href: '/publication-record/reading-en.html',
+          origin: 'hosted',
+          language: 'English',
+          lang: 'en',
+          format: 'HTML',
+          size: '360 bytes',
+        },
+      ],
+    },
+  },
+};
+// example.org is a reserved documentation domain: the synthetic fixture does
+// not claim a real publisher copy exists. Format and size are unknown, so
+// only the language shows.
+export const ExternalOnly = {
+  name: 'Publisher copy only',
+  args: {
+    ...Standard.args,
+    record: {
+      ...exampleRecord,
+      resources: [
+        {
+          label: 'Understanding disaster risk',
           href: 'https://example.org/understanding-disaster-risk',
+          language: 'English',
+          lang: 'en',
+          origin: 'publisher',
+        },
+      ],
+    },
+  },
+};
+// The video ID is a placeholder: only the youtube.com host matters, because
+// it switches the verb to "Watch".
+export const Video = {
+  name: 'Video on a video host',
+  args: {
+    ...Standard.args,
+    record: {
+      ...exampleRecord,
+      resources: [
+        {
+          label: 'Understanding disaster risk: video introduction',
+          href: 'https://www.youtube.com/watch?v=00000000000',
           language: 'English',
           lang: 'en',
           origin: 'publisher',
@@ -70,29 +116,6 @@ export const NoCover = {
 export const NoFile = {
   name: 'No public file',
   args: { ...Standard.args, record: { ...exampleRecord, resources: [] } },
-};
-// Duplicate local copy demonstrates original/backup roles without implying real external provenance.
-export const LocalBackup = {
-  name: 'Original / local backup',
-  args: {
-    record: {
-      ...exampleRecord,
-      resources: [
-        {
-          ...exampleRecord.resources[0],
-          origin: 'publisher',
-          backup: {
-            label: 'Read the backup copy',
-            href: '/publication-record/reading-en-backup.html',
-            lang: 'en',
-            language: 'English',
-            format: 'HTML',
-          },
-        },
-      ],
-    },
-    children: exampleBody,
-  },
 };
 export const LongCopy = {
   name: 'Long content',

@@ -9,12 +9,14 @@ import {
   pluralLabel,
   showAllDownloads,
 } from '../recordAccess';
-import { RECORD_LABELS, exampleRecord } from '../recordFixtures';
+import { RECORD_LABELS, exampleRecord, severalFiles } from '../recordFixtures';
 import meta, {
   ExternalOnly,
   HostedOnly,
-  LocalBackup,
   NoFile,
+  SeveralFiles,
+  Standard,
+  Video,
 } from '../PublicationRecord.stories';
 
 // The stories import browser play checks; Jest renders the stories only.
@@ -26,7 +28,7 @@ const show = (record, lang = 'en') =>
 const coverLink = container =>
   container.querySelector('.mg-publication-record__cover-link');
 const firstResourceLink = container =>
-  container.querySelector('.mg-publication-record__resources > li > a');
+  container.querySelector('.mg-publication-record__primary a');
 
 const publisherWithBackup = {
   title: 'Work',
@@ -224,20 +226,23 @@ describe('plural selection', () => {
 
 describe('rendered cover link and cue', () => {
   test('several resources: cover duplicates the first link and the cue jumps to the list', () => {
-    const { container } = show(exampleRecord);
+    const { container } = show({ ...exampleRecord, resources: severalFiles });
     const link = coverLink(container);
     expect(link).toHaveAttribute(
       'href',
       firstResourceLink(container).getAttribute('href')
     );
-    expect(link.getAttribute('href')).toBe(exampleRecord.resources[0].href);
+    expect(link.getAttribute('href')).toBe(severalFiles[0].href);
     expect(link).toHaveAttribute('aria-hidden', 'true');
     expect(link).toHaveAttribute('tabindex', '-1');
+    // Same window behaviour as the publisher link it duplicates.
+    expect(link).toHaveAttribute('target', '_blank');
+    expect(link).toHaveAttribute('rel', 'noopener');
     expect(link).toHaveAttribute(
       'data-vf-analytics-label',
-      'download_internal_cover'
+      'download_publisher_cover'
     );
-    expect(link.querySelector('.mg-icon-download')).not.toBeNull();
+    expect(link.querySelector('.mg-icon-external-link')).not.toBeNull();
     const cue = screen.getByRole('link', { name: 'All downloads (3)' });
     const target = container.querySelector(cue.getAttribute('href'));
     expect(target).toBe(
@@ -277,13 +282,11 @@ describe('rendered cover link and cue', () => {
   });
 
   test('publisher copy plus backup: cover never points at the backup', () => {
-    const { container } = render(
-      meta.render(LocalBackup.args, { globals: {} })
-    );
-    const backup = LocalBackup.args.record.resources[0].backup.href;
+    const { container } = render(meta.render(Standard.args, { globals: {} }));
+    const backup = Standard.args.record.resources[0].backup.href;
     expect(coverLink(container).getAttribute('href')).not.toBe(backup);
     expect(coverLink(container).getAttribute('href')).toBe(
-      LocalBackup.args.record.resources[0].href
+      Standard.args.record.resources[0].href
     );
     expect(container.querySelector(`a[href="${backup}"]`)).toHaveAttribute(
       'data-vf-analytics-label',
@@ -361,20 +364,21 @@ describe('rendered cover link and cue', () => {
   });
 
   test('Arabic interface uses the Arabic plural for the cue', () => {
-    render(
-      meta.render({ record: exampleRecord }, { globals: { locale: 'arabic' } })
-    );
+    render(meta.render(SeveralFiles.args, { globals: { locale: 'arabic' } }));
     const aside = document.querySelector('.mg-publication-record__aside');
     expect(
       within(aside).getByRole('link', { name: /^جميع التنزيلات/ })
     ).toBeInTheDocument();
   });
 
-  test.each([exampleRecord, ExternalOnly.args.record, LocalBackup.args.record])(
-    'linked cover passes axe',
-    async record => {
-      const { container } = show(record);
-      expect(await axe(container)).toHaveNoViolations();
-    }
-  );
+  test.each([
+    exampleRecord,
+    ExternalOnly.args.record,
+    HostedOnly.args.record,
+    Video.args.record,
+    SeveralFiles.args.record,
+  ])('linked cover passes axe', async record => {
+    const { container } = show(record);
+    expect(await axe(container)).toHaveNoViolations();
+  });
 });

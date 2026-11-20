@@ -20,6 +20,8 @@ export const ANALYTICS = {
   internal: 'download_internal',
   backup: 'download_backup',
   allDownloads: 'nav_all_downloads_cover',
+  // The backup explanation's contact link: not a download, so not download_.
+  contact: 'contact_download_help',
 };
 
 /** Label for a primary resource link: the publisher copy or the hosted copy. */
@@ -39,6 +41,8 @@ export function coverAccess(resources) {
     href: first.href,
     lang: first.lang,
     origin: first.origin,
+    // Same window behaviour as the labelled link it duplicates.
+    newWindow: first.origin === 'publisher',
     icon: first.origin === 'publisher' ? 'external-link' : 'download',
     analyticsLabel: `${primaryAnalyticsLabel(first)}_cover`,
   };
@@ -65,4 +69,56 @@ export function pluralLabel(forms, lang, count) {
   }
   const template = forms[category] ?? forms.other ?? '';
   return template.replace('{count}', String(count));
+}
+
+/**
+ * Resource presentation (unisdr/undrr-mangrove#1505), matching the Drupal
+ * download box. A publisher copy reads "Access {title}", or "Watch {title}"
+ * on a video host; a hosted-only copy shows the title alone.
+ */
+const VIDEO_HOSTS = /^(www\.|m\.)?(youtube\.com|youtu\.be|vimeo\.com)$/i;
+
+export function linkVerb(resource) {
+  if (resource.origin !== 'publisher') return 'title';
+  try {
+    return VIDEO_HOSTS.test(new URL(resource.href).hostname)
+      ? 'watch'
+      : 'access';
+  } catch {
+    return 'access'; // Root-relative publisher copy (story fixtures).
+  }
+}
+
+/** "PDF, 1.6 MB · English": type and size, then language; unknown parts drop. */
+export function fileMeta({ format, size, language } = {}) {
+  return [[format, size].filter(Boolean).join(', '), language]
+    .filter(Boolean)
+    .join(' · ');
+}
+
+/**
+ * Which line carries the file facts. With a hosted backup they describe our
+ * hosted file, so they sit on the backup line; otherwise on the primary.
+ * Type and size never move between copies, because they describe one file.
+ * Language is the document's, so the backup inherits it when it has none.
+ */
+export function resourceMeta(resource) {
+  if (resource.backup) {
+    return {
+      line: 'backup',
+      text: fileMeta({
+        format: resource.backup.format,
+        size: resource.backup.size,
+        language: resource.backup.language || resource.language,
+      }),
+    };
+  }
+  return { line: 'primary', text: fileMeta(resource) };
+}
+
+/** Fill `{title}` while keeping the title separate for its own lang/dir. */
+export function splitTemplate(template, token = '{title}') {
+  const index = template.indexOf(token);
+  if (index < 0) return [template, ''];
+  return [template.slice(0, index), template.slice(index + token.length)];
 }

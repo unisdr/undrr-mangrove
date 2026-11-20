@@ -36,10 +36,13 @@ export function projectRecord(input) {
     });
   const languageTag = value =>
     /^[a-z]{2,3}(-[a-z0-9]{2,8})*$/i.test(value || '') ? value : undefined;
-  const resource = item => {
+  // `label` is the document's title: the link text for a hosted-only copy,
+  // and the {title} in "Access {title}" or "Watch {title}". A backup uses the
+  // interface's fixed wording, so it needs only a URL.
+  const resource = (item, { needsLabel = true } = {}) => {
     const label = text(item?.label);
     const href = resolveContentUrl(item?.href);
-    if (!label || !href) return undefined;
+    if ((needsLabel && !label) || !href) return undefined;
     return {
       label,
       href,
@@ -54,7 +57,7 @@ export function projectRecord(input) {
     const primary = resource(item);
     if (!primary) return [];
     // A backup cannot silently become the primary/original access route.
-    const backup = resource(item.backup);
+    const backup = resource(item.backup, { needsLabel: false });
     const origin = resourceOrigin(item.origin, primary.href, backup);
     return [
       {
@@ -65,6 +68,11 @@ export function projectRecord(input) {
     ];
   });
   const year = String(input.publicationYear ?? '');
+  // Date the hosted copies were added (Drupal's media creation date). It is
+  // not a link check, so it is never presented as one.
+  const added = /^\d{4}-\d{2}-\d{2}$/.test(input.resourcesAdded || '')
+    ? input.resourcesAdded
+    : undefined;
   return {
     ...input,
     title,
@@ -93,6 +101,8 @@ export function projectRecord(input) {
       : undefined,
     citation: text(input.citation),
     resources,
+    resourcesAdded: resources.length > 0 ? added : undefined,
+    contactHref: resolveContentUrl(input.contactHref),
     related: links(input.related),
     details: list(input.details).flatMap(item =>
       text(item?.label) && text(item?.value)
