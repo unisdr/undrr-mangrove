@@ -302,6 +302,34 @@
   }
 }
 
+// Panels open on click only, so a pointer needs to see that a top-level item
+// is interactive before clicking it: a light tint, and a faint preview of the
+// active bar. Hover never opens anything. Text is not underlined, so link and
+// button items look alike; forced colours, which drop backgrounds, underline.
+@media screen and (min-width: $mg-breakpoint-tablet) and (hover: hover) {
+  .mg-mega-topbar__item > :is(a, button):hover {
+    background: rgb(var(--mg-color-interactive) / 0.08);
+    text-decoration: none;
+
+    @media (forced-colors: active) {
+      text-decoration: underline;
+    }
+  }
+
+  .mg-mega-topbar__item:not(.mg-mega-topbar__item--active)
+    > :is(a, button):hover::after {
+    opacity: 0.4;
+    transform: scaleX(1);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .mg-mega-topbar__item > :is(a, button) {
+      transition: background-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard);
+    }
+  }
+}
+
 .mg-mega-content {
   // Mobile-first: Start with mobile styles
   display: flex;

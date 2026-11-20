@@ -147,7 +147,9 @@ hides one panel.
   focus or hover. The
   [W3C fly-out menu tutorial](https://www.w3.org/WAI/tutorials/menus/flyout/)
   says submenus should not open when tabbing, and opening on hover makes a
-  click on an already-open panel ambiguous. GOV.UK reached the same model
+  click on an already-open panel ambiguous. Hovering a top-level item still
+  shows a light tint and a faint underline bar, so it reads as clickable;
+  it changes nothing else. GOV.UK reached the same model
   after usability rounds and an A/B test
   ([GOV.UK menu bar](https://insidegovuk.blog.gov.uk/2021/11/11/launching-gov-uks-new-menu-bar)),
   as did the [Department for Education](https://design-histories.education.gov.uk/get-into-teaching/designing-dropdown-navigation).
@@ -426,7 +428,7 @@ for consumers needing the same strings outside React.
 ## Changelog
 
 - **2.0.0**, 2026-11-20 ([#1499](https://github.com/unisdr/undrr-mangrove/issues/1499)): **Breaking:** the desktop menu now follows the WAI-ARIA disclosure navigation pattern; see [Design principles](#design-principles).
-  - Panels open and close only when their top-level button is clicked or activated with Enter or Space. They no longer open on hover or focus, or close when the pointer leaves. Focus moving out of the navigation, Escape and an outside click close them. `hoverDelay`, `delay`, `data-hover-delay` and `data-delay` are still accepted but ignored.
+  - Panels open and close only when their top-level button is clicked or activated with Enter or Space. They no longer open on hover or focus, or close when the pointer leaves. Hovering a top-level item shows a light tint and a faint underline bar instead. Focus moving out of the navigation, Escape and an outside click close them. `hoverDelay`, `delay`, `data-hover-delay` and `data-delay` are still accepted but ignored.
   - Every top-level item with a panel is a button, including sections with a landing page (`bannerButton.url`). The landing page is offered inside the panel: the banner button, a leading link in the destinations when there is no banner, or a link after banner-only copy. Sections without a panel stay links.
   - Categories in two-column panels are buttons with `aria-expanded` that show their destinations on click, Enter or Space, and still preview on hover. Focus no longer switches them, so Tab reaches the chosen category's destinations; previously only the last category's destinations could be reached by keyboard. Each category's own page leads its destinations.
   - Removed `menu`, `menuitem`, `aria-haspopup` and the misused `aria-current="page"` from panels, and the panel live region.
