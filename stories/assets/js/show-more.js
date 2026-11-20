@@ -247,7 +247,7 @@ function initItemsMode(item, target, labelFor, stateLabels) {
     event.preventDefault();
     setOpen(!open, { reader: true });
   };
-  // Find-in-page (or a text fragment) revealing one item opens the whole set,
+  // Find-in-page or a text-highlight link revealing one item opens the set,
   // so the label and aria-expanded stay true. The browser owns focus here.
   const onBeforeMatch = () => setOpen(true);
 
