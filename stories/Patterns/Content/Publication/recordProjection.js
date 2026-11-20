@@ -68,8 +68,9 @@ export function projectRecord(input) {
     ];
   });
   const year = String(input.publicationYear ?? '');
-  // Date the hosted copies were added (Drupal's media creation date). It is
-  // not a link check, so it is never presented as one.
+  // When the record's resources were added to the site (Drupal's media
+  // creation date), shown for every case as Drupal does. It is not a link
+  // check, so it is never presented as one.
   const added = /^\d{4}-\d{2}-\d{2}$/.test(input.resourcesAdded || '')
     ? input.resourcesAdded
     : undefined;

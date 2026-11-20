@@ -56,12 +56,17 @@ function fillDate(template, isoDate, lang) {
 
 // File facts follow the interface direction so they line up under their
 // link; LTR runs such as "PDF, 1.6 MB" still read correctly inside RTL.
-function Meta({ text }) {
-  return text ? (
-    <p className="mg-publication-record__meta mg-u-font-size-250">{text}</p>
-  ) : null;
+function Meta({ meta }) {
+  if (!meta.text) return null;
+  return (
+    <p className="mg-publication-record__meta mg-u-font-size-250">
+      {meta.facts}
+      {meta.facts && meta.language && ' · '}
+      {meta.language && <span lang={meta.lang}>{meta.language}</span>}
+    </p>
+  );
 }
-Meta.propTypes = { text: PropTypes.string };
+Meta.propTypes = { meta: PropTypes.object.isRequired };
 
 /** External links open in a new tab, with an icon and a spoken warning. */
 function NewTabCue({ label }) {
@@ -109,19 +114,27 @@ function ResourceItem({ resource, labels, workLang, contactHref }) {
           {external && <NewTabCue label={labels.opensInNewTab} />}
         </a>
       </p>
-      {meta.line === 'primary' && <Meta text={meta.text} />}
+      {meta.line === 'primary' && <Meta meta={meta} />}
       {backup && (
         <div className="mg-publication-record__backup">
           <p>
             <a
               href={backup.href}
-              hrefLang={backup.lang}
+              hrefLang={backup.lang || resource.lang}
               data-vf-analytics-label={ANALYTICS.backup}
             >
               {labels.backupLink}
+              {/* The title keeps each backup link's name unique; the visible
+                  label stays first, as in Drupal. */}
+              <span className="mg-u-sr-only">
+                :{' '}
+                <span lang={titleLang} dir="auto">
+                  {resource.label}
+                </span>
+              </span>
             </a>
           </p>
-          <Meta text={meta.text} />
+          <Meta meta={meta} />
           <details className="mg-publication-record__backup-help">
             <summary>{labels.backupHelp}</summary>
             <p>
@@ -130,12 +143,18 @@ function ResourceItem({ resource, labels, workLang, contactHref }) {
                 <>
                   {' '}
                   {labels.problems}{' '}
+                  {/* Opens in a new tab, as in Drupal, so the reader keeps the
+                      record open while writing to us. */}
                   <a
                     href={contactHref}
+                    target="_blank"
+                    rel="noopener"
                     data-vf-analytics-label={ANALYTICS.contact}
                   >
                     {labels.contactUs}
+                    <NewTabCue label={labels.opensInNewTab} />
                   </a>
+                  {labels.sentenceEnd ?? '.'}
                 </>
               )}
             </p>

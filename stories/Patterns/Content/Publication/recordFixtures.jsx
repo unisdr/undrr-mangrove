@@ -34,6 +34,7 @@ export const RECORD_LABELS = {
       'We keep a copy of many documents to improve long-term access. Use this if the publisher’s site is slow or unavailable.',
     problems: 'Problems?',
     contactUs: 'Contact us',
+    sentenceEnd: '.',
     added: 'Added {date}',
   },
   french: {
@@ -64,6 +65,7 @@ export const RECORD_LABELS = {
       "Nous conservons une copie de nombreux documents afin d'en faciliter l'accès à long terme. Utilisez cette option si le site de l'éditeur est lent ou inaccessible.",
     problems: 'Des problèmes ?',
     contactUs: 'Nous contacter',
+    sentenceEnd: '.',
     added: 'Ajouté le {date}',
   },
   arabic: {
@@ -98,6 +100,7 @@ export const RECORD_LABELS = {
       'نحتفظ بنسخة من كثير من الوثائق لتحسين إمكانية الوصول على المدى البعيد. استخدم هذا الخيار إذا كان موقع الناشر بطيئاً أو غير متاح.',
     problems: 'هل تواجه مشكلة؟',
     contactUs: 'اتصل بنا',
+    sentenceEnd: '.',
     added: 'تاريخ الإضافة: {date}',
   },
   spanish: {
@@ -128,6 +131,7 @@ export const RECORD_LABELS = {
       'Conservamos una copia de muchos documentos para facilitar el acceso a largo plazo. Use esta opción si el sitio del editor es lento o no está disponible.',
     problems: '¿Problemas?',
     contactUs: 'Contáctenos',
+    sentenceEnd: '.',
     added: 'Añadido el {date}',
   },
   russian: {
@@ -161,6 +165,7 @@ export const RECORD_LABELS = {
       'Мы храним копии многих документов, чтобы обеспечить долгосрочный доступ к ним. Воспользуйтесь этой копией, если сайт издателя работает медленно или недоступен.',
     problems: 'Возникли проблемы?',
     contactUs: 'Свяжитесь с нами',
+    sentenceEnd: '.',
     added: 'Добавлено {date}',
   },
   japanese: {
@@ -188,6 +193,7 @@ export const RECORD_LABELS = {
       '長期的なアクセスを確保するため、多くの文書のコピーを保管しています。出版元のサイトが遅い場合や利用できない場合にご利用ください。',
     problems: '問題がありますか？',
     contactUs: 'お問い合わせ',
+    sentenceEnd: '。',
     added: '{date}に追加',
   },
   chinese: {
@@ -215,6 +221,7 @@ export const RECORD_LABELS = {
       '我们保存了许多文件的副本，以便长期获取。如发布网站访问缓慢或无法访问，请使用此副本。',
     problems: '遇到问题？',
     contactUs: '联系我们',
+    sentenceEnd: '。',
     added: '添加于{date}',
   },
 };
@@ -241,13 +248,16 @@ export const severalFiles = [
   report,
   {
     label: 'Comprendre les risques de catastrophe : résumé',
-    href: '/publication-record/reading-fr.html',
-    origin: 'hosted',
+    href: 'https://example.org/comprendre-les-risques-de-catastrophe',
+    origin: 'publisher',
     language: 'Français',
     labelLang: 'fr',
     lang: 'fr',
-    format: 'HTML',
-    size: '422 bytes',
+    backup: {
+      href: '/publication-record/reading-fr.html',
+      format: 'HTML',
+      size: '422 bytes',
+    },
   },
   {
     label: 'Understanding disaster risk: plain-text edition',

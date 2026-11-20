@@ -103,17 +103,23 @@ export function fileMeta({ format, size, language } = {}) {
  * Language is the document's, so the backup inherits it when it has none.
  */
 export function resourceMeta(resource) {
-  if (resource.backup) {
-    return {
-      line: 'backup',
-      text: fileMeta({
-        format: resource.backup.format,
-        size: resource.backup.size,
-        language: resource.backup.language || resource.language,
-      }),
-    };
-  }
-  return { line: 'primary', text: fileMeta(resource) };
+  const { backup } = resource;
+  const file = backup
+    ? {
+        format: backup.format,
+        size: backup.size,
+        language: backup.language || resource.language,
+        // The language name is spoken in the file's language ("Français").
+        lang: backup.lang || resource.lang,
+      }
+    : resource;
+  return {
+    line: backup ? 'backup' : 'primary',
+    text: fileMeta(file),
+    facts: fileMeta({ format: file.format, size: file.size }),
+    language: file.language || '',
+    lang: file.lang,
+  };
 }
 
 /** Fill `{title}` while keeping the title separate for its own lang/dir. */

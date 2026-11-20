@@ -71,7 +71,7 @@ describe('verbs, file facts and their placement', () => {
         },
       ],
     }).resources;
-    expect(resourceMeta(resource)).toEqual({
+    expect(resourceMeta(resource)).toMatchObject({
       line: 'backup',
       text: 'PDF, 1.6 MB · English',
     });
@@ -84,7 +84,7 @@ describe('verbs, file facts and their placement', () => {
         { label: 'Work', href: '/file.pdf', format: 'PDF', size: '2 MB' },
       ],
     }).resources;
-    expect(resourceMeta(resource)).toEqual({
+    expect(resourceMeta(resource)).toMatchObject({
       line: 'primary',
       text: 'PDF, 2 MB',
     });
@@ -140,7 +140,12 @@ describe('rendered cases', () => {
       'Understanding disaster risk'
     );
 
-    const backup = within(item).getByRole('link', { name: labels.backupLink });
+    // The visible label comes first; the hidden title keeps names unique.
+    const backup = within(item).getByRole('link', {
+      // The hidden title can add a space before the colon in the computed name.
+      name: new RegExp(`^${labels.backupLink} ?: Understanding disaster risk$`),
+    });
+    expect(backup.textContent.startsWith(labels.backupLink)).toBe(true);
     expect(backup).toHaveAttribute(
       'href',
       '/publication-record/reading-en-backup.html'
@@ -161,10 +166,17 @@ describe('rendered cases', () => {
       'SUMMARY'
     );
     expect(details.textContent).toContain(labels.backupExplanation);
-    const contact = within(details).getByRole('link', {
-      name: labels.contactUs,
-    });
+    const contact = details.querySelector(
+      '[data-vf-analytics-label="contact_download_help"]'
+    );
     expect(contact).toHaveAttribute('href', 'https://www.undrr.org/contact-us');
+    expect(contact).toHaveAccessibleName(
+      `${labels.contactUs} (${labels.opensInNewTab})`
+    );
+    expect(contact).toHaveAttribute('target', '_blank');
+    expect(contact).toHaveAttribute('rel', 'noopener');
+    // Drupal's full stop follows the link.
+    expect(contact.nextSibling.textContent).toBe('.');
     expect(contact).toHaveAttribute(
       'data-vf-analytics-label',
       'contact_download_help'
@@ -224,7 +236,9 @@ describe('rendered cases', () => {
       'download_publisher',
       'download_backup',
       'contact_download_help',
-      'download_internal',
+      'download_publisher',
+      'download_backup',
+      'contact_download_help',
       'download_internal',
     ]);
     expect(
@@ -238,6 +252,47 @@ describe('rendered cases', () => {
     ).toBeInTheDocument();
   });
 
+  test('backup links have unique accessible names', () => {
+    renderStory(SeveralFiles);
+    const backups = [
+      ...access().querySelectorAll(
+        '[data-vf-analytics-label="download_backup"]'
+      ),
+    ];
+    expect(backups.length).toBeGreaterThanOrEqual(2);
+    const names = backups.map(link => link.textContent);
+    expect(new Set(names).size).toBe(names.length);
+    names.forEach(name =>
+      expect(name.startsWith(labels.backupLink)).toBe(true)
+    );
+  });
+
+  test('a backup falls back to its resource language for hreflang and the language name', () => {
+    renderStory(SeveralFiles);
+    const french = items()[1];
+    const backup = french.querySelector(
+      '[data-vf-analytics-label="download_backup"]'
+    );
+    expect(backup).toHaveAttribute('hreflang', 'fr');
+    const language = within(french).getByText('Français');
+    expect(language).toHaveAttribute('lang', 'fr');
+    expect(language.parentElement.textContent).toBe(
+      'HTML, 422 bytes · Français'
+    );
+  });
+
+  test.each([
+    ['japanese', '。'],
+    ['chinese', '。'],
+    ['arabic', '.'],
+  ])('%s ends the contact sentence with %s', (locale, mark) => {
+    renderStory(Standard, locale);
+    const contact = document.querySelector(
+      '[data-vf-analytics-label="contact_download_help"]'
+    );
+    expect(contact.nextSibling.textContent).toBe(mark);
+  });
+
   test('the date line says Added, never Last checked', () => {
     renderStory(Standard);
     const line = access().querySelector('.mg-publication-record__added');
@@ -248,6 +303,16 @@ describe('rendered cases', () => {
     );
     expect(access().textContent).not.toMatch(/last checked/i);
   });
+
+  test.each([HostedOnly, ExternalOnly, Video, SeveralFiles])(
+    'the date line shows in every case, as in Drupal',
+    story => {
+      renderStory(story);
+      expect(
+        access().querySelector('.mg-publication-record__added').textContent
+      ).toBe('Added 15 March 2026');
+    }
+  );
 
   test('no date line without a valid date or without resources', () => {
     const { container, rerender } = render(

@@ -50,7 +50,7 @@ test('identity roles and early access retain structure and known precision', () 
     Node.DOCUMENT_POSITION_FOLLOWING
   );
   const french = screen.getByRole('link', {
-    name: 'Comprendre les risques de catastrophe : résumé',
+    name: 'Access Comprendre les risques de catastrophe : résumé (opens in new tab)',
   });
   expect(french).toHaveAttribute('hreflang', 'fr');
   expect(french.querySelector('[lang="fr"]')).not.toBeNull();
@@ -115,10 +115,18 @@ test('safe primary and backup keep distinct links; metadata is only supplied inf
   });
   expect(original).toHaveAttribute('href', 'https://example.org/work');
   expect(original).not.toHaveAttribute('hreflang');
-  const backup = screen.getByRole('link', { name: labels.backupLink });
+  const backup = screen.getByRole('link', {
+    // The hidden title can add a space before the colon in the computed name.
+    name: new RegExp(`^${labels.backupLink} ?: Original$`),
+  });
   expect(backup).toHaveAttribute('href', '/backup.html');
   expect(backup).toHaveAttribute('hreflang', 'fr');
-  expect(screen.getByText('HTML · Français')).toBeInTheDocument();
+  expect(
+    container.querySelector('.mg-publication-record__meta').textContent
+  ).toBe('HTML · Français');
+  expect(
+    container.querySelector('.mg-publication-record__meta [lang]')
+  ).toHaveAttribute('lang', 'fr');
   expect(container.querySelector('time')).toBeNull();
   expect(screen.getByRole('main').querySelectorAll('a')).toHaveLength(3); // category + primary + backup, never a guessed DOI
   // No invented file facts or status. The backup explanation is fixed copy
