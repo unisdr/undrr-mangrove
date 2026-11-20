@@ -220,7 +220,7 @@ The thresholds are named constants in `recordAccess.js` (`TABLE_FROM`, `TIER3_FR
 | 3 | 2+ languages, or 6+ resources | Tier 2 plus language filters above the table. A Language column shows when "All" is selected | 273px for 3 files in 2 languages (was 454px) |
 | 4 | 11+ resources | Tier 3 plus a "Filter files" text input | 439px for 34 files, collapsed |
 
-- **Long views.** In tiers 2 to 4, a view with more than 6 rows shows the first 6. The rest sit behind ShowMore items mode: "Show all {count} files", where count is the number of rows in the current view, then "Show fewer files". A filter change resets it to collapsed.
+- **Long views.** The table only collapses when it also has the text filter, from 11 resources (`COLLAPSE_FROM`, equal to `TEXT_FILTER_FROM`). There, a view with more than 6 rows (`PREVIEW_ROWS`) shows the first 6, and the rest sit behind ShowMore items mode: "Show all {count} files", where count is the number of rows in the current view, then "Show fewer files". A filter change resets it to collapsed, and a filtered view of 6 rows or fewer has no toggle. Tables of 10 rows or fewer always show every row, about 400px at most. The reason is that collapsed rows use plain `hidden`: Chromium ignores `hidden="until-found"` on table rows, so a collapsed row can't be found with find-in-page, and only the text filter can reach it. An earlier draft collapsed from 7 rows, which hid one row of the 7-language story behind "Show all 7 files", with no way to search it.
 - **Language filter.** It needs 2 or more languages to be useful. A one-language record in tier 3 or 4 therefore has no language filter, only the collapse and, from 11 files, the text filter. From 6 languages the buttons become a native `<select>`. A resource with no known language appears only under "All".
 - **No language-specific toggle label.** "Show all 22 English files" would need each language name in the grammar of every interface language. The toggle uses the generic "Show all {count} files", with the count of the current view.
 
@@ -242,10 +242,11 @@ Changing `display` on table parts drops their table semantics in some browsers, 
 ### Filters
 
 - **Controls.** Language filters are a native radio group: Mangrove's SegmentedControl, with a visually hidden legend "Language". They are not the ARIA tabs pattern, because they filter one table rather than switching panels. Arrow keys move between options and select as they go, which is the browser's radio behaviour. From 6 languages the control is Mangrove's Select, labelled "Language", with "All languages (N)" first. The text filter is Mangrove's TextInput (`type="search"`) with a persistent visible label "Filter files". It matches every word of the query in the title, language or format, ignoring case and accents, but not sizes, where "2" would match "422". The text and language filters combine.
-- **Feedback.** Focus stays on the control. A polite live region announces "Showing {shown} of {total} files". When nothing matches, a short message replaces the table.
+- **Feedback.** Focus stays on the control. A polite live region announces "Showing {shown} of {total} files". A language choice is announced at once. A text query is announced once typing pauses for 500ms (`ANNOUNCE_DELAY`), so screen readers don't read a count after every keystroke. A language choice cancels a pending text announcement. When nothing matches, a short message replaces the table.
+- **Language names in the select.** `<option>` elements can't carry their own `lang`, so in the select a language name such as "Français" is spoken in the interface language. The radio-group labels are ordinary elements, but they also inherit the interface language.
 - **"All downloads (N)".** It resets the filters to All, opens the list, and the anchor then moves to the resources heading. Its count stays the true total.
 - **Cover.** The cover always targets the first primary resource in source order, whatever the filter.
-- **Find in page.** Table rows hidden by the collapse use plain `hidden`, because Chromium doesn't reveal `hidden="until-found"` on table rows (see ShowMore's items-mode docs). Find-in-page therefore doesn't reach collapsed rows. In tier 4 the text filter covers that need.
+- **Find in page.** Table rows hidden by the collapse use plain `hidden`, because `hidden="until-found"` has no effect on table rows in Chromium (see ShowMore's items-mode docs). Find-in-page therefore doesn't reach collapsed rows, which is why only tables with the text filter collapse.
 
 ### Vanilla and React
 
@@ -255,7 +256,7 @@ React is the full experience. The server-rendered HTML is the contract for Drupa
 | --- | --- | --- |
 | Tier 1 row; tier 2–4 table, with every link working | Yes, no JavaScript needed | Yes |
 | Caption, scoped headers, ARIA table roles, mobile cards (CSS) | Yes | Yes |
-| Collapse after 6 rows (ShowMore items mode) | Yes, with `show-more.js`; without it, every row shows | Yes |
+| Collapse after 6 rows, from 11 resources (ShowMore items mode) | Yes, with `show-more.js`; without it, every row shows. Vanilla has no text filter, so its collapsed rows can only be reached by opening the list | Yes, with the text filter |
 | Language filter (buttons or select) | No; not rendered | Yes |
 | Text filter | No; not rendered | Yes |
 | Live result count | No | Yes |
@@ -275,12 +276,12 @@ Every access link keeps `download_publisher`, `download_internal` or `download_b
 
 | Control | Label |
 | --- | --- |
-| Language buttons | `nav_filter_language: <language code>`. SegmentedControl appends the stable option value, so reports can split by language, and the label still starts `nav_filter_language` |
-| Language select | `nav_filter_language` |
+| Language buttons | `nav_filter_language: <language code>`. SegmentedControl appends the stable option value |
+| Language select | `nav_filter_language`. Only the opening is recorded: the tracker listens to `mousedown`, which fires before a choice is made, so the chosen language isn't known |
 | Text filter | `nav_filter_text` |
 | Show all / Show fewer | `nav_show_all_downloads` |
 
-None of them starts `download_`. The drupal-base tracker records `mousedown` only, so keyboard use of these controls isn't recorded. That gap is site-wide and pre-existing.
+None of them starts `download_`. Count language-filter use by the prefix `nav_filter_language`, which matches both the buttons and the select. Split by language only from the buttons' `: <code>` suffix. The drupal-base tracker records `mousedown` only, so keyboard use of these controls isn't recorded. That gap is site-wide and pre-existing.
 
 ### Checks
 

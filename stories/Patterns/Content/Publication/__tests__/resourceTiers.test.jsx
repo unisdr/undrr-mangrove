@@ -5,6 +5,7 @@ import { PublicationRecord } from '../PublicationRecord';
 import {
   LANGUAGE_FILTER_FROM,
   LANGUAGE_SELECT_FROM,
+  COLLAPSE_FROM,
   PREVIEW_ROWS,
   TABLE_FROM,
   TEXT_FILTER_FROM,
@@ -131,12 +132,23 @@ describe('tier rules', () => {
   });
 
   test.each([
-    [6, 5, false],
-    [7, 5, false],
-    [7, 6, true],
-    [34, 33, true],
-  ])('a view of %i rows collapses row %i: %s', (total, position, hidden) => {
-    expect(isCollapsedRow(position, total)).toBe(hidden);
+    // [rows in view, resources, position, collapsed]
+    [10, 10, 6, false], // no text filter below 11: never collapse
+    [10, 10, 9, false],
+    [11, 11, 5, false],
+    [11, 11, 6, true],
+    [34, 34, 33, true],
+    [6, 34, 5, false], // a filtered view of 6 or fewer: no toggle
+    [7, 34, 6, true],
+  ])(
+    'a view of %i rows in a table of %i: row %i collapsed is %s',
+    (viewCount, resourceCount, position, hidden) => {
+      expect(isCollapsedRow(position, viewCount, resourceCount)).toBe(hidden);
+    }
+  );
+
+  test('COLLAPSE_FROM is the text-filter threshold', () => {
+    expect(COLLAPSE_FROM).toBe(TEXT_FILTER_FROM);
   });
 });
 

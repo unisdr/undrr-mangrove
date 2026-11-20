@@ -72,8 +72,14 @@ export const TIER3_FROM = 6;
 export const TEXT_FILTER_FROM = 11;
 /** From this many languages, the language filter is a select. */
 export const LANGUAGE_SELECT_FROM = 6;
-/** Rows in view before the rest of the current view is collapsed. */
+/**
+ * Rows in view before the rest of the current view is collapsed. Collapsed
+ * table rows use plain `hidden` (Chromium ignores `until-found` on rows), so
+ * find-in-page can't reach them: the table only collapses from
+ * COLLAPSE_FROM resources, where the text filter is there to search them.
+ */
 export const PREVIEW_ROWS = 6;
+export const COLLAPSE_FROM = TEXT_FILTER_FROM;
 
 const languageKey = resource =>
   (resource.lang || resource.language || '').toLowerCase() || null;
@@ -156,9 +162,15 @@ export function filterResources(
   });
 }
 
-/** Whether row `position` of a view with `total` rows starts collapsed. */
-export const isCollapsedRow = (position, total) =>
-  total > PREVIEW_ROWS && position >= PREVIEW_ROWS;
+/**
+ * Whether row `position` of a view of `viewCount` rows starts collapsed, in
+ * a table of `resourceCount` resources. Only tables with a text filter
+ * (11+ resources) collapse; a filtered view of 6 rows or fewer never does.
+ */
+export const isCollapsedRow = (position, viewCount, resourceCount) =>
+  resourceCount >= COLLAPSE_FROM &&
+  viewCount > PREVIEW_ROWS &&
+  position >= PREVIEW_ROWS;
 
 /**
  * Pick the CLDR plural form for `count` in the interface language, falling back

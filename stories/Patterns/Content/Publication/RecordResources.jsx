@@ -34,6 +34,9 @@ import {
  * appears without a script behind it.
  */
 
+/** Pause in typing before a text-filter result count is announced. */
+export const ANNOUNCE_DELAY = 500;
+
 /** External links open in a new tab, with an icon and a spoken warning. */
 export function NewTabCue({ label }) {
   return (
@@ -226,7 +229,9 @@ function FilesTable({
               key={index}
               role="row"
               data-mg-show-more-item={
-                isCollapsedRow(position, rows.length) ? '' : undefined
+                isCollapsedRow(position, rows.length, resources.length)
+                  ? ''
+                  : undefined
               }
             >
               <th
@@ -387,6 +392,9 @@ export function RecordAccess({
   const [announcement, setAnnouncement] = useState('');
   const toggleRef = useRef(null);
   const openAfterReset = useRef(false);
+  // Timer for a pending text-filter announcement (see onQuery).
+  const pendingAnnouncement = useRef(0);
+  useEffect(() => () => clearTimeout(pendingAnnouncement.current), []);
 
   // Filters need a script, so they only appear once React is running.
   useEffect(() => setEnhanced(true), []);
@@ -395,7 +403,8 @@ export function RecordAccess({
     ? filterResources(resources, { language, query })
     : resources.map((_, index) => index);
   const collapses =
-    rows.length > 0 && isCollapsedRow(rows.length - 1, rows.length);
+    rows.length > 0 &&
+    isCollapsedRow(rows.length - 1, rows.length, resources.length);
   const showLanguage = view.languages.length >= 2 && language === 'all';
   const viewKey = `${language}\u0000${query}\u0000${rows.join(',')}`;
   const bodyId = `${id}-files`;
@@ -427,6 +436,7 @@ export function RecordAccess({
 
   useImperativeHandle(controller, () => ({
     showAll() {
+      clearTimeout(pendingAnnouncement.current);
       if (language !== 'all' || query !== '') {
         openAfterReset.current = true;
         flushSync(() => {
@@ -446,13 +456,20 @@ export function RecordAccess({
         .replace('{shown}', String(filterResources(resources, next).length))
         .replace('{total}', String(resources.length))
     );
+  // Typing would announce on every keystroke, so a text query is announced
+  // once typing pauses; a language choice is announced at once.
   const onLanguage = value => {
+    clearTimeout(pendingAnnouncement.current);
     setLanguage(value);
     announce({ language: value, query });
   };
   const onQuery = value => {
     setQuery(value);
-    announce({ language, query: value });
+    clearTimeout(pendingAnnouncement.current);
+    pendingAnnouncement.current = setTimeout(
+      () => announce({ language, query: value }),
+      ANNOUNCE_DELAY
+    );
   };
 
   if (view.tier === 0) return null;

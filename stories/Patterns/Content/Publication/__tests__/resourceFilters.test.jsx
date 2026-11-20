@@ -1,7 +1,8 @@
 import React from 'react';
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { PublicationRecord } from '../PublicationRecord';
+import { ANNOUNCE_DELAY } from '../RecordResources';
 import { pluralLabel } from '../recordAccess';
 import { RECORD_LABELS, exampleRecord, manyFiles } from '../recordFixtures';
 import meta, {
@@ -115,7 +116,6 @@ describe('text filter (11+ files) and collapse', () => {
     expect(shown()).toHaveLength(6);
     expect(toggle()).toHaveAttribute('aria-expanded', 'false');
     expect(toggle().textContent).toBe('Show all 26 files');
-    expect(status().textContent).toBe('Showing 26 of 34 files');
     fireEvent.click(radio('es'));
     expect(rows()).toHaveLength(0);
     expect(access().textContent).toContain(labels.noMatch);
@@ -142,6 +142,72 @@ describe('text filter (11+ files) and collapse', () => {
     renderStory(ManyFiles);
     fireEvent.click(screen.getByRole('link', { name: 'All downloads (34)' }));
     expect(shown()).toHaveLength(34);
+  });
+});
+
+describe('collapse threshold', () => {
+  const files = count =>
+    Array.from({ length: count }, (_, index) => ({
+      label: `File ${index + 1}`,
+      href: `/f${index + 1}`,
+      origin: 'hosted',
+      language: 'English',
+      lang: 'en',
+    }));
+  const show = count =>
+    render(
+      <PublicationRecord
+        record={{ ...exampleRecord, resources: files(count) }}
+        labels={labels}
+      />
+    );
+
+  test('10 rows (no text filter): every row shows, no toggle', () => {
+    show(10);
+    expect(rows()).toHaveLength(10);
+    expect(shown()).toHaveLength(10);
+    expect(toggle()).toBeNull();
+    expect(access().querySelector('input[type="search"]')).toBeNull();
+  });
+
+  test('11 rows (text filter): 6 show, the rest behind the toggle', () => {
+    show(11);
+    expect(shown()).toHaveLength(6);
+    expect(toggle().textContent).toBe('Show all 11 files');
+    expect(access().querySelector('input[type="search"]')).not.toBeNull();
+  });
+
+  test('Many languages (7 files) no longer hides one row', () => {
+    renderStory(ManyLanguages);
+    expect(shown()).toHaveLength(7);
+    expect(toggle()).toBeNull();
+  });
+});
+
+describe('announcements', () => {
+  afterEach(() => jest.useRealTimers());
+
+  test('a text query is announced once typing pauses; a language at once', () => {
+    jest.useFakeTimers();
+    renderStory(ManyFiles);
+    const input = within(access()).getByRole('searchbox', {
+      name: labels.filterFiles,
+    });
+    fireEvent.change(input, { target: { value: 'c' } });
+    fireEvent.change(input, { target: { value: 'co' } });
+    fireEvent.change(input, { target: { value: 'country' } });
+    expect(status().textContent).toBe('');
+    act(() => jest.advanceTimersByTime(ANNOUNCE_DELAY - 1));
+    expect(status().textContent).toBe('');
+    act(() => jest.advanceTimersByTime(1));
+    expect(status().textContent).toBe('Showing 26 of 34 files');
+
+    // A language choice is immediate and cancels a pending query announcement.
+    fireEvent.change(input, { target: { value: 'country p' } });
+    fireEvent.click(radio('es'));
+    expect(status().textContent).toBe('Showing 0 of 34 files');
+    act(() => jest.advanceTimersByTime(ANNOUNCE_DELAY));
+    expect(status().textContent).toBe('Showing 0 of 34 files');
   });
 });
 
