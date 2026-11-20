@@ -1,5 +1,3 @@
-import { expect } from 'storybook/test';
-
 // Matches $mg-breakpoint-tablet, where .mg-grid--article becomes two columns.
 const TWO_COLUMN_MIN_WIDTH = 900;
 const TEST_WIDTHS = [320, 760, 800, 860, 899, 900, 1164, 1440];
@@ -51,6 +49,9 @@ function getArticleGridColumns(canvasElement) {
  *   900px up.
  */
 export async function checkArticleGridGeometry({ canvasElement }) {
+  // Loaded here, not at module level: Jest tests import story files that
+  // use this check, and Jest cannot load the storybook/test ES module.
+  const { expect } = await import('storybook/test');
   await canvasElement.ownerDocument.fonts.ready;
   const { grid, main, rail } = getArticleGridColumns(canvasElement);
 
