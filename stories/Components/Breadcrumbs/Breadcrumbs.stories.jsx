@@ -88,8 +88,6 @@ export default {
       control: {
         type: 'inline-radio',
       },
-
-      defaultValue: 'Black',
     },
   },
 
@@ -104,6 +102,10 @@ export default {
         },
       ],
     },
+  },
+
+  args: {
+    Color: 'Black',
   },
 };
 

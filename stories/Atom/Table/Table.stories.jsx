@@ -49,8 +49,6 @@ export default {
       control: {
         type: 'inline-radio',
       },
-
-      defaultValue: 'large',
     },
 
     variant: {
@@ -59,8 +57,6 @@ export default {
       control: {
         type: 'inline-radio',
       },
-
-      defaultValue: 'default',
     },
 
     responsive: {
@@ -69,9 +65,12 @@ export default {
       control: {
         type: 'inline-radio',
       },
-
-      defaultValue: 'auto',
     },
+  },
+  args: {
+    size: 'large',
+    variant: 'default',
+    responsive: 'auto',
   },
 };
 

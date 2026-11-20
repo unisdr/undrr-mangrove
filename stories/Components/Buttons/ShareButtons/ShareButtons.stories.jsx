@@ -9,12 +9,14 @@ export default {
   argTypes: {
     SharingSubject: {
       control: { type: 'text' },
-      defaultValue: 'Sharing Link',
     },
     SharingTextBody: {
       control: { type: 'text' },
-      defaultValue: 'Check out this link: ',
     },
+  },
+  args: {
+    SharingSubject: 'Sharing Link',
+    SharingTextBody: 'Check out this link: ',
   },
 };
 

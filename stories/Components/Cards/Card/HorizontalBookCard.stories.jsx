@@ -95,9 +95,10 @@ export default {
       control: {
         type: 'inline-radio',
       },
-
-      defaultValue: 'primary',
     },
+  },
+  args: {
+    variant: 'primary',
   },
 };
 

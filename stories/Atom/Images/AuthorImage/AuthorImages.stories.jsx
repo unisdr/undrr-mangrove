@@ -99,22 +99,24 @@ export default {
       control: {
         type: 'inline-radio',
       },
-      defaultValue: 'Large',
     },
     highlight: {
       options: ['primary', 'secondary', 'tertiary'],
       control: {
         type: 'inline-radio',
       },
-      defaultValue: 'primary',
     },
     layout: {
       options: ['horizontal', 'vertical'],
       control: {
         type: 'inline-radio',
       },
-      defaultValue: 'vertical',
     },
+  },
+  args: {
+    variant: 'Large',
+    highlight: 'primary',
+    layout: 'vertical',
   },
 };
 

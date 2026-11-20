@@ -62,19 +62,20 @@ export default {
       control: {
         type: 'inline-radio',
       },
-
-      defaultValue: 'wide',
     },
 
     caption: {
       control: { type: 'boolean' },
-      defaultValue: true,
     },
 
     credit: {
       control: { type: 'boolean' },
-      defaultValue: true,
     },
+  },
+  args: {
+    size: 'wide',
+    caption: true,
+    credit: true,
   },
 };
 

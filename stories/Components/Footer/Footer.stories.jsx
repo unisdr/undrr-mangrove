@@ -10,17 +10,19 @@ export default {
       options: ['default', 'minimal'],
       control: { type: 'inline-radio' },
       description: 'Visual variant of the Footer component',
-      defaultValue: 'default',
     },
     enableSyndication: {
       control: { type: 'boolean' },
       description: 'Enable/disable UNDRR syndicated footer content',
-      defaultValue: true,
     },
     syndicationConfig: {
       control: { type: 'object' },
       description: 'Configuration object for UNDRR syndication widget',
     },
+  },
+  args: {
+    variant: 'default',
+    enableSyndication: true,
   },
   parameters: {
     docs: {

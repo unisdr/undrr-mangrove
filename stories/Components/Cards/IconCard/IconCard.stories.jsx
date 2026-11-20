@@ -115,14 +115,16 @@ export default {
     centered: {
       control: 'boolean',
       description: 'Center-align content',
-      defaultValue: false,
     },
     variant: {
       options: ['default', 'negative'],
       control: { type: 'inline-radio' },
       description: 'Visual variant',
-      defaultValue: 'default',
     },
+  },
+  args: {
+    centered: false,
+    variant: 'default',
   },
 };
 
