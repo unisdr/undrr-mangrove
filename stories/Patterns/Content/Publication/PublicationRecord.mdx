@@ -26,7 +26,7 @@ The optional standfirst requires approved content: do not automatically promote 
 
 ## Cover link and download cues
 
-The cover links to the same place as the first resource link: the publisher's copy when there is one, otherwise the hosted copy, never a backup. A badge in its corner shows a download icon for a hosted copy or an external-link icon for a publisher copy, so the cue works without hover. With two or more resources, "All downloads (N)" under the cover jumps to the resource list. With no resources, the cover isn't linked. The [record specification](?path=/docs/patterns-content-publication-record-specification--docs) records each decision and its reasons ([#1502](https://github.com/unisdr/undrr-mangrove/issues/1502)).
+The cover links to the same place as the first resource link: the publisher's copy when there is one, otherwise the hosted copy, never a backup. When a pointer is over the cover, an outline and a corner badge appear: a download icon for a hosted copy or an external-link icon for a publisher copy. The badge isn't shown otherwise, or on touch, so the publisher's cover stays as published. The labelled resource list and the jump link are the always-visible ways in. With two or more resources, "All downloads (N)" under the cover jumps to the resource list. With no resources, the cover isn't linked. The [record specification](?path=/docs/patterns-content-publication-record-specification--docs) records each decision and its reasons ([#1502](https://github.com/unisdr/undrr-mangrove/issues/1502)).
 
 <Canvas of={Stories.HostedOnly} story={{ inline: false, height: '700px' }} />
 <Canvas of={Stories.ExternalOnly} story={{ inline: false, height: '700px' }} />
@@ -43,7 +43,7 @@ The cover links to the same place as the first resource link: the publisher's co
 - The link is drawn over the image rather than wrapping it, so a cover with informative alt text still announces it.
 - Voice-control users can't name the hidden cover link. They can say the visible name of the labelled resource link instead.
 - "All downloads (N)" is an ordinary link with visible text. Its plural forms follow `Intl.PluralRules` for the interface language; Arabic has all six.
-- In forced-colours mode the badge keeps a `LinkText` border and icon. Hover feedback is instant, so reduced motion needs nothing extra.
+- The hover badge and outline only appear under `@media (hover: hover)`. On hover in forced-colours mode, the badge has a `LinkText` border and icon. They appear instantly, so reduced motion needs nothing extra.
 
 ### Analytics
 
@@ -73,7 +73,7 @@ Backups have their own labels and metadata and never replace an invalid primary 
 
 <Canvas of={Stories.LongCopy} story={{ inline: false, height: '700px' }} />
 
-Long text and identifiers wrap in DOM reading order. The fixture includes the DOI that overflowed Drupal's sidebar in RTL; here identifier lists keep their own text direction, so a DOI is not reordered on an Arabic page. Use the standard toolbar for interface language and direction. Record labels have seven draft translations requiring native-speaker review. Work, body and resource languages remain separate from interface language. The demonstration shell supports English/Arabic; other interface locales use an explicitly English-labelled shell.
+Long text and identifiers wrap in DOM reading order. The fixture includes the DOI that overflowed Drupal's sidebar in RTL; each author, source and identifier resolves its own text direction, so a Latin DOI is not reordered on an Arabic page or after an Arabic entry. Use the standard toolbar for interface language and direction. Record labels have seven draft translations requiring native-speaker review. Work, body and resource languages remain separate from interface language. The demonstration shell supports English/Arabic; other interface locales use an explicitly English-labelled shell.
 
 ## Adapting the prototype
 
@@ -83,6 +83,6 @@ The composition needs its own `publication-record.scss`, shared Mangrove CSS and
 
 ## Changelog
 
-- **0.2.0**, 2026-11-20 ([#1502](https://github.com/unisdr/undrr-mangrove/issues/1502)): The cover links to the first primary resource (publisher copy, otherwise hosted copy) as a hidden duplicate of the labelled link, with a permanent download or external-link badge. Records with two or more resources show "All downloads (N)" under the cover, with plural forms in all bundled languages. Resource, backup, cover and jump links carry the `undrr-download-box` analytics regions and labels used by Drupal. Added one-hosted-file and publisher-only stories and a long-DOI fixture. Identifier and author lists no longer take `direction: rtl` from the page, so a Latin DOI reads correctly in Arabic.
+- **0.2.0**, 2026-11-20 ([#1502](https://github.com/unisdr/undrr-mangrove/issues/1502)): The cover links to the first primary resource (publisher copy, otherwise hosted copy) as a hidden duplicate of the labelled link, with an outline and a download or external-link badge on hover only. Records with two or more resources show "All downloads (N)" under the cover, with plural forms in all bundled languages. Resource, backup, cover and jump links carry the `undrr-download-box` analytics regions and labels used by Drupal. Added one-hosted-file and publisher-only stories and a long-DOI fixture. Each author, source and identifier now resolves its own direction (`dir="auto"`), so a Latin DOI reads correctly on an Arabic page and after an Arabic entry. A resource without an origin and with an absolute URL is treated as hosted, with a development warning; adapters must supply the origin.
 
 - **0.1.0**, 2026-10-29 ([#1437](https://github.com/unisdr/undrr-mangrove/pull/1437), [#1432](https://github.com/unisdr/undrr-mangrove/issues/1432)): Add an experimental ordinary publication-record story composition, separate from report landing references. Give complete covers a thin neutral border consistent with book cards. Remove the title-only minimal, external-only and dedicated RTL stories; retain missing-content and resource regression coverage. Preserve work-language tags on related links. Production adapter and reusable API remain unimplemented.

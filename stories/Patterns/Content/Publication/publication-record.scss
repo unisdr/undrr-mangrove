@@ -43,11 +43,6 @@
   ul {
     @include mg-list-unmarked;
 
-    // The foundational RTL list rule sets `direction: rtl` on every list
-    // under an RTL page, which overrides the `dir="auto"` on the dd and
-    // reorders a Latin DOI ("10.21953/x.y" displayed as "x.y/10.21953").
-    // Inherit the dd's resolved direction instead.
-    direction: inherit;
     margin-block: 0;
     padding-inline-start: 0;
   }
@@ -115,7 +110,9 @@
 }
 
 // Cover link (#1502). The link overlays the image so the image keeps its own
-// alt text; the badge is a permanent cue that works without hover.
+// alt text. The badge is a hover-only hint: it stays off the publisher's cover
+// art until a pointer is over it, and never appears on touch. It changes
+// instantly, with no transition, so reduced motion needs nothing extra.
 .mg-publication-record__cover-group {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -138,7 +135,7 @@
     }
 
     &:hover .mg-publication-record__cover-badge {
-      background-color: rgb(var(--mg-color-interactive-active));
+      display: grid;
     }
   }
 }
@@ -147,7 +144,7 @@
   position: absolute;
   inset-block-end: var(--mg-spacing-100);
   inset-inline-end: var(--mg-spacing-100);
-  display: grid;
+  display: none;
   place-items: center;
   inline-size: 2.25rem;
   block-size: 2.25rem;

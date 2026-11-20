@@ -7,26 +7,81 @@ const within = (inner, outer) =>
   inner.top >= outer.top - 1 &&
   inner.bottom <= outer.bottom + 1;
 
-/** The badge sits on the cover and the link covers the whole image. */
+// Finds a rule that reveals the badge on hover, inside @media (hover: hover).
+// Play functions cannot produce a real :hover, so the reveal is checked in
+// the stylesheet and the badge position with the badge forced visible.
+function hasHoverReveal(doc) {
+  const visit = (rules, inHoverMedia) =>
+    [...rules].some(rule => {
+      if (rule.media && rule.cssRules)
+        return visit(
+          rule.cssRules,
+          inHoverMedia || /\(hover:\s*hover\)/.test(rule.media.mediaText)
+        );
+      if (rule.cssRules && rule.cssRules.length && !rule.style)
+        return visit(rule.cssRules, inHoverMedia);
+      return (
+        inHoverMedia &&
+        /cover-link:hover\s+\.mg-publication-record__cover-badge/.test(
+          rule.selectorText || ''
+        ) &&
+        rule.style?.display === 'grid'
+      );
+    });
+  return [...doc.styleSheets].some(sheet => {
+    try {
+      return visit(sheet.cssRules, false);
+    } catch {
+      return false; // Cross-origin sheet.
+    }
+  });
+}
+
+/**
+ * The badge is hidden until hover. When shown, it sits in the cover's bottom
+ * inline-end corner, in LTR and RTL, and the link covers the whole image. The
+ * record root's dir is switched in place, as in the aside check, rather than
+ * adding a dedicated RTL story.
+ */
 export async function checkCoverAffordance({ canvasElement }) {
-  await canvasElement.ownerDocument.fonts.ready;
-  const figure = canvasElement.querySelector('.mg-publication-record__cover');
+  const doc = canvasElement.ownerDocument;
+  await doc.fonts.ready;
+  const root = canvasElement.querySelector('.mg-publication-record');
+  const original = root.getAttribute('dir');
+  const figure = root.querySelector('.mg-publication-record__cover');
   const link = figure.querySelector('.mg-publication-record__cover-link');
   const badge = figure.querySelector('.mg-publication-record__cover-badge');
   const image = figure.querySelector('img');
-  const imageBox = image.getBoundingClientRect();
-  const linkBox = link.getBoundingClientRect();
-  const badgeBox = badge.getBoundingClientRect();
-  expect(badgeBox.width).toBeGreaterThan(20);
-  expect(within(badgeBox, imageBox)).toBe(true);
-  expect(within(imageBox, linkBox)).toBe(true);
-  // A click anywhere on the image lands on the link.
-  const doc = canvasElement.ownerDocument;
-  const hit = doc.elementFromPoint(
-    imageBox.left + imageBox.width / 2,
-    imageBox.top + imageBox.height / 2
-  );
-  expect(link.contains(hit)).toBe(true);
+  const view = doc.defaultView;
+  expect(view.getComputedStyle(badge).display).toBe('none');
+  expect(hasHoverReveal(doc)).toBe(true);
+  try {
+    badge.style.display = 'grid';
+    for (const dir of ['ltr', 'rtl']) {
+      root.setAttribute('dir', dir);
+      figure.scrollIntoView({ block: 'center' });
+      const imageBox = image.getBoundingClientRect();
+      const linkBox = link.getBoundingClientRect();
+      const badgeBox = badge.getBoundingClientRect();
+      expect(badgeBox.width).toBeGreaterThan(20);
+      expect(within(badgeBox, imageBox)).toBe(true);
+      expect(within(imageBox, linkBox)).toBe(true);
+      // Bottom half, on the inline-end side: right in LTR, left in RTL.
+      const middle = imageBox.left + imageBox.width / 2;
+      expect(badgeBox.top).toBeGreaterThan(imageBox.top + imageBox.height / 2);
+      if (dir === 'ltr') expect(badgeBox.left).toBeGreaterThan(middle);
+      else expect(badgeBox.right).toBeLessThan(middle);
+      // A click anywhere on the image lands on the link.
+      const hit = doc.elementFromPoint(
+        middle,
+        imageBox.top + imageBox.height / 2
+      );
+      expect(link.contains(hit)).toBe(true);
+    }
+  } finally {
+    badge.style.display = '';
+    root.setAttribute('dir', original);
+  }
 }
 
 /**
@@ -51,13 +106,17 @@ export async function checkAsideContainment({ canvasElement }) {
       expect(within(asideBox, reading.getBoundingClientRect())).toBe(true);
       expect(aside.scrollWidth).toBeLessThanOrEqual(aside.clientWidth + 1);
       expect(asideBox.width).toBeLessThan(16 * 16 + 1);
-      // Identifiers keep the direction their own text resolves to, so a DOI
-      // is not reordered on an RTL page.
+      // Each identifier keeps the direction its own text resolves to, so a
+      // Latin DOI is not reordered on an RTL page or after an Arabic entry.
       aside.querySelectorAll('dd li').forEach(item => {
         const view = item.ownerDocument.defaultView;
         expect(view.getComputedStyle(item).direction).toBe(
-          view.getComputedStyle(item.closest('dd')).direction
+          item.matches(':dir(rtl)') ? 'rtl' : 'ltr'
         );
+        // ASCII text with a Latin letter (a DOI, a symbol) is always LTR.
+        if (/^[\x20-\x7e]*[a-z][\x20-\x7e]*$/i.test(item.textContent)) {
+          expect(view.getComputedStyle(item).direction).toBe('ltr');
+        }
       });
       aside.querySelectorAll('figure, dd, li').forEach(node => {
         expect(within(node.getBoundingClientRect(), asideBox)).toBe(true);
