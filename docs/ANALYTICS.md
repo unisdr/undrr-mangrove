@@ -25,7 +25,7 @@ Download links use one naming scheme, so reports can count them with a single ma
 
 - Download labels start `download_`, for example `download_publisher`, `download_internal` and `download_backup`.
 - A second link to the same file, such as a linked cover, adds `_cover` to the label and `-cover` to the region: `download_publisher_cover` in `undrr-download-box-cover`.
-- In-page navigation starts `nav_`, for example `nav_all_downloads_cover` (the jump link under a cover) and `nav_show_all_downloads` (the button that opens or closes a long resource list), so it never counts as a download.
+- In-page navigation starts `nav_`, so it never counts as a download. Examples: `nav_all_downloads_cover` (the jump link under a cover), `nav_show_all_downloads` (the button that opens or closes a long resource list), and `nav_filter_language` and `nav_filter_text` (the resource table's language and text filters). Language buttons report `nav_filter_language: <language code>`.
 
 The script records clicks through `mousedown` listeners. A keyboard activation (Enter or Space on a button or link) and a click made from code are not recorded. This applies site-wide, not only to these names.
 

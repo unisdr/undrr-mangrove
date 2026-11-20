@@ -107,7 +107,7 @@ This table records adapter decisions to implement and verify later; it does not 
 
 The inspected template opens resource links in new windows with `rel="noopener"` and an accessible warning. Preserve the host's reviewed policy and communicate the actual behaviour; this spec does not introduce a different global new-window rule. A linked cover follows the same policy as the first resource link; see [Cover link and download cues](#cover-link-and-download-cues). Retain meaningful action names and file context in accessible names, not icon/colour-only affordances. A format badge alone does not identify an available file.
 
-The source attachment template labels a status line “Last checked”, but the preprocessing value is media **creation time**, not a verified link-check event. The proposed record omits that assurance until a genuine check timestamp/process is supplied, or uses an accurately labelled source date after editorial approval. It must not turn creation time into a claim of verification. The record now labels that date "Added {date}"; see [Resource presentation](#resource-presentation).
+The source attachment template labels a status line “Last checked”, but the preprocessing value is media **creation time**, not a verified link-check event. The proposed record omits that assurance until a genuine check timestamp/process is supplied, or uses an accurately labelled source date after editorial approval. It must not turn creation time into a claim of verification. The record shows that date as "Added" in Bibliographic details; see [Adaptive resource presentation](#adaptive-resource-presentation).
 
 ## Cover link and download cues
 
@@ -142,12 +142,12 @@ Decided for [#1502](https://github.com/unisdr/undrr-mangrove/issues/1502), Novem
 - **Motion.** The badge and outline appear instantly, with no transition, so reduced motion needs nothing extra ([motion guidance](MOTION.md): hover feedback may be instant).
 - **RTL.** The badge uses logical insets. Neither icon is in the icon system's RTL mirror list, so neither flips.
 - **Size.** The badge is 2.25rem. The click target is the whole cover, not the badge.
-- **New windows.** The cover opens its target the same way as the labelled link it duplicates. A publisher link opens in a new tab (`target="_blank"`, `rel="noopener"`), so the cover does too; a hosted copy opens in the same tab, and so does its cover ([Resource presentation](#resource-presentation)). The labelled link carries the spoken "opens in new tab" warning. The cover's only visual cue is the external-link badge on hover, a gap shared with the Drupal interim.
-- **Resource list.** A publisher link in the list ends with the same `external-link` icon, so the badge and the list use one cue for "leaves the site".
+- **New windows.** The cover opens its target the same way as the labelled link it duplicates. A publisher link opens in a new tab (`target="_blank"`, `rel="noopener"`), so the cover does too; a hosted copy opens in the same tab, and so does its cover ([Adaptive resource presentation](#adaptive-resource-presentation)). The labelled link carries the spoken "opens in new tab" warning. The cover's only visual cue is the external-link badge on hover, a gap shared with the Drupal interim.
+- **Resource list.** A publisher link in the row or table ends with the same `external-link` icon, so the badge and the list use one cue for "leaves the site".
 
 ### 3. "All downloads (N)" under the cover
 
-**Decision.** With two or more resources, a text link under the cover reads "All downloads (N)" and jumps to the "Read or access this publication" heading. N counts primary resources; backups are not counted separately. There is no modal.
+**Decision.** With two or more resources, a text link under the cover reads "All downloads (N)" and jumps to the "Read or access this publication" heading. N counts primary resources; backups are not counted separately. There is no modal. When the table is filtered or collapsed, the link first resets the filters to All and opens the list (see [Adaptive resource presentation](#adaptive-resource-presentation)).
 
 **Why.** A reader who sees one cover can't tell that the record has several files, and the cover only reaches the first one. A modal or menu would be a second download interface to keep in step with the list. An in-page link keeps one list and only points at it. With one resource the cover already reaches everything, so the cue would be noise.
 
@@ -179,7 +179,9 @@ Decided for [#1502](https://github.com/unisdr/undrr-mangrove/issues/1502), Novem
 | Cover, publisher copy | `undrr-download-box-cover` | `download_publisher_cover` |
 | Cover, hosted copy | `undrr-download-box-cover` | `download_internal_cover` |
 | "All downloads (N)" | `undrr-download-box-cover` | `nav_all_downloads_cover` |
-| "Show all {count} files" / "Show fewer files" | `undrr-download-box` | `nav_show_all_downloads`, in both states (see [Long resource lists](#long-resource-lists)); mouse clicks only, as for every tracked click |
+| "Show all {count} files" / "Show fewer files" | `undrr-download-box` | `nav_show_all_downloads`, in both states |
+| Language buttons / select | `undrr-download-box` | `nav_filter_language: <code>` / `nav_filter_language` |
+| Text filter | `undrr-download-box` | `nav_filter_text` |
 
 **Why.** Each rule needs only one match. Region `undrr-download-box` (a prefix match, which also catches `-cover`) or label prefix `download_` finds every download click. Excluding `cover` leaves only the resource list. In-page navigation starts `nav_`, so it never counts as a download. Labels are fixed English strings with no counts, as in the [Collection page](https://mangrove.undrr.org/?path=/docs/patterns-collection-page--docs), so reports don't split by language or by number. The shared script's behaviour is unchanged; see [analytics](ANALYTICS.md).
 
@@ -190,32 +192,13 @@ Decided for [#1502](https://github.com/unisdr/undrr-mangrove/issues/1502), Novem
 - **Manual screenshots** in LTR, Arabic RTL and emulated forced colours, with and without hover; see the pull request for what was and wasn't checked.
 - Not done: testing with screen readers, voice control or real Windows High Contrast. These remain part of the acceptance outcomes below.
 
-## Resource presentation
+## Adaptive resource presentation
 
-Decided for [#1505](https://github.com/unisdr/undrr-mangrove/issues/1505), November 2026. On PreventionWeb and undrr.org, a publication usually has two copies of each file: the original on the publisher's site and a backup hosted by UNDRR. Hosted-only records are the exception. The record now treats publisher plus backup as the standard case, following Drupal's download box (`field--default--node--field-attachment.html.twig` in drupal-base, from [web-backlog#2363](https://gitlab.com/undrr/web-backlog/-/issues/2363) and [#2453](https://gitlab.com/undrr/web-backlog/-/issues/2453)). Each resource is one list item:
+Decided for [#1505](https://github.com/unisdr/undrr-mangrove/issues/1505) and its follow-up, November 2026. On PreventionWeb and undrr.org a publication usually has two copies of each file: the original on the publisher's site and a backup hosted by UNDRR (Drupal's download box, `field--default--node--field-attachment.html.twig`, from [web-backlog#2363](https://gitlab.com/undrr/web-backlog/-/issues/2363) and [#2453](https://gitlab.com/undrr/web-backlog/-/issues/2453)).
 
-| Case | Primary line | Under it |
-| --- | --- | --- |
-| A. Publisher + backup (standard) | **Access {title}** to the publisher URL, opening in a new tab | Backup line: **Download a backup copy hosted by this site**, then the file facts, then **What is a backup copy?** |
-| B. Hosted only | **{title}** to the hosted file, then the file facts | Nothing |
-| C. Publisher only | **Access {title}**, opening in a new tab, then the file facts when known | Nothing |
-| Video host | **Watch {title}** instead of Access (youtube.com, youtu.be, vimeo.com) | As A or C |
+A UX review measured the earlier stacked list at 237px for one file and 454px for three at 1378px wide. That pushed the Description below the fold. The repeated "What is a backup copy?", the stacked backup and fact lines, the large button and the date line cost the most. The presentation now grows with the number of files and languages.
 
-**Primary and backup.** The publisher's original is the primary route because it is the authoritative copy. The backup is a quieter second route, indented under its primary with an inline-start rule, and never replaces an invalid primary. Its wording is fixed interface text, so a backup needs only a URL. The link's accessible name is that wording followed by the title in visually hidden text ("Download a backup copy hosted by this site: {title}"), so with several files each backup link has a unique name. The visible label stays at the start of the name for voice control, as Drupal's `aria-label` does. Its `hreflang` falls back to the resource's language. The cover still links to the first primary resource, never the backup.
-
-**File facts.** File facts read "TYPE, SIZE · Language", for example "PDF, 1.6 MB · English". Unknown parts are dropped, and the line is omitted when nothing is known. With a backup, the facts sit on the backup line, because they describe the hosted file. Type and size never move from one copy to the other, because each describes one file. Language belongs to the document, so the backup inherits it when it has none. Hosted-only shows the facts on the primary line; publisher-only shows them only when known. Facts follow the interface direction so they line up under their link. The language name carries the file's language (`lang`, falling back to the resource's), so "Français" is pronounced in French. Sizes are supplied text, never computed.
-
-**Verbs and new tabs.** "Access" and "Watch" are interface words around the title. The title keeps its own `lang` and `dir="auto"`, and each language places it where its grammar needs (`{title}にアクセス`). Publisher links open in a new tab with `rel="noopener"`, as Drupal does. They end with the existing `external-link` icon and visually hidden "(opens in new tab)" text. Hosted links open in the same tab, which is a deliberate difference from Drupal (which opens every attachment link in a new window): a download doesn't need a new tab, and an unexpected one is a known usability problem. The cover follows the same rule as the link it duplicates. A hosted-only link's accessible name is the title alone, the same as its visible text. Drupal's `aria-label` replaces it with "Download: {title} (opens in new window)". The record doesn't do that: a name that differs from the visible text breaks voice control (WCAG 2.5.3, Label in Name), and the link no longer opens a new window. The file facts that follow say it's a file.
-
-**Backup explanation.** A native `<details>` element labelled **What is a backup copy?** reveals: "We keep a copy of many documents to improve long-term access. Use this if the publisher's site is slow or unavailable." It is followed by "Problems? Contact us." when the adapter supplies `contactHref`. Drupal pre-fills the contact form's topic, subject and the entry ID in that URL, and the adapter should do the same; the record only renders it. As in Drupal, the contact link opens in a new tab, so the reader keeps the record open while writing to us. It has the same external-link icon and hidden "(opens in new tab)" text as publisher links. The sentence ends with Drupal's full stop in Latin-script languages and Arabic, and with "。" in Japanese and Chinese, matching the ideographic full stops in those languages' explanation text (the `sentenceEnd` label). `<details>` was chosen over Drupal's `?` button with `aria-expanded` for several reasons. It works without JavaScript, which matters because the record must be usable as static HTML. Keyboard, screen-reader and forced-colours support come from the browser. Its visible text label is something voice-control users can say, which a "?" is not. The summary uses Mangrove's global `details > summary` focus ring. Drupal also attaches the explanation to both links with `aria-describedby`. The record doesn't, because the explanation follows directly in reading order and would otherwise be read on every pass through the link.
-
-**Date line.** One line below the list reads **"Added {date}"**, for example "Added 15 March 2026". It gives the date the record's resources were added to the site, and like Drupal it shows in every case, including publisher-only and video records. Drupal labels this value "Last checked", but it is the media item's creation date, not a link check; this spec already says not to present creation time as verification. "Added" states only what the date is. The user may still change the wording. The date is a `<time>` element in the editorial-manual format, with Latin digits as Drupal prints them. It is shown only with resources and a valid ISO date.
-
-### Long resource lists
-
-**Decision.** A record with **3 or more** resources shows the first **2** resource groups in full (primary, backup, file facts and explanation). Groups 3 to N are hidden until a "Show all {count} files" button opens them; it then reads "Show fewer files". The numbers are two constants, `COLLAPSE_FROM = 3` and `VISIBLE = 2`, next to `showAllDownloads` in `recordAccess.js`, so they can be tuned in one place.
-
-**Why.** In the local Drupal database there are 27,839 published publications:
+The local Drupal database has 27,839 published publications:
 
 | Files per record | Share |
 | --- | --- |
@@ -224,25 +207,88 @@ Decided for [#1505](https://github.com/unisdr/undrr-mangrove/issues/1505), Novem
 | 3 | 1.8% |
 | 4–5 | 1.4% |
 | 6–10 | 0.9% |
-| 11–20 | 0.2% |
-| 21 or more | 12 records (the largest has 34, node 42346) |
+| 11 or more | 57 records (the largest has 34, node 42346) |
 
-Each group is about three lines, so the largest records run to about 100 lines and push the description and citation far down the page. One or two files are shown as they are. From three, the list collapses: the first two groups stay in view, and the button gives the true total. That threshold was the user's decision.
+### Tiers
 
-**How.**
+The thresholds are named constants in `recordAccess.js` (`TABLE_FROM`, `TIER3_FROM`, `TEXT_FILTER_FROM`, `LANGUAGE_FILTER_FROM`, `LANGUAGE_SELECT_FROM`, `PREVIEW_ROWS`), and each boundary has a test.
 
-- **True disclosure.** The collapse uses ShowMore's [items mode](https://mangrove.undrr.org/?path=/docs/components-showmore--docs), added in this change. It hides whole groups and never clips them. The list stays one `<ul>`, and groups 3 to N carry `data-mg-show-more-item`. When ShowMore runs, they get `hidden="until-found"`, so they leave the accessibility tree and the tab order. Screen-reader users hear two items and a button that really reveals the rest. Earlier drafts used ShowMore's default, visual-only collapse. That kept all 34 groups in the accessibility tree behind a toggle that changed nothing they could perceive, split the list in two, and let Shift+Tab land on a control 3,500px off-screen.
-- **Button.** The toggle is a `<button>` after the list, with `aria-expanded` and `aria-controls`. Enter and Space work it. When the reader opens the list, focus moves to the first link of group 3, and `focus()` scrolls it into view. Before this, a real Enter on the 34-file story scrolled to the button at the end of the list and left the reader past everything revealed. Shift+Tab from there returns to group 2. Closing moves focus to the button from a group that is being hidden. The button needs no hidden context, because it sits inside "Read or access this publication" and its text names what it shows.
-- **Find in page and text-highlight links.** In browsers that support `until-found` (Chromium), both find-in-page and a text-highlight link (`#:~:text=…`) search the hidden groups and fire `beforematch`. That opens the whole list and keeps the label and `aria-expanded` true; focus stays with the browser. This depends on ShowMore's CSS overriding normalize's `[hidden] { display: none }`; without it the browser never searches the groups. A host stylesheet with `[hidden] { display: none !important }` defeats it (see the ShowMore docs). Browsers without `until-found` fall back to plain `hidden`, where neither can reach hidden groups until the list is opened.
-- **Without JavaScript.** The groups ship visible and the button ships `hidden`, following ShowMore's documented pattern. Every group shows and no dead button appears.
-- **Host integration (web-backlog#3362).** The toggle doesn't opt out of auto-init, so a host page only needs to load `show-more.js`. It initialises `[data-mg-show-more]` toggles on `DOMContentLoaded`. Markup added later can call `mgShowMore(toggle)`, which is idempotent.
-- **"All downloads (N)".** The cover cue always shows the true total. If the list is collapsed, its click handler opens it with `mgShowMoreSetOpen(toggle, true)`, without a synthetic click, and the browser then follows the anchor to the resources heading. Without JavaScript it is a plain anchor to an open list.
-- **Analytics.** The button carries `data-vf-analytics-label="nav_show_all_downloads"` in both states (ShowMore keeps an author-set label). It is navigation, so it doesn't start `download_`. The drupal-base click tracker listens for `mousedown` only. So it records a mouse click on the toggle; when "All downloads (N)" opens the list, it records only `nav_all_downloads_cover`; and it never records keyboard activation (Enter or Space) of any toggle. That last gap is site-wide and pre-existing.
-- **Stories.** "Several files" (3 resources) shows the collapsed state with 2 visible. "Many files" models node 42346 with 34 resources: publisher + backup, every fourth hosted only, and some French and Spanish annexes.
+| Tier | When | Presentation | Measured at 1378px |
+| --- | --- | --- | --- |
+| 1 | 1 resource | One access row: **Access {title}** ↗ (or **Watch**, or the plain title for hosted-only), then "Language · Format, size", then the backup as a download-icon link | 115px (was 237px) |
+| 2 | 2–5 resources, one language | A compact table, no filters. Columns: Title, Format / size, Original, Backup | 166px for 2 files |
+| 3 | 2+ languages, or 6+ resources | Tier 2 plus language filters above the table. A Language column shows when "All" is selected | 273px for 3 files in 2 languages (was 454px) |
+| 4 | 11+ resources | Tier 3 plus a "Filter files" text input | 439px for 34 files, collapsed |
 
-**Checks.** `__tests__/resourcePresentation.test.jsx` covers verb selection (including look-alike hosts), file-fact text and placement for each case, new-tab attributes and icons, the closed-by-default disclosure and its contact link, the date line, analytics labels on every link, and title placement in Arabic, Japanese and Chinese. It checks every story in every interface language for unfilled placeholders, and runs axe with the explanation open. Screenshots cover LTR, Arabic RTL, the explanation opened with the keyboard, and emulated forced colours. Screen readers and voice control were not tested.
+- **Long views.** In tiers 2 to 4, a view with more than 6 rows shows the first 6. The rest sit behind ShowMore items mode: "Show all {count} files", where count is the number of rows in the current view, then "Show fewer files". A filter change resets it to collapsed.
+- **Language filter.** It needs 2 or more languages to be useful. A one-language record in tier 3 or 4 therefore has no language filter, only the collapse and, from 11 files, the text filter. From 6 languages the buttons become a native `<select>`. A resource with no known language appears only under "All".
+- **No language-specific toggle label.** "Show all 22 English files" would need each language name in the grammar of every interface language. The toggle uses the generic "Show all {count} files", with the count of the current view.
 
-**Analytics.** All links sit in region `undrr-download-box`. The labels are `download_publisher` for a publisher primary (including Watch), `download_internal` for a hosted-only primary, and `download_backup` for a backup, matching drupal-base!268. The contact link in the explanation is `contact_download_help`: it isn't a download, so it doesn't start `download_`. That name is new and open to review.
+### Rows and cells
+
+- **Primary action.** The primary action column reads **Access** ↗ for a publisher copy, **Watch** ↗ on a video host (youtube.com, youtu.be, vimeo.com), or **Download** for a hosted-only row. Hosted-only rows show "—" in the Backup column, hidden from assistive technology.
+- **Accessible names.** Each repeated action names its file: "Access {title} (opens in new tab)", "Download {title}". The title is visually hidden text after the visible verb, so the visible label starts the name (WCAG 2.5.3).
+- **Backup link.** The backup is a download-icon link named "Download a backup copy hosted by this site: {title}", reusing the Drupal string with the title as hidden text, so every backup link is unique. On narrow screens a short visible "Backup" label appears beside the icon. The target is 28px in the table (above WCAG 2.5.8's 24px) and 44px in the tier-1 row and on narrow screens.
+- **File facts.** File facts describe the hosted backup when there is one, because that is the file we host. Type and size never move between copies; language is inherited. Sizes are supplied text. Formats and sizes sit in `<bdi>`, and titles carry their own `lang` and `dir="auto"`, so Latin text reads correctly in RTL.
+- **New tabs.** Publisher links open in a new tab with `rel="noopener"`, the `external-link` icon and hidden "(opens in new tab)". Hosted links open in the same tab, which is a deliberate difference from Drupal, which opens every attachment link in a new window. The cover follows the link it duplicates.
+- **Title cells.** The title is the row header (`<th scope="row">`), as plain text. The mockups also made it a link; this design doesn't, so each row has one Access link and one Backup link rather than two links to the same file.
+
+### Table semantics
+
+The table has a visually hidden `<caption>` ("Files for this publication"), `<th scope="col">` column headers and a `<th scope="row">` title per row. Below 48rem each row is restyled as a stacked card (CSS grid), as in the mobile mockup.
+
+Changing `display` on table parts drops their table semantics in some browsers, so the table also carries explicit ARIA table roles (`table`, `rowgroup`, `row`, `columnheader`, `rowheader`, `cell`). Screen readers still get rows and headers in card layout. I chose this over switching to a list on narrow screens because it keeps one structure, and the column headers name every cell. In card layout the column headers are visually hidden but still read. Language and facts share one line ("English · HTML, 360 bytes"); the separator is CSS generated content with empty alternative text.
+
+### Filters
+
+- **Controls.** Language filters are a native radio group: Mangrove's SegmentedControl, with a visually hidden legend "Language". They are not the ARIA tabs pattern, because they filter one table rather than switching panels. Arrow keys move between options and select as they go, which is the browser's radio behaviour. From 6 languages the control is Mangrove's Select, labelled "Language", with "All languages (N)" first. The text filter is Mangrove's TextInput (`type="search"`) with a persistent visible label "Filter files". It matches every word of the query in the title, language or format, ignoring case and accents, but not sizes, where "2" would match "422". The text and language filters combine.
+- **Feedback.** Focus stays on the control. A polite live region announces "Showing {shown} of {total} files". When nothing matches, a short message replaces the table.
+- **"All downloads (N)".** It resets the filters to All, opens the list, and the anchor then moves to the resources heading. Its count stays the true total.
+- **Cover.** The cover always targets the first primary resource in source order, whatever the filter.
+- **Find in page.** Table rows hidden by the collapse use plain `hidden`, because Chromium doesn't reveal `hidden="until-found"` on table rows (see ShowMore's items-mode docs). Find-in-page therefore doesn't reach collapsed rows. In tier 4 the text filter covers that need.
+
+### Vanilla and React
+
+React is the full experience. The server-rendered HTML is the contract for Drupal ([web-backlog#3362](https://gitlab.com/undrr/web-backlog/-/work_items/3362)). Filters render only after the React component has mounted, so no control appears without a working script.
+
+| Feature | Vanilla (server HTML + `show-more.js`) | React |
+| --- | --- | --- |
+| Tier 1 row; tier 2–4 table, with every link working | Yes, no JavaScript needed | Yes |
+| Caption, scoped headers, ARIA table roles, mobile cards (CSS) | Yes | Yes |
+| Collapse after 6 rows (ShowMore items mode) | Yes, with `show-more.js`; without it, every row shows | Yes |
+| Language filter (buttons or select) | No; not rendered | Yes |
+| Text filter | No; not rendered | Yes |
+| Live result count | No | Yes |
+| "All downloads (N)" | A plain anchor; a collapsed list stays collapsed unless the host's click handler calls `mgShowMoreSetOpen(toggle, true)` | Resets the filters, opens the list, jumps |
+| Shared "What is a backup copy?" | Yes (`<details>`) | Yes |
+
+A vanilla language filter would be a small enhancement that hides rows by language. I left it out: it would add a second filtering implementation to keep in step with React, and the collapse already keeps long tables short. It can be added later if Drupal needs it.
+
+### Shared explanation and date
+
+- **"What is a backup copy?"** One shared `<details>` follows the row or table, rendered only if some resource has a backup. The text is the Drupal explanation, plus "Problems? Contact us." with the adapter's pre-filled contact URL, opening in a new tab. The per-file disclosure is gone. `<details>` works without JavaScript, and its visible label can be said by voice-control users.
+- **"Added".** The date moves out of the access block into Bibliographic details, as "Added" with the date (the date the record's resources were added; Drupal's media creation date). Drupal labels it "Last checked", but it isn't a link check, so this spec doesn't use that label.
+
+### Analytics
+
+Every access link keeps `download_publisher`, `download_internal` or `download_backup` in region `undrr-download-box`. The new controls are navigation:
+
+| Control | Label |
+| --- | --- |
+| Language buttons | `nav_filter_language: <language code>`. SegmentedControl appends the stable option value, so reports can split by language, and the label still starts `nav_filter_language` |
+| Language select | `nav_filter_language` |
+| Text filter | `nav_filter_text` |
+| Show all / Show fewer | `nav_show_all_downloads` |
+
+None of them starts `download_`. The drupal-base tracker records `mousedown` only, so keyboard use of these controls isn't recorded. That gap is site-wide and pre-existing.
+
+### Checks
+
+- **Unit tests.** `__tests__/resourceTiers.test.jsx` covers tier boundaries (0, 1, 2, 5, 6, 10, 11 and 34 files; 5, 6 and 7 languages), language groups, filtering, each tier's markup and names, table semantics, RTL isolation, the shared explanation, "Added" in Bibliographic details, placeholders in every language, and axe. `__tests__/resourceFilters.test.jsx` covers the radio group, the select, the text filter, the collapse reset, the live region, "All downloads (N)", the cover target under a filter, and the server-rendered (vanilla) markup.
+- **Browser checks.** Tier 1's access block is at most 160px (200px narrow) and tier 3's at most 340px (460px narrow), with the Description directly after it. In Many files: 6 of 34 rows show; Enter opens the list and focuses row 7; Space closes it; a language filter keeps focus and announces the count; the text filter combines with it; "All downloads (34)" resets and opens. Many languages: the select filters to one row.
+- **Real keys.** A Playwright run in Chromium exercised arrow keys in the radio group, Tab and Shift+Tab, typing, Enter and Space on the toggle, and a mouse click on "All downloads".
+- **Screenshots.** Every story at 1378px and 390px, plus Arabic.
+- **Not done.** Screen readers, voice control, and real Windows High Contrast.
 
 ## Responsive and accessibility requirements
 
@@ -264,7 +310,7 @@ Each group is about three lines, so the largest records run to about 100 lines a
 | Explicitly labelled core bibliographic and resource information | Preserves distinct source meanings while making ordinary records easier to scan; it does not promote hidden fields or mandate every field configured for policies/statements. |
 | Optional supplied standfirst | Experimental story capability derived from the news-entry introduction, not automatic promotion of hidden `field_short_description` or truncation of the full body. The adapter must obtain approved text or omit it. |
 | Optional approved publication citation support | A future integration decision. It is not parity with the source's hazard-profile-only Drupal citation extra field/library and does not unhide `undrr_citation`; future Mangrove CiteThis reuse is a separate proposal. |
-| Relabel the apparent “Last checked” assurance as “Added {date}” | Decided in [Resource presentation](#resource-presentation) to avoid representing media creation as a verified check. The Drupal template still needs the matching change. |
+| Relabel the apparent “Last checked” assurance as “Added” | Decided in [Adaptive resource presentation](#adaptive-resource-presentation) to avoid representing media creation as a verified check. The Drupal template still needs the matching change. |
 
 No production adapter, data migration, Gutenberg serialization, live-domain parity, accessibility certification or current deployment is established here. Keep Drupal extraction, eligibility and URLs in the consumer adapter; Mangrove owns the presentation requirements and shared component contracts. The teaser/card contracts remain separate and unchanged.
 
