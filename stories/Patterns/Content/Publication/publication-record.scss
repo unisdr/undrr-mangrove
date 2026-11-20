@@ -43,6 +43,11 @@
   ul {
     @include mg-list-unmarked;
 
+    // The foundational RTL list rule sets `direction: rtl` on every list
+    // under an RTL page, which overrides the `dir="auto"` on the dd and
+    // reorders a Latin DOI ("10.21953/x.y" displayed as "x.y/10.21953").
+    // Inherit the dd's resolved direction instead.
+    direction: inherit;
     margin-block: 0;
     padding-inline-start: 0;
   }

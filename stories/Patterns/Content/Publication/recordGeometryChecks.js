@@ -51,6 +51,14 @@ export async function checkAsideContainment({ canvasElement }) {
       expect(within(asideBox, reading.getBoundingClientRect())).toBe(true);
       expect(aside.scrollWidth).toBeLessThanOrEqual(aside.clientWidth + 1);
       expect(asideBox.width).toBeLessThan(16 * 16 + 1);
+      // Identifiers keep the direction their own text resolves to, so a DOI
+      // is not reordered on an RTL page.
+      aside.querySelectorAll('dd li').forEach(item => {
+        const view = item.ownerDocument.defaultView;
+        expect(view.getComputedStyle(item).direction).toBe(
+          view.getComputedStyle(item.closest('dd')).direction
+        );
+      });
       aside.querySelectorAll('figure, dd, li').forEach(node => {
         expect(within(node.getBoundingClientRect(), asideBox)).toBe(true);
         // Text can spill out of a box that itself fits; RTL spills leftwards,
