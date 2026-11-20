@@ -173,17 +173,53 @@ hides one panel.
   purpose. This also meets
   [WCAG 1.4.13 Content on Hover or Focus](https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html).
 
+- **On narrow screens, the menu is a modal dialog.** Below 900px the drawer
+  follows the
+  [APG modal dialog pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/):
+  it is labelled, keeps focus inside, closes on Escape and returns focus to
+  whatever opened it. The page behind does not scroll, and a swipe past the
+  end of a long list stays in the drawer (`overscroll-behavior: contain`).
+  Nested groups open on the same surface; Back restores the scroll position
+  and focus on the group the visitor came from.
+- **Each destination has one predictable home.** Navigation only helps when a
+  visitor can guess which category holds what they want. List a destination
+  once, under the category a visitor would look in, and name categories after
+  what they contain. Repeating a link under unrelated categories, or burying
+  it in a long list of a different kind of content, makes visitors scan
+  everything
+  ([Nielsen Norman Group on mega menus](https://www.nngroup.com/articles/mega-menus-work-well/)).
+  The component cannot enforce this; it belongs to each site's information
+  architecture. The stories model it: practical guidance has its own category
+  instead of repeating under publication types.
+
 ### Evidence and limits
 
 The pattern choice rests mostly on expert consensus and the GOV.UK testing
 above, not on research with UNDRR audiences. APG examples are not tested with
 every screen reader. Some screen-reader users prefer menubar-style arrow
 navigation for large menus (see the comments on Roselli's 2017 post); the
-arrow shortcuts here offer that without changing the semantics. Still to
-verify with people and assistive technology: NVDA, JAWS and VoiceOver with the
-two-column panels, voice control, tablets 900px or wider, and whether visitors
-miss hover-to-open. Record findings in
-[#1499](https://github.com/unisdr/undrr-mangrove/issues/1499).
+arrow shortcuts here offer that without changing the semantics.
+
+What has been checked, in Jest and in real Chromium and WebKit
+(`yarn test:megamenu-keyboard-browser`, `yarn test:megamenu-mobile-browser`):
+
+- Tab and Shift+Tab reach every desktop destination from a fresh load and
+  after pointer navigation and browser Back, and ArrowDown on a top-level
+  button opens the panel rather than scrolling the page. Arrow keys still
+  scroll the page when focus is on the page itself, as browsers do; that is
+  the likely cause of the page scroll seen in the
+  [#1499](https://github.com/unisdr/undrr-mangrove/issues/1499) trial.
+- On a phone-sized viewport, a long list scrolls inside the drawer, the page
+  behind stays put, the last entry is reachable, and Back and reopening
+  restore the expected position. Chromium uses a synthetic touch swipe and
+  WebKit the scroll wheel.
+
+Still to verify with people, devices and assistive technology: a physical
+phone and tablet (including tablets 900px or wider), NVDA, JAWS and VoiceOver
+with the two-column panels, voice control, whether visitors miss
+hover-to-open, and whether visitors find destinations in each site's real
+content structure. Treat any discovery difficulty seen so far as a research
+question, not a pass or a failure.
 
 ## Accessibility
 
@@ -339,7 +375,7 @@ close the menu and return focus to opener. The panel uses a translucent blurred
 surface with opaque fallback and switches to opaque/no-transition for reduced
 motion/transparency, increased contrast, and forced colors.
 
-This is a drop-in update: existing `sections`, logo/timing props, Drupal
+This is a drop-in update: existing `sections`, logo props, Drupal
 attributes, and hydration entry points are unchanged. `labels` also accepts
 `backLabel`, `allSectionsLabel`, `closeLabel`, `overviewLabel`,
 `toggleMobileNavLabel`; omitted keys use the selected catalogue, then English defaults. Legacy `menuLabel`
@@ -395,6 +431,7 @@ for consumers needing the same strings outside React.
   - Categories in two-column panels are buttons with `aria-expanded` that show their destinations on click, Enter or Space, and still preview on hover. Focus no longer switches them, so Tab reaches the chosen category's destinations; previously only the last category's destinations could be reached by keyboard. Each category's own page leads its destinations.
   - Removed `menu`, `menuitem`, `aria-haspopup` and the misused `aria-current="page"` from panels, and the panel live region.
   - Arrow keys are shortcuts only: ↓ / ↑ and Home / End inside a panel, ← / → and Home / End along the bar. They work from the focused element, skip anything that cannot take focus, and leave Tab, form fields and ← / → inside panels to the browser.
+  - Mobile and content: Design principles now cover the drawer as a modal dialog and one home per destination. The story data lists each destination once, with practical guidance in its own category, and Directory has its own entries instead of repeating News & Events. Browser checks cover the trial's Back path and long-list touch scrolling.
   - Analytics: top-level clicks that used to navigate now report `Mega menu: Section`, and category clicks report the new `Mega menu: Category`. The `WithCustomDelay` story is removed.
 
 - **1.7.1**, 2026-11-13 ([web-backlog#3328](https://gitlab.com/undrr/web-backlog/-/work_items/3328)): The logo in the branded variant keeps its proportions when the top bar is too narrow for its full width. It previously kept its height while its width shrank, so it was drawn squeezed. It now scales down inside its box, aligned to the inline start in left-to-right and right-to-left layouts.

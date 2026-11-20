@@ -213,5 +213,90 @@ for (const engine of [chromium, webkit]) {
     );
     console.log(engine.name(), width, 'desktop passed');
   }
+  // Long nested list (#1499 check 2). Chromium sends a synthetic touch scroll
+  // gesture; Playwright cannot synthesise one in WebKit, which uses the wheel
+  // over the drawer instead. Neither replaces a physical phone.
+  const phonePage = page;
+  {
+    // Mobile WebKit has no wheel input in Playwright, so WebKit runs this in
+    // a touch page without mobile emulation.
+    const page =
+      engine === webkit
+        ? await browser.newPage({
+            viewport: { width: 393, height: 852 },
+            hasTouch: true,
+          })
+        : phonePage;
+    await page.setViewportSize({ width: 393, height: 852 });
+    await page.goto(
+      `${baseUrl}/iframe.html?id=components-navigation-megamenu--progressive-mobile&viewMode=story`
+    );
+    const drawer = page.getByRole('dialog');
+    await page.getByRole('button', { name: 'Open navigation menu' }).tap();
+    await drawer.getByRole('button', { name: 'Knowledge Hub' }).tap();
+    await drawer.getByRole('button', { name: 'Publications' }).tap();
+    await drawer.getByRole('heading', { name: 'Publications' }).waitFor();
+    const metrics = () =>
+      drawer.evaluate(element => ({
+        top: element.scrollTop,
+        max: element.scrollHeight - element.clientHeight,
+        page: window.scrollY,
+      }));
+    // The trial's phone size; the drawer is capped at 700px tall.
+    assert((await metrics()).max > 40, 'the list overflows the drawer');
+    const box = await drawer.boundingBox();
+    const swipeUp = async distance => {
+      if (engine === chromium) {
+        const cdp = await page.context().newCDPSession(page);
+        await cdp.send('Input.synthesizeScrollGesture', {
+          x: Math.round(box.x + box.width / 2),
+          y: Math.round(box.y + box.height * 0.7),
+          yDistance: -distance,
+          gestureSourceType: 'touch',
+          speed: 1200,
+        });
+        await cdp.detach();
+      } else {
+        await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+        await page.mouse.wheel(0, distance);
+      }
+      await page.waitForTimeout(300);
+    };
+    await swipeUp(60);
+    let scroll = await metrics();
+    assert(scroll.top > 20, `the swipe scrolls the drawer (${scroll.top})`);
+    assert.equal(scroll.page, 0, 'the page behind does not scroll');
+    // Past the end, the gesture stays in the drawer rather than chaining.
+    await swipeUp(2000);
+    scroll = await metrics();
+    assert(scroll.top >= scroll.max - 1, 'the drawer reaches its last entry');
+    assert.equal(scroll.page, 0, 'over-scroll does not move the page');
+    const last = drawer.getByRole('link', { name: 'Policy Frameworks' });
+    const lastBox = await last.boundingBox();
+    assert(
+      lastBox.y + lastBox.height <= box.y + box.height + 1,
+      'the last entry is fully visible'
+    );
+    // Entering a lower group and returning restores the position and focus.
+    const group = drawer.getByRole('button', { name: 'Technical Reports' });
+    await group.tap();
+    await drawer.getByRole('heading', { name: 'Technical Reports' }).waitFor();
+    await drawer.getByRole('button', { name: 'Back', exact: true }).tap();
+    await drawer.getByRole('heading', { name: 'Publications' }).waitFor();
+    assert(
+      Math.abs((await metrics()).top - scroll.top) <= 1,
+      'Back restores the scroll position'
+    );
+    assert(
+      await group.evaluate(element => element === document.activeElement),
+      'Back restores focus to the group'
+    );
+    await drawer.getByRole('button', { name: 'Close mobile navigation' }).tap();
+    await drawer.waitFor({ state: 'hidden' });
+    await page.getByRole('button', { name: 'Open navigation menu' }).tap();
+    await drawer.getByRole('heading', { name: 'All sections' }).waitFor();
+    assert.equal((await metrics()).top, 0, 'reopening starts at the top');
+    console.log(engine.name(), 'long nested list touch scrolling passed');
+  }
   await browser.close();
 }

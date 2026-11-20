@@ -8,6 +8,7 @@ const baseUrl = process.env.STORYBOOK_URL || 'http://localhost:6006';
 const storyUrl = story =>
   `${baseUrl}/iframe.html?id=components-navigation-megamenu--${story}&viewMode=story&globals=viewport:reset`;
 const target = 'Words into Action Guidelines';
+const nested = 'Risk Analysis Reports';
 
 const focused = page =>
   page.evaluate(() => {
@@ -58,13 +59,29 @@ for (const engine of [chromium, webkit]) {
   await page.waitForTimeout(500);
   assert.equal(await trigger.getAttribute('aria-expanded'), 'false');
 
-  // Enter opens; Tab alone reaches a nested destination of the first
+  // Enter opens; Tab alone reaches a nested destination of the chosen
   // category, passing later categories without switching destinations.
   await trigger.press('Enter');
   assert.equal(await trigger.getAttribute('aria-expanded'), 'true');
-  const reached = await pressUntil(page, tab, target);
+  let reached = await pressUntil(page, tab, nested);
   assert(reached.inPanel, 'the destination is inside the panel');
   assert.equal(reached.category, 'Publications');
+
+  // The #1499 task: choose Practical guidance, then Tab past the remaining
+  // categories and its landing link to the guidelines.
+  await pressUntil(page, `Shift+${tab}`, 'Practical guidance');
+  await page.keyboard.press('Enter');
+  await page.keyboard.press(tab);
+  assert.equal((await focused(page)).text, 'Risk Information');
+  await page.keyboard.press(tab);
+  assert.equal((await focused(page)).text, 'Practical guidance');
+  await page.keyboard.press(tab);
+  reached = await focused(page);
+  assert.equal(reached.text, target);
+  assert.equal(reached.category, 'Practical guidance');
+
+  // Shift+Tab walks back to the trigger through visible entries only.
+  await pressUntil(page, `Shift+${tab}`, 'Knowledge Hub');
 
   // Enter on another category shows its destinations, led by its page.
   await page.getByRole('button', { name: 'Risk Information' }).focus();
@@ -121,6 +138,39 @@ for (const engine of [chromium, webkit]) {
   assert.equal(await promo.getAttribute('aria-expanded'), 'true');
   await page.keyboard.press(tab);
   assert((await focused(page)).inPanel, 'Tab enters the banner-only panel');
+
+  // The trial's path: pointer navigation, browser Back, pointer use of
+  // another section, then the keyboard. Enter opens, Tab enters the panel
+  // rather than returning to the header, and ArrowDown on the trigger opens
+  // the panel instead of scrolling the page.
+  trigger = await load(page, 'progressive-mobile');
+  await trigger.click();
+  await page
+    .locator('.mg-mega-topbar__item--active .mg-mega-content__menu--desktop')
+    .getByRole('link', { name: 'Policy Briefs' })
+    .click();
+  await page.waitForURL(url => !url.href.includes('iframe.html'));
+  await page.goBack();
+  trigger = page.getByRole('button', { name: 'Knowledge Hub' });
+  await trigger.waitFor();
+  await page.getByRole('button', { name: 'About Us' }).click();
+  await page.getByRole('button', { name: 'About Us' }).click();
+  await trigger.focus();
+  await trigger.press('Enter');
+  assert.equal(await trigger.getAttribute('aria-expanded'), 'true');
+  await page.keyboard.press(tab);
+  assert((await focused(page)).inPanel, 'Tab after Back enters the panel');
+  await trigger.focus();
+  await trigger.press('Enter');
+  const scrollBefore = await page.evaluate(() => window.scrollY);
+  await trigger.press('ArrowDown');
+  assert.equal(await trigger.getAttribute('aria-expanded'), 'true');
+  assert((await focused(page)).inPanel, 'ArrowDown moves into the panel');
+  assert.equal(
+    await page.evaluate(() => window.scrollY),
+    scrollBefore,
+    'ArrowDown on the trigger does not scroll the page'
+  );
 
   // Category buttons keep the full column width of the former links.
   trigger = await load(page, 'progressive-mobile');
