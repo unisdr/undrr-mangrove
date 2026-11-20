@@ -111,12 +111,6 @@ export default {
       table: { defaultValue: { summary: '2/3' } },
     },
   },
-  args: {
-    variant: 'primary',
-    layout: 'background',
-    headingLevel: 'h1',
-    split: '2/3',
-  },
 };
 
 export const Default = {

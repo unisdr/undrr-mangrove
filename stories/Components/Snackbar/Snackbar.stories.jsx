@@ -38,11 +38,6 @@ export default {
       table: { defaultValue: { summary: '5000' } },
     },
   },
-  args: {
-    message: 'This is a notification message',
-    severity: 'info',
-    openedMiliseconds: 5000,
-  },
 };
 
 // Primary example

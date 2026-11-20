@@ -98,9 +98,6 @@ export default {
       table: { defaultValue: { summary: 'primary' } },
     },
   },
-  args: {
-    variant: 'primary',
-  },
 };
 
 export const DefaultHorizontalBookCard = {

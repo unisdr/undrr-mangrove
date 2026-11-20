@@ -116,11 +116,6 @@ export default {
       table: { defaultValue: { summary: 'vertical' } },
     },
   },
-  args: {
-    variant: 'Large',
-    highlight: 'primary',
-    layout: 'vertical',
-  },
 };
 
 export const DefaultAuthorImage = {
@@ -153,6 +148,9 @@ export const DefaultAuthorImage = {
       )}
     </StoryGrid>
   ),
+  // Each person in the grid sets its own highlight and layout, so those
+  // controls would show a value the story never renders.
+  parameters: { controls: { exclude: ['highlight', 'layout'] } },
 
   name: 'Author image',
 };
@@ -229,13 +227,15 @@ export const NoImageAuthorImage = {
       name="Author Three"
       title="Contributor"
       org="Example organisation"
-      highlight="secondary"
-      layout="vertical"
       tone="default"
       href="#author-three"
       {...args}
     />
   ),
+  args: {
+    highlight: 'secondary',
+    layout: 'vertical',
+  },
 
   name: 'No image author image',
 };

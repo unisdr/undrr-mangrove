@@ -104,10 +104,6 @@ export default {
       ],
     },
   },
-
-  args: {
-    Color: 'Black',
-  },
 };
 
 export const DefaultBreadcrumbs = {

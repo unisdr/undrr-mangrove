@@ -75,11 +75,6 @@ export default {
       table: { defaultValue: { summary: 'true' } },
     },
   },
-  args: {
-    size: 'wide',
-    caption: true,
-    credit: true,
-  },
 };
 
 export const DefaultImageWithCreditCaption = {

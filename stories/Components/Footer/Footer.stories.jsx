@@ -22,10 +22,6 @@ export default {
       description: 'Configuration object for UNDRR syndication widget',
     },
   },
-  args: {
-    variant: 'default',
-    enableSyndication: true,
-  },
   parameters: {
     docs: {
       description: {

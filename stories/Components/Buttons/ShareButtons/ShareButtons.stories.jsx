@@ -16,10 +16,6 @@ export default {
       table: { defaultValue: { summary: 'Check out this link: ' } },
     },
   },
-  args: {
-    SharingSubject: 'Sharing Link',
-    SharingTextBody: 'Check out this link: ',
-  },
 };
 
 export const DefaultShareButtons = {

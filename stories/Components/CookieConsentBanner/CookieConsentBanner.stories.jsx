@@ -141,9 +141,6 @@ export default {
       },
     },
   },
-  args: {
-    cdnBaseUrl: 'https://assets.undrr.org/cookie-banner/v1',
-  },
 };
 
 export const Default = {

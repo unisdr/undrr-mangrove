@@ -124,10 +124,6 @@ export default {
       table: { defaultValue: { summary: 'default' } },
     },
   },
-  args: {
-    centered: false,
-    variant: 'default',
-  },
 };
 
 // Default - Left aligned with text link

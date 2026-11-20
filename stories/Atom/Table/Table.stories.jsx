@@ -70,11 +70,6 @@ export default {
       table: { defaultValue: { summary: 'auto' } },
     },
   },
-  args: {
-    size: 'large',
-    variant: 'default',
-    responsive: 'auto',
-  },
 };
 
 export const DefaultTable = {
