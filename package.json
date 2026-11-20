@@ -163,6 +163,7 @@
     "prettier": "3.10.1",
     "process": "^0.11.10",
     "react": "19.3.1",
+    "react-docgen": "8.0.2",
     "react-dom": "19.3.1",
     "react-syntax-highlighter": "16.1.2",
     "remark-gfm": "^4.0.1",

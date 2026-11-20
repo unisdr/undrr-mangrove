@@ -8,12 +8,41 @@ unconsumed upstream fields, and does not rewrite paths, supply missing props,
 or replace generated snippets with hand-maintained examples.
 
 This is an adapter contract for current tooling, not a canonical component or
-editorial content schema. It still requires Storybook metadata. It neither
-removes the full Storybook build nor establishes Storybook 11 compatibility.
+editorial content schema. It still requires Storybook metadata and the full
+Storybook build.
+
+## Storybook 11 (envelope `v: 1`)
+
+Storybook 11 enables its docgen server by default. `manifests/components.json`
+then holds `$ref` pointers into `services/core/docgen/`,
+`services/core/story-docs/` and `services/addon-docs/mdx/`, which the adapter
+resolves from disk (relative to the manifest, with cycle detection and strict
+JSON-pointer handling) before validation. Both envelopes produce the same
+dereferenced shape.
+
+The docgen server reads props through the TypeScript compiler, which does not
+understand PropTypes or JSDoc in Mangrove's JavaScript components: enums become
+`string` or `any`, descriptions are lost and destructured props without
+defaults are reported as required. Prop data is part of the published contract,
+so `scripts/ai-manifest/react-docgen-source.js` reads it with react-docgen,
+a direct devDependency used as a library (not Storybook's deprecated
+builder-docgen integration). Storybook still decides which file and export
+each component is; if it found none, the adapter follows the story file's
+relative `meta.component` import. JSDoc block tags are read from the same
+docblock in the form the generator has always consumed (`{type}` kept); the
+docgen server's own tags omit the type. When react-docgen finds nothing, the
+docgen server's data is used unchanged.
+
+Against a Storybook 10 baseline this keeps every published prop, type,
+default, description and JSDoc tag identical. Remaining differences come from
+Storybook 11's snippet printer (indentation, `<X></X>` instead of `<X />`) and
+from stories in sibling files that share a component's title, which are now
+included. The generator lists the component's own story file first, so each
+component's previous examples stay an ordered prefix of the new list.
 
 ## Audited consumers
 
-The baseline uses envelope `v: 0`. An unsupported version, empty map, mismatched
+The baseline uses envelope `v: 0`; Storybook 11 produces `v: 1` (above). An unsupported version, empty map, mismatched
 component key/ID, unsafe/reserved component filename, a story scoped to another
 component, duplicate story ID or malformed consumed field fails with its
 source filename and field path. CSS-only and story-only records can legitimately
@@ -59,7 +88,7 @@ node scripts/ai-manifest/compare-manifest-output.mjs /tmp/ai-baseline /tmp/ai-ca
 
 Destinations must not already exist. The snapshot tool reruns generation and
 validation in fresh temporary staging copied from only the metadata/navigation
-inputs; an omitted candidate output cannot inherit an older generated file. It
+inputs (plus `services/`, the targets of v1 `$ref`s); an omitted candidate output cannot inherit an older generated file. It
 refuses either subprocess failure and creates the destination exclusively, so a
 destination created during generation is not overwritten. The required metadata
 contract is written last so an interrupted copy cannot appear complete. `--build-dir=DIR` selects the navigation

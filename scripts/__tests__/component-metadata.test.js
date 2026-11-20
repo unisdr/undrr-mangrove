@@ -408,7 +408,9 @@ describe('Storybook 11 ref-based metadata dereferencing', () => {
     });
 
     it('reports non-existent JSON pointer in existing file', () => {
-      const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'sb11-missing-ptr-'));
+      const tmpDir = fs.mkdtempSync(
+        path.join(os.tmpdir(), 'sb11-missing-ptr-')
+      );
       try {
         const file = path.join(tmpDir, 'data.json');
         fs.writeFileSync(file, JSON.stringify({ existing: 1 }));
@@ -500,7 +502,9 @@ describe('Storybook 11 ref-based metadata dereferencing', () => {
           value: '"default"',
           computed: true,
         });
-        expect(tag.reactDocgen.props.nullFieldsProp.description).toBeUndefined();
+        expect(
+          tag.reactDocgen.props.nullFieldsProp.description
+        ).toBeUndefined();
         expect(tag.reactDocgen.props.nullFieldsProp.required).toBeUndefined();
         expect(tag.reactDocgen.props.nullFieldsProp.type).toBeUndefined();
         expect(
@@ -554,4 +558,3 @@ describe('Storybook 11 ref-based metadata dereferencing', () => {
     });
   });
 });
-

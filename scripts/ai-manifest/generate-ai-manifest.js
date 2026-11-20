@@ -781,6 +781,12 @@ const manifestPath = metadataFileArg
   ? path.resolve(process.cwd(), metadataFileArg)
   : path.join(buildDir, 'manifests', 'components.json');
 const outputDir = path.join(buildDir, 'ai-components');
+let navigationEntriesCache;
+/** Story index entries by ID, read once from the build's navigation index. */
+const navigationEntries = () =>
+  (navigationEntriesCache ??=
+    JSON.parse(fs.readFileSync(path.join(buildDir, 'index.json'), 'utf8'))
+      .entries ?? {});
 const llmsTxtPath = path.join(buildDir, 'llms.txt');
 const distDir = path.resolve(process.cwd(), 'dist/components');
 
@@ -2206,9 +2212,16 @@ async function main() {
       }
     }
 
-    // Story examples (React JSX)
+    // Story examples (React JSX). Storybook 11 also collects stories from
+    // sibling files that share the component's title; list the component's
+    // own story file first so examples[0] stays its primary story.
     if (component.stories?.length) {
-      detail.examples = component.stories.map(s => {
+      const ownFile = s =>
+        navigationEntries()[s.id]?.importPath === component.path;
+      detail.examples = [
+        ...component.stories.filter(ownFile),
+        ...component.stories.filter(s => !ownFile(s)),
+      ].map(s => {
         const example = { name: s.name };
         if (s.snippet) example.code = s.snippet;
         return example;

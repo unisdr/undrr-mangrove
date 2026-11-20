@@ -73,7 +73,10 @@ const config = {
   },
 
   // Allow ES modules
-  transformIgnorePatterns: ['node_modules/(?!core-js)'],
+  // react-docgen ships ESM only; the AI manifest scripts load it.
+  transformIgnorePatterns: [
+    'node_modules/(?!(core-js|react-docgen|strip-indent|min-indent)/)',
+  ],
 
   // Coverage thresholds (ratchet up as coverage improves)
   coverageThreshold: {

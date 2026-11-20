@@ -5,6 +5,12 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import {
+  docblockText,
+  readJsDocTags,
+  readPropTypesDocgen,
+  resolveStoryComponent,
+} from './react-docgen-source.js';
 
 const object = value =>
   value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -188,9 +194,7 @@ export function resolveJsonPointer(data, pointer) {
   }
   if (!p || p === '/') return data;
   if (!p.startsWith('/')) {
-    throw new Error(
-      `Malformed JSON pointer: "${pointer}" must start with '/'`
-    );
+    throw new Error(`Malformed JSON pointer: "${pointer}" must start with '/'`);
   }
   const rawParts = p.slice(1).split('/');
   let curr = data;
@@ -272,7 +276,11 @@ export function resolveRef(baseDir, ref, visited = new Set()) {
 
 export function dereferenceComponentMetadata(
   value,
-  { baseDir = process.cwd() } = {}
+  {
+    baseDir = process.cwd(),
+    readDocgen = readPropTypesDocgen,
+    resolveComponent = resolveStoryComponent,
+  } = {}
 ) {
   if (!object(value) || !object(value.components)) return value;
 
@@ -347,6 +355,7 @@ export function dereferenceComponentMetadata(
     }
 
     let reactDocgen = component.reactDocgen || docgenPayload?.reactDocgen;
+    let propTypesDocgen;
     if (reactDocgen) {
       if (object(reactDocgen.props)) {
         reactDocgen = {
@@ -354,17 +363,36 @@ export function dereferenceComponentMetadata(
           props: cleanDocgenProps(reactDocgen.props),
         };
       }
-    } else if (docgenPayload?.reactComponentMeta) {
+    } else if (docgenPayload) {
+      // Prefer PropTypes documentation; see react-docgen-source.js for why.
+      // The docgen server says which file and export the component is; when
+      // it found none, follow the story file's own meta.component import.
       const meta = docgenPayload.reactComponentMeta;
-      reactDocgen = {
-        ...(typeof meta.description === 'string' && meta.description.trim()
-          ? { description: meta.description }
-          : {}),
-        props: cleanDocgenProps(meta.props),
-        ...(typeof meta.filePath === 'string'
-          ? { definedInFile: meta.filePath }
-          : {}),
-      };
+      const target = meta
+        ? {
+            filePath: meta.filePath,
+            names: [meta.exportName, meta.displayName, docgenPayload.name],
+          }
+        : docgenPayload.error && resolveComponent(docgenPayload.path);
+      propTypesDocgen = target && readDocgen(target.filePath, target.names);
+      if (propTypesDocgen) {
+        reactDocgen = {
+          ...propTypesDocgen,
+          ...(object(propTypesDocgen.props)
+            ? { props: cleanDocgenProps(propTypesDocgen.props) }
+            : {}),
+        };
+      } else if (meta) {
+        reactDocgen = {
+          ...(typeof meta.description === 'string' && meta.description.trim()
+            ? { description: meta.description }
+            : {}),
+          props: cleanDocgenProps(meta.props),
+          ...(typeof meta.filePath === 'string'
+            ? { definedInFile: meta.filePath }
+            : {}),
+        };
+      }
     }
 
     let stories = component.stories;
@@ -392,10 +420,22 @@ export function dereferenceComponentMetadata(
     const compPath =
       docgenPayload?.path || storyPayload?.path || component.path;
     const description =
-      component.description || docgenPayload?.description;
+      component.description ||
+      docgenPayload?.description ||
+      docblockText(propTypesDocgen?.description);
     const compImport = storyPayload?.import || component.import;
-    const jsDocTags = docgenPayload?.jsDocTags || component.jsDocTags;
-    const error = docgenPayload?.error || component.error;
+    // Tags read from the same docblock as the PropTypes props, in the form
+    // the catalogue consumes; the docgen server's tags omit @param types.
+    const ownTags = propTypesDocgen
+      ? readJsDocTags(propTypesDocgen.description)
+      : {};
+    const jsDocTags = Object.keys(ownTags).length
+      ? ownTags
+      : docgenPayload?.jsDocTags || component.jsDocTags;
+    // A component documented through the story-file fallback is not an error.
+    const error = propTypesDocgen
+      ? undefined
+      : docgenPayload?.error || component.error;
 
     dereferencedComponents[key] = {
       ...component,
