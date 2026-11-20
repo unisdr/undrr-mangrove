@@ -15,6 +15,8 @@ const focused = page =>
     const element = document.activeElement;
     return {
       text: element.textContent.trim(),
+      // Categories and their overview links share a name.
+      tag: element.tagName,
       visible: element.getClientRects().length > 0,
       inPanel: Boolean(element.closest('.mg-mega-content')),
       category: document
@@ -72,9 +74,15 @@ for (const engine of [chromium, webkit]) {
   await pressUntil(page, `Shift+${tab}`, 'Practical guidance');
   await page.keyboard.press('Enter');
   await page.keyboard.press(tab);
-  assert.equal((await focused(page)).text, 'Risk Information');
+  assert.deepEqual((({ text, tag }) => ({ text, tag }))(await focused(page)), {
+    text: 'Risk Information',
+    tag: 'BUTTON',
+  });
   await page.keyboard.press(tab);
-  assert.equal((await focused(page)).text, 'Practical guidance');
+  assert.deepEqual((({ text, tag }) => ({ text, tag }))(await focused(page)), {
+    text: 'Practical guidance',
+    tag: 'A',
+  });
   await page.keyboard.press(tab);
   reached = await focused(page);
   assert.equal(reached.text, target);
@@ -87,12 +95,18 @@ for (const engine of [chromium, webkit]) {
   await page.getByRole('button', { name: 'Risk Information' }).focus();
   await page.keyboard.press('Enter');
   await page.keyboard.press(tab);
-  assert.equal((await focused(page)).text, 'Risk Information');
+  assert.deepEqual((({ text, tag }) => ({ text, tag }))(await focused(page)), {
+    text: 'Risk Information',
+    tag: 'A',
+  });
   await page.keyboard.press(tab);
   assert.equal((await focused(page)).text, 'PreventionWeb');
 
   // Arrow shortcuts land only on visible entries.
-  await pressUntil(page, 'ArrowUp', 'Risk Information', 5);
+  assert.equal(
+    (await pressUntil(page, 'ArrowUp', 'Risk Information', 5)).tag,
+    'A'
+  );
   await page.keyboard.press('End');
   assert.equal((await focused(page)).text, 'Sendai Framework Monitor');
 
@@ -162,6 +176,14 @@ for (const engine of [chromium, webkit]) {
   assert((await focused(page)).inPanel, 'Tab after Back enters the panel');
   await trigger.focus();
   await trigger.press('Enter');
+  // The page must be able to scroll, or the check below proves nothing.
+  assert(
+    await page.evaluate(() => {
+      document.body.style.minHeight = '300vh';
+      return document.scrollingElement.scrollHeight > window.innerHeight;
+    }),
+    'the page can scroll'
+  );
   const scrollBefore = await page.evaluate(() => window.scrollY);
   await trigger.press('ArrowDown');
   assert.equal(await trigger.getAttribute('aria-expanded'), 'true');

@@ -178,6 +178,34 @@ describe('top-level disclosure buttons', () => {
   });
 });
 
+describe('sections with an empty items array', () => {
+  it('render a link, or banner copy, rather than an empty panel', () => {
+    render(
+      <MegaMenu
+        sections={[
+          { title: 'Leaf', bannerButton: { url: '/leaf' }, items: [] },
+          { title: 'Note', bannerDescription: '<p>Copy</p>', items: [] },
+          { title: 'Open', items: [{ title: 'Child', url: '/child' }] },
+        ]}
+      />
+    );
+    expect(screen.getByRole('link', { name: 'Leaf' })).toHaveAttribute(
+      'href',
+      '/leaf'
+    );
+    fireEvent.click(trigger('Note'));
+    expect(panelOf(trigger('Note'))).toHaveTextContent('Copy');
+  });
+
+  it('keep Home and End on the bar after sections are removed', () => {
+    const { rerender } = render(<MegaMenu sections={sections} />);
+    rerender(<MegaMenu sections={sections.slice(0, 2)} />);
+    trigger('Knowledge').focus();
+    fireEvent.keyDown(document.activeElement, { key: 'End' });
+    expect(trigger('Directory')).toHaveFocus();
+  });
+});
+
 describe('landing pages stay reachable inside panels', () => {
   it('offers the section landing page in the banner', () => {
     renderDesktop();
@@ -261,6 +289,15 @@ describe('category disclosure buttons', () => {
     expect(
       within(desktop).getByRole('link', { name: 'Global report' })
     ).toBeTruthy();
+  });
+
+  it('ignore hover while keyboard focus is in the destinations', () => {
+    const { desktop, category } = open();
+    const link = within(desktop).getByRole('link', { name: 'Global report' });
+    link.focus();
+    fireEvent.mouseEnter(category('Risk information').closest('li'));
+    expect(link).toHaveFocus();
+    expect(category('Publications')).toHaveAttribute('aria-expanded', 'true');
   });
 
   it('lead the destinations with the category page', () => {

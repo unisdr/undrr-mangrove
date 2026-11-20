@@ -46,8 +46,11 @@ export default function Section({
   // CSS media queries control which version is visible.
   const [filterQuery, setFilterQuery] = useState('');
   const [finderOpen, setFinderOpen] = useState(false);
+  // An empty `items` array (common from CMS feeds) counts as no items, the
+  // same rule TopBarItem uses to decide whether there is a panel at all.
+  const hasItems = section?.items?.length > 0;
   const hasIntroduction = Boolean(
-    section?.bannerHeading && section?.bannerDescription && section?.items
+    hasItems && section.bannerHeading && section.bannerDescription
   );
   const filtering = enableFilter && finderOpen && isActive && hasIntroduction;
   const finderTriggerRef = useRef(null);
@@ -96,15 +99,14 @@ export default function Section({
   );
   const [itemIndex, setItemIndex] = useState(0);
   const destinationsId = useId();
+  const destinationsRef = useRef(null);
 
   // Landmarks inside every section share a name unless it is derived from the
   // section itself, which leaves a screen-reader landmark list unusable.
   const sectionTitle = section?.title || 'Menu section';
 
   const showCategories = Boolean(
-    hasIntroduction &&
-    section.items.length > 0 &&
-    section.items[0].items?.length > 0
+    hasIntroduction && section.items[0].items?.length > 0
   );
   const chosen = showCategories ? section.items[itemIndex] : null;
 
@@ -233,7 +235,7 @@ export default function Section({
 
   return (
     <>
-      {section && section.items && (
+      {hasItems && (
         // The panel takes focus only from script (↓ on its button); its links
         // and buttons are the tab stops.
         <article
@@ -289,7 +291,16 @@ export default function Section({
                       <li
                         key={index}
                         className="mg-mega-content__section-list-item"
-                        onMouseEnter={() => setItemIndex(index)}
+                        onMouseEnter={() => {
+                          // Swapping the list would remove a focused link.
+                          if (
+                            !destinationsRef.current?.contains(
+                              destinationsRef.current.ownerDocument
+                                .activeElement
+                            )
+                          )
+                            setItemIndex(index);
+                        }}
                       >
                         {/* A disclosure: focus alone never switches it. */}
                         <button
@@ -318,7 +329,7 @@ export default function Section({
               )}
             </nav>
           )}
-          {section.items && (
+          {hasItems && (
             <nav
               className="mg-mega-content__right"
               aria-label={`${sectionTitle} submenu`}
@@ -332,6 +343,7 @@ export default function Section({
                   every item when there are no categories. */}
               <ul
                 id={destinationsId}
+                ref={destinationsRef}
                 className="mg-mega-content__menu--desktop"
                 aria-label={chosen ? chosen.title : undefined}
               >
@@ -351,7 +363,7 @@ export default function Section({
       {/* A section with no child items renders its banner description as the
           whole panel, so this markup is the caller's layout and not just inline
           copy. Same contract as above: see the note at the top of this file. */}
-      {section && !section.items && section.bannerDescription && (
+      {section && !hasItems && section.bannerDescription && (
         <article
           className="mg-mega-content | mg-container-full-width"
           {...panelProps}

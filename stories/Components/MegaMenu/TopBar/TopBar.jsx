@@ -51,8 +51,10 @@ export function TopBar({
       e.preventDefault();
     }
 
-    if (e.key === 'Home') itemRef[0]?.focus();
-    if (e.key === 'End') itemRef[itemRef.length - 1]?.focus();
+    // Refs of removed sections stay behind as null entries.
+    const items = (itemRef || []).filter(Boolean);
+    if (e.key === 'Home') items[0]?.focus();
+    if (e.key === 'End') items[items.length - 1]?.focus();
 
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
       const rtl = window.getComputedStyle(e.currentTarget).direction === 'rtl';

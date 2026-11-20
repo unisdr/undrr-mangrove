@@ -228,6 +228,10 @@ for (const engine of [chromium, webkit]) {
     await page.setViewportSize({ width: 393, height: 852 });
     await page.goto(storyUrl('progressive-mobile'));
     const drawer = page.getByRole('dialog');
+    // A tall page, so "the page does not scroll" is a real check.
+    await page.evaluate(() => {
+      document.body.style.minHeight = '300vh';
+    });
     await page.getByRole('button', { name: 'Open navigation menu' }).tap();
     await drawer.getByRole('button', { name: 'Knowledge Hub' }).tap();
     await drawer.getByRole('button', { name: 'Publications' }).tap();
@@ -311,6 +315,7 @@ for (const engine of [chromium, webkit]) {
     await drawer.getByRole('heading', { name: 'All sections' }).waitFor();
     assert.equal((await metrics()).top, 0, 'reopening starts at the top');
     console.log(engine.name(), 'long nested list touch scrolling passed');
+    if (page !== phonePage) await page.close();
   }
   await browser.close();
 }

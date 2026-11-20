@@ -31,7 +31,7 @@ export function TopBarItem({
   // navigation). Section renders a panel for child items or for banner copy
   // alone; only those triggers announce an expanded state.
   const hasPanel = Boolean(
-    section && (section.items || section.bannerDescription)
+    section?.items?.length > 0 || section?.bannerDescription
   );
 
   const trigger = {
@@ -102,7 +102,12 @@ export function TopBarItem({
         <button
           type="button"
           {...trigger}
-          onClick={onToggle}
+          onClick={event => {
+            // Safari does not focus buttons on click; without this, focus
+            // left in the closing panel would be lost when it turns inert.
+            event.currentTarget.focus({ preventScroll: true });
+            onToggle();
+          }}
           aria-expanded={String(isActive)}
           aria-controls={panelId}
           data-vf-analytics-label="Mega menu: Section"
