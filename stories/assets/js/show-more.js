@@ -130,8 +130,62 @@ const itemControllers = new WeakMap();
  * @param {Object|null} stateLabels - Analytics labels per state, or null.
  * @returns {Function} Cleanup restoring the initial markup.
  */
+const FOCUSABLE =
+  'a[href], area[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), summary, iframe, [contenteditable="true"], [tabindex]:not([tabindex="-1"])';
+
+/**
+ * The first control a keyboard user could reach inside `element`, skipping
+ * anything inside a closed <details> other than its summary.
+ *
+ * @param {HTMLElement} element - A revealed item.
+ * @returns {HTMLElement|undefined} The control, if there is one.
+ */
+function firstFocusable(element) {
+  return [...element.querySelectorAll(FOCUSABLE)].find(candidate => {
+    const details = candidate.closest('details:not([open])');
+    return (
+      !details ||
+      (candidate.tagName === 'SUMMARY' && candidate.parentElement === details)
+    );
+  });
+}
+
+/**
+ * Moves focus to the start of what a reader just revealed, so they land on
+ * the new content instead of past it. With no control in the first item,
+ * the item itself takes focus for as long as it has it.
+ *
+ * @param {HTMLElement} element - The first revealed item.
+ */
+function focusRevealed(element) {
+  const control = firstFocusable(element);
+  if (control) {
+    control.focus();
+    return;
+  }
+  element.setAttribute('tabindex', '-1');
+  element.addEventListener('blur', () => element.removeAttribute('tabindex'), {
+    once: true,
+  });
+  element.focus();
+}
+
 function initItemsMode(item, target, labelFor, stateLabels) {
   const items = [...target.querySelectorAll('[data-mg-show-more-item]')];
+  // Bundlers replace process.env.NODE_ENV; loaded unbundled, `process` does
+  // not exist, which counts as development.
+  let isProduction = false;
+  try {
+    isProduction = process.env.NODE_ENV === 'production';
+  } catch {
+    // Not bundled.
+  }
+  if (item.tagName !== 'BUTTON' && !isProduction) {
+    console.warn(
+      '[mg-show-more] Items mode needs a <button> toggle: it carries aria-expanded.',
+      item
+    );
+  }
   const labelNode = item.querySelector('[data-mg-show-more-label]') || item;
   const initial = {
     text: labelNode.textContent,
@@ -139,6 +193,7 @@ function initItemsMode(item, target, labelFor, stateLabels) {
     expanded: item.getAttribute('aria-expanded'),
     controls: item.getAttribute('aria-controls'),
     analytics: item.getAttribute('data-vf-analytics-label'),
+    openClass: item.classList.contains('mg-show-more--button--open'),
     items: items.map(element => element.getAttribute('hidden')),
   };
   // `hidden="until-found"` lets find-in-page reveal an item; browsers without
@@ -162,14 +217,16 @@ function initItemsMode(item, target, labelFor, stateLabels) {
     }
   };
 
-  const setOpen = next => {
+  // A reader's open (click or key on the toggle) moves focus to the first
+  // revealed item, and focus() scrolls it into view. Opens from code or from
+  // find-in-page leave focus and scrolling to the caller or the browser.
+  const setOpen = (next, { reader = false } = {}) => {
     if (next === open) return;
     // Focus inside an item about to be hidden would be lost: move it to the
-    // toggle. Opening leaves focus where it is (on the toggle).
+    // toggle.
     const active = item.ownerDocument.activeElement;
     const focusInside =
       !next && items.some(element => element.contains(active));
-    const toggleFocused = active === item;
     open = next;
     render();
     if (focusInside) item.focus();
@@ -177,34 +234,22 @@ function initItemsMode(item, target, labelFor, stateLabels) {
       returnToContent(item, target);
       return;
     }
-    // Items revealed above a focused toggle push it down, often off-screen.
-    // Bring it back into view so the focused control stays visible
-    // (WCAG 2.4.7); "nearest" scrolls only as far as needed.
-    if (!toggleFocused) return;
-    const box = item.getBoundingClientRect();
-    if (box.top >= 0 && box.bottom <= window.innerHeight) return;
-    const reduce =
-      typeof window.matchMedia === 'function' &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    item.scrollIntoView?.({
-      block: 'nearest',
-      behavior: reduce ? 'auto' : 'smooth',
-    });
+    if (reader && items.length > 0) focusRevealed(items[0]);
   };
 
   const onClick = event => {
     event.preventDefault();
-    setOpen(!open);
+    setOpen(!open, { reader: true });
   };
   // Find-in-page (or a text fragment) revealing one item opens the whole set,
-  // so the label and aria-expanded stay true.
+  // so the label and aria-expanded stay true. The browser owns focus here.
   const onBeforeMatch = () => setOpen(true);
 
   if (target.id === '') target.id = nextTargetId();
   item.setAttribute('aria-controls', target.id);
   item.addEventListener('click', onClick);
   target.addEventListener('beforematch', onBeforeMatch);
-  itemControllers.set(item, setOpen);
+  itemControllers.set(item, next => setOpen(next));
   item.hidden = false;
   // Nothing to hide: leave everything open and the toggle hidden.
   if (items.length === 0) {
@@ -224,7 +269,7 @@ function initItemsMode(item, target, labelFor, stateLabels) {
     });
     labelNode.textContent = initial.text;
     item.hidden = initial.hidden;
-    item.classList.remove('mg-show-more--button--open');
+    item.classList.toggle('mg-show-more--button--open', initial.openClass);
     for (const [attribute, value] of [
       ['aria-expanded', initial.expanded],
       ['aria-controls', initial.controls],

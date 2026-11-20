@@ -685,36 +685,80 @@ describe('mgShowMore', () => {
       expect(
         button.querySelector('[data-mg-show-more-label]').textContent
       ).toBe('Show fewer');
-      expect(document.activeElement).toBe(button); // no focus jump on open
+      // A reader's open moves focus to the first revealed item's link.
+      expect(document.activeElement).toBe(
+        document.querySelector('a[href="/3"]')
+      );
       button.click();
       expect(hiddenItems()).toHaveLength(2);
       expect(button.getAttribute('aria-expanded')).toBe('false');
     });
 
-    it('keeps a focused toggle in view when opening pushes it down', () => {
+    it('a reader opening it focuses the first revealed control', () => {
       const { button } = setupItems();
       mgShowMore(button);
       button.focus();
-      button.scrollIntoView = jest.fn();
-      button.getBoundingClientRect = () => ({ top: 2000, bottom: 2040 });
       button.click();
-      expect(button.scrollIntoView).toHaveBeenCalledWith(
-        expect.objectContaining({ block: 'nearest' })
+      expect(document.activeElement).toBe(
+        document.querySelector('a[href="/3"]')
       );
     });
 
-    it('does not scroll when the opened toggle is still in view or not focused', () => {
+    it('focuses the first revealed item itself when it has no control', () => {
+      document.body.innerHTML = `
+        <ul id="plain"><li>One</li><li data-mg-show-more-item>Two</li><li data-mg-show-more-item>Three</li></ul>
+        <button type="button" data-mg-show-more data-mg-show-more-mode="items" data-mg-show-more-target="#plain">Show more</button>`;
+      const button = document.querySelector('button');
+      mgShowMore(button);
+      button.click();
+      const first = document.querySelectorAll('li')[1];
+      expect(document.activeElement).toBe(first);
+      expect(first).toHaveAttribute('tabindex', '-1');
+      button.focus(); // blur the item
+      expect(first.hasAttribute('tabindex')).toBe(false);
+    });
+
+    it('skips controls inside a closed details, except its summary', () => {
+      document.body.innerHTML = `
+        <ul id="d"><li>One</li><li data-mg-show-more-item><details><summary>Why?</summary><a href="/x">Inside</a></details></li></ul>
+        <button type="button" data-mg-show-more data-mg-show-more-mode="items" data-mg-show-more-target="#d">Show more</button>`;
+      const button = document.querySelector('button');
+      mgShowMore(button);
+      button.click();
+      expect(document.activeElement.tagName).toBe('SUMMARY');
+    });
+
+    it('opening from code or find-in-page leaves focus alone', () => {
       const { button } = setupItems();
       mgShowMore(button);
-      button.scrollIntoView = jest.fn();
-      button.getBoundingClientRect = () => ({ top: 200, bottom: 240 });
-      button.focus();
-      button.click();
-      mgShowMoreSetOpen(button, false);
-      button.getBoundingClientRect = () => ({ top: 2000, bottom: 2040 });
-      button.blur();
+      const outside = document.createElement('a');
+      outside.href = '/outside';
+      document.body.append(outside);
+      outside.focus();
       mgShowMoreSetOpen(button, true);
-      expect(button.scrollIntoView).not.toHaveBeenCalled();
+      expect(document.activeElement).toBe(outside);
+      mgShowMoreSetOpen(button, false);
+      document
+        .querySelector('[data-mg-show-more-item]')
+        .dispatchEvent(new Event('beforematch', { bubbles: true }));
+      expect(button.getAttribute('aria-expanded')).toBe('true');
+      expect(document.activeElement).toBe(outside);
+    });
+
+    it('warns when an items-mode toggle is not a button', () => {
+      const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      try {
+        document.body.innerHTML = `
+          <ul id="w"><li>One</li><li data-mg-show-more-item>Two</li></ul>
+          <a href="#" data-mg-show-more data-mg-show-more-mode="items" data-mg-show-more-target="#w">Show more</a>`;
+        mgShowMore(document.querySelector('a'));
+        expect(warn).toHaveBeenCalledWith(
+          expect.stringMatching(/needs a <button>/),
+          expect.anything()
+        );
+      } finally {
+        warn.mockRestore();
+      }
     });
 
     it('moves focus to the toggle when closing hides the focused item', () => {
@@ -805,10 +849,26 @@ describe('mgShowMore', () => {
       expect(button.hidden).toBe(true);
       expect(button.hasAttribute('aria-expanded')).toBe(false);
       expect(button.hasAttribute('aria-controls')).toBe(false);
+      expect(button.classList.contains('mg-show-more--button--open')).toBe(
+        false
+      );
       expect(button.dataset.mgShowMoreInitialized).toBeUndefined();
       expect(mgShowMoreSetOpen(button, true)).toBe(false);
       mgShowMore(button);
       expect(hiddenItems()).toHaveLength(2);
+    });
+
+    it('cleanup restores a class the toggle shipped with', () => {
+      const { button } = setupItems();
+      button.classList.add('mg-show-more--button--open');
+      const cleanup = mgShowMore(button);
+      expect(button.classList.contains('mg-show-more--button--open')).toBe(
+        false
+      );
+      cleanup();
+      expect(button.classList.contains('mg-show-more--button--open')).toBe(
+        true
+      );
     });
 
     it('leaves the toggle hidden when there are no items to hide', () => {

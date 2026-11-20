@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { ShowMore } from './ShowMore';
 import { mgShowMore } from '../../assets/js/show-more';
+import { expect, waitFor } from 'storybook/test';
 
 const getCaptionForLocale = locale => {
   switch (locale) {
@@ -257,6 +258,25 @@ const reports = [
 
 export const ItemsMode = {
   name: 'Items mode (true disclosure)',
+  // Hidden items must stay searchable: normalize's [hidden] { display: none }
+  // once hid them from find-in-page, so beforematch never fired.
+  play: async ({ canvasElement }) => {
+    const toggle = canvasElement.querySelector('[data-mg-show-more-mode]');
+    await waitFor(() => expect(toggle.hidden).toBe(false));
+    const hiddenItem = canvasElement.querySelector('[data-mg-show-more-item]');
+    expect(hiddenItem.getAttribute('hidden')).toBe('until-found');
+    const view = canvasElement.ownerDocument.defaultView;
+    expect(view.getComputedStyle(hiddenItem).display).not.toBe('none');
+    expect(hiddenItem.getBoundingClientRect().height).toBe(0);
+    // Searchable while hidden. window.find() doesn't fire beforematch the
+    // way the browser's find bar does, so dispatch it for the open path.
+    view.getSelection().removeAllRanges();
+    expect(view.find(hiddenItem.textContent)).toBe(true);
+    view.getSelection().removeAllRanges();
+    hiddenItem.dispatchEvent(new Event('beforematch', { bubbles: true }));
+    expect(toggle.getAttribute('aria-expanded')).toBe('true');
+    toggle.click(); // Leave it collapsed, as it loads.
+  },
   render: () => (
     <div style={{ maxWidth: '480px' }}>
       <h3 className="mg-heading-300">Related reports</h3>

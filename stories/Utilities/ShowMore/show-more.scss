@@ -49,3 +49,12 @@
   padding-block: 0;
   border-block-width: 0;
 }
+
+// Normalize's `[hidden] { display: none }` also matches
+// `hidden="until-found"` and beats the browser's own rule for it, so the
+// browser never searches the item and find-in-page can't reveal it. Give
+// until-found items their normal display back; the browser keeps their
+// content hidden (content-visibility) and the rule above removes their box.
+[data-mg-show-more-item][hidden="until-found" i] {
+  display: revert;
+}
