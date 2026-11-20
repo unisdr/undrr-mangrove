@@ -179,6 +179,7 @@ Decided for [#1502](https://github.com/unisdr/undrr-mangrove/issues/1502), Novem
 | Cover, publisher copy | `undrr-download-box-cover` | `download_publisher_cover` |
 | Cover, hosted copy | `undrr-download-box-cover` | `download_internal_cover` |
 | "All downloads (N)" | `undrr-download-box-cover` | `nav_all_downloads_cover` |
+| "Show all {count} files" / "Show fewer files" | `undrr-download-box` | `nav_show_all_downloads`, in both states (see [Long resource lists](#long-resource-lists)) |
 
 **Why.** Each rule needs only one match. Region `undrr-download-box` (a prefix match, which also catches `-cover`) or label prefix `download_` finds every download click. Excluding `cover` leaves only the resource list. In-page navigation starts `nav_`, so it never counts as a download. Labels are fixed English strings with no counts, as in the [Collection page](https://mangrove.undrr.org/?path=/docs/patterns-collection-page--docs), so reports don't split by language or by number. The shared script's behaviour is unchanged; see [analytics](ANALYTICS.md).
 
@@ -209,6 +210,36 @@ Decided for [#1505](https://github.com/unisdr/undrr-mangrove/issues/1505), Novem
 **Backup explanation.** A native `<details>` element labelled **What is a backup copy?** reveals: "We keep a copy of many documents to improve long-term access. Use this if the publisher's site is slow or unavailable." It is followed by "Problems? Contact us." when the adapter supplies `contactHref`. Drupal pre-fills the contact form's topic, subject and the entry ID in that URL, and the adapter should do the same; the record only renders it. As in Drupal, the contact link opens in a new tab, so the reader keeps the record open while writing to us. It has the same external-link icon and hidden "(opens in new tab)" text as publisher links. The sentence ends with Drupal's full stop in Latin-script languages and Arabic, and with "。" in Japanese and Chinese, matching the ideographic full stops in those languages' explanation text (the `sentenceEnd` label). `<details>` was chosen over Drupal's `?` button with `aria-expanded` for several reasons. It works without JavaScript, which matters because the record must be usable as static HTML. Keyboard, screen-reader and forced-colours support come from the browser. Its visible text label is something voice-control users can say, which a "?" is not. The summary uses Mangrove's global `details > summary` focus ring. Drupal also attaches the explanation to both links with `aria-describedby`. The record doesn't, because the explanation follows directly in reading order and would otherwise be read on every pass through the link.
 
 **Date line.** One line below the list reads **"Added {date}"**, for example "Added 15 March 2026". It gives the date the record's resources were added to the site, and like Drupal it shows in every case, including publisher-only and video records. Drupal labels this value "Last checked", but it is the media item's creation date, not a link check; this spec already says not to present creation time as verification. "Added" states only what the date is. The user may still change the wording. The date is a `<time>` element in the editorial-manual format, with Latin digits as Drupal prints them. It is shown only with resources and a valid ISO date.
+
+### Long resource lists
+
+**Decision.** A record with **3 or more** resources shows the first **2** resource groups in full (primary, backup, file facts and explanation). Groups 3 to N sit in their own container behind a "Show all {count} files" button, which then reads "Show fewer files". The numbers are two constants, `COLLAPSE_FROM = 3` and `VISIBLE = 2`, next to `showAllDownloads` in `recordAccess.js`, so they can be tuned in one place.
+
+**Why.** In the local Drupal database there are 27,839 published publications:
+
+| Files per record | Share |
+| --- | --- |
+| 1 | 88% |
+| 2 | 7.7% |
+| 3 | 1.8% |
+| 4–5 | 1.4% |
+| 6–10 | 0.9% |
+| 11–20 | 0.2% |
+| 21 or more | 12 records (the largest has 34, node 42346) |
+
+Each group is about three lines, so the largest records run to about 100 lines and push the description and citation far down the page. One or two files are shown as they are. From three, the list collapses: the first two groups stay in view, and the button gives the true total. That threshold was the user's decision.
+
+**How.**
+
+- **ShowMore.** The collapse reuses the [ShowMore](https://mangrove.undrr.org/?path=/docs/components-showmore--docs) utility with a detached button (`data-mg-show-more-target`). ShowMore collapses by `max-height`, which would cut a group in half, so its target holds only the overflow groups. The visible groups are in a list before it.
+- **Zero height.** The target collapses to zero height (`--mg-show-more-height: 0px`, with no fade), so no link shows partly.
+- **Keyboard.** ShowMore's collapse is visual: the overflow groups stay in the accessibility tree and in the tab order. A browser's real Tab moves from group 2 into the zero-height container, and ShowMore's `focusin` handler opens it, so focus never lands on a hidden link. A Playwright check with real key presses confirmed this. The Storybook play test moves focus there directly, because user-event's simulated Tab skips zero-size boxes.
+- **Button.** The button is a `<button>` after the overflow groups and works with Enter and Space. Following ShowMore's accessibility notes, it has `aria-controls` and no `aria-expanded`. It needs no hidden context, because it sits inside the "Read or access this publication" section, and its text names what it shows.
+- **Without JavaScript.** The button ships `hidden` and the container ships open, following ShowMore's documented pattern. Every group is visible and no dead button appears.
+- **"All downloads (N)".** The cover cue always shows the true total. If the list is collapsed, it opens the list (by clicking the toggle, so the label and state stay in step) before the browser follows the anchor to the resources heading. Without JavaScript it is a plain anchor to an open list.
+- **Analytics.** The button carries `data-vf-analytics-label="nav_show_all_downloads"` in both states (ShowMore keeps an author-set label). It is navigation, so it doesn't start `download_`. When "All downloads (N)" opens a collapsed list, the toggle's click is also reported.
+- **Semantics.** The groups are now two lists (2 items, then N−2). A screen reader announces two list sizes instead of one; the alternative, one list with hidden items, would need a different collapse mechanism than ShowMore.
+- **Stories.** "Several files" (3 resources) shows the collapsed state with 2 visible. "Many files" models node 42346 with 34 resources: publisher + backup, every fourth hosted only, and some French and Spanish annexes.
 
 **Checks.** `__tests__/resourcePresentation.test.jsx` covers verb selection (including look-alike hosts), file-fact text and placement for each case, new-tab attributes and icons, the closed-by-default disclosure and its contact link, the date line, analytics labels on every link, and title placement in Arabic, Japanese and Chinese. It checks every story in every interface language for unfilled placeholders, and runs axe with the explanation open. Screenshots cover LTR, Arabic RTL, the explanation opened with the keyboard, and emulated forced colours. Screen readers and voice control were not tested.
 
