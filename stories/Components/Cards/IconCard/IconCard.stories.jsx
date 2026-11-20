@@ -115,11 +115,13 @@ export default {
     centered: {
       control: 'boolean',
       description: 'Center-align content',
+      table: { defaultValue: { summary: 'false' } },
     },
     variant: {
       options: ['default', 'negative'],
       control: { type: 'inline-radio' },
       description: 'Visual variant',
+      table: { defaultValue: { summary: 'default' } },
     },
   },
   args: {
@@ -395,7 +397,6 @@ export const Negative = {
     return (
       <IconCard
         {...args}
-        variant="negative"
         data={[
           {
             icon: componentIcon,
@@ -411,6 +412,7 @@ export const Negative = {
   },
   args: {
     centered: false,
+    variant: 'negative',
   },
   decorators: [
     Story => (

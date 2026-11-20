@@ -87,24 +87,28 @@ export default {
       options: ['primary', 'secondary', 'tertiary', 'quaternary', 'neutral'],
       control: { type: 'inline-radio' },
       description: 'Variant of the Hero component',
+      table: { defaultValue: { summary: 'primary' } },
     },
     layout: {
       options: ['background', 'split'],
       control: { type: 'inline-radio' },
       description:
         'Layout mode: full-bleed background image, or solid background with media column.',
+      table: { defaultValue: { summary: 'background' } },
     },
     headingLevel: {
       options: ['h1', 'h2', 'h3'],
       control: { type: 'inline-radio' },
       description:
         "Heading element for the title. Use h1 for the page's primary heading, h2/h3 for mid-page.",
+      table: { defaultValue: { summary: 'h1' } },
     },
     split: {
       options: ['2/3', '1/2', '1/3'],
       control: { type: 'inline-radio' },
       description:
         'Column split for layout="split". Content column is always first.',
+      table: { defaultValue: { summary: '2/3' } },
     },
   },
   args: {

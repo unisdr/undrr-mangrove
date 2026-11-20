@@ -9,9 +9,11 @@ export default {
   argTypes: {
     SharingSubject: {
       control: { type: 'text' },
+      table: { defaultValue: { summary: 'Sharing Link' } },
     },
     SharingTextBody: {
       control: { type: 'text' },
+      table: { defaultValue: { summary: 'Check out this link: ' } },
     },
   },
   args: {

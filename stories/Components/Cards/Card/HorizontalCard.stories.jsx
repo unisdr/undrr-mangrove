@@ -91,6 +91,7 @@ export default {
       control: {
         type: 'inline-radio',
       },
+      table: { defaultValue: { summary: 'primary' } },
     },
   },
   args: {

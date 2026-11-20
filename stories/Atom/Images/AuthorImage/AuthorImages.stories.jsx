@@ -99,18 +99,21 @@ export default {
       control: {
         type: 'inline-radio',
       },
+      table: { defaultValue: { summary: 'Large' } },
     },
     highlight: {
       options: ['primary', 'secondary', 'tertiary'],
       control: {
         type: 'inline-radio',
       },
+      table: { defaultValue: { summary: 'primary' } },
     },
     layout: {
       options: ['horizontal', 'vertical'],
       control: {
         type: 'inline-radio',
       },
+      table: { defaultValue: { summary: 'vertical' } },
     },
   },
   args: {
@@ -127,24 +130,24 @@ export const DefaultAuthorImage = {
         person.noImage ? (
           <AuthorImage
             key={person.name}
+            {...args}
             name={person.name}
             title={person.title}
             org={person.org}
             highlight={person.highlight}
             layout={person.layout}
-            {...args}
           />
         ) : (
           <SeededAuthorImage
             key={person.name}
             seed={person.seed}
             imageAlt={`${person.name}, ${person.title}, ${person.org}`}
+            {...args}
             name={person.name}
             title={person.title}
             org={person.org}
             highlight={person.highlight}
             layout={person.layout}
-            {...args}
           />
         )
       )}
@@ -162,12 +165,13 @@ export const HorizontalAuthorImage = {
       name="Author One"
       title="Special Representative"
       org="Example organisation"
-      highlight="primary"
-      layout="horizontal"
       href="#author-one"
       {...args}
     />
   ),
+  args: {
+    layout: 'horizontal',
+  },
 
   name: 'Horizontal author image',
 };
@@ -180,12 +184,14 @@ export const VerticalAuthorImage = {
       name="Author Two"
       title="Director"
       org="Example organisation"
-      highlight="secondary"
-      layout="vertical"
       href="#author-two"
       {...args}
     />
   ),
+  args: {
+    highlight: 'secondary',
+    layout: 'vertical',
+  },
 
   name: 'Vertical author image',
 };
@@ -204,14 +210,15 @@ export const InverseAuthorImage = {
         name="Author One"
         title="Special Representative"
         org="Example organisation"
-        highlight="primary"
-        layout="horizontal"
         tone="inverse"
         href="#author-one"
         {...args}
       />
     </div>
   ),
+  args: {
+    layout: 'horizontal',
+  },
 
   name: 'Inverse author image',
 };

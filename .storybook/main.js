@@ -104,7 +104,6 @@ export default {
         ['Content', ['Overview', '*'], '*'],
         'Utilities',
       ],
-      includeName: true,
     },
   ],
 };
