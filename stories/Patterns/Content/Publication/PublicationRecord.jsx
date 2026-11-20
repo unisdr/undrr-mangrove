@@ -1,4 +1,5 @@
-import React, { useId } from 'react';
+import React, { useEffect, useId, useRef } from 'react';
+import { mgShowMore } from '../../../assets/js/show-more';
 import PropTypes from 'prop-types';
 import { SkipLink } from '../../../Utilities/SkipLink/SkipLink';
 import { projectRecord } from './recordProjection';
@@ -11,6 +12,8 @@ import {
   primaryAnalyticsLabel,
   resourceMeta,
   showAllDownloads,
+  splitResources,
+  VISIBLE,
   splitTemplate,
 } from './recordAccess';
 import { UndrrChrome } from '../../_shared/UndrrChrome';
@@ -171,6 +174,88 @@ ResourceItem.propTypes = {
   contactHref: PropTypes.string,
 };
 
+/**
+ * The resource groups. From COLLAPSE_FROM files, groups after the first
+ * VISIBLE sit in their own container behind the ShowMore utility, so the
+ * collapse never cuts a group in half. Without JavaScript the toggle stays
+ * hidden and every group is open.
+ */
+function ResourceList({ value, labels, lang, moreId, toggleRef }) {
+  const { visible, overflow } = splitResources(value.resources);
+  const hasOverflow = overflow.length > 0;
+  const showAll = pluralLabel(
+    labels.showAllFiles,
+    lang,
+    value.resources.length
+  );
+  const showFewer = labels.showFewerFiles;
+  const render = (resource, index) => (
+    <ResourceItem
+      key={index}
+      resource={resource}
+      labels={labels}
+      workLang={value.lang}
+      contactHref={value.contactHref}
+    />
+  );
+
+  useEffect(() => {
+    const button = toggleRef.current;
+    return hasOverflow && button ? mgShowMore(button) : undefined;
+  }, [hasOverflow, toggleRef]);
+
+  // Keep the visible label right when the interface language changes.
+  useEffect(() => {
+    const button = toggleRef.current;
+    const target = document.getElementById(moreId);
+    const label = button?.querySelector('[data-mg-show-more-label]');
+    if (!label || !target) return;
+    label.textContent = target.classList.contains('mg-show-more--collapsed')
+      ? showAll
+      : showFewer;
+  }, [showAll, showFewer, moreId, toggleRef]);
+
+  return (
+    <>
+      <ul className="mg-publication-record__resources">
+        {visible.map(render)}
+      </ul>
+      {hasOverflow && (
+        <>
+          <div id={moreId} className="mg-publication-record__more-files">
+            <ul className="mg-publication-record__resources">
+              {overflow.map((resource, index) =>
+                render(resource, index + VISIBLE)
+              )}
+            </ul>
+          </div>
+          <button
+            ref={toggleRef}
+            type="button"
+            hidden
+            className="mg-button mg-button-secondary mg-show-more--button mg-publication-record__show-all"
+            data-mg-show-more="true"
+            data-mg-show-more-skip-auto-init="true"
+            data-mg-show-more-target={`#${moreId}`}
+            data-mg-show-more-label-collapsed={showAll}
+            data-mg-show-more-label-open={showFewer}
+            data-vf-analytics-label={ANALYTICS.showAll}
+          >
+            <span data-mg-show-more-label>{showAll}</span>
+          </button>
+        </>
+      )}
+    </>
+  );
+}
+ResourceList.propTypes = {
+  value: PropTypes.object.isRequired,
+  labels: PropTypes.object.isRequired,
+  lang: PropTypes.string,
+  moreId: PropTypes.string.isRequired,
+  toggleRef: PropTypes.object.isRequired,
+};
+
 /** Experimental story-owned composition, not a published package renderer. */
 export function PublicationRecord({
   record,
@@ -180,6 +265,16 @@ export function PublicationRecord({
   children,
 }) {
   const prefix = `publication-${useId().replace(/:/g, '')}`;
+  const toggleRef = useRef(null);
+  const moreId = `${prefix}-more-files`;
+  // "All downloads (N)" opens a collapsed list before the browser follows
+  // the anchor to the resources heading. Without JavaScript the list is
+  // already open and the link is a plain anchor.
+  const openList = () => {
+    const target = document.getElementById(moreId);
+    if (target?.classList.contains('mg-show-more--collapsed'))
+      toggleRef.current?.click();
+  };
   const value = projectRecord(record);
   const hasDetails =
     value.identifiers.length > 0 ||
@@ -282,17 +377,13 @@ export function PublicationRecord({
                   data-vf-google-analytics-region={ANALYTICS.region}
                 >
                   <h2 id={`${prefix}-access`}>{labels.access}</h2>
-                  <ul className="mg-publication-record__resources">
-                    {value.resources.map((resource, index) => (
-                      <ResourceItem
-                        key={index}
-                        resource={resource}
-                        labels={labels}
-                        workLang={value.lang}
-                        contactHref={value.contactHref}
-                      />
-                    ))}
-                  </ul>
+                  <ResourceList
+                    value={value}
+                    labels={labels}
+                    lang={lang}
+                    moreId={moreId}
+                    toggleRef={toggleRef}
+                  />
                   {value.resourcesAdded && (
                     <p className="mg-publication-record__added mg-u-font-size-250">
                       {fillDate(labels.added, value.resourcesAdded, lang)}
@@ -394,6 +485,7 @@ export function PublicationRecord({
                       <p className="mg-publication-record__all-downloads mg-u-font-size-250">
                         <a
                           href={`#${prefix}-access`}
+                          onClick={openList}
                           data-vf-analytics-label={ANALYTICS.allDownloads}
                         >
                           {allDownloads}

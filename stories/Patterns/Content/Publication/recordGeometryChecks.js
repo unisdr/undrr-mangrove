@@ -1,4 +1,4 @@
-import { expect } from 'storybook/test';
+import { expect, userEvent, waitFor } from 'storybook/test';
 
 // jsdom cannot see SCSS: these assertions run against the rendered stories.
 const within = (inner, outer) =>
@@ -131,4 +131,62 @@ export async function checkAsideContainment({ canvasElement }) {
     root.setAttribute('dir', original);
     reading.style.gridTemplateColumns = '';
   }
+}
+
+/**
+ * A long list shows two groups; the rest sit in a zero-height ShowMore
+ * target. Tabbing into it opens it, so focus never lands on a hidden link,
+ * and the toggle works with Enter and Space.
+ */
+export async function checkCollapsedList({ canvasElement }) {
+  const doc = canvasElement.ownerDocument;
+  const toggle = canvasElement.querySelector(
+    '.mg-publication-record__show-all'
+  );
+  const more = canvasElement.querySelector(
+    '.mg-publication-record__more-files'
+  );
+  const collapsed = () => more.classList.contains('mg-show-more--collapsed');
+  await waitFor(() => expect(toggle.hidden).toBe(false));
+  expect(collapsed()).toBe(true);
+  expect(more.getBoundingClientRect().height).toBe(0);
+  const shown = canvasElement.querySelectorAll(
+    '.mg-publication-record__resources:not(.mg-publication-record__more-files *) > li'
+  );
+  expect(shown).toHaveLength(2);
+  expect(toggle.textContent).toBe('Show all 34 files');
+
+  // Focus moving into the collapsed groups opens them, so a keyboard user
+  // never lands on a hidden link. user-event's simulated Tab skips links in a
+  // zero-height box, unlike a browser's real Tab (which lands there and
+  // opens it), so focus is moved directly; the focusin path is the same.
+  const first = more.querySelector('a');
+  first.focus();
+  expect(doc.activeElement).toBe(first);
+  expect(collapsed()).toBe(false);
+  expect(doc.activeElement.getBoundingClientRect().height).toBeGreaterThan(0);
+  expect(toggle.textContent).toBe('Show fewer files');
+
+  // The toggle with Enter, then Space.
+  toggle.focus();
+  await userEvent.keyboard('{Enter}');
+  expect(collapsed()).toBe(true);
+  expect(toggle.textContent).toBe('Show all 34 files');
+  await userEvent.keyboard(' ');
+  expect(collapsed()).toBe(false);
+  await userEvent.keyboard('{Enter}');
+  expect(collapsed()).toBe(true);
+
+  // "All downloads (34)" opens the list before jumping to it.
+  const jump = canvasElement.querySelector(
+    '.mg-publication-record__all-downloads a'
+  );
+  expect(jump.textContent).toBe('All downloads (34)');
+  jump.addEventListener('click', event => event.preventDefault(), {
+    once: true,
+  });
+  await userEvent.click(jump);
+  expect(collapsed()).toBe(false);
+  toggle.click(); // Leave the story collapsed, as it loads.
+  expect(collapsed()).toBe(true);
 }

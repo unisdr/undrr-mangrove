@@ -35,6 +35,11 @@ export const RECORD_LABELS = {
     problems: 'Problems?',
     contactUs: 'Contact us',
     sentenceEnd: '.',
+    showAllFiles: {
+      one: 'Show {count} file',
+      other: 'Show all {count} files',
+    },
+    showFewerFiles: 'Show fewer files',
     added: 'Added {date}',
   },
   french: {
@@ -66,6 +71,11 @@ export const RECORD_LABELS = {
     problems: 'Des problèmes ?',
     contactUs: 'Nous contacter',
     sentenceEnd: '.',
+    showAllFiles: {
+      one: 'Afficher {count} fichier',
+      other: 'Afficher les {count} fichiers',
+    },
+    showFewerFiles: 'Afficher moins de fichiers',
     added: 'Ajouté le {date}',
   },
   arabic: {
@@ -101,6 +111,15 @@ export const RECORD_LABELS = {
     problems: 'هل تواجه مشكلة؟',
     contactUs: 'اتصل بنا',
     sentenceEnd: '.',
+    showAllFiles: {
+      zero: 'عرض جميع الملفات ({count})',
+      one: 'عرض الملف ({count})',
+      two: 'عرض الملفين ({count})',
+      few: 'عرض جميع الملفات ({count})',
+      many: 'عرض جميع الملفات ({count})',
+      other: 'عرض جميع الملفات ({count})',
+    },
+    showFewerFiles: 'عرض ملفات أقل',
     added: 'تاريخ الإضافة: {date}',
   },
   spanish: {
@@ -132,6 +151,11 @@ export const RECORD_LABELS = {
     problems: '¿Problemas?',
     contactUs: 'Contáctenos',
     sentenceEnd: '.',
+    showAllFiles: {
+      one: 'Mostrar {count} archivo',
+      other: 'Mostrar los {count} archivos',
+    },
+    showFewerFiles: 'Mostrar menos archivos',
     added: 'Añadido el {date}',
   },
   russian: {
@@ -166,6 +190,13 @@ export const RECORD_LABELS = {
     problems: 'Возникли проблемы?',
     contactUs: 'Свяжитесь с нами',
     sentenceEnd: '.',
+    showAllFiles: {
+      one: 'Показать все {count} файл',
+      few: 'Показать все {count} файла',
+      many: 'Показать все {count} файлов',
+      other: 'Показать все {count} файла',
+    },
+    showFewerFiles: 'Показать меньше файлов',
     added: 'Добавлено {date}',
   },
   japanese: {
@@ -194,6 +225,8 @@ export const RECORD_LABELS = {
     problems: '問題がありますか？',
     contactUs: 'お問い合わせ',
     sentenceEnd: '。',
+    showAllFiles: { other: '{count}件のファイルをすべて表示' },
+    showFewerFiles: '表示するファイルを減らす',
     added: '{date}に追加',
   },
   chinese: {
@@ -222,6 +255,8 @@ export const RECORD_LABELS = {
     problems: '遇到问题？',
     contactUs: '联系我们',
     sentenceEnd: '。',
+    showAllFiles: { other: '显示全部 {count} 个文件' },
+    showFewerFiles: '显示较少文件',
     added: '添加于{date}',
   },
 };
@@ -268,6 +303,47 @@ export const severalFiles = [
     format: 'Plain text',
     size: '162 bytes',
   },
+];
+
+// Modelled on the largest Drupal publication record (node 42346, 34 files):
+// a report plus annexes, mostly publisher + backup, some hosted only, in a
+// few languages. Titles are synthetic; the checked-in demo files stand in
+// for every hosted copy.
+const annex = number => {
+  const french = number % 7 === 0;
+  const spanish = !french && number % 9 === 0;
+  const title = french
+    ? `Annexe ${number} : profil de pays`
+    : spanish
+      ? `Anexo ${number}: perfil de país`
+      : `Annex ${number}: country profile`;
+  const lang = french ? 'fr' : spanish ? 'es' : 'en';
+  const language = french ? 'Français' : spanish ? 'Español' : 'English';
+  const hosted = french
+    ? {
+        href: '/publication-record/reading-fr.html',
+        format: 'HTML',
+        size: '422 bytes',
+      }
+    : {
+        href: '/publication-record/reading-en.txt',
+        format: 'Plain text',
+        size: '162 bytes',
+      };
+  const common = { label: title, labelLang: lang, lang, language };
+  // Every fourth annex has no publisher copy.
+  return number % 4 === 0
+    ? { ...common, ...hosted, origin: 'hosted' }
+    : {
+        ...common,
+        href: `https://example.org/understanding-disaster-risk/annex-${number}`,
+        origin: 'publisher',
+        backup: hosted,
+      };
+};
+export const manyFiles = [
+  report,
+  ...Array.from({ length: 33 }, (_, index) => annex(index + 1)),
 ];
 
 // The standard case: the publisher's original plus a backup hosted here.

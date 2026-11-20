@@ -20,6 +20,8 @@ export const ANALYTICS = {
   internal: 'download_internal',
   backup: 'download_backup',
   allDownloads: 'nav_all_downloads_cover',
+  // Expanding or collapsing a long resource list: navigation, not a download.
+  showAll: 'nav_show_all_downloads',
   // The backup explanation's contact link: not a download, so not download_.
   contact: 'contact_download_help',
 };
@@ -50,6 +52,25 @@ export function coverAccess(resources) {
 
 /** The jump link appears only when the cover alone cannot show every file. */
 export const showAllDownloads = resources => (resources?.length ?? 0) >= 2;
+
+/**
+ * Long resource lists collapse (unisdr/undrr-mangrove#1502 follow-up). Of
+ * 27,839 published Drupal publications, 88% have one file and 2.5% have
+ * three or more; the largest has 34. From COLLAPSE_FROM files, the first
+ * VISIBLE groups stay in view and the rest sit behind ShowMore. Tune here.
+ */
+export const COLLAPSE_FROM = 3;
+export const VISIBLE = 2;
+
+/** Split resources into the groups always shown and the collapsible rest. */
+export function splitResources(resources = []) {
+  return resources.length >= COLLAPSE_FROM
+    ? {
+        visible: resources.slice(0, VISIBLE),
+        overflow: resources.slice(VISIBLE),
+      }
+    : { visible: resources, overflow: [] };
+}
 
 /**
  * Pick the CLDR plural form for `count` in the interface language, falling back

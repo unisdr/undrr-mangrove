@@ -6,9 +6,11 @@ import {
   exampleRecord,
   exampleBody,
   severalFiles,
+  manyFiles,
 } from './recordFixtures';
 import {
   checkAsideContainment,
+  checkCollapsedList,
   checkCoverAffordance,
 } from './recordGeometryChecks';
 import './publication-record.scss';
@@ -47,6 +49,16 @@ export const SeveralFiles = {
     ...Standard.args,
     record: { ...exampleRecord, resources: severalFiles },
   },
+};
+// 34 files, as on the largest Drupal record: two groups show, the rest
+// collapse behind "Show all 34 files".
+export const ManyFiles = {
+  name: 'Many files',
+  args: {
+    ...Standard.args,
+    record: { ...exampleRecord, resources: manyFiles },
+  },
+  play: checkCollapsedList,
 };
 export const HostedOnly = {
   name: 'Hosted copy only',
