@@ -153,6 +153,7 @@ export const AllVariants = {
     for (let index = 0; index < tags.length; index += 2) {
       const label = tags[index];
       const link = tags[index + 1];
+      // eslint-disable-next-line no-await-in-loop -- sequential DOM assertions
       await expect(label.getBoundingClientRect().height).toBe(
         link.getBoundingClientRect().height
       );
@@ -164,6 +165,7 @@ export const AllVariants = {
         'lineHeight',
         'borderWidth',
       ]) {
+        // eslint-disable-next-line no-await-in-loop -- sequential DOM assertions
         await expect(getComputedStyle(label)[property]).toBe(
           getComputedStyle(link)[property]
         );
@@ -297,9 +299,11 @@ export const ReflowAndLanguages = {
     );
     await expect(group.scrollWidth).toBeLessThanOrEqual(group.clientWidth);
     for (const destination of canvas.getAllByRole('link')) {
+      // eslint-disable-next-line no-await-in-loop -- sequential sizing assertions
       await expect(
         destination.getBoundingClientRect().height
       ).toBeGreaterThanOrEqual(24);
+      // eslint-disable-next-line no-await-in-loop -- sequential sizing assertions
       await expect(
         destination.getBoundingClientRect().width
       ).toBeGreaterThanOrEqual(24);
@@ -311,7 +315,7 @@ export const ReflowAndLanguages = {
     await userEvent.unhover(label);
     await userEvent.tab();
     await expect(link).toHaveFocus();
-    expect(getComputedStyle(link).outlineStyle).not.toBe('none');
+    await expect(getComputedStyle(link).outlineStyle).not.toBe('none');
   },
   render: () => (
     <div style={{ maxWidth: '280px', display: 'grid', gap: '24px' }}>

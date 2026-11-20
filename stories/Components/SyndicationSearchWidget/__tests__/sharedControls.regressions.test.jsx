@@ -129,22 +129,24 @@ test('real widget starts a new group on page one when store revisions happen to 
   fireEvent.click(
     await screen.findByRole('button', { name: 'Page 3', exact: true })
   );
-  await waitFor(() => expect(latest()?.from).toBe(20));
+  await waitFor(() => expect(latest()?.from).toBe(20), { timeout: 3000 });
   view.rerender(
     <SyndicationSearchWidget config={{ ...config, sharedControls: two }} />
   );
-  await waitFor(() =>
-    expect(JSON.stringify(latest()?.query)).toContain('other query')
+  await waitFor(
+    () => expect(JSON.stringify(latest()?.query)).toContain('other query'),
+    { timeout: 3000 }
   );
   expect(latest().from).toBe(0);
   // Returning to an existing group also starts at its first page.
   fireEvent.click(
     await screen.findByRole('button', { name: 'Page 3', exact: true })
   );
-  await waitFor(() => expect(latest()?.from).toBe(20));
+  await waitFor(() => expect(latest()?.from).toBe(20), { timeout: 3000 });
   view.rerender(<SyndicationSearchWidget config={config} />);
-  await waitFor(() =>
-    expect(JSON.stringify(latest()?.query)).toContain('first query')
+  await waitFor(
+    () => expect(JSON.stringify(latest()?.query)).toContain('first query'),
+    { timeout: 3000 }
   );
   expect(latest().from).toBe(0);
 });

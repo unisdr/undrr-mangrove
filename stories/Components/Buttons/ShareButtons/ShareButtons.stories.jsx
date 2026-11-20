@@ -58,11 +58,15 @@ const checkLayout = async ({ canvasElement }, expectedCount) => {
         const rows = new Map();
         for (const rect of rects) {
           rows.set(rect.top, (rows.get(rect.top) ?? 0) + 1);
+          // eslint-disable-next-line no-await-in-loop -- sequential layout assertions
           await expect(rect.width).toBeGreaterThanOrEqual(40);
+          // eslint-disable-next-line no-await-in-loop -- sequential layout assertions
           await expect(rect.height).toBeGreaterThanOrEqual(40);
+          // eslint-disable-next-line no-await-in-loop -- sequential layout assertions
           await expect(rect.left).toBeGreaterThanOrEqual(
             container.getBoundingClientRect().left
           );
+          // eslint-disable-next-line no-await-in-loop -- sequential layout assertions
           await expect(rect.right).toBeLessThanOrEqual(
             container.getBoundingClientRect().right + 1
           );
