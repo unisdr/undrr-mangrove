@@ -15,6 +15,16 @@ const cls = (...classes) =>
  * (roughly square) rather than the ~6.6:1 the crop box assumes. Do not use
  * `crop="autocrop"` with a translated or otherwise differently-proportioned
  * logo asset.
+ *
+ * @param {Object} props
+ * @param {string} props.src              URL of the logo image
+ * @param {string} props.alt              Alternative text describing the logo for screen readers
+ * @param {string} [props.title]          Title attribute shown on hover
+ * @param {string|number} [props.width]   Native image width, for layout stability
+ * @param {string|number} [props.height]  Native image height, for layout stability
+ * @param {string} [props.lang]           BCP 47 language tag of the wordmark's text (e.g. `ar`, `es`, `fr`, `ru`, `zh`). Treat it as a hint: support for `lang` on an `<img>` varies by browser and assistive technology. Omit for the default English logo, which inherits the page language
+ * @param {'autocrop'} [props.crop]       Crop variant. `autocrop` crops to a fixed box below the desktop breakpoint instead of letterboxing. Tuned for the default English horizontal wordmark only; do not use with translated or differently proportioned assets. Unset renders the uncropped default
+ * @param {string} [props.className]      Additional CSS classes
  */
 export const Logo = ({
   src,

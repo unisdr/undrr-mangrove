@@ -28,6 +28,17 @@ import DOMPurify from 'dompurify';
  * `data-attribution-title` when the component is hydrated, and a consumer should
  * still filter them where they are produced. See "Quote HTML handling" in
  * QuoteHighlight.mdx for the consumer-facing statement.
+ *
+ * @param {Object} props
+ * @param {string} props.quote                                    The quote text. A value containing `<` is rendered as HTML, sanitised with DOMPurify; anything else is rendered as text
+ * @param {string} [props.attribution]                            The name of the person being quoted. Always rendered as HTML, sanitised with DOMPurify
+ * @param {string} [props.attributionTitle]                       The title or position of the person being quoted. Always rendered as HTML, sanitised with DOMPurify
+ * @param {string} [props.imageSrc]                               URL for the image to display
+ * @param {string} [props.imageAlt]                               Alt text for the image
+ * @param {'light'|'dark'|'bright'} [props.backgroundColor='light'] Background colour variant
+ * @param {'line'|'image'} [props.variant='line']                 `line` shows a separator line; `image` shows the image
+ * @param {'full'|'left'|'right'} [props.alignment='full']        `full` spans the column; `left` and `right` float the quote
+ * @param {string} [props.className='']                           Additional CSS class names
  */
 const QuoteHighlight = ({
   quote,

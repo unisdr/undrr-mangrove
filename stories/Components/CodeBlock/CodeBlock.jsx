@@ -20,6 +20,12 @@ SyntaxHighlighter.registerLanguage('jsx', jsx);
  *
  * For inline `<code>` snippets inside prose, use the bare `<code>` element
  * directly — no component needed.
+ *
+ * @param {Object} props
+ * @param {string} props.code                           The source code string to display
+ * @param {'bash'|'javascript'|'jsx'} [props.language]  Syntax highlighting language. Omit for a plain dark block
+ * @param {string} [props.filename]                     Optional filename shown in the header bar above the block
+ * @param {boolean} [props.lineNumbers]                 Show line numbers in the gutter. Requires `language` to be set
  */
 export const CodeBlock = ({ code, language, filename, lineNumbers }) => {
   const block = language ? (

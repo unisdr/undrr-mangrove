@@ -7,6 +7,17 @@ const appendClassName = (existing, added) =>
 /**
  * Joins one form control to its primary action while preserving two separate,
  * semantic and independently focusable elements.
+ *
+ * @param {Object} props
+ * @param {React.ReactElement} props.control       A single input, select, or equivalent form control
+ * @param {React.ReactElement} props.action        The button responsible for the control's primary action
+ * @param {string} [props.label]                   Label text for the control
+ * @param {boolean} [props.hideLabel=false]        Keep the label for screen readers only
+ * @param {string} [props.helpText]                Help text below the field, linked with `aria-describedby`
+ * @param {string} [props.errorText]               Error message below the field; also marks the control invalid
+ * @param {boolean} [props.stackOnMobile=false]    Stack the control and action on small screens
+ * @param {string} [props.className]               Additional CSS class for the field wrapper
+ * @param {string} [props.analyticsLabel]          Fixed `data-vf-analytics-label` for the label and the control, unless the control sets its own
  */
 export function FormAction({
   control,

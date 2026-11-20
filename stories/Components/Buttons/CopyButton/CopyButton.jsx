@@ -13,6 +13,22 @@ const VARIANT_CLASSES = {
   secondary: 'mg-button-secondary mg-button-outline',
 };
 
+/**
+ * Icon-only button that copies text to the clipboard and confirms it with a
+ * tooltip and a live-region announcement.
+ *
+ * @param {Object} props
+ * @param {string} [props.textToCopy='']                                   Text written to the clipboard
+ * @param {string} [props.className]                                       Additional CSS class for the button
+ * @param {string} [props.lang]                                            UI language tag; selects the built-in catalogue, with English fallback
+ * @param {'ltr'|'rtl'|'auto'} [props.dir]                                 Explicit text direction; otherwise known catalogue languages select their direction
+ * @param {{ariaLabel?: string, copiedLabel?: string, tooltipLabel?: string, failedLabel?: string, failedTooltipLabel?: string}} [props.labels] Explicit UI label overrides; omitted keys use the selected catalogue, then English
+ * @param {string} [props.ariaLabel]                                       Accessible name of the button; overrides `labels.ariaLabel`
+ * @param {string} [props.copiedLabel]                                     Announcement after a successful copy; overrides `labels.copiedLabel`
+ * @param {string} [props.tooltipLabel]                                    Tooltip text after a successful copy; overrides `labels.tooltipLabel`
+ * @param {'outline'|'primary'|'secondary'} [props.variant='outline']      Button style
+ * @param {'small'|'large'} [props.size]                                   Button size; omit for the default size
+ */
 export const CopyButton = ({
   textToCopy = '',
   className,

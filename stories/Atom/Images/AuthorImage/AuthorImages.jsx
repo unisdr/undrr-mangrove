@@ -16,6 +16,24 @@ export const highlight_options = {
   tertiary: 'mg-author-image--tertiary',
 };
 
+/**
+ * Author portrait with name, title and organisation, optionally linked.
+ *
+ * @param {Object} props
+ * @param {string} [props.image]                                         Avatar image URL
+ * @param {string} [props.imageAlt='']                                   Accessible alt text for the avatar image
+ * @param {string} [props.alt]                                           Backward-compatible alt text; `imageAlt` takes precedence
+ * @param {string} [props.name='']                                       Author name
+ * @param {string} [props.title='']                                      Job title or role
+ * @param {string} [props.org='']                                        Organisation or affiliation
+ * @param {'Large'|'Small'} [props.variant='Large']                      Visual size
+ * @param {'primary'|'secondary'|'tertiary'} [props.highlight='primary'] Accent colour
+ * @param {'vertical'|'horizontal'} [props.layout='vertical']            Layout direction
+ * @param {'default'|'inverse'} [props.tone='default']                   Text tone
+ * @param {string} [props.href='']                                       Link destination
+ * @param {string} [props.target]                                        Link target
+ * @param {string} [props.rel]                                           Link rel attribute; defaults to `noreferrer noopener` when `target` is `_blank`
+ */
 export function AuthorImage({
   image,
   imageAlt = '',
