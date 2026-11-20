@@ -1,5 +1,6 @@
 import React from 'react';
 import { Reading } from './PagePatterns';
+import { checkArticleGridGeometry } from '../../Atom/Layout/Grid/gridGeometryChecks';
 
 export default {
   title: 'Components/Reading column',
@@ -34,7 +35,7 @@ export const ReadingColumn = {
           <h2>First section</h2>
           <p>
             The article is constrained to a readable measure; the contents sit
-            in a sticky sidebar from 48rem up, and stack above on narrow
+            in a sticky sidebar from 900px up, and stack above on narrow
             screens.
           </p>
         </section>
@@ -45,4 +46,5 @@ export const ReadingColumn = {
       </Reading>
     </div>
   ),
+  play: checkArticleGridGeometry,
 };
