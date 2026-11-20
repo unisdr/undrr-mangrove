@@ -1,6 +1,10 @@
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import {
   normalizeComponentMetadata,
   componentMetadataContract,
+  dereferenceComponentMetadata,
 } from '../ai-manifest/component-metadata';
 
 const fixture = () => ({
@@ -88,7 +92,7 @@ describe('component metadata boundary', () => {
     [
       'an unknown version',
       value => {
-        value.v = 1;
+        value.v = 2;
       },
       'manifest.v',
     ],
@@ -226,3 +230,111 @@ it('compares source association after normalizing the checkout prefix', () => {
   source.components.example.reactDocgen.definedInFile = `${process.cwd()}/stories/Other.jsx`;
   expect(componentMetadataContract(source)).not.toEqual(original);
 });
+
+describe('Storybook 11 ref-based metadata dereferencing', () => {
+  it('accepts v: 1 manifests in normalizeComponentMetadata', () => {
+    const source = fixture();
+    source.v = 1;
+    const normalized = normalizeComponentMetadata(source);
+    expect(normalized.v).toBe(1);
+  });
+
+  it('dereferences $ref pointers and maps reactComponentMeta to reactDocgen', () => {
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'sb11-meta-test-'));
+    try {
+      const docgenDir = path.join(tmpDir, 'services', 'core', 'docgen');
+      const storyDir = path.join(tmpDir, 'services', 'core', 'story-docs');
+      const mdxDir = path.join(tmpDir, 'services', 'addon-docs', 'mdx');
+      fs.mkdirSync(docgenDir, { recursive: true });
+      fs.mkdirSync(storyDir, { recursive: true });
+      fs.mkdirSync(mdxDir, { recursive: true });
+
+      fs.writeFileSync(
+        path.join(docgenDir, 'tag.json'),
+        JSON.stringify({
+          reactComponentMeta: {
+            description: 'Ref component description',
+            filePath: 'stories/Atom/Tag/Tag.jsx',
+            props: {
+              label: {
+                description: 'Tag label',
+                required: true,
+                type: { name: 'string' },
+                defaultValue: null,
+              },
+            },
+          },
+        })
+      );
+
+      fs.writeFileSync(
+        path.join(storyDir, 'tag.json'),
+        JSON.stringify({
+          stories: {
+            'tag--default': {
+              id: 'tag--default',
+              name: 'Default',
+              snippet: '<Tag label="test" />',
+            },
+          },
+        })
+      );
+
+      fs.writeFileSync(
+        path.join(mdxDir, 'tag.json'),
+        JSON.stringify({
+          content: '## Tag Changelog\n- **1.0**: Initial release.',
+        })
+      );
+
+      const sourceWithRefs = {
+        v: 1,
+        components: {
+          tag: {
+            id: 'tag',
+            name: 'Tag',
+            path: './stories/Atom/Tag/Tag.stories.jsx',
+            docgen: { $ref: 'services/core/docgen/tag.json' },
+            stories: { $ref: 'services/core/story-docs/tag.json' },
+            docs: {
+              'tag--docs': {
+                mdx: { $ref: 'services/addon-docs/mdx/tag.json' },
+              },
+            },
+          },
+        },
+      };
+
+      const dereferenced = dereferenceComponentMetadata(sourceWithRefs, {
+        baseDir: tmpDir,
+      });
+      expect(dereferenced.components.tag.reactDocgen).toBeDefined();
+      expect(dereferenced.components.tag.reactDocgen.description).toBe(
+        'Ref component description'
+      );
+      expect(
+        dereferenced.components.tag.reactDocgen.props.label.defaultValue
+      ).toBeUndefined();
+      expect(dereferenced.components.tag.stories).toEqual([
+        {
+          id: 'tag--default',
+          name: 'Default',
+          snippet: '<Tag label="test" />',
+        },
+      ]);
+      expect(dereferenced.components.tag.docs['tag--docs'].content).toBe(
+        '## Tag Changelog\n- **1.0**: Initial release.'
+      );
+
+      const normalized = normalizeComponentMetadata(dereferenced);
+      expect(normalized.components.tag.id).toBe('tag');
+
+      // Also verify that a metadata source without refs passes through unchanged
+      const noRefSource = fixture();
+      expect(dereferenceComponentMetadata(noRefSource)).toEqual(noRefSource);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+});
+

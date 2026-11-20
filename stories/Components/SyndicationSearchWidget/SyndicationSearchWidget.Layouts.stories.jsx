@@ -10,9 +10,9 @@ import { SyndicationSearchWidget } from './SyndicationSearchWidget';
 import { defaultConfig, widgetMetaShared } from './_storyHelpers';
 
 export default {
+  ...widgetMetaShared,
   title: 'Components/Syndicated search/Layouts',
   component: SyndicationSearchWidget,
-  ...widgetMetaShared,
 };
 
 /**

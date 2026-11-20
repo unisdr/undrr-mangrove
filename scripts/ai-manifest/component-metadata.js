@@ -62,7 +62,8 @@ export function normalizeComponentMetadata(
     }
   };
   record(value, 'manifest');
-  if (value.v !== 0) fail('manifest.v', 'the supported Storybook version 0');
+  if (value.v !== 0 && value.v !== 1)
+    fail('manifest.v', 'the supported Storybook version 0 or 1');
   record(value.components, 'manifest.components');
   if (!Object.keys(value.components).length)
     fail('manifest.components', 'a nonempty component map');
@@ -143,6 +144,149 @@ export function normalizeComponentMetadata(
   return structuredClone(value);
 }
 
+function resolveJsonPointer(data, pointer) {
+  if (!pointer) return data;
+  const parts = pointer.replace(/^\//, '').split('/');
+  let curr = data;
+  for (const part of parts) {
+    if (curr === null || typeof curr !== 'object') return undefined;
+    curr = curr[part];
+  }
+  return curr;
+}
+
+function resolveRef(baseDir, ref) {
+  const [filePath, pointer] = ref.split('#');
+  const fullPath = path.resolve(baseDir, filePath);
+  let data;
+  try {
+    data = JSON.parse(fs.readFileSync(fullPath, 'utf8'));
+  } catch (cause) {
+    throw new Error(
+      `Cannot resolve metadata $ref at ${fullPath}: ${cause.message}`,
+      { cause }
+    );
+  }
+  return resolveJsonPointer(data, pointer);
+}
+
+export function dereferenceComponentMetadata(
+  value,
+  { baseDir = process.cwd() } = {}
+) {
+  if (!object(value) || !object(value.components)) return value;
+
+  const dereferencedComponents = {};
+  for (const [key, component] of Object.entries(value.components)) {
+    if (!object(component)) {
+      dereferencedComponents[key] = component;
+      continue;
+    }
+
+    const hasRefs =
+      (component.docgen && typeof component.docgen.$ref === 'string') ||
+      (component.stories && typeof component.stories.$ref === 'string') ||
+      (component.docs &&
+        Object.values(component.docs).some(
+          d => d?.mdx && typeof d.mdx.$ref === 'string'
+        ));
+
+    if (!hasRefs) {
+      dereferencedComponents[key] = component;
+      continue;
+    }
+
+    const docgenPayload =
+      component.docgen && typeof component.docgen.$ref === 'string'
+        ? resolveRef(baseDir, component.docgen.$ref)
+        : component.docgen;
+
+    const storyPayload =
+      component.stories && typeof component.stories.$ref === 'string'
+        ? resolveRef(baseDir, component.stories.$ref)
+        : component.stories;
+
+    const docs = {};
+    if (object(component.docs)) {
+      for (const [docId, docEntry] of Object.entries(component.docs)) {
+        if (!object(docEntry)) continue;
+        const mdxPayload =
+          docEntry.mdx && typeof docEntry.mdx.$ref === 'string'
+            ? resolveRef(baseDir, docEntry.mdx.$ref)
+            : docEntry.mdx;
+        docs[docId] = {
+          ...docEntry,
+          content: mdxPayload?.content ?? docEntry.content,
+        };
+      }
+    }
+
+    let reactDocgen = component.reactDocgen || docgenPayload?.reactDocgen;
+    if (!reactDocgen && docgenPayload?.reactComponentMeta) {
+      const meta = docgenPayload.reactComponentMeta;
+      const cleanProps = {};
+      if (object(meta.props)) {
+        for (const [propName, propDef] of Object.entries(meta.props)) {
+          if (!object(propDef)) continue;
+          const { defaultValue, ...restProp } = propDef;
+          cleanProps[propName] = {
+            ...restProp,
+            ...(defaultValue &&
+            typeof defaultValue === 'object' &&
+            typeof defaultValue.value === 'string'
+              ? { defaultValue }
+              : {}),
+          };
+        }
+      }
+      reactDocgen = {
+        ...(typeof meta.description === 'string'
+          ? { description: meta.description }
+          : {}),
+        props: cleanProps,
+        ...(typeof meta.filePath === 'string'
+          ? { definedInFile: meta.filePath }
+          : {}),
+      };
+    }
+
+    let stories = component.stories;
+    if (storyPayload?.stories) {
+      if (Array.isArray(storyPayload.stories)) {
+        stories = storyPayload.stories;
+      } else if (object(storyPayload.stories)) {
+        stories = Object.values(storyPayload.stories);
+      }
+    }
+
+    const name = docgenPayload?.name || storyPayload?.name || component.name;
+    const compPath =
+      docgenPayload?.path || storyPayload?.path || component.path;
+    const description =
+      component.description || docgenPayload?.description;
+    const compImport = storyPayload?.import || component.import;
+    const jsDocTags = docgenPayload?.jsDocTags || component.jsDocTags;
+
+    dereferencedComponents[key] = {
+      ...component,
+      id: component.id ?? key,
+      ...(typeof name === 'string' ? { name } : {}),
+      ...(typeof compPath === 'string' ? { path: compPath } : {}),
+      ...(typeof description === 'string' ? { description } : {}),
+      ...(typeof compImport === 'string' ? { import: compImport } : {}),
+      ...(jsDocTags && Object.keys(jsDocTags).length ? { jsDocTags } : {}),
+      ...(reactDocgen ? { reactDocgen } : {}),
+      ...(stories ? { stories } : {}),
+      ...(Object.keys(docs).length ? { docs } : {}),
+    };
+  }
+
+  return {
+    ...value,
+    components: dereferencedComponents,
+  };
+}
+
 export function readComponentMetadata(filename) {
   let input;
   try {
@@ -153,7 +297,9 @@ export function readComponentMetadata(filename) {
       { cause }
     );
   }
-  return normalizeComponentMetadata(input, { source: filename });
+  const baseDir = path.dirname(path.resolve(filename));
+  const dereferenced = dereferenceComponentMetadata(input, { baseDir });
+  return normalizeComponentMetadata(dereferenced, { source: filename });
 }
 
 /** Audited inputs and complete prop/docgen data, plus stable story identity. */

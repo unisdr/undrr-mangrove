@@ -90,9 +90,9 @@ function SelectionPreview() {
 }
 
 export default {
+  ...widgetMetaShared,
   title: 'Components/Syndicated search',
   component: SyndicationSearchWidget,
-  ...widgetMetaShared,
 };
 
 export const FilterSelection = {

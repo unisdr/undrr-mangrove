@@ -18,9 +18,9 @@ const config = {
 const sourceDescription =
   'Real requests to the normal public UNDRR search endpoint. Access and network errors remain visible; there is no automatic local or fixture fallback.';
 export default {
+  ...widgetMetaShared,
   title: 'Components/Syndicated search/Downloads',
   component: SyndicationSearchWidget,
-  ...widgetMetaShared,
   tags: ['!test'],
 };
 export const DownloadResults = {
