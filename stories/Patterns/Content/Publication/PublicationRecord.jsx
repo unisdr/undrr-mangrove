@@ -199,10 +199,13 @@ function ResourceList({ value, labels, lang, listId, toggleRef }) {
 
   // In React the module's auto-init has already run, so enhance this toggle
   // here; mgShowMore is idempotent, so a host's auto-init is harmless.
+  // Items mode reads the items when it starts, so start again when they
+  // change: the cleanup restores the old markup first.
+  const itemsKey = resources.map(resource => resource.href).join('\n');
   useEffect(() => {
     const button = toggleRef.current;
     return collapses && button ? mgShowMore(button) : undefined;
-  }, [collapses, toggleRef]);
+  }, [collapses, itemsKey, toggleRef]);
 
   // Keep the visible label right when the interface language changes.
   useEffect(() => {

@@ -140,6 +140,26 @@ describe('behaviour', () => {
     expect(document.activeElement).toBe(button);
   });
 
+  test('changing the resources re-initialises the collapse', () => {
+    const { container, rerender } = render(
+      <PublicationRecord
+        record={{ ...exampleRecord, resources: files(3) }}
+        labels={labels}
+      />
+    );
+    // New items 4 and 5 must be hidden too, not only the one captured first.
+    rerender(
+      <PublicationRecord
+        record={{ ...exampleRecord, resources: files(5) }}
+        labels={labels}
+      />
+    );
+    expect(allItems(container)).toHaveLength(5);
+    expect(shownItems(container)).toHaveLength(2);
+    fireEvent.click(toggle(container));
+    expect(shownItems(container)).toHaveLength(5);
+  });
+
   test('the cover still targets the first primary resource', () => {
     const { container } = show(files(34));
     expect(

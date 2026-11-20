@@ -154,19 +154,27 @@ export async function checkCollapsedList({ canvasElement }) {
   expect(shown()).toHaveLength(2);
   // A hidden group takes no space: its padding and border are dropped too.
   expect(items[20].getBoundingClientRect().height).toBe(0);
+  // ...yet stays searchable: normalize's [hidden] { display: none } must not
+  // win over hidden="until-found", or find-in-page never reaches it.
+  const view = doc.defaultView;
+  expect(view.getComputedStyle(items[20]).display).not.toBe('none');
   expect(toggle).toHaveAttribute('aria-expanded', 'false');
   expect(toggle.textContent).toBe('Show all 34 files');
 
-  // Enter opens, focus stays on the toggle; Space closes; Enter reopens.
+  // Enter opens and focus moves to the first revealed control; Space on the
+  // toggle closes it.
   toggle.focus();
   await userEvent.keyboard('{Enter}');
   expect(toggle).toHaveAttribute('aria-expanded', 'true');
   expect(shown()).toHaveLength(34);
-  expect(doc.activeElement).toBe(toggle);
   expect(toggle.textContent).toBe('Show fewer files');
+  // A reader's open lands on the first revealed group's first link.
+  expect(doc.activeElement).toBe(items[2].querySelector('a'));
+  toggle.focus();
   await userEvent.keyboard(' ');
   expect(toggle).toHaveAttribute('aria-expanded', 'false');
   expect(shown()).toHaveLength(2);
+  expect(doc.activeElement).toBe(toggle);
 
   // Closing while focus is in a group that is about to be hidden moves
   // focus to the toggle, never to a hidden or off-screen control.
@@ -176,9 +184,15 @@ export async function checkCollapsedList({ canvasElement }) {
   expect(doc.activeElement).toBe(toggle);
 
   // Find-in-page revealing a hidden group opens the whole list.
+  // window.find() proves the hidden text is searchable; it doesn't fire
+  // beforematch the way the browser's find bar does, so dispatch that.
+  view.getSelection().removeAllRanges();
+  expect(view.find('Annex 20: country')).toBe(true);
+  view.getSelection().removeAllRanges();
   items[20].dispatchEvent(new Event('beforematch', { bubbles: true }));
   expect(toggle).toHaveAttribute('aria-expanded', 'true');
   expect(shown()).toHaveLength(34);
+  view.getSelection().removeAllRanges();
   toggle.click();
 
   // "All downloads (34)" opens the list before jumping to it.
