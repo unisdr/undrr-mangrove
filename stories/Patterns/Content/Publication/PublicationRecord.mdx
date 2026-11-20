@@ -20,7 +20,7 @@ The [news-entry reference](?path=/docs/patterns-article-story--docs) supplies th
 - Early access links, full description and an optional cover/bibliography rail.
 - Complete, uncropped covers with a thin neutral border.
 
-The fixture is synthetic. Its HTML/plain-text resources are usable demonstration files; its backup is an identical local copy, not evidence of a verified external edition. Citation text is supplied verbatim. Resource language, format and size are supplied facts; unknown values are omitted.
+The fixture is synthetic and shows the usual case: the publisher's original (on example.org, a reserved documentation domain) plus a backup hosted here. The hosted files are small checked-in demonstration files, not real report downloads. Citation text is supplied verbatim. Resource language, format and size are supplied facts; unknown values are omitted.
 
 The optional standfirst requires approved content: do not automatically promote Drupal’s hidden short description or trim its body. The cover is decorative here because its title/year repeat adjacent text; supply meaningful alternative text for covers that convey additional information.
 
@@ -28,8 +28,7 @@ The optional standfirst requires approved content: do not automatically promote 
 
 The cover links to the same place as the first resource link: the publisher's copy when there is one, otherwise the hosted copy, never a backup. When a pointer is over the cover, an outline and a corner badge appear: a download icon for a hosted copy or an external-link icon for a publisher copy. The badge isn't shown otherwise, or on touch, so the publisher's cover stays as published. The labelled resource list and the jump link are the always-visible ways in. With two or more resources, "All downloads (N)" under the cover jumps to the resource list. With no resources, the cover isn't linked. The [record specification](?path=/docs/patterns-content-publication-record-specification--docs) records each decision and its reasons ([#1502](https://github.com/unisdr/undrr-mangrove/issues/1502)).
 
-<Canvas of={Stories.HostedOnly} story={{ inline: false, height: '700px' }} />
-<Canvas of={Stories.ExternalOnly} story={{ inline: false, height: '700px' }} />
+<Canvas of={Stories.SeveralFiles} story={{ inline: false, height: '700px' }} />
 
 | Resources | Cover                               | "All downloads (N)" |
 | --------- | ----------------------------------- | ------------------- |
@@ -63,11 +62,28 @@ Every download label starts `download_`; cover clicks contain `cover`; in-page n
 
 Missing data leaves no empty sections or placeholders. No public file does not imply unavailability; any explanation must be supplied by the editor or adapter.
 
-## Original and backup access
+## Resource presentation
 
-<Canvas of={Stories.LocalBackup} story={{ inline: false, height: '700px' }} />
+Publisher original plus hosted backup is the standard case, as in Drupal's download box ([#1505](https://github.com/unisdr/undrr-mangrove/issues/1505)):
 
-Backups have their own labels and metadata and never replace an invalid primary link. The cover links to the original, not the backup. Root-relative and HTTP(S) URLs follow the shared ContentPattern URL contract; unsafe and protocol-relative URLs are omitted. Identifiers remain opaque text rather than guessed DOI links.
+| Case               | Primary line                              | Under it                                                                                        |
+| ------------------ | ----------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| Publisher + backup | **Access {title}**, opens in a new tab    | **Download a backup copy hosted by this site**, the file facts, then **What is a backup copy?** |
+| Hosted only        | **{title}**, then the file facts          | Nothing                                                                                         |
+| Publisher only     | **Access {title}**, facts only when known | Nothing                                                                                         |
+| Video host         | **Watch {title}**                         | As above                                                                                        |
+
+<Canvas of={Stories.HostedOnly} story={{ inline: false, height: '700px' }} />
+<Canvas of={Stories.ExternalOnly} story={{ inline: false, height: '700px' }} />
+<Canvas of={Stories.Video} story={{ inline: false, height: '700px' }} />
+
+- File facts read "TYPE, SIZE · Language" and drop unknown parts. With a backup they sit on the backup line, because they describe the hosted file.
+- Publisher links end with the `external-link` icon and visually hidden "(opens in new tab)". Hosted links open in the same tab.
+- "What is a backup copy?" is a native `<details>`, so it works without JavaScript and is operable by keyboard and screen readers. Its contact sentence appears only when the record supplies `contactHref`.
+- The date line reads "Added {date}". Drupal's "Last checked" label is not used, because the date is when the hosted copy was added, not a check.
+- Every link in the section carries `data-vf-analytics-label`: `download_publisher`, `download_backup`, `download_internal`, or `contact_download_help` for the contact link.
+
+Backups never replace an invalid primary link, and the cover links to the original, not the backup. Root-relative and HTTP(S) URLs follow the shared ContentPattern URL contract; unsafe and protocol-relative URLs are omitted. Identifiers remain opaque text rather than guessed DOI links. Adapters must supply each resource's `origin` (`publisher` or `hosted`).
 
 ## Long content
 
@@ -83,6 +99,6 @@ The composition needs its own `publication-record.scss`, shared Mangrove CSS and
 
 ## Changelog
 
-- **0.2.0**, 2026-11-20 ([#1502](https://github.com/unisdr/undrr-mangrove/issues/1502)): The cover links to the first primary resource (publisher copy, otherwise hosted copy) as a hidden duplicate of the labelled link, with an outline and a download or external-link badge on hover only. Records with two or more resources show "All downloads (N)" under the cover, with plural forms in all bundled languages. Resource, backup, cover and jump links carry the `undrr-download-box` analytics regions and labels used by Drupal. Added one-hosted-file and publisher-only stories and a long-DOI fixture. Each author, source and identifier now resolves its own direction (`dir="auto"`), so a Latin DOI reads correctly on an Arabic page and after an Arabic entry. A resource without an origin and with an absolute URL is treated as hosted, with a development warning; adapters must supply the origin.
+- **0.2.0**, 2026-11-20 ([#1502](https://github.com/unisdr/undrr-mangrove/issues/1502)): The cover links to the first primary resource (publisher copy, otherwise hosted copy) as a hidden duplicate of the labelled link, with an outline and a download or external-link badge on hover only. Records with two or more resources show "All downloads (N)" under the cover, with plural forms in all bundled languages. Resource, backup, cover and jump links carry the `undrr-download-box` analytics regions and labels used by Drupal. Added one-hosted-file and publisher-only stories and a long-DOI fixture. Each author, source and identifier now resolves its own direction (`dir="auto"`), so a Latin DOI reads correctly on an Arabic page and after an Arabic entry. A resource without an origin and with an absolute URL is treated as hosted, with a development warning; adapters must supply the origin. Resources follow Drupal's download box ([#1505](https://github.com/unisdr/undrr-mangrove/issues/1505)): Standard is now the publisher original plus a hosted backup; added several-files, hosted-only, publisher-only and video stories and removed the separate original/local backup story. Primary links read "Access {title}" or "Watch {title}" (publisher, new tab, external-link icon) or the title (hosted); the backup line reads "Download a backup copy hosted by this site" with the file facts and a "What is a backup copy?" disclosure; one "Added {date}" line follows the list.
 
 - **0.1.0**, 2026-10-29 ([#1437](https://github.com/unisdr/undrr-mangrove/pull/1437), [#1432](https://github.com/unisdr/undrr-mangrove/issues/1432)): Add an experimental ordinary publication-record story composition, separate from report landing references. Give complete covers a thin neutral border consistent with book cards. Remove the title-only minimal, external-only and dedicated RTL stories; retain missing-content and resource regression coverage. Preserve work-language tags on related links. Production adapter and reusable API remain unimplemented.

@@ -107,7 +107,7 @@ This table records adapter decisions to implement and verify later; it does not 
 
 The inspected template opens resource links in new windows with `rel="noopener"` and an accessible warning. Preserve the host's reviewed policy and communicate the actual behaviour; this spec does not introduce a different global new-window rule. A linked cover follows the same policy as the first resource link; see [Cover link and download cues](#cover-link-and-download-cues). Retain meaningful action names and file context in accessible names, not icon/colour-only affordances. A format badge alone does not identify an available file.
 
-The source attachment template labels a status line “Last checked”, but the preprocessing value is media **creation time**, not a verified link-check event. The proposed record omits that assurance until a genuine check timestamp/process is supplied, or uses an accurately labelled source date after editorial approval. It must not turn creation time into a claim of verification.
+The source attachment template labels a status line “Last checked”, but the preprocessing value is media **creation time**, not a verified link-check event. The proposed record omits that assurance until a genuine check timestamp/process is supplied, or uses an accurately labelled source date after editorial approval. It must not turn creation time into a claim of verification. The record now labels that date "Added {date}"; see [Resource presentation](#resource-presentation).
 
 ## Cover link and download cues
 
@@ -142,8 +142,8 @@ Decided for [#1502](https://github.com/unisdr/undrr-mangrove/issues/1502), Novem
 - **Motion.** The badge and outline appear instantly, with no transition, so reduced motion needs nothing extra ([motion guidance](MOTION.md): hover feedback may be instant).
 - **RTL.** The badge uses logical insets. Neither icon is in the icon system's RTL mirror list, so neither flips.
 - **Size.** The badge is 2.25rem. The click target is the whole cover, not the badge.
-- **New windows.** The badge shows where the link goes, not how it opens. The story's resource links open in the same window, and so does the cover. A host that opens its labelled resource links in a new window should open the cover the same way (same `target` and `rel`), and keep the accessible new-window warning on the labelled link. The cover has no visible new-window cue, which is a known gap shared with the Drupal interim.
-- **Resource list.** The list has no destination icons, so the hover badge is the only place this cue appears. Adding the same icon to the first resource link is a possible follow-up; it is not part of this change.
+- **New windows.** The cover opens its target the same way as the labelled link it duplicates. A publisher link opens in a new tab (`target="_blank"`, `rel="noopener"`), so the cover does too; a hosted copy opens in the same tab, and so does its cover ([Resource presentation](#resource-presentation)). The labelled link carries the spoken "opens in new tab" warning. The cover's only visual cue is the external-link badge on hover, a gap shared with the Drupal interim.
+- **Resource list.** A publisher link in the list ends with the same `external-link` icon, so the badge and the list use one cue for "leaves the site".
 
 ### 3. "All downloads (N)" under the cover
 
@@ -189,6 +189,31 @@ Decided for [#1502](https://github.com/unisdr/undrr-mangrove/issues/1502), Novem
 - **Manual screenshots** in LTR, Arabic RTL and emulated forced colours, with and without hover; see the pull request for what was and wasn't checked.
 - Not done: testing with screen readers, voice control or real Windows High Contrast. These remain part of the acceptance outcomes below.
 
+## Resource presentation
+
+Decided for [#1505](https://github.com/unisdr/undrr-mangrove/issues/1505), November 2026. On PreventionWeb and undrr.org, a publication usually has two copies of each file: the original on the publisher's site and a backup hosted by UNDRR. Hosted-only records are the exception. The record now treats publisher plus backup as the standard case, following Drupal's download box (`field--default--node--field-attachment.html.twig` in drupal-base, from [web-backlog#2363](https://gitlab.com/undrr/web-backlog/-/issues/2363) and [#2453](https://gitlab.com/undrr/web-backlog/-/issues/2453)). Each resource is one list item:
+
+| Case | Primary line | Under it |
+| --- | --- | --- |
+| A. Publisher + backup (standard) | **Access {title}** to the publisher URL, opening in a new tab | Backup line: **Download a backup copy hosted by this site**, then the file facts, then **What is a backup copy?** |
+| B. Hosted only | **{title}** to the hosted file, then the file facts | Nothing |
+| C. Publisher only | **Access {title}**, opening in a new tab, then the file facts when known | Nothing |
+| Video host | **Watch {title}** instead of Access (youtube.com, youtu.be, vimeo.com) | As A or C |
+
+**Primary and backup.** The publisher's original is the primary route because it is the authoritative copy. The backup is a quieter second route, indented under its primary with an inline-start rule, and never replaces an invalid primary. Its wording is fixed interface text, so a backup needs only a URL. The cover still links to the first primary resource, never the backup.
+
+**File facts.** File facts read "TYPE, SIZE · Language", for example "PDF, 1.6 MB · English". Unknown parts are dropped, and the line is omitted when nothing is known. With a backup, the facts sit on the backup line, because they describe the hosted file. Type and size never move from one copy to the other, because each describes one file. Language belongs to the document, so the backup inherits it when it has none. Hosted-only shows the facts on the primary line; publisher-only shows them only when known. Facts follow the interface direction so they line up under their link, and sizes are supplied text, never computed.
+
+**Verbs and new tabs.** "Access" and "Watch" are interface words around the title. The title keeps its own `lang` and `dir="auto"`, and each language places it where its grammar needs (`{title}にアクセス`). Publisher links open in a new tab with `rel="noopener"`, as Drupal does. They end with the existing `external-link` icon and visually hidden "(opens in new tab)" text. Hosted links open in the same tab, which is a deliberate difference from Drupal (which opens every attachment link in a new window): a download doesn't need a new tab, and an unexpected one is a known usability problem. The cover follows the same rule as the link it duplicates.
+
+**Backup explanation.** A native `<details>` element labelled **What is a backup copy?** reveals: "We keep a copy of many documents to improve long-term access. Use this if the publisher's site is slow or unavailable." It is followed by "Problems? Contact us." when the adapter supplies a contact URL. `<details>` was chosen over Drupal's `?` button with `aria-expanded` for several reasons. It works without JavaScript, which matters because the record must be usable as static HTML. Keyboard, screen-reader and forced-colours support come from the browser. Its visible text label is something voice-control users can say, which a "?" is not. The summary uses Mangrove's global `details > summary` focus ring. Drupal also attaches the explanation to both links with `aria-describedby`. The record doesn't, because the explanation follows directly in reading order and would otherwise be read on every pass through the link.
+
+**Date line.** One line below the list reads **"Added {date}"**, for example "Added 15 March 2026". Drupal labels this value "Last checked", but it is the media item's creation date, not a link check; this spec already says not to present creation time as verification. "Added" states only what the date is. The user may still change the wording. The date is a `<time>` element in the editorial-manual format, with Latin digits as Drupal prints them. It is shown only with resources and a valid ISO date.
+
+**Checks.** `__tests__/resourcePresentation.test.jsx` covers verb selection (including look-alike hosts), file-fact text and placement for each case, new-tab attributes and icons, the closed-by-default disclosure and its contact link, the date line, analytics labels on every link, and title placement in Arabic, Japanese and Chinese. It checks every story in every interface language for unfilled placeholders, and runs axe with the explanation open. Screenshots cover LTR, Arabic RTL, the explanation opened with the keyboard, and emulated forced colours. Screen readers and voice control were not tested.
+
+**Analytics.** All links sit in region `undrr-download-box`. The labels are `download_publisher` for a publisher primary (including Watch), `download_internal` for a hosted-only primary, and `download_backup` for a backup, matching drupal-base!268. The contact link in the explanation is `contact_download_help`: it isn't a download, so it doesn't start `download_`. That name is new and open to review.
+
 ## Responsive and accessibility requirements
 
 - One H1, logical section headings and semantic metadata/resource lists. Composed controls remain outside Rich content styling; preserve native focus/hover/visited states.
@@ -209,7 +234,7 @@ Decided for [#1502](https://github.com/unisdr/undrr-mangrove/issues/1502), Novem
 | Explicitly labelled core bibliographic and resource information | Preserves distinct source meanings while making ordinary records easier to scan; it does not promote hidden fields or mandate every field configured for policies/statements. |
 | Optional supplied standfirst | Experimental story capability derived from the news-entry introduction, not automatic promotion of hidden `field_short_description` or truncation of the full body. The adapter must obtain approved text or omit it. |
 | Optional approved publication citation support | A future integration decision. It is not parity with the source's hazard-profile-only Drupal citation extra field/library and does not unhide `undrr_citation`; future Mangrove CiteThis reuse is a separate proposal. |
-| Omit or relabel the apparent “Last checked” assurance | A proposed correction to avoid representing media creation as a verified check. Needs an approved consumer decision before migration. |
+| Relabel the apparent “Last checked” assurance as “Added {date}” | Decided in [Resource presentation](#resource-presentation) to avoid representing media creation as a verified check. The Drupal template still needs the matching change. |
 
 No production adapter, data migration, Gutenberg serialization, live-domain parity, accessibility certification or current deployment is established here. Keep Drupal extraction, eligibility and URLs in the consumer adapter; Mangrove owns the presentation requirements and shared component contracts. The teaser/card contracts remain separate and unchanged.
 
