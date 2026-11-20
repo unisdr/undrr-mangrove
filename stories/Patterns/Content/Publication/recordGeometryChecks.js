@@ -134,48 +134,52 @@ export async function checkAsideContainment({ canvasElement }) {
 }
 
 /**
- * A long list shows two groups; the rest sit in a zero-height ShowMore
- * target. Tabbing into it opens it, so focus never lands on a hidden link,
- * and the toggle works with Enter and Space.
+ * A long list shows two groups; ShowMore's items mode hides the rest with
+ * hidden="until-found". The toggle is a disclosure button that works with
+ * Enter and Space, opening leaves focus on it, closing pulls focus out of a
+ * hidden group, and a find-in-page match opens the list.
  */
 export async function checkCollapsedList({ canvasElement }) {
   const doc = canvasElement.ownerDocument;
   const toggle = canvasElement.querySelector(
     '.mg-publication-record__show-all'
   );
-  const more = canvasElement.querySelector(
-    '.mg-publication-record__more-files'
-  );
-  const collapsed = () => more.classList.contains('mg-show-more--collapsed');
+  const items = [
+    ...canvasElement.querySelectorAll('.mg-publication-record__resources > li'),
+  ];
+  const shown = () =>
+    items.filter(item => !item.hidden && item.offsetHeight > 0);
   await waitFor(() => expect(toggle.hidden).toBe(false));
-  expect(collapsed()).toBe(true);
-  expect(more.getBoundingClientRect().height).toBe(0);
-  const shown = canvasElement.querySelectorAll(
-    '.mg-publication-record__resources:not(.mg-publication-record__more-files *) > li'
-  );
-  expect(shown).toHaveLength(2);
+  expect(items).toHaveLength(34);
+  expect(shown()).toHaveLength(2);
+  // A hidden group takes no space: its padding and border are dropped too.
+  expect(items[20].getBoundingClientRect().height).toBe(0);
+  expect(toggle).toHaveAttribute('aria-expanded', 'false');
   expect(toggle.textContent).toBe('Show all 34 files');
 
-  // Focus moving into the collapsed groups opens them, so a keyboard user
-  // never lands on a hidden link. user-event's simulated Tab skips links in a
-  // zero-height box, unlike a browser's real Tab (which lands there and
-  // opens it), so focus is moved directly; the focusin path is the same.
-  const first = more.querySelector('a');
-  first.focus();
-  expect(doc.activeElement).toBe(first);
-  expect(collapsed()).toBe(false);
-  expect(doc.activeElement.getBoundingClientRect().height).toBeGreaterThan(0);
-  expect(toggle.textContent).toBe('Show fewer files');
-
-  // The toggle with Enter, then Space.
+  // Enter opens, focus stays on the toggle; Space closes; Enter reopens.
   toggle.focus();
   await userEvent.keyboard('{Enter}');
-  expect(collapsed()).toBe(true);
-  expect(toggle.textContent).toBe('Show all 34 files');
+  expect(toggle).toHaveAttribute('aria-expanded', 'true');
+  expect(shown()).toHaveLength(34);
+  expect(doc.activeElement).toBe(toggle);
+  expect(toggle.textContent).toBe('Show fewer files');
   await userEvent.keyboard(' ');
-  expect(collapsed()).toBe(false);
+  expect(toggle).toHaveAttribute('aria-expanded', 'false');
+  expect(shown()).toHaveLength(2);
+
+  // Closing while focus is in a group that is about to be hidden moves
+  // focus to the toggle, never to a hidden or off-screen control.
   await userEvent.keyboard('{Enter}');
-  expect(collapsed()).toBe(true);
+  items[33].querySelector('a').focus();
+  toggle.click();
+  expect(doc.activeElement).toBe(toggle);
+
+  // Find-in-page revealing a hidden group opens the whole list.
+  items[20].dispatchEvent(new Event('beforematch', { bubbles: true }));
+  expect(toggle).toHaveAttribute('aria-expanded', 'true');
+  expect(shown()).toHaveLength(34);
+  toggle.click();
 
   // "All downloads (34)" opens the list before jumping to it.
   const jump = canvasElement.querySelector(
@@ -186,7 +190,7 @@ export async function checkCollapsedList({ canvasElement }) {
     once: true,
   });
   await userEvent.click(jump);
-  expect(collapsed()).toBe(false);
+  expect(toggle).toHaveAttribute('aria-expanded', 'true');
   toggle.click(); // Leave the story collapsed, as it loads.
-  expect(collapsed()).toBe(true);
+  expect(toggle).toHaveAttribute('aria-expanded', 'false');
 }

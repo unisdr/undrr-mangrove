@@ -27,6 +27,8 @@ Download links use one naming scheme, so reports can count them with a single ma
 - A second link to the same file, such as a linked cover, adds `_cover` to the label and `-cover` to the region: `download_publisher_cover` in `undrr-download-box-cover`.
 - In-page navigation starts `nav_`, for example `nav_all_downloads_cover` (the jump link under a cover) and `nav_show_all_downloads` (the button that opens or closes a long resource list), so it never counts as a download.
 
+The script records clicks through `mousedown` listeners. A keyboard activation (Enter or Space on a button or link) and a click made from code are not recorded. This applies site-wide, not only to these names.
+
 Matching `download_` finds every download click; excluding `cover` leaves the primary list. The [publication record specification](PUBLICATION-RECORD-SPEC.md#5-analytics-download_-_cover-and-nav_) has the full table. Pattern docs such as the [Collection page](https://mangrove.undrr.org/?path=/docs/patterns-collection-page--docs) list their own regions and labels.
 
 ## Working example

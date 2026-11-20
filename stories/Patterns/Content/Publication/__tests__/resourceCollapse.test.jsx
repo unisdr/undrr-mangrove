@@ -5,8 +5,8 @@ import { PublicationRecord } from '../PublicationRecord';
 import {
   COLLAPSE_FROM,
   VISIBLE,
+  isCollapsible,
   pluralLabel,
-  splitResources,
 } from '../recordAccess';
 import {
   RECORD_LABELS,
@@ -30,12 +30,10 @@ const show = resources =>
   );
 const toggle = container =>
   container.querySelector('.mg-publication-record__show-all');
-const more = container =>
-  container.querySelector('.mg-publication-record__more-files');
-const visibleItems = container =>
-  container.querySelectorAll(
-    '.mg-publication-record__resources:not(.mg-publication-record__more-files *) > li'
-  );
+const allItems = container =>
+  container.querySelectorAll('.mg-publication-record__resources > li');
+const shownItems = container =>
+  [...allItems(container)].filter(item => !item.hasAttribute('hidden'));
 
 describe('threshold', () => {
   test('is one named constant: collapse from 3, keep 2 in view', () => {
@@ -44,31 +42,48 @@ describe('threshold', () => {
   });
 
   test.each([
-    [1, 1, 0],
-    [2, 2, 0],
-    [3, 2, 1],
-    [34, 2, 32],
-  ])('%i files: %i visible, %i collapsible', (count, visible, overflow) => {
-    const split = splitResources(files(count));
-    expect(split.visible).toHaveLength(visible);
-    expect(split.overflow).toHaveLength(overflow);
+    [1, 0],
+    [2, 0],
+    [3, 1],
+    [34, 32],
+  ])('%i files: %i collapsible', (count, collapsible) => {
+    const marked = Array.from({ length: count }, (_, index) =>
+      isCollapsible(index, count)
+    ).filter(Boolean);
+    expect(marked).toHaveLength(collapsible);
   });
 
-  test('2 files render no toggle and no collapsible container', () => {
+  test('2 files render no toggle and nothing hidden', () => {
     const { container } = show(files(2));
     expect(toggle(container)).toBeNull();
-    expect(more(container)).toBeNull();
+    expect(container.querySelector('[data-mg-show-more-item]')).toBeNull();
   });
 
   test.each([3, 34])(
-    '%i files collapse with 2 visible and the true total on the toggle',
+    '%i files: one list, 2 shown, the rest hidden until found',
     count => {
       const { container } = show(files(count));
-      expect(visibleItems(container)).toHaveLength(2);
-      expect(more(container).querySelectorAll('li')).toHaveLength(count - 2);
-      expect(more(container)).toHaveClass('mg-show-more--collapsed');
-      expect(toggle(container).hidden).toBe(false);
-      expect(toggle(container).textContent).toBe(`Show all ${count} files`);
+      expect(
+        container.querySelectorAll('.mg-publication-record__resources')
+      ).toHaveLength(1);
+      expect(allItems(container)).toHaveLength(count);
+      expect(shownItems(container)).toHaveLength(2);
+      [...allItems(container)].slice(2).forEach(item => {
+        expect(item).toHaveAttribute('data-mg-show-more-item');
+        expect(item).toHaveAttribute('hidden', 'until-found');
+      });
+      // Hidden groups leave the accessibility tree.
+      expect(screen.getAllByRole('listitem', { hidden: false })).toEqual(
+        expect.arrayContaining(shownItems(container))
+      );
+      const button = toggle(container);
+      expect(button.hidden).toBe(false);
+      expect(button).toHaveAttribute('aria-expanded', 'false');
+      expect(button).toHaveAttribute(
+        'aria-controls',
+        container.querySelector('.mg-publication-record__resources').id
+      );
+      expect(button.textContent).toBe(`Show all ${count} files`);
       expect(
         screen.getByRole('link', { name: `All downloads (${count})` })
       ).toBeInTheDocument();
@@ -77,26 +92,52 @@ describe('threshold', () => {
 });
 
 describe('behaviour', () => {
-  test('the toggle opens and closes the collapsible groups', () => {
+  test('the toggle opens and closes the hidden groups, with aria-expanded', () => {
     const { container } = show(files(34));
-    fireEvent.click(toggle(container));
-    expect(more(container)).not.toHaveClass('mg-show-more--collapsed');
-    expect(toggle(container).textContent).toBe(labels.showFewerFiles);
-    fireEvent.click(toggle(container));
-    expect(more(container)).toHaveClass('mg-show-more--collapsed');
+    const button = toggle(container);
+    fireEvent.click(button);
+    expect(shownItems(container)).toHaveLength(34);
+    expect(button).toHaveAttribute('aria-expanded', 'true');
+    expect(button.textContent).toBe(labels.showFewerFiles);
+    fireEvent.click(button);
+    expect(shownItems(container)).toHaveLength(2);
+    expect(button).toHaveAttribute('aria-expanded', 'false');
   });
 
-  test('"All downloads (N)" opens a collapsed list and still jumps to the heading', () => {
+  test('"All downloads (N)" opens the list through the API, without clicking the toggle', () => {
     const { container } = show(files(34));
+    const button = toggle(container);
+    const onToggleClick = jest.fn();
+    button.addEventListener('click', onToggleClick);
     const jump = screen.getByRole('link', { name: 'All downloads (34)' });
     expect(container.querySelector(jump.getAttribute('href'))).toBe(
       screen.getByRole('heading', { name: labels.access, level: 2 })
     );
     fireEvent.click(jump);
-    expect(more(container)).not.toHaveClass('mg-show-more--collapsed');
+    expect(shownItems(container)).toHaveLength(34);
+    expect(button).toHaveAttribute('aria-expanded', 'true');
+    expect(onToggleClick).not.toHaveBeenCalled();
     // An open list stays open.
     fireEvent.click(jump);
-    expect(more(container)).not.toHaveClass('mg-show-more--collapsed');
+    expect(shownItems(container)).toHaveLength(34);
+  });
+
+  test('find-in-page (beforematch) on a hidden group opens the list', () => {
+    const { container } = show(files(34));
+    allItems(container)[20].dispatchEvent(
+      new Event('beforematch', { bubbles: true })
+    );
+    expect(shownItems(container)).toHaveLength(34);
+    expect(toggle(container)).toHaveAttribute('aria-expanded', 'true');
+  });
+
+  test('closing moves focus from a hidden group to the toggle', () => {
+    const { container } = show(files(34));
+    const button = toggle(container);
+    fireEvent.click(button);
+    allItems(container)[33].querySelector('a').focus();
+    fireEvent.click(button);
+    expect(document.activeElement).toBe(button);
   });
 
   test('the cover still targets the first primary resource', () => {
@@ -120,15 +161,13 @@ describe('behaviour', () => {
     );
   });
 
-  test('stories: Several files collapses to 2 of 3; Many files has 34', () => {
+  test('stories: Several files shows 2 of 3; Many files has 34', () => {
     const several = render(meta.render(SeveralFiles.args, { globals: {} }));
-    expect(visibleItems(several.container)).toHaveLength(2);
+    expect(shownItems(several.container)).toHaveLength(2);
     expect(severalFiles).toHaveLength(3);
     several.unmount();
     const many = render(meta.render(ManyFiles.args, { globals: {} }));
-    expect(
-      many.container.querySelectorAll('.mg-publication-record__resources > li')
-    ).toHaveLength(34);
+    expect(allItems(many.container)).toHaveLength(34);
   });
 });
 
@@ -142,12 +181,13 @@ test('without JavaScript the toggle is hidden and every group is open', () => {
   const document = new DOMParser().parseFromString(html, 'text/html');
   const button = document.querySelector('.mg-publication-record__show-all');
   expect(button.hasAttribute('hidden')).toBe(true);
+  expect(button.getAttribute('data-mg-show-more-mode')).toBe('items');
+  // A host's auto-init picks it up: no opt-out attribute.
+  expect(button.hasAttribute('data-mg-show-more-skip-auto-init')).toBe(false);
   expect(button.getAttribute('data-mg-show-more-target')).toBe(
-    `#${document.querySelector('.mg-publication-record__more-files').id}`
+    `#${document.querySelector('.mg-publication-record__resources').id}`
   );
-  expect(
-    document.querySelector('.mg-publication-record__more-files').className
-  ).not.toMatch(/collapsed/);
+  expect(document.querySelectorAll('li[hidden]')).toHaveLength(0);
   expect(
     document.querySelectorAll('.mg-publication-record__resources > li')
   ).toHaveLength(34);

@@ -1,5 +1,5 @@
 import React, { useEffect, useId, useRef } from 'react';
-import { mgShowMore } from '../../../assets/js/show-more';
+import { mgShowMore, mgShowMoreSetOpen } from '../../../assets/js/show-more';
 import PropTypes from 'prop-types';
 import { SkipLink } from '../../../Utilities/SkipLink/SkipLink';
 import { projectRecord } from './recordProjection';
@@ -12,8 +12,7 @@ import {
   primaryAnalyticsLabel,
   resourceMeta,
   showAllDownloads,
-  splitResources,
-  VISIBLE,
+  isCollapsible,
   splitTemplate,
 } from './recordAccess';
 import { UndrrChrome } from '../../_shared/UndrrChrome';
@@ -89,7 +88,13 @@ NewTabCue.propTypes = { label: PropTypes.string };
  * B. hosted only: the title, then the file facts;
  * C. publisher only: "Access {title}", then the facts when known.
  */
-function ResourceItem({ resource, labels, workLang, contactHref }) {
+function ResourceItem({
+  resource,
+  labels,
+  workLang,
+  contactHref,
+  collapsible,
+}) {
   const verb = linkVerb(resource);
   const external = resource.origin === 'publisher';
   const [before, after] =
@@ -100,7 +105,7 @@ function ResourceItem({ resource, labels, workLang, contactHref }) {
   const titleLang = resource.labelLang || workLang;
   const { backup } = resource;
   return (
-    <li>
+    <li data-mg-show-more-item={collapsible ? '' : undefined}>
       <p className="mg-publication-record__primary">
         <a
           href={resource.href}
@@ -172,78 +177,72 @@ ResourceItem.propTypes = {
   labels: PropTypes.object.isRequired,
   workLang: PropTypes.string,
   contactHref: PropTypes.string,
+  /** Hidden by ShowMore's items mode until the list is opened. */
+  collapsible: PropTypes.bool,
 };
 
 /**
- * The resource groups. From COLLAPSE_FROM files, groups after the first
- * VISIBLE sit in their own container behind the ShowMore utility, so the
- * collapse never cuts a group in half. Without JavaScript the toggle stays
- * hidden and every group is open.
+ * The resource groups, in one list. From COLLAPSE_FROM files, groups after
+ * the first VISIBLE are marked for ShowMore's items mode, a true disclosure:
+ * they are hidden with hidden="until-found" (so find-in-page still reaches
+ * them) until the toggle opens the list. Without JavaScript the toggle stays
+ * hidden and every group is open. A host page only needs show-more.js: its
+ * auto-init picks up the toggle.
  */
-function ResourceList({ value, labels, lang, moreId, toggleRef }) {
-  const { visible, overflow } = splitResources(value.resources);
-  const hasOverflow = overflow.length > 0;
-  const showAll = pluralLabel(
-    labels.showAllFiles,
-    lang,
-    value.resources.length
+function ResourceList({ value, labels, lang, listId, toggleRef }) {
+  const { resources } = value;
+  const collapses = resources.some((_, index) =>
+    isCollapsible(index, resources.length)
   );
+  const showAll = pluralLabel(labels.showAllFiles, lang, resources.length);
   const showFewer = labels.showFewerFiles;
-  const render = (resource, index) => (
-    <ResourceItem
-      key={index}
-      resource={resource}
-      labels={labels}
-      workLang={value.lang}
-      contactHref={value.contactHref}
-    />
-  );
 
+  // In React the module's auto-init has already run, so enhance this toggle
+  // here; mgShowMore is idempotent, so a host's auto-init is harmless.
   useEffect(() => {
     const button = toggleRef.current;
-    return hasOverflow && button ? mgShowMore(button) : undefined;
-  }, [hasOverflow, toggleRef]);
+    return collapses && button ? mgShowMore(button) : undefined;
+  }, [collapses, toggleRef]);
 
   // Keep the visible label right when the interface language changes.
   useEffect(() => {
-    const button = toggleRef.current;
-    const target = document.getElementById(moreId);
-    const label = button?.querySelector('[data-mg-show-more-label]');
-    if (!label || !target) return;
-    label.textContent = target.classList.contains('mg-show-more--collapsed')
-      ? showAll
-      : showFewer;
-  }, [showAll, showFewer, moreId, toggleRef]);
+    const label = toggleRef.current?.querySelector('[data-mg-show-more-label]');
+    if (!label) return;
+    label.textContent =
+      toggleRef.current.getAttribute('aria-expanded') === 'true'
+        ? showFewer
+        : showAll;
+  }, [showAll, showFewer, toggleRef]);
 
   return (
     <>
-      <ul className="mg-publication-record__resources">
-        {visible.map(render)}
+      <ul id={listId} className="mg-publication-record__resources">
+        {resources.map((resource, index) => (
+          <ResourceItem
+            key={index}
+            resource={resource}
+            labels={labels}
+            workLang={value.lang}
+            contactHref={value.contactHref}
+            collapsible={isCollapsible(index, resources.length)}
+          />
+        ))}
       </ul>
-      {hasOverflow && (
-        <>
-          <div id={moreId} className="mg-publication-record__more-files">
-            <ul className="mg-publication-record__resources">
-              {overflow.map((resource, index) =>
-                render(resource, index + VISIBLE)
-              )}
-            </ul>
-          </div>
-          <button
-            ref={toggleRef}
-            type="button"
-            hidden
-            className="mg-button mg-button-secondary mg-show-more--button mg-publication-record__show-all"
-            data-mg-show-more="true"
-            data-mg-show-more-skip-auto-init="true"
-            data-mg-show-more-target={`#${moreId}`}
-            data-mg-show-more-label-collapsed={showAll}
-            data-mg-show-more-label-open={showFewer}
-            data-vf-analytics-label={ANALYTICS.showAll}
-          >
-            <span data-mg-show-more-label>{showAll}</span>
-          </button>
-        </>
+      {collapses && (
+        <button
+          ref={toggleRef}
+          type="button"
+          hidden
+          className="mg-button mg-button-secondary mg-show-more--button mg-publication-record__show-all"
+          data-mg-show-more="true"
+          data-mg-show-more-mode="items"
+          data-mg-show-more-target={`#${listId}`}
+          data-mg-show-more-label-collapsed={showAll}
+          data-mg-show-more-label-open={showFewer}
+          data-vf-analytics-label={ANALYTICS.showAll}
+        >
+          <span data-mg-show-more-label>{showAll}</span>
+        </button>
       )}
     </>
   );
@@ -252,7 +251,7 @@ ResourceList.propTypes = {
   value: PropTypes.object.isRequired,
   labels: PropTypes.object.isRequired,
   lang: PropTypes.string,
-  moreId: PropTypes.string.isRequired,
+  listId: PropTypes.string.isRequired,
   toggleRef: PropTypes.object.isRequired,
 };
 
@@ -266,15 +265,12 @@ export function PublicationRecord({
 }) {
   const prefix = `publication-${useId().replace(/:/g, '')}`;
   const toggleRef = useRef(null);
-  const moreId = `${prefix}-more-files`;
+  const listId = `${prefix}-resources`;
   // "All downloads (N)" opens a collapsed list before the browser follows
   // the anchor to the resources heading. Without JavaScript the list is
   // already open and the link is a plain anchor.
-  const openList = () => {
-    const target = document.getElementById(moreId);
-    if (target?.classList.contains('mg-show-more--collapsed'))
-      toggleRef.current?.click();
-  };
+  const openList = () => mgShowMoreSetOpen(toggleRef.current, true);
+
   const value = projectRecord(record);
   const hasDetails =
     value.identifiers.length > 0 ||
@@ -381,7 +377,7 @@ export function PublicationRecord({
                     value={value}
                     labels={labels}
                     lang={lang}
-                    moreId={moreId}
+                    listId={listId}
                     toggleRef={toggleRef}
                   />
                   {value.resourcesAdded && (

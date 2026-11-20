@@ -226,7 +226,7 @@ export const RECORD_LABELS = {
     contactUs: 'お問い合わせ',
     sentenceEnd: '。',
     showAllFiles: { other: '{count}件のファイルをすべて表示' },
-    showFewerFiles: '表示するファイルを減らす',
+    showFewerFiles: '折りたたむ',
     added: '{date}に追加',
   },
   chinese: {
@@ -256,7 +256,7 @@ export const RECORD_LABELS = {
     contactUs: '联系我们',
     sentenceEnd: '。',
     showAllFiles: { other: '显示全部 {count} 个文件' },
-    showFewerFiles: '显示较少文件',
+    showFewerFiles: '收起',
     added: '添加于{date}',
   },
 };
