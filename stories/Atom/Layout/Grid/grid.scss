@@ -183,7 +183,7 @@ g-grid {
   }
 
   // Reading layout variant: flexible content column plus fixed rail.
-  $mg-grid-article-breakpoint: 48rem;
+  $mg-grid-article-breakpoint: $mg-breakpoint-tablet;
   $mg-grid-article-rail-width: 16rem;
 
   @media (min-width: $mg-grid-article-breakpoint) {

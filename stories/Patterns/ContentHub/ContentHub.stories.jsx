@@ -1,5 +1,6 @@
 import React from 'react';
 import { ContentHub } from './ContentHub';
+import { checkArticleGridGeometry } from '../../Atom/Layout/Grid/gridGeometryChecks';
 import '../_shared/pattern-demo.scss';
 
 export default {
@@ -36,18 +37,22 @@ export const HubHome = {
 };
 export const HubDetailWithHero = {
   name: 'Hub detail with a hero',
+  play: checkArticleGridGeometry,
   args: { initialPage: 'how-to-report', withHero: true },
 };
 export const HubDetail = {
   name: 'Hub detail',
+  play: checkArticleGridGeometry,
   args: { initialPage: 'how-to-report' },
 };
 export const DeeperPage = {
   name: 'Deeper page',
+  play: checkArticleGridGeometry,
   args: { initialPage: 'validate-data' },
 };
 export const HubDetailDetachedHeader = {
   name: 'Hub detail with a detached header',
+  play: checkArticleGridGeometry,
   args: {
     initialPage: 'how-to-report',
     withHero: true,
@@ -62,6 +67,7 @@ export const HubDetailDetachedHeader = {
 // See docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text
 export const HubDetailSecondaryHeader = {
   name: 'Hub detail with the secondary header surface',
+  play: checkArticleGridGeometry,
   args: {
     initialPage: 'how-to-report',
     withHero: true,

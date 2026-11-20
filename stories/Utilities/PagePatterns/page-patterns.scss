@@ -6,6 +6,8 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Utilities/PagePatterns/PagePatterns.mdx
  */
+@use "../../assets/scss/config" as *;
+
 // Reading-page layout tokens and placement rules.
 
 :root {
@@ -29,7 +31,7 @@
 }
 
 // Sidebar-on-wide, stacked-on-narrow placement for table of contents.
-@media (width >= 48rem) {
+@media (min-width: $mg-breakpoint-tablet) {
   // Prevent unused horizontal space between the text measure and side rail.
   .mg-reading--with-contents {
     max-inline-size: var(--mg-reading-with-contents-width);

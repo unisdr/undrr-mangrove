@@ -139,7 +139,7 @@ export default {
         {
           class: 'mg-reading',
           description:
-            'Reading column. Add mg-reading--with-contents to place a table of contents in a sticky right sidebar above 48rem.',
+            'Reading column. Add mg-reading--with-contents to place a table of contents in a sticky right sidebar from the 900px tablet breakpoint up.',
           usage:
             '<div class="mg-reading mg-reading--with-contents">\n  <div class="mg-table-of-contents">…</div>\n  <div class="mg-reading__article">…</div>\n</div>',
         },
