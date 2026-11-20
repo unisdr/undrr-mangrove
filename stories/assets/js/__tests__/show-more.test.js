@@ -824,6 +824,22 @@ describe('mgShowMore', () => {
       ).toBe('Show fewer');
     });
 
+    it('hides table rows with plain hidden', () => {
+      document.body.innerHTML = `
+        <table><tbody id="rows">
+          <tr><th scope="row">One</th></tr>
+          <tr data-mg-show-more-item><th scope="row"><a href="/2">Two</a></th></tr>
+        </tbody></table>
+        <button type="button" data-mg-show-more data-mg-show-more-mode="items" data-mg-show-more-target="#rows">Show more</button>`;
+      const button = document.querySelector('button');
+      mgShowMore(button);
+      const row = document.querySelector('[data-mg-show-more-item]');
+      expect(row.getAttribute('hidden')).toBe('');
+      button.click();
+      expect(row.hasAttribute('hidden')).toBe(false);
+      expect(document.activeElement).toBe(row.querySelector('a'));
+    });
+
     it('falls back to plain hidden without until-found support', () => {
       const descriptor = Object.getOwnPropertyDescriptor(
         HTMLElement.prototype,

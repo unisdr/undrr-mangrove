@@ -117,6 +117,8 @@ function returnToContent(toggle, target) {
 // set without a synthetic click (see mgShowMoreSetOpen).
 const itemControllers = new WeakMap();
 
+const TABLE_PARTS = new Set(['TR', 'TBODY', 'THEAD', 'TFOOT']);
+
 const FOCUSABLE =
   'a[href], area[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), summary, iframe, [contenteditable="true"], [tabindex]:not([tabindex="-1"])';
 
@@ -207,10 +209,14 @@ function initItemsMode(item, target, labelFor, stateLabels) {
   const untilFound = 'onbeforematch' in document.documentElement;
   let open = false;
 
+  // Chromium neither reveals until-found table parts on a find-in-page or
+  // text-highlight match nor drops their height, so rows use plain hidden.
+  const hiddenValue = element =>
+    untilFound && !TABLE_PARTS.has(element.tagName) ? 'until-found' : '';
   const render = () => {
     items.forEach(element => {
       if (open) element.removeAttribute('hidden');
-      else element.setAttribute('hidden', untilFound ? 'until-found' : '');
+      else element.setAttribute('hidden', hiddenValue(element));
     });
     item.setAttribute('aria-expanded', String(open));
     labelNode.textContent = labelFor(!open);
