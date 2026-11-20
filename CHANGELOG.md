@@ -13,7 +13,7 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 ### Breaking and visible changes
 
-- **Article grid two-column breakpoint aligns with tablet container (900px).** `.mg-grid--article` and `.mg-reading--with-contents` switch from a stacked single column to the two-column sidebar layout at 900px (`$mg-breakpoint-tablet`) instead of 48rem (768px), preventing the main reading column from squeezing inside `mg-container` between 768px and 899px. Drupal pages using these classes switch to two columns at 900px. ([#1504](https://github.com/unisdr/undrr-mangrove/issues/1504))
+- **Article grid two-column breakpoint aligns with tablet container (900px).** `.mg-grid--article` and `.mg-reading--with-contents` switch from a stacked single column to the two-column sidebar layout at 900px (`$mg-breakpoint-tablet`) instead of 48rem (768px), preventing the main reading column from squeezing inside `mg-container` between 768px and 899px. Drupal pages using these classes switch to two columns at 900px. A grid that is not inside `mg-container` (for example, full-width page content) now also stacks between 768px and 899px, even though it would have room for the rail there. ([#1504](https://github.com/unisdr/undrr-mangrove/issues/1504))
 
 ## 2.5.0, 2026-11-13
 
@@ -165,10 +165,7 @@ Mangrove 2.3 brings existing interface translations into production components, 
 The versioned paths become available after npm publication and the shared-web-assets production deployment. Verify the CSS version banner and module paths before upgrading consumers.
 
 ```html
-<link
-  rel="stylesheet"
-  href="https://assets.undrr.org/mangrove/2.3.0/css/style.css"
-/>
+<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.3.0/css/style.css">
 ```
 
 ### Repository maintenance
@@ -219,10 +216,7 @@ Mangrove 2.2 improves card presentation and adds experimental content patterns f
 The versioned paths become available after npm publication and the shared-web-assets production deployment. Verify the CSS version banner and newly published module paths before upgrading consumers.
 
 ```html
-<link
-  rel="stylesheet"
-  href="https://assets.undrr.org/mangrove/2.2.0/css/style.css"
-/>
+<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.2.0/css/style.css">
 ```
 
 ### Repository maintenance

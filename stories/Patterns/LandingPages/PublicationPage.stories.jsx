@@ -1,5 +1,6 @@
 import React from 'react';
 import { LandingPage } from './LandingPages';
+import { checkArticleGridGeometry } from '../../Atom/Layout/Grid/gridGeometryChecks';
 import { Hero } from '../../Components/Hero/Hero';
 import { StatsCard } from '../../Components/Cards/StatsCard/StatsCard';
 import './publication-example.scss';
@@ -28,6 +29,7 @@ export default {
 
 export const ReportLanding = {
   name: 'Report landing page',
+  play: checkArticleGridGeometry,
   args: { archetype: 'report' },
 };
 
