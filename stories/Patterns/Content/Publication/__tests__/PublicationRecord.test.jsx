@@ -7,6 +7,9 @@ import { projectRecord } from '../recordProjection';
 import { RECORD_LABELS, exampleRecord, exampleBody } from '../recordFixtures';
 import meta, { LongCopy } from '../PublicationRecord.stories';
 
+// The stories import browser play checks; Jest renders the stories only.
+jest.mock('storybook/test', () => ({}));
+
 const labels = RECORD_LABELS.english;
 const show = record =>
   render(

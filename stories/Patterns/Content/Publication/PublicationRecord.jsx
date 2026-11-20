@@ -2,6 +2,13 @@ import React, { useId } from 'react';
 import PropTypes from 'prop-types';
 import { SkipLink } from '../../../Utilities/SkipLink/SkipLink';
 import { projectRecord } from './recordProjection';
+import {
+  ANALYTICS,
+  coverAccess,
+  pluralLabel,
+  primaryAnalyticsLabel,
+  showAllDownloads,
+} from './recordAccess';
 import { UndrrChrome } from '../../_shared/UndrrChrome';
 
 function RecordNames({ entries }) {
@@ -33,6 +40,11 @@ export function PublicationRecord({
     value.pages ||
     value.details.length > 0;
   const hasAside = value.cover || hasDetails;
+  const coverLink = value.cover ? coverAccess(value.resources) : undefined;
+  const allDownloads =
+    coverLink && showAllDownloads(value.resources)
+      ? pluralLabel(labels.allDownloads, lang, value.resources.length)
+      : '';
   const chromeLocale = lang === 'ar' ? 'arabic' : 'english';
   return (
     <div lang={lang} dir={dir} className="mg-publication-record">
@@ -120,6 +132,7 @@ export function PublicationRecord({
                 <section
                   className="mg-reading__article"
                   aria-labelledby={`${prefix}-access`}
+                  data-vf-google-analytics-region={ANALYTICS.region}
                 >
                   <h2 id={`${prefix}-access`}>{labels.access}</h2>
                   <ul className="mg-publication-record__resources">
@@ -130,6 +143,9 @@ export function PublicationRecord({
                           hrefLang={resource.lang}
                           lang={resource.labelLang || value.lang}
                           dir="auto"
+                          data-vf-analytics-label={primaryAnalyticsLabel(
+                            resource
+                          )}
                         >
                           {resource.label}
                         </a>
@@ -157,6 +173,7 @@ export function PublicationRecord({
                                 hrefLang={resource.backup.lang}
                                 lang={resource.backup.labelLang || value.lang}
                                 dir="auto"
+                                data-vf-analytics-label={ANALYTICS.backup}
                               >
                                 {resource.backup.label}
                               </a>
@@ -241,9 +258,50 @@ export function PublicationRecord({
             {hasAside && (
               <aside className="mg-publication-record__aside">
                 {value.cover && (
-                  <figure className="mg-publication-record__cover">
-                    <img src={value.cover.src} alt={value.cover.alt} />
-                  </figure>
+                  <div
+                    className="mg-publication-record__cover-group"
+                    data-vf-google-analytics-region={
+                      coverLink ? ANALYTICS.coverRegion : undefined
+                    }
+                  >
+                    <figure
+                      className={`mg-publication-record__cover${coverLink ? ' mg-publication-record__cover--linked' : ''}`}
+                    >
+                      <img src={value.cover.src} alt={value.cover.alt} />
+                      {coverLink && (
+                        // Pointer shortcut duplicating the first labelled
+                        // resource link, so it is hidden from assistive
+                        // technology and the tab order. It overlays the image
+                        // instead of wrapping it, so informative alt text
+                        // stays exposed.
+                        <a
+                          className="mg-publication-record__cover-link"
+                          href={coverLink.href}
+                          hrefLang={coverLink.lang}
+                          aria-hidden="true"
+                          tabIndex={-1}
+                          data-vf-analytics-label={coverLink.analyticsLabel}
+                        >
+                          <span className="mg-publication-record__cover-badge">
+                            <span
+                              className={`mg-icon mg-icon-${coverLink.icon}`}
+                              aria-hidden="true"
+                            />
+                          </span>
+                        </a>
+                      )}
+                    </figure>
+                    {allDownloads && (
+                      <p className="mg-publication-record__all-downloads mg-u-font-size-250">
+                        <a
+                          href={`#${prefix}-access`}
+                          data-vf-analytics-label={ANALYTICS.allDownloads}
+                        >
+                          {allDownloads}
+                        </a>
+                      </p>
+                    )}
+                  </div>
                 )}
                 {(value.identifiers.length > 0 ||
                   value.edition ||
@@ -301,8 +359,17 @@ export function PublicationRecord({
 PublicationRecord.propTypes = {
   /** Approved, public record-local presentation selection; see the story specification. */
   record: PropTypes.object.isRequired,
-  /** Authored interface labels, separate from work and resource languages. */
-  labels: PropTypes.objectOf(PropTypes.string).isRequired,
+  /**
+   * Authored interface labels, separate from work and resource languages.
+   * `allDownloads` holds CLDR plural forms (`one`, `other`, and `zero`, `two`,
+   * `few`, `many` where the language uses them) with a `{count}` placeholder.
+   */
+  labels: PropTypes.objectOf(
+    PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.objectOf(PropTypes.string),
+    ])
+  ).isRequired,
   lang: PropTypes.string,
   dir: PropTypes.oneOf(['ltr', 'rtl']),
   /** Trusted authored React content. CMS consumers must sanitise HTML before producing prose. */

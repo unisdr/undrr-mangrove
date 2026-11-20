@@ -31,8 +31,24 @@ export function projectRecord(input) {
   };
   const resources = list(input.resources).flatMap(item => {
     const primary = resource(item);
+    if (!primary) return [];
     // A backup cannot silently become the primary/original access route.
-    return primary ? [{ ...primary, backup: resource(item.backup) }] : [];
+    const backup = resource(item.backup);
+    // Adapters should state where the primary copy lives. Without that, a
+    // primary with a hosted backup, or an absolute URL, is treated as the
+    // publisher's copy, and a root-relative URL as the hosted copy.
+    const origin = ['publisher', 'hosted'].includes(item.origin)
+      ? item.origin
+      : backup || /^https?:/i.test(primary.href)
+        ? 'publisher'
+        : 'hosted';
+    return [
+      {
+        ...primary,
+        origin,
+        backup: backup && { ...backup, origin: 'hosted' },
+      },
+    ];
   });
   const year = String(input.publicationYear ?? '');
   return {

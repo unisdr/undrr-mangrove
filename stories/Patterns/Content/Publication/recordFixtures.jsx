@@ -1,6 +1,10 @@
 import React from 'react';
 
 // Authored demo labels: native-speaker review remains required before adoption.
+// allDownloads holds CLDR plural forms. The en, ar, es, fr, ja and zh strings
+// copy the Drupal "All downloads (@count)" translations from
+// https://gitlab.com/undrr/drupal-base/-/merge_requests/268; Russian is a
+// draft. The cue only shows for two or more resources.
 export const RECORD_LABELS = {
   english: {
     publication: 'Publication',
@@ -18,6 +22,10 @@ export const RECORD_LABELS = {
     citation: 'Citation and record link',
     recordLink: 'Open the approved record',
     related: 'Related resources',
+    allDownloads: {
+      one: 'All downloads ({count})',
+      other: 'All downloads ({count})',
+    },
   },
   french: {
     publication: 'Publication',
@@ -35,6 +43,10 @@ export const RECORD_LABELS = {
     citation: 'Citation et lien vers la notice',
     recordLink: 'Ouvrir la notice approuvée',
     related: 'Ressources connexes',
+    allDownloads: {
+      one: 'Téléchargement ({count})',
+      other: 'Tous les téléchargements ({count})',
+    },
   },
   arabic: {
     publication: 'منشور',
@@ -52,6 +64,14 @@ export const RECORD_LABELS = {
     citation: 'الاستشهاد ورابط السجل',
     recordLink: 'فتح السجل المعتمد',
     related: 'موارد ذات صلة',
+    allDownloads: {
+      zero: 'جميع التنزيلات ({count})',
+      one: 'التنزيل ({count})',
+      two: 'كلا التنزيلين ({count})',
+      few: 'جميع التنزيلات ({count})',
+      many: 'جميع التنزيلات ({count})',
+      other: 'جميع التنزيلات ({count})',
+    },
   },
   spanish: {
     publication: 'Publicación',
@@ -69,6 +89,10 @@ export const RECORD_LABELS = {
     citation: 'Cita y enlace al registro',
     recordLink: 'Abrir el registro aprobado',
     related: 'Recursos relacionados',
+    allDownloads: {
+      one: 'Descarga ({count})',
+      other: 'Todas las descargas ({count})',
+    },
   },
   russian: {
     publication: 'Публикация',
@@ -86,6 +110,13 @@ export const RECORD_LABELS = {
     citation: 'Цитата и ссылка на запись',
     recordLink: 'Открыть утверждённую запись',
     related: 'Связанные материалы',
+    // Draft, not a live site string: needs native-speaker review.
+    allDownloads: {
+      one: 'Все файлы для скачивания ({count})',
+      few: 'Все файлы для скачивания ({count})',
+      many: 'Все файлы для скачивания ({count})',
+      other: 'Все файлы для скачивания ({count})',
+    },
   },
   japanese: {
     publication: '刊行物',
@@ -103,6 +134,7 @@ export const RECORD_LABELS = {
     citation: '引用と書誌レコードへのリンク',
     recordLink: '承認済みレコードを開く',
     related: '関連資料',
+    allDownloads: { other: 'すべてのダウンロード ({count})' },
   },
   chinese: {
     publication: '出版物',
@@ -120,6 +152,7 @@ export const RECORD_LABELS = {
     citation: '引文和记录链接',
     recordLink: '打开经批准的记录',
     related: '相关资源',
+    allDownloads: { other: '所有下载文件 ({count})' },
   },
 };
 
@@ -142,6 +175,7 @@ export const exampleRecord = {
       language: 'English',
       lang: 'en',
       format: 'HTML',
+      origin: 'hosted',
     },
     {
       label: 'Lire Comprendre les risques de catastrophe',
@@ -150,6 +184,7 @@ export const exampleRecord = {
       labelLang: 'fr',
       lang: 'fr',
       format: 'HTML',
+      origin: 'hosted',
     },
     {
       label: 'Read the plain-text edition',
@@ -157,6 +192,7 @@ export const exampleRecord = {
       language: 'English',
       lang: 'en',
       format: 'Plain text',
+      origin: 'hosted',
     },
   ],
   related: [

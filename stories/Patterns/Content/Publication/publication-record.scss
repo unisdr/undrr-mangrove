@@ -108,3 +108,67 @@
     border: 1px solid rgb(var(--mg-color-neutral-600) / 0.2);
   }
 }
+
+// Cover link (#1502). The link overlays the image so the image keeps its own
+// alt text; the badge is a permanent cue that works without hover.
+.mg-publication-record__cover-group {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--mg-spacing-100);
+  max-inline-size: 14rem;
+}
+
+.mg-publication-record__cover--linked {
+  position: relative;
+}
+
+.mg-publication-record__cover-link {
+  position: absolute;
+  inset: 0;
+
+  @media (hover: hover) {
+    &:hover {
+      outline: var(--mg-focus-ring-width) solid rgb(var(--mg-color-interactive));
+      outline-offset: var(--mg-focus-ring-offset);
+    }
+
+    &:hover .mg-publication-record__cover-badge {
+      background-color: rgb(var(--mg-color-interactive-active));
+    }
+  }
+}
+
+.mg-publication-record__cover-badge {
+  position: absolute;
+  inset-block-end: var(--mg-spacing-100);
+  inset-inline-end: var(--mg-spacing-100);
+  display: grid;
+  place-items: center;
+  inline-size: 2.25rem;
+  block-size: 2.25rem;
+  border-radius: 50%;
+  background-color: rgb(var(--mg-color-interactive));
+  box-shadow: 0 0 0 2px rgb(var(--mg-color-white));
+  color: rgb(var(--mg-color-white));
+  font-size: 1.125rem;
+  line-height: 1;
+}
+
+.mg-publication-record__all-downloads {
+  margin: 0;
+}
+
+@media (forced-colors: active) {
+  .mg-publication-record__cover-badge {
+    border: 2px solid LinkText;
+    background-color: Canvas;
+    box-shadow: none;
+  }
+
+  // Beats the icon system's CanvasText fill so the cue reads as a link.
+  .mg-publication-record__cover-link
+    .mg-publication-record__cover-badge
+    .mg-icon::before {
+    background-color: LinkText;
+  }
+}
