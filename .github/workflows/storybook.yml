@@ -88,6 +88,9 @@ jobs:
           # Fail on any change to the published prop contract; update the
           # baseline deliberately (--update) and explain the diff in the PR.
           yarn check:catalogue-baseline
+          # Typed JSDoc and PropTypes must describe the same props. Reports
+          # every component; fails only for migrated ones (#1511).
+          yarn check:prop-contracts
           # Snapshot the site catalogue: reruns generation and validation in
           # isolated staging. (On a docgen-server build it also covers v1 $refs.)
           node scripts/ai-manifest/snapshot-manifest-output.mjs .cache/manifest-parity/site

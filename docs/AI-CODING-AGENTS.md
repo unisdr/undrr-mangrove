@@ -126,6 +126,25 @@ If you add a real React component, declare `propTypes` (and ensure docgen can
 see it) to raise coverage. If category membership changes, update the table in
 the same PR.
 
+### Typed JSDoc is what Storybook 11 reads
+
+Storybook 11's docgen server reads props through the TypeScript compiler. It
+reads typed JSDoc `@param` blocks and ignores PropTypes, so a component with
+PropTypes alone shows `any` types and false "required" flags in its props
+table. Write both: typed JSDoc for the docs, PropTypes for React 18's runtime
+warnings (unisdr/undrr-mangrove#1511).
+
+- `yarn jsdoc:draft <file> [ExportName]` prints a `@param` block drafted from
+  the PropTypes. Reorder it to match the signature and review every line
+  before committing.
+- After `yarn build`, `yarn check:prop-contracts` compares the two for every
+  component: prop names, optionality, and a real type wherever PropTypes give
+  one. Components listed in `scripts/prop-contracts-migrated.json` fail the
+  check if they disagree; add a component there once it reports no problems.
+- The repository has no `@types/react`, so the TypeScript compiler cannot
+  resolve `React.ReactNode`. A required `{React.ReactNode}` prop shows the
+  name; an optional one shows `any`, and the check reports it.
+
 ## CSS class rename gotchas
 
 Renaming CSS classes is a common task that creates subtle breakage because CSS failures are silent — elements just lose styling with no error. When renaming classes:

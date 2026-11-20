@@ -1,0 +1,16 @@
+{
+  "$comment": "Components whose typed JSDoc must agree with their PropTypes in Storybook's docgen output. yarn check:prop-contracts fails if any of these regress. Add a component once it reports no problems. See unisdr/undrr-mangrove#1511.",
+  "migrated": [
+    "components-buttons-copybutton",
+    "components-codeblock",
+    "components-forms-form-action",
+    "components-icons",
+    "components-images-author-image",
+    "components-logos",
+    "components-notice-cookieconsentbanner",
+    "components-progress-bar",
+    "components-quotehighlight",
+    "components-showmore",
+    "components-table"
+  ]
+}
