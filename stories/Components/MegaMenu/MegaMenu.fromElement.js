@@ -21,10 +21,6 @@ export default function megaMenuFromElement(container) {
   const props = {
     ...languageFromElement(container),
     ...(labels ? { labels } : {}),
-    // Deprecated since MegaMenu 2.0 and ignored by the component; still
-    // parsed so existing markup and hydration tests keep their contract.
-    delay: dataset.delay ? parseInt(dataset.delay, 10) : 300,
-    hoverDelay: dataset.hoverDelay ? parseInt(dataset.hoverDelay, 10) : 180,
   };
 
   if (dataset.enableFilter !== undefined) {

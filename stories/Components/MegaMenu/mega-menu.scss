@@ -310,9 +310,11 @@
   block-size: 0.7em;
   margin-inline-start: 0.3em;
   vertical-align: middle;
+  stroke-width: 2.5;
+  transform: rotate(90deg); // the shared chevron points to the inline end
 
   [aria-expanded="true"] > & {
-    transform: rotate(180deg);
+    transform: rotate(-90deg);
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -323,16 +325,12 @@
 
 // Panels open on click only, so a pointer needs to see that a top-level item
 // is interactive before clicking it: a light tint, and a faint preview of the
-// active bar. Hover never opens anything. Text is not underlined, so link and
-// button items look alike; forced colours, which drop backgrounds, underline.
-@media screen and (min-width: $mg-breakpoint-tablet) and (hover: hover) {
+// active bar. Hover never opens anything. Forced colours drop the tint, so
+// they keep the browser's own hover styling.
+@media screen and (min-width: $mg-breakpoint-tablet) and (hover: hover) and (forced-colors: none) {
   .mg-mega-topbar__item > :is(a, button):hover {
     background: rgb(var(--mg-color-interactive) / 0.08);
     text-decoration: none;
-
-    @media (forced-colors: active) {
-      text-decoration: underline;
-    }
   }
 
   .mg-mega-topbar__item:not(.mg-mega-topbar__item--active)
@@ -419,8 +417,6 @@
 }
 
 .mg-mega-content,
-.mg-mega-content__left,
-.mg-mega-content__right,
 .mg-mega-topbar__item-link {
   // Was `-webkit-focus-ring-color auto 1px`, which hands the indicator to the
   // browser: a WebKit/Blink-only keyword that renders nothing in Firefox, and
@@ -461,21 +457,16 @@
   margin: 0;
 
   .mg-mega-content__section-list-link {
-    text-decoration: none;
     display: block;
 
-    // Categories are disclosure buttons (they reveal destinations), so reset
-    // the native button look to match the former link styling. A block
+    // Categories are disclosure buttons styled like the former links. A block
     // button does not stretch like a link, hence the explicit width that
     // matches the negative inline margins below.
+    @include mg-button-reset;
+
     box-sizing: border-box;
     width: calc(100% + 2 * var(--mg-spacing-200));
-    border: 0;
-    background: transparent;
     font: inherit;
-    line-height: inherit;
-    text-align: start;
-    cursor: pointer;
 
     // RTL-friendly: Use logical properties for better improvements
     letter-spacing: 0.2px;
@@ -512,8 +503,6 @@
     }
 
     &--active {
-      padding: var(--mg-spacing-150) var(--mg-spacing-250);
-      margin-inline-start: calc(-1 * var(--mg-spacing-200));
       border-inline-start: 4px solid rgb(var(--mg-color-interactive)); // RTL-friendly vertical rule
       text-decoration: underline;
       background: rgb(var(--mg-color-interactive) / 0.15);
@@ -625,6 +614,10 @@
 
       a::after {
         content: " ›";
+
+        [dir="rtl"] & {
+          content: " ‹";
+        }
       }
     }
 
@@ -984,12 +977,11 @@
     gap: var(--mg-spacing-100);
     min-height: mg-rem(44);
     padding: var(--mg-spacing-50);
-    border: 0;
-    background: transparent;
+
+    @include mg-button-reset;
+
     color: rgb(var(--mg-color-interactive));
     font-family: var(--mg-font-family-text);
-    text-align: start;
-    cursor: pointer;
   }
 
   .mg-mega-mobile-sidebar__close {
@@ -1630,8 +1622,4 @@
 .mg-mega-content__banner-only-cta {
   align-self: flex-start;
   margin: var(--mg-spacing-200);
-}
-
-[dir="rtl"] .mg-mega-content__overview a::after {
-  content: " ‹";
 }

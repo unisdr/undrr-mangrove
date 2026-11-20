@@ -117,17 +117,17 @@ const MegaMenu = ({
     setJsActive(true);
   }, []);
 
+  // Move focus from inside a desktop panel to that panel's trigger.
+  const focusTriggerOf = element =>
+    element
+      ?.closest('.mg-mega-content')
+      ?.closest('.mg-mega-topbar__item')
+      ?.querySelector('.mg-mega-topbar__item-link')
+      ?.focus();
+
   const releaseDesktopFocus = () => {
     const focused = wrapperRef.current?.ownerDocument.activeElement;
-    if (
-      wrapperRef.current?.contains(focused) &&
-      focused.closest('.mg-mega-content')
-    ) {
-      focused
-        .closest('.mg-mega-topbar__item')
-        ?.querySelector('.mg-mega-topbar__item-link')
-        ?.focus();
-    }
+    if (wrapperRef.current?.contains(focused)) focusTriggerOf(focused);
   };
 
   // Desktop panels follow the WAI-ARIA APG disclosure navigation pattern:
@@ -141,11 +141,7 @@ const MegaMenu = ({
   const handleEscape = e => {
     if (e.key === 'Escape') {
       // Return keyboard focus before the exiting desktop panel becomes inert.
-      const panel = e.target.closest('.mg-mega-content');
-      panel
-        ?.closest('.mg-mega-topbar__item')
-        ?.querySelector('.mg-mega-topbar__item-link')
-        ?.focus();
+      focusTriggerOf(e.target);
       setActiveItem(null);
     }
   };

@@ -36,10 +36,8 @@ export function TopBar({
   }, [activeItem, sectionListRef]);
 
   const handleFocusByArrows = (e, index) => {
-    // Keys bubble here from inside the open panel; only the top-level item
-    // itself moves along the bar (APG disclosure navigation, optional keys).
+    // Optional APG disclosure navigation keys, on the top-level trigger only.
     const itemRef = itemListRef?.current;
-    if (e.target !== itemRef?.[index]) return;
     if (
       [
         'ArrowDown',
@@ -94,7 +92,6 @@ export function TopBar({
       handleOnKeyDown={e => {
         if (isMobile && e.key === 'ArrowDown') {
           e.preventDefault();
-          e.currentTarget.querySelector('button')?.focus();
           openMobileSection(index);
         } else {
           handleFocusByArrows(e, index);

@@ -2,6 +2,8 @@
 import { chromium, webkit } from 'playwright';
 import assert from 'node:assert/strict';
 const baseUrl = process.env.STORYBOOK_URL || 'http://localhost:6006';
+const storyUrl = (story, query = '') =>
+  `${baseUrl}/iframe.html?id=components-navigation-megamenu--${story}&viewMode=story${query}`;
 const themes = [
   'Global UNDRR Theme',
   'PreventionWeb Theme',
@@ -20,7 +22,7 @@ for (const engine of [chromium, webkit]) {
     for (const direction of ['ltr', 'rtl'])
       for (const story of ['default', 'with-logo']) {
         await page.goto(
-          `${baseUrl}/iframe.html?id=components-navigation-megamenu--${story}&viewMode=story&globals=theme:${encodeURIComponent(theme)}`
+          storyUrl(story, `&globals=theme:${encodeURIComponent(theme)}`)
         );
         const button = page.getByRole('button', {
           name: 'Open navigation menu',
@@ -161,9 +163,7 @@ for (const engine of [chromium, webkit]) {
   for (const width of [320, 768, 899]) {
     await page.setViewportSize({ width, height: 844 });
     for (const story of ['default', 'with-logo']) {
-      await page.goto(
-        `${baseUrl}/iframe.html?id=components-navigation-megamenu--${story}&viewMode=story`
-      );
+      await page.goto(storyUrl(story));
       const button = page.getByRole('button', { name: 'Open navigation menu' });
       await button.waitFor();
       const nav = await page.locator('.mg-mega-topbar').boundingBox();
@@ -186,9 +186,7 @@ for (const engine of [chromium, webkit]) {
   }
   for (const width of [900, 901, 1280]) {
     await page.setViewportSize({ width, height: 800 });
-    await page.goto(
-      `${baseUrl}/iframe.html?id=components-navigation-megamenu--default&viewMode=story`
-    );
+    await page.goto(storyUrl('default'));
     await page.locator('.mg-mega-topbar__item-link').first().waitFor();
     assert.equal(
       await page
@@ -228,9 +226,7 @@ for (const engine of [chromium, webkit]) {
           })
         : phonePage;
     await page.setViewportSize({ width: 393, height: 852 });
-    await page.goto(
-      `${baseUrl}/iframe.html?id=components-navigation-megamenu--progressive-mobile&viewMode=story`
-    );
+    await page.goto(storyUrl('progressive-mobile'));
     const drawer = page.getByRole('dialog');
     await page.getByRole('button', { name: 'Open navigation menu' }).tap();
     await drawer.getByRole('button', { name: 'Knowledge Hub' }).tap();
@@ -245,9 +241,11 @@ for (const engine of [chromium, webkit]) {
     // The trial's phone size; the drawer is capped at 700px tall.
     assert((await metrics()).max > 40, 'the list overflows the drawer');
     const box = await drawer.boundingBox();
+    const cdp =
+      engine === chromium ? await page.context().newCDPSession(page) : null;
     const swipeUp = async distance => {
-      if (engine === chromium) {
-        const cdp = await page.context().newCDPSession(page);
+      const before = (await metrics()).top;
+      if (cdp) {
         await cdp.send('Input.synthesizeScrollGesture', {
           x: Math.round(box.x + box.width / 2),
           y: Math.round(box.y + box.height * 0.7),
@@ -255,12 +253,28 @@ for (const engine of [chromium, webkit]) {
           gestureSourceType: 'touch',
           speed: 1200,
         });
-        await cdp.detach();
       } else {
         await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
         await page.mouse.wheel(0, distance);
       }
-      await page.waitForTimeout(300);
+      // Wait for the scroll to land rather than for a fixed time.
+      await drawer.evaluate(
+        (element, start) =>
+          new Promise(resolve => {
+            let last = element.scrollTop;
+            let tries = 40; // give up after about 2s; the asserts then fail
+            const check = () => {
+              const now = element.scrollTop;
+              if ((now !== start && now === last) || --tries === 0) resolve();
+              else {
+                last = now;
+                setTimeout(check, 50);
+              }
+            };
+            setTimeout(check, 50);
+          }),
+        before
+      );
     };
     await swipeUp(60);
     let scroll = await metrics();

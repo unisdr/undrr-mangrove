@@ -101,8 +101,6 @@ export default function Section({
   // section itself, which leaves a screen-reader landmark list unusable.
   const sectionTitle = section?.title || 'Menu section';
 
-  const asideRef = useRef(null);
-  const contentRef = useRef(null);
   const showCategories = Boolean(
     hasIntroduction &&
     section.items.length > 0 &&
@@ -110,22 +108,23 @@ export default function Section({
   );
   const chosen = showCategories ? section.items[itemIndex] : null;
 
-  // Arrow keys supplement Tab, as in the APG disclosure navigation example:
-  // Up and Down step through the panel's links and controls in document
-  // order, Home and End jump to the ends. They only land on elements that can
-  // take focus, so a link hidden by CSS (the panel carries a mobile list that
-  // is hidden on desktop), a link without an address or a disabled control
-  // never swallows the key.
-  const isShown = element => {
+  // Arrow keys only supplement Tab (see "Design principles" in MegaMenu.mdx),
+  // and land only on what can take focus: never the CSS-hidden mobile list, a
+  // link without an address or a disabled control.
+  const isShown = (element, panel) => {
     if (typeof element.checkVisibility === 'function')
       return element.checkVisibility({ visibilityProperty: true });
-    const list = element.closest(
-      '.mg-mega-content__menu--mobile, .mg-mega-content__menu--desktop'
-    );
-    return (
-      !list ||
-      list.ownerDocument.defaultView.getComputedStyle(list).display !== 'none'
-    );
+    const view = element.ownerDocument.defaultView;
+    for (
+      let node = element;
+      node && node !== panel;
+      node = node.parentElement
+    ) {
+      const style = view.getComputedStyle(node);
+      if (style.display === 'none' || style.visibility === 'hidden')
+        return false;
+    }
+    return true;
   };
 
   const getArrowTargets = () => {
@@ -140,7 +139,7 @@ export default function Section({
         !element.disabled &&
         element.getAttribute('tabindex') !== '-1' &&
         !element.closest('[inert]') &&
-        isShown(element)
+        isShown(element, panel)
     );
   };
 
@@ -151,6 +150,35 @@ export default function Section({
       reference.compareDocumentPosition(element) &
       Node.DOCUMENT_POSITION_FOLLOWING
     );
+
+  const landingLink = className => (
+    <a href={section.bannerButton.url} className={className}>
+      {section.bannerButton.label || labels.overviewLabel}
+    </a>
+  );
+
+  // Nested destinations, `depth` levels deep.
+  const renderLinks = (items, depth) =>
+    items.map((item, key) => (
+      <li key={key}>
+        <a href={item.url}>{item.title}</a>
+        {depth > 1 && item.items?.length > 0 && (
+          <ul>{renderLinks(item.items, depth - 1)}</ul>
+        )}
+      </li>
+    ));
+
+  // The chosen category's page, or the section's landing page when there are
+  // no categories and no banner offers it, leads the desktop destinations.
+  let overview = null;
+  if (chosen) {
+    if (chosen.url) overview = { url: chosen.url, title: chosen.title };
+  } else if (!hasIntroduction && section?.bannerButton?.url) {
+    overview = {
+      url: section.bannerButton.url,
+      title: section.bannerButton.label || section.title,
+    };
+  }
 
   const handleArrowFocus = e => {
     if (e.target.closest('.mg-mega-menu-finder')) return;
@@ -189,23 +217,28 @@ export default function Section({
     }
   };
 
+  // Both panel shapes share their disclosure wiring.
+  const panelProps = {
+    id: panelId,
+    'aria-label': sectionTitle,
+    'aria-hidden': !isActive,
+    inert: !isActive ? true : undefined,
+    role: 'region',
+    tabIndex: -1,
+    ref: element => {
+      sectionListRef.current[index] = element;
+    },
+    onKeyDown: handleArrowFocus,
+  };
+
   return (
     <>
       {section && section.items && (
         // The panel takes focus only from script (↓ on its button); its links
-        // and buttons are the tab stops, and scroll their column into view.
+        // and buttons are the tab stops.
         <article
           className={`mg-mega-content${enableFilter && hasIntroduction ? ' mg-mega-content--filterable' : ''} | mg-container-full-width`}
-          id={panelId}
-          aria-label={sectionTitle}
-          aria-hidden={!isActive}
-          inert={!isActive ? true : undefined}
-          tabIndex={-1}
-          ref={element => {
-            sectionListRef.current[index] = element;
-          }}
-          onKeyDown={handleArrowFocus}
-          role="region"
+          {...panelProps}
         >
           {filtering && (
             <MenuFinder
@@ -220,174 +253,94 @@ export default function Section({
               onClose={onClose}
             />
           )}
-          {/* Only show the left area if there are child items and heading */}
-          {section.bannerHeading &&
-            section.bannerDescription &&
-            section.items && (
-              <nav
-                className="mg-mega-content__left"
-                aria-label={`${sectionTitle} categories`}
-                ref={asideRef}
+          {hasIntroduction && (
+            <nav
+              className="mg-mega-content__left"
+              aria-label={`${sectionTitle} categories`}
+            >
+              <div
+                className={
+                  enableFilter
+                    ? 'mg-mega-content__left-scroll'
+                    : 'mg-mega-content__left-contents'
+                }
               >
-                <div
-                  className={
-                    enableFilter
-                      ? 'mg-mega-content__left-scroll'
-                      : 'mg-mega-content__left-contents'
-                  }
-                >
-                  <section className="mg-mega-content__banner">
-                    <header>{section.bannerHeading}</header>
-                    {/* Authored banner copy, rendered as-is so its links and
+                <section className="mg-mega-content__banner">
+                  <header>{section.bannerHeading}</header>
+                  {/* Authored banner copy, rendered as-is so its links and
                       inline markup survive. The `<` check routes between markup
                       and text; it does not filter. See the trust boundary note
                       at the top of this file. */}
-                    {section.bannerDescription.includes('<') ? (
-                      <div
-                        dangerouslySetInnerHTML={{
-                          __html: section.bannerDescription,
-                        }}
-                      />
-                    ) : (
-                      <p>{section.bannerDescription}</p>
-                    )}
-                    {(section.bannerButton?.label ||
-                      section.bannerButton?.url) && (
-                      <a
-                        href={section.bannerButton.url}
-                        className="mg-button mg-button-primary"
+                  {section.bannerDescription.includes('<') ? (
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: section.bannerDescription,
+                      }}
+                    />
+                  ) : (
+                    <p>{section.bannerDescription}</p>
+                  )}
+                  {(section.bannerButton?.label || section.bannerButton?.url) &&
+                    landingLink('mg-button mg-button-primary')}
+                </section>
+                {showCategories && (
+                  <ul className="mg-mega-content__section-list">
+                    {section.items.map((item, index) => (
+                      <li
+                        key={index}
+                        className="mg-mega-content__section-list-item"
+                        onMouseEnter={() => setItemIndex(index)}
                       >
-                        {section.bannerButton.label || labels.overviewLabel}
-                      </a>
-                    )}
-                  </section>
-                  {showCategories ? (
-                    <ul className="mg-mega-content__section-list">
-                      {section.items.map((item, index) => (
-                        <li
-                          key={index}
-                          className="mg-mega-content__section-list-item"
-                          onMouseEnter={() => setItemIndex(index)}
+                        {/* A disclosure: focus alone never switches it. */}
+                        <button
+                          type="button"
+                          className={`mg-mega-content__section-list-link ${
+                            itemIndex === index
+                              ? 'mg-mega-content__section-list-link--active'
+                              : ''
+                          }`}
+                          aria-expanded={String(itemIndex === index)}
+                          aria-controls={destinationsId}
+                          data-vf-analytics-label="Mega menu: Category"
+                          onClick={() => setItemIndex(index)}
                         >
-                          {/* Choosing a category is a disclosure: it shows
-                            that category's destinations. Focus alone never
-                            switches them, so Tab reaches the destinations of
-                            the chosen category. The category's own page is
-                            the first link in the destinations column. */}
-                          <button
-                            type="button"
-                            className={`mg-mega-content__section-list-link ${
-                              itemIndex === index
-                                ? 'mg-mega-content__section-list-link--active'
-                                : ''
-                            }`}
-                            aria-expanded={String(itemIndex === index)}
-                            aria-controls={destinationsId}
-                            data-vf-analytics-label="Mega menu: Category"
-                            onClick={() => setItemIndex(index)}
-                          >
-                            {item.title}
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : null}
-                </div>
-                {enableFilter && (
-                  <div className="mg-mega-content__finder-footer">
-                    {finderTrigger}
-                  </div>
+                          {item.title}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
                 )}
-              </nav>
-            )}
+              </div>
+              {enableFilter && (
+                <div className="mg-mega-content__finder-footer">
+                  {finderTrigger}
+                </div>
+              )}
+            </nav>
+          )}
           {section.items && (
             <nav
               className="mg-mega-content__right"
               aria-label={`${sectionTitle} submenu`}
-              ref={contentRef}
             >
               {/* Mobile version - shows all nested items */}
               <ul className="mg-mega-content__menu--mobile">
-                {section.items.map((item, index) => (
-                  <li key={index}>
-                    <a href={item.url}>{item.title}</a>
-                    {item.items && item.items.length > 0 && (
-                      <ul>
-                        {item.items.map((subItem, subIndex) => (
-                          <li key={subIndex}>
-                            <a href={subItem.url}>{subItem.title}</a>
-                            {/* Render third level if exists */}
-                            {subItem.items && (
-                              <ul>
-                                {subItem.items.map(
-                                  (nestedItem, nestedIndex) => (
-                                    <li key={nestedIndex}>
-                                      <a href={nestedItem.url}>
-                                        {nestedItem.title}
-                                      </a>
-                                    </li>
-                                  )
-                                )}
-                              </ul>
-                            )}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </li>
-                ))}
+                {renderLinks(section.items, 3)}
               </ul>
 
-              {/* Desktop version: the chosen category's destinations, led by
-                  a link to the category's own page. Without categories, the
-                  section's landing page leads instead when no banner offers
-                  it. */}
+              {/* Desktop version: the chosen category's destinations, or
+                  every item when there are no categories. */}
               <ul
                 id={destinationsId}
                 className="mg-mega-content__menu--desktop"
                 aria-label={chosen ? chosen.title : undefined}
               >
-                {chosen?.url && (
+                {overview && (
                   <li className="mg-mega-content__overview">
-                    <a href={chosen.url}>{chosen.title}</a>
+                    <a href={overview.url}>{overview.title}</a>
                   </li>
                 )}
-                {!chosen && !hasIntroduction && section.bannerButton?.url && (
-                  <li className="mg-mega-content__overview">
-                    <a href={section.bannerButton.url}>
-                      {section.bannerButton.label || section.title}
-                    </a>
-                  </li>
-                )}
-                {chosen
-                  ? (chosen.items || []).map((subItem, subIndex) => (
-                      <li key={subIndex}>
-                        <a href={subItem.url}>{subItem.title}</a>
-                        {subItem.items && (
-                          <ul>
-                            {subItem.items.map((nestedItem, nestedIndex) => (
-                              <li key={nestedIndex}>
-                                <a href={nestedItem.url}>{nestedItem.title}</a>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </li>
-                    ))
-                  : section.items.map((item, index) => (
-                      <li key={index}>
-                        <a href={item.url}>{item.title}</a>
-                        {item.items && (
-                          <ul>
-                            {item.items.map((subItem, subIndex) => (
-                              <li key={subIndex}>
-                                <a href={subItem.url}>{subItem.title}</a>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </li>
-                    ))}
+                {renderLinks(chosen ? chosen.items || [] : section.items, 2)}
               </ul>
             </nav>
           )}
@@ -401,16 +354,7 @@ export default function Section({
       {section && !section.items && section.bannerDescription && (
         <article
           className="mg-mega-content | mg-container-full-width"
-          id={panelId}
-          aria-hidden={!isActive}
-          inert={!isActive ? true : undefined}
-          aria-label={sectionTitle}
-          role="region"
-          tabIndex={-1}
-          ref={element => {
-            sectionListRef.current[index] = element;
-          }}
-          onKeyDown={handleArrowFocus}
+          {...panelProps}
         >
           {/* `display: contents` keeps the authored markup laid out as a
               direct child of the panel, as it was before this wrapper. */}
@@ -418,14 +362,10 @@ export default function Section({
             className="mg-mega-content__banner-only"
             dangerouslySetInnerHTML={{ __html: section.bannerDescription }}
           />
-          {section.bannerButton?.url && (
-            <a
-              href={section.bannerButton.url}
-              className="mg-button mg-button-primary mg-mega-content__banner-only-cta"
-            >
-              {section.bannerButton.label || labels.overviewLabel}
-            </a>
-          )}
+          {section.bannerButton?.url &&
+            landingLink(
+              'mg-button mg-button-primary mg-mega-content__banner-only-cta'
+            )}
         </article>
       )}
     </>

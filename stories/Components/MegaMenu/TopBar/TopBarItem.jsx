@@ -1,5 +1,6 @@
 import React, { useId } from 'react';
 import Section from '../Section/Section.jsx';
+import Chevron from '../Chevron';
 
 export function TopBarItem({
   isMobile,
@@ -33,6 +34,12 @@ export function TopBarItem({
     section && (section.items || section.bannerDescription)
   );
 
+  const trigger = {
+    className: 'mg-mega-topbar__item-link',
+    ref,
+    onKeyDown: handleOnKeyDown,
+  };
+
   const label = (
     <>
       {icon && (
@@ -48,6 +55,8 @@ export function TopBarItem({
   return (
     <li
       className={`mg-mega-topbar__item ${isActive ? 'mg-mega-topbar__item--active' : ''}`}
+      // Only the finder shortcut listens here, because it must also work from
+      // inside the open panel; bar navigation keys belong to the trigger.
       onKeyDown={event => {
         const isEditable =
           event.target.isContentEditable ||
@@ -65,27 +74,23 @@ export function TopBarItem({
           !event.isComposing &&
           !event.defaultPrevented
         ) {
-          const trigger = sectionListRef.current[index]?.querySelector(
+          const finder = sectionListRef.current[index]?.querySelector(
             '.mg-mega-content__finder-trigger'
           );
-          if (trigger) {
+          if (finder) {
             event.preventDefault();
-            trigger.click();
-            return;
+            finder.click();
           }
         }
-        handleOnKeyDown(event);
       }}
     >
       {/* A trigger with a panel is always a disclosure button, even when the
-          section has a landing page: a link that also expands is ambiguous
-          and Enter could do only one of the two. The landing link is offered
-          inside the panel instead. Sections without a panel stay links. */}
+          section has a landing page; the landing link is inside the panel.
+          See "Design principles" in MegaMenu.mdx. */}
       {isMobile ? (
         <button
           type="button"
-          className="mg-mega-topbar__item-link"
-          ref={ref}
+          {...trigger}
           onClick={onMobileClick}
           aria-haspopup="dialog"
           aria-controls={sidebarId}
@@ -96,39 +101,23 @@ export function TopBarItem({
       ) : hasPanel ? (
         <button
           type="button"
-          className="mg-mega-topbar__item-link"
-          ref={ref}
+          {...trigger}
           onClick={onToggle}
           aria-expanded={String(isActive)}
           aria-controls={panelId}
           data-vf-analytics-label="Mega menu: Section"
         >
           {label}
-          {/* Tells a pointer user, before clicking, that this item opens a
-              panel; items without one navigate and carry no chevron. */}
-          <svg
-            className="mg-mega-topbar__item-chevron"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <path d="m6 9 6 6 6-6" />
-          </svg>
+          <Chevron className="mg-mega-topbar__item-chevron" />
         </button>
       ) : link && link.url ? (
-        <a className="mg-mega-topbar__item-link" href={link.url} ref={ref}>
+        <a {...trigger} href={link.url}>
           {label}
         </a>
       ) : (
         <button
           type="button"
-          className="mg-mega-topbar__item-link"
-          ref={ref}
+          {...trigger}
           data-vf-analytics-label="Mega menu: Section"
         >
           {label}
