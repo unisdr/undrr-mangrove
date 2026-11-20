@@ -117,19 +117,6 @@ function returnToContent(toggle, target) {
 // set without a synthetic click (see mgShowMoreSetOpen).
 const itemControllers = new WeakMap();
 
-/**
- * Items mode: a true disclosure. Whole elements marked
- * `data-mg-show-more-item` inside the target are hidden with
- * `hidden="until-found"` (plain `hidden` where the browser lacks it), so they
- * leave the accessibility tree and the tab order, and find-in-page can still
- * reveal them. The toggle is a disclosure button with `aria-expanded`.
- *
- * @param {HTMLElement} item - The toggle.
- * @param {HTMLElement} target - The container holding the items.
- * @param {Function} labelFor - Returns the visible label for a state.
- * @param {Object|null} stateLabels - Analytics labels per state, or null.
- * @returns {Function} Cleanup restoring the initial markup.
- */
 const FOCUSABLE =
   'a[href], area[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), summary, iframe, [contenteditable="true"], [tabindex]:not([tabindex="-1"])';
 
@@ -161,15 +148,34 @@ function focusRevealed(element) {
   const control = firstFocusable(element);
   if (control) {
     control.focus();
-    return;
+    // A control inside an inner `hidden` or `inert` element refuses focus.
+    if (element.ownerDocument.activeElement === control) return;
   }
-  element.setAttribute('tabindex', '-1');
-  element.addEventListener('blur', () => element.removeAttribute('tabindex'), {
-    once: true,
-  });
+  // Keep a tabindex the item already had; only add and remove our own.
+  if (!element.hasAttribute('tabindex')) {
+    element.setAttribute('tabindex', '-1');
+    element.addEventListener(
+      'blur',
+      () => element.removeAttribute('tabindex'),
+      { once: true }
+    );
+  }
   element.focus();
 }
 
+/**
+ * Items mode: a true disclosure. Whole elements marked
+ * `data-mg-show-more-item` inside the target are hidden with
+ * `hidden="until-found"` (plain `hidden` where the browser lacks it), so they
+ * leave the accessibility tree and the tab order, and find-in-page can still
+ * reveal them. The toggle is a disclosure button with `aria-expanded`.
+ *
+ * @param {HTMLElement} item - The toggle.
+ * @param {HTMLElement} target - The container holding the items.
+ * @param {Function} labelFor - Returns the visible label for a state.
+ * @param {Object|null} stateLabels - Analytics labels per state, or null.
+ * @returns {Function} Cleanup restoring the initial markup.
+ */
 function initItemsMode(item, target, labelFor, stateLabels) {
   const items = [...target.querySelectorAll('[data-mg-show-more-item]')];
   // Bundlers replace process.env.NODE_ENV; loaded unbundled, `process` does

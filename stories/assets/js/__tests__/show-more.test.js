@@ -718,6 +718,46 @@ describe('mgShowMore', () => {
       expect(first.hasAttribute('tabindex')).toBe(false);
     });
 
+    it('falls back to the item when its control refuses focus', () => {
+      document.body.innerHTML = `
+        <ul id="f"><li>One</li><li data-mg-show-more-item><div hidden><a href="/x">Hidden</a></div></li></ul>
+        <button type="button" data-mg-show-more data-mg-show-more-mode="items" data-mg-show-more-target="#f">Show more</button>`;
+      const button = document.querySelector('button');
+      mgShowMore(button);
+      const item = document.querySelectorAll('li')[1];
+      const link = item.querySelector('a');
+      // jsdom focuses anything; model a browser refusing focus.
+      link.focus = () => {};
+      button.click();
+      expect(document.activeElement).toBe(item);
+      expect(item).toHaveAttribute('tabindex', '-1');
+    });
+
+    it('keeps a tabindex the item already had', () => {
+      document.body.innerHTML = `
+        <ul id="t"><li>One</li><li data-mg-show-more-item tabindex="0">Two</li></ul>
+        <button type="button" data-mg-show-more data-mg-show-more-mode="items" data-mg-show-more-target="#t">Show more</button>`;
+      const button = document.querySelector('button');
+      mgShowMore(button);
+      const item = document.querySelectorAll('li')[1];
+      // No control inside: the item takes focus and keeps its own tabindex.
+      button.click();
+      expect(document.activeElement).toBe(item);
+      button.focus();
+      expect(item).toHaveAttribute('tabindex', '0');
+
+      document.body.innerHTML = `
+        <ul id="u"><li>One</li><li data-mg-show-more-item tabindex="-1"><span>Two</span></li></ul>
+        <button type="button" data-mg-show-more data-mg-show-more-mode="items" data-mg-show-more-target="#u">Show more</button>`;
+      const second = document.querySelector('button');
+      mgShowMore(second);
+      const authored = document.querySelectorAll('li')[1];
+      second.click();
+      expect(document.activeElement).toBe(authored);
+      second.focus();
+      expect(authored).toHaveAttribute('tabindex', '-1');
+    });
+
     it('skips controls inside a closed details, except its summary', () => {
       document.body.innerHTML = `
         <ul id="d"><li>One</li><li data-mg-show-more-item><details><summary>Why?</summary><a href="/x">Inside</a></details></li></ul>
