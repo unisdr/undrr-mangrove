@@ -26,7 +26,7 @@ const show = record =>
     </PublicationRecord>
   );
 
-test('identity roles and early access retain structure and known precision', () => {
+test('identity roles and the files section retain structure and known precision', () => {
   const { container } = show({
     ...exampleRecord,
     resources: severalFiles,
