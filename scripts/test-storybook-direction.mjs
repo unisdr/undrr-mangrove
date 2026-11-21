@@ -137,7 +137,7 @@ try {
   await expectLanguage(frame, 'english', 'en', 'ltr');
   await select(page, /Text direction/, 'Force right-to-left');
   await expectLanguage(frame, 'english', 'en', 'rtl');
-  await select(page, /locale English/, 'Arabic');
+  await select(page, /^locale( |$)/, 'Arabic');
   await select(page, /Text direction/, 'Locale direction');
   await expectLanguage(frame, 'arabic', 'ar', 'rtl');
 
@@ -219,7 +219,7 @@ try {
   };
   await expectCanvases('en', 'ltr');
   await expectLanguage(embeddedDocs, 'english', 'en', 'ltr', false);
-  await select(page, /locale English/, 'Arabic');
+  await select(page, /^locale( |$)/, 'Arabic');
   await expectCanvases('ar', 'rtl');
   await expectLanguage(embeddedDocs, 'arabic', 'ar', 'rtl', false);
   await select(page, /locale Arabic/, 'English');
