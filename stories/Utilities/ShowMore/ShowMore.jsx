@@ -15,16 +15,7 @@ import { mgShowMore } from '../../assets/js/show-more';
 
 const EMPTY_DATA = [];
 
-function ShowMoreItem({
-  item,
-  id,
-  labelOpen,
-  labelCollapsed,
-  minHiddenLines,
-  mode,
-  visibleItems,
-}) {
-  const itemsMode = mode === 'items';
+function ShowMoreItem({ item, id, labelOpen, labelCollapsed, minHiddenLines }) {
   const buttonRef = useRef(null);
 
   // Each new item owns its enhancement. Mounting or updating this component
@@ -34,40 +25,21 @@ function ShowMoreItem({
   useEffect(() => {
     const button = buttonRef.current;
     const target = document.getElementById(id);
-    const collapsed = itemsMode
-      ? button.getAttribute('aria-expanded') !== 'true'
-      : target.classList.contains('mg-show-more--collapsed');
-    button.textContent = collapsed ? labelCollapsed : labelOpen;
-  }, [id, labelOpen, labelCollapsed, itemsMode]);
+    button.textContent = target.classList.contains('mg-show-more--collapsed')
+      ? labelCollapsed
+      : labelOpen;
+  }, [id, labelOpen, labelCollapsed]);
 
   return (
     <React.Fragment>
-      {itemsMode ? (
-        // Whole elements past `visibleItems` are the ones hidden.
-        <ul id={id} className={item.collapsable_wrapper_class}>
-          {(item.collapsable_items || []).map((entry, index) => (
-            <li
-              key={index}
-              data-mg-show-more-item={index >= visibleItems ? '' : undefined}
-            >
-              {entry}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <div id={id} className={item.collapsable_wrapper_class}>
-          {item.collapsable_text}
-        </div>
-      )}
+      <div id={id} className={item.collapsable_wrapper_class}>
+        {item.collapsable_text}
+      </div>
       <button
         ref={buttonRef}
         type="button"
-        // Items mode ships the toggle hidden: without JavaScript every item
-        // shows and there is nothing to toggle.
-        hidden={itemsMode || undefined}
         className="mg-button mg-button-primary mg-show-more--button"
         data-mg-show-more="true"
-        data-mg-show-more-mode={itemsMode ? 'items' : undefined}
         data-mg-show-more-skip-auto-init="true"
         data-mg-show-more-target={`#${id}`}
         data-mg-show-more-label-open={labelOpen}
@@ -84,10 +56,7 @@ const itemType = PropTypes.shape({
   /** Legacy pre-enhancement label; use labelCollapsed for both render and toggle. */
   button_text: PropTypes.string,
   collapsable_wrapper_class: PropTypes.string.isRequired,
-  /** Content for the default, visual-only mode. */
-  collapsable_text: PropTypes.string,
-  /** Items mode: one list item each; those past `visibleItems` are hidden. */
-  collapsable_items: PropTypes.arrayOf(PropTypes.node),
+  collapsable_text: PropTypes.string.isRequired,
 });
 
 ShowMoreItem.propTypes = {
@@ -96,8 +65,6 @@ ShowMoreItem.propTypes = {
   labelOpen: PropTypes.string.isRequired,
   labelCollapsed: PropTypes.string.isRequired,
   minHiddenLines: PropTypes.number,
-  mode: PropTypes.oneOf(['height', 'items']),
-  visibleItems: PropTypes.number,
 };
 
 /**
@@ -117,8 +84,6 @@ export function ShowMore({
   labelOpen = 'Show less',
   labelCollapsed = 'Show more',
   minHiddenLines,
-  mode = 'height',
-  visibleItems = 3,
 }) {
   // Each item gets its own id, and the toggle targets that id rather than
   // `collapsable_wrapper_class`. Two items sharing a wrapper class used to
@@ -140,8 +105,6 @@ export function ShowMore({
           labelOpen={labelOpen}
           labelCollapsed={labelCollapsed}
           minHiddenLines={minHiddenLines}
-          mode={mode}
-          visibleItems={visibleItems}
         />
       ))}
     </React.Fragment>
@@ -164,15 +127,6 @@ ShowMore.propTypes = {
    * hide the toggle. Set it before the item is enhanced.
    */
   minHiddenLines: PropTypes.number,
-  /**
-   * `"height"` (default): the visual-only collapse by max-height. `"items"`:
-   * a true disclosure that hides whole list items past `visibleItems` with
-   * `hidden="until-found"`, and gives the toggle `aria-expanded`. Each data
-   * entry then takes `collapsable_items` instead of `collapsable_text`.
-   */
-  mode: PropTypes.oneOf(['height', 'items']),
-  /** Items mode: how many list items stay visible. */
-  visibleItems: PropTypes.number,
 };
 
 export default ShowMore;

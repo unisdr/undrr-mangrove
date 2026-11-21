@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { ShowMore } from './ShowMore';
 import { mgShowMore } from '../../assets/js/show-more';
-import { expect, waitFor } from 'storybook/test';
 
 const getCaptionForLocale = locale => {
   switch (locale) {
@@ -239,56 +238,6 @@ export const OnlyWhenLong = {
           {
             collapsable_wrapper_class: 'show-more-wrapper-class',
             collapsable_text: `${blockText} ${blockText} ${blockText}`,
-          },
-        ]}
-      />
-    </div>
-  ),
-};
-
-// Items mode: a true disclosure over whole list items.
-const reports = [
-  'Global Assessment Report 2025',
-  'Words into Action: nature-based solutions',
-  'Early warnings for all: progress report',
-  'Sendai Framework midterm review',
-  'Scaling up disaster risk reduction in humanitarian action',
-  'Gender action plan to support the Sendai Framework',
-];
-
-export const ItemsMode = {
-  name: 'Items mode (true disclosure)',
-  // Hidden items must stay searchable: normalize's [hidden] { display: none }
-  // once hid them from find-in-page, so beforematch never fired.
-  play: async ({ canvasElement }) => {
-    const toggle = canvasElement.querySelector('[data-mg-show-more-mode]');
-    await waitFor(() => expect(toggle.hidden).toBe(false));
-    const hiddenItem = canvasElement.querySelector('[data-mg-show-more-item]');
-    await expect(hiddenItem.getAttribute('hidden')).toBe('until-found');
-    const view = canvasElement.ownerDocument.defaultView;
-    await expect(view.getComputedStyle(hiddenItem).display).not.toBe('none');
-    await expect(hiddenItem.getBoundingClientRect().height).toBe(0);
-    // Searchable while hidden. window.find() doesn't fire beforematch the
-    // way the browser's find bar does, so dispatch it for the open path.
-    view.getSelection().removeAllRanges();
-    await expect(view.find(hiddenItem.textContent)).toBe(true);
-    view.getSelection().removeAllRanges();
-    hiddenItem.dispatchEvent(new Event('beforematch', { bubbles: true }));
-    await expect(toggle.getAttribute('aria-expanded')).toBe('true');
-    toggle.click(); // Leave it collapsed, as it loads.
-  },
-  render: () => (
-    <div style={{ maxWidth: '480px' }}>
-      <h3 className="mg-heading-300">Related reports</h3>
-      <ShowMore
-        mode="items"
-        visibleItems={3}
-        labelCollapsed="Show all 6 reports"
-        labelOpen="Show fewer reports"
-        data={[
-          {
-            collapsable_wrapper_class: 'show-more-items-list',
-            collapsable_items: reports,
           },
         ]}
       />
