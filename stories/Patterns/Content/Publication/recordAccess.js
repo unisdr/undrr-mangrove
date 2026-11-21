@@ -20,11 +20,8 @@ export const ANALYTICS = {
   internal: 'download_internal',
   backup: 'download_backup',
   allDownloads: 'nav_all_downloads_cover',
-  // Expanding or collapsing a long resource list: navigation, not a download.
-  showAll: 'nav_show_all_downloads',
-  // Filtering the resource table.
+  // Filtering the resource table by language: navigation, not a download.
   filterLanguage: 'nav_filter_language',
-  filterText: 'nav_filter_text',
   // The backup explanation's contact link: not a download, so not download_.
   contact: 'contact_download_help',
 };
@@ -59,27 +56,16 @@ export const showAllDownloads = resources => (resources?.length ?? 0) >= 2;
 /**
  * Adaptive presentation (tiers). Of 27,839 published Drupal publications,
  * 88% have one file, 7.7% two, 1.8% three, 1.4% four or five, 0.9% six to
- * ten, 57 eleven or more, and the largest 34. The presentation grows with
- * the number of files and languages; tune the thresholds here.
+ * ten, 57 (0.2%) eleven or more, 12 twenty-one or more, and the largest 34.
+ * Every row is always shown, so the browser's find-in-page reaches every
+ * file; tune the thresholds here.
  */
 /** From this many resources, a table replaces the single access row. */
 export const TABLE_FROM = 2;
 /** From this many languages, the table gets language filters. */
 export const LANGUAGE_FILTER_FROM = 2;
-/** From this many resources, the table is tier 3 even in one language. */
-export const TIER3_FROM = 6;
-/** From this many resources, a text filter is added. */
-export const TEXT_FILTER_FROM = 11;
 /** From this many languages, the language filter is a select. */
 export const LANGUAGE_SELECT_FROM = 6;
-/**
- * Rows in view before the rest of the current view is collapsed. Collapsed
- * table rows use plain `hidden` (Chromium ignores `until-found` on rows), so
- * find-in-page can't reach them: the table only collapses from
- * COLLAPSE_FROM resources, where the text filter is there to search them.
- */
-export const PREVIEW_ROWS = 6;
-export const COLLAPSE_FROM = TEXT_FILTER_FROM;
 
 const languageKey = resource =>
   (resource.lang || resource.language || '').toLowerCase() || null;
@@ -107,11 +93,10 @@ export function languageGroups(resources = []) {
 
 /**
  * Which presentation a set of resources gets:
- * - tier 0: none; 1: one access row; 2: a table (2–5 files, one language);
- * - tier 3: a table with language filters (2+ languages, or 6+ files);
- * - tier 4: tier 3 plus a text filter (11+ files).
- * Language filters need 2+ languages to be useful, so a one-language tier 3
- * or 4 has none. From 6 languages the filter is a select.
+ * - tier 0: none; 1: one access row;
+ * - tier 2: a table (2+ files, one language);
+ * - tier 3: a table with language filters (2+ languages); from 6 languages
+ *   the filter is a select.
  */
 export function presentation(resources = []) {
   const count = resources.length;
@@ -119,58 +104,20 @@ export function presentation(resources = []) {
   const multilingual = languages.length >= LANGUAGE_FILTER_FROM;
   let tier = 0;
   if (count === 1) tier = 1;
-  else if (count >= TEXT_FILTER_FROM) tier = 4;
-  else if (count >= TIER3_FROM || multilingual) tier = 3;
-  else if (count >= TABLE_FROM) tier = 2;
+  else if (count >= TABLE_FROM) tier = multilingual ? 3 : 2;
   let languageFilter = 'none';
-  if (tier >= 3 && multilingual)
+  if (tier === 3)
     languageFilter =
       languages.length >= LANGUAGE_SELECT_FROM ? 'select' : 'buttons';
-  return {
-    tier,
-    count,
-    languages,
-    languageFilter,
-    textFilter: tier === 4,
-  };
+  return { tier, count, languages, languageFilter };
 }
 
-const fold = value =>
-  String(value || '')
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLocaleLowerCase();
-
-/**
- * Indexes of the resources shown for a language key ("all" for every one)
- * and a text query, which match together. Every word of the query must
- * appear in the title, language or format, ignoring case and accents.
- */
-export function filterResources(
-  resources = [],
-  { language = 'all', query = '' } = {}
-) {
-  const words = fold(query).split(/\s+/).filter(Boolean);
-  return resources.flatMap((resource, index) => {
-    if (language !== 'all' && languageKey(resource) !== language) return [];
-    // Title, language and format; not sizes, where "2" would match "422".
-    const format = resource.backup?.format || resource.format;
-    const haystack = fold(
-      [resource.label, resource.language, format].join(' ')
-    );
-    return words.every(word => haystack.includes(word)) ? [index] : [];
-  });
+/** Indexes of the resources in a language ("all" for every one). */
+export function filterResources(resources = [], { language = 'all' } = {}) {
+  return resources.flatMap((resource, index) =>
+    language === 'all' || languageKey(resource) === language ? [index] : []
+  );
 }
-
-/**
- * Whether row `position` of a view of `viewCount` rows starts collapsed, in
- * a table of `resourceCount` resources. Only tables with a text filter
- * (11+ resources) collapse; a filtered view of 6 rows or fewer never does.
- */
-export const isCollapsedRow = (position, viewCount, resourceCount) =>
-  resourceCount >= COLLAPSE_FROM &&
-  viewCount > PREVIEW_ROWS &&
-  position >= PREVIEW_ROWS;
 
 /**
  * Pick the CLDR plural form for `count` in the interface language, falling back

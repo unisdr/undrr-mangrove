@@ -1,8 +1,7 @@
 import React from 'react';
-import { act, fireEvent, render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { PublicationRecord } from '../PublicationRecord';
-import { ANNOUNCE_DELAY } from '../RecordResources';
 import { pluralLabel } from '../recordAccess';
 import { RECORD_LABELS, exampleRecord, manyFiles } from '../recordFixtures';
 import meta, {
@@ -19,8 +18,6 @@ const renderStory = (story, locale) =>
   render(meta.render(story.args, { globals: locale ? { locale } : {} }));
 const access = () => screen.getByRole('region', { name: labels.access });
 const rows = () => [...access().querySelectorAll('tbody tr')];
-const shown = () => rows().filter(row => !row.hidden);
-const toggle = () => access().querySelector('.mg-publication-record__show-all');
 const status = () => access().querySelector('.mg-publication-record__status');
 const radio = value =>
   access().querySelector(
@@ -89,44 +86,24 @@ describe('language select (6+ languages)', () => {
   });
 });
 
-describe('text filter (11+ files) and collapse', () => {
-  test('first 6 rows of the view; the rest behind the toggle with the true count', () => {
+describe('every row, no collapse', () => {
+  test('Many files (34) shows the full table; filtering keeps every matching row', () => {
     renderStory(ManyFiles);
     expect(rows()).toHaveLength(34);
-    expect(shown()).toHaveLength(6);
-    expect(toggle().textContent).toBe('Show all 34 files');
-    expect(toggle()).toHaveAttribute(
-      'data-vf-analytics-label',
-      'nav_show_all_downloads'
-    );
-    fireEvent.click(toggle());
-    expect(shown()).toHaveLength(34);
+    expect(rows().filter(row => row.hidden)).toHaveLength(0);
+    expect(
+      access().querySelector('.mg-publication-record__show-all')
+    ).toBeNull();
+    expect(access().querySelector('input[type="search"]')).toBeNull();
+    fireEvent.click(radio('en'));
+    expect(rows()).toHaveLength(27);
+    expect(status().textContent).toBe('Showing 27 of 34 files');
   });
 
-  test('a filter resets the collapse; the text filter combines with language', () => {
-    renderStory(ManyFiles);
-    fireEvent.click(toggle());
-    const input = within(access()).getByRole('searchbox', {
-      name: labels.filterFiles,
-    });
-    expect(input).toHaveAttribute('data-vf-analytics-label', 'nav_filter_text');
-    fireEvent.change(input, { target: { value: 'country' } });
-    // 26 English annex rows match; collapsed again to 6.
-    expect(rows()).toHaveLength(26);
-    expect(shown()).toHaveLength(6);
-    expect(toggle()).toHaveAttribute('aria-expanded', 'false');
-    expect(toggle().textContent).toBe('Show all 26 files');
-    fireEvent.click(radio('es'));
-    expect(rows()).toHaveLength(0);
-    expect(access().textContent).toContain(labels.noMatch);
-    fireEvent.change(input, { target: { value: 'perfil' } });
-    expect(rows()).toHaveLength(3);
-    expect(toggle()).toBeNull();
-  });
-
-  test('"All downloads (N)" resets the filters, opens the list and keeps the anchor', () => {
+  test('"All downloads (N)" resets the language to All and keeps the anchor', () => {
     renderStory(ManyFiles);
     fireEvent.click(radio('fr'));
+    expect(rows()).toHaveLength(4);
     const jump = screen.getByRole('link', { name: 'All downloads (34)' });
     expect(document.querySelector(jump.getAttribute('href'))).toBe(
       screen.getByRole('heading', { name: labels.access, level: 2 })
@@ -134,80 +111,7 @@ describe('text filter (11+ files) and collapse', () => {
     fireEvent.click(jump);
     expect(radio('all').checked).toBe(true);
     expect(rows()).toHaveLength(34);
-    expect(shown()).toHaveLength(34);
-    expect(toggle()).toHaveAttribute('aria-expanded', 'true');
-  });
-
-  test('"All downloads (N)" also opens an unfiltered collapsed list', () => {
-    renderStory(ManyFiles);
-    fireEvent.click(screen.getByRole('link', { name: 'All downloads (34)' }));
-    expect(shown()).toHaveLength(34);
-  });
-});
-
-describe('collapse threshold', () => {
-  const files = count =>
-    Array.from({ length: count }, (_, index) => ({
-      label: `File ${index + 1}`,
-      href: `/f${index + 1}`,
-      origin: 'hosted',
-      language: 'English',
-      lang: 'en',
-    }));
-  const show = count =>
-    render(
-      <PublicationRecord
-        record={{ ...exampleRecord, resources: files(count) }}
-        labels={labels}
-      />
-    );
-
-  test('10 rows (no text filter): every row shows, no toggle', () => {
-    show(10);
-    expect(rows()).toHaveLength(10);
-    expect(shown()).toHaveLength(10);
-    expect(toggle()).toBeNull();
-    expect(access().querySelector('input[type="search"]')).toBeNull();
-  });
-
-  test('11 rows (text filter): 6 show, the rest behind the toggle', () => {
-    show(11);
-    expect(shown()).toHaveLength(6);
-    expect(toggle().textContent).toBe('Show all 11 files');
-    expect(access().querySelector('input[type="search"]')).not.toBeNull();
-  });
-
-  test('Many languages (7 files) no longer hides one row', () => {
-    renderStory(ManyLanguages);
-    expect(shown()).toHaveLength(7);
-    expect(toggle()).toBeNull();
-  });
-});
-
-describe('announcements', () => {
-  afterEach(() => jest.useRealTimers());
-
-  test('a text query is announced once typing pauses; a language at once', () => {
-    jest.useFakeTimers();
-    renderStory(ManyFiles);
-    const input = within(access()).getByRole('searchbox', {
-      name: labels.filterFiles,
-    });
-    fireEvent.change(input, { target: { value: 'c' } });
-    fireEvent.change(input, { target: { value: 'co' } });
-    fireEvent.change(input, { target: { value: 'country' } });
     expect(status().textContent).toBe('');
-    act(() => jest.advanceTimersByTime(ANNOUNCE_DELAY - 1));
-    expect(status().textContent).toBe('');
-    act(() => jest.advanceTimersByTime(1));
-    expect(status().textContent).toBe('Showing 26 of 34 files');
-
-    // A language choice is immediate and cancels a pending query announcement.
-    fireEvent.change(input, { target: { value: 'country p' } });
-    fireEvent.click(radio('es'));
-    expect(status().textContent).toBe('Showing 0 of 34 files');
-    act(() => jest.advanceTimersByTime(ANNOUNCE_DELAY));
-    expect(status().textContent).toBe('Showing 0 of 34 files');
   });
 });
 
@@ -220,9 +124,10 @@ describe('vanilla contract: server output without JavaScript', () => {
   );
   const doc = new DOMParser().parseFromString(html, 'text/html');
 
-  test('every row and link is present and nothing is hidden', () => {
+  test('every row and link is present and nothing is hidden or collapsible', () => {
     expect(doc.querySelectorAll('tbody tr')).toHaveLength(34);
     expect(doc.querySelectorAll('tbody tr[hidden]')).toHaveLength(0);
+    expect(doc.querySelector('[data-mg-show-more]')).toBeNull();
     expect(
       doc.querySelectorAll('[data-vf-analytics-label^="download_"]').length
     ).toBeGreaterThan(34);
@@ -231,19 +136,6 @@ describe('vanilla contract: server output without JavaScript', () => {
   test('no filter controls or live region render without a script', () => {
     expect(doc.querySelector('.mg-publication-record__filters')).toBeNull();
     expect(doc.querySelector('.mg-publication-record__status')).toBeNull();
-  });
-
-  test('the ShowMore toggle ships hidden, items marked, auto-init allowed', () => {
-    const button = doc.querySelector('.mg-publication-record__show-all');
-    expect(button.hasAttribute('hidden')).toBe(true);
-    expect(button.getAttribute('data-mg-show-more-mode')).toBe('items');
-    expect(button.hasAttribute('data-mg-show-more-skip-auto-init')).toBe(false);
-    expect(button.getAttribute('data-mg-show-more-target')).toBe(
-      `#${doc.querySelector('tbody').id}`
-    );
-    expect(
-      doc.querySelectorAll('tbody tr[data-mg-show-more-item]')
-    ).toHaveLength(28);
   });
 });
 
@@ -273,8 +165,6 @@ describe('labels', () => {
       'allCount',
       'allLanguages',
       'languageLabel',
-      'filterFiles',
-      'noMatch',
       'accessShort',
       'watchShort',
       'downloadShort',

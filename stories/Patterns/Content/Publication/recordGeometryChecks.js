@@ -194,40 +194,37 @@ export const checkAccessBudget = (wide, narrow) =>
   };
 
 /**
- * Tier 4 (34 files): language and text filters over one table, the first 6
- * rows of the current view, and ShowMore items mode for the rest.
+ * Many files (34, three languages): the full table, every row visible, so
+ * the browser's find-in-page reaches a late row; the language filter keeps
+ * focus and announces the count; "All downloads (34)" resets it to All.
  */
-export async function checkCollapsedList({ canvasElement }) {
+export async function checkManyFiles({ canvasElement }) {
   const doc = canvasElement.ownerDocument;
   const view = doc.defaultView;
   const root = canvasElement.querySelector('.mg-publication-record');
   const rows = () => [
     ...root.querySelectorAll('.mg-publication-record__files tbody tr'),
   ];
-  const shown = () => rows().filter(row => !row.hidden);
-  const toggle = () => root.querySelector('.mg-publication-record__show-all');
   const live = () => root.querySelector('.mg-publication-record__status');
-  await waitFor(() => expect(toggle()?.hidden).toBe(false));
+  await waitFor(() =>
+    expect(
+      root.querySelector('.mg-publication-record__language-filter')
+    ).not.toBeNull()
+  );
 
   expect(rows()).toHaveLength(34);
-  expect(shown()).toHaveLength(6);
-  // Table rows use plain hidden (until-found doesn't work on rows).
-  expect(rows()[6].getAttribute('hidden')).toBe('');
-  expect(toggle().textContent).toBe('Show all 34 files');
-  expect(toggle()).toHaveAttribute('aria-expanded', 'false');
+  expect(
+    rows().filter(row => row.hidden || row.offsetHeight === 0)
+  ).toHaveLength(0);
+  expect(root.querySelector('[data-mg-show-more]')).toBeNull();
+  expect(root.querySelector('input[type="search"]')).toBeNull();
 
-  // Enter opens and moves focus to row 7's first control.
-  toggle().focus();
-  await userEvent.keyboard('{Enter}');
-  expect(shown()).toHaveLength(34);
-  expect(doc.activeElement).toBe(rows()[6].querySelector('a'));
-  toggle().focus();
-  await userEvent.keyboard(' ');
-  expect(shown()).toHaveLength(6);
-  expect(doc.activeElement).toBe(toggle());
+  // Find-in-page reaches a late row (wrapping from wherever the selection is).
+  view.getSelection().removeAllRanges();
+  expect(view.find('Annex 30', false, false, true)).toBe(true);
+  view.getSelection().removeAllRanges();
 
-  // A language filter: focus stays on the control, the count is announced,
-  // and four rows need no toggle.
+  // The language filter keeps focus and announces at once.
   const french = root.querySelector(
     '.mg-publication-record__language-filter input[value="fr"]'
   );
@@ -235,48 +232,29 @@ export async function checkCollapsedList({ canvasElement }) {
   await userEvent.click(french);
   expect(doc.activeElement).toBe(french);
   expect(rows()).toHaveLength(4);
-  expect(toggle()).toBeNull();
   expect(live().textContent).toBe('Showing 4 of 34 files');
   expect(
     root.querySelector('.mg-publication-record__files thead').textContent
   ).not.toMatch(/Language/);
 
-  // The text filter combines with the language filter.
-  const all = root.querySelector(
-    '.mg-publication-record__language-filter input[value="all"]'
-  );
-  await userEvent.click(all);
-  const input = root.querySelector('.mg-publication-record__text-filter input');
-  await userEvent.type(input, 'annex 2');
-  expect(doc.activeElement).toBe(input);
-  // Annex 2 and 20–29 (two are French or Spanish titles: Annexe 21, 28 /
-  // Anexo 27 don't contain "annex 2").
-  expect(rows().length).toBeGreaterThan(6);
-  expect(shown()).toHaveLength(6);
-  expect(toggle().textContent).toBe(`Show all ${rows().length} files`);
-  await userEvent.click(french);
-  expect(rows().every(row => row.textContent.includes('Annexe 2'))).toBe(true);
-
-  // "All downloads (34)" resets the filters and opens the list.
+  // "All downloads (34)" resets the filter to All.
   const jump = root.querySelector('.mg-publication-record__all-downloads a');
   expect(jump.textContent).toBe('All downloads (34)');
   jump.addEventListener('click', event => event.preventDefault(), {
     once: true,
   });
   await userEvent.click(jump);
-  expect(input.value).toBe('');
+  const all = root.querySelector(
+    '.mg-publication-record__language-filter input[value="all"]'
+  );
   expect(all.checked).toBe(true);
   expect(rows()).toHaveLength(34);
-  expect(shown()).toHaveLength(34);
   // The cover still targets the first resource in source order.
   expect(
     root
       .querySelector('.mg-publication-record__cover-link')
       .getAttribute('href')
   ).toBe(rows()[0].querySelector('a').getAttribute('href'));
-  toggle().click(); // Leave the story collapsed, as it loads.
-  expect(shown()).toHaveLength(6);
-  view.getSelection().removeAllRanges();
 }
 
 /** Seven languages: the language filter is a native select. */

@@ -158,15 +158,6 @@
   }
 }
 
-.mg-publication-record__text-filter {
-  flex: 1 1 14rem;
-  max-inline-size: 22rem;
-}
-
-.mg-publication-record__no-match {
-  font-size: var(--mg-font-size-250);
-}
-
 // One shared explanation for all backups.
 .mg-publication-record__backup-help {
   > summary {
@@ -242,12 +233,6 @@
 
     .mg-publication-record__file-action {
       grid-area: action;
-    }
-
-    // Rows collapsed by ShowMore stay hidden: `display: grid` above would
-    // otherwise beat the [hidden] rule.
-    tr[hidden] {
-      display: none;
     }
 
     .mg-publication-record__file-backup {

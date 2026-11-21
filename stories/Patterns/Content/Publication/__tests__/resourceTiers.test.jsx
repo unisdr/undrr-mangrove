@@ -5,14 +5,9 @@ import { PublicationRecord } from '../PublicationRecord';
 import {
   LANGUAGE_FILTER_FROM,
   LANGUAGE_SELECT_FROM,
-  COLLAPSE_FROM,
-  PREVIEW_ROWS,
   TABLE_FROM,
-  TEXT_FILTER_FROM,
-  TIER3_FROM,
   fileFacts,
   filterResources,
-  isCollapsedRow,
   languageGroups,
   linkVerb,
   presentation,
@@ -55,37 +50,26 @@ const english = (count, extra = {}) =>
 
 describe('tier rules', () => {
   test('thresholds are named constants', () => {
-    expect({
-      TABLE_FROM,
-      TIER3_FROM,
-      TEXT_FILTER_FROM,
-      LANGUAGE_FILTER_FROM,
-      LANGUAGE_SELECT_FROM,
-      PREVIEW_ROWS,
-    }).toEqual({
+    expect({ TABLE_FROM, LANGUAGE_FILTER_FROM, LANGUAGE_SELECT_FROM }).toEqual({
       TABLE_FROM: 2,
-      TIER3_FROM: 6,
-      TEXT_FILTER_FROM: 11,
       LANGUAGE_FILTER_FROM: 2,
       LANGUAGE_SELECT_FROM: 6,
-      PREVIEW_ROWS: 6,
     });
   });
 
   test.each([
-    [0, 0, 'none', false],
-    [1, 1, 'none', false],
-    [2, 2, 'none', false],
-    [5, 2, 'none', false],
-    [6, 3, 'none', false], // one language: no language filter
-    [10, 3, 'none', false],
-    [11, 4, 'none', true],
-    [34, 4, 'none', true],
-  ])('%i files in one language: tier %i', (count, tier, filter, text) => {
+    [0, 0],
+    [1, 1],
+    [2, 2],
+    [5, 2],
+    [6, 2],
+    [11, 2],
+    [34, 2],
+  ])('%i files in one language: tier %i, no filter', (count, tier) => {
     const view = presentation(english(count));
     expect(view.tier).toBe(tier);
-    expect(view.languageFilter).toBe(filter);
-    expect(view.textFilter).toBe(text);
+    expect(view.languageFilter).toBe('none');
+    expect(view).not.toHaveProperty('textFilter');
   });
 
   test('two languages make a two-file record tier 3 with buttons', () => {
@@ -115,7 +99,7 @@ describe('tier rules', () => {
     expect(presentation(exampleRecord.resources).tier).toBe(1);
     expect(presentation(twoFiles).tier).toBe(2);
     expect(presentation(severalFiles).tier).toBe(3);
-    expect(presentation(manyFiles).tier).toBe(4);
+    expect(presentation(manyFiles).tier).toBe(3);
     expect(presentation(manyLanguages).languageFilter).toBe('select');
   });
 
@@ -130,42 +114,15 @@ describe('tier rules', () => {
     // A resource with no language appears only under "All".
     expect(languageGroups([{ label: 'x', href: '/x' }])).toEqual([]);
   });
-
-  test.each([
-    // [rows in view, resources, position, collapsed]
-    [10, 10, 6, false], // no text filter below 11: never collapse
-    [10, 10, 9, false],
-    [11, 11, 5, false],
-    [11, 11, 6, true],
-    [34, 34, 33, true],
-    [6, 34, 5, false], // a filtered view of 6 or fewer: no toggle
-    [7, 34, 6, true],
-  ])(
-    'a view of %i rows in a table of %i: row %i collapsed is %s',
-    (viewCount, resourceCount, position, hidden) => {
-      expect(isCollapsedRow(position, viewCount, resourceCount)).toBe(hidden);
-    }
-  );
-
-  test('COLLAPSE_FROM is the text-filter threshold', () => {
-    expect(COLLAPSE_FROM).toBe(TEXT_FILTER_FROM);
-  });
 });
 
 describe('filtering', () => {
-  test('language and text filters combine, ignoring case and accents', () => {
-    const fr = filterResources(manyFiles, { language: 'fr' });
-    expect(fr).toHaveLength(4);
-    expect(filterResources(manyFiles, { query: 'ANNEXE' })).toEqual(fr);
-    expect(
-      filterResources(manyFiles, { language: 'es', query: 'anexo 9' })
-    ).toEqual([9]);
-    expect(filterResources(manyFiles, { query: 'pais' })).toHaveLength(3);
-    expect(filterResources(manyFiles, { query: 'nothing here' })).toEqual([]);
-  });
-
-  test('sizes are not searched', () => {
-    expect(filterResources(manyFiles, { query: '422' })).toEqual([]);
+  test('a language key selects its rows; "all" selects every row', () => {
+    expect(filterResources(manyFiles, { language: 'fr' })).toEqual([
+      7, 14, 21, 28,
+    ]);
+    expect(filterResources(manyFiles, { language: 'all' })).toHaveLength(34);
+    expect(filterResources(manyFiles)).toHaveLength(34);
   });
 });
 

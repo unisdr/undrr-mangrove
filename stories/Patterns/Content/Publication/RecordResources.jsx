@@ -1,22 +1,12 @@
-import React, {
-  useEffect,
-  useImperativeHandle,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
-import { flushSync } from 'react-dom';
+import React, { useEffect, useImperativeHandle, useState } from 'react';
 import PropTypes from 'prop-types';
-import { mgShowMore, mgShowMoreSetOpen } from '../../../assets/js/show-more';
 import { Icon } from '../../../Atom/Icons/Icon';
 import { SegmentedControl } from '../../../Components/Forms/SegmentedControl/SegmentedControl';
 import { Select } from '../../../Components/Forms/Select/Select';
-import { TextInput } from '../../../Components/Forms/TextInput/TextInput';
 import {
   ANALYTICS,
   fileFacts,
   filterResources,
-  isCollapsedRow,
   linkVerb,
   pluralLabel,
   presentation,
@@ -29,13 +19,10 @@ import {
  * See docs/PUBLICATION-RECORD-SPEC.md, "Adaptive resource presentation".
  *
  * Server-rendered output is the vanilla contract: the single row or the full
- * table, every link working, and ShowMore items-mode markup for long tables.
- * Filters render only after this component has mounted, so no control ever
- * appears without a script behind it.
+ * table with every row and link. The language filter renders only after this
+ * component has mounted, so no control ever appears without a script behind
+ * it.
  */
-
-/** Pause in typing before a text-filter result count is announced. */
-export const ANNOUNCE_DELAY = 500;
 
 /** External links open in a new tab, with an icon and a spoken warning. */
 export function NewTabCue({ label }) {
@@ -187,7 +174,6 @@ function FilesTable({
   labels,
   workLang,
   showLanguage,
-  bodyId,
   captionId,
 }) {
   return (
@@ -220,20 +206,12 @@ function FilesTable({
           </th>
         </tr>
       </thead>
-      <tbody id={bodyId} role="rowgroup">
-        {rows.map((index, position) => {
+      <tbody role="rowgroup">
+        {rows.map(index => {
           const resource = resources[index];
           const { language, lang } = fileFacts(resource);
           return (
-            <tr
-              key={index}
-              role="row"
-              data-mg-show-more-item={
-                isCollapsedRow(position, rows.length, resources.length)
-                  ? ''
-                  : undefined
-              }
-            >
+            <tr key={index} role="row">
               <th
                 scope="row"
                 role="rowheader"
@@ -283,7 +261,6 @@ FilesTable.propTypes = {
   labels: PropTypes.object.isRequired,
   workLang: PropTypes.string,
   showLanguage: PropTypes.bool,
-  bodyId: PropTypes.string.isRequired,
   captionId: PropTypes.string.isRequired,
 };
 
@@ -373,8 +350,8 @@ LanguageFilter.propTypes = {
 };
 
 /**
- * The resource access block. `controller` gets `showAll()`, which resets the
- * filters, opens the list and leaves the anchor to move to the heading.
+ * The resource access block. `controller` gets `resetFilters()`, which "All
+ * downloads (N)" calls before its anchor moves to the heading.
  */
 export function RecordAccess({
   resources,
@@ -388,87 +365,33 @@ export function RecordAccess({
   const view = presentation(resources);
   const [enhanced, setEnhanced] = useState(false);
   const [language, setLanguage] = useState('all');
-  const [query, setQuery] = useState('');
   const [announcement, setAnnouncement] = useState('');
-  const toggleRef = useRef(null);
-  const openAfterReset = useRef(false);
-  // Timer for a pending text-filter announcement (see onQuery).
-  const pendingAnnouncement = useRef(0);
-  useEffect(() => () => clearTimeout(pendingAnnouncement.current), []);
 
-  // Filters need a script, so they only appear once React is running.
+  // The language filter needs a script, so it only appears once React runs.
   useEffect(() => setEnhanced(true), []);
 
+  // Every row of the current view is shown, so find-in-page reaches them.
   const rows = enhanced
-    ? filterResources(resources, { language, query })
+    ? filterResources(resources, { language })
     : resources.map((_, index) => index);
-  const collapses =
-    rows.length > 0 &&
-    isCollapsedRow(rows.length - 1, rows.length, resources.length);
   const showLanguage = view.languages.length >= 2 && language === 'all';
-  const viewKey = `${language}\u0000${query}\u0000${rows.join(',')}`;
-  const bodyId = `${id}-files`;
-  const showAll = pluralLabel(labels.showAllFiles, lang, rows.length);
-
-  // ShowMore items mode reads the rows when it starts, so start again (in
-  // the collapsed state) whenever the view changes. Layout effect, so a
-  // reset from "All downloads" can open the list in the same task.
-  useLayoutEffect(() => {
-    const button = toggleRef.current;
-    if (!collapses || !button) return undefined;
-    const cleanup = mgShowMore(button);
-    if (openAfterReset.current) {
-      openAfterReset.current = false;
-      mgShowMoreSetOpen(button, true);
-    }
-    return cleanup;
-  }, [collapses, viewKey]);
-
-  // Keep the visible label right when the language or count changes.
-  useEffect(() => {
-    const label = toggleRef.current?.querySelector('[data-mg-show-more-label]');
-    if (!label) return;
-    label.textContent =
-      toggleRef.current.getAttribute('aria-expanded') === 'true'
-        ? labels.showFewerFiles
-        : showAll;
-  }, [showAll, labels.showFewerFiles]);
 
   useImperativeHandle(controller, () => ({
-    showAll() {
-      clearTimeout(pendingAnnouncement.current);
-      if (language !== 'all' || query !== '') {
-        openAfterReset.current = true;
-        flushSync(() => {
-          setLanguage('all');
-          setQuery('');
-          setAnnouncement('');
-        });
-        return;
-      }
-      if (toggleRef.current) mgShowMoreSetOpen(toggleRef.current, true);
+    resetFilters() {
+      setLanguage('all');
+      setAnnouncement('');
     },
   }));
 
-  const announce = next =>
+  const onLanguage = value => {
+    setLanguage(value);
     setAnnouncement(
       pluralLabel(labels.showing, lang, resources.length)
-        .replace('{shown}', String(filterResources(resources, next).length))
+        .replace(
+          '{shown}',
+          String(filterResources(resources, { language: value }).length)
+        )
         .replace('{total}', String(resources.length))
-    );
-  // Typing would announce on every keystroke, so a text query is announced
-  // once typing pauses; a language choice is announced at once.
-  const onLanguage = value => {
-    clearTimeout(pendingAnnouncement.current);
-    setLanguage(value);
-    announce({ language: value, query });
-  };
-  const onQuery = value => {
-    setQuery(value);
-    clearTimeout(pendingAnnouncement.current);
-    pendingAnnouncement.current = setTimeout(
-      () => announce({ language, query: value }),
-      ANNOUNCE_DELAY
     );
   };
 
@@ -487,9 +410,9 @@ export function RecordAccess({
         />
       ) : (
         <>
-          {enhanced && (view.languageFilter !== 'none' || view.textFilter) && (
-            <div className="mg-publication-record__filters">
-              {view.languageFilter !== 'none' && (
+          {enhanced && view.languageFilter !== 'none' && (
+            <>
+              <div className="mg-publication-record__filters">
                 <LanguageFilter
                   kind={view.languageFilter}
                   view={view}
@@ -498,58 +421,23 @@ export function RecordAccess({
                   onChange={onLanguage}
                   id={id}
                 />
-              )}
-              {view.textFilter && (
-                <TextInput
-                  id={`${id}-filter`}
-                  type="search"
-                  label={labels.filterFiles}
-                  value={query}
-                  onChange={event => onQuery(event.target.value)}
-                  analyticsLabel={ANALYTICS.filterText}
-                  className="mg-publication-record__text-filter"
-                />
-              )}
-            </div>
+              </div>
+              <p
+                className="mg-u-sr-only mg-publication-record__status"
+                aria-live="polite"
+              >
+                {announcement}
+              </p>
+            </>
           )}
-          {enhanced && (
-            <p
-              className="mg-u-sr-only mg-publication-record__status"
-              aria-live="polite"
-            >
-              {announcement}
-            </p>
-          )}
-          {rows.length > 0 ? (
-            <FilesTable
-              rows={rows}
-              resources={resources}
-              labels={labels}
-              workLang={workLang}
-              showLanguage={showLanguage}
-              bodyId={bodyId}
-              captionId={`${id}-caption`}
-            />
-          ) : (
-            <p className="mg-publication-record__no-match">{labels.noMatch}</p>
-          )}
-          {collapses && (
-            <button
-              key={viewKey}
-              ref={toggleRef}
-              type="button"
-              hidden
-              className="mg-button mg-button-secondary mg-button-outline mg-button--small mg-show-more--button mg-publication-record__show-all"
-              data-mg-show-more="true"
-              data-mg-show-more-mode="items"
-              data-mg-show-more-target={`#${bodyId}`}
-              data-mg-show-more-label-collapsed={showAll}
-              data-mg-show-more-label-open={labels.showFewerFiles}
-              data-vf-analytics-label={ANALYTICS.showAll}
-            >
-              <span data-mg-show-more-label>{showAll}</span>
-            </button>
-          )}
+          <FilesTable
+            rows={rows}
+            resources={resources}
+            labels={labels}
+            workLang={workLang}
+            showLanguage={showLanguage}
+            captionId={`${id}-caption`}
+          />
         </>
       )}
       {hasBackup && <BackupHelp labels={labels} contactHref={contactHref} />}
@@ -563,6 +451,6 @@ RecordAccess.propTypes = {
   workLang: PropTypes.string,
   contactHref: PropTypes.string,
   id: PropTypes.string.isRequired,
-  /** Ref that receives `{ showAll() }` for "All downloads (N)". */
+  /** Ref that receives `{ resetFilters() }` for "All downloads (N)". */
   controller: PropTypes.object,
 };

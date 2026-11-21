@@ -53,10 +53,10 @@ export function PublicationRecord({
 }) {
   const prefix = `publication-${useId().replace(/:/g, '')}`;
   const access = useRef(null);
-  // "All downloads (N)" resets the filters and opens a collapsed list before
-  // the browser follows the anchor to the resources heading. Without
-  // JavaScript it is a plain anchor to an open list.
-  const openList = () => access.current?.showAll();
+  // "All downloads (N)" resets the language filter to All before the browser
+  // follows the anchor to the resources heading. Without JavaScript (and in
+  // tiers 1 and 2) it is a plain anchor.
+  const openList = () => access.current?.resetFilters();
 
   const value = projectRecord(record);
   const hasDetails =

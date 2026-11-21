@@ -14,7 +14,7 @@ import {
 import {
   checkAccessBudget,
   checkAsideContainment,
-  checkCollapsedList,
+  checkManyFiles,
   checkCoverAffordance,
   checkLanguageSelect,
   withGridCheck,
@@ -74,15 +74,15 @@ export const SeveralFiles = {
   // list was 454px), 460px narrow.
   play: withGridCheck(checkAccessBudget(340, 460)),
 };
-// Tier 4, modelled on the largest Drupal record (34 files): language and
-// text filters, and the first 6 rows of the current view.
+// Modelled on the largest Drupal record (34 files, three languages): the
+// full table with a language filter. Every row shows, so find-in-page works.
 export const ManyFiles = {
   name: 'Many files',
   args: {
     ...Standard.args,
     record: { ...exampleRecord, resources: manyFiles },
   },
-  play: withGridCheck(checkCollapsedList),
+  play: withGridCheck(checkManyFiles),
 };
 // Seven languages: the language filter is a select.
 export const ManyLanguages = {
