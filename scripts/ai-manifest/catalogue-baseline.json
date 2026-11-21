@@ -1251,13 +1251,16 @@
       "data": "custom[] | optional | default=[] | described",
       "labelCollapsed": "string | optional | default='Show more' | described",
       "labelOpen": "string | optional | default='Show less' | described",
-      "minHiddenLines": "number | optional | no default | described"
+      "minHiddenLines": "number | optional | no default | described",
+      "mode": "'height' | 'items' | optional | default='height' | described",
+      "visibleItems": "number | optional | default=3 | described"
     },
     "examples": [
       "ShowMore",
       "Detached button",
       "Two on one page",
-      "Only when long"
+      "Only when long",
+      "Items mode (true disclosure)"
     ]
   },
   "components-status-label": {
@@ -1754,15 +1757,21 @@
     "props": {
       "children": "node | optional | no default | described",
       "dir": "'ltr' | 'rtl' | optional | default='ltr' | undescribed",
-      "labels": "Record<string, string> | required | no default | described",
+      "labels": "Record<string, string | Record<string, string>> | required | no default | described",
       "lang": "string | optional | default='en' | undescribed",
       "record": "object | required | no default | described"
     },
     "examples": [
       "Experimental publication record",
+      "Two files, one language",
+      "Several files, two languages",
+      "Many files",
+      "Many languages",
+      "Hosted copy only",
+      "Publisher copy only",
+      "Video on a video host",
       "No cover",
       "No public file",
-      "Original / local backup",
       "Long content"
     ]
   },
