@@ -135,8 +135,13 @@ const preview = {
     },
   },
 
+  // Storybook 11 ignores globalTypes.<name>.defaultValue (deprecated since
+  // Storybook 8), which left locale and theme undefined until a reader picked
+  // one. Every global's starting value belongs here.
   initialGlobals: {
     addonRtl: 'ltr',
+    locale: 'english',
+    theme: 'Global UNDRR Theme',
   },
 
   globalTypes: {
@@ -155,7 +160,6 @@ const preview = {
     locale: {
       name: 'Locale',
       description: 'locale',
-      defaultValue: 'english',
       toolbar: {
         icon: 'globe',
         items: [
@@ -172,7 +176,6 @@ const preview = {
     theme: {
       name: 'Theme',
       description: 'Global theme for components',
-      defaultValue: 'Global UNDRR Theme',
       toolbar: {
         icon: 'paintbrush',
         items: themeNames.map(name => ({
