@@ -72,7 +72,7 @@ This is a **proposed simpler presentation**, not a reproduction of the source's 
 | Order | Region | Content and omission rule |
 | --- | --- | --- |
 | 1 | Identity | One plain H1 for the work, followed by eligible document classification and core attribution/publication-year information. Use the existing typography hierarchy; no Hero or stats band is required. Preserve an approved alternate/original title where supplied, with language metadata only when known. |
-| 2 | Read / access / download | A labelled list of genuinely available resources near the work identity, preserving primary-versus-backup roles and languages. Use descriptive native links; file metadata belongs to the resource it describes. With one file (88% of records) the access row comes before the description, so readers don't pass a long description to find the document. With two or more, the files section follows the description and is reached from a "Files (N)" link in the header and the cover's "All downloads (N)"; see [Order and the files heading](#order-and-the-files-heading). |
+| 2 | Read / access / download | A labelled list of genuinely available resources near the work identity, preserving primary-versus-backup roles and languages. Use descriptive native links; file metadata belongs to the resource it describes. The files section always follows the description and is reached from a "Files (N)" link in the header, the cover and the link under it; see [Order and the files heading](#order-and-the-files-heading). |
 | 3 | Cover and description | Optional complete cover, plus the full approved description in a Rich content boundary. Do not reuse a 255-character teaser, invent a cover or crop away publication identity. Missing cover leaves no empty media stage. A wide-screen cover may sit alongside this content without changing the logical sequence. |
 | 4 | Bibliographic details | A compact labelled group for remaining authors/issuing organizations, identifiers, edition/series and pagination where known. Avoid repeating the same attribution twice; a compact identity summary can link to a fuller list. There are no empty labelled rows or invented values. |
 | 5 | Citation and sharing | Approved citation text or a clearly documented host-approved citation mechanism when available, plus approved stable-link sharing. Do not display the hidden Drupal citation field automatically. Without approved citation data/integration, retain usable bibliographic details and the record URL instead of fabricating a citation. |
@@ -113,11 +113,11 @@ The source attachment template labels a status line “Last checked”, but the 
 
 Decided for [#1502](https://github.com/unisdr/undrr-mangrove/issues/1502), November 2026. Readers on PreventionWeb publication pages click the cover expecting the document ([web-backlog#3351](https://gitlab.com/undrr/web-backlog/-/work_items/3351)). Drupal ships an interim answer in [drupal-base!268](https://gitlab.com/undrr/drupal-base/-/merge_requests/268) (UNDRR-6.4). This section records what the record pattern does so the Drupal move to the record ([web-backlog#3362](https://gitlab.com/undrr/web-backlog/-/work_items/3362)) can implement it directly. Points 1, 3, 4 and 5 keep the interim's behaviour. Point 2 replaces the interim's hover shadow with a hover outline and a destination badge. Like the rest of this spec, it is demonstrated in the experimental story only.
 
-| Resources | Cover | "All downloads (N)" |
+| Resources | Cover | Link under the cover |
 | --- | --- | --- |
 | None | Not linked | Not shown |
-| 1 | Links to the first primary resource | Not shown |
-| 2 or more | Links to the first primary resource | Shown under the cover |
+| 1 | Links to the first primary resource | "Download options" |
+| 2 or more | Links to the first primary resource | "All downloads (N)" |
 
 ### 1. The cover links to the first primary resource
 
@@ -145,11 +145,11 @@ Decided for [#1502](https://github.com/unisdr/undrr-mangrove/issues/1502), Novem
 - **New windows.** The cover opens its target the same way as the labelled link it duplicates. A publisher link opens in a new tab (`target="_blank"`, `rel="noopener"`), so the cover does too; a hosted copy opens in the same tab, and so does its cover ([Adaptive resource presentation](#adaptive-resource-presentation)). The labelled link carries the spoken "opens in new tab" warning. The cover's only visual cue is the external-link badge on hover, a gap shared with the Drupal interim.
 - **Resource list.** A publisher link in the row or table ends with the same `external-link` icon, so the badge and the list use one cue for "leaves the site".
 
-### 3. "All downloads (N)" under the cover
+### 3. A link under the cover, always
 
-**Decision.** With two or more resources, a text link under the cover reads "All downloads (N)" and jumps to the "Read or access this publication" heading. N counts primary resources; backups are not counted separately. There is no modal. When the table is filtered by language, the link first resets the filter to All (see [Adaptive resource presentation](#adaptive-resource-presentation)).
+**Decision.** A linked cover always has a text link under it, which jumps to the "Files" heading after the Description. With two or more resources it reads "All downloads (N)": N counts primary resources, and backups are not counted separately. With one resource it reads **"Download options"**, because "All downloads (1)" would be odd and the section offers the file and, usually, a backup. Both use `nav_all_downloads_cover`. There is no modal. When the table is filtered by language, the link first resets the filter to All (see [Adaptive resource presentation](#adaptive-resource-presentation)).
 
-**Why.** A reader who sees one cover can't tell that the record has several files, and the cover only reaches the first one. A modal or menu would be a second download interface to keep in step with the list. An in-page link keeps one list and only points at it. With one resource the cover already reaches everything, so the cue would be noise.
+**Why.** A reader who sees one cover can't tell how many files the record has, and the cover only reaches the first one. Readers who look under the cover for the files should always find a link there, so it no longer depends on the count. With the files section after the Description, a single-file record also has three routes to its file: the cover, the link under it, and the header's "File (1)" jump link. A modal or menu would be a second download interface to keep in step with the list; an in-page link keeps one list and only points at it.
 
 **Plurals.** The string has CLDR plural forms, chosen with `Intl.PluralRules` for the interface language, as in the search widget's labels. The count is written in ASCII digits, as Drupal's `@count` is, so locales such as `ar-EG` don't switch to Arabic-Indic digits. Arabic supplies all six forms. The English, Arabic, Spanish, French, Japanese and Chinese strings are the drupal-base!268 translations. Russian is a draft that needs review. The `one` forms (and Arabic `zero`) are never shown by this rule, but they are kept so the catalogue matches Drupal's.
 
@@ -214,7 +214,7 @@ The thresholds are named constants in `recordAccess.js` (`TABLE_FROM`, `LANGUAGE
 
 | Tier | When | Presentation | Measured at 1378px |
 | --- | --- | --- | --- |
-| 1 | 1 resource | One access row: **Access {title}** ↗ (or **Watch**, or the plain title for hosted-only), then "Language · Format, size", then the backup as a download-icon link | 115px (was 237px) |
+| 1 | 1 resource | One access row (in the Files section after the Description, like every tier): **Access {title}** ↗ (or **Watch**, or the plain title for hosted-only), then "Language · Format, size", then the backup as a download-icon link | 115px (was 237px) |
 | 2 | 2+ resources, one language | A compact table with every row, no filters, no Language column. Columns: Title, Format / size, Original, Backup | 166px for 2 files |
 | 3 | 2+ languages | Tier 2 plus a language filter ("All (N) \| English (k) \| …", default All) above the table, and a Language column while All is selected. From 6 languages the filter is a native `<select>` | 273px for 3 files in 2 languages (was 454px) |
 
@@ -223,11 +223,11 @@ The thresholds are named constants in `recordAccess.js` (`TABLE_FROM`, `LANGUAGE
 
 ### Order and the files heading
 
-**Decision.** With one file (tier 1), nothing changes: the access row sits at the top, before the Description, under the heading "Read or access this publication". With two or more files (tiers 2 and 3), the files section (heading, language control and table) moves after the Description, and its heading becomes **"Files"**. A compact "Files (N) ↓" link under the header metadata (authors, sources, year) jumps to it at every width. The cover's "All downloads (N)" jumps there too, resetting the language filter to All.
+**Decision.** One order for every tier: the Description always comes first, and the **Files** section (heading, language control, and the single row or the table) always follows it. A compact "Files (N) ↓" link under the header metadata (authors, sources, year) jumps to it at every width, including "File (1) ↓" for a single file. The link under the cover jumps there too ("All downloads (N)", or "Download options" for one file), resetting the language filter to All.
 
-**Why.** The single row is cheap (115px) and covers 88% of records, so keeping it first costs nothing. A table of several files is taller (166px for 2 files, about 1,400px for 34), and putting it first pushes the Description down for everyone. After the Description the files stay findable: the header's jump link names the count, the cover links straight to the first file, and "All downloads (N)" sits under the cover. This replaces the earlier rule that access always comes before a long description.
+**Why.** It's consistent: the page has the same shape whatever the number of files, so readers and the Drupal template don't have to handle a moving section. The files stay findable from the top: the header's jump link names the count, the cover links straight to the first file, and the link under the cover is always there. An earlier draft kept the single-file row before the Description (it's only 115px, and 88% of records have one file), but a moving section cost more in consistency than it saved. This replaces the earlier rule that access comes before a long description.
 
-"Files" was chosen over "Read or access this publication" because, once the section is no longer the first thing on the page, a short noun matches the jump link ("Files (3)") and the heading readers land on. "Download this publication" would mislabel publisher links that open a web page. The jump link uses CLDR plural forms (`filesJump`, a separate label from "All downloads" because the wording differs). The arrow is decorative text (`aria-hidden`); Mangrove's icon set has no down arrow. The heading has a scroll margin so the jump doesn't land flush against the viewport edge. Analytics: `nav_files_jump`.
+**Heading.** "Files" replaces "Read or access this publication", which is gone. A short noun matches the jump link ("Files (3)") and the heading readers land on. "Download this publication" would mislabel publisher links that open a web page. The jump link uses CLDR plural forms (`filesJump`, separate from "All downloads" because the wording differs); the singular reads "File (1)" in English, French, Spanish and Arabic. Japanese and Chinese have one form, and Russian uses "Файлы (1)" because its `one` category also covers 21 and 31. The arrow is decorative text (`aria-hidden`); Mangrove's icon set has no down arrow. The heading has a scroll margin so the jump doesn't land flush against the viewport edge. Analytics: `nav_files_jump`.
 
 ### Rows and cells
 
@@ -288,8 +288,8 @@ None of them starts `download_`. Count language-filter use by the prefix `nav_fi
 
 ### Checks
 
-- **Unit tests.** `__tests__/resourceTiers.test.jsx` covers tier boundaries (0, 1, 2, 5, 6, 11 and 34 files in one language; 5, 6 and 7 languages), language groups, filtering, each tier's markup and names, table semantics, RTL isolation, the shared explanation, "Added" in Bibliographic details, placeholders in every language, and axe. `__tests__/resourceFilters.test.jsx` covers the order (access first for one file; Description, then Files, plus the jump link, for two or more), the inline control with its hidden "Language" name and decorative icon, the radio group, the select, the live region, every row of the 34-file table being shown, "All downloads (N)" resetting the filter, the cover target under a filter, and the server-rendered (vanilla) markup having no filter and no collapse.
-- **Browser checks.** Tier 1's access block is at most 160px (200px narrow) and comes before the Description. In tiers 2 and 3 the Description starts within 120px of the header, the files section follows it, and the header's "Files (N)" link points at the files heading, which has a scroll margin. In Many files, all 34 rows show; `window.find("Annex 30")` with wrap-around finds a late row; the language filter keeps focus and announces the count; "All downloads (34)" resets it to All. In Many languages, the select filters to one row.
+- **Unit tests.** `__tests__/resourceTiers.test.jsx` covers tier boundaries (0, 1, 2, 5, 6, 11 and 34 files in one language; 5, 6 and 7 languages), language groups, filtering, each tier's markup and names, table semantics, RTL isolation, the shared explanation, "Added" in Bibliographic details, placeholders in every language, and axe. `__tests__/resourceFilters.test.jsx` covers the order (Description, then Files, plus the jump link, in every tier), the inline control with its hidden "Language" name and decorative icon, the radio group, the select, the live region, every row of the 34-file table being shown, "All downloads (N)" resetting the filter, the cover target under a filter, and the server-rendered (vanilla) markup having no filter and no collapse.
+- **Browser checks.** In every tier the Description starts within 120px of the header, the files section follows it, the header's "Files (N)" link points at the files heading (which has a scroll margin), and the link under the cover is present with "All downloads (N)" or "Download options". In Many files, all 34 rows show; `window.find("Annex 30")` with wrap-around finds a late row; the language filter keeps focus and announces the count; "All downloads (34)" resets it to All. In Many languages, the select filters to one row.
 - **Screenshots.** Every story at 1378px and 390px, plus Arabic.
 - **Not done.** Screen readers, voice control, and real Windows High Contrast.
 
@@ -308,7 +308,7 @@ None of them starts `download_`. Count language-filter use by the prefix `nav_fi
 
 | Proposal | Relationship to the inspected source |
 | --- | --- |
-| Plain title, early resource access and a simpler one-column/mobile or cover/details composition | A proposed reader-oriented order, including access before a potentially long body for single-file records (multi-file records put the description first, with a header jump link), rather than copying the source metadata strip, body-before-download sequence or three-column geometry. No Hero is required for an ordinary record. |
+| Plain title, early resource access and a simpler one-column/mobile or cover/details composition | A proposed reader-oriented order, with the description first and a header jump link to the files for every record, rather than copying the source metadata strip, body-before-download sequence or three-column geometry. No Hero is required for an ordinary record. |
 | Complete uncropped cover | Deliberate departure from Drupal `por` cropping, consistent with Mangrove's established publication media-role policy. |
 | Explicitly labelled core bibliographic and resource information | Preserves distinct source meanings while making ordinary records easier to scan; it does not promote hidden fields or mandate every field configured for policies/statements. |
 | Optional supplied standfirst | Experimental story capability derived from the news-entry introduction, not automatic promotion of hidden `field_short_description` or truncation of the full body. The adapter must obtain approved text or omit it. |
