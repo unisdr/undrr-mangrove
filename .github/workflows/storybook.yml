@@ -84,8 +84,12 @@ jobs:
           # Same command as the local gate developers are asked to run, so a
           # grep for it finds the CI step too.
           yarn validate-manifest
+          # validate-manifest accepts a well-formed catalogue with weaker data.
+          # Fail on any change to the published prop contract; update the
+          # baseline deliberately (--update) and explain the diff in the PR.
+          yarn check:catalogue-baseline
           # Snapshot the site catalogue: reruns generation and validation in
-          # isolated staging, so the adapter's v1 $ref handling is exercised.
+          # isolated staging. (On a docgen-server build it also covers v1 $refs.)
           node scripts/ai-manifest/snapshot-manifest-output.mjs .cache/manifest-parity/site
           # The opt-in source-extraction research path compared its output
           # with this snapshot. It cannot read Storybook 11 docgen-server

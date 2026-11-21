@@ -1,0 +1,1777 @@
+{
+  "components-buttons-buttons": {
+    "props": {
+      "className": "string | optional | no default | described",
+      "href": "string | optional | default='#' | described",
+      "label": "string | required | no default | described",
+      "onClick": "func | optional | no default | described",
+      "Outline": "bool | optional | default=false | described",
+      "State": "'Default' | 'Disabled' | optional | default='Default' | described",
+      "Type": "'Primary' | 'Secondary' | optional | default='Primary' | described",
+      "Variant": "'Default' | 'CTA' | optional | default='Default' | described"
+    },
+    "examples": [
+      "Buttons",
+      "Editorial CTA",
+      "Long labels",
+      "All variants",
+      "Icon-only buttons",
+      "Icon with text label",
+      "Responsive icon button",
+      "Standalone icon button"
+    ]
+  },
+  "components-buttons-chips": {
+    "props": {
+      "className": "string | optional | no default | described",
+      "href": "string | optional | default='#' | described",
+      "label": "string | required | no default | described",
+      "onDismiss": "func | optional | no default | described",
+      "removeLabel": "string | optional | no default | described",
+      "Type": "'Default' | 'With X' | optional | default='Default' | described"
+    },
+    "examples": [
+      "Chips",
+      "Dismissible",
+      "Long labels and RTL"
+    ]
+  },
+  "components-buttons-copybutton": {
+    "props": {
+      "ariaLabel": "string | optional | no default | undescribed",
+      "className": "string | optional | no default | undescribed",
+      "copiedLabel": "string | optional | no default | undescribed",
+      "dir": "'ltr' | 'rtl' | 'auto' | optional | no default | described",
+      "labels": "{ ariaLabel: string, copiedLabel: string, tooltipLabel: string, failedLabel: string, failedTooltipLabel: string } | optional | no default | described",
+      "lang": "string | optional | no default | described",
+      "size": "'small' | 'large' | optional | no default | undescribed",
+      "textToCopy": "string | optional | default='' | undescribed",
+      "tooltipLabel": "string | optional | no default | undescribed",
+      "variant": "'outline' | 'primary' | 'secondary' | optional | default='outline' | undescribed"
+    },
+    "examples": [
+      "Default",
+      "Primary",
+      "In Context",
+      "Vanilla Html Live Integration"
+    ]
+  },
+  "components-buttons-sharebuttons": {
+    "props": {
+      "dir": "'ltr' | 'rtl' | 'auto' | optional | no default | described",
+      "labels": "{ mainLabel: string, onCopy: string, qrCodeTitle: string, qrCodeDescription: string, closeModal: string, copyImage: string, downloadImage: string, closeMessage: string, shareUsingDevice: string, shareOnLinkedIn: string, shareOnFacebook: string, shareOnX: string, shareViaEmail: string, generateQRCode: string, copyToClipboard: string } | optional | no default | described",
+      "lang": "string | optional | no default | described",
+      "SharingSubject": "string | optional | no default | described",
+      "SharingTextBody": "string | optional | no default | described"
+    },
+    "examples": [
+      "ShareButtons",
+      "Narrow sidebar (six actions)",
+      "Narrow sidebar (five actions)",
+      "Narrow sidebar (Arabic)",
+      "Compact container"
+    ]
+  },
+  "components-cards-book-card": {
+    "props": {
+      "className": "string | optional | no default | undescribed",
+      "data": "array | required | no default | undescribed",
+      "variant": "'primary' | 'secondary' | 'tertiary' | 'quaternary' | optional | default='primary' | undescribed"
+    },
+    "examples": [
+      "Book Card",
+      "Without a link",
+      "Mixed Title Lengths",
+      "Complete cover without outer frame",
+      "Theme-owned publication surface",
+      "Publication with CMS classes"
+    ]
+  },
+  "components-cards-horizontal-book-card": {
+    "props": {
+      "className": "string | optional | no default | undescribed",
+      "data": "array | required | no default | undescribed",
+      "variant": "'primary' | 'secondary' | 'tertiary' | 'quaternary' | optional | default='primary' | undescribed"
+    },
+    "examples": [
+      "Horizontal Book Card",
+      "Horizontal Book Card Without Image",
+      "Without a link",
+      "Button only, no card link",
+      "Complete cover without outer frame",
+      "Theme-owned publication surface"
+    ]
+  },
+  "components-cards-horizontal-card": {
+    "props": {
+      "className": "string | optional | no default | undescribed",
+      "data": "array | required | no default | undescribed",
+      "variant": "'primary' | 'secondary' | 'tertiary' | 'quaternary' | optional | default='primary' | undescribed"
+    },
+    "examples": [
+      "Horizontal Card",
+      "Without a link",
+      "Button only, no card link",
+      "Mixed group (linked, button only, unlinked)",
+      "Long Content",
+      "Horizontal card without image",
+      "Without labels"
+    ]
+  },
+  "components-cards-icon-card": {
+    "props": {
+      "centered": "bool | optional | default=false | described",
+      "data": "{ id: string | number, icon: string, imgback: string, imgalt: string, iconSize: number, imageScale: 'small' | 'medium' | 'large' | 'full', iconColor: string, iconFgColor: string, borderColor: string, label: string, visualLabel: string, title: string, srOnlyTitle: bool, summaryText: string, link: string, linkText: string, onClick: func, button: string, buttonType: 'Primary' | 'Secondary' }[] | required | no default | described",
+      "orientation": "'vertical' | 'horizontal' | optional | default='vertical' | described",
+      "variant": "'default' | 'negative' | optional | default='default' | described"
+    },
+    "examples": [
+      "Default",
+      "Centered",
+      "With Label",
+      "Grid Layout",
+      "Mixed Content",
+      "With Logo",
+      "Negative",
+      "Real World Images",
+      "Feature Cards",
+      "Mixed Icon Types",
+      "Horizontal",
+      "Horizontal in a grid"
+    ]
+  },
+  "components-cards-stats-card": {
+    "props": {
+      "className": "string | optional | default='' | described",
+      "stats": "{ icon: string, label: string, value: string | number, bottomLabel: string, summaryText: string, link: string }[] | optional | default=[] | described",
+      "title": "string | optional | no default | described",
+      "variant": "'default' | 'compact' | 'highlighted' | 'negative' | optional | default='default' | described"
+    },
+    "examples": [
+      "Default",
+      "With Icons",
+      "Compact",
+      "Highlighted",
+      "Negative",
+      "Linked",
+      "Mixed Content"
+    ]
+  },
+  "components-cards-vertical-card": {
+    "props": {
+      "className": "string | optional | no default | undescribed",
+      "data": "{ title: string, link: string, target: string, rel: string, imgback: string, imgalt: string, summaryText: string, label1: string, label2: string, button: string, buttonLink: string }[] | required | no default | undescribed",
+      "variant": "'primary' | 'secondary' | 'tertiary' | 'quaternary' | optional | default='primary' | undescribed"
+    },
+    "examples": [
+      "Vertical Card",
+      "Plain title (opt-out)",
+      "Vertical Card Without Image",
+      "Without a link",
+      "Button only, no card link",
+      "Mixed group (linked, button only, unlinked)",
+      "Legacy Gutenberg markup (empty href)",
+      "In separate columns (uneven content)",
+      "Grid Of Cards",
+      "Flex Row Of Cards",
+      "Scrolling Cards",
+      "Without labels"
+    ]
+  },
+  "components-cite-this": {
+    "props": {},
+    "examples": [
+      "Vanilla HTML page fallback",
+      "Page title and site overrides",
+      "Configured publication metadata",
+      "Matching Schema.org work",
+      "Publisher citation",
+      "Long citation",
+      "Citation only",
+      "Compact trigger"
+    ]
+  },
+  "components-codeblock": {
+    "props": {
+      "code": "string | required | no default | described",
+      "filename": "string | optional | no default | described",
+      "language": "'bash' | 'javascript' | 'jsx' | optional | no default | described",
+      "lineNumbers": "bool | optional | no default | described"
+    },
+    "examples": [
+      "Plain",
+      "Syntax highlighted",
+      "With filename header",
+      "With filename + syntax highlighting",
+      "With line numbers",
+      "With line numbers + filename"
+    ]
+  },
+  "components-cta": {
+    "props": {
+      "backgroundColor": "string | optional | no default | described",
+      "buttons": "{ label: string, url: string, type: 'Primary' | 'Secondary', variant: 'Default' | 'CTA', outline: bool, target: string, rel: string }[] | optional | default=[] | described",
+      "centered": "bool | optional | default=true | described",
+      "children": "node | optional | no default | described",
+      "className": "string | optional | no default | described",
+      "eyebrow": "string | optional | no default | described",
+      "headline": "string | optional | no default | described",
+      "headlineLevel": "2 | 3 | 4 | 5 | 6 | optional | default=2 | described",
+      "headlineSize": "string | optional | default='600' | described",
+      "image": "string | optional | no default | described",
+      "imageAlt": "string | optional | default='' | described",
+      "layout": "'stacked' | 'inline' | optional | default='stacked' | described",
+      "padding": "string | optional | no default | described",
+      "text": "string | optional | no default | described",
+      "tone": "'strong' | 'soft' | optional | default='strong' | described",
+      "variant": "'primary' | 'secondary' | 'tertiary' | 'quaternary' | optional | default='primary' | described"
+    },
+    "examples": [
+      "Default",
+      "Secondary",
+      "Tertiary",
+      "Quaternary",
+      "Custom Color",
+      "Left Aligned",
+      "Inline",
+      "With Image",
+      "Headline Only",
+      "Extra Padding",
+      "Soft",
+      "Newsletter",
+      "Newsletter With Preferences"
+    ]
+  },
+  "components-dataviz-legend": {
+    "props": {
+      "className": "string | optional | default='' | undescribed",
+      "customRamp": "string | optional | default='' | undescribed",
+      "items": "{ color: string, label: node, value: node }[] | optional | default=[] | undescribed",
+      "layout": "'default' | 'inline' | 'grid' | optional | default='default' | undescribed",
+      "orientation": "'horizontal' | 'vertical' | optional | default='horizontal' | undescribed",
+      "rampClass": "string | optional | default='' | undescribed",
+      "ticks": "{ label: node, position: string }[] | optional | default=[] | undescribed",
+      "title": "node | optional | default='' | undescribed",
+      "type": "'continuous' | 'categorical' | 'stepped' | optional | default='continuous' | undescribed"
+    },
+    "examples": [
+      "Continuous",
+      "Categorical",
+      "Stepped",
+      "Vertical Continuous",
+      "Categorical Grid"
+    ]
+  },
+  "components-dialog": {
+    "props": {},
+    "examples": [
+      "Short message",
+      "Long reading",
+      "Long title",
+      "Expanded Close label"
+    ]
+  },
+  "components-embedcontainer": {
+    "props": {
+      "as": "string | optional | default='div' | described",
+      "aspectRatio": "'16x9' | '4x3' | '1x1' | '21x9' | optional | default='16x9' | described",
+      "children": "node | optional | no default | described",
+      "className": "string | optional | default='' | described"
+    },
+    "examples": [
+      "16:9 (default)",
+      "4:3",
+      "1:1",
+      "21:9 (ultrawide)",
+      "Generic HTML iframe",
+      "Inside highlight box",
+      "Inside highlight box (primary)"
+    ]
+  },
+  "components-empty-state": {
+    "props": {},
+    "examples": [
+      "Default",
+      "Without an action",
+      "Panel",
+      "Compact",
+      "In a table",
+      "Heading level",
+      "Start aligned",
+      "Right to left"
+    ]
+  },
+  "components-error-pages": {
+    "props": {
+      "challengeType": "unknown | optional | default='challenge' | undescribed",
+      "code": "unknown | optional | default=404 | undescribed",
+      "contactUrl": "unknown | optional | default='https://www.undrr.org/contact-us' | undescribed",
+      "requestDetails": "unknown | optional | default={\n  rayId: '8a1b2c3d4e5f6789-IAD',\n  clientIp: '203.0.113.42',\n  geo: 'United States',\n} | undescribed",
+      "searchAction": "unknown | optional | default='/search' | undescribed",
+      "showBrandHeader": "unknown | optional | default=true | undescribed",
+      "showButtons": "unknown | optional | default=false | undescribed",
+      "showRequestDetails": "unknown | optional | default=false | undescribed",
+      "showSearch": "unknown | optional | default=false | undescribed",
+      "variant": "unknown | optional | default='error' | undescribed"
+    },
+    "examples": [
+      "Not Found 404",
+      "Forbidden 403",
+      "Too Many Requests 429",
+      "Bad Gateway 502",
+      "Service Unavailable 503",
+      "Internal Server Error 500",
+      "Gateway Timeout 504",
+      "Unauthorized 401",
+      "Interactive Challenge",
+      "Managed Challenge"
+    ]
+  },
+  "components-font-size-utilities": {
+    "props": {},
+    "examples": [
+      "All font sizes",
+      "Applied to headings"
+    ]
+  },
+  "components-footer": {
+    "props": {
+      "children": "node | optional | no default | described",
+      "className": "string | optional | no default | described",
+      "complementaryContent": "node | optional | default=null | described",
+      "enableSyndication": "bool | optional | default=true | described",
+      "syndicationConfig": "{ contenttype: string, pageid: string, includemetatags: bool, includecss: bool, suffixID: string, activedomain: string } | optional | default={} | described",
+      "variant": "string | optional | default='default' | described"
+    },
+    "examples": [
+      "Default",
+      "With Complementary Content",
+      "No Syndication",
+      "Custom Syndication Config"
+    ]
+  },
+  "components-forms-checkbox": {
+    "props": {
+      "analyticsLabel": "string | optional | no default | described",
+      "checked": "bool | optional | no default | described",
+      "className": "string | optional | no default | described",
+      "defaultChecked": "bool | optional | no default | described",
+      "disabled": "bool | optional | default=false | described",
+      "error": "bool | optional | default=false | described",
+      "errorText": "string | optional | no default | described",
+      "id": "string | optional | no default | described",
+      "label": "string | optional | no default | described",
+      "labelPosition": "'before' | 'after' | optional | default='after' | described",
+      "name": "string | optional | no default | described",
+      "onChange": "func | optional | no default | described",
+      "row": "bool | optional | default=false | described",
+      "value": "string | optional | no default | described"
+    },
+    "examples": [
+      "Default",
+      "Checked",
+      "Disabled",
+      "Label Before",
+      "Error State",
+      "Checkbox Group",
+      "Switch toggle",
+      "Switch disabled",
+      "Switch error",
+      "Switch sizes",
+      "Switch pending",
+      "Switch pending, interactive",
+      "Row",
+      "Row States"
+    ]
+  },
+  "components-forms-form-action": {
+    "props": {
+      "action": "element | required | no default | described",
+      "analyticsLabel": "string | optional | no default | described",
+      "className": "string | optional | no default | undescribed",
+      "control": "element | required | no default | described",
+      "errorText": "string | optional | no default | undescribed",
+      "helpText": "string | optional | no default | undescribed",
+      "hideLabel": "bool | optional | default=false | undescribed",
+      "label": "string | optional | no default | undescribed",
+      "stackOnMobile": "bool | optional | default=false | undescribed"
+    },
+    "examples": [
+      "Search",
+      "Subscribe",
+      "Select and continue",
+      "Stacked on mobile",
+      "RTL"
+    ]
+  },
+  "components-forms-formerrorsummary": {
+    "props": {
+      "className": "string | optional | no default | described",
+      "errors": "{ id: string, message: string }[] | required | no default | undescribed",
+      "title": "string | optional | default='There is a problem' | described"
+    },
+    "examples": [
+      "Single error",
+      "Multiple errors"
+    ]
+  },
+  "components-forms-formgroup": {
+    "props": {
+      "children": "node | required | no default | described",
+      "className": "string | optional | no default | described",
+      "disabled": "bool | optional | default=false | described",
+      "error": "bool | optional | default=false | described",
+      "errorText": "string | optional | no default | described",
+      "hideLegend": "bool | optional | default=false | described",
+      "legend": "string | required | no default | described"
+    },
+    "examples": [
+      "Checkbox group",
+      "Radio group",
+      "Disabled",
+      "Error State",
+      "Hidden Legend"
+    ]
+  },
+  "components-forms-radio": {
+    "props": {
+      "analyticsLabel": "string | optional | no default | described",
+      "checked": "bool | optional | no default | described",
+      "className": "string | optional | no default | described",
+      "defaultChecked": "bool | optional | no default | described",
+      "disabled": "bool | optional | default=false | described",
+      "error": "bool | optional | default=false | described",
+      "errorText": "string | optional | no default | described",
+      "id": "string | optional | no default | described",
+      "label": "string | optional | no default | described",
+      "labelPosition": "'before' | 'after' | optional | default='after' | described",
+      "name": "string | optional | no default | described",
+      "onChange": "func | optional | no default | described",
+      "row": "bool | optional | default=false | described",
+      "value": "string | optional | no default | described"
+    },
+    "examples": [
+      "Default",
+      "Selected",
+      "Disabled",
+      "Label Before",
+      "Error State",
+      "Radio Group",
+      "Row",
+      "Row States"
+    ]
+  },
+  "components-forms-range": {
+    "props": {
+      "analyticsLabel": "string | optional | no default | described",
+      "className": "string | optional | no default | undescribed",
+      "defaultValue": "number | string | optional | no default | undescribed",
+      "disabled": "bool | optional | default=false | undescribed",
+      "id": "string | required | no default | undescribed",
+      "max": "number | string | optional | default=100 | undescribed",
+      "min": "number | string | optional | default=0 | undescribed",
+      "name": "string | optional | no default | undescribed",
+      "onChange": "func | optional | no default | undescribed",
+      "step": "number | string | optional | no default | undescribed",
+      "ticks": "{ value: number | string, label: string }[] | optional | no default | undescribed",
+      "value": "number | string | optional | no default | undescribed"
+    },
+    "examples": [
+      "Continuous",
+      "Stepped",
+      "Disabled"
+    ]
+  },
+  "components-forms-segmented-control": {
+    "props": {
+      "analyticsLabel": "string | optional | no default | described",
+      "className": "string | optional | no default | described",
+      "defaultValue": "string | optional | no default | described",
+      "fullWidth": "bool | optional | default=false | described",
+      "hideLegend": "bool | optional | default=false | described",
+      "legend": "string | required | no default | described",
+      "name": "string | required | no default | described",
+      "onChange": "func | optional | no default | described",
+      "options": "{ label: string, value: string, disabled: bool }[] | required | no default | described",
+      "size": "'default' | 'small' | optional | default='default' | described",
+      "value": "string | optional | no default | described"
+    },
+    "examples": [
+      "Default",
+      "Hidden Legend",
+      "No Selection",
+      "Small",
+      "Full Width",
+      "With Disabled Segment",
+      "Controlled"
+    ]
+  },
+  "components-forms-select": {
+    "props": {
+      "analyticsLabel": "string | optional | no default | described",
+      "className": "string | optional | no default | described",
+      "defaultValue": "string | optional | no default | described",
+      "disabled": "bool | optional | default=false | described",
+      "error": "bool | optional | default=false | described",
+      "errorText": "string | optional | no default | described",
+      "helpText": "string | optional | no default | described",
+      "hideLabel": "bool | optional | default=false | described",
+      "id": "string | optional | no default | described",
+      "label": "string | optional | no default | described",
+      "name": "string | optional | no default | described",
+      "onChange": "func | optional | no default | described",
+      "options": "{ value: string, label: string, disabled: bool }[] | optional | default=[] | undescribed",
+      "placeholder": "string | optional | no default | described",
+      "required": "bool | optional | default=false | described",
+      "value": "string | optional | no default | described"
+    },
+    "examples": [
+      "Default",
+      "With Help Text",
+      "Error State",
+      "Disabled",
+      "Required",
+      "With Disabled Option"
+    ]
+  },
+  "components-forms-text-input": {
+    "props": {
+      "analyticsLabel": "string | optional | no default | described",
+      "className": "string | optional | no default | described",
+      "defaultValue": "string | optional | no default | described",
+      "disabled": "bool | optional | default=false | described",
+      "error": "bool | optional | default=false | described",
+      "errorText": "string | optional | no default | described",
+      "helpText": "string | optional | no default | described",
+      "hideLabel": "bool | optional | default=false | described",
+      "id": "string | optional | no default | described",
+      "label": "string | optional | no default | described",
+      "name": "string | optional | no default | described",
+      "onChange": "func | optional | no default | described",
+      "placeholder": "string | optional | no default | described",
+      "required": "bool | optional | default=false | described",
+      "type": "'text' | 'email' | 'password' | 'number' | 'tel' | 'search' | 'date' | 'url' | optional | default='text' | described",
+      "value": "string | optional | no default | described"
+    },
+    "examples": [
+      "Default",
+      "With Help Text",
+      "Error State",
+      "Disabled",
+      "Required",
+      "Date",
+      "Number",
+      "Telephone",
+      "Search"
+    ]
+  },
+  "components-forms-textarea": {
+    "props": {
+      "analyticsLabel": "string | optional | no default | described",
+      "className": "string | optional | no default | described",
+      "cols": "number | optional | no default | described",
+      "defaultValue": "string | optional | no default | described",
+      "disabled": "bool | optional | default=false | described",
+      "error": "bool | optional | default=false | described",
+      "errorText": "string | optional | no default | described",
+      "helpText": "string | optional | no default | described",
+      "hideLabel": "bool | optional | default=false | described",
+      "id": "string | optional | no default | described",
+      "label": "string | optional | no default | described",
+      "name": "string | optional | no default | described",
+      "onChange": "func | optional | no default | described",
+      "placeholder": "string | optional | no default | described",
+      "required": "bool | optional | default=false | described",
+      "rows": "number | optional | default=4 | described",
+      "value": "string | optional | no default | described"
+    },
+    "examples": [
+      "Default",
+      "With Help Text",
+      "Error State",
+      "Disabled",
+      "Required"
+    ]
+  },
+  "components-fullwidth": {
+    "props": {
+      "children": "node | optional | no default | described",
+      "className": "string | optional | default='' | described"
+    },
+    "examples": [
+      "FullWidth",
+      "Blocked by an ancestor background"
+    ]
+  },
+  "components-gallery": {
+    "props": {
+      "analyticsRegion": "string | optional | default='gallery' | described",
+      "arrowStyle": "'overlay' | 'corner' | optional | default='overlay' | described",
+      "dir": "'ltr' | 'rtl' | 'auto' | optional | no default | described",
+      "enableKeyboard": "bool | optional | default=true | described",
+      "initialIndex": "number | optional | default=0 | described",
+      "labels": "{ galleryAriaLabel: string, prevLabel: string, nextLabel: string, loadingLabel: string } | optional | no default | described",
+      "lang": "string | optional | no default | described",
+      "loop": "bool | optional | default=false | described",
+      "media": "{ id: string, type: 'image' | 'video' | 'embed' | 'html', src: string, alt: string, title: string, description: string, thumbnail: string, poster: string, embedUrl: string, html: string }[] | required | no default | described",
+      "onMediaChange": "func | optional | no default | described",
+      "showArrows": "bool | optional | default=true | described",
+      "showDescription": "bool | optional | default=true | described",
+      "showThumbnails": "bool | optional | default=true | described",
+      "thumbnailPosition": "'left' | 'bottom' | optional | default='left' | described"
+    },
+    "examples": [
+      "Basic Gallery",
+      "Many Images (Scrolling)",
+      "Thumbnails at Bottom",
+      "Without Thumbnails",
+      "Without Arrows",
+      "Without Descriptions",
+      "Minimal Configuration",
+      "Mixed Aspect Ratios",
+      "With onChange Callback",
+      "Start at Second Image",
+      "Infinite Loop",
+      "Corner Navigation Buttons",
+      "Mixed Media (Images, Videos, Embeds)",
+      "With HTML Content"
+    ]
+  },
+  "components-hero-hero-child": {
+    "props": {
+      "data": "{ imgback: string, label: string, title: string, link: string, summaryText: string, primary_button: string }[] | required | no default | described",
+      "variant": "'primary' | 'secondary' | 'tertiary' | 'quaternary' | optional | default='primary' | described"
+    },
+    "examples": [
+      "Hero - child"
+    ]
+  },
+  "components-hero-hero": {
+    "props": {
+      "contained": "bool | optional | default=false | described",
+      "data": "{ imgback: string, label: node, title: string, link: string, summaryText: string, detail: node, tags: { label: string, href: string }[], tagsLabel: string, primary_button: string, secondary_button: string, logo: { src: string, alt: string }, buttons: { label: string, url: string, type: 'Primary' | 'Secondary', onClick: func, target: string, rel: string, analyticsLabel: string }[], media: { type: 'image' | 'video' | 'html', src: string, alt: string, title: string, html: string } }[] | required | no default | described",
+      "headingLevel": "'h1' | 'h2' | 'h3' | optional | default='h1' | described",
+      "layout": "'background' | 'split' | optional | default='background' | described",
+      "size": "'default' | 'immersive' | optional | default='default' | described",
+      "split": "'2/3' | '1/2' | '1/3' | optional | default='2/3' | described",
+      "variant": "'primary' | 'secondary' | 'tertiary' | 'quaternary' | 'neutral' | optional | default='primary' | described"
+    },
+    "examples": [
+      "Default",
+      "No Link",
+      "With Html In Title",
+      "Immersive (contained)",
+      "Mobile banner and panel",
+      "No background image (mobile)",
+      "Split (2/3 content, default)",
+      "Split (1/2 balanced)",
+      "Split (1/3 media-led)",
+      "Split (video embed)",
+      "Split (custom HTML slot)",
+      "Split (neutral surface)",
+      "Split (tags on a coloured surface)"
+    ]
+  },
+  "components-highlightbox": {
+    "props": {
+      "centered": "bool | optional | default=false | described",
+      "children": "node | optional | no default | described",
+      "className": "string | optional | default='' | described",
+      "float": "'start' | 'end' | optional | default=null | described",
+      "variant": "'default' | 'primary' | 'secondary' | optional | default='default' | described"
+    },
+    "examples": [
+      "Default",
+      "Primary",
+      "Secondary",
+      "Centered",
+      "Centered Primary",
+      "With Video",
+      "Float Start",
+      "Float End",
+      "With Image",
+      "With List",
+      "RTL float start (appears on right)",
+      "RTL float end (appears on left)"
+    ]
+  },
+  "components-icons": {
+    "props": {
+      "className": "string | optional | default='' | described",
+      "name": "string | required | no default | described",
+      "size": "'sm' | 'lg' | 'xl' | optional | no default | described"
+    },
+    "examples": [
+      "Icons",
+      "Icon component",
+      "Colored icons"
+    ]
+  },
+  "components-images-author-image": {
+    "props": {
+      "alt": "string | optional | no default | described",
+      "highlight": "'primary' | 'secondary' | 'tertiary' | optional | default='primary' | described",
+      "href": "string | optional | default='' | described",
+      "image": "string | optional | no default | described",
+      "imageAlt": "string | optional | default='' | described",
+      "layout": "'vertical' | 'horizontal' | optional | default='vertical' | described",
+      "name": "string | optional | default='' | described",
+      "org": "string | optional | default='' | described",
+      "rel": "string | optional | no default | described",
+      "target": "string | optional | no default | described",
+      "title": "string | optional | default='' | described",
+      "tone": "'default' | 'inverse' | optional | default='default' | described",
+      "variant": "'Large' | 'Small' | optional | default='Large' | described"
+    },
+    "examples": [
+      "Author image",
+      "Horizontal author image",
+      "Vertical author image",
+      "Inverse author image",
+      "No image author image"
+    ]
+  },
+  "components-images-image-with-credit-caption": {
+    "props": {
+      "caption": "unknown | optional | default=true | undescribed",
+      "credit": "unknown | optional | default=true | undescribed",
+      "size": "unknown | optional | default='wide' | undescribed"
+    },
+    "examples": [
+      "Image with credit + caption",
+      "Multi-paragraph caption"
+    ]
+  },
+  "components-loader": {
+    "props": {
+      "className": "string | optional | default='' | described",
+      "decorative": "bool | optional | default=false | described",
+      "label": "string | optional | default='Loading' | described",
+      "size": "'default' | 'inline' | optional | default='default' | described"
+    },
+    "examples": [
+      "Loader",
+      "Inline",
+      "Status labels in constrained layouts",
+      "Inline, in text",
+      "Inline, in buttons",
+      "Inline, next to a form field",
+      "Decorative, announced through a live region",
+      "Inline loading pattern"
+    ]
+  },
+  "components-logos": {
+    "props": {
+      "alt": "string | required | no default | described",
+      "className": "string | optional | no default | described",
+      "crop": "'autocrop' | optional | no default | described",
+      "height": "string | number | optional | no default | described",
+      "lang": "string | optional | no default | described",
+      "src": "string | required | no default | described",
+      "title": "string | optional | no default | described",
+      "width": "string | number | optional | no default | described"
+    },
+    "examples": [
+      "UNDRR logo - blue",
+      "UNDRR logo - white",
+      "UNDRR logo square - blue",
+      "UNDRR logo square - white",
+      "UNDRR logo - autocropping"
+    ]
+  },
+  "components-navigation-breadcrumbs": {
+    "props": {
+      "Color": "string | optional | no default | described",
+      "data": "{ text: string }[] | required | no default | described",
+      "navLabel": "string | optional | default='breadcrumbs' | described"
+    },
+    "examples": [
+      "Breadcrumbs",
+      "White breadcrumbs",
+      "Long trail"
+    ]
+  },
+  "components-navigation-drawer": {
+    "props": {
+      "backdrop": "bool | optional | default=true | described",
+      "bodyHtml": "string | optional | no default | described",
+      "children": "node | optional | no default | described",
+      "className": "string | optional | no default | described",
+      "dir": "'ltr' | 'rtl' | 'auto' | optional | no default | described",
+      "footer": "node | optional | no default | described",
+      "footerHtml": "string | optional | no default | described",
+      "isFloatingPanel": "bool | optional | default=false | described",
+      "isOpen": "bool | optional | default=false | described",
+      "labels": "{ closeLabel: string } | optional | no default | described",
+      "lang": "string | optional | no default | described",
+      "onClose": "func | optional | no default | described",
+      "position": "'start' | 'end' | 'bottom' | optional | default='start' | described",
+      "title": "node | optional | no default | described"
+    },
+    "examples": [
+      "Default",
+      "End",
+      "Bottom",
+      "Floating panel",
+      "Vanilla lifecycle (no React)"
+    ]
+  },
+  "components-navigation-megamenu": {
+    "props": {
+      "analyticsRegion": "string | optional | default='mega-menu' | described",
+      "delay": "number | optional | no default | described",
+      "dir": "'ltr' | 'rtl' | 'auto' | optional | no default | described",
+      "enableFilter": "bool | optional | default=false | described",
+      "enableSiteSearch": "bool | optional | default=true | described",
+      "hoverDelay": "number | optional | no default | described",
+      "labels": "{ navLabel: string, closeMobileNavLabel: string, menuLabel: string, backLabel: string, allSectionsLabel: string, closeLabel: string, overviewLabel: string, toggleMobileNavLabel: string, menuFilterLabel: string, filterPlaceholder: string, clearFilterLabel: string, noFilterResultsLabel: string, searchSiteLabel: string, filterMatchesCount: string } | optional | no default | described",
+      "lang": "string | optional | no default | described",
+      "logoAlt": "string | optional | default='' | described",
+      "logoHeight": "number | optional | no default | described",
+      "logoHref": "string | optional | default='/' | described",
+      "logoSrc": "string | optional | no default | described",
+      "logoWidth": "number | optional | no default | described",
+      "searchUrl": "string | optional | default='/search' | described",
+      "sections": "{ title: string, icon: string, bannerHeading: string, bannerDescription: string, bannerButton: { label: string, url: string }, items: { title: string, url: string, items: array }[] }[] | required | no default | described"
+    },
+    "examples": [
+      "Default",
+      "RTL",
+      "With Logo",
+      "With Quick Filter",
+      "With Icons",
+      "Simple Nav",
+      "Progressive mobile navigation",
+      "Motion: open and category swap",
+      "Motion: mobile close and reopen",
+      "Motion: vanilla hydration"
+    ]
+  },
+  "components-navigation-on-this-page-nav": {
+    "props": {
+      "analyticsRegion": "string | optional | no default | described",
+      "contentSelector": "string | optional | default=null | described",
+      "ctaHref": "string | optional | default=null | described",
+      "ctaText": "string | optional | default=null | described",
+      "depth": "string | optional | default='2' | described",
+      "dir": "'ltr' | 'rtl' | 'auto' | optional | no default | described",
+      "items": "{ href: string, text: string }[] | optional | default=null | described",
+      "labels": "{ label: string } | optional | no default | described",
+      "lang": "string | optional | no default | described"
+    },
+    "examples": [
+      "Auto Detect",
+      "With nested headings (H2 + H3)",
+      "Explicit links",
+      "With CTA button",
+      "With excluded heading",
+      "Many items (horizontal overflow)",
+      "With scroll offset",
+      "RTL",
+      "With tabs content"
+    ]
+  },
+  "components-navigation-pager": {
+    "props": {
+      "ariaLabel": "string | optional | default='Pagination' | described",
+      "currentPageLabel": "string | func | optional | default='Page {page}, current page' | described",
+      "emptyAction": "{ label: string, onClick: func } | optional | no default | undescribed",
+      "emptyState": "string | optional | no default | described",
+      "goNextLabel": "string | func | optional | default='Go to next page' | described",
+      "goPrevLabel": "string | func | optional | default='Go to previous page' | described",
+      "isLoading": "bool | optional | default=false | described",
+      "jumpToAction": "string | optional | no default | described",
+      "jumpToLabel": "string | optional | no default | described",
+      "layout": "'centered' | 'bar' | optional | default='centered' | described",
+      "nextLabel": "string | func | optional | default='Next' | described",
+      "onPageChange": "func | required | no default | described",
+      "page": "number | required | no default | described",
+      "pageLabel": "string | func | optional | default='Page {page}' | described",
+      "pageOfLabel": "string | func | optional | default='Page {page} of {total}' | described",
+      "prevLabel": "string | func | optional | default='Previous' | described",
+      "range": "{ start: number, end: number } | optional | no default | undescribed",
+      "rangeLabel": "string | optional | no default | described",
+      "showJumpTo": "bool | optional | default=false | described",
+      "totalPages": "number | optional | default=null | described"
+    },
+    "examples": [
+      "Default",
+      "Bar layout",
+      "Unknown total",
+      "Empty state",
+      "Loading",
+      "RTL",
+      "Mobile",
+      "Few pages",
+      "Many pages"
+    ]
+  },
+  "components-navigation-skip-link": {
+    "props": {
+      "className": "string | optional | no default | described",
+      "label": "string | optional | default='Skip to main content' | described",
+      "onClick": "func | optional | no default | described",
+      "targetId": "string | optional | default='main-content' | described"
+    },
+    "examples": [
+      "Skip link",
+      "Focused",
+      "Translated and RTL"
+    ]
+  },
+  "components-navigation-table-of-contents": {
+    "props": {
+      "showNumbers": "bool | optional | default=false | described",
+      "title": "string | optional | default='On this page' | described",
+      "tocData": "{ id: string, text: string }[] | required | no default | described"
+    },
+    "examples": [
+      "List",
+      "Numbered",
+      "Scraped Content"
+    ]
+  },
+  "components-navigation-tree": {
+    "props": {
+      "children": "node | required | no default | undescribed",
+      "className": "string | optional | no default | undescribed",
+      "defaultExpandedIds": "string[] | optional | default=[] | undescribed",
+      "defaultSelectedId": "string | optional | default=null | undescribed",
+      "expandedIds": "string[] | optional | no default | undescribed",
+      "guides": "bool | optional | default=true | undescribed",
+      "onSelect": "func | optional | no default | undescribed",
+      "onToggle": "func | optional | no default | undescribed",
+      "selectedId": "string | optional | no default | undescribed",
+      "toggleIcon": "string | optional | default='mg-icon-right' | described"
+    },
+    "examples": [
+      "Default",
+      "With Links",
+      "Custom Toggle Icon",
+      "Hydrated from HTML"
+    ]
+  },
+  "components-normalize": {
+    "props": {},
+    "examples": [
+      "Normalize"
+    ]
+  },
+  "components-notice-cookieconsentbanner": {
+    "props": {
+      "cdnBaseUrl": "string | optional | default='https://assets.undrr.org/cookie-banner/v1' | described",
+      "config": "object | optional | default=null | described",
+      "debug": "bool | optional | default=false | described",
+      "forceFallback": "bool | optional | default=false | described"
+    },
+    "examples": [
+      "Default",
+      "Reset banner",
+      "Rendering check",
+      "Fallback (Local Config)",
+      "Custom Config",
+      "Custom CDN URL"
+    ]
+  },
+  "components-notice-notice": {
+    "props": {
+      "actions": "node | optional | no default | described",
+      "children": "node | optional | no default | described",
+      "className": "string | optional | no default | described",
+      "description": "node | optional | no default | described",
+      "dismissLabel": "string | optional | default='Dismiss notification' | described",
+      "headerContent": "node | optional | no default | described",
+      "headingLevel": "'h2' | 'h3' | 'h4' | 'h5' | 'h6' | optional | default='h3' | described",
+      "icon": "bool | string | node | optional | default=true | described",
+      "isCompact": "bool | optional | default=false | described",
+      "isDismissible": "bool | optional | default=false | described",
+      "isOverlay": "bool | optional | default=false | described",
+      "isProminent": "bool | optional | default=false | described",
+      "onDismiss": "func | optional | no default | described",
+      "role": "string | optional | no default | described",
+      "title": "node | optional | no default | described",
+      "variant": "'info' | 'warning' | 'negative' | 'positive' | optional | default='info' | described"
+    },
+    "examples": [
+      "Info Notice",
+      "Warning Banner",
+      "Negative Alert",
+      "Emergency Broadcast",
+      "Positive Confirmation",
+      "Dismissible"
+    ]
+  },
+  "components-notice-service-notice": {
+    "props": {
+      "className": "string | optional | no default | described",
+      "countdownSeconds": "number | optional | default=null | described",
+      "description": "node | optional | no default | described",
+      "dir": "'ltr' | 'rtl' | 'auto' | optional | no default | described",
+      "headingLevel": "'h2' | 'h3' | 'h4' | 'h5' | 'h6' | optional | default='h3' | described",
+      "isCompact": "bool | optional | default=false | described",
+      "isOverlay": "bool | optional | default=false | described",
+      "labels": "{ retryLabel: string, statusUrlLabel: string, opensInNewTab: string, statusDegraded: string, statusOffline: string, countdownPrefix: string, countdownAnnouncement: string, autoRetryStopped: string } | optional | no default | described",
+      "lang": "string | optional | no default | described",
+      "maxAutoRetries": "number | optional | default=3 | described",
+      "onRetry": "func | optional | no default | described",
+      "retryLabel": "string | optional | no default | described",
+      "status": "'degraded' | 'offline' | optional | default='degraded' | described",
+      "statusUrl": "string | optional | no default | described",
+      "statusUrlLabel": "string | optional | no default | described",
+      "title": "node | optional | no default | described"
+    },
+    "examples": [
+      "Degraded",
+      "Offline",
+      "Embed Overlay"
+    ]
+  },
+  "components-notice-snackbar": {
+    "props": {
+      "message": "unknown | optional | default='Showing off an example of the snackbar' | undescribed",
+      "severity": "unknown | optional | default='info' | undescribed"
+    },
+    "examples": [
+      "Snackbar",
+      "Error",
+      "Warning",
+      "Info",
+      "Success"
+    ]
+  },
+  "components-pageheader": {
+    "props": {
+      "className": "string | optional | no default | described",
+      "homeUrl": "string | optional | default='/' | described",
+      "idPrefix": "string | optional | default='' | described",
+      "languageDisplay": "'dropdown' | 'links' | optional | default='dropdown' | described",
+      "languages": "{ value: string, label: string, selected: bool }[] | optional | default=[\n  { value: 'ar', label: 'Arabic' },\n  { value: 'en', label: 'English', selected: true },\n  { value: 'es', label: 'Spanish' },\n] | described",
+      "locale": "string | optional | default='english' | described",
+      "logoAlt": "string | optional | default='UNDRR Logo' | described",
+      "logoCrop": "'autocrop' | null | optional | no default | described",
+      "logoHeight": "string | number | optional | no default | described",
+      "logoLang": "string | optional | no default | described",
+      "logoTitle": "string | optional | default='UNDRR Logo' | described",
+      "logoUrl": "string | optional | no default | described",
+      "logoWidth": "string | number | optional | no default | described",
+      "maxLanguageLinks": "number | optional | default=6 | described",
+      "showAccount": "bool | optional | default=true | described",
+      "showLanguage": "bool | optional | default=true | described",
+      "showLogo": "bool | optional | default=true | described",
+      "skipLinkLabel": "string | optional | default='Skip to main content' | described",
+      "skipLinkTarget": "string | optional | no default | described",
+      "variant": "'default' | 'decoration-only' | optional | default='default' | described"
+    },
+    "examples": [
+      "Default",
+      "Decoration Only",
+      "With Custom Languages",
+      "With language links",
+      "With language links, too many",
+      "With Custom Class",
+      "Locale-driven logo"
+    ]
+  },
+  "components-preview-access": {
+    "props": {
+      "contactLabel": "string | optional | default='Need help? Contact UNDRR' | described",
+      "contactUrl": "string | optional | default='https://www.undrr.org/contact-us' | described",
+      "errorMessage": "string | optional | default='That PIN is not correct. Please try again.' | described",
+      "eyebrow": "string | optional | default='UNDRR · Preview' | described",
+      "id": "string | optional | default=null | described",
+      "live": "bool | optional | default=false | described",
+      "maxAge": "number | optional | default=null | described",
+      "message": "string | optional | default='This page is in preview and is not yet ready for general distribution. ' +\n'Please enter the access PIN provided by UNDRR to continue.' | described",
+      "persist": "'session' | 'local' | optional | default='session' | described",
+      "pin": "string | optional | default='5498' | described",
+      "pinLabel": "string | optional | default='Access PIN' | described",
+      "submitLabel": "string | optional | default='Unlock' | described",
+      "title": "string | optional | default='Preview access required' | described"
+    },
+    "examples": [
+      "Default",
+      "Product-branded copy",
+      "Live demo (activates the gate)"
+    ]
+  },
+  "components-progress-bar": {
+    "props": {
+      "className": "string | optional | default='' | described",
+      "helpText": "string | optional | no default | described",
+      "hideLabel": "bool | optional | default=false | described",
+      "label": "custom | optional | no default | described",
+      "max": "number | optional | default=100 | described",
+      "showValue": "bool | optional | default=false | described",
+      "value": "number | optional | no default | described",
+      "valueText": "string | optional | no default | described",
+      "variant": "'default' | 'flush' | optional | default='default' | described"
+    },
+    "examples": [
+      "Determinate",
+      "With help text and value text",
+      "Indeterminate",
+      "Flush, pinned to a region",
+      "Flush, pinned to the viewport",
+      "Indeterminate, then determinate",
+      "Upload with announced milestones",
+      "Drupal batch markup",
+      "Long labels"
+    ]
+  },
+  "components-quiz-quiz-question": {
+    "props": {
+      "answer": "bool | optional | no default | described",
+      "blanks": "{ label: string, expected: string[], caseSensitive: bool }[] | optional | no default | described",
+      "caseSensitive": "bool | optional | no default | described",
+      "className": "string | optional | no default | described",
+      "dir": "'ltr' | 'rtl' | 'auto' | optional | no default | described",
+      "expected": "string[] | optional | no default | described",
+      "explanation": "string | optional | no default | described",
+      "hint": "string | optional | no default | described",
+      "labels": "{ checkAnswer: string, showAnswer: string, correct: string, incorrectMessage: string, revealedMessage: string, emptyChoice: string, emptyText: string, questionNumber: string, selectAll: string, fillBlankLegend: string, blankLabel: string, trueLabel: string, falseLabel: string } | optional | no default | described",
+      "lang": "string | optional | no default | described",
+      "media": "node | optional | no default | described",
+      "multiple": "bool | optional | no default | described",
+      "number": "number | optional | no default | described",
+      "onCheck": "func | optional | no default | described",
+      "onReveal": "func | optional | no default | described",
+      "options": "{ value: string | number, label: string, correct: bool }[] | optional | no default | described",
+      "prompt": "string | required | no default | described",
+      "questionId": "string | optional | no default | described",
+      "showAnswer": "bool | optional | no default | described",
+      "showNumber": "bool | optional | no default | described",
+      "total": "number | optional | no default | described",
+      "type": "'multiple_choice' | 'true_false' | 'text' | 'fill_blank' | optional | no default | described"
+    },
+    "examples": [
+      "Multiple Choice",
+      "Multiple Answers",
+      "True False",
+      "Short Answer",
+      "Fill In The Blank",
+      "Fill In The Blank Fields Below",
+      "With Image",
+      "Long Labels",
+      "Numbered",
+      "Answered Correct",
+      "Answered Incorrect",
+      "Incorrect With Hint",
+      "Show Answer Offered",
+      "Answer Revealed",
+      "Answer Revealed Fill In The Blank",
+      "Empty Attempt",
+      "Quiz Page",
+      "No Java Script",
+      "Server Rendered"
+    ]
+  },
+  "components-quiz-quiz-score": {
+    "props": {
+      "className": "string | optional | no default | described",
+      "dir": "'ltr' | 'rtl' | 'auto' | optional | no default | described",
+      "labels": "{ scoreSoFar: string, scoreSoFarWithAnswered: string, scoreFinal: string, progressLabel: string, progressValue: string, reset: string } | optional | no default | described",
+      "lang": "string | optional | no default | described",
+      "showProgress": "bool | optional | default=true | described",
+      "showReset": "bool | optional | default=true | described"
+    },
+    "examples": [
+      "Default",
+      "In Progress",
+      "Complete",
+      "Without Progress Or Reset"
+    ]
+  },
+  "components-quotehighlight": {
+    "props": {
+      "alignment": "'full' | 'left' | 'right' | optional | default='full' | described",
+      "attribution": "string | optional | no default | described",
+      "attributionTitle": "string | optional | no default | described",
+      "backgroundColor": "'light' | 'dark' | 'bright' | optional | default='light' | described",
+      "className": "string | optional | default='' | described",
+      "imageAlt": "string | optional | no default | described",
+      "imageSrc": "string | optional | no default | described",
+      "quote": "string | required | no default | described",
+      "variant": "'line' | 'image' | optional | default='line' | described"
+    },
+    "examples": [
+      "Line Variant",
+      "Line Variant Dark",
+      "Line Variant Bright",
+      "Line Variant With Portrait",
+      "Line Variant With Image",
+      "Left Aligned Quote",
+      "Left Aligned Quote With Portrait",
+      "Right Aligned Quote",
+      "Right Aligned Quote With Portrait",
+      "RTL Left Aligned (appears on right)",
+      "RTL Right Aligned (appears on left)",
+      "Image Variant",
+      "Image Variant Dark",
+      "Image Variant Bright",
+      "Without Attribution"
+    ]
+  },
+  "components-reading-column": {
+    "props": {
+      "children": "node | optional | no default | undescribed",
+      "contents": "node | optional | no default | described"
+    },
+    "examples": [
+      "Reading Column"
+    ]
+  },
+  "components-scrollcontainer": {
+    "props": {
+      "ariaLabel": "string | optional | no default | described",
+      "children": "node | required | no default | undescribed",
+      "className": "string | optional | default='' | undescribed",
+      "dir": "'ltr' | 'rtl' | 'auto' | optional | no default | described",
+      "height": "string | optional | default='auto' | undescribed",
+      "itemWidth": "string | optional | default='auto' | undescribed",
+      "labels": "{ ariaLabel: string, navigationLabel: string, scrollLeftLabel: string, scrollRightLabel: string } | optional | no default | described",
+      "lang": "string | optional | no default | described",
+      "minWidth": "string | optional | default='auto' | described",
+      "padding": "string | optional | default='0' | undescribed",
+      "showArrows": "bool | optional | default=false | undescribed",
+      "stepSize": "number | optional | default=null | undescribed",
+      "stretchItems": "bool | optional | default=false | described"
+    },
+    "examples": [
+      "Default",
+      "Custom Height",
+      "With Min Width",
+      "With Arrows",
+      "With Custom Step Size",
+      "Two hydrated on one page"
+    ]
+  },
+  "components-showmore": {
+    "props": {
+      "data": "custom[] | optional | default=[] | described",
+      "labelCollapsed": "string | optional | default='Show more' | described",
+      "labelOpen": "string | optional | default='Show less' | described",
+      "minHiddenLines": "number | optional | no default | described"
+    },
+    "examples": [
+      "ShowMore",
+      "Detached button",
+      "Two on one page",
+      "Only when long"
+    ]
+  },
+  "components-status-label": {
+    "props": {},
+    "examples": [
+      "Default",
+      "All statuses",
+      "Neutral (no modifier)",
+      "Service health",
+      "In a table",
+      "In a dense list",
+      "Right to left"
+    ]
+  },
+  "components-syndicated-search-display-modes": {
+    "props": {
+      "config": "{ searchEndpoint: string, taxonomyEndpoint: string, resultsPerPage: number, debounceDelay: number, minSearchLength: number, enableHashSync: bool | 'auto', defaultQuery: string, defaultSort: 'relevance' | 'newest' | 'oldest' | 'eventDateAsc' | 'eventDateDesc', yearField: 'published_at' | 'event_start' | 'display_date', showSearchBox: bool, showResultsCount: bool, showSearchTimer: bool, facets: false | 'sidebar' | 'horizontal', showFacets: bool, showSort: bool, showExport: bool, exportDefaultCount: number, exportContactUrl: string, exportFields: string[], exportEndpoint: string, facetsTarget: string, searchTarget: string, showActiveFilters: bool, showSearchMetrics: bool, showPager: bool, defaultFilters: { key: string, value: string }[], visibleFilters: string[], allowedTypes: string[], queryAppend: string, customFilters: array, customFacets: array, sharedControls: { id: string, visibleFilters: object, allowedTypes: object, customFacets: array, defaultFilters: array, defaultQuery: string }, displayMode: 'list' | 'card' | 'card-book', gridColumns: number, visibleTeaserFields: object, sourceFields: string[], ssrResults: object, requireImage: bool, onResults: func, analyticsRegionPrefix: string } | required | no default | described",
+      "dir": "'ltr' | 'rtl' | 'auto' | optional | no default | described",
+      "labels": "object | optional | no default | described",
+      "lang": "string | optional | no default | described"
+    },
+    "examples": [
+      "Card Display",
+      "Card Book Display",
+      "Hidden Teaser Fields",
+      "Book grid with mixed and missing artwork",
+      "Book grid with images explicitly hidden",
+      "Book grid when no results have artwork"
+    ]
+  },
+  "components-syndicated-search-downloads": {
+    "props": {
+      "config": "{ searchEndpoint: string, taxonomyEndpoint: string, resultsPerPage: number, debounceDelay: number, minSearchLength: number, enableHashSync: bool | 'auto', defaultQuery: string, defaultSort: 'relevance' | 'newest' | 'oldest' | 'eventDateAsc' | 'eventDateDesc', yearField: 'published_at' | 'event_start' | 'display_date', showSearchBox: bool, showResultsCount: bool, showSearchTimer: bool, facets: false | 'sidebar' | 'horizontal', showFacets: bool, showSort: bool, showExport: bool, exportDefaultCount: number, exportContactUrl: string, exportFields: string[], exportEndpoint: string, facetsTarget: string, searchTarget: string, showActiveFilters: bool, showSearchMetrics: bool, showPager: bool, defaultFilters: { key: string, value: string }[], visibleFilters: string[], allowedTypes: string[], queryAppend: string, customFilters: array, customFacets: array, sharedControls: { id: string, visibleFilters: object, allowedTypes: object, customFacets: array, defaultFilters: array, defaultQuery: string }, displayMode: 'list' | 'card' | 'card-book', gridColumns: number, visibleTeaserFields: object, sourceFields: string[], ssrResults: object, requireImage: bool, onResults: func, analyticsRegionPrefix: string } | required | no default | described",
+      "dir": "'ltr' | 'rtl' | 'auto' | optional | no default | described",
+      "labels": "object | optional | no default | described",
+      "lang": "string | optional | no default | described"
+    },
+    "examples": [
+      "Download Results",
+      "Download Modal",
+      "Download a result range",
+      "Choose fields",
+      "Choose number of results",
+      "Download active search",
+      "Download Without Pagination",
+      "Latest website results (live)",
+      "Local Drupal API",
+      "Restricted available fields"
+    ]
+  },
+  "components-syndicated-search-filters": {
+    "props": {
+      "config": "{ searchEndpoint: string, taxonomyEndpoint: string, resultsPerPage: number, debounceDelay: number, minSearchLength: number, enableHashSync: bool | 'auto', defaultQuery: string, defaultSort: 'relevance' | 'newest' | 'oldest' | 'eventDateAsc' | 'eventDateDesc', yearField: 'published_at' | 'event_start' | 'display_date', showSearchBox: bool, showResultsCount: bool, showSearchTimer: bool, facets: false | 'sidebar' | 'horizontal', showFacets: bool, showSort: bool, showExport: bool, exportDefaultCount: number, exportContactUrl: string, exportFields: string[], exportEndpoint: string, facetsTarget: string, searchTarget: string, showActiveFilters: bool, showSearchMetrics: bool, showPager: bool, defaultFilters: { key: string, value: string }[], visibleFilters: string[], allowedTypes: string[], queryAppend: string, customFilters: array, customFacets: array, sharedControls: { id: string, visibleFilters: object, allowedTypes: object, customFacets: array, defaultFilters: array, defaultQuery: string }, displayMode: 'list' | 'card' | 'card-book', gridColumns: number, visibleTeaserFields: object, sourceFields: string[], ssrResults: object, requireImage: bool, onResults: func, analyticsRegionPrefix: string } | required | no default | described",
+      "dir": "'ltr' | 'rtl' | 'auto' | optional | no default | described",
+      "labels": "object | optional | no default | described",
+      "lang": "string | optional | no default | described"
+    },
+    "examples": [
+      "Custom Filters",
+      "Custom Facets",
+      "Custom Filters And Facets",
+      "Allowed Types",
+      "Upcoming Events",
+      "Event Periods",
+      "Event Periods Keyboard",
+      "Event Periods Keyboard Rtl"
+    ]
+  },
+  "components-syndicated-search-integrations": {
+    "props": {
+      "config": "{ searchEndpoint: string, taxonomyEndpoint: string, resultsPerPage: number, debounceDelay: number, minSearchLength: number, enableHashSync: bool | 'auto', defaultQuery: string, defaultSort: 'relevance' | 'newest' | 'oldest' | 'eventDateAsc' | 'eventDateDesc', yearField: 'published_at' | 'event_start' | 'display_date', showSearchBox: bool, showResultsCount: bool, showSearchTimer: bool, facets: false | 'sidebar' | 'horizontal', showFacets: bool, showSort: bool, showExport: bool, exportDefaultCount: number, exportContactUrl: string, exportFields: string[], exportEndpoint: string, facetsTarget: string, searchTarget: string, showActiveFilters: bool, showSearchMetrics: bool, showPager: bool, defaultFilters: { key: string, value: string }[], visibleFilters: string[], allowedTypes: string[], queryAppend: string, customFilters: array, customFacets: array, sharedControls: { id: string, visibleFilters: object, allowedTypes: object, customFacets: array, defaultFilters: array, defaultQuery: string }, displayMode: 'list' | 'card' | 'card-book', gridColumns: number, visibleTeaserFields: object, sourceFields: string[], ssrResults: object, requireImage: bool, onResults: func, analyticsRegionPrefix: string } | required | no default | described",
+      "dir": "'ltr' | 'rtl' | 'auto' | optional | no default | described",
+      "labels": "object | optional | no default | described",
+      "lang": "string | optional | no default | described"
+    },
+    "examples": [
+      "Taxonomy Term Results",
+      "Custom Endpoint",
+      "Syndicated Publication Books",
+      "Syndicated Cards"
+    ]
+  },
+  "components-syndicated-search-layouts": {
+    "props": {
+      "config": "{ searchEndpoint: string, taxonomyEndpoint: string, resultsPerPage: number, debounceDelay: number, minSearchLength: number, enableHashSync: bool | 'auto', defaultQuery: string, defaultSort: 'relevance' | 'newest' | 'oldest' | 'eventDateAsc' | 'eventDateDesc', yearField: 'published_at' | 'event_start' | 'display_date', showSearchBox: bool, showResultsCount: bool, showSearchTimer: bool, facets: false | 'sidebar' | 'horizontal', showFacets: bool, showSort: bool, showExport: bool, exportDefaultCount: number, exportContactUrl: string, exportFields: string[], exportEndpoint: string, facetsTarget: string, searchTarget: string, showActiveFilters: bool, showSearchMetrics: bool, showPager: bool, defaultFilters: { key: string, value: string }[], visibleFilters: string[], allowedTypes: string[], queryAppend: string, customFilters: array, customFacets: array, sharedControls: { id: string, visibleFilters: object, allowedTypes: object, customFacets: array, defaultFilters: array, defaultQuery: string }, displayMode: 'list' | 'card' | 'card-book', gridColumns: number, visibleTeaserFields: object, sourceFields: string[], ssrResults: object, requireImage: bool, onResults: func, analyticsRegionPrefix: string } | required | no default | described",
+      "dir": "'ltr' | 'rtl' | 'auto' | optional | no default | described",
+      "labels": "object | optional | no default | described",
+      "lang": "string | optional | no default | described"
+    },
+    "examples": [
+      "Hidden Facets",
+      "Horizontal Facets",
+      "External Search Region",
+      "External Facets Region"
+    ]
+  },
+  "components-syndicated-search-toggles": {
+    "props": {
+      "config": "{ searchEndpoint: string, taxonomyEndpoint: string, resultsPerPage: number, debounceDelay: number, minSearchLength: number, enableHashSync: bool | 'auto', defaultQuery: string, defaultSort: 'relevance' | 'newest' | 'oldest' | 'eventDateAsc' | 'eventDateDesc', yearField: 'published_at' | 'event_start' | 'display_date', showSearchBox: bool, showResultsCount: bool, showSearchTimer: bool, facets: false | 'sidebar' | 'horizontal', showFacets: bool, showSort: bool, showExport: bool, exportDefaultCount: number, exportContactUrl: string, exportFields: string[], exportEndpoint: string, facetsTarget: string, searchTarget: string, showActiveFilters: bool, showSearchMetrics: bool, showPager: bool, defaultFilters: { key: string, value: string }[], visibleFilters: string[], allowedTypes: string[], queryAppend: string, customFilters: array, customFacets: array, sharedControls: { id: string, visibleFilters: object, allowedTypes: object, customFacets: array, defaultFilters: array, defaultQuery: string }, displayMode: 'list' | 'card' | 'card-book', gridColumns: number, visibleTeaserFields: object, sourceFields: string[], ssrResults: object, requireImage: bool, onResults: func, analyticsRegionPrefix: string } | required | no default | described",
+      "dir": "'ltr' | 'rtl' | 'auto' | optional | no default | described",
+      "labels": "object | optional | no default | described",
+      "lang": "string | optional | no default | described"
+    },
+    "examples": [
+      "No Pager",
+      "Debug Metrics"
+    ]
+  },
+  "components-syndicated-search": {
+    "props": {
+      "config": "{ searchEndpoint: string, taxonomyEndpoint: string, resultsPerPage: number, debounceDelay: number, minSearchLength: number, enableHashSync: bool | 'auto', defaultQuery: string, defaultSort: 'relevance' | 'newest' | 'oldest' | 'eventDateAsc' | 'eventDateDesc', yearField: 'published_at' | 'event_start' | 'display_date', showSearchBox: bool, showResultsCount: bool, showSearchTimer: bool, facets: false | 'sidebar' | 'horizontal', showFacets: bool, showSort: bool, showExport: bool, exportDefaultCount: number, exportContactUrl: string, exportFields: string[], exportEndpoint: string, facetsTarget: string, searchTarget: string, showActiveFilters: bool, showSearchMetrics: bool, showPager: bool, defaultFilters: { key: string, value: string }[], visibleFilters: string[], allowedTypes: string[], queryAppend: string, customFilters: array, customFacets: array, sharedControls: { id: string, visibleFilters: object, allowedTypes: object, customFacets: array, defaultFilters: array, defaultQuery: string }, displayMode: 'list' | 'card' | 'card-book', gridColumns: number, visibleTeaserFields: object, sourceFields: string[], ssrResults: object, requireImage: bool, onResults: func, analyticsRegionPrefix: string } | required | no default | described",
+      "dir": "'ltr' | 'rtl' | 'auto' | optional | no default | described",
+      "labels": "object | optional | no default | described",
+      "lang": "string | optional | no default | described"
+    },
+    "examples": [
+      "Default",
+      "Default Query",
+      "Minimal"
+    ]
+  },
+  "components-table": {
+    "props": {
+      "details": "string | optional | no default | described",
+      "responsive": "'auto' | 'stacked' | 'scroll' | optional | default='auto' | described",
+      "scrollLabel": "string | optional | default='Scrollable table' | described",
+      "size": "'large' | 'small' | optional | default='large' | described",
+      "tdtext": "string | optional | no default | described",
+      "text": "string | optional | no default | described",
+      "variant": "'default' | 'striped' | 'border' | optional | default='default' | described"
+    },
+    "examples": [
+      "Default table",
+      "Striped table",
+      "Bordered table",
+      "Small table",
+      "Small striped table",
+      "Stacked table (mobile-first)",
+      "Scrollable table",
+      "Bordered stacked table",
+      "Column alignment",
+      "Narrow scroll region",
+      "Data table"
+    ]
+  },
+  "components-tabs": {
+    "props": {
+      "analyticsRegion": "string | optional | no default | described",
+      "defaultOpen": "bool | optional | no default | described",
+      "dir": "'ltr' | 'rtl' | 'auto' | optional | no default | described",
+      "filterable": "bool | optional | default=false | described",
+      "labels": "{ filterPlaceholder: string, tabListLabel: string } | optional | no default | described",
+      "lang": "string | optional | no default | described",
+      "singleOpen": "bool | optional | default=false | described",
+      "stackOnMobile": "bool | optional | default=false | described",
+      "sticky": "bool | optional | default=false | described",
+      "tabdata": "{ text: string, text_id: string, data: string, is_default: string }[] | required | no default | described",
+      "variant": "'stacked' | 'horizontal' | optional | default='horizontal' | described"
+    },
+    "examples": [
+      "Tabs",
+      "Tabs With Default",
+      "Stacked Tabs",
+      "Stacked with default open",
+      "Stacked with deep link",
+      "Stacked as FAQ",
+      "Stacked single-open",
+      "Stacked FAQ accordion",
+      "Centred Group",
+      "Scrollable Group",
+      "Stacks On Mobile",
+      "Narrow Container",
+      "Oversized Label",
+      "Offscreen Default",
+      "Horizontal Deep Link",
+      "Independent Groups",
+      "Right To Left",
+      "Sticky within section"
+    ]
+  },
+  "components-tag": {
+    "props": {},
+    "examples": [
+      "Default",
+      "As link",
+      "Secondary",
+      "Outline",
+      "Accent",
+      "Subtle",
+      "Badges and format tags",
+      "All variants",
+      "Tag container",
+      "In context",
+      "Reflow and languages"
+    ]
+  },
+  "components-typography-links": {
+    "props": {
+      "variant": "unknown | optional | default='default' | undescribed"
+    },
+    "examples": [
+      "Links"
+    ]
+  },
+  "components-typography-typography-integration-example": {
+    "props": {},
+    "examples": [
+      "Default"
+    ]
+  },
+  "components-typography": {
+    "props": {},
+    "examples": [
+      "Typography Heading",
+      "Typography Paragraph",
+      "Typography Mark",
+      "Typography Small",
+      "Typography Code",
+      "Typography Abbreviation",
+      "Typography Blockquote",
+      "Typography Quotation",
+      "Typography Cite",
+      "Typography List Ordered",
+      "Typography List Unordered",
+      "Typography List Description",
+      "Typography Details",
+      "Typography Details Baseline",
+      "Accordion",
+      "Accordion (flush)",
+      "Typography Figcaption",
+      "Typography Hr"
+    ]
+  },
+  "components-user-feedback": {
+    "props": {
+      "className": "string | optional | no default | described",
+      "dir": "'ltr' | 'rtl' | 'auto' | optional | no default | described",
+      "feedbackUrl": "string | optional | default='https://www.undrr.org/contact/website-feedback' | described",
+      "labels": "{ question: string, yes: string, no: string, reportIssue: string, confirmationBeforeLink: string, confirmationSeparator: string, confirmationLink: string, confirmationAfterLink: string } | optional | no default | described",
+      "lang": "string | optional | no default | described",
+      "onResponse": "func | optional | no default | described"
+    },
+    "examples": [
+      "Default",
+      "Arabic Confirmation",
+      "Long Labels"
+    ]
+  },
+  "components-utility-css": {
+    "props": {},
+    "examples": [
+      "Screen reader only (.mg-u-sr-only)",
+      "Text wrapping utilities",
+      "Comma separator (.mg-u-comma-between)",
+      "Background color utilities",
+      "Text color utilities",
+      "Responsive display utilities",
+      "Layout utilities",
+      "Combined utilities example",
+      "Flex utilities",
+      "Push alignment utilities"
+    ]
+  },
+  "design-decisions-container": {
+    "props": {
+      "children": "node | optional | no default | described",
+      "className": "string | optional | no default | described"
+    },
+    "examples": [
+      "Default",
+      "Padded Variant"
+    ]
+  },
+  "design-decisions-grid-layout": {
+    "props": {},
+    "examples": [
+      "Default Grid",
+      "Article layout variant"
+    ]
+  },
+  "design-decisions-language-boundaries": {
+    "props": {},
+    "examples": [
+      "Arabic page with a Latin island",
+      "Latin page with an Arabic island",
+      "Switching language inside component chrome"
+    ]
+  },
+  "example-boilerplate-component": {
+    "props": {
+      "children": "node | required | no default | described",
+      "href": "string | optional | no default | described",
+      "title": "string | required | no default | described",
+      "variant": "'primary' | 'secondary' | optional | default='primary' | described"
+    },
+    "examples": [
+      "Default",
+      "With Link",
+      "Secondary"
+    ]
+  },
+  "example-form-validation": {
+    "props": {},
+    "examples": [
+      "Default"
+    ]
+  },
+  "example-newsletter-promotion": {
+    "props": {},
+    "examples": [
+      "With Preferences",
+      "Service Error",
+      "After Article",
+      "Validation and confirmation"
+    ]
+  },
+  "example-page-template-example": {
+    "props": {},
+    "examples": [
+      "Default",
+      "Component laboratory",
+      "Delta Resilience"
+    ]
+  },
+  "example-typescript-component": {
+    "props": {
+      "label": "unknown | required | no default | described",
+      "onClick": "unknown | optional | no default | described",
+      "type": "unknown | required | no default | described",
+      "width": "unknown | required | no default | described"
+    },
+    "examples": [
+      "Submit",
+      "Check"
+    ]
+  },
+  "patterns-article-story": {
+    "props": {
+      "heroImage": "'main' | 'alternate' | 'none' | optional | default='main' | described",
+      "imageProminence": "'large' | 'compact' | 'split' | optional | default='large' | described",
+      "locale": "string | optional | default='english' | described"
+    },
+    "examples": [
+      "Large, prominent image",
+      "Compact image in the reading column",
+      "No image on the article page",
+      "Different image than the teaser",
+      "Split hero (text and image side by side)"
+    ]
+  },
+  "patterns-collection-page": {
+    "props": {
+      "collection": "'wildfire' | 'jasper' | 'japan' | 'planned' | 'empty' | optional | default='wildfire' | described",
+      "dir": "'ltr' | 'rtl' | optional | no default | described",
+      "id": "string | optional | no default | described",
+      "itemCount": "number | optional | no default | described",
+      "syncUrl": "bool | optional | default=true | described"
+    },
+    "examples": [
+      "Collection page",
+      "Short description",
+      "Long description",
+      "No summary",
+      "No items yet"
+    ]
+  },
+  "patterns-content-card": {
+    "props": {
+      "className": "string | optional | no default | undescribed",
+      "content": "{ type: 'article' | 'publication' | 'resource' | 'event' | 'organization' | 'collection' | 'opportunity' | 'reference-entry' | 'commitment' | 'landing-page' | 'person', profile: string, title: string, shortTitle: string, link: string, image: { src: string, alt: string, kind: 'photo' | 'cover' | 'logo' }, summary: string, labels: custom[], typeLabel: string, published: custom, event: { start: custom, end: custom, timeZone: string, location: string, label: string }, resourceType: custom | custom[], location: custom | custom[], delivery: string, identifier: string, sources: string[], authors: string[], source: string, organizationType: custom, scope: string, status: custom, deadline: custom, freshness: { kind: 'updated' | 'created', date: custom }, classification: custom[], topics: custom[], session: { bucket: string, types: custom[], schedule: custom[], exhibitions: custom[], room: string, format: string }, language: string, lang: string, dir: 'ltr' | 'rtl' | 'auto' } | required | no default | described",
+      "headingLevel": "2 | 3 | 4 | 5 | 6 | optional | default=3 | described",
+      "layout": "'vertical' | 'book' | optional | default='vertical' | described"
+    },
+    "examples": [
+      "News",
+      "News book",
+      "Commentary",
+      "Commentary book",
+      "Publication",
+      "Publication book",
+      "Resource",
+      "Resource book",
+      "Event",
+      "Event book",
+      "Programme session",
+      "Programme session book",
+      "Organization",
+      "Organization book",
+      "Collection",
+      "Collection book",
+      "Job",
+      "Job book",
+      "Hazard profile",
+      "Hazard profile book",
+      "Commitment",
+      "Commitment book",
+      "Landing page",
+      "Landing page book",
+      "Coordination platform",
+      "Coordination platform book",
+      "Definition",
+      "Definition book",
+      "Person",
+      "Person book",
+      "All profiles",
+      "All profiles, book layout",
+      "Missing media",
+      "Mixed languages",
+      "Unlabelled",
+      "Resource with a complete cover",
+      "Decision dates and publication dates",
+      "Decision dates and publication dates, book layout",
+      "Open, closed and past dates",
+      "Event with publication date",
+      "Job with publication date"
+    ]
+  },
+  "patterns-content-hub": {
+    "props": {
+      "headerSurface": "'primary' | 'secondary' | 'tertiary' | 'detached' | optional | default='primary' | described",
+      "heroSource": "'header' | 'page' | optional | default='header' | described",
+      "initialPage": "'landing' | 'overview' | 'about' | 'indicators' | 'reporting' | 'reports' | 'data' | 'how-to-report' | 'validate-data' | optional | default='overview' | described",
+      "locale": "string | optional | default='english' | described",
+      "pageHeroMedia": "'image' | 'video' | optional | default='image' | described",
+      "routeCards": "'vertical' | 'icon' | optional | default='icon' | described",
+      "routePrefix": "string | optional | no default | described",
+      "showOnThisPage": "bool | optional | default=true | described",
+      "withHero": "bool | optional | default=false | described"
+    },
+    "examples": [
+      "Hub home",
+      "Hub detail with a hero",
+      "Hub detail",
+      "Deeper page",
+      "Hub detail with a detached header",
+      "Hub detail with the secondary header surface"
+    ]
+  },
+  "patterns-content-teaser": {
+    "props": {
+      "className": "string | optional | no default | undescribed",
+      "content": "{ type: 'article' | 'publication' | 'resource' | 'event' | 'organization' | 'collection' | 'opportunity' | 'reference-entry' | 'commitment' | 'landing-page' | 'person', profile: string, title: string, shortTitle: string, link: string, image: { src: string, alt: string, kind: 'photo' | 'cover' | 'logo' }, summary: string, labels: custom[], typeLabel: string, published: custom, event: { start: custom, end: custom, timeZone: string, location: string, label: string }, resourceType: custom | custom[], location: custom | custom[], delivery: string, identifier: string, sources: string[], authors: string[], source: string, organizationType: custom, scope: string, status: custom, deadline: custom, freshness: { kind: 'updated' | 'created', date: custom }, classification: custom[], topics: custom[], session: { bucket: string, types: custom[], schedule: custom[], exhibitions: custom[], room: string, format: string }, language: string, lang: string, dir: 'ltr' | 'rtl' | 'auto' } | required | no default | described",
+      "headingLevel": "2 | 3 | 4 | 5 | 6 | optional | default=3 | described"
+    },
+    "examples": [
+      "News",
+      "Short Update",
+      "Publication",
+      "Resource",
+      "Event",
+      "Event with times and time zone",
+      "Blog",
+      "Organization",
+      "Collection",
+      "Vacancy",
+      "Hazard profile",
+      "Conference session",
+      "Commitment",
+      "Landing page",
+      "National platform",
+      "Terminology",
+      "Person",
+      "Collection created",
+      "Closed vacancy",
+      "Minimum Content",
+      "Missing Covers",
+      "Arabic",
+      "Mixed Content",
+      "Missing optional fields"
+    ]
+  },
+  "patterns-landing-pages": {
+    "props": {
+      "archetype": "'topic' | 'report' | 'index' | optional | default='topic' | described",
+      "id": "string | optional | no default | described",
+      "locale": "string | optional | default='english' | described"
+    },
+    "examples": [
+      "Report landing page",
+      "Report landing with theme defaults",
+      "Report landing with scoped branding"
+    ]
+  },
+  "patterns-page-actions": {
+    "props": {},
+    "examples": [
+      "Page Actions",
+      "Share and cite",
+      "Share only",
+      "Cite only"
+    ]
+  },
+  "patterns-publication-record": {
+    "props": {
+      "children": "node | optional | no default | described",
+      "dir": "'ltr' | 'rtl' | optional | default='ltr' | undescribed",
+      "labels": "Record<string, string> | required | no default | described",
+      "lang": "string | optional | default='en' | undescribed",
+      "record": "object | required | no default | described"
+    },
+    "examples": [
+      "Experimental publication record",
+      "No cover",
+      "No public file",
+      "Original / local backup",
+      "Long content"
+    ]
+  },
+  "patterns-rich-content": {
+    "props": {
+      "dir": "'ltr' | 'rtl' | optional | default='ltr' | described"
+    },
+    "examples": [
+      "Editorial",
+      "Boundaries"
+    ]
+  }
+}

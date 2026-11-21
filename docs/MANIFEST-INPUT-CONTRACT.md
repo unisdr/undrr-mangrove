@@ -13,8 +13,20 @@ Storybook build.
 
 ## Storybook 11 (envelope `v: 1`)
 
-Storybook 11 enables its docgen server by default. `manifests/components.json`
-then holds `$ref` pointers into `services/core/docgen/`,
+Mangrove builds with Storybook 11's docgen server **off** for now
+(`features.docgenServer` in `.storybook/main.js`), so the site and catalogue
+use builder docgen and the `v: 0` envelope, as on Storybook 10. Setting
+`MANGROVE_DOCGEN_SERVER=true` builds with it on; CI does that in a separate
+build to preview the switch (unisdr/undrr-mangrove#1511). The adapter
+supports both envelopes, so the switch needs no pipeline change.
+
+`yarn check:catalogue-baseline` compares every published component's props
+(type, optionality, default, description present) and example names with
+`scripts/ai-manifest/catalogue-baseline.json`, and fails on any difference.
+`validate-manifest` alone accepted a well-formed catalogue whose props had
+degraded, so intended changes now update the baseline in the same PR.
+
+With the docgen server on, `manifests/components.json` holds `$ref` pointers into `services/core/docgen/`,
 `services/core/story-docs/` and `services/addon-docs/mdx/`, which the adapter
 resolves from disk (relative to the manifest, with cycle detection and strict
 JSON-pointer handling) before validation. Both envelopes produce the same
