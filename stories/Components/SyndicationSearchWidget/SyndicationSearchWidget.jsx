@@ -86,9 +86,11 @@ export function buildInitialSearchQuery(userConfig = {}) {
  * SyndicationSearchWidget component.
  * Main entry point for the UNDRR Syndication Search Widget.
  *
- * @param {Object} props - Component props
- * @param {Object} props.config - Widget configuration
- * @param {Object} [props.labels] - UI label overrides; merged with DEFAULT_LABELS
+ * @param {Object} props                  Component props
+ * @param {Object} props.config           Widget configuration, merged with DEFAULT_CONFIG; see the PropTypes for its fields
+ * @param {Object} [props.labels]         UI label overrides; merged with DEFAULT_LABELS
+ * @param {string} [props.lang]           UI language tag; selects the built-in catalogue, with English fallback
+ * @param {'ltr'|'rtl'|'auto'} [props.dir] Explicit text direction; otherwise known catalogue languages select their direction
  */
 export function SyndicationSearchWidget({ config, labels, lang, dir }) {
   // The widget root, attached by the inner component. Target selectors and

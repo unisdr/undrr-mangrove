@@ -792,6 +792,35 @@ function QuizQuestionView({
  * The answer key is optional in the props. Without a usable key no answer is
  * marked correct, for every type: a `true_false` question with no `answer`
  * has no key.
+ *
+ * Defaults, applied inside the component: `type` is `multiple_choice`,
+ * `prompt` is empty, `options`, `expected` and `blanks` are empty lists,
+ * `multiple`, `caseSensitive` and `showAnswer` are `false`, and `showNumber`
+ * is `true`.
+ *
+ * @param {Object} props
+ * @param {'multiple_choice'|'true_false'|'text'|'fill_blank'} [props.type] Question type. The values match the Drupal grader types
+ * @param {string} props.prompt                         The question, as plain text. Line breaks are kept. For `fill_blank`, write `[1]`, `[2]` where each blank belongs in the sentence; a repeated marker or one with no blank is left out
+ * @param {Array<{value: string|number, label?: string, correct?: boolean}>} [props.options] Options for `multiple_choice`: a `value`, a visible `label` and `correct: true` on each right answer. Options are graded by position, so a repeated or empty `value` still works; `onCheck` reports the values as written, so keep them unique if you read them
+ * @param {boolean} [props.multiple]                    `multiple_choice` only: several options are correct, so the question uses checkboxes and shows the "Select all that apply." instruction
+ * @param {boolean} [props.answer]                      `true_false` only: whether the statement is true. Left out, the question has no key and no answer is marked correct. The True and False labels come from the language catalogue
+ * @param {Array<string>} [props.expected]              `text` only: every accepted answer
+ * @param {boolean} [props.caseSensitive]               `text` only: match letter case exactly. Whitespace, Unicode compatibility forms (NFKC, so full-width digits match) and zero-width characters are always normalised
+ * @param {Array<{label?: string, expected?: Array<string>, caseSensitive?: boolean}>} [props.blanks] `fill_blank` only: one entry per blank, in order, with its accepted answers, optional case sensitivity and an optional label used as the input's accessible name. With no blanks the question has no check button and is not counted
+ * @param {string} [props.explanation]                  Optional plain-text explanation, to say why the answer is right. Shown with the "Correct" feedback, and with "Here is the answer." after "Show answer"
+ * @param {string} [props.hint]                         Optional plain-text hint shown with "Not correct yet. Try again." after an incorrect attempt. Never shown before an attempt or for an empty one. Line breaks are kept
+ * @param {boolean} [props.showAnswer]                  Offer a "Show answer" button beside "Check answer" from the first incorrect attempt until the question is answered correctly, revealed or started again. It selects the correct options, or fills in the first accepted answer of each field, locks the question in the `revealed` state and shows the explanation. Never offered for a question with no usable answer key
+ * @param {React.ReactNode} [props.media]               Optional image or figure that belongs to the question, shown between the prompt and the answer controls
+ * @param {number} [props.number]                       Position of the question. Left out, it is counted from the questions that share the page or the nearest `data-mg-quiz` wrapper
+ * @param {number} [props.total]                        Number of questions. Left out, it is counted in the same way as `number`
+ * @param {boolean} [props.showNumber]                  Show "Question 2 of 5" above the prompt. A question on its own is not numbered unless `number` is passed
+ * @param {string} [props.questionId]                   Optional stable identifier for the question, for consumers that tie a result to a question. Reflected as `data-mg-quiz-id` on the root and passed to `onCheck` and `onReveal`. DOM ids and radio names do not use it, so the same question can appear twice on a page
+ * @param {string} [props.lang]                         Language of the built-in labels (en, ar, es, fr, ja, ru, zh), including regional tags
+ * @param {'ltr'|'rtl'|'auto'} [props.dir]              Explicit text direction. Arabic selects right-to-left without it
+ * @param {{checkAnswer?: string, showAnswer?: string, correct?: string, incorrectMessage?: string, revealedMessage?: string, emptyChoice?: string, emptyText?: string, questionNumber?: string, selectAll?: string, fillBlankLegend?: string, blankLabel?: string, trueLabel?: string, falseLabel?: string}} [props.labels] Overrides for individual built-in labels
+ * @param {Function} [props.onCheck]                    Called after each graded attempt with `{ correct, answer }`, and `questionId` when the question has one. An empty attempt is not graded and does not call it. A correct answer locks the question, so it is the last call until the quiz is started again. "Show answer" is not an attempt and does not call it
+ * @param {Function} [props.onReveal]                   Called when the visitor selects "Show answer", with an object that carries `questionId` when the question has one and is otherwise empty. The question is then locked, so no call to `onCheck` follows until the quiz is started again
+ * @param {string} [props.className]                    Additional CSS class names for the root
  */
 export function QuizQuestion({ serverFallback, ...props }) {
   // Set by `fromElement` for a hydrated question, never by a React consumer.

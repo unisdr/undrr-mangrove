@@ -186,12 +186,14 @@ const QRCodeModal = ({
 };
 
 /**
- *  ShareButtons is a Component that renders buttons to share on platforms like twitter, facebook, linkedin and others
- *  @param {Object} labels - should contain language specific values like:
- *                           mainLabel: "SHARE THIS "
- *                           onCopy: "Copied"
- *  @param {string} SharingSubject - subject of the Email that will be prefilled to the user
- *  @param {string} SharingTextBody - body of the Email that will be prefilled and appended with LINK to the site
+ * ShareButtons is a Component that renders buttons to share on platforms like twitter, facebook, linkedin and others
+ *
+ * @param {Object} props
+ * @param {string} [props.lang]                 UI language tag; selects the built-in catalogue, with English fallback
+ * @param {'ltr'|'rtl'|'auto'} [props.dir]      Explicit text direction; otherwise known catalogue languages select their direction
+ * @param {{mainLabel?: string, onCopy?: string, qrCodeTitle?: string, qrCodeDescription?: string, closeModal?: string, copyImage?: string, downloadImage?: string, closeMessage?: string, shareUsingDevice?: string, shareOnLinkedIn?: string, shareOnFacebook?: string, shareOnX?: string, shareViaEmail?: string, generateQRCode?: string, copyToClipboard?: string}} [props.labels] Language-specific label overrides, such as `mainLabel: "SHARE THIS "` and `onCopy: "Copied"`; omitted keys use the selected catalogue, then English
+ * @param {string} [props.SharingSubject]       Subject of the email that will be prefilled for the user; also the Web Share title
+ * @param {string} [props.SharingTextBody]      Body of the email that will be prefilled and appended with the link to the site
  */
 const ShareButtons = ({
   lang,

@@ -16,13 +16,15 @@ export { DEFAULT_ON_THIS_PAGE_LABELS } from './_labels';
  * This is not intended as a production React component.
  *
  * @param {Object} props
- * @param {string} [props.depth]            Max heading level to scan ("2", "3", "4")
- * @param {string} [props.contentSelector]  CSS selector for heading scan scope
- * @param {object} [props.labels]           UI label overrides
- * @param {Array<{href: string, text: string}>} [props.items] Explicit nav items (skips auto-detect)
- * @param {string} [props.ctaHref]          CTA link URL
- * @param {string} [props.ctaText]          CTA link text
- * @param {string} [props.analyticsRegion]  Click-tracking region; defaults to "on-this-page"
+ * @param {string} [props.depth='2']                               Max heading level to scan ("2", "3", "4")
+ * @param {string} [props.contentSelector=null]                    CSS selector for heading scan scope
+ * @param {string} [props.lang]                                    UI language tag; selects the built-in catalogue, with English fallback
+ * @param {'ltr'|'rtl'|'auto'} [props.dir]                         Explicit text direction; otherwise known catalogue languages select their direction
+ * @param {{label?: string}} [props.labels]                        UI label overrides
+ * @param {Array<{href: string, text: string}>} [props.items=null] Explicit nav items (skips auto-detect)
+ * @param {string} [props.ctaHref=null]                            CTA link URL
+ * @param {string} [props.ctaText=null]                            CTA link text
+ * @param {string} [props.analyticsRegion]                         Click-tracking region; defaults to "on-this-page"
  */
 export default function OnThisPageNav({
   depth = '2',

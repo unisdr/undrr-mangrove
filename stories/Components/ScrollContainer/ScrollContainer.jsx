@@ -49,7 +49,24 @@ ArrowButtons.propTypes = {
   scrollRightLabel: PropTypes.string,
 };
 
-// Scroll container component
+/**
+ * Scroll container component.
+ *
+ * @param {Object} props
+ * @param {React.ReactNode} props.children          Items to scroll; each is wrapped in an item wrapper
+ * @param {string} [props.height='auto']            Custom height for the container (CSS value)
+ * @param {string} [props.minWidth='auto']          Minimum width of the scroll container, e.g. `'320px'`. A value wider than the parent makes the container overflow it; to widen the scrollable track instead, use `itemWidth`
+ * @param {string} [props.itemWidth='auto']         Width for individual items within the container (CSS value)
+ * @param {string} [props.padding='0']              Padding inside the container (CSS value)
+ * @param {string} [props.className='']             Additional CSS class names
+ * @param {boolean} [props.showArrows=false]        Whether to show navigation arrows
+ * @param {boolean} [props.stretchItems=false]      Stretch item wrappers and their direct children to a shared row height
+ * @param {number} [props.stepSize=null]            Custom step size for arrow navigation, in pixels; defaults to half the container width
+ * @param {string} [props.ariaLabel]                Accessible name for this scroll container's arrow navigation. Use a unique value when more than one container appears on a page
+ * @param {string} [props.lang]                     HTML language tag. Built-in labels support en, ar, es, fr, ja, ru and zh
+ * @param {'ltr'|'rtl'|'auto'} [props.dir]          Explicit text direction; otherwise known catalogue languages select their direction
+ * @param {{ariaLabel?: string, navigationLabel?: string, scrollLeftLabel?: string, scrollRightLabel?: string}} [props.labels] Label overrides; `navigationLabel` accepts a `{label}` token for `ariaLabel`
+ */
 const ScrollContainer = ({
   children,
   height = 'auto',
@@ -360,4 +377,9 @@ ScrollContainer.propTypes = {
   }),
 };
 
-export default React.memo(ScrollContainer);
+// The cast is for Storybook's docgen server: without React's type
+// definitions, `React.memo` returns `any` and hides the props documented
+// above. It has no effect at run time.
+export default /** @type {typeof ScrollContainer} */ (
+  React.memo(ScrollContainer)
+);

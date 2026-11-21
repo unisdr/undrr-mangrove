@@ -9,8 +9,12 @@ import PropTypes from 'prop-types';
  * renders a button that removes a filter.
  *
  * @param {Object} props
- * @param {string} props.label  Visible text for the chip
- * @param {string} [props.Type='Default']  Variant: 'Default' (link) or 'With X' (dismiss button)
+ * @param {string} props.label                        Visible text for the chip
+ * @param {'Default'|'With X'} [props.Type='Default'] Variant: 'Default' (link) or 'With X' (dismiss button)
+ * @param {string} [props.href='#']                   Destination for the default link variant
+ * @param {Function} [props.onDismiss]                Called when the dismissible variant is activated
+ * @param {string} [props.removeLabel]                Localised accessible name for the dismissible variant; defaults to "Remove filter: {label}"
+ * @param {string} [props.className]                  Additional classes to compose with the Mangrove chip classes
  */
 export function Chips({
   label,
