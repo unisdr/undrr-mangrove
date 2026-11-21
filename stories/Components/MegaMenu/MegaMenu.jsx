@@ -318,6 +318,13 @@ MegaMenu.propTypes = {
   enableSiteSearch: PropTypes.bool,
   /** Base URL for full-site search (default: '/search', which routes to syndicated search #query=). */
   searchUrl: PropTypes.string,
+  /**
+   * Called with the link's `href` when a visitor follows a quick filter
+   * result (including the full-site search link), in place of the browser's
+   * own navigation. Modified clicks still open normally. For client-side
+   * routers.
+   */
+  onNavigate: PropTypes.func,
   /** UI language tag; selects the built-in catalogue, with English fallback. */
   lang: PropTypes.string,
   /** Explicit text direction; otherwise known catalogue languages select their direction. */

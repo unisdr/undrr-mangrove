@@ -432,6 +432,8 @@ for consumers needing the same strings outside React.
 
 ## Changelog
 
+- **2.0.1**, 2026-11-21 ([#1511](https://github.com/unisdr/undrr-mangrove/issues/1511)): `MegaMenu.propTypes` now declares `onNavigate` (`PropTypes.func`). The prop already worked; React 18 now warns when it is not a function. No visual or behavioural change.
+
 - **2.0.0**, 2026-11-20 ([#1499](https://github.com/unisdr/undrr-mangrove/issues/1499)): **Breaking:** the desktop menu now follows the WAI-ARIA disclosure navigation pattern; see [Design principles](#design-principles).
   - Panels open and close only when their top-level button is clicked or activated with Enter or Space. They no longer open on hover or focus, or close when the pointer leaves. Hovering a top-level item shows a light tint and a faint underline bar instead, and items that open a panel carry a chevron so visitors can tell them from items that navigate. Focus moving out of the navigation, Escape and an outside click close them. `hoverDelay`, `delay`, `data-hover-delay` and `data-delay` are still accepted but ignored.
   - Every top-level item with a panel is a button, including sections with a landing page (`bannerButton.url`). The landing page is offered inside the panel: the banner button, a leading link in the destinations when there is no banner, or a link after banner-only copy. Sections without a panel stay links.
