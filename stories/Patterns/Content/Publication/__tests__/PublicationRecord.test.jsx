@@ -4,8 +4,19 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { axe } from 'jest-axe';
 import { PublicationRecord } from '../PublicationRecord';
 import { projectRecord } from '../recordProjection';
-import { RECORD_LABELS, exampleRecord, exampleBody } from '../recordFixtures';
-import meta, { LongCopy } from '../PublicationRecord.stories';
+import {
+  RECORD_LABELS,
+  exampleRecord,
+  exampleBody,
+  severalFiles,
+} from '../recordFixtures';
+import meta, * as stories from '../PublicationRecord.stories';
+import { checkArticleGridGeometry } from '../../../../Atom/Layout/Grid/gridGeometryChecks';
+
+const { LongCopy } = stories;
+
+// The stories import browser play checks; Jest renders the stories only.
+jest.mock('storybook/test', () => ({}));
 
 const labels = RECORD_LABELS.english;
 const show = record =>
@@ -15,9 +26,10 @@ const show = record =>
     </PublicationRecord>
   );
 
-test('identity roles and early access retain structure and known precision', () => {
+test('identity roles and the files section retain structure and known precision', () => {
   const { container } = show({
     ...exampleRecord,
+    resources: severalFiles,
     publicationYear: 2026,
     details: [{ label: 'Policy validity period', value: '2025–2030' }],
   });
@@ -30,18 +42,29 @@ test('identity roles and early access retain structure and known precision', () 
     '/images/teaser-publication-cover.svg'
   );
   expect(container.querySelector('main img')).toHaveAttribute('alt', '');
-  expect(container.querySelectorAll('time')).toHaveLength(1);
+  // Publication year plus the separate "Added" date of the hosted copies.
+  expect(
+    [...container.querySelectorAll('time')].map(node => node.dateTime)
+  ).toEqual(['2026', '2026-03-15']);
   expect(screen.getByText('2025–2030')).toBeInTheDocument();
-  const access = screen.getByRole('region', { name: labels.access });
+  // Several files: the Description comes first, then the files section,
+  // reached from the header's "Files (3)" jump link.
+  const files = screen.getByRole('region', { name: labels.filesHeading });
   const description = screen.getByRole('region', { name: labels.description });
-  expect(access.compareDocumentPosition(description)).toBe(
+  expect(description.compareDocumentPosition(files)).toBe(
     Node.DOCUMENT_POSITION_FOLLOWING
   );
-  expect(
-    screen.getByRole('link', {
-      name: 'Lire Comprendre les risques de catastrophe',
-    })
-  ).toHaveAttribute('hreflang', 'fr');
+  const jump = screen.getByRole('link', { name: 'Files (3)' });
+  expect(jump.closest('header')).not.toBeNull();
+  expect(jump).toHaveAttribute('data-vf-analytics-label', 'nav_files_jump');
+  expect(container.querySelector(jump.getAttribute('href'))).toBe(
+    screen.getByRole('heading', { name: labels.filesHeading, level: 2 })
+  );
+  const french = screen.getByRole('link', {
+    name: 'Access Comprendre les risques de catastrophe : résumé (opens in new tab)',
+  });
+  expect(french).toHaveAttribute('hreflang', 'fr');
+  expect(french.querySelector('[lang="fr"]')).not.toBeNull();
   expect(container.querySelector('.mg-content')).toHaveAttribute('lang', 'en');
 });
 
@@ -84,10 +107,9 @@ test('safe primary and backup keep distinct links; metadata is only supplied inf
     title: 'Work',
     resources: [
       {
-        label: 'Read original',
+        label: 'Original',
         href: 'https://example.org/work',
         backup: {
-          label: 'Lire la copie',
           href: '/backup.html',
           labelLang: 'fr',
           lang: 'fr',
@@ -99,30 +121,33 @@ test('safe primary and backup keep distinct links; metadata is only supplied inf
     identifiers: ['10.opaque/not-guessed'],
     publicationYear: 'yesterday',
   });
-  expect(screen.getByRole('link', { name: 'Read original' })).toHaveAttribute(
-    'href',
-    'https://example.org/work'
-  );
-  expect(screen.getByRole('link', { name: 'Lire la copie' })).toHaveAttribute(
-    'href',
-    '/backup.html'
-  );
-  expect(screen.getByRole('link', { name: 'Lire la copie' })).toHaveAttribute(
-    'hreflang',
-    'fr'
-  );
-  expect(screen.getByRole('link', { name: 'Lire la copie' })).toHaveAttribute(
-    'lang',
-    'fr'
-  );
+  const original = screen.getByRole('link', {
+    name: 'Access Original (opens in new tab)',
+  });
+  expect(original).toHaveAttribute('href', 'https://example.org/work');
+  expect(original).not.toHaveAttribute('hreflang');
+  const backup = screen.getByRole('link', {
+    // The hidden title can add a space before the colon in the computed name.
+    name: new RegExp(`^${labels.backupLink} ?: Original$`),
+  });
+  expect(backup).toHaveAttribute('href', '/backup.html');
+  expect(backup).toHaveAttribute('hreflang', 'fr');
+  // One file: the single access row, language first.
   expect(
-    screen.getByRole('link', { name: 'Read original' })
-  ).not.toHaveAttribute('hreflang');
+    container.querySelector('.mg-publication-record__facts').textContent
+  ).toBe('Français · HTML');
+  expect(
+    container.querySelector('.mg-publication-record__facts [lang]')
+  ).toHaveAttribute('lang', 'fr');
   expect(container.querySelector('time')).toBeNull();
-  expect(screen.getByRole('main').querySelectorAll('a')).toHaveLength(3); // category + primary + backup, never a guessed DOI
-  expect(
-    screen.getByRole('region', { name: labels.access }).textContent
-  ).not.toMatch(/PDF|MB|available|last checked/);
+  // Category + "Files (1)" jump + primary + backup, never a guessed DOI.
+  expect(screen.getByRole('main').querySelectorAll('a')).toHaveLength(4);
+  // No invented file facts or status. The backup explanation is fixed copy
+  // ("slow or unavailable"), so it is left out of the status check.
+  const access = screen.getByRole('region', { name: labels.filesHeading });
+  const status = access.cloneNode(true);
+  status.querySelectorAll('details').forEach(node => node.remove());
+  expect(status.textContent).not.toMatch(/PDF|MB|available|last checked/i);
 });
 
 test('supplied citation is verbatim text, never generated HTML or preview identity', () => {
@@ -163,7 +188,9 @@ test('server output has usable native content/links and unique instance anchors 
       expect(document.querySelector(link.getAttribute('href'))).not.toBeNull()
     );
   expect(
-    document.querySelector('a[href="/publication-record/reading-en.html"]')
+    document.querySelector(
+      'a[href="/publication-record/reading-en-backup.html"]'
+    )
   ).not.toBeNull();
 });
 
@@ -174,7 +201,9 @@ test.each(Object.keys(RECORD_LABELS))(
       meta.render({ record: exampleRecord }, { globals: { locale } })
     );
     expect(
-      screen.getByRole('heading', { name: RECORD_LABELS[locale].access })
+      screen.getByRole('heading', {
+        name: RECORD_LABELS[locale].filesHeading,
+      })
     ).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 1 })).toHaveAttribute(
       'lang',
@@ -229,4 +258,17 @@ test('invalid optional destinations remain text or disappear without leaking uns
   expect(record.sources).toEqual([{ label: 'Known organization', href: null }]);
   expect(record.related).toEqual([]);
   expect(() => projectRecord({ title: ' ' })).toThrow(/approved title/);
+});
+
+test('every record story runs the article grid check (#1504)', () => {
+  // A story-level play replaces the meta play, so it must wrap the check.
+  expect(meta.play).toBe(checkArticleGridGeometry);
+  const named = Object.entries(stories).filter(([name]) => name !== 'default');
+  expect(named.length).toBeGreaterThan(8);
+  named.forEach(([name, story]) => {
+    expect([name, story.play ? story.play.runsGridCheck : true]).toEqual([
+      name,
+      true,
+    ]);
+  });
 });

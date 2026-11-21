@@ -2,7 +2,23 @@ import React from 'react';
 import { resolveLanguage } from '../../../../.storybook/language';
 import { PublicationRecord } from './PublicationRecord';
 import { checkArticleGridGeometry } from '../../../Atom/Layout/Grid/gridGeometryChecks';
-import { RECORD_LABELS, exampleRecord, exampleBody } from './recordFixtures';
+import {
+  RECORD_LABELS,
+  exampleRecord,
+  exampleBody,
+  severalFiles,
+  manyFiles,
+  twoFiles,
+  manyLanguages,
+} from './recordFixtures';
+import {
+  checkAsideContainment,
+  checkManyFiles,
+  checkCoverAffordance,
+  checkDescriptionFirst,
+  checkLanguageSelect,
+  withGridCheck,
+} from './recordGeometryChecks';
 import './publication-record.scss';
 import '../../_shared/pattern-demo.scss';
 
@@ -12,6 +28,8 @@ export default {
   component: PublicationRecord,
   tags: ['!autodocs'],
   parameters: { layout: 'fullscreen', docs: { source: { html: true } } },
+  // A story's own play replaces this one, so every story-level play below is
+  // wrapped in withGridCheck to keep the article grid check (#1504).
   play: checkArticleGridGeometry,
   render: (args, context) => {
     const language = resolveLanguage(context.globals);
@@ -28,6 +46,117 @@ export default {
 export const Standard = {
   name: 'Experimental publication record',
   args: { record: exampleRecord, children: exampleBody },
+  // One file: still the Description first, then Files; three routes to the
+  // file (the cover, "Download options" under it, the "File (1)" jump link).
+  play: withGridCheck(async context => {
+    await checkCoverAffordance(context);
+    await checkDescriptionFirst(context);
+  }),
+};
+// Resource cases (#1502, #1505). Standard is the usual Drupal shape: the
+// publisher's original plus a hosted backup. The cover links to the first
+// primary resource and shows "All downloads (N)" for two or more resources.
+// Tier 2: a table without filters.
+export const TwoFiles = {
+  name: 'Two files, one language',
+  args: {
+    ...Standard.args,
+    record: { ...exampleRecord, resources: twoFiles },
+  },
+  play: withGridCheck(checkDescriptionFirst),
+};
+// Tier 3: two languages, so the table gets language filters.
+export const SeveralFiles = {
+  name: 'Several files, two languages',
+  args: {
+    ...Standard.args,
+    record: { ...exampleRecord, resources: severalFiles },
+  },
+  // Tier 3: the Description first, then the files with the language filter.
+  play: withGridCheck(checkDescriptionFirst),
+};
+// Modelled on the largest Drupal record (34 files, three languages): the
+// full table with a language filter. Every row shows, so find-in-page works.
+export const ManyFiles = {
+  name: 'Many files',
+  args: {
+    ...Standard.args,
+    record: { ...exampleRecord, resources: manyFiles },
+  },
+  play: withGridCheck(async context => {
+    await checkDescriptionFirst(context);
+    await checkManyFiles(context);
+  }),
+};
+// Seven languages: the language filter is a select.
+export const ManyLanguages = {
+  name: 'Many languages',
+  args: {
+    ...Standard.args,
+    record: { ...exampleRecord, resources: manyLanguages },
+  },
+  play: withGridCheck(checkLanguageSelect),
+};
+export const HostedOnly = {
+  name: 'Hosted copy only',
+  args: {
+    ...Standard.args,
+    record: {
+      ...exampleRecord,
+      resources: [
+        {
+          label: 'Understanding disaster risk',
+          href: '/publication-record/reading-en.html',
+          origin: 'hosted',
+          language: 'English',
+          lang: 'en',
+          format: 'HTML',
+          size: '360 bytes',
+        },
+      ],
+    },
+  },
+};
+// example.org is a reserved documentation domain: the synthetic fixture does
+// not claim a real publisher copy exists. Format and size are unknown, so
+// only the language shows.
+export const ExternalOnly = {
+  name: 'Publisher copy only',
+  args: {
+    ...Standard.args,
+    record: {
+      ...exampleRecord,
+      resources: [
+        {
+          label: 'Understanding disaster risk',
+          href: 'https://example.org/understanding-disaster-risk',
+          language: 'English',
+          lang: 'en',
+          origin: 'publisher',
+        },
+      ],
+    },
+  },
+};
+// The video ID is a placeholder: only the youtube.com host matters, because
+// it switches the verb to "Watch".
+export const Video = {
+  name: 'Video on a video host',
+  args: {
+    ...Standard.args,
+    record: {
+      ...exampleRecord,
+      resources: [
+        {
+          label: 'Understanding disaster risk: video introduction',
+          href: 'https://www.youtube.com/watch?v=00000000000',
+          language: 'English',
+          lang: 'en',
+          origin: 'publisher',
+        },
+      ],
+    },
+  },
 };
 export const NoCover = {
   name: 'No cover',
@@ -37,30 +166,9 @@ export const NoFile = {
   name: 'No public file',
   args: { ...Standard.args, record: { ...exampleRecord, resources: [] } },
 };
-// Duplicate local copy demonstrates original/backup roles without implying real external provenance.
-export const LocalBackup = {
-  name: 'Original / local backup',
-  args: {
-    record: {
-      ...exampleRecord,
-      resources: [
-        {
-          ...exampleRecord.resources[0],
-          backup: {
-            label: 'Read the backup copy',
-            href: '/publication-record/reading-en-backup.html',
-            lang: 'en',
-            language: 'English',
-            format: 'HTML',
-          },
-        },
-      ],
-    },
-    children: exampleBody,
-  },
-};
 export const LongCopy = {
   name: 'Long content',
+  play: withGridCheck(checkAsideContainment),
   args: {
     record: {
       ...exampleRecord,
@@ -71,6 +179,12 @@ export const LongCopy = {
         ...exampleRecord.authors,
       ],
       identifiers: [
+        // Synthetic Arabic-script entry first, so the Latin DOI after it must
+        // keep its own direction rather than follow the list's first item.
+        'رقم الوثيقة التجريبي',
+        // Real-world DOI that overflowed the Drupal sidebar in RTL
+        // (https://gitlab.com/undrr/web-backlog/-/work_items/3362).
+        '10.21953/researchonline.lse.ac.uk.00138625',
         'EXAMPLE/very-long-opaque-identifier-without-invented-DOI-linking-000000000000000000000000000000000000000000000000000000000',
       ],
       details: [

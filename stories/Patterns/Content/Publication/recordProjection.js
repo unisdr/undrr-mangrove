@@ -2,6 +2,27 @@ import { resolveContentUrl } from '../_shared/ContentPattern';
 
 const text = value => (typeof value === 'string' ? value.trim() : '');
 const list = value => (Array.isArray(value) ? value : []);
+/**
+ * Where a primary copy lives: `publisher` (external) or `hosted`. Adapters
+ * must supply it; a missing origin is an adapter error. Only two cases follow
+ * from the data: a primary with a hosted backup is the publisher copy, and a
+ * root-relative URL is hosted. An absolute URL could be either (a hosted file
+ * can be linked as https://www.undrr.org/media/123/download), so it falls back
+ * to `hosted`, which keeps analytics labels internal rather than claiming an
+ * external publisher, and warns in development.
+ */
+export function resourceOrigin(origin, href, backup) {
+  if (origin === 'publisher' || origin === 'hosted') return origin;
+  if (backup) return 'publisher';
+  if (/^https?:/i.test(href) && process.env.NODE_ENV !== 'production') {
+    console.warn(
+      `PublicationRecord: resource ${href} has no origin; treating it as hosted. ` +
+        "Adapters must set origin to 'publisher' or 'hosted'."
+    );
+  }
+  return 'hosted';
+}
+
 /** Experimental presentation selection only; not a CMS adapter or domain schema. */
 export function projectRecord(input) {
   const title = text(input?.title);
@@ -15,10 +36,13 @@ export function projectRecord(input) {
     });
   const languageTag = value =>
     /^[a-z]{2,3}(-[a-z0-9]{2,8})*$/i.test(value || '') ? value : undefined;
-  const resource = item => {
+  // `label` is the document's title: the link text for a hosted-only copy,
+  // and the {title} in "Access {title}" or "Watch {title}". A backup uses the
+  // interface's fixed wording, so it needs only a URL.
+  const resource = (item, { needsLabel = true } = {}) => {
     const label = text(item?.label);
     const href = resolveContentUrl(item?.href);
-    if (!label || !href) return undefined;
+    if ((needsLabel && !label) || !href) return undefined;
     return {
       label,
       href,
@@ -31,10 +55,25 @@ export function projectRecord(input) {
   };
   const resources = list(input.resources).flatMap(item => {
     const primary = resource(item);
+    if (!primary) return [];
     // A backup cannot silently become the primary/original access route.
-    return primary ? [{ ...primary, backup: resource(item.backup) }] : [];
+    const backup = resource(item.backup, { needsLabel: false });
+    const origin = resourceOrigin(item.origin, primary.href, backup);
+    return [
+      {
+        ...primary,
+        origin,
+        backup: backup && { ...backup, origin: 'hosted' },
+      },
+    ];
   });
   const year = String(input.publicationYear ?? '');
+  // When the record's resources were added to the site (Drupal's media
+  // creation date), shown for every case as Drupal does. It is not a link
+  // check, so it is never presented as one.
+  const added = /^\d{4}-\d{2}-\d{2}$/.test(input.resourcesAdded || '')
+    ? input.resourcesAdded
+    : undefined;
   return {
     ...input,
     title,
@@ -63,6 +102,8 @@ export function projectRecord(input) {
       : undefined,
     citation: text(input.citation),
     resources,
+    resourcesAdded: resources.length > 0 ? added : undefined,
+    contactHref: resolveContentUrl(input.contactHref),
     related: links(input.related),
     details: list(input.details).flatMap(item =>
       text(item?.label) && text(item?.value)

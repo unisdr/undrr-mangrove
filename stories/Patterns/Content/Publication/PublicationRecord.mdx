@@ -17,12 +17,44 @@ There is no published package import or production Drupal adapter. The [record s
 The [news-entry reference](?path=/docs/patterns-article-story--docs) supplies the masthead, plain-title introduction, optional lede and reading layout. Publication-specific elements are:
 
 - Separate author/source lists and a publication year, distinct from other date roles.
-- Early access links, full description and an optional cover/bibliography rail.
+- The full description first, then the files, reached through the link under the cover, the cover and the Files jump link; an optional cover/bibliography rail.
 - Complete, uncropped covers with a thin neutral border.
 
-The fixture is synthetic. Its HTML/plain-text resources are usable demonstration files; its backup is an identical local copy, not evidence of a verified external edition. Citation text is supplied verbatim. Resource language, format and size are supplied facts; unknown values are omitted.
+The fixture is synthetic and shows the usual case: the publisher's original (on example.org, a reserved documentation domain) plus a backup hosted here. The hosted files are small checked-in demonstration files, not real report downloads. Citation text is supplied verbatim. Resource language, format and size are supplied facts; unknown values are omitted.
 
 The optional standfirst requires approved content: do not automatically promote Drupal’s hidden short description or trim its body. The cover is decorative here because its title/year repeat adjacent text; supply meaningful alternative text for covers that convey additional information.
+
+## Cover link and download cues
+
+The cover links to the same place as the first resource link: the publisher's copy when there is one, otherwise the hosted copy, never a backup. When a pointer is over the cover, an outline and a corner badge appear: a download icon for a hosted copy or an external-link icon for a publisher copy. The badge isn't shown otherwise, or on touch, so the publisher's cover stays as published. The labelled resource list and the jump link are the always-visible ways in. A link under the cover ("All downloads (N)", or "Download options" for one file) jumps to the Files section. With no resources, the cover isn't linked. The [record specification](?path=/docs/patterns-content-publication-record-specification--docs) records each decision and its reasons ([#1502](https://github.com/unisdr/undrr-mangrove/issues/1502)).
+
+<Canvas of={Stories.SeveralFiles} story={{ inline: false, height: '700px' }} />
+
+| Resources | Cover                               | Link under the cover |
+| --------- | ----------------------------------- | -------------------- |
+| None      | Not linked                          | Not shown            |
+| 1         | Links to the first primary resource | "Download options"   |
+| 2 or more | Links to the first primary resource | "All downloads (N)"  |
+
+### Accessibility
+
+- The cover link repeats the first labelled resource link, so it has `aria-hidden="true"` and `tabindex="-1"`. Keyboard and screen-reader users reach the same file through the labelled link, which comes first.
+- The link is drawn over the image rather than wrapping it, so a cover with informative alt text still announces it.
+- Voice-control users can't name the hidden cover link. They can say the visible name of the labelled resource link instead.
+- The link under the cover ("All downloads (N)", or "Download options" for one file) is an ordinary link with visible text. Its plural forms follow `Intl.PluralRules` for the interface language; Arabic has all six.
+- The hover badge and outline only appear under `@media (hover: hover)`. On hover in forced-colours mode, the badge has a `LinkText` border and icon. They appear instantly, so reduced motion needs nothing extra.
+
+### Analytics
+
+| Link              | Region                     | `data-vf-analytics-label`                               |
+| ----------------- | -------------------------- | ------------------------------------------------------- |
+| Primary resource  | `undrr-download-box`       | `download_publisher` or `download_internal`             |
+| Backup            | `undrr-download-box`       | `download_backup`                                       |
+| Cover             | `undrr-download-box-cover` | `download_publisher_cover` or `download_internal_cover` |
+| All downloads (N) | `undrr-download-box-cover` | `nav_all_downloads_cover`                               |
+| Language filter   | `undrr-download-box`       | `nav_filter_language`                                   |
+
+Every download label starts `download_`; cover clicks contain `cover`; in-page navigation starts `nav_`. The names match the Drupal interim ([drupal-base!268](https://gitlab.com/undrr/drupal-base/-/merge_requests/268)).
 
 ## Missing content
 
@@ -31,17 +63,41 @@ The optional standfirst requires approved content: do not automatically promote 
 
 Missing data leaves no empty sections or placeholders. No public file does not imply unavailability; any explanation must be supplied by the editor or adapter.
 
-## Original and backup access
+## Adaptive resource presentation
 
-<Canvas of={Stories.LocalBackup} story={{ inline: false, height: '700px' }} />
+The access block grows with the number of files and languages, so the Description stays high on the page. 88% of Drupal publication records have one file; the largest has 34. The [record specification](?path=/docs/patterns-content-publication-record-specification--docs) has the full rules and reasons.
 
-Backups have their own labels and metadata and never replace an invalid primary link. Root-relative and HTTP(S) URLs follow the shared ContentPattern URL contract; unsafe and protocol-relative URLs are omitted. Identifiers remain opaque text rather than guessed DOI links.
+| Tier | When                   | Presentation                                                                                 |
+| ---- | ---------------------- | -------------------------------------------------------------------------------------------- |
+| 1    | 1 file                 | One row: **Access {title}** ↗, language · format, size, and a backup icon                    |
+| 2    | 2+ files, one language | A compact table with every row: Title, Format / size, Original, Backup                       |
+| 3    | 2+ languages           | A language filter above the table (a select from 6 languages); a Language column under "All" |
+
+<Canvas of={Stories.TwoFiles} story={{ inline: false, height: '700px' }} />
+<Canvas of={Stories.ManyFiles} story={{ inline: false, height: '700px' }} />
+<Canvas of={Stories.ManyLanguages} story={{ inline: false, height: '700px' }} />
+<Canvas of={Stories.HostedOnly} story={{ inline: false, height: '700px' }} />
+<Canvas of={Stories.ExternalOnly} story={{ inline: false, height: '700px' }} />
+<Canvas of={Stories.Video} story={{ inline: false, height: '700px' }} />
+
+- **Order.** One order for every record: the Description comes first, then a **Files** section (the single row, or the table). A "Files (N) ↓" link under the header metadata jumps to it ("File (1) ↓" for one file; `nav_files_jump`), as does the link under the cover.
+- **Inline language control.** The language buttons or select sit at the inline end of the Files heading row and wrap under it when narrow. The "Language" label is visually hidden; the site header's languages icon stands in for it.
+- **Primary action.** The action reads **Access** ↗ (publisher), **Watch** ↗ (video host) or **Download** (hosted only). Each action and each backup link names its file, and the backup's name is "Download a backup copy hosted by this site: {title}".
+- **Table.** It has a visually hidden caption, scoped column headers and the title as a row header. Explicit ARIA table roles keep that structure when narrow screens restyle rows as cards.
+- **Language filter.** A native radio group (SegmentedControl), or from 6 languages a Select labelled "Language". These aren't tabs. Focus stays on the control, and a polite live region announces "Showing {shown} of {total} files" at once.
+- **Every row.** The table never collapses and has no text filter, so the browser's find-in-page reaches every file. Only 0.2% of records have 11 or more files.
+- **Link under the cover.** Always there with a linked cover: "All downloads (N)" for several files, "Download options" for one. It jumps to the Files heading; in tier 3 it first resets the language filter to All.
+- **Shared parts.** One shared "What is a backup copy?" follows the table, only when a backup exists. "Added" is now in Bibliographic details.
+- **Without JavaScript (the vanilla contract).** The row or table shows every row and link; only the language filter and its live region don't render.
+- **Analytics.** Labels are `download_publisher`, `download_internal`, `download_backup`, `nav_filter_language` and `nav_files_jump`.
+
+Backups never replace an invalid primary link, and the cover links to the first original in source order, whatever the filter. Root-relative and HTTP(S) URLs follow the shared ContentPattern URL contract; unsafe and protocol-relative URLs are omitted. Identifiers remain opaque text rather than guessed DOI links. Adapters must supply each resource's `origin` (`publisher` or `hosted`).
 
 ## Long content
 
 <Canvas of={Stories.LongCopy} story={{ inline: false, height: '700px' }} />
 
-Long text and identifiers wrap in DOM reading order. Use the standard toolbar for interface language and direction. Record labels have seven draft translations requiring native-speaker review. Work, body and resource languages remain separate from interface language. The demonstration shell supports English/Arabic; other interface locales use an explicitly English-labelled shell.
+Long text and identifiers wrap in DOM reading order. The fixture includes the DOI that overflowed Drupal's sidebar in RTL; each author, source and identifier resolves its own text direction, so a Latin DOI is not reordered on an Arabic page or after an Arabic entry. Use the standard toolbar for interface language and direction. Record labels have seven draft translations requiring native-speaker review. Work, body and resource languages remain separate from interface language. The demonstration shell supports English/Arabic; other interface locales use an explicitly English-labelled shell.
 
 ## Adapting the prototype
 
@@ -50,5 +106,8 @@ The composition needs its own `publication-record.scss`, shared Mangrove CSS and
 `recordProjection.js` filters presentation data; it is not a canonical schema or CMS adapter. Consumers must select approved public/domain content, sanitize CMS prose, and validate dates, language and primary/backup provenance against the pinned source audit. Consumer integration and editorial/accessibility review remain outstanding; this prototype does not establish Drupal rendering parity.
 
 ## Changelog
+
+- **0.3.0**, 2026-11-21 ([#1505](https://github.com/unisdr/undrr-mangrove/issues/1505)): Adaptive resource presentation. One file is a single access row; 2+ files in one language a compact table; 2+ languages add a language filter (a radio group, or a select from 6 languages) that renders only with JavaScript. Every row is always shown, so find-in-page reaches every file. The per-file backup explanation is replaced by one shared disclosure, and "Added" moves to Bibliographic details. The Description always comes first, followed by a Files section with the language control inline at the heading's end and its label visually hidden; a "Files (N)" header jump link and the link under the cover ("Download options" for one file) jump to it. New Two files and Many languages stories.
+- **0.2.0**, 2026-11-20 ([#1502](https://github.com/unisdr/undrr-mangrove/issues/1502)): The cover links to the first primary resource (publisher copy, otherwise hosted copy) as a hidden duplicate of the labelled link, with an outline and a download or external-link badge on hover only. Records with two or more resources show "All downloads (N)" under the cover, with plural forms in all bundled languages. Resource, backup, cover and jump links carry the `undrr-download-box` analytics regions and labels used by Drupal. Added one-hosted-file and publisher-only stories and a long-DOI fixture. Each author, source and identifier now resolves its own direction (`dir="auto"`), so a Latin DOI reads correctly on an Arabic page and after an Arabic entry. A resource without an origin and with an absolute URL is treated as hosted, with a development warning; adapters must supply the origin. Resources follow Drupal's download box ([#1505](https://github.com/unisdr/undrr-mangrove/issues/1505)): Standard is now the publisher original plus a hosted backup; added several-files, hosted-only, publisher-only and video stories and removed the separate original/local backup story. Primary links read "Access {title}" or "Watch {title}" (publisher, new tab, external-link icon) or the title (hosted); the backup line reads "Download a backup copy hosted by this site" with the file facts and a "What is a backup copy?" disclosure; one "Added {date}" line follows the list. Added the Many files story (34 files). Backup links end their accessible name with the hidden title; file facts carry the file's language; the contact link opens in a new tab and ends with the sentence's full stop.
 
 - **0.1.0**, 2026-10-29 ([#1437](https://github.com/unisdr/undrr-mangrove/pull/1437), [#1432](https://github.com/unisdr/undrr-mangrove/issues/1432)): Add an experimental ordinary publication-record story composition, separate from report landing references. Give complete covers a thin neutral border consistent with book cards. Remove the title-only minimal, external-only and dedicated RTL stories; retain missing-content and resource regression coverage. Preserve work-language tags on related links. Production adapter and reusable API remain unimplemented.

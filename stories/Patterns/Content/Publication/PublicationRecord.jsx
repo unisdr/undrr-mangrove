@@ -1,14 +1,20 @@
-import React, { useId } from 'react';
+import React, { useId, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { SkipLink } from '../../../Utilities/SkipLink/SkipLink';
 import { projectRecord } from './recordProjection';
+import { ANALYTICS, coverAccess, pluralLabel } from './recordAccess';
+import { RecordAccess } from './RecordResources';
 import { UndrrChrome } from '../../_shared/UndrrChrome';
 
 function RecordNames({ entries }) {
   return (
     <ul>
       {entries.map((entry, index) => (
-        <li key={index}>{entry}</li>
+        // Each name or identifier resolves its own direction, so a Latin DOI
+        // after an Arabic entry is not reordered.
+        <li key={index} dir="auto">
+          {entry}
+        </li>
       ))}
     </ul>
   );
@@ -17,7 +23,31 @@ RecordNames.propTypes = {
   entries: PropTypes.arrayOf(PropTypes.node).isRequired,
 };
 
-/** Experimental story-owned composition, not a published package renderer. */
+// Dates follow the editorial manual ("15 March 2026"), which en-US does not,
+// in Latin digits as Drupal prints them.
+function formatDate(isoDate, lang) {
+  let text = isoDate;
+  try {
+    text = new Intl.DateTimeFormat(
+      `${lang === 'en' ? 'en-GB' : lang}-u-nu-latn`,
+      { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }
+    ).format(new Date(`${isoDate}T00:00:00Z`));
+  } catch {
+    // Unknown language tag: keep the ISO date.
+  }
+  return <time dateTime={isoDate}>{text}</time>;
+}
+
+/**
+ * Experimental story-owned composition, not a published package renderer.
+ *
+ * @param {Object} props
+ * @param {Object} props.record Approved, public record-local presentation selection (`title` is required); see the story specification
+ * @param {Object<string, (string|Object<string, string>)>} props.labels Authored interface labels, separate from work and resource languages. Plural labels (`allDownloads`, `filesJump`, `showing`) hold CLDR plural forms with `{count}`, `{shown}` and `{total}` placeholders
+ * @param {string} [props.lang='en'] Interface language tag
+ * @param {'ltr'|'rtl'} [props.dir='ltr'] Interface direction
+ * @param {React.ReactNode} [props.children] Trusted authored description content. CMS consumers must sanitise HTML before producing prose
+ */
 export function PublicationRecord({
   record,
   labels,
@@ -26,14 +56,52 @@ export function PublicationRecord({
   children,
 }) {
   const prefix = `publication-${useId().replace(/:/g, '')}`;
+  const access = useRef(null);
+  // "All downloads (N)" resets the language filter to All before the browser
+  // follows the anchor to the resources heading. Without JavaScript (and in
+  // tiers 1 and 2) it is a plain anchor.
+  const openList = () => access.current?.resetFilters();
+
   const value = projectRecord(record);
   const hasDetails =
     value.identifiers.length > 0 ||
     value.edition ||
     value.pages ||
+    value.resourcesAdded ||
     value.details.length > 0;
   const hasAside = value.cover || hasDetails;
+  const coverLink = value.cover ? coverAccess(value.resources) : undefined;
+  // Always present with a linked cover, so readers who look under the cover
+  // find the files: "All downloads (N)" for several, "Download options" for one.
+  const allDownloads = !coverLink
+    ? ''
+    : value.resources.length > 1
+      ? pluralLabel(labels.allDownloads, lang, value.resources.length)
+      : labels.downloadOptions;
   const chromeLocale = lang === 'ar' ? 'arabic' : 'english';
+  // The Description always comes first and the files section always follows
+  // it, for every number of files. The header's "Files (N)" link, the cover
+  // and the link under it keep the files findable.
+  const filesId = `${prefix}-access`;
+  const filesSection = value.resources.length > 0 && (
+    <section
+      className="mg-reading__article mg-publication-record__files-section"
+      aria-labelledby={filesId}
+      data-vf-google-analytics-region={ANALYTICS.region}
+    >
+      <RecordAccess
+        resources={value.resources}
+        labels={labels}
+        lang={lang}
+        workLang={value.lang}
+        contactHref={value.contactHref}
+        id={prefix}
+        heading={labels.filesHeading}
+        headingId={filesId}
+        controller={access}
+      />
+    </section>
+  );
   return (
     <div lang={lang} dir={dir} className="mg-publication-record">
       <SkipLink targetId={`${prefix}-main`} label={labels.skip} />
@@ -111,82 +179,22 @@ export function PublicationRecord({
                 )}
               </dl>
             )}
+            {value.resources.length > 0 && (
+              <p className="mg-publication-record__files-jump mg-u-font-size-250">
+                <a
+                  href={`#${filesId}`}
+                  data-vf-analytics-label={ANALYTICS.filesJump}
+                >
+                  {pluralLabel(labels.filesJump, lang, value.resources.length)}
+                  <span aria-hidden="true"> ↓</span>
+                </a>
+              </p>
+            )}
           </header>
           <div
             className={`mg-reading mg-publication-record__reading${hasAside ? ' mg-grid mg-grid--article' : ''}`}
           >
             <div className="mg-publication-record__main mg-reading__article">
-              {value.resources.length > 0 && (
-                <section
-                  className="mg-reading__article"
-                  aria-labelledby={`${prefix}-access`}
-                >
-                  <h2 id={`${prefix}-access`}>{labels.access}</h2>
-                  <ul className="mg-publication-record__resources">
-                    {value.resources.map((resource, index) => (
-                      <li key={index}>
-                        <a
-                          href={resource.href}
-                          hrefLang={resource.lang}
-                          lang={resource.labelLang || value.lang}
-                          dir="auto"
-                        >
-                          {resource.label}
-                        </a>
-                        {[
-                          resource.language,
-                          resource.format,
-                          resource.size,
-                        ].filter(Boolean).length > 0 && (
-                          <p
-                            className="mg-u-font-size-250"
-                            lang={resource.labelLang || value.lang}
-                            dir="auto"
-                          >
-                            {[resource.language, resource.format, resource.size]
-                              .filter(Boolean)
-                              .join(' · ')}
-                          </p>
-                        )}
-                        {resource.backup && (
-                          <>
-                            <p>
-                              {labels.backup}:{' '}
-                              <a
-                                href={resource.backup.href}
-                                hrefLang={resource.backup.lang}
-                                lang={resource.backup.labelLang || value.lang}
-                                dir="auto"
-                              >
-                                {resource.backup.label}
-                              </a>
-                            </p>
-                            {[
-                              resource.backup.language,
-                              resource.backup.format,
-                              resource.backup.size,
-                            ].filter(Boolean).length > 0 && (
-                              <p
-                                className="mg-u-font-size-250"
-                                lang={resource.backup.labelLang || value.lang}
-                                dir="auto"
-                              >
-                                {[
-                                  resource.backup.language,
-                                  resource.backup.format,
-                                  resource.backup.size,
-                                ]
-                                  .filter(Boolean)
-                                  .join(' · ')}
-                              </p>
-                            )}
-                          </>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                </section>
-              )}
               {children && (
                 <section
                   className="mg-reading__article"
@@ -202,6 +210,7 @@ export function PublicationRecord({
                   </div>
                 </section>
               )}
+              {filesSection}
               {(value.citation || value.canonicalUrl) && (
                 <section
                   className="mg-reading__article"
@@ -241,14 +250,56 @@ export function PublicationRecord({
             {hasAside && (
               <aside className="mg-publication-record__aside">
                 {value.cover && (
-                  <figure className="mg-publication-record__cover">
-                    <img src={value.cover.src} alt={value.cover.alt} />
-                  </figure>
+                  <div
+                    className="mg-publication-record__cover-group"
+                    data-vf-google-analytics-region={
+                      coverLink ? ANALYTICS.coverRegion : undefined
+                    }
+                  >
+                    <figure
+                      className={`mg-publication-record__cover${coverLink ? ' mg-publication-record__cover--linked' : ''}`}
+                    >
+                      <img src={value.cover.src} alt={value.cover.alt} />
+                      {coverLink && (
+                        // Pointer shortcut duplicating the first labelled
+                        // resource link, so it is hidden from assistive
+                        // technology and the tab order. It overlays the image
+                        // instead of wrapping it, so informative alt text
+                        // stays exposed.
+                        <a
+                          className="mg-publication-record__cover-link"
+                          href={coverLink.href}
+                          hrefLang={coverLink.lang}
+                          {...(coverLink.newWindow
+                            ? { target: '_blank', rel: 'noopener' }
+                            : {})}
+                          aria-hidden="true"
+                          tabIndex={-1}
+                          data-vf-analytics-label={coverLink.analyticsLabel}
+                        >
+                          <span className="mg-publication-record__cover-badge">
+                            <span
+                              className={`mg-icon mg-icon-${coverLink.icon}`}
+                              aria-hidden="true"
+                            />
+                          </span>
+                        </a>
+                      )}
+                    </figure>
+                    {allDownloads && (
+                      <p className="mg-publication-record__all-downloads mg-u-font-size-250">
+                        <a
+                          href={`#${filesId}`}
+                          onClick={openList}
+                          data-vf-analytics-label={ANALYTICS.allDownloads}
+                        >
+                          {allDownloads}
+                        </a>
+                      </p>
+                    )}
+                  </div>
                 )}
-                {(value.identifiers.length > 0 ||
-                  value.edition ||
-                  value.pages ||
-                  value.details.length > 0) && (
+                {hasDetails && (
                   <section
                     className="mg-reading__article"
                     aria-labelledby={`${prefix}-details`}
@@ -279,6 +330,14 @@ export function PublicationRecord({
                           </dd>
                         </div>
                       )}
+                      {value.resourcesAdded && (
+                        // When the hosted copies were added (Drupal's media
+                        // creation date). Not a link check.
+                        <div>
+                          <dt>{labels.addedLabel}</dt>
+                          <dd>{formatDate(value.resourcesAdded, lang)}</dd>
+                        </div>
+                      )}
                       {value.details.map((detail, index) => (
                         <div key={index} lang={value.lang} dir="auto">
                           <dt>{detail.label}</dt>
@@ -301,8 +360,17 @@ export function PublicationRecord({
 PublicationRecord.propTypes = {
   /** Approved, public record-local presentation selection; see the story specification. */
   record: PropTypes.object.isRequired,
-  /** Authored interface labels, separate from work and resource languages. */
-  labels: PropTypes.objectOf(PropTypes.string).isRequired,
+  /**
+   * Authored interface labels, separate from work and resource languages.
+   * `allDownloads` holds CLDR plural forms (`one`, `other`, and `zero`, `two`,
+   * `few`, `many` where the language uses them) with a `{count}` placeholder.
+   */
+  labels: PropTypes.objectOf(
+    PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.objectOf(PropTypes.string),
+    ])
+  ).isRequired,
   lang: PropTypes.string,
   dir: PropTypes.oneOf(['ltr', 'rtl']),
   /** Trusted authored React content. CMS consumers must sanitise HTML before producing prose. */
