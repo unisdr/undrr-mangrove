@@ -59,7 +59,7 @@ function accessibleNameRequired(props, propName, componentName) {
  * @param {string} [props.helpText]           Text under the bar, linked to it with `aria-describedby`
  * @param {boolean} [props.showValue=false]   Show the value next to the label (determinate only)
  * @param {string} [props.valueText]          Text for the value, such as "3 of 12 files", used as `aria-valuetext` and as the visible value
- * @param {string} [props.variant='default']  `flush` for a thin bar with no visible text, for the top edge of a region or the viewport
+ * @param {'default'|'flush'} [props.variant='default'] `flush` for a thin bar with no visible text, for the top edge of a region or the viewport
  * @param {string} [props.className='']       Additional CSS classes for the wrapper
  */
 export function ProgressBar({
