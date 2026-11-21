@@ -794,9 +794,14 @@ function QuizQuestionView({
  * has no key.
  *
  * Defaults, applied inside the component: `type` is `multiple_choice`,
- * `prompt` is empty, `options`, `expected` and `blanks` are empty lists,
- * `multiple`, `caseSensitive` and `showAnswer` are `false`, and `showNumber`
- * is `true`.
+ * `options`, `expected` and `blanks` are empty lists, `multiple`,
+ * `caseSensitive` and `showAnswer` are `false`, and `showNumber` is `true`.
+ *
+ * `prompt` is required: it is the question's legend or the answer field's
+ * label, so without it the controls have no accessible name. A missing
+ * prompt renders as empty text, a defensive fallback rather than a supported
+ * use, and `fromElement` keeps the server fallback instead of mounting a
+ * question without one.
  *
  * @param {Object} props
  * @param {'multiple_choice'|'true_false'|'text'|'fill_blank'} [props.type] Question type. The values match the Drupal grader types
