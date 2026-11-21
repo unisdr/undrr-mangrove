@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArticleStory } from './ArticleStory';
+import { checkArticleGridGeometry } from '../../Atom/Layout/Grid/gridGeometryChecks';
 import '../_shared/pattern-demo.scss';
 
 export default {
@@ -7,6 +8,7 @@ export default {
   title: 'Patterns/Content/Article/Full page',
   component: ArticleStory,
   parameters: { layout: 'fullscreen' },
+  play: checkArticleGridGeometry,
   args: { imageProminence: 'large', heroImage: 'main' },
   argTypes: {
     imageProminence: {

@@ -1,6 +1,7 @@
 import React from 'react';
 import { resolveLanguage } from '../../../../.storybook/language';
 import { PublicationRecord } from './PublicationRecord';
+import { checkArticleGridGeometry } from '../../../Atom/Layout/Grid/gridGeometryChecks';
 import { RECORD_LABELS, exampleRecord, exampleBody } from './recordFixtures';
 import './publication-record.scss';
 import '../../_shared/pattern-demo.scss';
@@ -11,6 +12,7 @@ export default {
   component: PublicationRecord,
   tags: ['!autodocs'],
   parameters: { layout: 'fullscreen', docs: { source: { html: true } } },
+  play: checkArticleGridGeometry,
   render: (args, context) => {
     const language = resolveLanguage(context.globals);
     return (

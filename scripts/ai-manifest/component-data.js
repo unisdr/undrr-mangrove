@@ -2236,9 +2236,9 @@ npm run build</code></pre>
   // --- Page templates ---
   'components-reading-column': {
     summary:
-      'Reading column for a long page: constrains the article to a readable measure, with an optional sticky table of contents beside it from 48rem up.',
+      'Reading column for a long page: constrains the article to a readable measure, with an optional sticky table of contents beside it from 900px ($mg-breakpoint-tablet) up.',
     description:
-      "Reading column for a long page: constrains the article to a readable measure, and with mg-reading--with-contents places a table of contents in a sticky sidebar from 48rem up, stacking it above the article below that. The sidebar split itself is mg-grid's --article variant (see design-decisions-grid-layout) — pair mg-reading--with-contents with mg-grid mg-grid--article in markup.",
+      "Reading column for a long page: constrains the article to a readable measure, and with mg-reading--with-contents places a table of contents in a sticky sidebar from 900px ($mg-breakpoint-tablet) up, stacking it above the article below that. The sidebar split itself is mg-grid's --article variant (see design-decisions-grid-layout) — pair mg-reading--with-contents with mg-grid mg-grid--article in markup. Use it at page width only, not nested inside a narrower column, card or sidebar: the sidebar switch follows the viewport, not the width the reading column gets.",
     cssClasses: [
       'mg-reading',
       'mg-reading--with-contents',

@@ -53,6 +53,15 @@ doc); reach for it directly if you need the same shape outside that pattern.
 </div>
 ```
 
+<Canvas of={GridStories.ArticleGrid} meta={GridStories} />
+
+Use `mg-grid--article` at page width only: directly in the page's `mg-container`,
+not nested inside a narrower column, card or sidebar. The two-column switch
+follows the viewport (900px), not the width the grid actually gets, so a nested
+grid can turn two-column with no room for it and squeeze the flexible column
+next to the 16rem rail. Responding to the grid's own width is tracked in
+[#1510](https://github.com/unisdr/undrr-mangrove/issues/1510).
+
 #### CSS:
 
 There is no standalone grid stylesheet. The grid rules are compiled into every
@@ -72,6 +81,8 @@ carries the same prerequisites as any other per-component partial — see
 
 ## Changelog
 
+- **1.5**, 2026-11-20 ([#1510](https://github.com/unisdr/undrr-mangrove/issues/1510)): Documented that `.mg-grid--article` belongs at page width only, because its breakpoint follows the viewport rather than the grid's own width. Documentation only; the component is unchanged.
+- **1.4**, 2026-11-20 ([#1504](https://github.com/unisdr/undrr-mangrove/issues/1504)): Aligned `.mg-grid--article`'s two-column breakpoint (`$mg-grid-article-breakpoint`) with the container's tablet width (`$mg-breakpoint-tablet`, 900px) instead of 48rem (768px), preventing the main reading column from squeezing to ~160px between 768px and 899px. A grid outside `mg-container` now also stacks in that range; responding to the grid's own width would need a container query.
 - **1.3**, 2026-09-19 ([#1266](https://github.com/unisdr/undrr-mangrove/issues/1266)): The CSS section pointed at `.../assets/css/grid.min.css`, which the CDN has never served: no standalone grid stylesheet is emitted, the `assets/` segment is doubled, and nothing under Mangrove is minified. It now names the theme stylesheet the grid rules compile into, and the SCSS partial for Sass consumers. Documentation only; the component is unchanged.
 - **1.2**, 2026-09-11 ([undrr/web-backlog#3060](https://gitlab.com/undrr/web-backlog/-/work_items/3060)): Added `.mg-grid--article` for reading-layout column splits (flexible content column + fixed rail), extracted for reuse from page-pattern-specific CSS.
 - **1.1**, 2026-08-27: Added `.mg-grid__col-7` through `.mg-grid__col-12` and `.mg-grid--auto-fit` to support larger or dynamic item counts.
