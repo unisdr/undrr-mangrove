@@ -113,6 +113,202 @@ function returnToContent(toggle, target) {
   });
 }
 
+// Items mode keeps a controller per toggle so a page can open or close the
+// set without a synthetic click (see mgShowMoreSetOpen).
+const itemControllers = new WeakMap();
+
+const TABLE_PARTS = new Set(['TR', 'TBODY', 'THEAD', 'TFOOT']);
+
+const FOCUSABLE =
+  'a[href], area[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), summary, iframe, [contenteditable="true"], [tabindex]:not([tabindex="-1"])';
+
+/**
+ * The first control a keyboard user could reach inside `element`, skipping
+ * anything inside a closed <details> other than its summary.
+ *
+ * @param {HTMLElement} element - A revealed item.
+ * @returns {HTMLElement|undefined} The control, if there is one.
+ */
+function firstFocusable(element) {
+  return [...element.querySelectorAll(FOCUSABLE)].find(candidate => {
+    const details = candidate.closest('details:not([open])');
+    return (
+      !details ||
+      (candidate.tagName === 'SUMMARY' && candidate.parentElement === details)
+    );
+  });
+}
+
+/**
+ * Moves focus to the start of what a reader just revealed, so they land on
+ * the new content instead of past it. With no control in the first item,
+ * the item itself takes focus for as long as it has it.
+ *
+ * @param {HTMLElement} element - The first revealed item.
+ */
+function focusRevealed(element) {
+  const control = firstFocusable(element);
+  if (control) {
+    control.focus();
+    // A control inside an inner `hidden` or `inert` element refuses focus.
+    if (element.ownerDocument.activeElement === control) return;
+  }
+  // Keep a tabindex the item already had; only add and remove our own.
+  if (!element.hasAttribute('tabindex')) {
+    element.setAttribute('tabindex', '-1');
+    element.addEventListener(
+      'blur',
+      () => element.removeAttribute('tabindex'),
+      { once: true }
+    );
+  }
+  element.focus();
+}
+
+/**
+ * Items mode: a true disclosure. Whole elements marked
+ * `data-mg-show-more-item` inside the target are hidden with
+ * `hidden="until-found"` (plain `hidden` where the browser lacks it), so they
+ * leave the accessibility tree and the tab order, and find-in-page can still
+ * reveal them. The toggle is a disclosure button with `aria-expanded`.
+ *
+ * @param {HTMLElement} item - The toggle.
+ * @param {HTMLElement} target - The container holding the items.
+ * @param {Function} labelFor - Returns the visible label for a state.
+ * @param {Object|null} stateLabels - Analytics labels per state, or null.
+ * @returns {Function} Cleanup restoring the initial markup.
+ */
+function initItemsMode(item, target, labelFor, stateLabels) {
+  const items = [...target.querySelectorAll('[data-mg-show-more-item]')];
+  // Bundlers replace process.env.NODE_ENV; loaded unbundled, `process` does
+  // not exist, which counts as development.
+  let isProduction = false;
+  try {
+    isProduction = process.env.NODE_ENV === 'production';
+  } catch {
+    // Not bundled.
+  }
+  if (item.tagName !== 'BUTTON' && !isProduction) {
+    console.warn(
+      '[mg-show-more] Items mode needs a <button> toggle: it carries aria-expanded.',
+      item
+    );
+  }
+  const labelNode = item.querySelector('[data-mg-show-more-label]') || item;
+  const initial = {
+    text: labelNode.textContent,
+    hidden: item.hidden,
+    expanded: item.getAttribute('aria-expanded'),
+    controls: item.getAttribute('aria-controls'),
+    analytics: item.getAttribute('data-vf-analytics-label'),
+    openClass: item.classList.contains('mg-show-more--button--open'),
+    items: items.map(element => element.getAttribute('hidden')),
+  };
+  // `hidden="until-found"` lets find-in-page reveal an item; browsers without
+  // it treat the value as plain `hidden`, so the fallback is the same markup.
+  const untilFound = 'onbeforematch' in document.documentElement;
+  let open = false;
+
+  // Chromium neither reveals until-found table parts on a find-in-page or
+  // text-highlight match nor drops their height, so rows use plain hidden.
+  const hiddenValue = element =>
+    untilFound && !TABLE_PARTS.has(element.tagName) ? 'until-found' : '';
+  const render = () => {
+    items.forEach(element => {
+      if (open) element.removeAttribute('hidden');
+      else element.setAttribute('hidden', hiddenValue(element));
+    });
+    item.setAttribute('aria-expanded', String(open));
+    labelNode.textContent = labelFor(!open);
+    item.classList.toggle('mg-show-more--button--open', open);
+    if (stateLabels) {
+      item.setAttribute(
+        'data-vf-analytics-label',
+        open ? stateLabels.open : stateLabels.collapsed
+      );
+    }
+  };
+
+  // A reader's open (click or key on the toggle) moves focus to the first
+  // revealed item, and focus() scrolls it into view. Opens from code or from
+  // find-in-page leave focus and scrolling to the caller or the browser.
+  const setOpen = (next, { reader = false } = {}) => {
+    if (next === open) return;
+    // Focus inside an item about to be hidden would be lost: move it to the
+    // toggle.
+    const active = item.ownerDocument.activeElement;
+    const focusInside =
+      !next && items.some(element => element.contains(active));
+    open = next;
+    render();
+    if (focusInside) item.focus();
+    if (!next) {
+      returnToContent(item, target);
+      return;
+    }
+    if (reader && items.length > 0) focusRevealed(items[0]);
+  };
+
+  const onClick = event => {
+    event.preventDefault();
+    setOpen(!open, { reader: true });
+  };
+  // Find-in-page or a text-highlight link revealing one item opens the set,
+  // so the label and aria-expanded stay true. The browser owns focus here.
+  const onBeforeMatch = () => setOpen(true);
+
+  if (target.id === '') target.id = nextTargetId();
+  item.setAttribute('aria-controls', target.id);
+  item.addEventListener('click', onClick);
+  target.addEventListener('beforematch', onBeforeMatch);
+  itemControllers.set(item, next => setOpen(next));
+  item.hidden = false;
+  // Nothing to hide: leave everything open and the toggle hidden.
+  if (items.length === 0) {
+    item.hidden = true;
+    open = true;
+  }
+  render();
+
+  return () => {
+    item.removeEventListener('click', onClick);
+    target.removeEventListener('beforematch', onBeforeMatch);
+    itemControllers.delete(item);
+    items.forEach((element, index) => {
+      const value = initial.items[index];
+      if (value === null) element.removeAttribute('hidden');
+      else element.setAttribute('hidden', value);
+    });
+    labelNode.textContent = initial.text;
+    item.hidden = initial.hidden;
+    item.classList.toggle('mg-show-more--button--open', initial.openClass);
+    for (const [attribute, value] of [
+      ['aria-expanded', initial.expanded],
+      ['aria-controls', initial.controls],
+      ['data-vf-analytics-label', initial.analytics],
+    ]) {
+      if (value === null) item.removeAttribute(attribute);
+      else item.setAttribute(attribute, value);
+    }
+    delete item.dataset.mgShowMoreInitialized;
+  };
+}
+
+/**
+ * Opens or closes an items-mode toggle's set, as the reader's click would,
+ * without dispatching a click. Visual-mode toggles are not affected.
+ *
+ * @param {HTMLElement} toggle - An initialised items-mode toggle.
+ * @param {boolean} open - The state to set.
+ * @returns {boolean} Whether the toggle was an initialised items-mode toggle.
+ */
+export function mgShowMoreSetOpen(toggle, open) {
+  const setOpen = toggle && itemControllers.get(toggle);
+  if (!setOpen) return false;
+  setOpen(Boolean(open));
+  return true;
+}
+
 /**
  * Initializes "show more" toggle buttons.
  *
@@ -150,6 +346,34 @@ export function mgShowMore(scope) {
     }
 
     item.dataset.mgShowMoreInitialized = 'true';
+
+    // Opt-in true disclosure over whole elements. The visual-only mode below
+    // is unchanged.
+    if (item.dataset.mgShowMoreMode === 'items') {
+      const authorAnalytics = item.getAttribute('data-vf-analytics-label');
+      const {
+        mgShowMoreAnalyticsCollapsed: collapsedLabel,
+        mgShowMoreAnalyticsOpen: openLabel,
+      } = item.dataset;
+      cleanups.push(
+        initItemsMode(
+          item,
+          mgShowMoreTarget,
+          collapsed =>
+            collapsed
+              ? item.dataset.mgShowMoreLabelCollapsed || 'Show more'
+              : item.dataset.mgShowMoreLabelOpen || 'Show less',
+          collapsedLabel || openLabel || !authorAnalytics
+            ? {
+                collapsed: collapsedLabel || 'Show more',
+                open: openLabel || 'Show less',
+              }
+            : null
+        )
+      );
+      return;
+    }
+
     const wasCollapsed = mgShowMoreTarget.classList.contains(
       'mg-show-more--collapsed'
     );
