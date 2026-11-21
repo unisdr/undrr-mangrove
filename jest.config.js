@@ -37,6 +37,9 @@ const config = {
     // The Pages workflow renames docs-build-temp to _site before running tests.
     '/_site/',
     '/storybook-static/',
+    // Scratch builds, such as the docgen-server build the Pages workflow
+    // makes for yarn check:prop-contracts before running tests.
+    '<rootDir>/.cache/',
     '<rootDir>/npm-package/',
     // Local git worktrees (agent and manual) are full checkouts of the repo;
     // without this, one run can pick up thousands of duplicate test files.
