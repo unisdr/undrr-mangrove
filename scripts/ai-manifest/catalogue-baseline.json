@@ -1756,9 +1756,9 @@
   "patterns-publication-record": {
     "props": {
       "children": "node | optional | no default | described",
-      "dir": "'ltr' | 'rtl' | optional | default='ltr' | undescribed",
+      "dir": "'ltr' | 'rtl' | optional | default='ltr' | described",
       "labels": "Record<string, string | Record<string, string>> | required | no default | described",
-      "lang": "string | optional | default='en' | undescribed",
+      "lang": "string | optional | default='en' | described",
       "record": "object | required | no default | described"
     },
     "examples": [
