@@ -38,7 +38,16 @@ function formatDate(isoDate, lang) {
   return <time dateTime={isoDate}>{text}</time>;
 }
 
-/** Experimental story-owned composition, not a published package renderer. */
+/**
+ * Experimental story-owned composition, not a published package renderer.
+ *
+ * @param {Object} props
+ * @param {Object} props.record Approved, public record-local presentation selection (`title` is required); see the story specification
+ * @param {Object<string, (string|Object<string, string>)>} props.labels Authored interface labels, separate from work and resource languages. Plural labels (`allDownloads`, `filesJump`, `showing`) hold CLDR plural forms with `{count}`, `{shown}` and `{total}` placeholders
+ * @param {string} [props.lang='en'] Interface language tag
+ * @param {'ltr'|'rtl'} [props.dir='ltr'] Interface direction
+ * @param {React.ReactNode} [props.children] Trusted authored description content. CMS consumers must sanitise HTML before producing prose
+ */
 export function PublicationRecord({
   record,
   labels,
