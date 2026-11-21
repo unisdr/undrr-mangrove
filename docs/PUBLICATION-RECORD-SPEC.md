@@ -147,7 +147,7 @@ Decided for [#1502](https://github.com/unisdr/undrr-mangrove/issues/1502), Novem
 
 ### 3. "All downloads (N)" under the cover
 
-**Decision.** With two or more resources, a text link under the cover reads "All downloads (N)" and jumps to the "Read or access this publication" heading. N counts primary resources; backups are not counted separately. There is no modal. When the table is filtered or collapsed, the link first resets the filters to All and opens the list (see [Adaptive resource presentation](#adaptive-resource-presentation)).
+**Decision.** With two or more resources, a text link under the cover reads "All downloads (N)" and jumps to the "Read or access this publication" heading. N counts primary resources; backups are not counted separately. There is no modal. When the table is filtered by language, the link first resets the filter to All (see [Adaptive resource presentation](#adaptive-resource-presentation)).
 
 **Why.** A reader who sees one cover can't tell that the record has several files, and the cover only reaches the first one. A modal or menu would be a second download interface to keep in step with the list. An in-page link keeps one list and only points at it. With one resource the cover already reaches everything, so the cue would be noise.
 
@@ -179,9 +179,7 @@ Decided for [#1502](https://github.com/unisdr/undrr-mangrove/issues/1502), Novem
 | Cover, publisher copy | `undrr-download-box-cover` | `download_publisher_cover` |
 | Cover, hosted copy | `undrr-download-box-cover` | `download_internal_cover` |
 | "All downloads (N)" | `undrr-download-box-cover` | `nav_all_downloads_cover` |
-| "Show all {count} files" / "Show fewer files" | `undrr-download-box` | `nav_show_all_downloads`, in both states |
 | Language buttons / select | `undrr-download-box` | `nav_filter_language: <code>` / `nav_filter_language` |
-| Text filter | `undrr-download-box` | `nav_filter_text` |
 
 **Why.** Each rule needs only one match. Region `undrr-download-box` (a prefix match, which also catches `-cover`) or label prefix `download_` finds every download click. Excluding `cover` leaves only the resource list. In-page navigation starts `nav_`, so it never counts as a download. Labels are fixed English strings with no counts, as in the [Collection page](https://mangrove.undrr.org/?path=/docs/patterns-collection-page--docs), so reports don't split by language or by number. The shared script's behaviour is unchanged; see [analytics](ANALYTICS.md).
 
@@ -211,18 +209,16 @@ The local Drupal database has 27,839 published publications:
 
 ### Tiers
 
-The thresholds are named constants in `recordAccess.js` (`TABLE_FROM`, `TIER3_FROM`, `TEXT_FILTER_FROM`, `LANGUAGE_FILTER_FROM`, `LANGUAGE_SELECT_FROM`, `PREVIEW_ROWS`), and each boundary has a test.
+The thresholds are named constants in `recordAccess.js` (`TABLE_FROM`, `LANGUAGE_FILTER_FROM`, `LANGUAGE_SELECT_FROM`), and each boundary has a test.
 
 | Tier | When | Presentation | Measured at 1378px |
 | --- | --- | --- | --- |
 | 1 | 1 resource | One access row: **Access {title}** ↗ (or **Watch**, or the plain title for hosted-only), then "Language · Format, size", then the backup as a download-icon link | 115px (was 237px) |
-| 2 | 2–5 resources, one language | A compact table, no filters. Columns: Title, Format / size, Original, Backup | 166px for 2 files |
-| 3 | 2+ languages, or 6+ resources | Tier 2 plus language filters above the table. A Language column shows when "All" is selected | 273px for 3 files in 2 languages (was 454px) |
-| 4 | 11+ resources | Tier 3 plus a "Filter files" text input | 439px for 34 files, collapsed |
+| 2 | 2+ resources, one language | A compact table with every row, no filters, no Language column. Columns: Title, Format / size, Original, Backup | 166px for 2 files |
+| 3 | 2+ languages | Tier 2 plus a language filter ("All (N) \| English (k) \| …", default All) above the table, and a Language column while All is selected. From 6 languages the filter is a native `<select>` | 273px for 3 files in 2 languages (was 454px) |
 
-- **Long views.** The table only collapses when it also has the text filter, from 11 resources (`COLLAPSE_FROM`, equal to `TEXT_FILTER_FROM`). There, a view with more than 6 rows (`PREVIEW_ROWS`) shows the first 6, and the rest sit behind ShowMore items mode: "Show all {count} files", where count is the number of rows in the current view, then "Show fewer files". A filter change resets it to collapsed, and a filtered view of 6 rows or fewer has no toggle. Tables of 10 rows or fewer always show every row, about 400px at most. The reason is that collapsed rows use plain `hidden`: Chromium ignores `hidden="until-found"` on table rows, so a collapsed row can't be found with find-in-page, and only the text filter can reach it. An earlier draft collapsed from 7 rows, which hid one row of the 7-language story behind "Show all 7 files", with no way to search it.
-- **Language filter.** It needs 2 or more languages to be useful. A one-language record in tier 3 or 4 therefore has no language filter, only the collapse and, from 11 files, the text filter. From 6 languages the buttons become a native `<select>`. A resource with no known language appears only under "All".
-- **No language-specific toggle label.** "Show all 22 English files" would need each language name in the grammar of every interface language. The toggle uses the generic "Show all {count} files", with the count of the current view.
+- **Every row, always.** The table never collapses, and there is no text filter. Only 57 of 27,839 publications (0.2%) have 11 or more files, and 12 have 21 or more; most have 5 or fewer. The browser's find-in-page is enough to search a long table, but only if its rows aren't hidden. Table rows can't use `hidden="until-found"` (Chromium ignores it on `<tr>`; see the ShowMore docs), so a collapsed row would be unsearchable. That is why the collapse was removed rather than kept behind a text filter. It also means the server-rendered (vanilla) and React tables show the same rows.
+- **Language filter.** It needs 2 or more languages to be useful, so a one-language record has none. A resource with no known language appears only under "All".
 
 ### Rows and cells
 
@@ -239,31 +235,28 @@ The table has a visually hidden `<caption>` ("Files for this publication"), `<th
 
 Changing `display` on table parts drops their table semantics in some browsers, so the table also carries explicit ARIA table roles (`table`, `rowgroup`, `row`, `columnheader`, `rowheader`, `cell`). Screen readers still get rows and headers in card layout. I chose this over switching to a list on narrow screens because it keeps one structure, and the column headers name every cell. In card layout the column headers are visually hidden but still read. Language and facts share one line ("English · HTML, 360 bytes"); the separator is CSS generated content with empty alternative text.
 
-### Filters
+### Language filter
 
-- **Controls.** Language filters are a native radio group: Mangrove's SegmentedControl, with a visually hidden legend "Language". They are not the ARIA tabs pattern, because they filter one table rather than switching panels. Arrow keys move between options and select as they go, which is the browser's radio behaviour. From 6 languages the control is Mangrove's Select, labelled "Language", with "All languages (N)" first. The text filter is Mangrove's TextInput (`type="search"`) with a persistent visible label "Filter files". It matches every word of the query in the title, language or format, ignoring case and accents, but not sizes, where "2" would match "422". The text and language filters combine.
-- **Feedback.** Focus stays on the control. A polite live region announces "Showing {shown} of {total} files". A language choice is announced at once. A text query is announced once typing pauses for 500ms (`ANNOUNCE_DELAY`), so screen readers don't read a count after every keystroke. A language choice cancels a pending text announcement. When nothing matches, a short message replaces the table.
+- **Controls.** The filter is a native radio group: Mangrove's SegmentedControl, with a visually hidden legend "Language". It is not the ARIA tabs pattern, because it filters one table rather than switching panels. Arrow keys move between options and select as they go, which is the browser's radio behaviour. From 6 languages the control is Mangrove's Select, labelled "Language", with "All languages (N)" first. Every language option has at least one row, so a filter never empties the table.
+- **Feedback.** Focus stays on the control. A polite live region announces "Showing {shown} of {total} files" at once when the language changes.
 - **Language names in the select.** `<option>` elements can't carry their own `lang`, so in the select a language name such as "Français" is spoken in the interface language. The radio-group labels are ordinary elements, but they also inherit the interface language.
-- **"All downloads (N)".** It resets the filters to All, opens the list, and the anchor then moves to the resources heading. Its count stays the true total.
+- **"All downloads (N)".** In tier 3 it resets the filter to All, and the anchor then moves to the resources heading. In tiers 1 and 2, and without JavaScript, it is a plain anchor. Its count is always the true total.
 - **Cover.** The cover always targets the first primary resource in source order, whatever the filter.
-- **Find in page.** Table rows hidden by the collapse use plain `hidden`, because `hidden="until-found"` has no effect on table rows in Chromium (see ShowMore's items-mode docs). Find-in-page therefore doesn't reach collapsed rows, which is why only tables with the text filter collapse.
 
 ### Vanilla and React
 
-React is the full experience. The server-rendered HTML is the contract for Drupal ([web-backlog#3362](https://gitlab.com/undrr/web-backlog/-/work_items/3362)). Filters render only after the React component has mounted, so no control appears without a working script.
+The server-rendered HTML is the contract for Drupal ([web-backlog#3362](https://gitlab.com/undrr/web-backlog/-/work_items/3362)). The only difference from React is the language filter: it renders only after the React component has mounted, so no control appears without a working script.
 
-| Feature | Vanilla (server HTML + `show-more.js`) | React |
+| Feature | Vanilla (server HTML, no script needed) | React |
 | --- | --- | --- |
-| Tier 1 row; tier 2–4 table, with every link working | Yes, no JavaScript needed | Yes |
+| Tier 1 row; tier 2–3 table with every row and link | Yes | Yes |
 | Caption, scoped headers, ARIA table roles, mobile cards (CSS) | Yes | Yes |
-| Collapse after 6 rows, from 11 resources (ShowMore items mode) | Yes, with `show-more.js`; without it, every row shows. Vanilla has no text filter, so its collapsed rows can only be reached by opening the list | Yes, with the text filter |
-| Language filter (buttons or select) | No; not rendered | Yes |
-| Text filter | No; not rendered | Yes |
-| Live result count | No | Yes |
-| "All downloads (N)" | A plain anchor; a collapsed list stays collapsed unless the host's click handler calls `mgShowMoreSetOpen(toggle, true)` | Resets the filters, opens the list, jumps |
+| Find-in-page reaches every file | Yes | Yes (rows in the selected language) |
+| Language filter (buttons or select) and live count | No; not rendered | Yes |
+| "All downloads (N)" | Plain anchor | Resets the filter to All, then jumps |
 | Shared "What is a backup copy?" | Yes (`<details>`) | Yes |
 
-A vanilla language filter would be a small enhancement that hides rows by language. I left it out: it would add a second filtering implementation to keep in step with React, and the collapse already keeps long tables short. It can be added later if Drupal needs it.
+A vanilla language filter would be a small enhancement that hides rows by language. I left it out: it would add a second filtering implementation to keep in step with React, and an unfiltered table already works. It can be added later if Drupal needs it.
 
 ### Shared explanation and date
 
@@ -278,16 +271,13 @@ Every access link keeps `download_publisher`, `download_internal` or `download_b
 | --- | --- |
 | Language buttons | `nav_filter_language: <language code>`. SegmentedControl appends the stable option value |
 | Language select | `nav_filter_language`. Only the opening is recorded: the tracker listens to `mousedown`, which fires before a choice is made, so the chosen language isn't known |
-| Text filter | `nav_filter_text` |
-| Show all / Show fewer | `nav_show_all_downloads` |
 
-None of them starts `download_`. Count language-filter use by the prefix `nav_filter_language`, which matches both the buttons and the select. Split by language only from the buttons' `: <code>` suffix. The drupal-base tracker records `mousedown` only, so keyboard use of these controls isn't recorded. That gap is site-wide and pre-existing.
+Neither starts `download_`. Count language-filter use by the prefix `nav_filter_language`, which matches both the buttons and the select. Split by language only from the buttons' `: <code>` suffix. The drupal-base tracker records `mousedown` only, so keyboard use of these controls isn't recorded. That gap is site-wide and pre-existing.
 
 ### Checks
 
-- **Unit tests.** `__tests__/resourceTiers.test.jsx` covers tier boundaries (0, 1, 2, 5, 6, 10, 11 and 34 files; 5, 6 and 7 languages), language groups, filtering, each tier's markup and names, table semantics, RTL isolation, the shared explanation, "Added" in Bibliographic details, placeholders in every language, and axe. `__tests__/resourceFilters.test.jsx` covers the radio group, the select, the text filter, the collapse reset, the live region, "All downloads (N)", the cover target under a filter, and the server-rendered (vanilla) markup.
-- **Browser checks.** Tier 1's access block is at most 160px (200px narrow) and tier 3's at most 340px (460px narrow), with the Description directly after it. In Many files: 6 of 34 rows show; Enter opens the list and focuses row 7; Space closes it; a language filter keeps focus and announces the count; the text filter combines with it; "All downloads (34)" resets and opens. Many languages: the select filters to one row.
-- **Real keys.** A Playwright run in Chromium exercised arrow keys in the radio group, Tab and Shift+Tab, typing, Enter and Space on the toggle, and a mouse click on "All downloads".
+- **Unit tests.** `__tests__/resourceTiers.test.jsx` covers tier boundaries (0, 1, 2, 5, 6, 11 and 34 files in one language; 5, 6 and 7 languages), language groups, filtering, each tier's markup and names, table semantics, RTL isolation, the shared explanation, "Added" in Bibliographic details, placeholders in every language, and axe. `__tests__/resourceFilters.test.jsx` covers the radio group, the select, the live region, every row of the 34-file table being shown, "All downloads (N)" resetting the filter, the cover target under a filter, and the server-rendered (vanilla) markup having no filter and no collapse.
+- **Browser checks.** Tier 1's access block is at most 160px (200px narrow) and tier 3's at most 340px (460px narrow), with the Description directly after it. In Many files, all 34 rows show; `window.find("Annex 30")` with wrap-around finds a late row; the language filter keeps focus and announces the count; "All downloads (34)" resets it to All. In Many languages, the select filters to one row.
 - **Screenshots.** Every story at 1378px and 390px, plus Arabic.
 - **Not done.** Screen readers, voice control, and real Windows High Contrast.
 
