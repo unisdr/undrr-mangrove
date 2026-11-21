@@ -32,6 +32,31 @@ const THUMBNAIL_PREVIEW_FOCUSABLE_SELECTOR = [
   '[tabindex]',
 ].join(',');
 
+/**
+ * Gallery component.
+ *
+ * Shows one media item at a time (an image, a video, an embed or authored
+ * HTML) with optional thumbnails, navigation arrows and captions. When a
+ * visitor changes the visible item, the root dispatches a bubbling
+ * `mg-gallery:change` event.
+ *
+ * @param {Object} props
+ * @param {Array<{id: string, type?: 'image'|'video'|'embed'|'html', src?: string, alt?: string, title?: string, description?: string, thumbnail?: string, poster?: string, embedUrl?: string, html?: string}>} props.media Media items, each with a unique `id`. `type` defaults to `image`; `embedUrl` is for `embed` items and falls back to `src`; `html` is for `html` items and is rendered with `dangerouslySetInnerHTML`, so sanitise it before passing it in
+ * @param {number} [props.initialIndex=0]                    Index of the item shown first
+ * @param {boolean} [props.showThumbnails=true]              Show the thumbnail list
+ * @param {'left'|'bottom'} [props.thumbnailPosition='left'] Where the thumbnail list sits
+ * @param {boolean} [props.showArrows=true]                  Show the previous and next arrows
+ * @param {'overlay'|'corner'} [props.arrowStyle='overlay']  Arrows at either side of the media, or grouped in its bottom corner
+ * @param {boolean} [props.showDescription=true]             Show each item's title and description
+ * @param {boolean} [props.enableKeyboard=true]              Navigate with the arrow keys, Home and End
+ * @param {boolean} [props.loop=false]                       Wrap from the last item to the first, and back
+ * @param {Function} [props.onMediaChange]                   Called with `(index, item)` on each navigation, including selecting the item already shown
+ * @param {string} [props.lang]                              UI language tag; selects the built-in catalogue, with English fallback
+ * @param {'ltr'|'rtl'|'auto'} [props.dir]                   Explicit text direction; otherwise known catalogue languages select their direction
+ * @param {{galleryAriaLabel?: string, prevLabel?: string, nextLabel?: string, loadingLabel?: string}} [props.labels] Explicit UI label overrides; omitted keys use the selected catalogue, then English
+ * @param {string} [props.analyticsRegion='gallery']         `data-vf-google-analytics-region` on the root; pass an empty string to omit it
+ * @returns {JSX.Element} Rendered gallery
+ */
 function GalleryComponent({
   media,
   initialIndex = 0,
@@ -497,4 +522,9 @@ GalleryComponent.propTypes = {
   analyticsRegion: PropTypes.string,
 };
 
-export const Gallery = React.memo(GalleryComponent);
+// The cast is for Storybook's docgen server: without React's type
+// definitions, `React.memo` returns `any` and hides the props documented
+// above. It has no effect at run time.
+export const Gallery = /** @type {typeof GalleryComponent} */ (
+  React.memo(GalleryComponent)
+);

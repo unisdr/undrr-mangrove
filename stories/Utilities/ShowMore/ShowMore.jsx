@@ -74,7 +74,7 @@ ShowMoreItem.propTypes = {
  * by the `mgShowMore` vanilla JS utility.
  *
  * @param {Object} props
- * @param {Array<{button_text?: string, collapsable_wrapper_class: string, collapsable_text: string}>} [props.data=EMPTY_DATA] Collapsible content items. `collapsable_text` is the text to show or hide; `collapsable_wrapper_class` is a CSS class on the content wrapper, for styling only; `button_text` is a legacy field, use `labelCollapsed` instead
+ * @param {Array<{button_text?: string, collapsable_wrapper_class: string, collapsable_text: string}>} [props.data=EMPTY_DATA] Collapsible content items. `collapsable_text` is the text to show or hide; `collapsable_wrapper_class` is a CSS class on the content wrapper, for styling only; `button_text` is a legacy field, use `labelCollapsed` instead. With no items nothing renders
  * @param {string} [props.labelOpen='Show less']             Translated expanded-state label
  * @param {string} [props.labelCollapsed='Show more']        Translated collapsed-state label
  * @param {number} [props.minHiddenLines]                    Collapse only when at least this many lines would be hidden
@@ -112,8 +112,11 @@ export function ShowMore({
 }
 
 ShowMore.propTypes = {
-  /** Array of collapsible content items */
-  data: PropTypes.arrayOf(itemType).isRequired,
+  /**
+   * Array of collapsible content items. Optional: with no items nothing
+   * renders, and items added later are enhanced as they mount.
+   */
+  data: PropTypes.arrayOf(itemType),
   /** Label while expanded; supply the page's translated wording. */
   labelOpen: PropTypes.string,
   /** Label while collapsed; supply the page's translated wording. */

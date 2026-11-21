@@ -831,6 +831,7 @@
       "logoHref": "string | optional | default='/' | described",
       "logoSrc": "string | optional | no default | described",
       "logoWidth": "number | optional | no default | described",
+      "onNavigate": "func | optional | no default | described",
       "searchUrl": "string | optional | default='/search' | described",
       "sections": "{ title: string, icon: string, bannerHeading: string, bannerDescription: string, bannerButton: { label: string, url: string }, items: { title: string, url: string, items: array }[] }[] | required | no default | described"
     },
