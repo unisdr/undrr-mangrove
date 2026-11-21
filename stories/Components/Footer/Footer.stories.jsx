@@ -10,12 +10,12 @@ export default {
       options: ['default', 'minimal'],
       control: { type: 'inline-radio' },
       description: 'Visual variant of the Footer component',
-      defaultValue: 'default',
+      table: { defaultValue: { summary: 'default' } },
     },
     enableSyndication: {
       control: { type: 'boolean' },
       description: 'Enable/disable UNDRR syndicated footer content',
-      defaultValue: true,
+      table: { defaultValue: { summary: 'true' } },
     },
     syndicationConfig: {
       control: { type: 'object' },

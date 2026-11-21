@@ -84,12 +84,20 @@ jobs:
           # Same command as the local gate developers are asked to run, so a
           # grep for it finds the CI step too.
           yarn validate-manifest
-          # Opt-in catalogue-only research path: require complete public-output
-          # and validation parity before trusting source preset extraction.
-          yarn extract:source-metadata
+          # validate-manifest accepts a well-formed catalogue with weaker data.
+          # Fail on any change to the published prop contract; update the
+          # baseline deliberately (--update) and explain the diff in the PR.
+          yarn check:catalogue-baseline
+          # Snapshot the site catalogue: reruns generation and validation in
+          # isolated staging. (On a docgen-server build it also covers v1 $refs.)
           node scripts/ai-manifest/snapshot-manifest-output.mjs .cache/manifest-parity/site
-          node scripts/ai-manifest/snapshot-manifest-output.mjs .cache/manifest-parity/source --build-dir=.cache/manifest-source
-          node scripts/ai-manifest/compare-manifest-output.mjs .cache/manifest-parity/site .cache/manifest-parity/source
+          # The opt-in source-extraction research path compared its output
+          # with this snapshot. It cannot read Storybook 11 docgen-server
+          # metadata yet (docs/MANIFEST-SOURCE-SPIKE.md), so the comparison is
+          # off until it is ported. Restore these lines with that port:
+          #   yarn extract:source-metadata
+          #   node scripts/ai-manifest/snapshot-manifest-output.mjs .cache/manifest-parity/source --build-dir=.cache/manifest-source
+          #   node scripts/ai-manifest/compare-manifest-output.mjs .cache/manifest-parity/site .cache/manifest-parity/source
           # preview-stats.json feeds Chromatic's TurboSnap (the chromatic
           # workflow runs its own build); the published site never reads it.
           rm -f docs-build-temp/preview-stats.json

@@ -62,18 +62,17 @@ export default {
       control: {
         type: 'inline-radio',
       },
-
-      defaultValue: 'wide',
+      table: { defaultValue: { summary: 'wide' } },
     },
 
     caption: {
       control: { type: 'boolean' },
-      defaultValue: true,
+      table: { defaultValue: { summary: 'true' } },
     },
 
     credit: {
       control: { type: 'boolean' },
-      defaultValue: true,
+      table: { defaultValue: { summary: 'true' } },
     },
   },
 };

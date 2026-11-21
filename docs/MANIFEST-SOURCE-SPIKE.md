@@ -1,5 +1,15 @@
 # Source-only manifest extraction candidate
 
+> **Status on Storybook 11: not supported.** Storybook 11's docgen server
+> returns component metadata as `$ref`s into `services/` payloads that only a
+> full build writes. Loading the presets from source returns those references
+> but not their targets, and the docgen service is not reachable from a
+> source-only load (`OpenServiceInternalServiceError`). `yarn
+> extract:source-metadata` now stops with an explicit error when the docgen server is enabled,
+> and the CI parity comparison against this path is commented out in
+> `.github/workflows/storybook.yml`. Porting the extractor to the open-service
+> API, then re-earning the parity below, is a separate task.
+
 This opt-in candidate evaluates generating Mangrove's static AI catalogue
 without building the Storybook site. It addresses the full-build dependency
 in [#1354](https://github.com/unisdr/undrr-mangrove/issues/1354); it does **not**

@@ -36,6 +36,14 @@ export default {
 
   features: {
     componentsManifest: true,
+    // Storybook 11's docgen server reads props from typed JSDoc and ignores
+    // PropTypes, so most components would lose types, descriptions or whole
+    // props in the docs tables and Controls. Until every component documents
+    // its props in typed JSDoc (unisdr/undrr-mangrove#1511), main keeps
+    // builder docgen (react-docgen), which Storybook 11 deprecates and
+    // Storybook 12 removes. CI also builds with MANGROVE_DOCGEN_SERVER=true to
+    // check the JSDoc against PropTypes, which previews switching it on.
+    docgenServer: process.env.MANGROVE_DOCGEN_SERVER === 'true',
   },
 
   docs: {
@@ -49,4 +57,61 @@ export default {
     // Switch to 'react-docgen-typescript' if props tables are missing or incomplete for TS components
     reactDocgen: 'react-docgen',
   },
+  storySorts: [
+    {
+      method: 'alphabetical',
+      order: [
+        'Introduction',
+        'Brand',
+        [
+          'About this guide',
+          'Brand identity',
+          'Brand guidelines',
+          'Common patterns',
+          'Component gallery',
+        ],
+        'Getting started',
+        [
+          'About Mangrove',
+          'Getting started guide',
+          'Integration',
+          [
+            'Vanilla HTML and CSS',
+            'Sass integration',
+            'React integration',
+            'Theming guide',
+            'CDN reference',
+            'Hydration guide',
+            'Drupal Gutenberg',
+          ],
+          'Best practices',
+          'Accessibility',
+          'Browser support',
+          'AI and MCP integration',
+        ],
+        'Contributing',
+        [
+          'Component standards',
+          'Build a component',
+          ['Step by step', 'Review checklist', 'Testing', 'Hydration'],
+          'Writing guidelines',
+          'Architecture',
+          'Release process',
+        ],
+        'Platform services',
+        [
+          'Analytics enhancements',
+          'Critical messaging',
+          'Cookie consent',
+          'Content syndication',
+          'Search syndication',
+        ],
+        'Design decisions',
+        'Components',
+        'Patterns',
+        ['Content', ['Overview', '*'], '*'],
+        'Utilities',
+      ],
+    },
+  ],
 };

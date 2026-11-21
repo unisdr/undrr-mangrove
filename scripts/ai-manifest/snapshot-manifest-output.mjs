@@ -45,6 +45,11 @@ try {
   // stopped generating, falsely passing parity against stale baseline output.
   fs.mkdirSync(path.join(staging, 'manifests'));
   fs.copyFileSync(metadata, path.join(staging, 'manifests/components.json'));
+  // Storybook 11 metadata (v1) points into services/ with relative $refs
+  // (../services/core/docgen/...), so the staged copy needs that tree too.
+  const services = path.join(path.dirname(path.dirname(metadata)), 'services');
+  if (fs.existsSync(services))
+    fs.cpSync(services, path.join(staging, 'services'), { recursive: true });
   fs.copyFileSync(
     path.join(buildDirectory, 'index.json'),
     path.join(staging, 'index.json')

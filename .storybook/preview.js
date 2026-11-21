@@ -133,68 +133,15 @@ const preview = {
     viewport: {
       viewports: INITIAL_VIEWPORTS,
     },
-    options: {
-      storySort: {
-        method: 'alphabetical',
-        order: [
-          'Introduction',
-          'Brand',
-          [
-            'About this guide',
-            'Brand identity',
-            'Brand guidelines',
-            'Common patterns',
-            'Component gallery',
-          ],
-          'Getting started',
-          [
-            'About Mangrove',
-            'Getting started guide',
-            'Integration',
-            [
-              'Vanilla HTML and CSS',
-              'Sass integration',
-              'React integration',
-              'Theming guide',
-              'CDN reference',
-              'Hydration guide',
-              'Drupal Gutenberg',
-            ],
-            'Best practices',
-            'Accessibility',
-            'Browser support',
-            'AI and MCP integration',
-          ],
-          'Contributing',
-          [
-            'Component standards',
-            'Build a component',
-            ['Step by step', 'Review checklist', 'Testing', 'Hydration'],
-            'Writing guidelines',
-            'Architecture',
-            'Release process',
-          ],
-          'Platform services',
-          [
-            'Analytics enhancements',
-            'Critical messaging',
-            'Cookie consent',
-            'Content syndication',
-            'Search syndication',
-          ],
-          'Design decisions',
-          'Components',
-          'Patterns',
-          ['Content', ['Overview', '*'], '*'],
-          'Utilities',
-        ],
-        includeName: true,
-      },
-    },
   },
 
+  // Storybook 11 ignores globalTypes.<name>.defaultValue (deprecated since
+  // Storybook 8), which left locale and theme undefined until a reader picked
+  // one. Every global's starting value belongs here.
   initialGlobals: {
     addonRtl: 'ltr',
+    locale: 'english',
+    theme: 'Global UNDRR Theme',
   },
 
   globalTypes: {
@@ -213,7 +160,6 @@ const preview = {
     locale: {
       name: 'Locale',
       description: 'locale',
-      defaultValue: 'english',
       toolbar: {
         icon: 'globe',
         items: [
@@ -230,7 +176,6 @@ const preview = {
     theme: {
       name: 'Theme',
       description: 'Global theme for components',
-      defaultValue: 'Global UNDRR Theme',
       toolbar: {
         icon: 'paintbrush',
         items: themeNames.map(name => ({

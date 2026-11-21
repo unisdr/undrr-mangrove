@@ -88,8 +88,7 @@ export default {
       control: {
         type: 'inline-radio',
       },
-
-      defaultValue: 'Black',
+      table: { defaultValue: { summary: 'Black' } },
     },
   },
 
@@ -125,13 +124,11 @@ export const DefaultBreadcrumbs = {
 export const WhiteBreadcrumbs = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
-    return (
-      <Breadcrumbcomponent
-        data={caption}
-        Color="White"
-        {...args}
-      ></Breadcrumbcomponent>
-    );
+    return <Breadcrumbcomponent data={caption} {...args}></Breadcrumbcomponent>;
+  },
+
+  args: {
+    Color: 'White',
   },
 
   name: 'White breadcrumbs',

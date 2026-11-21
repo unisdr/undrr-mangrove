@@ -99,21 +99,21 @@ export default {
       control: {
         type: 'inline-radio',
       },
-      defaultValue: 'Large',
+      table: { defaultValue: { summary: 'Large' } },
     },
     highlight: {
       options: ['primary', 'secondary', 'tertiary'],
       control: {
         type: 'inline-radio',
       },
-      defaultValue: 'primary',
+      table: { defaultValue: { summary: 'primary' } },
     },
     layout: {
       options: ['horizontal', 'vertical'],
       control: {
         type: 'inline-radio',
       },
-      defaultValue: 'vertical',
+      table: { defaultValue: { summary: 'vertical' } },
     },
   },
 };
@@ -125,29 +125,32 @@ export const DefaultAuthorImage = {
         person.noImage ? (
           <AuthorImage
             key={person.name}
+            {...args}
             name={person.name}
             title={person.title}
             org={person.org}
             highlight={person.highlight}
             layout={person.layout}
-            {...args}
           />
         ) : (
           <SeededAuthorImage
             key={person.name}
             seed={person.seed}
             imageAlt={`${person.name}, ${person.title}, ${person.org}`}
+            {...args}
             name={person.name}
             title={person.title}
             org={person.org}
             highlight={person.highlight}
             layout={person.layout}
-            {...args}
           />
         )
       )}
     </StoryGrid>
   ),
+  // Each person in the grid sets its own highlight and layout, so those
+  // controls would show a value the story never renders.
+  parameters: { controls: { exclude: ['highlight', 'layout'] } },
 
   name: 'Author image',
 };
@@ -160,12 +163,13 @@ export const HorizontalAuthorImage = {
       name="Author One"
       title="Special Representative"
       org="Example organisation"
-      highlight="primary"
-      layout="horizontal"
       href="#author-one"
       {...args}
     />
   ),
+  args: {
+    layout: 'horizontal',
+  },
 
   name: 'Horizontal author image',
 };
@@ -178,12 +182,14 @@ export const VerticalAuthorImage = {
       name="Author Two"
       title="Director"
       org="Example organisation"
-      highlight="secondary"
-      layout="vertical"
       href="#author-two"
       {...args}
     />
   ),
+  args: {
+    highlight: 'secondary',
+    layout: 'vertical',
+  },
 
   name: 'Vertical author image',
 };
@@ -202,14 +208,15 @@ export const InverseAuthorImage = {
         name="Author One"
         title="Special Representative"
         org="Example organisation"
-        highlight="primary"
-        layout="horizontal"
         tone="inverse"
         href="#author-one"
         {...args}
       />
     </div>
   ),
+  args: {
+    layout: 'horizontal',
+  },
 
   name: 'Inverse author image',
 };
@@ -220,13 +227,15 @@ export const NoImageAuthorImage = {
       name="Author Three"
       title="Contributor"
       org="Example organisation"
-      highlight="secondary"
-      layout="vertical"
       tone="default"
       href="#author-three"
       {...args}
     />
   ),
+  args: {
+    highlight: 'secondary',
+    layout: 'vertical',
+  },
 
   name: 'No image author image',
 };

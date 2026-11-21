@@ -73,6 +73,12 @@ export default {
   title: 'Components/Tabs',
   component: Tab,
   decorators: [withLanguage],
+  // Storybook 11 infers argTypes through its docgen service, which a
+  // standalone iframe.html does not load. Declared here so `?args=` links can
+  // set this prop on stories whose args do not already include it.
+  argTypes: {
+    stackOnMobile: { control: 'boolean' },
+  },
 };
 
 export const Tabs = {

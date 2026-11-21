@@ -156,9 +156,9 @@ async function openExport({ canvasElement }) {
 }
 
 export default {
+  ...widgetMetaShared,
   title: 'Components/Syndicated search/Downloads/Fixtures',
   component: SyndicationSearchWidget,
-  ...widgetMetaShared,
   tags: ['!manifest'],
 };
 

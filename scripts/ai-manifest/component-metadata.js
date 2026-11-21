@@ -5,6 +5,12 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import {
+  docblockText,
+  readJsDocTags,
+  readPropTypesDocgen,
+  resolveStoryComponent,
+} from './react-docgen-source.js';
 
 const object = value =>
   value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -62,7 +68,8 @@ export function normalizeComponentMetadata(
     }
   };
   record(value, 'manifest');
-  if (value.v !== 0) fail('manifest.v', 'the supported Storybook version 0');
+  if (value.v !== 0 && value.v !== 1)
+    fail('manifest.v', 'the supported Storybook version 0 or 1');
   record(value.components, 'manifest.components');
   if (!Object.keys(value.components).length)
     fail('manifest.components', 'a nonempty component map');
@@ -143,6 +150,314 @@ export function normalizeComponentMetadata(
   return structuredClone(value);
 }
 
+function cleanDocgenProps(rawProps) {
+  if (!object(rawProps)) return {};
+  const cleaned = {};
+  for (const [propName, propDef] of Object.entries(rawProps)) {
+    if (!object(propDef)) continue;
+    const { defaultValue, description, required, type, ...rest } = propDef;
+    const prop = {};
+    for (const [k, v] of Object.entries(rest)) {
+      if (v !== null && v !== undefined) prop[k] = v;
+    }
+    if (typeof description === 'string' && description.trim()) {
+      prop.description = description;
+    }
+    if (typeof required === 'boolean') {
+      prop.required = required;
+    }
+    if (object(type) && typeof type.name === 'string') {
+      prop.type = type;
+    }
+    if (
+      defaultValue &&
+      typeof defaultValue === 'object' &&
+      typeof defaultValue.value === 'string'
+    ) {
+      prop.defaultValue = {
+        value: defaultValue.value,
+        ...(defaultValue.computed !== undefined
+          ? { computed: Boolean(defaultValue.computed) }
+          : {}),
+      };
+    }
+    cleaned[propName] = prop;
+  }
+  return cleaned;
+}
+
+export function resolveJsonPointer(data, pointer) {
+  if (!pointer || pointer === '#' || pointer === '/') return data;
+  let p = pointer;
+  if (p.startsWith('#')) {
+    p = p.slice(1);
+  }
+  if (!p || p === '/') return data;
+  if (!p.startsWith('/')) {
+    throw new Error(`Malformed JSON pointer: "${pointer}" must start with '/'`);
+  }
+  const rawParts = p.slice(1).split('/');
+  let curr = data;
+  for (const rawPart of rawParts) {
+    if (/(?:^|[^\~])\~(?![01])|\~$/.test(rawPart)) {
+      throw new Error(
+        `Malformed JSON pointer: invalid escape sequence in "${pointer}"`
+      );
+    }
+    const unescaped = rawPart.replace(/~1/g, '/').replace(/~0/g, '~');
+    let part;
+    try {
+      part = decodeURIComponent(unescaped);
+    } catch {
+      throw new Error(
+        `Malformed JSON pointer: invalid URI encoding in "${pointer}"`
+      );
+    }
+    if (
+      part === '__proto__' ||
+      part === 'constructor' ||
+      part === 'prototype'
+    ) {
+      return undefined;
+    }
+    if (curr === null || typeof curr !== 'object') return undefined;
+    if (Array.isArray(curr)) {
+      if (part === '-') return undefined;
+      if (!/^(?:0|[1-9]\d*)$/.test(part)) return undefined;
+      const idx = Number(part);
+      if (idx >= curr.length) return undefined;
+      curr = curr[idx];
+    } else if (Object.hasOwn(curr, part)) {
+      curr = curr[part];
+    } else {
+      return undefined;
+    }
+  }
+  return curr;
+}
+
+export function resolveRef(baseDir, ref, visited = new Set()) {
+  if (typeof ref !== 'string' || !ref.trim()) {
+    throw new Error(
+      'Cannot resolve metadata $ref: ref must be a nonempty string'
+    );
+  }
+  const [filePath, ...rest] = ref.split('#');
+  const pointer = rest.length ? '#' + rest.join('#') : '';
+  const fullPath = path.resolve(baseDir, filePath);
+  const canonical = `${fullPath}${pointer}`;
+
+  if (visited.has(canonical)) {
+    throw new Error(`Circular metadata $ref detected: ${ref}`);
+  }
+  const nextVisited = new Set(visited).add(canonical);
+
+  let data;
+  try {
+    data = JSON.parse(fs.readFileSync(fullPath, 'utf8'));
+  } catch (cause) {
+    throw new Error(
+      `Cannot resolve metadata $ref at ${fullPath}: ${cause.message}`,
+      { cause }
+    );
+  }
+
+  const target = resolveJsonPointer(data, pointer);
+  if (target === undefined && pointer !== '' && pointer !== '#') {
+    throw new Error(
+      `Cannot resolve metadata $ref pointer "${pointer}" in ${fullPath}`
+    );
+  }
+  if (object(target) && typeof target.$ref === 'string') {
+    return resolveRef(path.dirname(fullPath), target.$ref, nextVisited);
+  }
+  return target;
+}
+
+export function dereferenceComponentMetadata(
+  value,
+  {
+    baseDir = process.cwd(),
+    readDocgen = readPropTypesDocgen,
+    resolveComponent = resolveStoryComponent,
+  } = {}
+) {
+  if (!object(value) || !object(value.components)) return value;
+
+  const dereferencedComponents = {};
+  for (const [key, rawComponent] of Object.entries(value.components)) {
+    if (!object(rawComponent)) {
+      dereferencedComponents[key] = rawComponent;
+      continue;
+    }
+
+    let component = rawComponent;
+    if (typeof component.$ref === 'string') {
+      const resolvedComp = resolveRef(baseDir, component.$ref);
+      if (object(resolvedComp)) {
+        component = { ...resolvedComp, ...component };
+        delete component.$ref;
+      }
+    }
+
+    let compDocs = component.docs;
+    if (compDocs && typeof compDocs.$ref === 'string') {
+      const resolvedDocs = resolveRef(baseDir, compDocs.$ref);
+      if (object(resolvedDocs)) compDocs = resolvedDocs;
+    }
+
+    const hasRefs =
+      (component.docgen && typeof component.docgen.$ref === 'string') ||
+      (component.stories && typeof component.stories.$ref === 'string') ||
+      (compDocs &&
+        Object.values(compDocs).some(
+          d =>
+            (d && typeof d.$ref === 'string') ||
+            (d?.mdx && typeof d.mdx.$ref === 'string')
+        ));
+
+    if (!hasRefs && !rawComponent.$ref) {
+      dereferencedComponents[key] = component;
+      continue;
+    }
+
+    const docgenPayload =
+      component.docgen && typeof component.docgen.$ref === 'string'
+        ? resolveRef(baseDir, component.docgen.$ref)
+        : component.docgen;
+
+    const storyPayload =
+      component.stories && typeof component.stories.$ref === 'string'
+        ? resolveRef(baseDir, component.stories.$ref)
+        : component.stories;
+
+    const docs = {};
+    if (object(compDocs)) {
+      for (const [docId, rawDocEntry] of Object.entries(compDocs)) {
+        if (!object(rawDocEntry)) continue;
+        let docEntry = rawDocEntry;
+        if (typeof docEntry.$ref === 'string') {
+          const resolvedDoc = resolveRef(baseDir, docEntry.$ref);
+          if (object(resolvedDoc)) {
+            docEntry = { ...resolvedDoc, ...docEntry };
+            delete docEntry.$ref;
+          }
+        }
+        const mdxPayload =
+          docEntry.mdx && typeof docEntry.mdx.$ref === 'string'
+            ? resolveRef(baseDir, docEntry.mdx.$ref)
+            : docEntry.mdx;
+        docs[docId] = {
+          ...docEntry,
+          content: mdxPayload?.content ?? docEntry.content,
+        };
+      }
+    }
+
+    let reactDocgen = component.reactDocgen || docgenPayload?.reactDocgen;
+    let propTypesDocgen;
+    if (reactDocgen) {
+      if (object(reactDocgen.props)) {
+        reactDocgen = {
+          ...reactDocgen,
+          props: cleanDocgenProps(reactDocgen.props),
+        };
+      }
+    } else if (docgenPayload) {
+      // Prefer PropTypes documentation; see react-docgen-source.js for why.
+      // The docgen server says which file and export the component is; when
+      // it found none, follow the story file's own meta.component import.
+      const meta = docgenPayload.reactComponentMeta;
+      const target = meta
+        ? {
+            filePath: meta.filePath,
+            names: [meta.exportName, meta.displayName, docgenPayload.name],
+          }
+        : docgenPayload.error && resolveComponent(docgenPayload.path);
+      propTypesDocgen = target && readDocgen(target.filePath, target.names);
+      if (propTypesDocgen) {
+        reactDocgen = {
+          ...propTypesDocgen,
+          ...(object(propTypesDocgen.props)
+            ? { props: cleanDocgenProps(propTypesDocgen.props) }
+            : {}),
+        };
+      } else if (meta) {
+        reactDocgen = {
+          ...(typeof meta.description === 'string' && meta.description.trim()
+            ? { description: meta.description }
+            : {}),
+          props: cleanDocgenProps(meta.props),
+          ...(typeof meta.filePath === 'string'
+            ? { definedInFile: meta.filePath }
+            : {}),
+        };
+      }
+    }
+
+    let stories = component.stories;
+    if (storyPayload) {
+      if (Array.isArray(storyPayload.stories)) {
+        stories = storyPayload.stories;
+      } else if (object(storyPayload.stories)) {
+        stories = Object.values(storyPayload.stories);
+      } else if (Array.isArray(storyPayload)) {
+        stories = storyPayload;
+      } else if (
+        object(storyPayload) &&
+        Object.values(storyPayload).some(s => s && typeof s.id === 'string')
+      ) {
+        stories = Object.values(storyPayload);
+      }
+    }
+
+    const name =
+      docgenPayload?.name ||
+      docgenPayload?.displayName ||
+      docgenPayload?.reactComponentMeta?.displayName ||
+      storyPayload?.name ||
+      component.name;
+    const compPath =
+      docgenPayload?.path || storyPayload?.path || component.path;
+    const description =
+      component.description ||
+      docgenPayload?.description ||
+      docblockText(propTypesDocgen?.description);
+    const compImport = storyPayload?.import || component.import;
+    // Tags read from the same docblock as the PropTypes props, in the form
+    // the catalogue consumes; the docgen server's tags omit @param types.
+    const ownTags = propTypesDocgen
+      ? readJsDocTags(propTypesDocgen.description)
+      : {};
+    const jsDocTags = Object.keys(ownTags).length
+      ? ownTags
+      : docgenPayload?.jsDocTags || component.jsDocTags;
+    // A component documented through the story-file fallback is not an error.
+    const error = propTypesDocgen
+      ? undefined
+      : docgenPayload?.error || component.error;
+
+    dereferencedComponents[key] = {
+      ...component,
+      id: component.id ?? key,
+      ...(typeof name === 'string' ? { name } : {}),
+      ...(typeof compPath === 'string' ? { path: compPath } : {}),
+      ...(typeof description === 'string' ? { description } : {}),
+      ...(typeof compImport === 'string' ? { import: compImport } : {}),
+      ...(jsDocTags && Object.keys(jsDocTags).length ? { jsDocTags } : {}),
+      ...(error ? { error } : {}),
+      ...(reactDocgen ? { reactDocgen } : {}),
+      ...(stories ? { stories } : {}),
+      ...(Object.keys(docs).length ? { docs } : {}),
+    };
+  }
+
+  return {
+    ...value,
+    components: dereferencedComponents,
+  };
+}
+
 export function readComponentMetadata(filename) {
   let input;
   try {
@@ -153,7 +468,9 @@ export function readComponentMetadata(filename) {
       { cause }
     );
   }
-  return normalizeComponentMetadata(input, { source: filename });
+  const baseDir = path.dirname(path.resolve(filename));
+  const dereferenced = dereferenceComponentMetadata(input, { baseDir });
+  return normalizeComponentMetadata(dereferenced, { source: filename });
 }
 
 /** Audited inputs and complete prop/docgen data, plus stable story identity. */

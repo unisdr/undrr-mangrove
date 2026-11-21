@@ -136,7 +136,9 @@ export default {
     cdnBaseUrl: {
       control: 'text',
       description: 'Base URL for the CDN resources (defaults to UNDRR CDN)',
-      defaultValue: 'https://assets.undrr.org/cookie-banner/v1',
+      table: {
+        defaultValue: { summary: 'https://assets.undrr.org/cookie-banner/v1' },
+      },
     },
   },
 };

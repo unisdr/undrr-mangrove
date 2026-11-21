@@ -49,8 +49,7 @@ export default {
       control: {
         type: 'inline-radio',
       },
-
-      defaultValue: 'large',
+      table: { defaultValue: { summary: 'large' } },
     },
 
     variant: {
@@ -59,8 +58,7 @@ export default {
       control: {
         type: 'inline-radio',
       },
-
-      defaultValue: 'default',
+      table: { defaultValue: { summary: 'default' } },
     },
 
     responsive: {
@@ -69,8 +67,7 @@ export default {
       control: {
         type: 'inline-radio',
       },
-
-      defaultValue: 'auto',
+      table: { defaultValue: { summary: 'auto' } },
     },
   },
 };
@@ -100,12 +97,13 @@ export const StripedTable = {
         text={caption.headertext}
         tdtext={caption.tdtext}
         details={caption.details}
-        variant="striped"
         {...args}
       ></TableTag>
     );
   },
-
+  args: {
+    variant: 'striped',
+  },
   name: 'Striped table',
 };
 
@@ -118,12 +116,13 @@ export const BorderedTable = {
         text={caption.headertext}
         tdtext={caption.tdtext}
         details={caption.details}
-        variant="border"
         {...args}
       ></TableTag>
     );
   },
-
+  args: {
+    variant: 'border',
+  },
   name: 'Bordered table',
 };
 
@@ -136,12 +135,13 @@ export const SmallTable = {
         text={caption.headertext}
         tdtext={caption.tdtext}
         details={caption.details}
-        size="small"
         {...args}
       ></TableTag>
     );
   },
-
+  args: {
+    size: 'small',
+  },
   name: 'Small table',
 };
 
@@ -154,13 +154,14 @@ export const SmallStripedTable = {
         text={caption.headertext}
         tdtext={caption.tdtext}
         details={caption.details}
-        size="small"
-        variant="striped"
         {...args}
       ></TableTag>
     );
   },
-
+  args: {
+    size: 'small',
+    variant: 'striped',
+  },
   name: 'Small striped table',
 };
 
@@ -173,12 +174,13 @@ export const StackedTable = {
         text={caption.headertext}
         tdtext={caption.tdtext}
         details={caption.details}
-        responsive="stacked"
         {...args}
       ></TableTag>
     );
   },
-
+  args: {
+    responsive: 'stacked',
+  },
   name: 'Stacked table (mobile-first)',
 };
 
@@ -191,12 +193,13 @@ export const ScrollableTable = {
         text={caption.headertext}
         tdtext={caption.tdtext}
         details={caption.details}
-        responsive="scroll"
         {...args}
       ></TableTag>
     );
   },
-
+  args: {
+    responsive: 'scroll',
+  },
   name: 'Scrollable table',
 };
 
@@ -209,13 +212,14 @@ export const BorderedStackedTable = {
         text={caption.headertext}
         tdtext={caption.tdtext}
         details={caption.details}
-        variant="border"
-        responsive="stacked"
         {...args}
       ></TableTag>
     );
   },
-
+  args: {
+    variant: 'border',
+    responsive: 'stacked',
+  },
   name: 'Bordered stacked table',
 };
 

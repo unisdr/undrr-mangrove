@@ -80,8 +80,7 @@ export default {
       control: {
         type: 'inline-radio',
       },
-
-      defaultValue: 'primary',
+      table: { defaultValue: { summary: 'primary' } },
     },
   },
 };

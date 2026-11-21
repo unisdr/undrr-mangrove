@@ -9,11 +9,11 @@ export default {
   argTypes: {
     SharingSubject: {
       control: { type: 'text' },
-      defaultValue: 'Sharing Link',
+      table: { defaultValue: { summary: 'Sharing Link' } },
     },
     SharingTextBody: {
       control: { type: 'text' },
-      defaultValue: 'Check out this link: ',
+      table: { defaultValue: { summary: 'Check out this link: ' } },
     },
   },
 };
@@ -56,17 +56,21 @@ const checkLayout = async ({ canvasElement }, expectedCount) => {
         await new Promise(resolve => requestAnimationFrame(resolve));
         const rects = buttons.map(button => button.getBoundingClientRect());
         const rows = new Map();
-        rects.forEach(rect => {
+        for (const rect of rects) {
           rows.set(rect.top, (rows.get(rect.top) ?? 0) + 1);
-          expect(rect.width).toBeGreaterThanOrEqual(40);
-          expect(rect.height).toBeGreaterThanOrEqual(40);
-          expect(rect.left).toBeGreaterThanOrEqual(
+          // eslint-disable-next-line no-await-in-loop -- sequential layout assertions
+          await expect(rect.width).toBeGreaterThanOrEqual(40);
+          // eslint-disable-next-line no-await-in-loop -- sequential layout assertions
+          await expect(rect.height).toBeGreaterThanOrEqual(40);
+          // eslint-disable-next-line no-await-in-loop -- sequential layout assertions
+          await expect(rect.left).toBeGreaterThanOrEqual(
             container.getBoundingClientRect().left
           );
-          expect(rect.right).toBeLessThanOrEqual(
+          // eslint-disable-next-line no-await-in-loop -- sequential layout assertions
+          await expect(rect.right).toBeLessThanOrEqual(
             container.getBoundingClientRect().right + 1
           );
-        });
+        }
         await expect([...rows.values()]).toEqual(
           width >= 250
             ? [expectedCount]

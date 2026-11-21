@@ -153,7 +153,8 @@ export const AllVariants = {
     for (let index = 0; index < tags.length; index += 2) {
       const label = tags[index];
       const link = tags[index + 1];
-      expect(label.getBoundingClientRect().height).toBe(
+      // eslint-disable-next-line no-await-in-loop -- sequential DOM assertions
+      await expect(label.getBoundingClientRect().height).toBe(
         link.getBoundingClientRect().height
       );
       for (const property of [
@@ -164,7 +165,8 @@ export const AllVariants = {
         'lineHeight',
         'borderWidth',
       ]) {
-        expect(getComputedStyle(label)[property]).toBe(
+        // eslint-disable-next-line no-await-in-loop -- sequential DOM assertions
+        await expect(getComputedStyle(label)[property]).toBe(
           getComputedStyle(link)[property]
         );
       }
@@ -292,24 +294,28 @@ export const ReflowAndLanguages = {
     });
     const group = link.parentElement;
     // A real browser catches CSS cascade and sizing failures that jsdom cannot.
-    expect(getComputedStyle(link).backgroundColor).toBe('rgba(0, 0, 0, 0)');
-    expect(group.scrollWidth).toBeLessThanOrEqual(group.clientWidth);
+    await expect(getComputedStyle(link).backgroundColor).toBe(
+      'rgba(0, 0, 0, 0)'
+    );
+    await expect(group.scrollWidth).toBeLessThanOrEqual(group.clientWidth);
     for (const destination of canvas.getAllByRole('link')) {
-      expect(destination.getBoundingClientRect().height).toBeGreaterThanOrEqual(
-        24
-      );
-      expect(destination.getBoundingClientRect().width).toBeGreaterThanOrEqual(
-        24
-      );
+      // eslint-disable-next-line no-await-in-loop -- sequential sizing assertions
+      await expect(
+        destination.getBoundingClientRect().height
+      ).toBeGreaterThanOrEqual(24);
+      // eslint-disable-next-line no-await-in-loop -- sequential sizing assertions
+      await expect(
+        destination.getBoundingClientRect().width
+      ).toBeGreaterThanOrEqual(24);
     }
     const label = canvas.getByText('Research');
     const background = getComputedStyle(label).backgroundColor;
     await userEvent.hover(label);
-    expect(getComputedStyle(label).backgroundColor).toBe(background);
+    await expect(getComputedStyle(label).backgroundColor).toBe(background);
     await userEvent.unhover(label);
     await userEvent.tab();
     await expect(link).toHaveFocus();
-    expect(getComputedStyle(link).outlineStyle).not.toBe('none');
+    await expect(getComputedStyle(link).outlineStyle).not.toBe('none');
   },
   render: () => (
     <div style={{ maxWidth: '280px', display: 'grid', gap: '24px' }}>

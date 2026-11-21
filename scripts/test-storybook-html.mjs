@@ -92,7 +92,7 @@ try {
       )
     );
   }
-  await page.getByRole('button', { name: /locale English/ }).click();
+  await page.getByRole('button', { name: /^locale( |$)/ }).click();
   await page.getByRole('option', { name: /Arabic/ }).click();
   await preview.locator('.mg-content[dir="rtl"]').waitFor();
   await page.waitForFunction(() =>
@@ -120,8 +120,9 @@ try {
 
   // The manager remains mounted during sidebar navigation; channel listeners
   // must follow its new story ID rather than retain their first closure.
+  // Storybook 11 sidebar entries are items keyed by story ID, not links.
   await page
-    .locator('a[href="/?path=/story/components-tabs--tabs-with-default"]')
+    .locator('[data-item-id="components-tabs--tabs-with-default"]')
     .click();
   await tabs.getByRole('tab', { name: 'Tab title 2', exact: true }).waitFor();
   await panel.getByRole('button', { name: 'Copy', exact: true }).click();

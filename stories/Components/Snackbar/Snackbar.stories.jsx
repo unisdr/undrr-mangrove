@@ -19,7 +19,7 @@ export default {
         type: 'text',
       },
       description: 'The text content to display in the snackbar',
-      defaultValue: 'This is a notification message',
+      table: { defaultValue: { summary: 'This is a notification message' } },
     },
     severity: {
       options: ['error', 'warning', 'info', 'success'],
@@ -27,7 +27,7 @@ export default {
         type: 'select',
       },
       description: 'Determines the appearance and icon of the snackbar',
-      defaultValue: 'info',
+      table: { defaultValue: { summary: 'info' } },
     },
     openedMiliseconds: {
       control: {
@@ -35,7 +35,7 @@ export default {
       },
       description:
         'Duration in milliseconds before the snackbar automatically closes',
-      defaultValue: 5000,
+      table: { defaultValue: { summary: '5000' } },
     },
   },
 };

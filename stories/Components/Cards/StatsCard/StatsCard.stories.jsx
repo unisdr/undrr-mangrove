@@ -231,7 +231,7 @@ export default {
     variant: {
       options: ['default', 'compact', 'highlighted', 'negative'],
       control: { type: 'inline-radio' },
-      defaultValue: 'default',
+      table: { defaultValue: { summary: 'default' } },
     },
   },
   decorators: [

@@ -11,9 +11,9 @@ import { allTeaserFieldsVisible } from './utils/constants';
 import { defaultConfig, widgetMetaShared } from './_storyHelpers';
 
 export default {
+  ...widgetMetaShared,
   title: 'Components/Syndicated search/Integrations',
   component: SyndicationSearchWidget,
-  ...widgetMetaShared,
 };
 
 /**
