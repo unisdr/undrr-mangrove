@@ -1223,17 +1223,17 @@
   "components-scrollcontainer": {
     "props": {
       "ariaLabel": "string | optional | no default | described",
-      "children": "node | required | no default | undescribed",
-      "className": "string | optional | default='' | undescribed",
+      "children": "node | required | no default | described",
+      "className": "string | optional | default='' | described",
       "dir": "'ltr' | 'rtl' | 'auto' | optional | no default | described",
-      "height": "string | optional | default='auto' | undescribed",
-      "itemWidth": "string | optional | default='auto' | undescribed",
+      "height": "string | optional | default='auto' | described",
+      "itemWidth": "string | optional | default='auto' | described",
       "labels": "{ ariaLabel: string, navigationLabel: string, scrollLeftLabel: string, scrollRightLabel: string } | optional | no default | described",
       "lang": "string | optional | no default | described",
       "minWidth": "string | optional | default='auto' | described",
-      "padding": "string | optional | default='0' | undescribed",
-      "showArrows": "bool | optional | default=false | undescribed",
-      "stepSize": "number | optional | default=null | undescribed",
+      "padding": "string | optional | default='0' | described",
+      "showArrows": "bool | optional | default=false | described",
+      "stepSize": "number | optional | default=null | described",
       "stretchItems": "bool | optional | default=false | described"
     },
     "examples": [

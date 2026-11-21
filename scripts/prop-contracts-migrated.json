@@ -1,16 +1,30 @@
 {
   "$comment": "Components whose typed JSDoc must agree with their PropTypes in Storybook's docgen output. yarn check:prop-contracts fails if any of these regress. Add a component once it reports no problems. See unisdr/undrr-mangrove#1511.",
   "migrated": [
+    "components-buttons-buttons",
+    "components-buttons-chips",
     "components-buttons-copybutton",
+    "components-buttons-sharebuttons",
     "components-codeblock",
     "components-forms-form-action",
     "components-icons",
     "components-images-author-image",
     "components-logos",
+    "components-navigation-breadcrumbs",
+    "components-navigation-on-this-page-nav",
     "components-notice-cookieconsentbanner",
     "components-progress-bar",
     "components-quotehighlight",
+    "components-scrollcontainer",
     "components-showmore",
+    "components-syndicated-search",
+    "components-syndicated-search-display-modes",
+    "components-syndicated-search-downloads",
+    "components-syndicated-search-downloads-fixtures",
+    "components-syndicated-search-filters",
+    "components-syndicated-search-integrations",
+    "components-syndicated-search-layouts",
+    "components-syndicated-search-toggles",
     "components-table"
   ]
 }

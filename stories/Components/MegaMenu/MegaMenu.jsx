@@ -1,5 +1,13 @@
 import { getLanguageProps } from '../../../src/i18n';
 import { getMegaMenuLabels } from './_labels';
+import React, { useState, useEffect, useRef, useId } from 'react';
+import PropTypes from 'prop-types';
+import { TopBar } from './TopBar/TopBar';
+import { Sidebar } from './TopBar/Sidebar';
+
+export { getMegaMenuLabels } from './_labels';
+export { DEFAULT_MEGAMENU_LABELS } from './_labels';
+
 /**
  * MegaMenu component. Multi-level navigation with sections and items.
  *
@@ -11,39 +19,36 @@ import { getMegaMenuLabels } from './_labels';
  * The wrapper layer (Drupal, Twig, whatever) should pass the right
  * `logoHref`, e.g. `data-mg-mega-menu-logo-href="/ar/"` on Arabic pages.
  *
- * @param {Object[]} sections - Array of section objects containing menu structure
- * @param {string} sections[].title - Top-level menu item label (required)
- * @param {string} sections[].icon - Optional icon class name shown before the title on desktop topbar (e.g. "mg-icon mg-icon-chart-bar")
- * @param {string} sections[].bannerHeading - Heading text for the section banner
- * @param {string} sections[].bannerDescription - Description text for the section banner. Rendered via `dangerouslySetInnerHTML` so authored links and inline markup survive; Mangrove does not sanitise it, so sanitise it where the sections array is built. See "Banner HTML trust contract" in MegaMenu.mdx.
- * @param {Object} sections[].bannerButton - Optional button object for the banner
- * @param {string} sections[].bannerButton.label - Label text for the banner button
- * @param {string} sections[].bannerButton.url - URL for the banner button
- * @param {Object[]} sections[].items - Array of menu items for the section
- * @param {string} sections[].items[].title - Title of the menu item
- * @param {string} sections[].items[].url - URL for the menu item
- * @param {Object[]} sections[].items[].items - Optional nested items
- * @param {number} [delay] - Deprecated and ignored since 2.0 (panels no longer close on mouse leave)
- * @param {number} [hoverDelay] - Deprecated and ignored since 2.0 (panels no longer open on hover)
- * @param {string} [logoSrc] - Image URL for a logo at inline-start of the nav strip (enables branded variant)
- * @param {string} [logoAlt=''] - Alt text for the logo image
- * @param {string} [logoHref='/'] - Where the logo links to. Defaults to `/`; on multilingual sites, pass the language-prefixed root from the CMS (e.g. `/ar/`)
- * @param {number} [logoWidth] - Optional explicit width for CLS prevention
- * @param {number} [logoHeight] - Optional explicit height for CLS prevention
- * @param {boolean} [enableFilter=false] - Whether to show quick filter input in desktop and mobile navigation
- * @param {boolean} [enableSiteSearch=true] - Whether to offer full-site search option when filtering
- * @param {string} [searchUrl='/search'] - Base URL for full-site search (defaults to syndicated search page /search)
- * @param {string|null} [analyticsRegion='mega-menu'] - `data-vf-google-analytics-region` on the root `<nav>`; pass `null` or `''` to inherit the host's region
+ * Each section has a top-level menu item label (`title`, required); an
+ * optional `icon` class name shown before the title on the desktop topbar
+ * (e.g. "mg-icon mg-icon-chart-bar"); `bannerHeading` and
+ * `bannerDescription` text for the section banner; an optional
+ * `bannerButton` with a `label` and `url`; and `items`, the section's menu
+ * items, each with a `title`, a `url` and optional nested `items`.
+ * `bannerDescription` is rendered via `dangerouslySetInnerHTML` so authored
+ * links and inline markup survive; Mangrove does not sanitise it, so
+ * sanitise it where the sections array is built. See "Banner HTML trust
+ * contract" in MegaMenu.mdx.
+ *
+ * @param {Object} props
+ * @param {Array<{title: string, icon?: string, bannerHeading?: string, bannerDescription?: string, bannerButton?: {label?: string, url?: string}, items?: Array<{title: string, url?: string, items?: Array}>}>} props.sections Array of section objects containing menu structure (fields above)
+ * @param {number} [props.delay]                       Deprecated and ignored since 2.0 (panels no longer close on mouse leave)
+ * @param {number} [props.hoverDelay]                  Deprecated and ignored since 2.0 (panels no longer open on hover)
+ * @param {string} [props.logoSrc]                     Image URL for a logo at inline-start of the nav strip (enables branded variant)
+ * @param {string} [props.logoAlt='']                  Alt text for the logo image
+ * @param {string} [props.logoHref='/']                Where the logo links to. Defaults to `/`; on multilingual sites, pass the language-prefixed root from the CMS (e.g. `/ar/`)
+ * @param {number} [props.logoWidth]                   Optional explicit width for CLS prevention
+ * @param {number} [props.logoHeight]                  Optional explicit height for CLS prevention
+ * @param {boolean} [props.enableFilter=false]         Whether to show quick filter input in desktop and mobile navigation
+ * @param {boolean} [props.enableSiteSearch=true]      Whether to offer full-site search option when filtering
+ * @param {string} [props.searchUrl='/search']         Base URL for full-site search (defaults to syndicated search page /search)
+ * @param {Function} [props.onNavigate]                Called with the link's `href` when a visitor follows a quick filter result (including the full-site search link), in place of the browser's own navigation (modified clicks still open normally); for client-side routers
+ * @param {string} [props.lang]                        UI language tag; selects the built-in catalogue, with English fallback
+ * @param {'ltr'|'rtl'|'auto'} [props.dir]             Explicit text direction; otherwise known catalogue languages select their direction
+ * @param {{navLabel?: string, closeMobileNavLabel?: string, menuLabel?: string, backLabel?: string, allSectionsLabel?: string, closeLabel?: string, overviewLabel?: string, toggleMobileNavLabel?: string, menuFilterLabel?: string, filterPlaceholder?: string, clearFilterLabel?: string, noFilterResultsLabel?: string, searchSiteLabel?: string, filterMatchesCount?: string}} [props.labels] Explicit UI label overrides; omitted keys use the selected catalogue, then English
+ * @param {string} [props.analyticsRegion='mega-menu'] `data-vf-google-analytics-region` on the root `<nav>`; pass `null` or `''` to inherit the host's region
  * @returns {JSX.Element} Rendered MegaMenu component
  */
-import React, { useState, useEffect, useRef, useId } from 'react';
-import PropTypes from 'prop-types';
-import { TopBar } from './TopBar/TopBar';
-import { Sidebar } from './TopBar/Sidebar';
-
-export { getMegaMenuLabels } from './_labels';
-export { DEFAULT_MEGAMENU_LABELS } from './_labels';
-
 const MegaMenu = ({
   sections,
   logoSrc,

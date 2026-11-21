@@ -6,10 +6,14 @@ import PropTypes from 'prop-types';
  * Call-to-action button rendered as a styled anchor link.
  *
  * @param {Object} props
- * @param {string} props.label                 Button text
- * @param {'Primary'|'Secondary'} [props.Type] Visual emphasis variant
- * @param {boolean} [props.Outline] Whether to use the transparent treatment
- * @param {'Default'|'Disabled'} [props.State] Enabled or disabled state
+ * @param {string} props.label                           Button text
+ * @param {'Primary'|'Secondary'} [props.Type='Primary'] Visual emphasis variant
+ * @param {'Default'|'CTA'} [props.Variant='Default']    Treatment variant: conventional button or editorial CTA link
+ * @param {boolean} [props.Outline=false]                Whether to use the transparent treatment
+ * @param {'Default'|'Disabled'} [props.State='Default'] Enabled or disabled state
+ * @param {string} [props.href='#']                      Link destination; omitted from disabled controls
+ * @param {Function} [props.onClick]                     Link activation handler; omitted from disabled controls
+ * @param {string} [props.className]                     Additional classes to compose with the Mangrove button classes
  */
 export function CtaButton({
   label,
