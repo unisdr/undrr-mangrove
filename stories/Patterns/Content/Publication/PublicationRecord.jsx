@@ -2,13 +2,7 @@ import React, { useId, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { SkipLink } from '../../../Utilities/SkipLink/SkipLink';
 import { projectRecord } from './recordProjection';
-import {
-  ANALYTICS,
-  coverAccess,
-  pluralLabel,
-  presentation,
-  showAllDownloads,
-} from './recordAccess';
+import { ANALYTICS, coverAccess, pluralLabel } from './recordAccess';
 import { RecordAccess } from './RecordResources';
 import { UndrrChrome } from '../../_shared/UndrrChrome';
 
@@ -68,17 +62,17 @@ export function PublicationRecord({
     value.details.length > 0;
   const hasAside = value.cover || hasDetails;
   const coverLink = value.cover ? coverAccess(value.resources) : undefined;
-  const allDownloads =
-    coverLink && showAllDownloads(value.resources)
+  // Always present with a linked cover, so readers who look under the cover
+  // find the files: "All downloads (N)" for several, "Download options" for one.
+  const allDownloads = !coverLink
+    ? ''
+    : value.resources.length > 1
       ? pluralLabel(labels.allDownloads, lang, value.resources.length)
-      : '';
+      : labels.downloadOptions;
   const chromeLocale = lang === 'ar' ? 'arabic' : 'english';
-  // One file: the access row stays first, before the Description. Two or
-  // more (88% of records have one): the Description comes first, and the
-  // files section follows it, reached from the header's "Files (N)" jump
-  // link and the cover's "All downloads (N)".
-  const filesTier = presentation(value.resources).tier;
-  const filesFirst = filesTier <= 1;
+  // The Description always comes first and the files section always follows
+  // it, for every number of files. The header's "Files (N)" link, the cover
+  // and the link under it keep the files findable.
   const filesId = `${prefix}-access`;
   const filesSection = value.resources.length > 0 && (
     <section
@@ -93,7 +87,7 @@ export function PublicationRecord({
         workLang={value.lang}
         contactHref={value.contactHref}
         id={prefix}
-        heading={filesFirst ? labels.access : labels.filesHeading}
+        heading={labels.filesHeading}
         headingId={filesId}
         controller={access}
       />
@@ -176,7 +170,7 @@ export function PublicationRecord({
                 )}
               </dl>
             )}
-            {!filesFirst && (
+            {value.resources.length > 0 && (
               <p className="mg-publication-record__files-jump mg-u-font-size-250">
                 <a
                   href={`#${filesId}`}
@@ -192,7 +186,6 @@ export function PublicationRecord({
             className={`mg-reading mg-publication-record__reading${hasAside ? ' mg-grid mg-grid--article' : ''}`}
           >
             <div className="mg-publication-record__main mg-reading__article">
-              {filesFirst && filesSection}
               {children && (
                 <section
                   className="mg-reading__article"
@@ -208,7 +201,7 @@ export function PublicationRecord({
                   </div>
                 </section>
               )}
-              {!filesFirst && filesSection}
+              {filesSection}
               {(value.citation || value.canonicalUrl) && (
                 <section
                   className="mg-reading__article"

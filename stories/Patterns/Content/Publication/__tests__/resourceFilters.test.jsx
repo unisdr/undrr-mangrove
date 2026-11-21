@@ -18,11 +18,7 @@ jest.mock('storybook/test', () => ({}));
 const labels = RECORD_LABELS.english;
 const renderStory = (story, locale) =>
   render(meta.render(story.args, { globals: locale ? { locale } : {} }));
-// Tier 1 keeps "Read or access this publication"; tiers 2–3 say "Files".
-const access = () =>
-  screen.getByRole('region', {
-    name: new RegExp(`^(${labels.access}|${labels.filesHeading})$`),
-  });
+const access = () => screen.getByRole('region', { name: labels.filesHeading });
 const rows = () => [...access().querySelectorAll('tbody tr')];
 const status = () => access().querySelector('.mg-publication-record__status');
 const radio = value =>
@@ -128,26 +124,19 @@ describe('order and the inline language control', () => {
       .map(region => region.getAttribute('aria-labelledby'))
       .map(id => document.getElementById(id).textContent);
 
-  test('one file: access before the Description, no jump link', () => {
-    renderStory(Standard);
-    const order = regions();
-    expect(order.indexOf(labels.access)).toBeLessThan(
-      order.indexOf(labels.description)
-    );
-    expect(screen.queryByRole('link', { name: /^Files? \(/ })).toBeNull();
-  });
-
-  test.each([TwoFiles, SeveralFiles, ManyFiles])(
-    'several files: Description first, then Files, with a header jump link (%#)',
+  test.each([Standard, TwoFiles, SeveralFiles, ManyFiles])(
+    'every tier: Description first, then Files, with a header jump link (%#)',
     story => {
       renderStory(story);
       const order = regions();
       expect(order.indexOf(labels.description)).toBeLessThan(
         order.indexOf(labels.filesHeading)
       );
-      expect(order).not.toContain(labels.access);
       const count = story.args.record.resources.length;
-      const jump = screen.getByRole('link', { name: `Files (${count})` });
+      // "File (1)" for one file, "Files (N)" otherwise.
+      const jump = screen.getByRole('link', {
+        name: pluralLabel(labels.filesJump, 'en', count),
+      });
       expect(jump.closest('header')).not.toBeNull();
       expect(jump).toHaveAttribute('data-vf-analytics-label', 'nav_files_jump');
       expect(document.querySelector(jump.getAttribute('href'))).toBe(
@@ -182,6 +171,12 @@ describe('order and the inline language control', () => {
     ['arabic', 'ar', 2, 'الملفان (2)'],
     ['french', 'fr', 3, 'Fichiers (3)'],
     ['japanese', 'ja', 3, 'ファイル (3)'],
+    ['english', 'en', 1, 'File (1)'],
+    ['french', 'fr', 1, 'Fichier (1)'],
+    ['spanish', 'es', 1, 'Archivo (1)'],
+    ['arabic', 'ar', 1, 'الملف (1)'],
+    ['russian', 'ru', 1, 'Файлы (1)'],
+    ['chinese', 'zh', 1, '文件 (1)'],
   ])('%s jump link for %i files', (locale, lang, count, expected) => {
     expect(pluralLabel(RECORD_LABELS[locale].filesJump, lang, count)).toBe(
       expected
@@ -244,9 +239,12 @@ describe('labels', () => {
       'downloadShort',
       'addedLabel',
       'filesHeading',
+      'downloadOptions',
     ].forEach(key => expect(typeof set[key]).toBe('string'));
     expect(set.showing.other).toMatch(/\{shown\}/);
     expect(set.filesJump.other).toMatch(/\{count\}/);
     expect(set.added).toBeUndefined();
+    // "Read or access this publication" is gone: every record says "Files".
+    expect(set.access).toBeUndefined();
   });
 });

@@ -12,7 +12,6 @@ import {
   manyLanguages,
 } from './recordFixtures';
 import {
-  checkAccessBudget,
   checkAsideContainment,
   checkManyFiles,
   checkCoverAffordance,
@@ -47,10 +46,11 @@ export default {
 export const Standard = {
   name: 'Experimental publication record',
   args: { record: exampleRecord, children: exampleBody },
-  // Tier 1: the access block is at most 160px wide, 200px narrow.
+  // One file: still the Description first, then Files; three routes to the
+  // file (the cover, "Download options" under it, the "File (1)" jump link).
   play: withGridCheck(async context => {
     await checkCoverAffordance(context);
-    await checkAccessBudget(160, 200)(context);
+    await checkDescriptionFirst(context);
   }),
 };
 // Resource cases (#1502, #1505). Standard is the usual Drupal shape: the

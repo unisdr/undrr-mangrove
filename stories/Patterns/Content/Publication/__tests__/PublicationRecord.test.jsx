@@ -140,10 +140,11 @@ test('safe primary and backup keep distinct links; metadata is only supplied inf
     container.querySelector('.mg-publication-record__facts [lang]')
   ).toHaveAttribute('lang', 'fr');
   expect(container.querySelector('time')).toBeNull();
-  expect(screen.getByRole('main').querySelectorAll('a')).toHaveLength(3); // category + primary + backup, never a guessed DOI
+  // Category + "Files (1)" jump + primary + backup, never a guessed DOI.
+  expect(screen.getByRole('main').querySelectorAll('a')).toHaveLength(4);
   // No invented file facts or status. The backup explanation is fixed copy
   // ("slow or unavailable"), so it is left out of the status check.
-  const access = screen.getByRole('region', { name: labels.access });
+  const access = screen.getByRole('region', { name: labels.filesHeading });
   const status = access.cloneNode(true);
   status.querySelectorAll('details').forEach(node => node.remove());
   expect(status.textContent).not.toMatch(/PDF|MB|available|last checked/i);
@@ -200,7 +201,9 @@ test.each(Object.keys(RECORD_LABELS))(
       meta.render({ record: exampleRecord }, { globals: { locale } })
     );
     expect(
-      screen.getByRole('heading', { name: RECORD_LABELS[locale].access })
+      screen.getByRole('heading', {
+        name: RECORD_LABELS[locale].filesHeading,
+      })
     ).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 1 })).toHaveAttribute(
       'lang',

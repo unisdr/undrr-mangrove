@@ -52,9 +52,6 @@ export function coverAccess(resources) {
   };
 }
 
-/** The jump link appears only when the cover alone cannot show every file. */
-export const showAllDownloads = resources => (resources?.length ?? 0) >= 2;
-
 /**
  * Adaptive presentation (tiers). Of 27,839 published Drupal publications,
  * 88% have one file, 7.7% two, 1.8% three, 1.4% four or five, 0.9% six to

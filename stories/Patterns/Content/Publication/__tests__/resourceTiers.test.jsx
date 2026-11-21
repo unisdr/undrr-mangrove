@@ -37,11 +37,7 @@ jest.mock('storybook/test', () => ({}));
 const labels = RECORD_LABELS.english;
 const renderStory = (story, locale) =>
   render(meta.render(story.args, { globals: locale ? { locale } : {} }));
-// Tier 1 keeps "Read or access this publication"; tiers 2–3 say "Files".
-const access = () =>
-  screen.getByRole('region', {
-    name: new RegExp(`^(${labels.access}|${labels.filesHeading})$`),
-  });
+const access = () => screen.getByRole('region', { name: labels.filesHeading });
 const english = (count, extra = {}) =>
   Array.from({ length: count }, (_, index) => ({
     label: `File ${index + 1}`,

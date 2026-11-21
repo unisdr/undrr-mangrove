@@ -171,34 +171,10 @@ export async function checkAsideContainment({ canvasElement }) {
 }
 
 /**
- * Tier 1: the single access row comes before the Description and stays
- * compact. The old stacked list measured 237px for one file at 1378px.
- */
-export const checkAccessBudget = (wide, narrow) =>
-  async function checkAccessHeight({ canvasElement }) {
-    const doc = canvasElement.ownerDocument;
-    await doc.fonts.ready;
-    const access = canvasElement.querySelector(
-      '.mg-publication-record__access'
-    );
-    await waitFor(() => expect(access).not.toBeNull());
-    const budget = doc.defaultView.innerWidth >= 768 ? wide : narrow;
-    expect(access.getBoundingClientRect().height).toBeLessThanOrEqual(budget);
-    const description = canvasElement
-      .querySelector('.mg-content')
-      .closest('section');
-    expect(access.compareDocumentPosition(description)).toBe(
-      doc.defaultView.Node.DOCUMENT_POSITION_FOLLOWING
-    );
-    expect(
-      canvasElement.querySelector('.mg-publication-record__files-jump')
-    ).toBeNull();
-  };
-
-/**
- * Tiers 2 and 3: the Description comes straight after the header, the files
- * section follows it, and the header's "Files (N)" link points at the files
- * heading.
+ * Every tier: the Description comes straight after the header, the files
+ * section follows it, the header's "Files (N)" link points at the files
+ * heading, and the link under the cover is always there: "All downloads (N)"
+ * for several files, "Download options" for one.
  */
 export async function checkDescriptionFirst({ canvasElement }) {
   const doc = canvasElement.ownerDocument;
@@ -227,6 +203,19 @@ export async function checkDescriptionFirst({ canvasElement }) {
   expect(
     parseFloat(doc.defaultView.getComputedStyle(target).scrollMarginTop)
   ).toBeGreaterThan(0);
+  const count = files.querySelectorAll(
+    '.mg-publication-record__files tbody tr, .mg-publication-record__access-row'
+  ).length;
+  const cue = canvasElement.querySelector(
+    '.mg-publication-record__all-downloads a'
+  );
+  if (canvasElement.querySelector('.mg-publication-record__cover-link')) {
+    expect(cue).not.toBeNull();
+    expect(cue.getAttribute('href')).toBe(jump.getAttribute('href'));
+    expect(cue.textContent).toMatch(
+      count > 1 ? /^All downloads \(\d+\)$/ : /^Download options$/
+    );
+  }
 }
 
 /**

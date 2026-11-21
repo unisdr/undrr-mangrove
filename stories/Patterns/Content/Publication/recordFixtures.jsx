@@ -4,7 +4,8 @@ import React from 'react';
 // allDownloads holds CLDR plural forms. The en, ar, es, fr, ja and zh strings
 // copy the Drupal "All downloads (@count)" translations from
 // https://gitlab.com/undrr/drupal-base/-/merge_requests/268; Russian is a
-// draft. The cue only shows for two or more resources.
+// draft. "All downloads" shows for two or more resources; one file uses
+// downloadOptions.
 export const RECORD_LABELS = {
   english: {
     publication: 'Publication',
@@ -12,7 +13,6 @@ export const RECORD_LABELS = {
     authors: 'Authors',
     sources: 'Sources / issuing organizations',
     year: 'Publication year',
-    access: 'Read or access this publication',
     description: 'Description',
     details: 'Bibliographic details',
     identifiers: 'Identifiers',
@@ -35,6 +35,7 @@ export const RECORD_LABELS = {
     problems: 'Problems?',
     contactUs: 'Contact us',
     sentenceEnd: '.',
+    downloadOptions: 'Download options',
     filesHeading: 'Files',
     filesJump: { one: 'File ({count})', other: 'Files ({count})' },
     caption: 'Files for this publication',
@@ -61,7 +62,6 @@ export const RECORD_LABELS = {
     authors: 'Auteurs',
     sources: 'Sources / organismes émetteurs',
     year: 'Année de publication',
-    access: 'Lire ou consulter cette publication',
     description: 'Description',
     details: 'Données bibliographiques',
     identifiers: 'Identifiants',
@@ -84,6 +84,7 @@ export const RECORD_LABELS = {
     problems: 'Des problèmes ?',
     contactUs: 'Nous contacter',
     sentenceEnd: '.',
+    downloadOptions: 'Options de téléchargement',
     filesHeading: 'Fichiers',
     filesJump: { one: 'Fichier ({count})', other: 'Fichiers ({count})' },
     caption: 'Fichiers de cette publication',
@@ -110,7 +111,6 @@ export const RECORD_LABELS = {
     authors: 'المؤلفون',
     sources: 'المصادر / الجهات المصدرة',
     year: 'سنة النشر',
-    access: 'قراءة هذا المنشور أو الوصول إليه',
     description: 'الوصف',
     details: 'البيانات الببليوغرافية',
     identifiers: 'المعرّفات',
@@ -137,6 +137,7 @@ export const RECORD_LABELS = {
     problems: 'هل تواجه مشكلة؟',
     contactUs: 'اتصل بنا',
     sentenceEnd: '.',
+    downloadOptions: 'خيارات التنزيل',
     filesHeading: 'الملفات',
     filesJump: {
       zero: 'الملفات ({count})',
@@ -174,7 +175,6 @@ export const RECORD_LABELS = {
     authors: 'Autores',
     sources: 'Fuentes / organizaciones emisoras',
     year: 'Año de publicación',
-    access: 'Leer o consultar esta publicación',
     description: 'Descripción',
     details: 'Datos bibliográficos',
     identifiers: 'Identificadores',
@@ -197,6 +197,7 @@ export const RECORD_LABELS = {
     problems: '¿Problemas?',
     contactUs: 'Contáctenos',
     sentenceEnd: '.',
+    downloadOptions: 'Opciones de descarga',
     filesHeading: 'Archivos',
     filesJump: { one: 'Archivo ({count})', other: 'Archivos ({count})' },
     caption: 'Archivos de esta publicación',
@@ -223,7 +224,6 @@ export const RECORD_LABELS = {
     authors: 'Авторы',
     sources: 'Источники / выпускающие организации',
     year: 'Год публикации',
-    access: 'Читать или открыть публикацию',
     description: 'Описание',
     details: 'Библиографические сведения',
     identifiers: 'Идентификаторы',
@@ -249,6 +249,7 @@ export const RECORD_LABELS = {
     problems: 'Возникли проблемы?',
     contactUs: 'Свяжитесь с нами',
     sentenceEnd: '.',
+    downloadOptions: 'Варианты скачивания',
     filesHeading: 'Файлы',
     filesJump: {
       one: 'Файлы ({count})',
@@ -282,7 +283,6 @@ export const RECORD_LABELS = {
     authors: '著者',
     sources: '情報源・発行機関',
     year: '発行年',
-    access: 'この刊行物を読む・アクセスする',
     description: '概要',
     details: '書誌情報',
     identifiers: '識別子',
@@ -302,6 +302,7 @@ export const RECORD_LABELS = {
     problems: '問題がありますか？',
     contactUs: 'お問い合わせ',
     sentenceEnd: '。',
+    downloadOptions: 'ダウンロードオプション',
     filesHeading: 'ファイル',
     filesJump: { other: 'ファイル ({count})' },
     caption: 'この刊行物のファイル',
@@ -325,7 +326,6 @@ export const RECORD_LABELS = {
     authors: '作者',
     sources: '来源／发布机构',
     year: '出版年份',
-    access: '阅读或访问本出版物',
     description: '说明',
     details: '书目信息',
     identifiers: '标识符',
@@ -345,6 +345,7 @@ export const RECORD_LABELS = {
     problems: '遇到问题？',
     contactUs: '联系我们',
     sentenceEnd: '。',
+    downloadOptions: '下载选项',
     filesHeading: '文件',
     filesJump: { other: '文件 ({count})' },
     caption: '本出版物的文件',

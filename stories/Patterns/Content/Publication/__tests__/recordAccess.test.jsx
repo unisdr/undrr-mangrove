@@ -3,12 +3,7 @@ import { render, screen, within } from '@testing-library/react';
 import { axe } from 'jest-axe';
 import { PublicationRecord } from '../PublicationRecord';
 import { projectRecord } from '../recordProjection';
-import {
-  ANALYTICS,
-  coverAccess,
-  pluralLabel,
-  showAllDownloads,
-} from '../recordAccess';
+import { ANALYTICS, coverAccess, pluralLabel } from '../recordAccess';
 import { RECORD_LABELS, exampleRecord, severalFiles } from '../recordFixtures';
 import meta, {
   ExternalOnly,
@@ -159,12 +154,6 @@ describe('cover target selection', () => {
       )
     ).toBeUndefined();
   });
-
-  test('"All downloads" needs two or more resources', () => {
-    expect(showAllDownloads([])).toBe(false);
-    expect(showAllDownloads([{}])).toBe(false);
-    expect(showAllDownloads([{}, {}])).toBe(true);
-  });
 });
 
 describe('plural selection', () => {
@@ -257,10 +246,18 @@ describe('rendered cover link and cue', () => {
     expect(cue).not.toHaveAttribute('tabindex');
   });
 
-  test('one resource: cover link, no cue', () => {
+  test('one resource: cover link, and "Download options" under the cover', () => {
     const { container } = render(meta.render(HostedOnly.args, { globals: {} }));
     expect(coverLink(container)).not.toBeNull();
     expect(container.textContent).not.toMatch(/All downloads/);
+    const cue = screen.getByRole('link', { name: labels.downloadOptions });
+    expect(cue).toHaveAttribute(
+      'data-vf-analytics-label',
+      'nav_all_downloads_cover'
+    );
+    expect(container.querySelector(cue.getAttribute('href'))).toBe(
+      screen.getByRole('heading', { name: labels.filesHeading, level: 2 })
+    );
   });
 
   test('publisher copy only: external icon and publisher labels', () => {
