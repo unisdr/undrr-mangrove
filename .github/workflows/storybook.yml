@@ -103,6 +103,18 @@ jobs:
           rm -f docs-build-temp/preview-stats.json
           mv docs-build-temp _site
           cp dist _site -r
+      # Preview of switching Storybook's docgen server on. The build above runs
+      # with it off, so it writes no services/core/docgen. This second build
+      # turns it on in its own output directory, which is never deployed:
+      # _site still comes from the build above. Typed JSDoc and PropTypes
+      # must then describe the same props: names, optionality, types, enum
+      # members and defaults. Reports every component; fails only for those
+      # in scripts/prop-contracts-migrated.json, or when the build has no
+      # docgen server output (#1511).
+      - name: Check prop contracts against a docgen-server build
+        run: |
+          MANGROVE_DOCGEN_SERVER=true yarn exec storybook build -o .cache/docgen-server-build
+          yarn check:prop-contracts --build-dir=.cache/docgen-server-build
       # Jest first: it is the cheap suite, and it runs before the browser
       # download and browser tests so an ordinary unit failure is
       # reported in a couple of minutes instead of behind them.

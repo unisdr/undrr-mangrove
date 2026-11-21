@@ -13,6 +13,11 @@ import PropTypes from 'prop-types';
  *
  * The component normalizes all formats to work with Mangrove's icon system.
  *
+ * @param {Object} props
+ * @param {string} props.name                Icon name: just the name (`globe`), `fa-` prefixed (`fa-globe`), or a full class string
+ * @param {string} [props.className='']      Additional CSS classes
+ * @param {'sm'|'lg'|'xl'} [props.size]      Size variant
+ *
  * @example
  * // Preferred - just the icon name
  * <Icon name="globe" />

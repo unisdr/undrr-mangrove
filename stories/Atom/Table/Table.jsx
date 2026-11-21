@@ -21,6 +21,16 @@ export const variant_options2 = {
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
+/**
+ * @param {Object} props
+ * @param {string} [props.text]                                     Header cell text
+ * @param {string} [props.tdtext]                                   Body cell text
+ * @param {string} [props.details]                                  Detail text for the last column
+ * @param {'default'|'striped'|'border'} [props.variant='default']  Visual variant
+ * @param {'large'|'small'} [props.size='large']                    Table size
+ * @param {'auto'|'stacked'|'scroll'} [props.responsive='auto']     Responsive behaviour: `auto`, `stacked`, or `scroll`
+ * @param {string} [props.scrollLabel='Scrollable table']           Accessible name of the scroll region; translate for the page language
+ */
 export const TableTag = ({
   text,
   tdtext,

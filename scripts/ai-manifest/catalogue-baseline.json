@@ -38,16 +38,16 @@
   },
   "components-buttons-copybutton": {
     "props": {
-      "ariaLabel": "string | optional | no default | undescribed",
-      "className": "string | optional | no default | undescribed",
-      "copiedLabel": "string | optional | no default | undescribed",
+      "ariaLabel": "string | optional | no default | described",
+      "className": "string | optional | no default | described",
+      "copiedLabel": "string | optional | no default | described",
       "dir": "'ltr' | 'rtl' | 'auto' | optional | no default | described",
       "labels": "{ ariaLabel: string, copiedLabel: string, tooltipLabel: string, failedLabel: string, failedTooltipLabel: string } | optional | no default | described",
       "lang": "string | optional | no default | described",
-      "size": "'small' | 'large' | optional | no default | undescribed",
-      "textToCopy": "string | optional | default='' | undescribed",
-      "tooltipLabel": "string | optional | no default | undescribed",
-      "variant": "'outline' | 'primary' | 'secondary' | optional | default='outline' | undescribed"
+      "size": "'small' | 'large' | optional | no default | described",
+      "textToCopy": "string | optional | default='' | described",
+      "tooltipLabel": "string | optional | no default | described",
+      "variant": "'outline' | 'primary' | 'secondary' | optional | default='outline' | described"
     },
     "examples": [
       "Default",
@@ -388,13 +388,13 @@
     "props": {
       "action": "element | required | no default | described",
       "analyticsLabel": "string | optional | no default | described",
-      "className": "string | optional | no default | undescribed",
+      "className": "string | optional | no default | described",
       "control": "element | required | no default | described",
-      "errorText": "string | optional | no default | undescribed",
-      "helpText": "string | optional | no default | undescribed",
-      "hideLabel": "bool | optional | default=false | undescribed",
-      "label": "string | optional | no default | undescribed",
-      "stackOnMobile": "bool | optional | default=false | undescribed"
+      "errorText": "string | optional | no default | described",
+      "helpText": "string | optional | no default | described",
+      "hideLabel": "bool | optional | default=false | described",
+      "label": "string | optional | no default | described",
+      "stackOnMobile": "bool | optional | default=false | described"
     },
     "examples": [
       "Search",

@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
  * preserves the chosen aspect ratio at any width.
  *
  * @param {Object} props
- * @param {React.ReactNode} props.children                  Embedded content (iframe, video, etc.)
+ * @param {React.ReactNode} [props.children]                Embedded content (iframe, video, etc.)
  * @param {string} [props.aspectRatio='16x9']               Aspect ratio: '16x9', '4x3', '1x1', or '21x9'
  * @param {string} [props.className='']                     Additional CSS classes to apply
  * @param {string} [props.as='div']                         HTML element to render as

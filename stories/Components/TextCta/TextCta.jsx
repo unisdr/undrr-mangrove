@@ -14,20 +14,22 @@ const EMPTY_BUTTONS = [];
  * tertiary, quaternary) plus a `backgroundColor` prop for custom colors.
  *
  * @param {Object} props
- * @param {string} props.eyebrow - Optional short label above the headline
- * @param {string} props.headline - Banner heading text
- * @param {string} props.text - Body text (HTML supported, rendered via dangerouslySetInnerHTML)
- * @param {Array}  props.buttons - Array of button objects: { label, url, type }
- * @param {string} props.variant - Color variant: 'primary' (default), 'secondary', 'tertiary', 'quaternary'
- * @param {string} props.backgroundColor - Custom CSS background color (overrides variant)
- * @param {string} props.image - Optional image URL displayed alongside the text content
- * @param {string} props.imageAlt - Alt text for the image
- * @param {string} props.headlineSize - Font size token for headline (e.g. '600', '800'). Maps to `mg-u-font-size-{value}`
- * @param {number} props.headlineLevel - Semantic heading level (2–6). Controls the HTML element (h2, h3, etc.) independently of visual size
- * @param {string} props.padding - Custom CSS padding (overrides theme token)
- * @param {boolean} props.centered - Center-align content (default: true; auto-disabled when image is set)
- * @param {'stacked'|'inline'} props.layout - Content and action arrangement
- * @param {string} props.className - Additional CSS classes
+ * @param {string} [props.eyebrow]                  Optional short label above the headline
+ * @param {string} [props.headline]                 Banner heading text
+ * @param {string} [props.headlineSize='600']       Font size token for the headline (e.g. '600', '800'). Maps to `mg-u-font-size-{value}`
+ * @param {2|3|4|5|6} [props.headlineLevel=2]       Semantic heading level (2–6). Controls the HTML element (h2, h3, etc.) independently of visual size
+ * @param {string} [props.text]                     Body text (HTML supported, sanitised with DOMPurify)
+ * @param {Array<{label: string, url?: string, type?: 'Primary'|'Secondary', variant?: 'Default'|'CTA', outline?: boolean, target?: string, rel?: string}>} [props.buttons=EMPTY_BUTTONS] Button objects rendered as `CtaButton`s
+ * @param {'primary'|'secondary'|'tertiary'|'quaternary'} [props.variant='primary'] Colour variant
+ * @param {'strong'|'soft'} [props.tone='strong']   Strong colour surface or pale accent surface with dark text
+ * @param {string} [props.backgroundColor]          Custom CSS background colour (overrides variant)
+ * @param {string} [props.padding]                  Custom CSS padding (overrides theme token)
+ * @param {string} [props.image]                    Optional image URL displayed alongside the text content
+ * @param {string} [props.imageAlt='']              Alt text for the image
+ * @param {boolean} [props.centered=true]           Centre-align content (auto-disabled when image is set)
+ * @param {'stacked'|'inline'} [props.layout='stacked'] Content and action arrangement
+ * @param {string} [props.className]                Additional CSS classes
+ * @param {React.ReactNode} [props.children]        Composed content, such as a form. Rendered after copy and before buttons
  */
 export function TextCta({
   eyebrow,

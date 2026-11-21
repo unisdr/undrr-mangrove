@@ -17,7 +17,7 @@ import PropTypes from 'prop-types';
  * Renders a full-width section that breaks out of its parent container.
  *
  * @param {Object} props
- * @param {React.ReactNode} props.children  Content to render at full width
+ * @param {React.ReactNode} [props.children] Content to render at full width
  * @param {string} [props.className='']     Additional CSS classes to apply
  */
 export function FullWidth({ children, className = '' }) {

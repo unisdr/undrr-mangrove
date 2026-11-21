@@ -74,13 +74,10 @@ ShowMoreItem.propTypes = {
  * by the `mgShowMore` vanilla JS utility.
  *
  * @param {Object} props
- * @param {Array<Object>} props.data                          Array of collapsible content items
- * @param {string} props.data[].button_text                   Legacy field; use labelCollapsed instead
- * @param {string} props.data[].collapsable_wrapper_class     CSS class applied to the content wrapper, for styling only
- * @param {string} props.data[].collapsable_text              Text content to show/hide
- * @param {string} props.labelOpen                           Translated expanded-state label
- * @param {string} props.labelCollapsed                      Translated collapsed-state label
- * @param {number} props.minHiddenLines                      Collapse only when at least this many lines would be hidden
+ * @param {Array<{button_text?: string, collapsable_wrapper_class: string, collapsable_text: string}>} [props.data=EMPTY_DATA] Collapsible content items. `collapsable_text` is the text to show or hide; `collapsable_wrapper_class` is a CSS class on the content wrapper, for styling only; `button_text` is a legacy field, use `labelCollapsed` instead
+ * @param {string} [props.labelOpen='Show less']             Translated expanded-state label
+ * @param {string} [props.labelCollapsed='Show more']        Translated collapsed-state label
+ * @param {number} [props.minHiddenLines]                    Collapse only when at least this many lines would be hidden
  */
 export function ShowMore({
   data = EMPTY_DATA,

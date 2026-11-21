@@ -183,10 +183,10 @@ const loadScript = (src, debugLog) => {
  * Cookie Consent Banner Component
  *
  * @param {Object} props - Component props
- * @param {Object} props.config - Custom configuration to override the default CDN configuration
- * @param {boolean} props.debug - Enable debug logging for troubleshooting
- * @param {boolean} props.forceFallback - Force the component to use local fallback configuration instead of CDN
- * @param {string} props.cdnBaseUrl - Base URL for the CDN resources (defaults to UNDRR CDN)
+ * @param {Object} [props.config=null] - Custom configuration to override the default CDN configuration
+ * @param {boolean} [props.debug=false] - Enable debug logging for troubleshooting
+ * @param {boolean} [props.forceFallback=false] - Force the component to use local fallback configuration instead of CDN
+ * @param {string} [props.cdnBaseUrl=DEFAULT_CDN_BASE] - Base URL for the CDN resources (defaults to UNDRR CDN)
  * @returns {null} - This component does not render anything itself
  */
 const CookieConsentBanner = ({
