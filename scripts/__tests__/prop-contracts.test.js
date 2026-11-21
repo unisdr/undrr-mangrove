@@ -6,8 +6,10 @@ import {
   checkContracts,
   compareContracts,
   draftJsDocParams,
+  enumMembers,
   isUntyped,
   jsDocType,
+  normaliseDefault,
   readBuiltContracts,
 } from '../lib/prop-contracts.js';
 
@@ -152,6 +154,175 @@ describe('compareContracts', () => {
   });
 });
 
+// react-docgen reads `oneOf(['a', 'b'])` with the source's quotes; the
+// docgen server prints TypeScript literals with double quotes.
+const propTypesEnum = (...values) => ({
+  name: 'enum',
+  value: values.map(value => ({ value, computed: false })),
+});
+const serverEnum = (...values) => ({
+  name: 'enum',
+  raw: values.join(' | '),
+  value: values.map(value => ({ value })),
+});
+
+describe('enumMembers', () => {
+  test('ignores quote style and drops undefined', () => {
+    expect([
+      ...enumMembers(serverEnum('"a"', "'b'", '`c`', 'undefined')).keys(),
+    ]).toEqual(['string:a', 'string:b', 'string:c']);
+  });
+
+  test('keeps a number apart from the same digits in a string', () => {
+    expect([...enumMembers(serverEnum('2', '"2"')).keys()]).toEqual([
+      'literal:2',
+      'string:2',
+    ]);
+  });
+
+  test.each([
+    [{ name: 'string' }],
+    [{ name: 'enum', value: [] }],
+    [{ name: 'enum', value: 'Object.keys(sizes)', computed: true }],
+    [{ name: 'enum', value: [{ value: 'SIZES.sm', computed: true }] }],
+  ])('%j cannot be listed', type => {
+    expect(enumMembers(type)).toBeUndefined();
+  });
+});
+
+describe('normaliseDefault', () => {
+  test.each([
+    ['"light"', "'light'"],
+    ["{ a: 'x', }", "{a:'x'}"],
+    ['[\n    "a",\n    "b",\n  ]', "['a','b']"],
+    ['  false ', 'false'],
+  ])('%j becomes %j', (text, expected) => {
+    expect(normaliseDefault(text)).toBe(expected);
+  });
+});
+
+describe('compareContracts enums and defaults', () => {
+  const propTypes = {
+    tone: {
+      type: propTypesEnum("'light'", "'dark'", "'bright'"),
+      required: false,
+      defaultValue: { value: "'light'", computed: false },
+    },
+    level: { type: propTypesEnum('2', '3'), required: false },
+    size: {
+      type: { name: 'enum', value: 'Object.keys(sizes)', computed: true },
+      required: false,
+    },
+    items: {
+      type: { name: 'array' },
+      required: false,
+      defaultValue: { value: "['a', 'b']", computed: false },
+    },
+  };
+
+  test('agree when members match in another order and quote style', () => {
+    expect(
+      compareContracts(
+        {
+          tone: {
+            required: false,
+            type: serverEnum('"bright"', '"light"', '"dark"', 'undefined'),
+            defaultValue: { value: '"light"' },
+          },
+          level: { required: false, type: serverEnum('3', '2') },
+          // A computed oneOf cannot be listed, so any real type passes.
+          size: { required: false, type: { name: 'string' } },
+          items: {
+            required: false,
+            type: { name: 'string[]' },
+            defaultValue: { value: '[\n  "a",\n  "b",\n]' },
+          },
+        },
+        propTypes
+      )
+    ).toEqual([]);
+  });
+
+  test('a default stated on one side only is not compared', () => {
+    expect(
+      compareContracts(
+        {
+          tone: {
+            required: false,
+            type: serverEnum('"light"', '"dark"', '"bright"'),
+            defaultValue: null,
+          },
+          level: {
+            required: false,
+            type: serverEnum('2', '3'),
+            defaultValue: { value: '2' },
+          },
+          size: { required: false, type: { name: 'string' } },
+          items: { required: false, type: { name: 'string[]' } },
+        },
+        propTypes
+      )
+    ).toEqual([]);
+  });
+
+  test('reports missing members', () => {
+    expect(
+      compareContracts(
+        { tone: { required: false, type: serverEnum('"light"', '"dark"') } },
+        { tone: propTypes.tone }
+      )
+    ).toEqual(["tone: docgen server enum lacks 'bright', listed in PropTypes"]);
+  });
+
+  test('reports extra members', () => {
+    expect(
+      compareContracts(
+        { level: { required: false, type: serverEnum('2', '3', '"4"') } },
+        { level: propTypes.level }
+      )
+    ).toEqual(["level: docgen server enum has '4', not in PropTypes"]);
+  });
+
+  test('reports a plain type where PropTypes list members', () => {
+    expect(
+      compareContracts(
+        { tone: { required: false, type: { name: 'string' } } },
+        { tone: propTypes.tone }
+      )
+    ).toEqual([
+      "tone: docgen server type is `string`, PropTypes list 'light', 'dark', 'bright'",
+    ]);
+  });
+
+  test('an untyped server enum is reported once, by the type check', () => {
+    expect(
+      compareContracts(
+        { tone: { required: false, type: { name: 'any' } } },
+        { tone: propTypes.tone }
+      )
+    ).toEqual([
+      "tone: docgen server type is `any`, PropTypes give `'light'|'dark'|'bright'`",
+    ]);
+  });
+
+  test('reports different defaults', () => {
+    expect(
+      compareContracts(
+        {
+          tone: {
+            required: false,
+            type: serverEnum('"light"', '"dark"', '"bright"'),
+            defaultValue: { value: '"dark"' },
+          },
+        },
+        { tone: propTypes.tone }
+      )
+    ).toEqual([
+      'tone: docgen server default is `"dark"`, react-docgen default is `\'light\'`',
+    ]);
+  });
+});
+
 describe('checkContracts', () => {
   const contracts = [
     {
@@ -251,7 +422,7 @@ describe('readBuiltContracts', () => {
 
   test('explains a missing build', () => {
     expect(() => readBuiltContracts(path.join(dir, 'nope'))).toThrow(
-      /Run the Storybook build first/
+      /MANGROVE_DOCGEN_SERVER=true yarn exec storybook build/
     );
   });
 });

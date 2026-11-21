@@ -137,10 +137,24 @@ warnings (unisdr/undrr-mangrove#1511).
 - `yarn jsdoc:draft <file> [ExportName]` prints a `@param` block drafted from
   the PropTypes. Reorder it to match the signature and review every line
   before committing.
-- After `yarn build`, `yarn check:prop-contracts` compares the two for every
-  component: prop names, optionality, and a real type wherever PropTypes give
-  one. Components listed in `scripts/prop-contracts-migrated.json` fail the
-  check if they disagree; add a component there once it reports no problems.
+- `yarn check:prop-contracts` compares the two for every component: prop
+  names, optionality, a real type wherever PropTypes give one, the same enum
+  members wherever PropTypes list `oneOf` values (in any order or quote
+  style), and the same default wherever both sides state one. The normal
+  build runs with the docgen server off, so build with it on first, as CI
+  does:
+
+  ```bash
+  MANGROVE_DOCGEN_SERVER=true yarn exec storybook build -o .cache/docgen-server-build
+  yarn check:prop-contracts --build-dir=.cache/docgen-server-build
+  ```
+
+  A build directory without docgen server output fails the check. Components
+  listed in `scripts/prop-contracts-migrated.json` fail it if they disagree;
+  add a component there once it reports no problems.
+- A `oneOf` prop needs a string-literal union in its `@param`, such as
+  `{'default'|'flush'}`. `{string}` loses the members, and the check reports
+  it.
 - The repository has no `@types/react`, so the TypeScript compiler cannot
   resolve `React.ReactNode`. A required `{React.ReactNode}` prop shows the
   name; an optional one shows `any`, and the check reports it.

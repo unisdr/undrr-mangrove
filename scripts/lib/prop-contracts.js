@@ -133,12 +133,104 @@ export function isUntyped(type) {
 }
 
 /**
+ * Canonical form of one enum member. A string literal loses its quote style
+ * (`'a'`, `"a"` and `` `a` `` are one member); anything else (a number,
+ * `true`, `null`) is kept as written, so the string `'2'` and the number `2`
+ * stay different. Returns the comparison key and the label for reports.
+ */
+function enumMember(raw) {
+  const text = String(raw).trim();
+  const quoted = text.match(/^(['"`])([\s\S]*)\1$/);
+  return quoted
+    ? { key: `string:${quoted[2]}`, label: `'${quoted[2]}'` }
+    : { key: `literal:${text}`, label: text };
+}
+
+/**
+ * The literal members of an enum type as a Map of key to label, or undefined
+ * when the type is not an enum or cannot be listed (a computed
+ * `oneOf(Object.keys(map))`). `undefined` is dropped: the docgen server may
+ * add it to an optional prop's union, and optionality is compared separately.
+ */
+export function enumMembers(type) {
+  if (type?.name !== 'enum' || !Array.isArray(type.value)) return undefined;
+  if (!type.value.length || type.value.some(member => member?.computed))
+    return undefined;
+  const members = new Map();
+  for (const member of type.value) {
+    const value = member?.value;
+    if (value === undefined || String(value).trim() === 'undefined') continue;
+    const { key, label } = enumMember(value);
+    members.set(key, label);
+  }
+  return members;
+}
+
+/**
+ * Normalise a default value's source text for comparison: one quote style,
+ * whitespace collapsed and dropped beside punctuation, no trailing commas.
+ * `{ a: "x", }` and `{a: 'x'}` normalise to the same text.
+ */
+export function normaliseDefault(text) {
+  return String(text)
+    .replace(/"/g, "'")
+    .replace(/\s+/g, ' ')
+    .replace(/\s*([{}[\](),:])\s*/g, '$1')
+    .replace(/,([}\]])/g, '$1')
+    .trim();
+}
+
+/**
+ * Where PropTypes list literal `oneOf` values, the docgen server must state
+ * the same members, in any order and quote style.
+ */
+function compareEnums(name, serverType, propType) {
+  const expected = enumMembers(propType);
+  if (!expected) return [];
+  const actual = enumMembers(serverType);
+  if (!actual) {
+    // An untyped server type is reported by the type check already.
+    if (isUntyped(serverType)) return [];
+    return [
+      `${name}: docgen server type is \`${serverType?.raw ?? serverType?.name}\`, PropTypes list ${[...expected.values()].join(', ')}`,
+    ];
+  }
+  const missing = [...expected].filter(([key]) => !actual.has(key));
+  const extra = [...actual].filter(([key]) => !expected.has(key));
+  const problems = [];
+  if (missing.length)
+    problems.push(
+      `${name}: docgen server enum lacks ${missing.map(([, label]) => label).join(', ')}, listed in PropTypes`
+    );
+  if (extra.length)
+    problems.push(
+      `${name}: docgen server enum has ${extra.map(([, label]) => label).join(', ')}, not in PropTypes`
+    );
+  return problems;
+}
+
+/** Where both sides state a default, the defaults must match. */
+function compareDefaults(name, serverDefault, propDefault) {
+  const server = serverDefault?.value;
+  const prop = propDefault?.value;
+  if (server == null || prop == null) return [];
+  if (normaliseDefault(server) === normaliseDefault(prop)) return [];
+  return [
+    `${name}: docgen server default is \`${oneLine(String(server))}\`, react-docgen default is \`${oneLine(String(prop))}\``,
+  ];
+}
+
+/**
  * Compare one component's docgen-server props with its PropTypes props.
  * Returns a list of human-readable problems; empty means they agree.
  *
  * - every PropTypes prop is documented by the docgen server, and vice versa;
  * - optionality matches (`isRequired` against `required`);
- * - the docgen server has a real type wherever PropTypes give one.
+ * - the docgen server has a real type wherever PropTypes give one;
+ * - where PropTypes list `oneOf` literals, the docgen server lists the same
+ *   members, ignoring order and quote style;
+ * - where both sides state a default, the defaults match, ignoring quote
+ *   style and whitespace.
  */
 export function compareContracts(serverProps = {}, propTypesProps = {}) {
   const problems = [];
@@ -168,6 +260,10 @@ export function compareContracts(serverProps = {}, propTypesProps = {}) {
         `${name}: docgen server type is \`${server?.type?.name ?? 'missing'}\`, PropTypes give \`${jsDocType(prop.type)}\``
       );
     }
+    problems.push(...compareEnums(name, server?.type, prop.type));
+    problems.push(
+      ...compareDefaults(name, server?.defaultValue, prop.defaultValue)
+    );
   }
   return problems;
 }
@@ -187,7 +283,10 @@ export function readBuiltContracts(
   const dir = path.join(buildDir, 'services', 'core', 'docgen');
   if (!fs.existsSync(dir))
     throw new Error(
-      `No docgen server output in ${dir}. Run the Storybook build first.`
+      `No docgen server output in ${dir}. The docgen server is off by ` +
+        'default, so build Storybook with it on first:\n' +
+        `  MANGROVE_DOCGEN_SERVER=true yarn exec storybook build -o ${buildDir}\n` +
+        `then run: yarn check:prop-contracts --build-dir=${buildDir}`
     );
   const results = [];
   for (const file of fs.readdirSync(dir).sort()) {
