@@ -40,3 +40,21 @@
 .mg-show-more--button[hidden] {
   display: none;
 }
+
+// Items mode. `hidden="until-found"` hides an item's content with
+// `content-visibility: hidden` but keeps its box, so its padding, borders and
+// margins would still show as an empty row. Drop them while it is hidden.
+[data-mg-show-more-item][hidden] {
+  margin-block: 0;
+  padding-block: 0;
+  border-block-width: 0;
+}
+
+// Normalize's `[hidden] { display: none }` also matches
+// `hidden="until-found"` and beats the browser's own rule for it, so the
+// browser never searches the item and find-in-page can't reveal it. Give
+// until-found items their normal display back; the browser keeps their
+// content hidden (content-visibility) and the rule above removes their box.
+[data-mg-show-more-item][hidden="until-found" i] {
+  display: revert;
+}

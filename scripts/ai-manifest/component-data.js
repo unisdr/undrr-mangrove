@@ -2138,7 +2138,7 @@ npm run build</code></pre>
     summary:
       'Collapse long content behind a gradient fade with a toggle button, driven by the mgShowMore vanilla JS utility. Height customizable via CSS variable.',
     description:
-      'Collapse long content behind a gradient fade with a toggle button. Height customizable via CSS variable. The mgShowMore vanilla JS utility reads data-mg-show-more attributes and returns optional lifecycle cleanup. Add data-mg-show-more-min-hidden-lines="N" (React: minHiddenLines) to collapse only when at least N lines would be hidden past the collapsed height (read from CSS; --mg-show-more-height may use lh); otherwise the content stays open and the toggle gets hidden. Ship the toggle with hidden in server markup; the script reveals it. Analytics: the toggle carries data-vf-analytics-label ("Show more"/"Show less", or data-mg-show-more-analytics-collapsed/-open). A [data-mg-show-more-label] child keeps visually hidden context in the toggle name. The React wrapper enhances each item independently, supports items added after mount, and accepts translated labelOpen and labelCollapsed props.',
+      'Collapse long content behind a gradient fade with a toggle button. Height customizable via CSS variable. The mgShowMore vanilla JS utility reads data-mg-show-more attributes and returns optional lifecycle cleanup. Add data-mg-show-more-min-hidden-lines="N" (React: minHiddenLines) to collapse only when at least N lines would be hidden past the collapsed height (read from CSS; --mg-show-more-height may use lh); otherwise the content stays open and the toggle gets hidden. Ship the toggle with hidden in server markup; the script reveals it. Analytics: the toggle carries data-vf-analytics-label ("Show more"/"Show less", or data-mg-show-more-analytics-collapsed/-open). A [data-mg-show-more-label] child keeps visually hidden context in the toggle name. The React wrapper enhances each item independently, supports items added after mount, and accepts translated labelOpen and labelCollapsed props. Items mode (opt-in): set data-mg-show-more-mode="items" on the toggle (React: mode="items" with collapsable_items and visibleItems) and data-mg-show-more-item on each element inside the target to hide; those get hidden="until-found" (plain hidden as fallback), the toggle gets aria-expanded, a reader open moves focus to the first revealed control, find-in-page opens the set via beforematch (show-more CSS keeps until-found items out of the normalize rule [hidden]{display:none}; a host [hidden]{display:none !important} defeats it), closing moves focus from a hidden item to the toggle, and mgShowMoreSetOpen(toggle, open) opens or closes it from code. Use items mode for lists of whole elements; the default visual-only mode is unchanged.',
     cssClasses: ['mg-show-more--collapsed', 'mg-show-more--button'],
     examples: [
       {
@@ -2160,6 +2160,19 @@ npm run build</code></pre>
   <p>More content here...</p>
 </div>
 <button type="button" class="mg-button mg-button-primary mg-show-more--button" data-mg-show-more data-mg-show-more-target="#extra-content" data-mg-show-more-label-collapsed="Show more" data-mg-show-more-label-open="Show less">Show more</button>`,
+      },
+      {
+        name: 'Items mode (true disclosure)',
+        // Items ship visible and the toggle ships hidden, so without
+        // JavaScript every item shows. mgShowMore() hides the marked items
+        // with hidden="until-found" and adds aria-expanded/aria-controls.
+        html: `<ul id="report-files">
+  <li><a href="/a">Report</a></li>
+  <li><a href="/b">Annex 1</a></li>
+  <li data-mg-show-more-item><a href="/c">Annex 2</a></li>
+  <li data-mg-show-more-item><a href="/d">Annex 3</a></li>
+</ul>
+<button type="button" hidden class="mg-button mg-button-secondary mg-show-more--button" data-mg-show-more data-mg-show-more-mode="items" data-mg-show-more-target="#report-files" data-mg-show-more-label-collapsed="Show all 4 files" data-mg-show-more-label-open="Show fewer files"><span data-mg-show-more-label>Show all 4 files</span></button>`,
       },
     ],
   },
