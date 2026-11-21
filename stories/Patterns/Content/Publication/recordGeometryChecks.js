@@ -171,9 +171,8 @@ export async function checkAsideContainment({ canvasElement }) {
 }
 
 /**
- * The access block stays compact so the Description starts high. The old
- * stacked list measured 237px for one file and 454px for three at 1378px.
- * Budgets are per width: the test runner is narrow.
+ * Tier 1: the single access row comes before the Description and stays
+ * compact. The old stacked list measured 237px for one file at 1378px.
  */
 export const checkAccessBudget = (wide, narrow) =>
   async function checkAccessHeight({ canvasElement }) {
@@ -185,13 +184,50 @@ export const checkAccessBudget = (wide, narrow) =>
     await waitFor(() => expect(access).not.toBeNull());
     const budget = doc.defaultView.innerWidth >= 768 ? wide : narrow;
     expect(access.getBoundingClientRect().height).toBeLessThanOrEqual(budget);
-    // The Description follows the access block directly.
-    const sections = [...canvasElement.querySelectorAll('main section')];
-    const accessSection = access.closest('section');
+    const description = canvasElement
+      .querySelector('.mg-content')
+      .closest('section');
+    expect(access.compareDocumentPosition(description)).toBe(
+      doc.defaultView.Node.DOCUMENT_POSITION_FOLLOWING
+    );
     expect(
-      sections[sections.indexOf(accessSection) + 1].querySelector('h2')
-    ).not.toBeNull();
+      canvasElement.querySelector('.mg-publication-record__files-jump')
+    ).toBeNull();
   };
+
+/**
+ * Tiers 2 and 3: the Description comes straight after the header, the files
+ * section follows it, and the header's "Files (N)" link points at the files
+ * heading.
+ */
+export async function checkDescriptionFirst({ canvasElement }) {
+  const doc = canvasElement.ownerDocument;
+  await doc.fonts.ready;
+  const header = canvasElement.querySelector('.mg-publication-record__header');
+  const description = canvasElement
+    .querySelector('.mg-content')
+    .closest('section');
+  const files = canvasElement.querySelector(
+    '.mg-publication-record__files-section'
+  );
+  expect(description.compareDocumentPosition(files)).toBe(
+    doc.defaultView.Node.DOCUMENT_POSITION_FOLLOWING
+  );
+  // The Description starts directly under the header (and its jump link).
+  const gap =
+    description.getBoundingClientRect().top -
+    header.getBoundingClientRect().bottom;
+  expect(gap).toBeLessThan(120);
+  const jump = header.querySelector('.mg-publication-record__files-jump a');
+  expect(jump).not.toBeNull();
+  expect(jump).toHaveAttribute('data-vf-analytics-label', 'nav_files_jump');
+  const target = doc.getElementById(jump.getAttribute('href').slice(1));
+  expect(target).toBe(files.querySelector('h2'));
+  // The heading keeps a scroll margin so the jump doesn't land flush.
+  expect(
+    parseFloat(doc.defaultView.getComputedStyle(target).scrollMarginTop)
+  ).toBeGreaterThan(0);
+}
 
 /**
  * Many files (34, three languages): the full table, every row visible, so

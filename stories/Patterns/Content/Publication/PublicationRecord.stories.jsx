@@ -16,6 +16,7 @@ import {
   checkAsideContainment,
   checkManyFiles,
   checkCoverAffordance,
+  checkDescriptionFirst,
   checkLanguageSelect,
   withGridCheck,
 } from './recordGeometryChecks';
@@ -62,6 +63,7 @@ export const TwoFiles = {
     ...Standard.args,
     record: { ...exampleRecord, resources: twoFiles },
   },
+  play: withGridCheck(checkDescriptionFirst),
 };
 // Tier 3: two languages, so the table gets language filters.
 export const SeveralFiles = {
@@ -70,9 +72,8 @@ export const SeveralFiles = {
     ...Standard.args,
     record: { ...exampleRecord, resources: severalFiles },
   },
-  // Tier 3: filters plus three rows, at most 340px wide (the old three-file
-  // list was 454px), 460px narrow.
-  play: withGridCheck(checkAccessBudget(340, 460)),
+  // Tier 3: the Description first, then the files with the language filter.
+  play: withGridCheck(checkDescriptionFirst),
 };
 // Modelled on the largest Drupal record (34 files, three languages): the
 // full table with a language filter. Every row shows, so find-in-page works.
@@ -82,7 +83,10 @@ export const ManyFiles = {
     ...Standard.args,
     record: { ...exampleRecord, resources: manyFiles },
   },
-  play: withGridCheck(checkManyFiles),
+  play: withGridCheck(async context => {
+    await checkDescriptionFirst(context);
+    await checkManyFiles(context);
+  }),
 };
 // Seven languages: the language filter is a select.
 export const ManyLanguages = {

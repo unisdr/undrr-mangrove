@@ -37,7 +37,11 @@ jest.mock('storybook/test', () => ({}));
 const labels = RECORD_LABELS.english;
 const renderStory = (story, locale) =>
   render(meta.render(story.args, { globals: locale ? { locale } : {} }));
-const access = () => screen.getByRole('region', { name: labels.access });
+// Tier 1 keeps "Read or access this publication"; tiers 2–3 say "Files".
+const access = () =>
+  screen.getByRole('region', {
+    name: new RegExp(`^(${labels.access}|${labels.filesHeading})$`),
+  });
 const english = (count, extra = {}) =>
   Array.from({ length: count }, (_, index) => ({
     label: `File ${index + 1}`,
@@ -251,7 +255,7 @@ describe('tiers 2–4: the table', () => {
   test('formats and sizes are isolated for RTL; titles carry their language', () => {
     renderStory(SeveralFiles, 'arabic');
     const row = screen
-      .getByRole('region', { name: RECORD_LABELS.arabic.access })
+      .getByRole('region', { name: RECORD_LABELS.arabic.filesHeading })
       .querySelectorAll('tbody tr')[1];
     expect(
       row.querySelector('.mg-publication-record__file-facts bdi').textContent

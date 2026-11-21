@@ -8,6 +8,8 @@ import meta, {
   ManyFiles,
   ManyLanguages,
   SeveralFiles,
+  Standard,
+  TwoFiles,
 } from '../PublicationRecord.stories';
 
 // The stories import browser play checks; Jest renders the stories only.
@@ -16,7 +18,11 @@ jest.mock('storybook/test', () => ({}));
 const labels = RECORD_LABELS.english;
 const renderStory = (story, locale) =>
   render(meta.render(story.args, { globals: locale ? { locale } : {} }));
-const access = () => screen.getByRole('region', { name: labels.access });
+// Tier 1 keeps "Read or access this publication"; tiers 2–3 say "Files".
+const access = () =>
+  screen.getByRole('region', {
+    name: new RegExp(`^(${labels.access}|${labels.filesHeading})$`),
+  });
 const rows = () => [...access().querySelectorAll('tbody tr')];
 const status = () => access().querySelector('.mg-publication-record__status');
 const radio = value =>
@@ -106,12 +112,80 @@ describe('every row, no collapse', () => {
     expect(rows()).toHaveLength(4);
     const jump = screen.getByRole('link', { name: 'All downloads (34)' });
     expect(document.querySelector(jump.getAttribute('href'))).toBe(
-      screen.getByRole('heading', { name: labels.access, level: 2 })
+      screen.getByRole('heading', { name: labels.filesHeading, level: 2 })
     );
     fireEvent.click(jump);
     expect(radio('all').checked).toBe(true);
     expect(rows()).toHaveLength(34);
     expect(status().textContent).toBe('');
+  });
+});
+
+describe('order and the inline language control', () => {
+  const regions = () =>
+    screen
+      .getAllByRole('region')
+      .map(region => region.getAttribute('aria-labelledby'))
+      .map(id => document.getElementById(id).textContent);
+
+  test('one file: access before the Description, no jump link', () => {
+    renderStory(Standard);
+    const order = regions();
+    expect(order.indexOf(labels.access)).toBeLessThan(
+      order.indexOf(labels.description)
+    );
+    expect(screen.queryByRole('link', { name: /^Files? \(/ })).toBeNull();
+  });
+
+  test.each([TwoFiles, SeveralFiles, ManyFiles])(
+    'several files: Description first, then Files, with a header jump link (%#)',
+    story => {
+      renderStory(story);
+      const order = regions();
+      expect(order.indexOf(labels.description)).toBeLessThan(
+        order.indexOf(labels.filesHeading)
+      );
+      expect(order).not.toContain(labels.access);
+      const count = story.args.record.resources.length;
+      const jump = screen.getByRole('link', { name: `Files (${count})` });
+      expect(jump.closest('header')).not.toBeNull();
+      expect(jump).toHaveAttribute('data-vf-analytics-label', 'nav_files_jump');
+      expect(document.querySelector(jump.getAttribute('href'))).toBe(
+        screen.getByRole('heading', { name: labels.filesHeading, level: 2 })
+      );
+    }
+  );
+
+  test('the button group sits in the heading row, named "Language", with a decorative icon', () => {
+    renderStory(SeveralFiles);
+    const head = access().querySelector('.mg-publication-record__access-head');
+    expect(head.querySelector('h2').textContent).toBe(labels.filesHeading);
+    const group = within(head).getByRole('group', { name: 'Language' });
+    expect(group.querySelector('legend')).toHaveClass('mg-u-sr-only');
+    const icon = head.querySelector('.mg-icon-languages');
+    expect(icon).toHaveAttribute('aria-hidden', 'true');
+  });
+
+  test('the select sits in the heading row with a visually hidden "Language" label', () => {
+    renderStory(ManyLanguages);
+    const head = access().querySelector('.mg-publication-record__access-head');
+    const select = within(head).getByRole('combobox', { name: 'Language' });
+    expect(select.labels[0]).toHaveClass('mg-u-sr-only');
+    expect(head.querySelector('.mg-icon-languages')).toHaveAttribute(
+      'aria-hidden',
+      'true'
+    );
+  });
+
+  test.each([
+    ['arabic', 'ar', 3, 'الملفات (3)'],
+    ['arabic', 'ar', 2, 'الملفان (2)'],
+    ['french', 'fr', 3, 'Fichiers (3)'],
+    ['japanese', 'ja', 3, 'ファイル (3)'],
+  ])('%s jump link for %i files', (locale, lang, count, expected) => {
+    expect(pluralLabel(RECORD_LABELS[locale].filesJump, lang, count)).toBe(
+      expected
+    );
   });
 });
 
@@ -169,8 +243,10 @@ describe('labels', () => {
       'watchShort',
       'downloadShort',
       'addedLabel',
+      'filesHeading',
     ].forEach(key => expect(typeof set[key]).toBe('string'));
     expect(set.showing.other).toMatch(/\{shown\}/);
+    expect(set.filesJump.other).toMatch(/\{count\}/);
     expect(set.added).toBeUndefined();
   });
 });

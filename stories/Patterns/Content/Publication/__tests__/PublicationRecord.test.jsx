@@ -47,10 +47,18 @@ test('identity roles and early access retain structure and known precision', () 
     [...container.querySelectorAll('time')].map(node => node.dateTime)
   ).toEqual(['2026', '2026-03-15']);
   expect(screen.getByText('2025–2030')).toBeInTheDocument();
-  const access = screen.getByRole('region', { name: labels.access });
+  // Several files: the Description comes first, then the files section,
+  // reached from the header's "Files (3)" jump link.
+  const files = screen.getByRole('region', { name: labels.filesHeading });
   const description = screen.getByRole('region', { name: labels.description });
-  expect(access.compareDocumentPosition(description)).toBe(
+  expect(description.compareDocumentPosition(files)).toBe(
     Node.DOCUMENT_POSITION_FOLLOWING
+  );
+  const jump = screen.getByRole('link', { name: 'Files (3)' });
+  expect(jump.closest('header')).not.toBeNull();
+  expect(jump).toHaveAttribute('data-vf-analytics-label', 'nav_files_jump');
+  expect(container.querySelector(jump.getAttribute('href'))).toBe(
+    screen.getByRole('heading', { name: labels.filesHeading, level: 2 })
   );
   const french = screen.getByRole('link', {
     name: 'Access Comprendre les risques de catastrophe : résumé (opens in new tab)',

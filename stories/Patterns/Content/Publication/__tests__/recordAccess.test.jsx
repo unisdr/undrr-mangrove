@@ -248,7 +248,7 @@ describe('rendered cover link and cue', () => {
     const cue = screen.getByRole('link', { name: 'All downloads (3)' });
     const target = container.querySelector(cue.getAttribute('href'));
     expect(target).toBe(
-      screen.getByRole('heading', { name: labels.access, level: 2 })
+      screen.getByRole('heading', { name: labels.filesHeading, level: 2 })
     );
     expect(cue).toHaveAttribute(
       'data-vf-analytics-label',

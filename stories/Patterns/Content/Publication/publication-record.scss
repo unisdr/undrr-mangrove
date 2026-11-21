@@ -147,15 +147,48 @@
   }
 }
 
+// The files heading with the language control inline at its end. It wraps
+// under the heading when the row is too narrow (a long button group, 390px).
+.mg-publication-record__access-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mg-spacing-100) var(--mg-spacing-300);
+}
+
+.mg-publication-record__access-heading {
+  margin: 0;
+
+  // "Files (N)" and "All downloads (N)" land here; keep it clear of the
+  // viewport edge (and of a sticky bar, which sets scroll-padding).
+  scroll-margin-block-start: var(--mg-spacing-200);
+}
+
+// The languages icon stands in for the visually hidden "Language" label.
 .mg-publication-record__filters {
   display: flex;
   flex-wrap: wrap;
-  align-items: end;
-  gap: var(--mg-spacing-150) var(--mg-spacing-300);
+  align-items: center;
+  gap: var(--mg-spacing-100);
+  min-inline-size: 0;
 
   > * {
     margin-block: 0;
   }
+
+  .mg-form-field {
+    margin: 0;
+  }
+}
+
+.mg-publication-record__filters-icon {
+  font-size: 1.25rem;
+}
+
+// Header jump link to the files section after the Description.
+.mg-publication-record__files-jump {
+  margin-block: var(--mg-spacing-150) 0;
 }
 
 // One shared explanation for all backups.

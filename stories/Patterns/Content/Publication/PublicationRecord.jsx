@@ -6,6 +6,7 @@ import {
   ANALYTICS,
   coverAccess,
   pluralLabel,
+  presentation,
   showAllDownloads,
 } from './recordAccess';
 import { RecordAccess } from './RecordResources';
@@ -72,6 +73,32 @@ export function PublicationRecord({
       ? pluralLabel(labels.allDownloads, lang, value.resources.length)
       : '';
   const chromeLocale = lang === 'ar' ? 'arabic' : 'english';
+  // One file: the access row stays first, before the Description. Two or
+  // more (88% of records have one): the Description comes first, and the
+  // files section follows it, reached from the header's "Files (N)" jump
+  // link and the cover's "All downloads (N)".
+  const filesTier = presentation(value.resources).tier;
+  const filesFirst = filesTier <= 1;
+  const filesId = `${prefix}-access`;
+  const filesSection = value.resources.length > 0 && (
+    <section
+      className="mg-reading__article mg-publication-record__files-section"
+      aria-labelledby={filesId}
+      data-vf-google-analytics-region={ANALYTICS.region}
+    >
+      <RecordAccess
+        resources={value.resources}
+        labels={labels}
+        lang={lang}
+        workLang={value.lang}
+        contactHref={value.contactHref}
+        id={prefix}
+        heading={filesFirst ? labels.access : labels.filesHeading}
+        headingId={filesId}
+        controller={access}
+      />
+    </section>
+  );
   return (
     <div lang={lang} dir={dir} className="mg-publication-record">
       <SkipLink targetId={`${prefix}-main`} label={labels.skip} />
@@ -149,29 +176,23 @@ export function PublicationRecord({
                 )}
               </dl>
             )}
+            {!filesFirst && (
+              <p className="mg-publication-record__files-jump mg-u-font-size-250">
+                <a
+                  href={`#${filesId}`}
+                  data-vf-analytics-label={ANALYTICS.filesJump}
+                >
+                  {pluralLabel(labels.filesJump, lang, value.resources.length)}
+                  <span aria-hidden="true"> ↓</span>
+                </a>
+              </p>
+            )}
           </header>
           <div
             className={`mg-reading mg-publication-record__reading${hasAside ? ' mg-grid mg-grid--article' : ''}`}
           >
             <div className="mg-publication-record__main mg-reading__article">
-              {value.resources.length > 0 && (
-                <section
-                  className="mg-reading__article"
-                  aria-labelledby={`${prefix}-access`}
-                  data-vf-google-analytics-region={ANALYTICS.region}
-                >
-                  <h2 id={`${prefix}-access`}>{labels.access}</h2>
-                  <RecordAccess
-                    resources={value.resources}
-                    labels={labels}
-                    lang={lang}
-                    workLang={value.lang}
-                    contactHref={value.contactHref}
-                    id={prefix}
-                    controller={access}
-                  />
-                </section>
-              )}
+              {filesFirst && filesSection}
               {children && (
                 <section
                   className="mg-reading__article"
@@ -187,6 +208,7 @@ export function PublicationRecord({
                   </div>
                 </section>
               )}
+              {!filesFirst && filesSection}
               {(value.citation || value.canonicalUrl) && (
                 <section
                   className="mg-reading__article"
@@ -265,7 +287,7 @@ export function PublicationRecord({
                     {allDownloads && (
                       <p className="mg-publication-record__all-downloads mg-u-font-size-250">
                         <a
-                          href={`#${prefix}-access`}
+                          href={`#${filesId}`}
                           onClick={openList}
                           data-vf-analytics-label={ANALYTICS.allDownloads}
                         >

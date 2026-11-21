@@ -22,6 +22,8 @@ export const ANALYTICS = {
   allDownloads: 'nav_all_downloads_cover',
   // Filtering the resource table by language: navigation, not a download.
   filterLanguage: 'nav_filter_language',
+  // The header's "Files (N)" jump link to the files section.
+  filesJump: 'nav_files_jump',
   // The backup explanation's contact link: not a download, so not download_.
   contact: 'contact_download_help',
 };

@@ -318,7 +318,10 @@ function LanguageFilter({ kind, view, labels, language, onChange, id }) {
     return (
       <Select
         id={`${id}-language`}
+        // The label is visually hidden; the languages icon stands in for it,
+        // and "Language" stays the accessible name voice control can say.
         label={labels.languageLabel}
+        hideLabel
         options={options}
         value={language}
         onChange={event => onChange(event.target.value)}
@@ -360,6 +363,8 @@ export function RecordAccess({
   workLang,
   contactHref,
   id,
+  heading,
+  headingId,
   controller,
 }) {
   const view = presentation(resources);
@@ -402,6 +407,29 @@ export function RecordAccess({
     <div
       className={`mg-publication-record__access mg-publication-record__access--tier-${view.tier}`}
     >
+      {/* The heading and, inline at its end, the language control. It wraps
+          under the heading when the row is too narrow. */}
+      <div className="mg-publication-record__access-head">
+        <h2 id={headingId} className="mg-publication-record__access-heading">
+          {heading}
+        </h2>
+        {enhanced && view.languageFilter !== 'none' && (
+          <div className="mg-publication-record__filters">
+            <Icon
+              name="languages"
+              className="mg-publication-record__filters-icon"
+            />
+            <LanguageFilter
+              kind={view.languageFilter}
+              view={view}
+              labels={labels}
+              language={language}
+              onChange={onLanguage}
+              id={id}
+            />
+          </div>
+        )}
+      </div>
       {view.tier === 1 ? (
         <AccessRow
           resource={resources[0]}
@@ -411,24 +439,12 @@ export function RecordAccess({
       ) : (
         <>
           {enhanced && view.languageFilter !== 'none' && (
-            <>
-              <div className="mg-publication-record__filters">
-                <LanguageFilter
-                  kind={view.languageFilter}
-                  view={view}
-                  labels={labels}
-                  language={language}
-                  onChange={onLanguage}
-                  id={id}
-                />
-              </div>
-              <p
-                className="mg-u-sr-only mg-publication-record__status"
-                aria-live="polite"
-              >
-                {announcement}
-              </p>
-            </>
+            <p
+              className="mg-u-sr-only mg-publication-record__status"
+              aria-live="polite"
+            >
+              {announcement}
+            </p>
           )}
           <FilesTable
             rows={rows}
@@ -451,6 +467,9 @@ RecordAccess.propTypes = {
   workLang: PropTypes.string,
   contactHref: PropTypes.string,
   id: PropTypes.string.isRequired,
+  /** The section heading's text and id. */
+  heading: PropTypes.node.isRequired,
+  headingId: PropTypes.string.isRequired,
   /** Ref that receives `{ resetFilters() }` for "All downloads (N)". */
   controller: PropTypes.object,
 };
