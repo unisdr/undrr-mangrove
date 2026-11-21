@@ -1251,16 +1251,13 @@
       "data": "custom[] | optional | default=[] | described",
       "labelCollapsed": "string | optional | default='Show more' | described",
       "labelOpen": "string | optional | default='Show less' | described",
-      "minHiddenLines": "number | optional | no default | described",
-      "mode": "'height' | 'items' | optional | default='height' | described",
-      "visibleItems": "number | optional | default=3 | described"
+      "minHiddenLines": "number | optional | no default | described"
     },
     "examples": [
       "ShowMore",
       "Detached button",
       "Two on one page",
-      "Only when long",
-      "Items mode (true disclosure)"
+      "Only when long"
     ]
   },
   "components-status-label": {
