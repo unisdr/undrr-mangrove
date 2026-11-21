@@ -1753,16 +1753,22 @@
   "patterns-publication-record": {
     "props": {
       "children": "node | optional | no default | described",
-      "dir": "'ltr' | 'rtl' | optional | default='ltr' | undescribed",
-      "labels": "Record<string, string> | required | no default | described",
-      "lang": "string | optional | default='en' | undescribed",
+      "dir": "'ltr' | 'rtl' | optional | default='ltr' | described",
+      "labels": "Record<string, string | Record<string, string>> | required | no default | described",
+      "lang": "string | optional | default='en' | described",
       "record": "object | required | no default | described"
     },
     "examples": [
       "Experimental publication record",
+      "Two files, one language",
+      "Several files, two languages",
+      "Many files",
+      "Many languages",
+      "Hosted copy only",
+      "Publisher copy only",
+      "Video on a video host",
       "No cover",
       "No public file",
-      "Original / local backup",
       "Long content"
     ]
   },

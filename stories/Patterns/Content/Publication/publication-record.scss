@@ -59,22 +59,237 @@
   }
 }
 
-.mg-publication-record__resources {
-  @include mg-list-unmarked;
+// Adaptive resource presentation. Tier 1 is one access row; tiers 2–4 are
+// a table, with filters from tier 3. See PUBLICATION-RECORD-SPEC.md.
+.mg-publication-record__access > * + * {
+  margin-block-start: var(--mg-spacing-150);
+}
 
-  padding-inline-start: 0;
+.mg-publication-record__external {
+  margin-inline-start: 0.25em;
+  font-size: 0.875em;
+}
 
-  li {
-    padding-block: var(--mg-spacing-150);
-    border-block-end: 1px solid rgb(var(--mg-color-neutral-200));
+// Tier 1: title link, facts, then the backup icon at the inline end.
+.mg-publication-record__access-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--mg-spacing-50) var(--mg-spacing-200);
+  padding-block: var(--mg-spacing-150);
+  border-block: 1px solid rgb(var(--mg-color-neutral-200));
+
+  .mg-publication-record__primary {
+    font-weight: 600;
   }
 
-  li:first-child {
-    padding-block-start: var(--mg-spacing-50);
+  .mg-publication-record__backup-link {
+    margin-inline-start: auto;
+  }
+}
+
+// The hosted backup: a quiet icon link with a 44px target. The short
+// visible label shows only on narrow screens.
+.mg-publication-record__backup-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--mg-spacing-50);
+  min-block-size: 2.75rem;
+  min-inline-size: 2.75rem;
+  text-decoration-line: none;
+
+  .mg-icon {
+    font-size: 1.25rem;
+  }
+}
+
+.mg-publication-record__backup-short {
+  display: none;
+}
+
+// Tiers 2–4: a compact table on the existing Mangrove table styles.
+.mg-publication-record__files {
+  font-size: var(--mg-font-size-250);
+
+  th,
+  td {
+    padding-block: var(--mg-spacing-50);
+    vertical-align: middle;
   }
 
-  p {
-    margin-block: var(--mg-spacing-50) 0;
+  thead th {
+    white-space: nowrap;
+  }
+
+  tbody th {
+    font-weight: 400;
+  }
+
+  .mg-publication-record__file-facts,
+  .mg-publication-record__file-action,
+  .mg-publication-record__file-backup {
+    white-space: nowrap;
+  }
+
+  .mg-publication-record__file-action a {
+    font-weight: 600;
+  }
+
+  .mg-publication-record__file-backup {
+    text-align: center;
+  }
+
+  // Compact rows: 28px targets, above the 24px minimum (WCAG 2.5.8).
+  .mg-publication-record__backup-link {
+    min-block-size: 1.75rem;
+    min-inline-size: 1.75rem;
+  }
+}
+
+// The files heading with the language control inline at its end. It wraps
+// under the heading when the row is too narrow (a long button group, 390px).
+.mg-publication-record__access-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mg-spacing-100) var(--mg-spacing-300);
+}
+
+.mg-publication-record__access-heading {
+  margin: 0;
+
+  // "Files (N)" and "All downloads (N)" land here; keep it clear of the
+  // viewport edge (and of a sticky bar, which sets scroll-padding).
+  scroll-margin-block-start: var(--mg-spacing-200);
+}
+
+// The languages icon stands in for the visually hidden "Language" label.
+.mg-publication-record__filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--mg-spacing-100);
+  min-inline-size: 0;
+
+  > * {
+    margin-block: 0;
+  }
+
+  .mg-form-field {
+    margin: 0;
+  }
+}
+
+.mg-publication-record__filters-icon {
+  font-size: 1.25rem;
+}
+
+// Header jump link to the files section after the Description.
+.mg-publication-record__files-jump {
+  margin-block: var(--mg-spacing-150) 0;
+}
+
+// One shared explanation for all backups.
+.mg-publication-record__backup-help {
+  > summary {
+    inline-size: fit-content;
+    color: rgb(var(--mg-color-interactive));
+    font-size: var(--mg-font-size-250);
+    text-decoration-line: underline;
+  }
+
+  > p {
+    max-inline-size: 40rem;
+    font-size: var(--mg-font-size-250);
+  }
+}
+
+// Narrow screens: each table row becomes a stacked card. The table keeps
+// explicit ARIA table roles, so changing display does not drop its
+// semantics.
+@media (width < 48rem) {
+  .mg-publication-record__files {
+    // Column headers stay available to screen readers (as .mg-u-sr-only).
+    thead {
+      position: absolute;
+      inline-size: 1px;
+      block-size: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    &,
+    tbody,
+    tr {
+      display: block;
+    }
+
+    tr {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      grid-template-areas:
+        "title title backup"
+        "lang facts backup"
+        "action action backup";
+      column-gap: 0;
+      padding-block: var(--mg-spacing-100);
+      border-block-end: 1px solid rgb(var(--mg-color-neutral-200));
+    }
+
+    th,
+    td {
+      display: block;
+      padding: 0;
+      border: 0;
+    }
+
+    .mg-publication-record__file-title {
+      grid-area: title;
+      font-weight: 600;
+    }
+
+    // Language and facts share one line: "English · HTML, 360 bytes".
+    .mg-publication-record__file-language {
+      grid-area: lang;
+
+      &:not(:empty)::after {
+        content: "\00a0·\00a0" / "";
+      }
+    }
+
+    .mg-publication-record__file-facts {
+      grid-area: facts;
+    }
+
+    .mg-publication-record__file-action {
+      grid-area: action;
+    }
+
+    .mg-publication-record__file-backup {
+      grid-area: backup;
+      align-self: center;
+      padding-inline-start: var(--mg-spacing-150);
+    }
+
+    .mg-publication-record__backup-link {
+      min-block-size: 2.75rem;
+      min-inline-size: 2.75rem;
+    }
+  }
+
+  .mg-publication-record__backup-short {
+    display: inline;
+    max-inline-size: 6rem;
+    white-space: normal;
+  }
+}
+
+@media (forced-colors: active) {
+  .mg-publication-record__backup-help > summary {
+    color: LinkText;
   }
 }
 
@@ -106,5 +321,71 @@
     block-size: auto;
     padding: 0;
     border: 1px solid rgb(var(--mg-color-neutral-600) / 0.2);
+  }
+}
+
+// Cover link (#1502). The link overlays the image so the image keeps its own
+// alt text. The badge is a hover-only hint: it stays off the publisher's cover
+// art until a pointer is over it, and never appears on touch. It changes
+// instantly, with no transition, so reduced motion needs nothing extra.
+.mg-publication-record__cover-group {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--mg-spacing-100);
+  max-inline-size: 14rem;
+}
+
+.mg-publication-record__cover--linked {
+  position: relative;
+}
+
+.mg-publication-record__cover-link {
+  position: absolute;
+  inset: 0;
+
+  @media (hover: hover) {
+    &:hover {
+      outline: var(--mg-focus-ring-width) solid rgb(var(--mg-color-interactive));
+      outline-offset: var(--mg-focus-ring-offset);
+    }
+
+    &:hover .mg-publication-record__cover-badge {
+      display: grid;
+    }
+  }
+}
+
+.mg-publication-record__cover-badge {
+  position: absolute;
+  inset-block-end: var(--mg-spacing-100);
+  inset-inline-end: var(--mg-spacing-100);
+  display: none;
+  place-items: center;
+  inline-size: 2.25rem;
+  block-size: 2.25rem;
+  border-radius: 50%;
+  background-color: rgb(var(--mg-color-interactive));
+  box-shadow: 0 0 0 2px rgb(var(--mg-color-white));
+  color: rgb(var(--mg-color-white));
+  font-size: 1.125rem;
+  line-height: 1;
+}
+
+.mg-publication-record__all-downloads {
+  margin: 0;
+}
+
+@media (forced-colors: active) {
+  .mg-publication-record__cover-badge {
+    border: 2px solid LinkText;
+    background-color: Canvas;
+    box-shadow: none;
+  }
+
+  // Beats the icon system's CanvasText fill so the cue reads as a link.
+  .mg-publication-record__cover-link
+    .mg-publication-record__cover-badge
+    .mg-icon::before {
+    background-color: LinkText;
   }
 }
