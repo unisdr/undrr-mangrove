@@ -4502,7 +4502,7 @@ __metadata:
     process: "npm:^0.11.10"
     qrcode: "npm:^1.5.4"
     react: "npm:19.3.1"
-    react-docgen: "npm:8.0.2"
+    react-docgen: "npm:8.0.4"
     react-dom: "npm:19.3.1"
     react-syntax-highlighter: "npm:16.1.2"
     remark-gfm: "npm:^4.0.1"
@@ -12231,9 +12231,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-docgen@npm:8.0.2":
-  version: 8.0.2
-  resolution: "react-docgen@npm:8.0.2"
+"react-docgen@npm:8.0.4":
+  version: 8.0.4
+  resolution: "react-docgen@npm:8.0.4"
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/traverse": "npm:^7.28.0"
@@ -12245,7 +12245,7 @@ __metadata:
     doctrine: "npm:^3.0.0"
     resolve: "npm:^1.22.1"
     strip-indent: "npm:^4.0.0"
-  checksum: 10/b56f594237a0bdf1356dee6a416ab6f2f38f60a7330cbdaf1da93d366f29f6bfbbfedecd51d47f6ba2a898985c3205c369e7f6cad528478560d9363717243ff8
+  checksum: 10/37564123860c1a90b730ca886a0828a5cd34318411262c33801069fa961d343b2b0bb56cd6197e6288569a8a60eafb205039ad1c40bdd0827a3bf9f6237d8a90
   languageName: node
   linkType: hard
 
