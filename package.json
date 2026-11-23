@@ -150,7 +150,7 @@
     "eslint-plugin-react-hooks": "7.1.1",
     "eslint-plugin-spellcheck": "0.0.20",
     "eslint-plugin-storybook": "11.0.0-beta.3",
-    "glob": "14.0.4",
+    "glob": "14.0.6",
     "globals": "17.14.0",
     "html-entities": "2.6.0",
     "jest": "30.5.2",
