@@ -101,11 +101,11 @@ async function checkBookmarkedArgs(page) {
 
   await open(
     'patterns-content-card--news',
-    'className:bookmarked-card;headingLevel:5'
+    'className:bookmarked-card;headingLevel:5;content.title:Story from bookmark'
   );
   await preview
     .locator('[data-content-layout].bookmarked-card')
-    .getByRole('heading', { level: 5 })
+    .getByRole('heading', { level: 5, name: 'Story from bookmark' })
     .waitFor(waitForBookmark);
 
   await open('components-forms-checkbox--default', 'disabled:true');

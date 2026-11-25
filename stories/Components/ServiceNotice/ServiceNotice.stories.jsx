@@ -10,6 +10,7 @@ const meta = {
     title: { control: 'text' },
     description: { control: 'text' },
     status: {
+      options: ['degraded', 'offline'],
       control: { type: 'inline-radio' },
     },
     isCompact: { control: 'boolean' },

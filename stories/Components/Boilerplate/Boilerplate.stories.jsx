@@ -9,6 +9,7 @@ export default {
     href: { control: 'text' },
     variant: {
       control: { type: 'radio' },
+      options: ['primary', 'secondary'],
     },
   },
 };
