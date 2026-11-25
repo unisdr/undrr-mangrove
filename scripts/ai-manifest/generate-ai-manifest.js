@@ -50,6 +50,7 @@ import {
   validateContentReferences,
 } from './content-patterns.js';
 import {
+  selectCatalogueExamples,
   selectPublishedComponents,
   propTypesCoverage,
 } from './catalog-components.js';
@@ -2212,20 +2213,12 @@ async function main() {
       }
     }
 
-    // Story examples (React JSX). Storybook 11 also collects stories from
-    // sibling files that share the component's title; list the component's
-    // own story file first so examples[0] stays its primary story.
     if (component.stories?.length) {
-      const ownFile = s =>
-        navigationEntries()[s.id]?.importPath === component.path;
-      detail.examples = [
-        ...component.stories.filter(ownFile),
-        ...component.stories.filter(s => !ownFile(s)),
-      ].map(s => {
-        const example = { name: s.name };
-        if (s.snippet) example.code = s.snippet;
-        return example;
-      });
+      detail.examples = selectCatalogueExamples(
+        component,
+        navigationEntries(),
+        { manifestVersion: manifest.v, packageName: pkg.name }
+      );
     }
 
     // Rendered HTML: prefer auto-rendered from dist/, fall back to curated.

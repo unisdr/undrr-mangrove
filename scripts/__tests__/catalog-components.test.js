@@ -1,5 +1,6 @@
 /** @jest-environment node */
 import {
+  selectCatalogueExamples,
   selectPublishedComponents,
   propTypesCoverage,
 } from '../ai-manifest/catalog-components.js';
@@ -80,4 +81,94 @@ test('ordinary story-only documentation and missing paths keep existing classifi
     documented: 0,
     percent: 0,
   });
+});
+
+test('v1 publishes primary-file examples without Storybook root imports', () => {
+  const component = {
+    path: './primary.stories.jsx',
+    stories: [
+      {
+        id: 'component--secondary',
+        name: 'Secondary helper',
+        snippet: 'const Secondary = () => <StoryOnlyHelper />;',
+      },
+      {
+        id: 'component--primary',
+        name: 'Primary',
+        snippet:
+          "import {\n  Example,\n  Helper,\n} from '@undrr/undrr-mangrove';\n\nimport { HelperConfig } from './_storyHelpers';\n\nconst Primary = () => <Example />;",
+      },
+      {
+        id: 'component--external',
+        name: 'External',
+        snippet: "import { fn } from 'storybook/test';\nconst Example = fn();",
+      },
+    ],
+  };
+  const navigation = {
+    'component--primary': { importPath: component.path },
+    'component--external': { importPath: component.path },
+    'component--secondary': { importPath: './secondary.stories.jsx' },
+  };
+  const packageName = '@undrr/undrr-mangrove';
+
+  expect(
+    selectCatalogueExamples(component, navigation, {
+      manifestVersion: 1,
+      packageName,
+    })
+  ).toEqual([
+    { name: 'Primary', code: 'const Primary = () => <Example />;' },
+    { name: 'External', code: component.stories[2].snippet },
+  ]);
+  expect(
+    selectCatalogueExamples(component, navigation, {
+      manifestVersion: 0,
+      packageName,
+    })
+  ).toEqual(
+    [component.stories[1], component.stories[2], component.stories[0]].map(
+      ({ name, snippet }) => ({ name, code: snippet })
+    )
+  );
+  expect(
+    selectCatalogueExamples(
+      component,
+      { 'component--primary': navigation['component--primary'] },
+      { manifestVersion: 1, packageName }
+    )
+  ).toHaveLength(3);
+  expect(
+    selectCatalogueExamples(
+      { ...component, stories: [component.stories[1]] },
+      navigation,
+      { manifestVersion: 1, packageName }
+    )
+  ).toEqual([{ name: 'Primary', code: component.stories[1].snippet }]);
+});
+
+test.each([
+  ["import '@undrr/undrr-mangrove';\nconst Example = () => <div />;"],
+  ["import type { Example } from '@undrr/undrr-mangrove';"],
+  ["import { type Example } from '@undrr/undrr-mangrove';"],
+  ["import {} from '@undrr/undrr-mangrove';"],
+  ["import { Example } from '@undrr/undrr-mangrove"],
+])('v1 preserves authored or malformed imports: %s', snippet => {
+  const path = './primary.stories.jsx';
+  expect(
+    selectCatalogueExamples(
+      {
+        path,
+        stories: [
+          { id: 'primary', name: 'Primary', snippet },
+          { id: 'secondary', name: 'Secondary' },
+        ],
+      },
+      {
+        primary: { importPath: path },
+        secondary: { importPath: './secondary.stories.jsx' },
+      },
+      { manifestVersion: 1, packageName: '@undrr/undrr-mangrove' }
+    )
+  ).toEqual([{ name: 'Primary', code: snippet }]);
 });
