@@ -6,11 +6,27 @@ import { StatsCardItem } from './StatsCardItem';
 const EMPTY_STATS = [];
 
 /**
+ * @typedef {object} StatsCardStat
+ * @property {string} [icon] Icon class name.
+ * @property {string} [label] Label above the value.
+ * @property {string|number} value Statistic value.
+ * @property {string} [bottomLabel] Label below the value.
+ * @property {string} [summaryText] Summary, which can include inline links.
+ * @property {string} [link] Link destination for the stat.
+ */
+
+/**
  * StatsCard Component
  *
  * A flexible card component for displaying statistics and key metrics in an engaging,
  * scannable format. Displays individual stat cards in a grid layout with optional
  * icons, dual labels, descriptions, and call-to-action links.
+ *
+ * @param {Object} props
+ * @param {string} [props.title] Section heading.
+ * @param {StatsCardStat[]} [props.stats] Statistics to display.
+ * @param {'default'|'compact'|'highlighted'|'negative'} [props.variant='default'] Visual variant.
+ * @param {string} [props.className=''] Additional CSS classes.
  */
 export function StatsCard({
   title,

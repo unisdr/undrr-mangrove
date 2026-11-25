@@ -16,6 +16,14 @@ const joinClasses = (...classes) => classes.filter(Boolean).join(' ');
  * Keep the response callback separate from the report link: products can send
  * the binary response to their own analytics service without Mangrove owning
  * storage or consent decisions.
+ *
+ * @param {Object} props
+ * @param {string} [props.feedbackUrl] Destination for both detailed feedback links.
+ * @param {string} [props.lang] Language tag for selecting built-in labels.
+ * @param {'ltr'|'rtl'|'auto'} [props.dir] Explicit text direction. Known catalogue languages select their direction by default.
+ * @param {{question?: string, yes?: string, no?: string, reportIssue?: string, confirmationBeforeLink?: string, confirmationSeparator?: string, confirmationLink?: string, confirmationAfterLink?: string}} [props.labels] Override individual UI labels.
+ * @param {Function} [props.onResponse] Called with yes or no after a response.
+ * @param {string} [props.className] Additional class names for the root section.
  */
 const UserFeedback = ({
   feedbackUrl = 'https://www.undrr.org/contact/website-feedback',

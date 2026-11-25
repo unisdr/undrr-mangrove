@@ -19,7 +19,7 @@ import { PagerJump } from './components/PagerJump';
  * @param {number|null} [props.totalPages]   Total pages (null = unknown / mini-pager)
  * @param {Function} props.onPageChange      Called with new page number
  * @param {boolean} [props.isLoading=false]  Disables all controls
- * @param {string} [props.layout='centered'] Layout mode: 'centered' or 'bar'
+ * @param {'centered'|'bar'} [props.layout='centered'] Layout mode: 'centered' or 'bar'
  * @param {string} [props.ariaLabel]         Custom aria-label for the nav element
  * @param {{ start: number, end: number }} [props.range]  Result range for bar layout
  * @param {string} [props.rangeLabel]        Template string with {start}/{end} placeholders

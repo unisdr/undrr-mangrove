@@ -5,6 +5,25 @@ import PropTypes from 'prop-types';
 const tickPosition = (tick, index, count) =>
   tick.position || (count > 1 ? `${(index / (count - 1)) * 100}%` : '0%');
 
+/**
+ * @typedef {{label: React.ReactNode, position?: string}} LegendTick
+ * @typedef {{color?: string, label: React.ReactNode, value?: React.ReactNode}} LegendItem
+ */
+
+/**
+ * Legend for continuous, categorical and stepped data.
+ *
+ * @param {object} props
+ * @param {'continuous'|'categorical'|'stepped'} [props.type='continuous'] Legend treatment.
+ * @param {'horizontal'|'vertical'} [props.orientation='horizontal'] Direction of the legend.
+ * @param {'default'|'inline'|'grid'} [props.layout='default'] Layout of the legend items.
+ * @param {string} [props.rampClass=''] CSS class for the ramp.
+ * @param {string} [props.customRamp=''] CSS background for a continuous ramp.
+ * @param {LegendTick[]} [props.ticks=[]] Labels on continuous or stepped ramps. Supply CSS positions or let the legend space them evenly.
+ * @param {LegendItem[]} [props.items=[]] Categories or steps. Values appear in the categorical layout.
+ * @param {React.ReactNode} [props.title=''] Visible title for the legend.
+ * @param {string} [props.className=''] Additional CSS classes.
+ */
 export const Legend = ({
   type = 'continuous',
   orientation = 'horizontal',

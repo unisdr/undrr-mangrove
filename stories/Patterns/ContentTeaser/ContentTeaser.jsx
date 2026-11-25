@@ -26,7 +26,14 @@ const rangeType = PropTypes.shape({
   timeZone: PropTypes.string,
   label: PropTypes.string,
 });
-/** Shared teaser renderer; archetype/profile specifications select content. */
+/**
+ * Shared teaser renderer. The content family and profile select the visible fields.
+ *
+ * @param {object} props
+ * @param {import('../Content/_shared/ContentPattern').PatternContent} props.content Normalised content. Supply visible strings as caller-localised plain text. Labels may have resolved links.
+ * @param {2|3|4|5|6} [props.headingLevel=3] Heading level in the containing page.
+ * @param {string} [props.className] Additional CSS classes.
+ */
 export function ContentTeaser({ content, headingLevel = 3, className }) {
   return (
     <ContentPattern

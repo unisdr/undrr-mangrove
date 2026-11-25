@@ -155,9 +155,35 @@ function HeroContent({ item, HeadingTag }) {
 }
 
 /**
+ * @typedef {object} HeroEntry
+ * @property {string} [imgback] Background image URL.
+ * @property {React.ReactNode} [label] Eyebrow above the heading.
+ * @property {string} title Heading HTML. Sanitise it before passing it to the hero.
+ * @property {string} [link] Heading link.
+ * @property {string} [summaryText] Summary HTML. Sanitise it before passing it to the hero.
+ * @property {React.ReactNode} [detail] Facts below the summary.
+ * @property {Array<{label: string, href?: string}>} [tags] Taxonomy tags. A tag with an href renders as a link.
+ * @property {string} [tagsLabel] Accessible name for the tag list. Defaults to Topics.
+ * @property {string} [primary_button] Legacy primary button label.
+ * @property {string} [secondary_button] Legacy secondary button label.
+ * @property {{src: string, alt?: string}} [logo] Brand mark above the label and title.
+ * @property {Array<{label: string, url?: string, type?: 'Primary'|'Secondary', onClick?: Function, target?: string, rel?: string, analyticsLabel?: string}>} [buttons] Structured actions that take precedence over the legacy button labels. Set analyticsLabel for a stable click-tracking label.
+ * @property {{type?: 'image'|'video'|'html', src?: string, alt?: string, title?: string, html?: string}} [media] Split-layout media. Supply src for an image or video, and a title for a video. Sanitise HTML before supplying it in html.
+ */
+
+/**
  * Full-width hero banner. Supports two layouts:
  * - `background` (default): full-bleed background image with coloured overlay.
  * - `split`: solid theme-colour background with a content column and a media column side by side.
+ *
+ * @param {object} props
+ * @param {HeroEntry[]} props.data Hero entries, typically one. Mangrove renders title, summaryText and HTML media unescaped. Pass pre-sanitised HTML in those fields.
+ * @param {'primary'|'secondary'|'tertiary'|'quaternary'|'neutral'} [props.variant='primary'] Colour variant. Neutral is intended for split layouts and hides the image in the background layout.
+ * @param {'background'|'split'} [props.layout='background'] Background image or separate media and content columns.
+ * @param {'h1'|'h2'|'h3'} [props.headingLevel='h1'] Heading level.
+ * @param {'2/3'|'1/2'|'1/3'} [props.split='2/3'] Width of the first, content column in a split layout.
+ * @param {'default'|'immersive'} [props.size='default'] Standard or tall editorial banner.
+ * @param {boolean} [props.contained=false] Keep the hero within its parent.
  */
 export function Hero({
   data,

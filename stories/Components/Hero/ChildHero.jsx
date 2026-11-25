@@ -20,6 +20,10 @@ export const variantOptions = {
  *
  * Smaller hero banner for child/section pages with linked label, title, and single CTA button.
  * Renders one section per item in the data array (typically one).
+ *
+ * @param {object} props
+ * @param {Array<{imgback?: string, label?: string, title: string, link?: string, summaryText?: string, primary_button?: string}>} props.data Child hero entries with plain-text titles and summaries.
+ * @param {'primary'|'secondary'|'tertiary'|'quaternary'} [props.variant='primary'] Colour variant.
  */
 export function ChildHero({ data, variant = 'primary' }) {
   const variantActive = variantOptions[`${variant}`];

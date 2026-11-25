@@ -155,9 +155,9 @@ warnings (unisdr/undrr-mangrove#1511).
 - A `oneOf` prop needs a string-literal union in its `@param`, such as
   `{'default'|'flush'}`. `{string}` loses the members, and the check reports
   it.
-- The repository has no `@types/react`, so the TypeScript compiler cannot
-  resolve `React.ReactNode`. A required `{React.ReactNode}` prop shows the
-  name; an optional one shows `any`, and the check reports it.
+- Storybook uses the development dependency `@types/react` to resolve
+  React types in JSDoc. Use `React.ReactNode` for props that accept renderable
+  content, and mark the prop optional when the component accepts its omission.
 
 ## CSS class rename gotchas
 

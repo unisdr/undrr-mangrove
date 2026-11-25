@@ -1,3 +1,44 @@
+/**
+ * @typedef {{dateTime: string, text: string, label?: string}} ContentDate
+ * @typedef {string|{label: string, link?: string}} ContentLabel
+ * @typedef {{start?: ContentDate, end?: ContentDate, timeZone?: string, label?: string}} ContentDateRange
+ */
+
+/**
+ * Caller-localised content shared by the card and teaser projections.
+ *
+ * @typedef {object} PatternContent
+ * @property {typeof import('../contentFamilies').CONTENT_FAMILY_IDS[number]} type Content family.
+ * @property {string} [profile] Editorial profile. Omit it to use the family default.
+ * @property {string} title Title in plain text.
+ * @property {string} [shortTitle] Short title in plain text.
+ * @property {string} link Resolved HTTP or HTTPS URL, or a root-relative path.
+ * @property {{src: string, alt: string, kind?: 'photo'|'cover'|'logo'}} [image] Image and alternative text.
+ * @property {string} [summary] Plain-text summary.
+ * @property {ContentLabel[]} [labels] Labels with optional resolved links.
+ * @property {string} [typeLabel] Display label for the content type.
+ * @property {ContentDate} [published] Publication date.
+ * @property {ContentDateRange & {location?: string}} [event] Event dates and location.
+ * @property {ContentLabel|ContentLabel[]} [resourceType] Resource type labels.
+ * @property {ContentLabel|ContentLabel[]} [location] Location labels.
+ * @property {string} [delivery] Delivery information.
+ * @property {string} [identifier] Content identifier.
+ * @property {string[]} [sources] Source names.
+ * @property {string[]} [authors] Author names.
+ * @property {string} [source] Legacy source name. Prefer sources.
+ * @property {string|string[]} [organizationType] Organisation types.
+ * @property {string} [scope] Scope label.
+ * @property {string|string[]} [status] Status labels.
+ * @property {ContentDate} [deadline] Deadline.
+ * @property {{kind: 'updated'|'created', date: ContentDate}} [freshness] Recently updated or created status and date.
+ * @property {ContentLabel[]} [classification] Classification labels.
+ * @property {ContentLabel[]} [topics] Topic labels.
+ * @property {{bucket?: string, types?: ContentLabel[], schedule?: ContentDateRange[], exhibitions?: ContentDateRange[], room?: string, format?: string}} [session] Session scheduling and presentation.
+ * @property {string} [language] Content language label.
+ * @property {string} [lang] Language tag.
+ * @property {'ltr'|'rtl'|'auto'} [dir] Text direction.
+ */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import { resolveCardLink } from '../../../Components/Cards/Card/cardParts';

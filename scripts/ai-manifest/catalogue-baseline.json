@@ -74,9 +74,9 @@
   },
   "components-cards-book-card": {
     "props": {
-      "className": "string | optional | no default | undescribed",
-      "data": "array | required | no default | undescribed",
-      "variant": "'primary' | 'secondary' | 'tertiary' | 'quaternary' | optional | default='primary' | undescribed"
+      "className": "string | optional | no default | described",
+      "data": "array | required | no default | described",
+      "variant": "'primary' | 'secondary' | 'tertiary' | 'quaternary' | optional | default='primary' | described"
     },
     "examples": [
       "Book Card",
@@ -89,9 +89,9 @@
   },
   "components-cards-horizontal-book-card": {
     "props": {
-      "className": "string | optional | no default | undescribed",
-      "data": "array | required | no default | undescribed",
-      "variant": "'primary' | 'secondary' | 'tertiary' | 'quaternary' | optional | default='primary' | undescribed"
+      "className": "string | optional | no default | described",
+      "data": "array | required | no default | described",
+      "variant": "'primary' | 'secondary' | 'tertiary' | 'quaternary' | optional | default='primary' | described"
     },
     "examples": [
       "Horizontal Book Card",
@@ -104,9 +104,9 @@
   },
   "components-cards-horizontal-card": {
     "props": {
-      "className": "string | optional | no default | undescribed",
-      "data": "array | required | no default | undescribed",
-      "variant": "'primary' | 'secondary' | 'tertiary' | 'quaternary' | optional | default='primary' | undescribed"
+      "className": "string | optional | no default | described",
+      "data": "array | required | no default | described",
+      "variant": "'primary' | 'secondary' | 'tertiary' | 'quaternary' | optional | default='primary' | described"
     },
     "examples": [
       "Horizontal Card",
@@ -159,9 +159,9 @@
   },
   "components-cards-vertical-card": {
     "props": {
-      "className": "string | optional | no default | undescribed",
-      "data": "{ title: string, link: string, target: string, rel: string, imgback: string, imgalt: string, summaryText: string, label1: string, label2: string, button: string, buttonLink: string }[] | required | no default | undescribed",
-      "variant": "'primary' | 'secondary' | 'tertiary' | 'quaternary' | optional | default='primary' | undescribed"
+      "className": "string | optional | no default | described",
+      "data": "{ title: string, link: string, target: string, rel: string, imgback: string, imgalt: string, summaryText: string, label1: string, label2: string, button: string, buttonLink: string }[] | required | no default | described",
+      "variant": "'primary' | 'secondary' | 'tertiary' | 'quaternary' | optional | default='primary' | described"
     },
     "examples": [
       "Vertical Card",
@@ -244,15 +244,15 @@
   },
   "components-dataviz-legend": {
     "props": {
-      "className": "string | optional | default='' | undescribed",
-      "customRamp": "string | optional | default='' | undescribed",
-      "items": "{ color: string, label: node, value: node }[] | optional | default=[] | undescribed",
-      "layout": "'default' | 'inline' | 'grid' | optional | default='default' | undescribed",
-      "orientation": "'horizontal' | 'vertical' | optional | default='horizontal' | undescribed",
-      "rampClass": "string | optional | default='' | undescribed",
-      "ticks": "{ label: node, position: string }[] | optional | default=[] | undescribed",
-      "title": "node | optional | default='' | undescribed",
-      "type": "'continuous' | 'categorical' | 'stepped' | optional | default='continuous' | undescribed"
+      "className": "string | optional | default='' | described",
+      "customRamp": "string | optional | default='' | described",
+      "items": "{ color: string, label: node, value: node }[] | optional | default=[] | described",
+      "layout": "'default' | 'inline' | 'grid' | optional | default='default' | described",
+      "orientation": "'horizontal' | 'vertical' | optional | default='horizontal' | described",
+      "rampClass": "string | optional | default='' | described",
+      "ticks": "{ label: node, position: string }[] | optional | default=[] | described",
+      "title": "node | optional | default='' | described",
+      "type": "'continuous' | 'categorical' | 'stepped' | optional | default='continuous' | described"
     },
     "examples": [
       "Continuous",
@@ -464,17 +464,17 @@
   "components-forms-range": {
     "props": {
       "analyticsLabel": "string | optional | no default | described",
-      "className": "string | optional | no default | undescribed",
-      "defaultValue": "number | string | optional | no default | undescribed",
-      "disabled": "bool | optional | default=false | undescribed",
-      "id": "string | required | no default | undescribed",
-      "max": "number | string | optional | default=100 | undescribed",
-      "min": "number | string | optional | default=0 | undescribed",
-      "name": "string | optional | no default | undescribed",
-      "onChange": "func | optional | no default | undescribed",
-      "step": "number | string | optional | no default | undescribed",
+      "className": "string | optional | no default | described",
+      "defaultValue": "number | string | optional | no default | described",
+      "disabled": "bool | optional | default=false | described",
+      "id": "string | required | no default | described",
+      "max": "number | string | optional | default=100 | described",
+      "min": "number | string | optional | default=0 | described",
+      "name": "string | optional | no default | described",
+      "onChange": "func | optional | no default | described",
+      "step": "number | string | optional | no default | described",
       "ticks": "{ value: number | string, label: string }[] | optional | no default | undescribed",
-      "value": "number | string | optional | no default | undescribed"
+      "value": "number | string | optional | no default | described"
     },
     "examples": [
       "Continuous",
@@ -677,7 +677,7 @@
       "centered": "bool | optional | default=false | described",
       "children": "node | optional | no default | described",
       "className": "string | optional | default='' | described",
-      "float": "'start' | 'end' | optional | default=null | described",
+      "float": "'start' | 'end' | null | optional | default=null | described",
       "variant": "'default' | 'primary' | 'secondary' | optional | default='default' | described"
     },
     "examples": [
@@ -934,15 +934,16 @@
   },
   "components-navigation-tree": {
     "props": {
-      "children": "node | required | no default | undescribed",
-      "className": "string | optional | no default | undescribed",
-      "defaultExpandedIds": "string[] | optional | default=[] | undescribed",
-      "defaultSelectedId": "string | optional | default=null | undescribed",
-      "expandedIds": "string[] | optional | no default | undescribed",
-      "guides": "bool | optional | default=true | undescribed",
-      "onSelect": "func | optional | no default | undescribed",
-      "onToggle": "func | optional | no default | undescribed",
-      "selectedId": "string | optional | no default | undescribed",
+      "children": "node | required | no default | described",
+      "className": "string | optional | no default | described",
+      "defaultExpandedIds": "string[] | optional | default=[] | described",
+      "defaultSelectedId": "string | optional | default=null | described",
+      "expandedIds": "string[] | optional | no default | described",
+      "guides": "bool | optional | default=true | described",
+      "onBlur": "func | optional | no default | described",
+      "onSelect": "func | optional | no default | described",
+      "onToggle": "func | optional | no default | described",
+      "selectedId": "string | optional | no default | described",
       "toggleIcon": "string | optional | default='mg-icon-right' | described"
     },
     "examples": [
@@ -1214,7 +1215,7 @@
   },
   "components-reading-column": {
     "props": {
-      "children": "node | optional | no default | undescribed",
+      "children": "node | optional | no default | described",
       "contents": "node | optional | no default | described"
     },
     "examples": [
@@ -1626,7 +1627,7 @@
   },
   "patterns-content-card": {
     "props": {
-      "className": "string | optional | no default | undescribed",
+      "className": "string | optional | no default | described",
       "content": "{ type: 'article' | 'publication' | 'resource' | 'event' | 'organization' | 'collection' | 'opportunity' | 'reference-entry' | 'commitment' | 'landing-page' | 'person', profile: string, title: string, shortTitle: string, link: string, image: { src: string, alt: string, kind: 'photo' | 'cover' | 'logo' }, summary: string, labels: custom[], typeLabel: string, published: custom, event: { start: custom, end: custom, timeZone: string, location: string, label: string }, resourceType: custom | custom[], location: custom | custom[], delivery: string, identifier: string, sources: string[], authors: string[], source: string, organizationType: custom, scope: string, status: custom, deadline: custom, freshness: { kind: 'updated' | 'created', date: custom }, classification: custom[], topics: custom[], session: { bucket: string, types: custom[], schedule: custom[], exhibitions: custom[], room: string, format: string }, language: string, lang: string, dir: 'ltr' | 'rtl' | 'auto' } | required | no default | described",
       "headingLevel": "2 | 3 | 4 | 5 | 6 | optional | default=3 | described",
       "layout": "'vertical' | 'book' | optional | default='vertical' | described"
@@ -1698,7 +1699,7 @@
   },
   "patterns-content-teaser": {
     "props": {
-      "className": "string | optional | no default | undescribed",
+      "className": "string | optional | no default | described",
       "content": "{ type: 'article' | 'publication' | 'resource' | 'event' | 'organization' | 'collection' | 'opportunity' | 'reference-entry' | 'commitment' | 'landing-page' | 'person', profile: string, title: string, shortTitle: string, link: string, image: { src: string, alt: string, kind: 'photo' | 'cover' | 'logo' }, summary: string, labels: custom[], typeLabel: string, published: custom, event: { start: custom, end: custom, timeZone: string, location: string, label: string }, resourceType: custom | custom[], location: custom | custom[], delivery: string, identifier: string, sources: string[], authors: string[], source: string, organizationType: custom, scope: string, status: custom, deadline: custom, freshness: { kind: 'updated' | 'created', date: custom }, classification: custom[], topics: custom[], session: { bucket: string, types: custom[], schedule: custom[], exhibitions: custom[], room: string, format: string }, language: string, lang: string, dir: 'ltr' | 'rtl' | 'auto' } | required | no default | described",
       "headingLevel": "2 | 3 | 4 | 5 | 6 | optional | default=3 | described"
     },

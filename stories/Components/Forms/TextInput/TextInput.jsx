@@ -14,7 +14,7 @@ import PropTypes from 'prop-types';
  * @param {Object} props
  * @param {string} [props.id]              Custom id for the input element
  * @param {string} [props.name]            Name attribute
- * @param {string} [props.type='text']     Input type: text, email, password, number, tel, search, date, url
+ * @param {'text'|'email'|'password'|'number'|'tel'|'search'|'date'|'url'} [props.type='text']     Input type: text, email, password, number, tel, search, date, url
  * @param {string} [props.label]           Visible label text
  * @param {boolean} [props.hideLabel=false] Visually hide the label (still accessible)
  * @param {string} [props.placeholder]     Placeholder text
