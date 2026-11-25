@@ -15,10 +15,7 @@ const meta = {
     },
     isCompact: { control: 'boolean' },
     isOverlay: { control: 'boolean' },
-    headingLevel: {
-      control: 'select',
-      options: ['h2', 'h3', 'h4', 'h5', 'h6'],
-    },
+    headingLevel: { control: 'select' },
     countdownSeconds: { control: 'number' },
     maxAutoRetries: { control: 'number' },
   },
