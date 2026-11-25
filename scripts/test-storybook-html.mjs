@@ -1,16 +1,64 @@
-/** Copy HTML from the production manager and check its rendered inline text. */
+/** Verify rendered docs, generated snippets and copied HTML in production. */
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright-core';
 
 const base = process.env.HTML_STORYBOOK_URL || 'http://127.0.0.1:6099';
 const url = new URL(`${base.replace(/\/$/, '')}/`);
-url.searchParams.set('path', '/story/patterns-rich-content--editorial');
 url.searchParams.set('addonPanel', 'controls');
 const browser = await chromium.launch({ headless: true });
 const deadline = setTimeout(() => {
   console.error('HTML browser gate exceeded two minutes');
   browser.close().finally(() => process.exit(1));
 }, 120_000);
+
+const docsUrl = id => {
+  const docs = new URL('iframe.html', url);
+  docs.searchParams.set('id', id);
+  docs.searchParams.set('viewMode', 'docs');
+  return docs.href;
+};
+
+async function checkDocs(page) {
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+
+  await page.goto(docsUrl('patterns-publication-record--docs'));
+  const publicationDocs = page.locator('#storybook-docs');
+  await publicationDocs
+    .getByRole('heading', { name: /Publication record prototype/ })
+    .waitFor();
+  await publicationDocs
+    .getByText('Showing {shown} of {total} files', { exact: false })
+    .waitFor();
+  await publicationDocs.getByRole('heading', { name: /Changelog/ }).waitFor();
+  await publicationDocs
+    .getByRole('switch', { name: 'Show code' })
+    .first()
+    .click();
+  await publicationDocs
+    .locator('pre')
+    .filter({
+      hasText: /<div\b[^>]*\bclass="mg-publication-record">/,
+    })
+    .waitFor();
+
+  await page.goto(docsUrl('components-notice-notice--docs'));
+  await page
+    .getByText('Scheduled maintenance update', { exact: true })
+    .first()
+    .waitFor();
+  await page.getByRole('switch', { name: 'Show code' }).first().click();
+  const noticeSource = page
+    .locator('pre')
+    .filter({ hasText: '<Notice' })
+    .filter({ hasText: 'title="Scheduled maintenance update"' });
+  await noticeSource.filter({ hasText: 'variant="info"' }).waitFor();
+  await page
+    .getByRole('combobox', { name: 'variant', exact: true })
+    .selectOption('positive');
+  await noticeSource.filter({ hasText: 'variant="positive"' }).waitFor();
+  assert.deepEqual(errors, [], 'Rendered docs must not raise uncaught errors');
+}
 
 try {
   const context = await browser.newContext({
@@ -199,8 +247,10 @@ try {
     !updated.includes('risk_register'),
     'Previous story HTML must not survive navigation'
   );
+  const docsPage = await context.newPage();
+  await checkDocs(docsPage);
   console.log(
-    'HTML gate passed: clipboard punctuation, five themes, RTL, live interaction and Controls updates.'
+    'HTML gate passed: rendered docs, generated JSX and HTML, clipboard punctuation, five themes, RTL, live interaction and Controls updates.'
   );
 } finally {
   clearTimeout(deadline);
