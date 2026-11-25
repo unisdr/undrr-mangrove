@@ -57,6 +57,18 @@ async function checkDocs(page) {
     .getByRole('combobox', { name: 'variant', exact: true })
     .selectOption('positive');
   await noticeSource.filter({ hasText: 'variant="positive"' }).waitFor();
+  await page
+    .getByRole('button', { name: 'Copy code', exact: true })
+    .first()
+    .click();
+  await page.waitForFunction(async () => {
+    const copied = await navigator.clipboard.readText();
+    return (
+      copied.includes('<Notice') &&
+      copied.includes('title="Scheduled maintenance update"') &&
+      copied.includes('variant="positive"')
+    );
+  });
   assert.deepEqual(errors, [], 'Rendered docs must not raise uncaught errors');
 }
 
