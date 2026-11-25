@@ -174,11 +174,22 @@ async function checkStoryControls(page) {
   await floating.waitFor({ state: 'detached' });
 
   story.searchParams.set('path', '/story/components-highlightbox--float-start');
-  story.searchParams.set('args', 'float:!null');
   await page.goto(story.href);
+  await preview.locator('.mg-highlight-box--float-start').waitFor();
+  await float.getByRole('radio', { name: 'None' }).check();
+  await page.waitForURL(
+    address => address.searchParams.get('args') === 'float:!null'
+  );
+  await page.reload();
   await float.getByRole('radio', { name: 'None', checked: true }).waitFor();
   await preview.locator('.mg-highlight-box').waitFor();
   await floating.waitFor({ state: 'detached' });
+
+  story.searchParams.set('args', 'float:null');
+  await page.goto(story.href);
+  await preview
+    .locator('.mg-highlight-box:not([class*="mg-highlight-box--float-"])')
+    .waitFor();
 }
 
 try {

@@ -6,7 +6,10 @@ export default {
   component: HighlightBox,
   argTypes: {
     float: {
-      options: [null, 'start', 'end'],
+      // Older Storybook links saved the no-float choice as the string "null".
+      // Give both values the same label so the radio writes the real null.
+      options: ['null', null, 'start', 'end'],
+      mapping: { null: null },
       control: { type: 'radio', labels: { null: 'None' } },
     },
   },
