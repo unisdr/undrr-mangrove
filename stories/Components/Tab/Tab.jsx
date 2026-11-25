@@ -41,7 +41,7 @@ export { DEFAULT_TAB_LABELS } from './_labels';
  * @param {boolean} [props.stackOnMobile=false] - Opt in to stacked disclosures below 480px for the horizontal variant.
  * @param {string} [props.lang] - UI language tag; selects the built-in catalogue, with English fallback.
  * @param {'ltr'|'rtl'|'auto'} [props.dir] - Explicit text direction; otherwise known catalogue languages select their direction.
- * @param {object} [props.labels] - UI label overrides.
+ * @param {{filterPlaceholder?: string, tabListLabel?: string}} [props.labels] - UI label overrides.
  * @param {string} [props.analyticsRegion] - Optional click-tracking region on the whole tab set, including its panels.
  * @returns {JSX.Element} A React component representing the tab structure.
  */

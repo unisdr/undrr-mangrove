@@ -13,12 +13,12 @@ Storybook build.
 
 ## Storybook 11 (envelope `v: 1`)
 
-Mangrove builds with Storybook 11's docgen server **off** for now
-(`features.docgenServer` in `.storybook/main.js`), so the site and catalogue
-use builder docgen and the `v: 0` envelope, as on Storybook 10. Setting
-`MANGROVE_DOCGEN_SERVER=true` builds with it on; CI does that in a separate
-build to preview the switch (unisdr/undrr-mangrove#1511). The adapter
-supports both envelopes, so the switch needs no pipeline change.
+Mangrove publishes with Storybook 11 server docgen and the `v: 1` envelope.
+CI checks the prop contracts and the published catalogue from that same build.
+Set `MANGROVE_DOCGEN_SERVER=false` to compare with the builder-docgen `v: 0`
+output. The two RC 0 Yarn patches preserve shared Controls URLs. Remove both
+patches when a Storybook release passes the bookmark regression checks without
+them ([#1531](https://github.com/unisdr/undrr-mangrove/issues/1531)).
 
 `yarn check:catalogue-baseline` compares every published component's props
 (type, optionality, default, description present) and example names with
@@ -32,11 +32,9 @@ resolves from disk (relative to the manifest, with cycle detection and strict
 JSON-pointer handling) before validation. Both envelopes produce the same
 dereferenced shape.
 
-The docgen server reads props through the TypeScript compiler, which does not
-understand PropTypes or JSDoc in Mangrove's JavaScript components: enums become
-`string` or `any`, descriptions are lost and destructured props without
-defaults are reported as required. Prop data is part of the published contract,
-so `scripts/ai-manifest/react-docgen-source.js` reads it with react-docgen,
+The docgen server reads typed JSDoc through the TypeScript compiler. The
+published catalogue still depends on PropTypes for details such as prop shapes
+and descriptions, so `scripts/ai-manifest/react-docgen-source.js` reads it with react-docgen,
 a direct devDependency used as a library (not Storybook's deprecated
 builder-docgen integration). Storybook still decides which file and export
 each component is; if it found none, the adapter follows the story file's

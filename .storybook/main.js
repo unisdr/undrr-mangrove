@@ -36,14 +36,9 @@ export default {
 
   features: {
     componentsManifest: true,
-    // Storybook 11's docgen server reads props from typed JSDoc and ignores
-    // PropTypes, so most components would lose types, descriptions or whole
-    // props in the docs tables and Controls. Until every component documents
-    // its props in typed JSDoc (unisdr/undrr-mangrove#1511), main keeps
-    // builder docgen (react-docgen), which Storybook 11 deprecates and
-    // Storybook 12 removes. CI also builds with MANGROVE_DOCGEN_SERVER=true to
-    // check the JSDoc against PropTypes, which previews switching it on.
-    docgenServer: process.env.MANGROVE_DOCGEN_SERVER === 'true',
+    // The RC 0 dependency patches preserve Controls bookmarks (#1531).
+    // Set MANGROVE_DOCGEN_SERVER=false to compare with builder docgen.
+    docgenServer: process.env.MANGROVE_DOCGEN_SERVER !== 'false',
   },
 
   docs: {

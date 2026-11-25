@@ -1,0 +1,112 @@
+diff --git a/dist/_node-chunks/chunk-2I5WCK5H.js b/dist/_node-chunks/chunk-2I5WCK5H.js
+index 6e9b0cba792c617427fadc4143ffaf59d90f8b02..c34e946cc0c9cf0f2d6d6875221f24645eb8fbee 100644
+--- a/dist/_node-chunks/chunk-2I5WCK5H.js
++++ b/dist/_node-chunks/chunk-2I5WCK5H.js
+@@ -4500,6 +4500,47 @@ function compareEnumMembers(typescript, a, b) {
+   let [enumA, enumB] = [memberA.parent, memberB.parent];
+   return compareNumericOrByCodeUnit(enumA.getSourceFile().fileName, enumB.getSourceFile().fileName) || enumA.pos - enumB.pos || memberA.pos - memberB.pos;
+ }
++function hasCompleteBookmarkType(type) {
++  return type.element ? hasCompleteBookmarkType(type.element) : type.name === "enum" || type.name === "string" || type.name === "number" || type.name === "boolean";
++}
++function serializeBookmarkType(typescript, checker, type, location, depth = 0) {
++  if (depth > 3) return;
++  let flags = typescript.TypeFlags, constraint = type.getConstraint?.();
++  if (constraint && constraint !== type)
++    return serializeBookmarkType(typescript, checker, constraint, location, depth + 1);
++  if (type.isUnion()) {
++    let nonNullish = type.types.filter(
++      (member) => !(member.getFlags() & (flags.Null | flags.Undefined))
++    );
++    if (nonNullish.length > 0 && nonNullish.every(isLiteralType)) {
++      let value = nonNullish.flatMap(
++        (member) => typeof member.value == "string" || typeof member.value == "number" ? [member.value] : []
++      );
++      if (value.length === nonNullish.length)
++        return type.types.some((member) => member.getFlags() & flags.Null) && value.push(null), { name: "enum", value };
++    }
++    return nonNullish.length === 1 ? serializeBookmarkType(typescript, checker, nonNullish[0], location, depth + 1) : nonNullish.length === 2 && nonNullish.every((member) => member.getFlags() & flags.BooleanLiteral) ? { name: "boolean" } : void 0;
++  }
++  let kind = type.getFlags(), name = checker.typeToString(type);
++  if (name === "string" || name === "number" || name === "boolean") return { name };
++  if (kind & flags.StringLiteral) return { name: "string" };
++  if (kind & flags.NumberLiteral) return { name: "number" };
++  if (kind & flags.BooleanLiteral) return { name: "boolean" };
++  if (type.getCallSignatures().length > 0 || type.getSymbol()?.getName() === "Function")
++    return { name: "function" };
++  if (isArrayType(type)) {
++    let [element] = checker.getTypeArguments(type), value = element && serializeBookmarkType(typescript, checker, element, location, depth + 1);
++    return value ? { name: "array", value } : void 0;
++  }
++  if (!(kind & flags.Object)) return;
++  let properties = type.getProperties();
++  if (properties.length > 32) return;
++  let entries = properties.flatMap((property) => {
++    let propertyType = checker.getTypeOfSymbolAtLocation(property, location), value = serializeBookmarkType(typescript, checker, propertyType, location, depth + 1);
++    return value ? [[property.getName(), value]] : [];
++  });
++  return { name: "object", value: Object.fromEntries(entries) };
++}
+ function serializeType(typescript, checker, type, isRequired, depth = 0, declaredTypeNode) {
+   if (depth > MAX_SERIALIZATION_DEPTH)
+     return { name: checker.typeToString(type) };
+@@ -4735,13 +4776,14 @@ function getJSDocDefault(typescript, prop, checker) {
+       return typescript.displayPartsToString(tag.text) || void 0;
+ }
+ function extractPropItem(typescript, checker, prop, contextNode, defaultsMap, typeOverride) {
+-  let isRequired = !!!(prop.flags & typescript.SymbolFlags.Optional), propType = typeOverride ?? checker.getTypeOfSymbolAtLocation(prop, contextNode), declaration = prop.declarations?.[0], declaredTypeNode = declaration && (typescript.isPropertySignature(declaration) || typescript.isPropertyDeclaration(declaration)) ? declaration.type : void 0, type = serializeType(typescript, checker, propType, isRequired, 0, declaredTypeNode), description = typescript.displayPartsToString(
++  let isRequired = !!!(prop.flags & typescript.SymbolFlags.Optional), propType = typeOverride ?? checker.getTypeOfSymbolAtLocation(prop, contextNode), declaration = prop.declarations?.[0], declaredTypeNode = declaration && (typescript.isPropertySignature(declaration) || typescript.isPropertyDeclaration(declaration)) ? declaration.type : void 0, type = serializeType(typescript, checker, propType, isRequired, 0, declaredTypeNode), bookmarkType = hasCompleteBookmarkType(type) ? void 0 : serializeBookmarkType(typescript, checker, propType, contextNode), description = typescript.displayPartsToString(
+     prop.getDocumentationComment(checker)
+   ), parent = getParentType(typescript, prop), declarations = getAllDeclarationParents(typescript, prop), propName = prop.getName(), destructuringDefault = defaultsMap?.get(propName), jsDocDefault = getJSDocDefault(typescript, prop, checker), defaultStr = destructuringDefault ?? jsDocDefault;
+   return {
+     name: propName,
+     required: isRequired,
+     type,
++    ...bookmarkType ? { bookmarkType } : {},
+     description,
+     defaultValue: defaultStr !== void 0 ? { value: defaultStr } : null,
+     parent,
+diff --git a/dist/_node-chunks/chunk-LZBEMUVF.js b/dist/_node-chunks/chunk-LZBEMUVF.js
+index 68e629de92dc622bc735a1fbf6cda19d277fa3cb..5ff2ea33c27570aaf41d63ddc65f3bf897f72939 100644
+--- a/dist/_node-chunks/chunk-LZBEMUVF.js
++++ b/dist/_node-chunks/chunk-LZBEMUVF.js
+@@ -37,19 +37,38 @@ function extractArgTypesFromComponentMeta(componentMeta) {
+   }
+   return argTypes;
+ }
++function omitBookmarkTypes(componentMeta) {
++  return !componentMeta || !Object.values(componentMeta.props).some((prop) => prop.bookmarkType) ? componentMeta : {
++    ...componentMeta,
++    props: Object.fromEntries(
++      Object.entries(componentMeta.props).map(([name, { bookmarkType, ...publicProp }]) => [
++        name,
++        publicProp
++      ])
++    )
++  };
++}
+ function addArgTypesFromComponentMeta(payload) {
+-  let argTypes = extractArgTypesFromComponentMeta(payload.reactComponentMeta), subcomponents = payload.subcomponents ? Object.fromEntries(
++  let argTypes = extractArgTypesFromComponentMeta(payload.reactComponentMeta), bookmarkTypes = Object.fromEntries(
++    Object.entries(payload.reactComponentMeta?.props ?? {}).flatMap(([name, prop]) => {
++      let displayType = argTypes?.[name]?.type;
++      return (displayType?.name === "other" || displayType?.name === "object" || displayType?.name === "array" && displayType.value.name === "other") && prop.bookmarkType ? [[name, prop.bookmarkType]] : [];
++    })
++  ), subcomponents = payload.subcomponents ? Object.fromEntries(
+     Object.entries(payload.subcomponents).map(([name, subcomponent]) => [
+       name,
+       {
+         ...subcomponent,
++        reactComponentMeta: omitBookmarkTypes(subcomponent.reactComponentMeta),
+         argTypes: extractArgTypesFromComponentMeta(subcomponent.reactComponentMeta)
+       }
+     ])
+   ) : void 0;
+   return {
+     ...payload,
++    reactComponentMeta: omitBookmarkTypes(payload.reactComponentMeta),
+     ...argTypes ? { argTypes } : {},
++    ...Object.keys(bookmarkTypes).length > 0 ? { bookmarkTypes } : {},
+     ...subcomponents ? { subcomponents } : {}
+   };
+ }

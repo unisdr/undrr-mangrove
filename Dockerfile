@@ -19,8 +19,9 @@ WORKDIR /data/storybook
 # Make storybook port available available
 EXPOSE 6006
 
-# Copy package.json and yarn.lock
-COPY package.json yarn.lock ./
+# Copy dependency inputs before installing
+COPY package.json yarn.lock .yarnrc.yml ./
+COPY .yarn/patches/ .yarn/patches/
 
 # Install dependencies
 RUN yarn install
