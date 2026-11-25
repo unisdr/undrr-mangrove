@@ -283,6 +283,36 @@ describe('compareContracts enums and defaults', () => {
     ).toEqual(["level: docgen server enum has '4', not in PropTypes"]);
   });
 
+  test.each([
+    ['"autocrop" | null | undefined', []],
+    [
+      '"none" | null | undefined',
+      [
+        "crop: docgen server enum lacks 'autocrop', listed in PropTypes",
+        "crop: docgen server enum has 'none', not in PropTypes",
+      ],
+    ],
+    [
+      '"autocrop" | "none" | undefined',
+      [
+        'crop: docgen server type is `"autocrop" | "none" | undefined`, PropTypes list \'autocrop\', null',
+      ],
+    ],
+    [
+      'string | null | undefined',
+      [
+        "crop: docgen server type is `string | null | undefined`, PropTypes list 'autocrop', null",
+      ],
+    ],
+  ])('checks nullable literal union %s', (value, expected) => {
+    expect(
+      compareContracts(
+        { crop: { required: false, type: { name: value } } },
+        { crop: { required: false, type: propTypesEnum("'autocrop'", 'null') } }
+      )
+    ).toEqual(expected);
+  });
+
   test('reports a plain type where PropTypes list members', () => {
     expect(
       compareContracts(

@@ -181,13 +181,39 @@ export function normaliseDefault(text) {
 }
 
 /**
+ * The normalized Storybook metadata can put a nullable string enum
+ * in the type name as TypeScript union text. Recover its members only when every part is a
+ * literal. Wider unions such as `string | null` still fail the enum check.
+ */
+function nullableStringEnumMembers(type) {
+  if (typeof type?.name !== 'string') return undefined;
+  const literals = type.name.split('|').map(value => value.trim());
+  const isStringLiteral = value =>
+    /^(?:"[^"\\\r\n]*"|'[^'\\\r\n]*')$/.test(value);
+  if (
+    !literals.includes('null') ||
+    !literals.some(isStringLiteral) ||
+    !literals.every(
+      value =>
+        value === 'null' || value === 'undefined' || isStringLiteral(value)
+    )
+  )
+    return undefined;
+  return enumMembers({
+    name: 'enum',
+    value: literals.map(value => ({ value })),
+  });
+}
+
+/**
  * Where PropTypes list literal `oneOf` values, the docgen server must state
  * the same members, in any order and quote style.
  */
 function compareEnums(name, serverType, propType) {
   const expected = enumMembers(propType);
   if (!expected) return [];
-  const actual = enumMembers(serverType);
+  const actual =
+    enumMembers(serverType) ?? nullableStringEnumMembers(serverType);
   if (!actual) {
     // An untyped server type is reported by the type check already.
     if (isUntyped(serverType)) return [];
