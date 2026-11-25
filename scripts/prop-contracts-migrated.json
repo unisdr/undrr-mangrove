@@ -6,15 +6,23 @@
     "components-buttons-copybutton",
     "components-buttons-sharebuttons",
     "components-codeblock",
+    "components-forms-checkbox",
     "components-forms-form-action",
+    "components-forms-radio",
+    "components-forms-range",
+    "components-forms-segmented-control",
+    "components-forms-text-input",
     "components-gallery",
     "components-icons",
     "components-images-author-image",
+    "components-loader",
     "components-logos",
     "components-navigation-breadcrumbs",
     "components-navigation-megamenu",
     "components-navigation-on-this-page-nav",
+    "components-navigation-pager",
     "components-notice-cookieconsentbanner",
+    "components-preview-access",
     "components-progress-bar",
     "components-quotehighlight",
     "components-scrollcontainer",
@@ -27,6 +35,7 @@
     "components-syndicated-search-integrations",
     "components-syndicated-search-layouts",
     "components-syndicated-search-toggles",
-    "components-table"
+    "components-table",
+    "components-tabs"
   ]
 }

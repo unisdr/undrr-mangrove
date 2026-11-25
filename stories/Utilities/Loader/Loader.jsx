@@ -37,7 +37,7 @@ export const LOADER_LABEL_DELAY_MS = 100;
  *
  * @param {Object} props
  * @param {string} [props.label='Loading']     Translated status text, visible under reduced motion and announced by screen readers
- * @param {string} [props.size='default']      `default` for pages and regions, `inline` for a 1em spinner in text and buttons
+ * @param {'default'|'inline'} [props.size='default']      `default` for pages and regions, `inline` for a 1em spinner in text and buttons
  * @param {boolean} [props.decorative=false]   Hide the spinner from assistive technology, with no role and no label
  * @param {string} [props.className='']        Additional CSS classes to apply
  */

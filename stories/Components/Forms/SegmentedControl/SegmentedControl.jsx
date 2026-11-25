@@ -22,13 +22,13 @@ import PropTypes from 'prop-types';
  * @param {Object} props
  * @param {string} props.legend                 Legend naming the whole group
  * @param {string} props.name                   Shared name for the radio inputs
- * @param {Array} props.options                 [{ label, value, disabled }]
+ * @param {Array<{label: string, value: string, disabled?: boolean}>} props.options Options for the radio inputs.
  * @param {string} [props.value]                Controlled selected value
  * @param {string} [props.defaultValue]         Uncontrolled initial value
  * @param {Function} [props.onChange]           Change handler, receives the event
  * @param {boolean} [props.hideLegend=false]    Visually hide the legend (still announced)
  * @param {boolean} [props.fullWidth=false]     Stretch segments to share the full width
- * @param {string} [props.size='default']       'default' (44px) or 'small' (36px)
+ * @param {'default'|'small'} [props.size='default']       'default' (44px) or 'small' (36px)
  * @param {string} [props.className]            Additional CSS class for the fieldset
  * @param {string} [props.analyticsLabel]       Fixed `data-vf-analytics-label` prefix for every segment's input and label, sent as `<analyticsLabel>: <option value>` so click tracking reports the stable value rather than the visible text or a generated id
  */

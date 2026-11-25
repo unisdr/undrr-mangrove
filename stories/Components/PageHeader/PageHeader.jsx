@@ -14,6 +14,28 @@ const DEFAULT_LOGO_URL =
 /**
  * UNDRR page header with logo, user account link, and language selector.
  * The "decoration-only" variant renders just the colored stripe.
+ *
+ * @param {Object} props
+ * @param {'default'|'decoration-only'} [props.variant='default'] Full header or just the colored stripe.
+ * @param {string} [props.className] Additional CSS classes.
+ * @param {string} [props.idPrefix=''] Namespace for element IDs when a page has more than one header.
+ * @param {string} [props.skipLinkTarget] ID of the main landmark. Set `tabIndex={-1}` on the target when including a skip link.
+ * @param {string} [props.skipLinkLabel='Skip to main content'] Accessible skip link label.
+ * @param {string} [props.logoUrl] Custom logo URL. Takes precedence over the locale-specific asset.
+ * @param {string} [props.logoAlt='UNDRR Logo'] Logo image alternative text.
+ * @param {string} [props.logoTitle='UNDRR Logo'] Logo image title attribute.
+ * @param {string|number} [props.logoWidth] Native image width. Defaults to the translated asset's aspect ratio at the selected height, or 324 for the English wordmark.
+ * @param {string|number} [props.logoHeight] Native image height. Defaults to 47.
+ * @param {string} [props.logoLang] BCP 47 language tag. Defaults to the translated asset's tag when one is resolved.
+ * @param {'autocrop'|null} [props.logoCrop] Crop override. Defaults to no crop for a translated asset and `autocrop` for the English wordmark.
+ * @param {string} [props.locale='english'] Storybook locale key for resolving a translated logo when no explicit URL is set.
+ * @param {string} [props.homeUrl='/'] Destination of the logo link.
+ * @param {boolean} [props.showAccount=true] Show the My account link.
+ * @param {boolean} [props.showLanguage=true] Show the language switcher.
+ * @param {boolean} [props.showLogo=true] Show the logo section.
+ * @param {'dropdown'|'links'} [props.languageDisplay='dropdown'] Native select or inline buttons. The buttons require JavaScript and fall back to the select on narrow screens or when there are too many languages.
+ * @param {number} [props.maxLanguageLinks=6] Maximum languages shown as inline buttons.
+ * @param {Array<{value: string, label: string, selected?: boolean}>} [props.languages] Language options with a code, visible label and optional selected state.
  */
 export function PageHeader({
   variant = 'default',

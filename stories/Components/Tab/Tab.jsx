@@ -32,8 +32,8 @@ export { DEFAULT_TAB_LABELS } from './_labels';
 /**
  * Renders a tab component with either stacked or horizontal layout.
  * @param {Object} props - The component props.
- * @param {Array} props.tabdata - An array of tab objects containing text, text_id, and data.
- * @param {string} [props.variant='horizontal'] - The layout variant, either 'stacked' or 'horizontal'.
+ * @param {Array<{text: string, text_id: string, data?: string, is_default?: string}>} props.tabdata - Tab labels, IDs, content, and optional default marker.
+ * @param {'stacked'|'horizontal'} [props.variant='horizontal'] - The layout variant, either 'stacked' or 'horizontal'.
  * @param {boolean} [props.sticky=false] - Opt in to a sticky horizontal rail, confined to this tab set.
  * @param {boolean} [props.defaultOpen] - Whether stacked panels start open (true), closed (false), or default (undefined = open first).
  * @param {boolean} [props.singleOpen=false] - When true, only one stacked panel can be open at a time.

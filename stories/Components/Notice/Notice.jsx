@@ -113,6 +113,27 @@ function findFocusTargetAfterDismiss(noticeEl, opener) {
   return null;
 }
 
+/**
+ * Display a notice with a severity variant, optional heading and actions.
+ *
+ * @param {Object} props
+ * @param {React.ReactNode} [props.title] Notice heading.
+ * @param {React.ReactNode} [props.description] Notice body. Strings render as plain text.
+ * @param {React.ReactNode} [props.children] Rich content in place of the description.
+ * @param {'info'|'warning'|'negative'|'positive'} [props.variant='info'] Severity variant.
+ * @param {boolean|string|React.ReactNode} [props.icon=true] Use the variant icon, hide it with false, or supply an icon class or node.
+ * @param {'h2'|'h3'|'h4'|'h5'|'h6'} [props.headingLevel='h3'] Heading element for the notice title.
+ * @param {boolean} [props.isCompact=false] Use compact padding and typography.
+ * @param {boolean} [props.isProminent=false] Use the full-width banner treatment.
+ * @param {boolean} [props.isOverlay=false] Center as an overlay in the container.
+ * @param {boolean} [props.isDismissible=false] Show a button that hides the notice.
+ * @param {Function} [props.onDismiss] Callback fired after dismissal.
+ * @param {string} [props.dismissLabel='Dismiss notification'] Accessible dismiss button label.
+ * @param {React.ReactNode} [props.actions] Buttons or controls beneath the notice content.
+ * @param {React.ReactNode} [props.headerContent] Custom content in the header row.
+ * @param {string|null} [props.role] ARIA role override. Defaults to alert for negative notices and status otherwise. Use null for a static notice without a live region.
+ * @param {string} [props.className] Additional CSS classes.
+ */
 export const Notice = ({
   title,
   description,
