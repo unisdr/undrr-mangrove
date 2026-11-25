@@ -29,7 +29,7 @@ import PropTypes from 'prop-types';
  * @param {Object} props
  * @param {string} props.legend                 Legend naming the whole group
  * @param {string} props.name                   Shared name for the radio inputs
- * @param {SegmentedControlOption[]} props.options Options for the radio inputs.
+ * @param {SegmentedControlOption[]} props.options Radio options with a `label`, `value` and optional `disabled` flag.
  * @param {string} [props.value]                Controlled selected value
  * @param {string} [props.defaultValue]         Uncontrolled initial value
  * @param {Function} [props.onChange]           Change handler, receives the event

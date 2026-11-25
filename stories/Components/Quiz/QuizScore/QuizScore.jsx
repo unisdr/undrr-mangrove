@@ -44,7 +44,7 @@ const joinClasses = (...classes) => classes.filter(Boolean).join(' ');
  * @param {boolean} [props.showReset=true] Offer Start again once all questions are answered.
  * @param {string} [props.lang] Language of the built-in labels, including regional tags.
  * @param {'ltr'|'rtl'|'auto'} [props.dir] Explicit text direction. Arabic selects right-to-left by default.
- * @param {{scoreSoFar?: string, scoreSoFarWithAnswered?: string, scoreFinal?: string, progressLabel?: string, progressValue?: string, reset?: string}} [props.labels] Override individual built-in labels.
+ * @param {{scoreSoFar?: string, scoreSoFarWithAnswered?: string, scoreFinal?: string, progressLabel?: string, progressValue?: string, reset?: string}} [props.labels] Override individual built-in labels. Keep the `{correct}`, `{total}` and `{answered}` placeholders used by each label. Use `scoreSoFar` for the running score beside the progress bar and `scoreSoFarWithAnswered` when `showProgress` is off.
  * @param {string} [props.className] Additional classes for the root.
  */
 export function QuizScore({

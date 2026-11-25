@@ -16,7 +16,7 @@ import classNames from 'classnames';
  * @param {boolean} [props.disabled=false] Disable the input.
  * @param {Function} [props.onChange] Change handler.
  * @param {string} [props.className] Additional CSS classes for the wrapper.
- * @param {Array<{value: number|string, label?: string}>} [props.ticks] Tick values and optional labels. A label for the current tick is announced in place of the numeric value.
+ * @param {Array<{value: number|string, label?: string}>} [props.ticks] Tick values and optional labels. The label matching value (or defaultValue when value is unset) supplies the accessible value text. Use a controlled value to update that text as the slider moves.
  * @param {string} [props.analyticsLabel] Fixed click-tracking label for the input.
  */
 export const Range = ({

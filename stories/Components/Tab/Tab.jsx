@@ -32,7 +32,7 @@ export { DEFAULT_TAB_LABELS } from './_labels';
 /**
  * Renders a tab component with either stacked or horizontal layout.
  * @param {Object} props - The component props.
- * @param {Array<{text: string, text_id: string, data?: string, is_default?: string}>} props.tabdata - Tab labels, IDs, content, and optional default marker.
+ * @param {Array<{text: string, text_id: string, data?: string, is_default?: string}>} props.tabdata - Tab labels, IDs, panel HTML, and optional default marker. Sanitize the HTML before passing it in data. Mangrove renders it unescaped.
  * @param {'stacked'|'horizontal'} [props.variant='horizontal'] - The layout variant, either 'stacked' or 'horizontal'.
  * @param {boolean} [props.sticky=false] - Opt in to a sticky horizontal rail, confined to this tab set.
  * @param {boolean} [props.defaultOpen] - Whether stacked panels start open (true), closed (false), or default (undefined = open first).
