@@ -29,7 +29,7 @@ const EMPTY_SYNDICATION_CONFIG = {};
  * @param {object} props
  * @param {string} [props.variant='default'] Visual variant.
  * @param {boolean} [props.enableSyndication=true] Load the PreventionWeb widget for global UNDRR footer content.
- * @param {{contenttype?: string, pageid?: string, includemetatags?: boolean, includecss?: boolean, suffixID?: string, activedomain?: string}} [props.syndicationConfig] Overrides for the syndication widget defaults.
+ * @param {{contenttype?: string, pageid?: string, includemetatags?: boolean, includecss?: boolean, suffixID?: string, activedomain?: string}} [props.syndicationConfig] Trusted configuration overrides for the syndication widget. Supply site-controlled values only because the widget uses them in an inline script.
  * @param {React.ReactNode} [props.complementaryContent=null] Site-specific content above the syndicated footer. Takes precedence over children when rendered.
  * @param {React.ReactNode} [props.children] Site-specific content above the syndicated footer.
  * @param {string} [props.className] Additional CSS classes.
@@ -142,7 +142,7 @@ Footer.propTypes = {
   variant: PropTypes.string,
   /** When true, loads the PreventionWeb syndication widget to inject global UNDRR footer content. */
   enableSyndication: PropTypes.bool,
-  /** Override defaults for the syndication widget (contenttype, pageid, suffixID, activedomain, includecss, includemetatags). */
+  /** Overrides for the syndication widget. Supply trusted site configuration only because the widget uses these values in an inline script. */
   syndicationConfig: PropTypes.shape({
     contenttype: PropTypes.string,
     pageid: PropTypes.string,

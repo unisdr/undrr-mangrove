@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
  * component — this exists so the classes have somewhere to be seen and reviewed.
  *
  * @param {object} props
- * @param {React.ReactNode} [props.contents] Optional contents element. From 900px it sits in a sticky sidebar.
+ * @param {React.ReactNode} [props.contents] Optional contents element. A sidebar containing a TableOfContents is sticky from 900px.
  * @param {React.ReactNode} [props.children] Main reading content.
  */
 export function Reading({ contents, children }) {
@@ -22,9 +22,9 @@ export function Reading({ contents, children }) {
 
 Reading.propTypes = {
   /**
-   * A contents element. When present it sits in a sticky sidebar from 900px
-   * (`$mg-breakpoint-tablet`) up, using `mg-grid`'s `--article` variant (an
-   * asymmetric flexible/fixed-width grid) for the split.
+   * A contents element. The `mg-grid--article` layout adds a sidebar from
+   * 900px (`$mg-breakpoint-tablet`). The sidebar is sticky when it contains
+   * a TableOfContents.
    */
   contents: PropTypes.node,
   children: PropTypes.node,

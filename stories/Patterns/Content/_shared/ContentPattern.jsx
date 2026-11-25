@@ -12,7 +12,7 @@
  * @property {string} [profile] Editorial profile. Omit it to use the family default.
  * @property {string} title Title in plain text.
  * @property {string} [shortTitle] Short title in plain text.
- * @property {string} link Content URL.
+ * @property {string} link Resolved HTTP or HTTPS URL, or a root-relative path.
  * @property {{src: string, alt: string, kind?: 'photo'|'cover'|'logo'}} [image] Image and alternative text.
  * @property {string} [summary] Plain-text summary.
  * @property {ContentLabel[]} [labels] Labels with optional resolved links.

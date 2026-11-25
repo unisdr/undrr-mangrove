@@ -37,7 +37,7 @@ const HEADING_LEVELS = ['h2', 'h3', 'h4', 'h5', 'h6'];
  * @param {boolean} [props.isOverlay=false] Centre the notice over its container.
  * @param {(event?: React.MouseEvent<HTMLElement>) => void} [props.onRetry] Called for manual and automatic retries.
  * @param {string} [props.retryLabel] Override the retry button text.
- * @param {string} [props.statusUrl] External status page URL using HTTP or HTTPS.
+ * @param {string} [props.statusUrl] Status page URL. Relative URLs resolve against the current page. The resolved URL must use HTTP or HTTPS.
  * @param {string} [props.statusUrlLabel] Override the status link text.
  * @param {number|null} [props.countdownSeconds=null] Seconds to the first automatic retry. The delay doubles after each attempt. Requires onRetry.
  * @param {number} [props.maxAutoRetries=3] Automatic retry limit before the visitor can only retry manually.
@@ -238,7 +238,7 @@ ServiceNotice.propTypes = {
   onRetry: PropTypes.func,
   /** Retry button text (overrides labels.retryLabel) */
   retryLabel: PropTypes.string,
-  /** External status page URL (http or https only; other schemes are not rendered) */
+  /** Status page URL. Relative URLs resolve against the current page. The resolved URL must use HTTP or HTTPS. */
   statusUrl: PropTypes.string,
   /** Status link text (overrides labels.statusUrlLabel) */
   statusUrlLabel: PropTypes.string,
