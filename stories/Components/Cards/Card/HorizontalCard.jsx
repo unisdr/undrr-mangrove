@@ -7,6 +7,14 @@ import { CardLabel, CardTitle, resolveCardLink } from './cardParts';
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
+/**
+ * A horizontal card with optional media and a call to action.
+ *
+ * @param {Object} props
+ * @param {import('./VerticalCard').VerticalCardItem[]} props.data Card data.
+ * @param {'primary'|'secondary'|'tertiary'|'quaternary'} [props.variant='primary'] Visual variant.
+ * @param {string} [props.className] Additional CSS classes.
+ */
 export function HorizontalCard({ data, variant = 'primary', className }) {
   const variantClass =
     variant && variant !== 'primary' ? `mg-card--${variant}` : null;
