@@ -25,7 +25,7 @@ Existing Mangrove components still read legacy `--mg-color-*`, `--mg-surface-*`,
 | `semantic.background.surface` | `--mg-semantic-background-surface` | `--mg-surface-raised`, `--mg-card-background`, `--mg-form-input-background` |
 | `semantic.background.overlay` | `--mg-semantic-background-overlay` | `--mg-color-modal-scrim` |
 | `semantic.background.inset` | `--mg-semantic-background-inset` | `--mg-color-button-secondary-background--hover`, `--mg-color-tag-accent` |
-| `semantic.background.disabled` | `--mg-semantic-background-disabled` | Disabled inputs, checkboxes, and switches in `_delta-2027-components.scss` |
+| `semantic.background.disabled` | `--mg-semantic-background-disabled` | Disabled inputs and checkboxes in `_delta-2027-components.scss` |
 | `semantic.border.control` | `--mg-semantic-border-control` | `--mg-form-input-border-color`; pilot `--mg-control-border` |
 | `semantic.text.primary` | `--mg-semantic-text-primary` | `--mg-color-text`, `--mg-color-button-outline-secondary`; pilot `--mg-control-text` |
 | `semantic.text.secondary` | `--mg-semantic-text-secondary` | `--mg-color-secondary`, `--mg-empty-state-text-color`, readable `<input>` placeholders |

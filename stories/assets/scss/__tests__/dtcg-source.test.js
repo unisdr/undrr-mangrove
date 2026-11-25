@@ -668,6 +668,17 @@ describe('self-contained portable exchange documents', () => {
       expect(sdValues.has(mappedKey)).toBe(true);
       expect(sdValues.get(mappedKey)).toEqual(oldValue);
     }
+
+    const deltaScss = build().get(
+      'stories/assets/scss/generated/_tokens-delta-2027.scss'
+    );
+    const toKebab = segment =>
+      segment.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+    for (const key of nonPrimitiveKeys(sdValues)) {
+      const cssName = `--mg-${key.split('.').map(toKebab).join('-')}`;
+      expect(deltaScss).toContain(`${cssName}:`);
+    }
+    expect(deltaScss).toContain('--mg-typography-weight-bold: 700;');
   });
 });
 

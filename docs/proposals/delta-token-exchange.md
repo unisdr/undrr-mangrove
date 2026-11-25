@@ -119,7 +119,7 @@ Summary of the v0.7.2 → shared contract renames (all unchanged `semantic.backg
 | `typography.scale.11`           | `typography.size.caption`                     | Role-based sizing across 16px / 14px bases          |
 | `typography.scale.12`           | `typography.size.label`                       | Role-based sizing                                   |
 | `typography.scale.14`           | `typography.size.body`                        | Role-based sizing                                   |
-| `typography.scale.16`           | `typography.size.subheading`                  | Role-based sizing                                   |
+| _(section-title role, 16px)_    | `typography.size.subheading`                  | Promoted to formal role-based size token            |
 | `typography.scale.20`           | `typography.size.title`                       | Role-based sizing                                   |
 | `typography.scale.24`           | `typography.size.kpi`                         | Role-based sizing                                   |
 | `typography.scale.30`           | `typography.size.display`                     | Role-based sizing                                   |

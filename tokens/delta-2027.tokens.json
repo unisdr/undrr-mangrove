@@ -1398,6 +1398,10 @@
       "semibold": {
         "$type": "fontWeight",
         "$value": 600
+      },
+      "bold": {
+        "$type": "fontWeight",
+        "$value": 700
       }
     },
     "lineHeight": {

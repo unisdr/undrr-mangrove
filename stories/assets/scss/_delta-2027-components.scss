@@ -268,7 +268,7 @@
 
     .mg-form-check__input:is(:disabled, .mg-form-check__input--disabled) {
       border-color: delta(semantic-border-default);
-      background-color: delta(semantic-background-inset);
+      background-color: delta(semantic-background-disabled);
     }
 
     .mg-form-check__input:is(
