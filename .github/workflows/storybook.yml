@@ -115,6 +115,9 @@ jobs:
         run: |
           MANGROVE_DOCGEN_SERVER=true yarn exec storybook build -o .cache/docgen-server-build
           yarn check:prop-contracts --build-dir=.cache/docgen-server-build
+          # Prop checks do not cover the published example list or catalogue format.
+          node scripts/ai-manifest/generate-ai-manifest.js --build-dir=.cache/docgen-server-build
+          yarn check:catalogue-baseline --build-dir=.cache/docgen-server-build
       # Jest first: it is the cheap suite, and it runs before the browser
       # download and browser tests so an ordinary unit failure is
       # reported in a couple of minutes instead of behind them.
