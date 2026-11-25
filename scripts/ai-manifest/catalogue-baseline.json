@@ -74,9 +74,9 @@
   },
   "components-cards-book-card": {
     "props": {
-      "className": "string | optional | no default | undescribed",
-      "data": "array | required | no default | undescribed",
-      "variant": "'primary' | 'secondary' | 'tertiary' | 'quaternary' | optional | default='primary' | undescribed"
+      "className": "string | optional | no default | described",
+      "data": "array | required | no default | described",
+      "variant": "'primary' | 'secondary' | 'tertiary' | 'quaternary' | optional | default='primary' | described"
     },
     "examples": [
       "Book Card",
@@ -89,9 +89,9 @@
   },
   "components-cards-horizontal-book-card": {
     "props": {
-      "className": "string | optional | no default | undescribed",
-      "data": "array | required | no default | undescribed",
-      "variant": "'primary' | 'secondary' | 'tertiary' | 'quaternary' | optional | default='primary' | undescribed"
+      "className": "string | optional | no default | described",
+      "data": "array | required | no default | described",
+      "variant": "'primary' | 'secondary' | 'tertiary' | 'quaternary' | optional | default='primary' | described"
     },
     "examples": [
       "Horizontal Book Card",
@@ -104,9 +104,9 @@
   },
   "components-cards-horizontal-card": {
     "props": {
-      "className": "string | optional | no default | undescribed",
-      "data": "array | required | no default | undescribed",
-      "variant": "'primary' | 'secondary' | 'tertiary' | 'quaternary' | optional | default='primary' | undescribed"
+      "className": "string | optional | no default | described",
+      "data": "array | required | no default | described",
+      "variant": "'primary' | 'secondary' | 'tertiary' | 'quaternary' | optional | default='primary' | described"
     },
     "examples": [
       "Horizontal Card",
@@ -159,9 +159,9 @@
   },
   "components-cards-vertical-card": {
     "props": {
-      "className": "string | optional | no default | undescribed",
-      "data": "{ title: string, link: string, target: string, rel: string, imgback: string, imgalt: string, summaryText: string, label1: string, label2: string, button: string, buttonLink: string }[] | required | no default | undescribed",
-      "variant": "'primary' | 'secondary' | 'tertiary' | 'quaternary' | optional | default='primary' | undescribed"
+      "className": "string | optional | no default | described",
+      "data": "{ title: string, link: string, target: string, rel: string, imgback: string, imgalt: string, summaryText: string, label1: string, label2: string, button: string, buttonLink: string }[] | required | no default | described",
+      "variant": "'primary' | 'secondary' | 'tertiary' | 'quaternary' | optional | default='primary' | described"
     },
     "examples": [
       "Vertical Card",
