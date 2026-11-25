@@ -130,6 +130,68 @@ async function checkBookmarkedArgs(page) {
     .waitFor(waitForBookmark);
 }
 
+async function checkStoryControls(page) {
+  const story = new URL('./', url);
+  story.searchParams.set('addonPanel', 'controls');
+  const preview = page.frameLocator('#storybook-preview-iframe');
+  const controls = page.getByRole('tabpanel', { name: /Controls/ });
+  const share = preview.locator('.mg-share');
+  const cite = preview.locator('.mg-cite-this');
+
+  story.searchParams.set('path', '/story/patterns-page-actions--page-actions');
+  await page.goto(story.href);
+  await share.waitFor();
+  await cite.waitFor();
+  await controls
+    .getByRole('switch', { name: 'share', checked: true })
+    .press('Space');
+  await share.waitFor({ state: 'detached' });
+  await cite.waitFor();
+  await controls
+    .getByRole('switch', { name: 'cite', checked: true })
+    .press('Space');
+  await cite.waitFor({ state: 'detached' });
+
+  story.searchParams.set('args', 'share:false;cite:true');
+  await page.goto(story.href);
+  await controls
+    .getByRole('switch', { name: 'share', checked: false })
+    .waitFor();
+  await cite.waitFor();
+  await share.waitFor({ state: 'detached' });
+
+  story.searchParams.set('path', '/story/components-highlightbox--default');
+  story.searchParams.delete('args');
+  await page.goto(story.href);
+  const float = controls.getByRole('group', { name: 'float', exact: true });
+  await float.getByRole('radio', { name: 'None' }).waitFor();
+  await float.getByRole('radio', { name: 'start' }).check();
+  await preview.locator('.mg-highlight-box--float-start').waitFor();
+  await float.getByRole('radio', { name: 'end' }).check();
+  await preview.locator('.mg-highlight-box--float-end').waitFor();
+  await float.getByRole('radio', { name: 'None' }).check();
+  const floating = preview.locator('[class*="mg-highlight-box--float-"]');
+  await floating.waitFor({ state: 'detached' });
+
+  story.searchParams.set('path', '/story/components-highlightbox--float-start');
+  await page.goto(story.href);
+  await preview.locator('.mg-highlight-box--float-start').waitFor();
+  await float.getByRole('radio', { name: 'None' }).check();
+  await page.waitForURL(
+    address => address.searchParams.get('args') === 'float:!null'
+  );
+  await page.reload();
+  await float.getByRole('radio', { name: 'None', checked: true }).waitFor();
+  await preview.locator('.mg-highlight-box').waitFor();
+  await floating.waitFor({ state: 'detached' });
+
+  story.searchParams.set('args', 'float:null');
+  await page.goto(story.href);
+  await preview
+    .locator('.mg-highlight-box:not([class*="mg-highlight-box--float-"])')
+    .waitFor();
+}
+
 try {
   const context = await browser.newContext({
     permissions: ['clipboard-read', 'clipboard-write'],
@@ -320,6 +382,7 @@ try {
   const docsPage = await context.newPage();
   await checkDocs(docsPage);
   await checkBookmarkedArgs(docsPage);
+  await checkStoryControls(docsPage);
   console.log(
     'HTML gate passed: rendered docs, generated JSX and HTML, clipboard punctuation, five themes, RTL, live interaction, Controls updates and bookmarked args.'
   );

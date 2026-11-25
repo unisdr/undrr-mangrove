@@ -46,6 +46,11 @@ export function PageActions({ share = true, cite = true }) {
 export default {
   title: 'Patterns/Page actions',
   component: PageActions,
+  args: { share: true, cite: true },
+  argTypes: {
+    share: { control: 'boolean' },
+    cite: { control: 'boolean' },
+  },
   parameters: { layout: 'padded' },
 };
 
