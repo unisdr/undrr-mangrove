@@ -1,0 +1,504 @@
+@use "config" as *;
+@use "sass:math";
+
+// =============================================================================
+// BOOTSTRAP 3 COMPATIBILITY LAYER
+// =============================================================================
+// This file provides backward compatibility for Bootstrap 3.3.7 grid classes.
+// It uses modern CSS Grid to replicate Bootstrap's 12-column grid system.
+// This allows gradual migration away from Bootstrap without breaking layouts.
+// Usage: Import this file to enable Bootstrap grid classes in your project.
+// Remove this file once all templates have been migrated to Mangrove grid.
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// Container
+// -----------------------------------------------------------------------------
+
+.container {
+  width: 100%;
+  padding-right: var(--mg-spacing-150);
+  padding-left: var(--mg-spacing-150);
+  margin-right: auto;
+  margin-left: auto;
+
+  @media (min-width: $mg-breakpoint-mobile) {
+    max-width: $mg-breakpoint-mobile;
+  }
+
+  @media (min-width: $mg-breakpoint-tablet) {
+    max-width: $mg-breakpoint-tablet;
+  }
+
+  @media (min-width: $mg-breakpoint-desktop) {
+    max-width: $mg-breakpoint-desktop;
+  }
+
+  @media (min-width: $mg-breakpoint-desktop-wide) {
+    max-width: $mg-breakpoint-desktop-wide;
+  }
+}
+
+.container-fluid {
+  width: 100%;
+  padding-right: var(--mg-spacing-150);
+  padding-left: var(--mg-spacing-150);
+  margin-right: auto;
+  margin-left: auto;
+}
+
+// -----------------------------------------------------------------------------
+// Row (Grid Container)
+// -----------------------------------------------------------------------------
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: calc(-1 * var(--mg-spacing-150));
+  margin-left: calc(-1 * var(--mg-spacing-150));
+
+  // Modern browsers: use CSS Grid for better control
+  @supports (display: grid) {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 0 var(--mg-spacing-300);
+    margin-right: 0;
+    margin-left: 0;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Columns - Base styles
+// -----------------------------------------------------------------------------
+
+// All column classes get these base styles
+[class*="col-"] {
+  position: relative;
+  width: 100%;
+  padding-right: var(--mg-spacing-150);
+  padding-left: var(--mg-spacing-150);
+
+  @supports (display: grid) {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Extra Small (xs) - Mobile first, always applies
+// -----------------------------------------------------------------------------
+
+@for $i from 1 through 12 {
+  .col-xs-#{$i} {
+    flex: 0 0 math.percentage(math.div($i, 12));
+    max-width: math.percentage(math.div($i, 12));
+
+    @supports (display: grid) {
+      grid-column: span $i;
+      max-width: none;
+    }
+  }
+}
+
+.col-xs-12 {
+  @supports (display: grid) {
+    grid-column: 1 / -1;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Small (sm) - Tablet portrait and up
+// -----------------------------------------------------------------------------
+
+@media (width >= 768px) {
+  @for $i from 1 through 12 {
+    .col-sm-#{$i} {
+      flex: 0 0 math.percentage(math.div($i, 12));
+      max-width: math.percentage(math.div($i, 12));
+
+      @supports (display: grid) {
+        grid-column: span $i;
+        max-width: none;
+      }
+    }
+  }
+
+  .col-sm-12 {
+    @supports (display: grid) {
+      grid-column: 1 / -1;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Medium (md) - Tablet landscape and up
+// Maps to Mangrove's $mg-breakpoint-tablet (900px)
+// -----------------------------------------------------------------------------
+
+@media (min-width: $mg-breakpoint-tablet) {
+  @for $i from 1 through 12 {
+    .col-md-#{$i} {
+      flex: 0 0 math.percentage(math.div($i, 12));
+      max-width: math.percentage(math.div($i, 12));
+
+      @supports (display: grid) {
+        grid-column: span $i;
+        max-width: none;
+      }
+    }
+  }
+
+  .col-md-12 {
+    @supports (display: grid) {
+      grid-column: 1 / -1;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Large (lg) - Desktop and up
+// Maps to Mangrove's $mg-breakpoint-desktop (1164px)
+// -----------------------------------------------------------------------------
+
+@media (min-width: $mg-breakpoint-desktop) {
+  @for $i from 1 through 12 {
+    .col-lg-#{$i} {
+      flex: 0 0 math.percentage(math.div($i, 12));
+      max-width: math.percentage(math.div($i, 12));
+
+      @supports (display: grid) {
+        grid-column: span $i;
+        max-width: none;
+      }
+    }
+  }
+
+  .col-lg-12 {
+    @supports (display: grid) {
+      grid-column: 1 / -1;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Standalone col-12 (without breakpoint prefix)
+// -----------------------------------------------------------------------------
+
+.col-12 {
+  flex: 0 0 100%;
+  max-width: 100%;
+
+  @supports (display: grid) {
+    grid-column: 1 / -1;
+    max-width: none;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Column offsets
+// -----------------------------------------------------------------------------
+
+@media (min-width: $mg-breakpoint-tablet) {
+  @for $i from 0 through 11 {
+    .col-md-offset-#{$i} {
+      margin-left: math.percentage(math.div($i, 12));
+
+      @supports (display: grid) {
+        margin-left: 0;
+        grid-column-start: $i + 1;
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Column ordering (push/pull)
+// -----------------------------------------------------------------------------
+
+@media (min-width: $mg-breakpoint-tablet) {
+  @for $i from 1 through 12 {
+    .col-md-push-#{$i} {
+      left: math.percentage(math.div($i, 12));
+
+      @supports (display: grid) {
+        left: auto;
+        order: $i;
+      }
+    }
+
+    .col-md-pull-#{$i} {
+      right: math.percentage(math.div($i, 12));
+
+      @supports (display: grid) {
+        right: auto;
+        order: -$i;
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Visibility utilities
+// -----------------------------------------------------------------------------
+
+.hidden {
+  display: none !important;
+}
+
+.hidden-xs {
+  @media (width <= 767px) {
+    display: none !important;
+  }
+}
+
+.hidden-sm {
+  @media (width >= 768px) and (max-width: #{$mg-breakpoint-tablet - 1px}) {
+    display: none !important;
+  }
+}
+
+.hidden-md {
+  @media (min-width: $mg-breakpoint-tablet) and (max-width: #{$mg-breakpoint-desktop - 1px}) {
+    display: none !important;
+  }
+}
+
+.hidden-lg {
+  @media (min-width: $mg-breakpoint-desktop) {
+    display: none !important;
+  }
+}
+
+.visible-xs {
+  display: none !important;
+
+  @media (width <= 767px) {
+    display: block !important;
+  }
+}
+
+.visible-sm {
+  display: none !important;
+
+  @media (width >= 768px) and (max-width: #{$mg-breakpoint-tablet - 1px}) {
+    display: block !important;
+  }
+}
+
+.visible-md {
+  display: none !important;
+
+  @media (min-width: $mg-breakpoint-tablet) and (max-width: #{$mg-breakpoint-desktop - 1px}) {
+    display: block !important;
+  }
+}
+
+.visible-lg {
+  display: none !important;
+
+  @media (min-width: $mg-breakpoint-desktop) {
+    display: block !important;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Text alignment utilities
+// -----------------------------------------------------------------------------
+
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+// -----------------------------------------------------------------------------
+// Clearfix (for flexbox fallback)
+// -----------------------------------------------------------------------------
+
+.clearfix::before,
+.clearfix::after {
+  display: table;
+  content: " ";
+}
+
+.clearfix::after {
+  clear: both;
+}
+
+// -----------------------------------------------------------------------------
+// Button compatibility
+// -----------------------------------------------------------------------------
+
+.btn {
+  display: inline-block;
+  padding: var(--mg-spacing-100) var(--mg-spacing-200);
+  font-size: var(--mg-font-size-300);
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-radius: 0;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition:
+      color var(--mg-motion-duration-fast) var(--mg-motion-easing-standard),
+      background-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard),
+      border-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard);
+  }
+
+  &:hover,
+  &:focus {
+    text-decoration: none;
+  }
+
+  &:disabled,
+  &.disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+}
+
+.btn-default {
+  color: rgb(var(--mg-color-neutral-800));
+  background-color: rgb(var(--mg-color-white));
+  border-color: rgb(var(--mg-color-neutral-400));
+
+  &:hover,
+  &:focus {
+    color: rgb(var(--mg-color-neutral-800));
+    background-color: rgb(var(--mg-color-neutral-100));
+    border-color: rgb(var(--mg-color-neutral-500));
+  }
+}
+
+.btn-primary {
+  color: rgb(var(--mg-color-white));
+  background-color: rgb(var(--mg-color-blue-900));
+
+  &:hover,
+  &:focus {
+    color: rgb(var(--mg-color-white));
+    background-color: hsl(from rgb(var(--mg-color-blue-900)) h s calc(l - 10));
+  }
+}
+
+.btn-link {
+  color: rgb(var(--mg-color-interactive));
+  background-color: transparent;
+  border-color: transparent;
+
+  &:hover,
+  &:focus {
+    color: rgb(var(--mg-color-interactive-active));
+    text-decoration: underline;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Form compatibility
+// -----------------------------------------------------------------------------
+
+.form-control {
+  display: block;
+  width: 100%;
+  padding: var(--mg-spacing-75) var(--mg-spacing-100);
+  font-size: var(--mg-font-size-300);
+  line-height: 1.5;
+  color: rgb(var(--mg-color-neutral-800));
+  background-color: rgb(var(--mg-color-white));
+  border: 1px solid rgb(var(--mg-color-neutral-400));
+  border-radius: 0;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: border-color var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
+  }
+
+  &:focus {
+    border-color: rgb(var(--mg-color-blue-500));
+    outline: 0;
+  }
+
+  &:disabled {
+    background-color: rgb(var(--mg-color-neutral-100));
+    opacity: 1;
+  }
+}
+
+.form-group {
+  margin-bottom: var(--mg-spacing-150);
+}
+
+// -----------------------------------------------------------------------------
+// Table compatibility
+// -----------------------------------------------------------------------------
+
+.table {
+  width: 100%;
+  margin-bottom: var(--mg-spacing-200);
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: var(--mg-spacing-100);
+    vertical-align: top;
+    border-top: 1px solid rgb(var(--mg-color-neutral-300));
+  }
+
+  thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid rgb(var(--mg-color-neutral-300));
+  }
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgb(var(--mg-color-neutral-100) / 0.5);
+}
+
+.table-bordered {
+  border: 1px solid rgb(var(--mg-color-neutral-300));
+
+  th,
+  td {
+    border: 1px solid rgb(var(--mg-color-neutral-300));
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Pull/Float utilities
+// -----------------------------------------------------------------------------
+
+.pull-left {
+  float: left !important;
+}
+
+.pull-right {
+  float: right !important;
+}
+
+// -----------------------------------------------------------------------------
+// Screen reader only (for accessibility)
+// -----------------------------------------------------------------------------
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
