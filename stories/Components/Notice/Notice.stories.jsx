@@ -12,10 +12,7 @@ const meta = {
       control: 'select',
       options: ['info', 'warning', 'negative', 'positive'],
     },
-    headingLevel: {
-      control: 'select',
-      options: ['h2', 'h3', 'h4', 'h5', 'h6'],
-    },
+    headingLevel: { control: 'select' },
     isCompact: { control: 'boolean' },
     isProminent: { control: 'boolean' },
     isOverlay: { control: 'boolean' },
