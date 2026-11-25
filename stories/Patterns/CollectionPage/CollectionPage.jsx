@@ -356,7 +356,16 @@ SectionNav.propTypes = {
   ).isRequired,
 };
 
-/** Story-only composition of a PreventionWeb collection page. */
+/**
+ * Story-only composition of a PreventionWeb collection page.
+ *
+ * @param {Object} props
+ * @param {'wildfire'|'jasper'|'japan'|'planned'|'empty'} [props.collection='wildfire'] Sample collection.
+ * @param {number} [props.itemCount] Known item count. Leave unset to count with the content list's own query.
+ * @param {boolean} [props.syncUrl=true] Write filters to the URL hash. Enable for one list per page.
+ * @param {'ltr'|'rtl'} [props.dir] Text direction.
+ * @param {string} [props.id] Prefix for the example's in-page IDs.
+ */
 export function CollectionPage({
   collection: collectionKey = 'wildfire',
   itemCount,

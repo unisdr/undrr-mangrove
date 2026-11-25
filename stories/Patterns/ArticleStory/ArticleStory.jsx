@@ -381,7 +381,14 @@ const words = {
   },
 };
 
-/** Story-only article layout fixture for undrr/web-backlog#3060. */
+/**
+ * Story-only article layout fixture for undrr/web-backlog#3060.
+ *
+ * @param {Object} props
+ * @param {'large'|'compact'|'split'} [props.imageProminence='large'] Header treatment.
+ * @param {'main'|'alternate'|'none'} [props.heroImage='main'] Header image, independent of the header treatment.
+ * @param {string} [props.locale='english'] Storybook locale key. Arabic uses right-to-left layout.
+ */
 export function ArticleStory({
   imageProminence = 'large',
   heroImage = 'main',

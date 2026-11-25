@@ -2,7 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { EDITORIAL_HTML } from './rich-content-fixtures';
 
-/** Story specimen only: consumers emit trusted editorial HTML with CSS. */
+/**
+ * Story specimen only: consumers emit trusted editorial HTML with CSS.
+ *
+ * @param {Object} props
+ * @param {'ltr'|'rtl'} [props.dir='ltr'] Logical direction supplied by the surrounding publication.
+ */
 export function RichContent({ dir = 'ltr' }) {
   return (
     <article

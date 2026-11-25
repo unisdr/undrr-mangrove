@@ -22,9 +22,10 @@
     "components-navigation-on-this-page-nav",
     "components-navigation-pager",
     "components-notice-cookieconsentbanner",
-    "components-preview-access",
     "components-pageheader",
+    "components-preview-access",
     "components-progress-bar",
+    "components-quiz-quiz-score",
     "components-quotehighlight",
     "components-scrollcontainer",
     "components-showmore",
@@ -37,6 +38,12 @@
     "components-syndicated-search-layouts",
     "components-syndicated-search-toggles",
     "components-table",
-    "components-tabs"
+    "components-tabs",
+    "components-user-feedback",
+    "patterns-article-story",
+    "patterns-collection-page",
+    "patterns-content-hub",
+    "patterns-landing-pages",
+    "patterns-rich-content"
   ]
 }
