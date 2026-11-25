@@ -60,6 +60,51 @@ async function checkDocs(page) {
   assert.deepEqual(errors, [], 'Rendered docs must not raise uncaught errors');
 }
 
+// Storybook applies the URL before server-inferred Controls are available.
+// Exercise both an explicit Control and a prop absent from the story's args.
+async function checkBookmarkedArgs(page) {
+  const bookmark = new URL('./', url);
+  const preview = page.frameLocator('#storybook-preview-iframe');
+  const open = async (id, args) => {
+    bookmark.searchParams.set('path', `/story/${id}`);
+    bookmark.searchParams.set('args', args);
+    await page.goto(bookmark.href);
+  };
+
+  await open(
+    'components-pageheader--default',
+    'languages[0].value:it;languages[0].label:ViaURL'
+  );
+  // Wait for the bookmarked values in the preview. The first render can
+  // briefly show the story defaults before the manager applies the URL.
+  const waitForBookmark = { state: 'attached', timeout: 15_000 };
+  const languages = preview.locator('.mg-page-header__select');
+  await languages
+    .locator('option')
+    .filter({ hasText: 'ViaURL' })
+    .waitFor(waitForBookmark);
+  assert.deepEqual(
+    (await languages.locator('option').allTextContents()).map(label =>
+      label.trim()
+    ),
+    ['ViaURL'],
+    'PageHeader should render the language list from the bookmarked args'
+  );
+
+  await open(
+    'components-notice-notice--info-notice',
+    'headingLevel:h5;isCompact:true'
+  );
+  await preview
+    .locator('.mg-notice.mg-notice--compact h5.mg-notice__title')
+    .waitFor(waitForBookmark);
+
+  await open('patterns-content-card--news', 'className:bookmarked-card');
+  await preview
+    .locator('[data-content-layout].bookmarked-card')
+    .waitFor(waitForBookmark);
+}
+
 try {
   const context = await browser.newContext({
     permissions: ['clipboard-read', 'clipboard-write'],
@@ -249,8 +294,9 @@ try {
   );
   const docsPage = await context.newPage();
   await checkDocs(docsPage);
+  await checkBookmarkedArgs(docsPage);
   console.log(
-    'HTML gate passed: rendered docs, generated JSX and HTML, clipboard punctuation, five themes, RTL, live interaction and Controls updates.'
+    'HTML gate passed: rendered docs, generated JSX and HTML, clipboard punctuation, five themes, RTL, live interaction, Controls updates and bookmarked args.'
   );
 } finally {
   clearTimeout(deadline);

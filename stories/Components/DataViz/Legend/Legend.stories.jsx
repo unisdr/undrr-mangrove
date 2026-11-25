@@ -4,18 +4,9 @@ export default {
   title: 'Components/DataViz/Legend',
   component: Legend,
   argTypes: {
-    type: {
-      control: 'select',
-      options: ['continuous', 'categorical', 'stepped'],
-    },
-    orientation: {
-      control: 'select',
-      options: ['horizontal', 'vertical'],
-    },
-    layout: {
-      control: 'select',
-      options: ['default', 'inline', 'grid'],
-    },
+    type: { control: 'select' },
+    orientation: { control: 'select' },
+    layout: { control: 'select' },
   },
 };
 
