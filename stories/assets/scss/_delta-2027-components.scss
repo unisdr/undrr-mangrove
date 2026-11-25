@@ -8,7 +8,7 @@
 @use "mixins" as *;
 
 @function delta($name) {
-  @return var(--mg-delta-2027-#{$name});
+  @return var(--mg-#{$name});
 }
 
 // Included only inside .mg-theme-delta-2027, after its generated token block.
@@ -18,13 +18,13 @@
   color: delta(semantic-text-primary);
   color-scheme: light;
   font-family: var(--mg-font-family-text);
-  font-size: delta(typography-scale-14);
+  font-size: delta(typography-size-body);
   font-weight: delta(typography-weight-regular);
   line-height: delta(typography-line-height-normal);
   -webkit-font-smoothing: antialiased;
 
   h1 {
-    font-size: delta(typography-scale-20);
+    font-size: delta(typography-size-title);
     font-weight: delta(typography-weight-medium);
     line-height: delta(typography-line-height-tight);
   }
@@ -36,7 +36,7 @@
   }
 
   h3 {
-    font-size: delta(typography-scale-14);
+    font-size: delta(typography-size-body);
     font-weight: delta(typography-weight-medium);
     line-height: delta(typography-line-height-normal);
   }
@@ -133,13 +133,13 @@
 
     &:is(:disabled, [aria-disabled="true"]) {
       background-color: transparent;
-      color: delta(semantic-text-placeholder);
+      color: delta(semantic-text-disabled);
     }
   }
 
   .mg-form-label {
     color: delta(semantic-text-primary);
-    font-size: delta(typography-scale-14);
+    font-size: delta(typography-size-body);
     font-weight: delta(typography-weight-regular);
   }
 
@@ -175,13 +175,13 @@
     }
 
     &:is(:disabled, [class*="--disabled"]) {
-      background-color: delta(semantic-background-inset);
+      background-color: delta(semantic-background-disabled);
       border-color: delta(semantic-border-default);
-      color: delta(semantic-text-placeholder);
+      color: delta(semantic-text-disabled);
       opacity: 1;
 
       &[placeholder]:not(:placeholder-shown) {
-        background-color: delta(semantic-background-inset);
+        background-color: delta(semantic-background-disabled);
       }
     }
 
@@ -201,7 +201,7 @@
   .mg-form-select {
     line-height: delta(typography-line-height-tight);
     padding-block: 0;
-    padding-inline: delta(spacing-3) delta(spacing-6);
+    padding-inline: delta(spacing-sm) delta(spacing-lg);
   }
 
   // Explicit direction boundaries also work when English is previewed in RTL.
@@ -210,8 +210,8 @@
   [dir="rtl"] & .mg-form-select,
   & [dir="rtl"] .mg-form-select,
   & .mg-form-select[dir="rtl"] {
-    padding-left: delta(spacing-6);
-    padding-right: delta(spacing-3);
+    padding-left: delta(spacing-lg);
+    padding-right: delta(spacing-sm);
   }
 
   .mg-form-input[type="date"] {
@@ -226,7 +226,7 @@
 
   .mg-form-help,
   .mg-form-error {
-    font-size: delta(typography-scale-12);
+    font-size: delta(typography-size-label);
     margin-block-start: 0.375rem;
   }
 
@@ -282,7 +282,7 @@
   .mg-form-check__label,
   .mg-switch__label {
     color: delta(semantic-text-primary);
-    font-size: delta(typography-scale-14);
+    font-size: delta(typography-size-body);
   }
 
   .mg-switch {
@@ -300,7 +300,7 @@
 
     .mg-segmented-control__label {
       min-block-size: 2rem;
-      font-size: delta(typography-scale-14);
+      font-size: delta(typography-size-body);
       font-weight: delta(typography-weight-regular);
       padding: 0.125rem 0.75rem 0.25rem;
     }
@@ -332,7 +332,7 @@
     .mg-segmented-control__input:disabled + .mg-segmented-control__label:hover {
       background-color: delta(semantic-background-surface);
       border-color: delta(semantic-border-default);
-      color: delta(semantic-text-placeholder);
+      color: delta(semantic-text-disabled);
     }
 
     .mg-segmented-control__input:disabled:checked
@@ -341,7 +341,7 @@
       + .mg-segmented-control__label:hover {
       background-color: delta(semantic-background-inset);
       border-color: delta(semantic-border-default);
-      color: delta(semantic-text-placeholder);
+      color: delta(semantic-text-disabled);
     }
   }
 
@@ -372,7 +372,7 @@
   .mg-status-label {
     --mg-status-label-indicator-size: 0.5rem;
     --mg-status-label-gap: 0.5rem;
-    --mg-status-label-font-size: #{delta(typography-scale-14)};
+    --mg-status-label-font-size: #{delta(typography-size-body)};
     --mg-status-label-color: #{delta(semantic-text-primary)};
   }
 
@@ -387,7 +387,7 @@
       border-radius: 50%;
       clip-path: none;
       transform: none;
-      background-color: delta(semantic-text-placeholder);
+      background-color: delta(semantic-text-disabled);
 
       &::before {
         content: none;
@@ -437,7 +437,7 @@
       > .mg-tabs__list
       > .mg-tabs__item
       > .mg-tabs__link {
-      font-size: delta(typography-scale-14);
+      font-size: delta(typography-size-body);
       font-weight: delta(typography-weight-regular);
       padding: 0.125rem 0.75rem 0.25rem;
 
@@ -458,7 +458,7 @@
     min-block-size: 1.5rem;
     border-color: transparent;
     border-radius: delta(radius-sm);
-    font-size: delta(typography-scale-12);
+    font-size: delta(typography-size-label);
     font-weight: delta(typography-weight-regular);
     padding: 0 0.5rem;
   }
@@ -474,14 +474,14 @@
       padding: 0.5rem 1rem;
       border-inline: 0;
       border-block-end: 1px solid delta(semantic-border-subtle);
-      font-size: delta(typography-scale-14);
+      font-size: delta(typography-size-body);
       vertical-align: middle;
     }
 
     thead tr th {
       background-color: delta(semantic-background-surface);
       color: delta(semantic-text-secondary);
-      font-size: delta(typography-scale-12);
+      font-size: delta(typography-size-label);
       font-weight: delta(typography-weight-medium);
       letter-spacing: normal;
       text-transform: none;
@@ -532,14 +532,14 @@
   }
 
   .mg-notice__title {
-    font-size: delta(typography-scale-14);
+    font-size: delta(typography-size-body);
     font-weight: delta(typography-weight-medium);
   }
 
   .mg-notice__description,
   .mg-notice__meta {
     color: delta(semantic-text-secondary);
-    font-size: delta(typography-scale-14);
+    font-size: delta(typography-size-body);
   }
 
   .mg-notice__icon {
@@ -565,8 +565,8 @@
     --mg-empty-state-title-color: #{delta(semantic-text-primary)};
     --mg-empty-state-panel-background: #{delta(semantic-background-surface)};
     --mg-empty-state-media-color: #{delta(semantic-text-secondary)};
-    --mg-empty-state-title-font-size: #{delta(typography-scale-20)};
-    --mg-empty-state-text-font-size: #{delta(typography-scale-14)};
+    --mg-empty-state-title-font-size: #{delta(typography-size-title)};
+    --mg-empty-state-text-font-size: #{delta(typography-size-body)};
 
     background-color: delta(semantic-background-surface);
     border: 1px solid delta(semantic-border-subtle);
@@ -582,7 +582,7 @@
 
   .mg-empty-state__description {
     color: delta(semantic-text-secondary);
-    font-size: delta(typography-scale-14);
+    font-size: delta(typography-size-body);
   }
 
   .mg-empty-state__media {
@@ -639,12 +639,12 @@
   }
 
   .mg-tree .mg-tree__group {
-    padding-inline-start: delta(spacing-4);
+    padding-inline-start: delta(spacing-md);
   }
 
   .mg-tree.mg-tree--guides .mg-tree__group {
-    --mg-tree-guide-offset: calc(#{delta(spacing-2)} + 0.5rem - 1px);
-    --mg-tree-group-indent: #{delta(spacing-4)};
+    --mg-tree-guide-offset: calc(#{delta(spacing-xs)} + 0.5rem - 1px);
+    --mg-tree-group-indent: #{delta(spacing-md)};
 
     padding-inline-start: calc(
       var(--mg-tree-group-indent) - var(--mg-tree-guide-offset) - 1px

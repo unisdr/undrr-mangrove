@@ -217,12 +217,12 @@ try {
   // Changing token data or public adapter roles must change actual rendering.
   // Default screenshots alone cannot establish this authoring contract.
   const overrides = {
-    '--mg-delta-2027-typography-weight-medium': '600',
-    '--mg-delta-2027-typography-weight-regular': '500',
-    '--mg-delta-2027-typography-line-height-tight': '2',
-    '--mg-delta-2027-typography-scale-14': '15px',
-    '--mg-delta-2027-spacing-3': '18px',
-    '--mg-delta-2027-spacing-6': '28px',
+    '--mg-typography-weight-medium': '600',
+    '--mg-typography-weight-regular': '500',
+    '--mg-typography-line-height-tight': '2',
+    '--mg-typography-size-body': '15px',
+    '--mg-spacing-sm': '18px',
+    '--mg-spacing-lg': '28px',
     '--mg-font-size-button': '22px',
     '--mg-padding-button': '1px 21px',
   };

@@ -67,7 +67,7 @@ Expand **Try a local token override** and enable the checkbox in either pane. Ch
 | Pane | Property changed |
 | --- | --- |
 | Existing Delta | `--mg-color-interactive`, a three-channel value |
-| Delta 2027 | `--mg-delta-2027-semantic-action-default`, a complete CSS colour |
+| Delta 2027 | `--mg-semantic-action-default`, a complete CSS colour |
 
 In Delta 2027, the override changes controls that read that property directly, such as primary buttons. Hover, pressed and disabled states retain their own tokens. Components that use a channel value calculated during the build do not automatically follow this browser-only change. Changing the older channel property does not rewrite the new source property either.
 

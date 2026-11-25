@@ -543,6 +543,56 @@ describe('self-contained portable exchange documents', () => {
       components: [0, 79 / 255, 145 / 255],
     });
   });
+
+  test('Mangrove default and Delta 2027 share identical semantic contract paths with brand-specific values', () => {
+    const documents = buildDtcgDocuments();
+    const mangroveValues = resolveDocument(
+      documents.get('mangrove.tokens.json')
+    );
+    const deltaValues = resolveDocument(
+      documents.get('delta-2027.tokens.json')
+    );
+    const sharedContractKeys = values =>
+      [...values.keys()]
+        .filter(
+          key =>
+            /^(semantic|typography|radius|shadow|layout|accessibility)\./.test(
+              key
+            ) ||
+            /^motion\.(duration|easing)\./.test(key) ||
+            /^spacing\.(2xs|xs|sm|md|lg|xl|2xl|3xl)$/.test(key)
+        )
+        .sort();
+    expect(sharedContractKeys(mangroveValues)).toEqual(
+      sharedContractKeys(deltaValues)
+    );
+    expect(mangroveValues.get('typography.size.body')).toEqual({
+      value: 16,
+      unit: 'px',
+    });
+    expect(deltaValues.get('typography.size.body')).toEqual({
+      value: 14,
+      unit: 'px',
+    });
+    expect(mangroveValues.get('semantic.action.default')).not.toEqual(
+      deltaValues.get('semantic.action.default')
+    );
+
+    const proposalMangrove = JSON.parse(
+      fs.readFileSync(
+        path.join(ROOT, 'docs/proposals/mangrove-default.dtcg.tokens.json'),
+        'utf8'
+      )
+    );
+    const proposalDelta = JSON.parse(
+      fs.readFileSync(
+        path.join(ROOT, 'docs/proposals/delta-2027.dtcg.tokens.json'),
+        'utf8'
+      )
+    );
+    expect(proposalMangrove).toEqual(documents.get('mangrove.tokens.json'));
+    expect(proposalDelta).toEqual(documents.get('delta-2027.tokens.json'));
+  });
 });
 
 describe('authored production values remain authoritative', () => {
