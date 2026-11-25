@@ -309,9 +309,8 @@ export function readBuiltContracts(
   const dir = path.join(buildDir, 'services', 'core', 'docgen');
   if (!fs.existsSync(dir))
     throw new Error(
-      `No docgen server output in ${dir}. The docgen server is off by ` +
-        'default, so build Storybook with it on first:\n' +
-        `  MANGROVE_DOCGEN_SERVER=true yarn exec storybook build -o ${buildDir}\n` +
+      `No docgen server output in ${dir}. Clear any MANGROVE_DOCGEN_SERVER=false override and build:\n` +
+        `  yarn exec storybook build -o ${buildDir}\n` +
         `then run: yarn check:prop-contracts --build-dir=${buildDir}`
     );
   const results = [];

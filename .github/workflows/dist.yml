@@ -13,6 +13,7 @@ on:
       # docs-only merge has to rebuild the dist branch too.
       - 'docs/**'
       - 'package.json'
+      - '.yarn/patches/**'
       - 'webpack.config.js'
       - 'babel.config.js'
       - '.babelrc*'

@@ -60,8 +60,7 @@ async function checkDocs(page) {
   assert.deepEqual(errors, [], 'Rendered docs must not raise uncaught errors');
 }
 
-// Storybook applies the URL before server-inferred Controls are available.
-// Exercise both an explicit Control and a prop absent from the story's args.
+// Exercise explicit Controls and props whose types come from server docgen.
 async function checkBookmarkedArgs(page) {
   const bookmark = new URL('./', url);
   const preview = page.frameLocator('#storybook-preview-iframe');
@@ -106,6 +105,11 @@ async function checkBookmarkedArgs(page) {
   await preview
     .locator('[data-content-layout].bookmarked-card')
     .getByRole('heading', { level: 5, name: 'Story from bookmark' })
+    .waitFor(waitForBookmark);
+
+  await open('components-highlightbox--default', 'float:start');
+  await preview
+    .locator('.mg-highlight-box--float-start')
     .waitFor(waitForBookmark);
 
   await open('components-forms-checkbox--default', 'disabled:true');

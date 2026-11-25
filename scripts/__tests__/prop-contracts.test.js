@@ -452,7 +452,7 @@ describe('readBuiltContracts', () => {
 
   test('explains a missing build', () => {
     expect(() => readBuiltContracts(path.join(dir, 'nope'))).toThrow(
-      /MANGROVE_DOCGEN_SERVER=true yarn exec storybook build/
+      /yarn exec storybook build/
     );
   });
 });

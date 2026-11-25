@@ -3905,6 +3905,33 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@storybook/react@patch:@storybook/react@npm%3A11.0.0-rc.0#~/.yarn/patches/@storybook-react-npm-11.0.0-rc.0-68163a19c7.patch":
+  version: 11.0.0-rc.0
+  resolution: "@storybook/react@patch:@storybook/react@npm%3A11.0.0-rc.0#~/.yarn/patches/@storybook-react-npm-11.0.0-rc.0-68163a19c7.patch::version=11.0.0-rc.0&hash=6f69c2"
+  dependencies:
+    "@storybook/global": "npm:^5.0.0"
+  peerDependencies:
+    "@types/react": ^18.0.0 || ^19.0.0
+    "@types/react-dom": ^18.0.0 || ^19.0.0
+    react: ^18.0.0 || ^19.0.0
+    react-docgen: ^8.0.2
+    react-docgen-typescript: ^2.2.2
+    react-dom: ^18.0.0 || ^19.0.0
+    storybook: ^11.0.0-rc.0
+    typescript: ^5.9.0 || ^6.0.0 || ^7.0.0
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    "@types/react-dom":
+      optional: true
+    react-docgen:
+      optional: true
+    react-docgen-typescript:
+      optional: true
+  checksum: 10/91996b1a58495eb49f11aba26baee591e8dee1ba18f1658dd7e238da40a6edf6e2919f69678fc9c7f9418e9fd61bb9f80ff10f563837046bd053bf0c4a5e54e6
+  languageName: node
+  linkType: hard
+
 "@testing-library/dom@npm:^10.4.2":
   version: 10.4.2
   resolution: "@testing-library/dom@npm:10.4.2"
@@ -13306,6 +13333,29 @@ __metadata:
   bin:
     storybook: ./dist/bin/dispatcher.js
   checksum: 10/5e821d0fbfb5c64a41108c85a75d882beb188c9bf03852904b87b9d40e772c3297a9b7fdf4fe760a859133dc92b5d2bc2c5f6da6544c2c4f388289072600fe75
+  languageName: node
+  linkType: hard
+
+"storybook@patch:storybook@npm%3A11.0.0-rc.0#~/.yarn/patches/storybook-npm-11.0.0-rc.0-918ed7ea16.patch":
+  version: 11.0.0-rc.0
+  resolution: "storybook@patch:storybook@npm%3A11.0.0-rc.0#~/.yarn/patches/storybook-npm-11.0.0-rc.0-918ed7ea16.patch::version=11.0.0-rc.0&hash=2d78d4"
+  dependencies:
+    "@storybook/global": "npm:^5.0.0"
+    "@storybook/icons": "npm:^2.0.2"
+    esbuild: "npm:^0.18.0 || ^0.19.0 || ^0.20.0 || ^0.21.0 || ^0.22.0 || ^0.23.0 || ^0.24.0 || ^0.25.0 || ^0.26.0 || ^0.27.0 || ^0.28.0"
+    oxc-parser: "npm:^0.155.0"
+    oxc-resolver: "npm:11.21.2"
+  peerDependencies:
+    "@types/react": ^18.0.0 || ^19.0.0
+    prettier: ^2 || ^3
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    prettier:
+      optional: true
+  bin:
+    storybook: ./dist/bin/dispatcher.js
+  checksum: 10/85f30cd3769cf8ef1119f73cfe30ba252db99af62ece603da0cad5362c3263f11ed3c966925ae523bdc79ac5612c1915364111fcba7a5bdde649f520edb9cdcb
   languageName: node
   linkType: hard
 

@@ -1,0 +1,253 @@
+diff --git a/dist/_browser-chunks/chunk-XUZXJQXD.js b/dist/_browser-chunks/chunk-XUZXJQXD.js
+index 10b920d58dbdf2dc21eb25a56d2c45243c364aa3..f8413de614a31a03db8b6100e4371483be192982 100644
+--- a/dist/_browser-chunks/chunk-XUZXJQXD.js
++++ b/dist/_browser-chunks/chunk-XUZXJQXD.js
+@@ -433,7 +433,28 @@ var argTypesForValidation = (story) => global2.FEATURES?.docgenServer ? inferArg
+   id: story.id,
+   argTypes: story.argTypes,
+   initialArgs: story.initialArgs
+-}) : story.argTypes, ArgsStore = class {
++}) : story.argTypes;
++function hasStructuredType(type) {
++  return type.name === "object" ? !!type.value : type.name !== "array" || !type.value || type.value.name === "other" ? !1 : type.value.name !== "array" || hasStructuredType(type.value);
++}
++function persistedArgTypes(story, persisted, docgen) {
++  let types = argTypesForValidation(story);
++  if (!docgen) return types;
++  let result = { ...types };
++  for (let name of Object.keys(persisted)) {
++    let explicit = Object.hasOwn(story.argTypes, name) ? story.argTypes[name] : void 0, fallback = Object.hasOwn(types, name) ? types[name] : void 0, display = Object.hasOwn(docgen.argTypes ?? {}, name) ? docgen.argTypes?.[name] : void 0, type = (Object.hasOwn(docgen.bookmarkTypes ?? {}, name) ? docgen.bookmarkTypes?.[name] : void 0) ?? display?.type;
++    if (!type) continue;
++    let optionType = explicit?.type ?? type, options = story.parameters.__isArgsStory && optionType.name === "enum" ? optionType.value : void 0;
++    if (!fallback) {
++      result[name] = { type, options };
++      continue;
++    }
++    let resolvedType = !explicit?.type && hasStructuredType(type) ? type : fallback.type ?? (type.name === "array" || type.name === "object" ? void 0 : type);
++    result[name] = { ...fallback, type: resolvedType, options: fallback.options ?? options };
++  }
++  return result;
++}
++var ArgsStore = class {
+   constructor() {
+     this.initialArgsByStoryId = {};
+     this.argsByStoryId = {};
+@@ -451,13 +472,13 @@ var argTypesForValidation = (story) => global2.FEATURES?.docgenServer ? inferArg
+       this.initialArgsByStoryId[story.id] = story.initialArgs, this.argsByStoryId[story.id] = story.initialArgs, delta !== DEEPLY_EQUAL && this.updateFromDelta(story, delta);
+     }
+   }
+-  updateFromDelta(story, delta) {
+-    let validatedDelta = validateOptions(delta, argTypesForValidation(story));
++  updateFromDelta(story, delta, argTypes = argTypesForValidation(story)) {
++    let validatedDelta = validateOptions(delta, argTypes);
+     this.argsByStoryId[story.id] = combineArgs(this.argsByStoryId[story.id], validatedDelta);
+   }
+-  updateFromPersisted(story, persisted) {
+-    let mappedPersisted = mapArgsToTypes(persisted, argTypesForValidation(story));
+-    return this.updateFromDelta(story, mappedPersisted);
++  updateFromPersisted(story, persisted, docgen) {
++    let argTypes = persistedArgTypes(story, persisted, docgen), mappedPersisted = mapArgsToTypes(persisted, argTypes);
++    return this.updateFromDelta(story, mappedPersisted, argTypes);
+   }
+   update(storyId, argsUpdate) {
+     if (!(storyId in this.argsByStoryId))
+@@ -2022,6 +2043,14 @@ import {
+   NoStoryMatchError
+ } from "storybook/internal/preview-errors";
+ 
++// src/shared/open-service/preview.ts
++var getService2 = getService;
++function registerService2(definition, registration) {
++  return registerService(definition, registration, {
++    staticLoader: createBrowserStaticLoader()
++  });
++}
++
+ // src/shared/utils/story-index-filters.ts
+ function isMdxEntry({ tags }) {
+   return tags?.includes(Tag.UNATTACHED_MDX) || tags?.includes(Tag.ATTACHED_MDX);
+@@ -2895,7 +2924,9 @@ var PreviewWithSelection = class extends Preview {
+     let { selection } = this.selectionStore;
+     if (!selection)
+       throw new Error("Cannot call renderSelection as no selection was made");
+-    let { storyId } = selection, entry;
++    let { storyId, viewMode } = selection;
++    (viewMode !== "story" || this.pendingBookmark?.storyId !== storyId) && (this.pendingBookmark = void 0), persistedArgs && viewMode === "story" && (this.pendingBookmark = { storyId, args: persistedArgs });
++    let bookmark = this.pendingBookmark, entry;
+     try {
+       entry = await this.storyStoreValue.storyIdToEntry(storyId);
+     } catch (err) {
+@@ -2935,7 +2966,25 @@ var PreviewWithSelection = class extends Preview {
+       return;
+     }
+     let implementationChanged = !storyIdChanged && lastRender && !render.isEqual(lastRender);
+-    if (persistedArgs && isStoryRender(render) && (invariant(!!render.story), this.storyStoreValue.args.updateFromPersisted(render.story, persistedArgs)), lastRender && !lastRender.torndown && !storyIdChanged && !implementationChanged && !viewModeChanged) {
++    if (bookmark && isStoryRender(render)) {
++      invariant(!!render.story);
++      let { args } = bookmark, docgen;
++      if (globalThis.FEATURES?.docgenServer && Object.keys(args).some((name) => {
++        let explicit = render.story?.argTypes[name];
++        return explicit?.type === void 0 || explicit.options === void 0;
++      }))
++        try {
++          docgen = await getService2("core/docgen", { internal: !0 }).queries.docgen.loaded({ id: render.story.componentId });
++        } catch (error) {
++          logger5.debug("Could not load component types for bookmarked args", error);
++        }
++      if (render.torndown || this.currentRender !== render || this.pendingBookmark !== bookmark) {
++        render.torndown || await this.teardownRender(render);
++        return;
++      }
++      this.pendingBookmark = void 0, this.storyStoreValue.args.updateFromPersisted(render.story, args, docgen);
++    }
++    if (lastRender && !lastRender.torndown && !storyIdChanged && !implementationChanged && !viewModeChanged) {
+       this.currentRender = lastRender, this.channel.emit(STORY_UNCHANGED, storyId), this.view.showMain();
+       return;
+     }
+@@ -3325,14 +3374,6 @@ async function emitTransformCode(source, context, warning) {
+   });
+ }
+ 
+-// src/shared/open-service/preview.ts
+-var getService2 = getService;
+-function registerService2(definition, registration) {
+-  return registerService(definition, registration, {
+-    staticLoader: createBrowserStaticLoader()
+-  });
+-}
+-
+ export {
+   addons,
+   HooksContext,
+@@ -3372,6 +3413,8 @@ export {
+   userOrAutoTitle,
+   sortStoriesV7,
+   Preview,
++  getService2 as getService,
++  registerService2 as registerService,
+   DocsContext,
+   PreviewWithSelection,
+   UrlStore,
+@@ -3379,7 +3422,5 @@ export {
+   PreviewWeb,
+   simulateDOMContentLoaded,
+   simulatePageLoad,
+-  emitTransformCode,
+-  getService2 as getService,
+-  registerService2 as registerService
++  emitTransformCode
+ };
+diff --git a/dist/preview/_chunks/runtime-DgXHNAal.js b/dist/preview/_chunks/runtime-DgXHNAal.js
+index 409cf303364eff2bdab9b0a580d737016d1fc73a..dcf8ebb3663e6194116cfab5a85dd651eea567ab 100644
+--- a/dist/preview/_chunks/runtime-DgXHNAal.js
++++ b/dist/preview/_chunks/runtime-DgXHNAal.js
+@@ -1232,6 +1232,39 @@ function deleteUndefined(obj) {
+ 	Object.keys(obj).forEach((key) => obj[key] === void 0 && delete obj[key]);
+ 	return obj;
+ }
++function hasStructuredType(type) {
++	if (type.name === "object") return !!type.value;
++	if (type.name !== "array" || !type.value || type.value.name === "other") return false;
++	return type.value.name !== "array" || hasStructuredType(type.value);
++}
++function persistedArgTypes(story, persisted, docgen) {
++	const types = argTypesForValidation(story);
++	if (!docgen) return types;
++	const result = { ...types };
++	for (const name of Object.keys(persisted)) {
++		const explicit = Object.hasOwn(story.argTypes, name) ? story.argTypes[name] : void 0;
++		const fallback = Object.hasOwn(types, name) ? types[name] : void 0;
++		const display = Object.hasOwn(docgen.argTypes ?? {}, name) ? docgen.argTypes?.[name] : void 0;
++		const type = (Object.hasOwn(docgen.bookmarkTypes ?? {}, name) ? docgen.bookmarkTypes?.[name] : void 0) ?? display?.type;
++		if (!type) continue;
++		const optionType = explicit?.type ?? type;
++		const options = story.parameters.__isArgsStory && optionType.name === "enum" ? optionType.value : void 0;
++		if (!fallback) {
++			result[name] = {
++				type,
++				options
++			};
++			continue;
++		}
++		const resolvedType = !explicit?.type && hasStructuredType(type) ? type : fallback.type ?? (type.name === "array" || type.name === "object" ? void 0 : type);
++		result[name] = {
++			...fallback,
++			type: resolvedType,
++			options: fallback.options ?? options
++		};
++	}
++	return result;
++}
+ var argTypesForValidation, ArgsStore;
+ var init_ArgsStore = __esmMin((() => {
+ 	init_dist();
+@@ -1262,13 +1295,14 @@ var init_ArgsStore = __esmMin((() => {
+ 				if (delta !== DEEPLY_EQUAL) this.updateFromDelta(story, delta);
+ 			}
+ 		}
+-		updateFromDelta(story, delta) {
+-			const validatedDelta = validateOptions(delta, argTypesForValidation(story));
++		updateFromDelta(story, delta, argTypes = argTypesForValidation(story)) {
++			const validatedDelta = validateOptions(delta, argTypes);
+ 			this.argsByStoryId[story.id] = combineArgs(this.argsByStoryId[story.id], validatedDelta);
+ 		}
+-		updateFromPersisted(story, persisted) {
+-			const mappedPersisted = mapArgsToTypes(persisted, argTypesForValidation(story));
+-			return this.updateFromDelta(story, mappedPersisted);
++		updateFromPersisted(story, persisted, docgen) {
++			const argTypes = persistedArgTypes(story, persisted, docgen);
++			const mappedPersisted = mapArgsToTypes(persisted, argTypes);
++			return this.updateFromDelta(story, mappedPersisted, argTypes);
+ 		}
+ 		update(storyId, argsUpdate) {
+ 			if (!(storyId in this.argsByStoryId)) throw new Error(`No args known for ${storyId} -- has it been rendered yet?`);
+@@ -4001,6 +4035,7 @@ var init_PreviewWithSelection = __esmMin((() => {
+ 	init_preview_errors();
+ 	init_tiny_invariant();
+ 	init_tags();
++	init_preview();
+ 	init_story_index_filters();
+ 	init_Preview();
+ 	init_embedMode();
+@@ -4165,7 +4200,13 @@ var init_PreviewWithSelection = __esmMin((() => {
+ 			if (!this.storyStoreValue || !renderToCanvas) throw new CalledPreviewMethodBeforeInitializationError({ methodName: "renderSelection" });
+ 			const { selection } = this.selectionStore;
+ 			if (!selection) throw new Error("Cannot call renderSelection as no selection was made");
+-			const { storyId } = selection;
++			const { storyId, viewMode } = selection;
++			if (viewMode !== "story" || this.pendingBookmark?.storyId !== storyId) this.pendingBookmark = void 0;
++			if (persistedArgs && viewMode === "story") this.pendingBookmark = {
++				storyId,
++				args: persistedArgs
++			};
++			const bookmark = this.pendingBookmark;
+ 			let entry;
+ 			try {
+ 				entry = await this.storyStoreValue.storyIdToEntry(storyId);
+@@ -4195,9 +4236,24 @@ var init_PreviewWithSelection = __esmMin((() => {
+ 				return;
+ 			}
+ 			const implementationChanged = !storyIdChanged && lastRender && !render.isEqual(lastRender);
+-			if (persistedArgs && isStoryRender(render)) {
++			if (bookmark && isStoryRender(render)) {
+ 				invariant(!!render.story);
+-				this.storyStoreValue.args.updateFromPersisted(render.story, persistedArgs);
++				const { args } = bookmark;
++				let docgen;
++				if (globalThis.FEATURES?.docgenServer && Object.keys(args).some((name) => {
++					const explicit = render.story?.argTypes[name];
++					return explicit?.type === void 0 || explicit.options === void 0;
++				})) try {
++					docgen = await getService("core/docgen", { internal: true }).queries.docgen.loaded({ id: render.story.componentId });
++				} catch (error) {
++					logger.debug("Could not load component types for bookmarked args", error);
++				}
++				if (render.torndown || this.currentRender !== render || this.pendingBookmark !== bookmark) {
++					if (!render.torndown) await this.teardownRender(render);
++					return;
++				}
++				this.pendingBookmark = void 0;
++				this.storyStoreValue.args.updateFromPersisted(render.story, args, docgen);
+ 			}
+ 			if (lastRender && !lastRender.torndown && !storyIdChanged && !implementationChanged && !viewModeChanged) {
+ 				this.currentRender = lastRender;

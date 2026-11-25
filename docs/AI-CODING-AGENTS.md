@@ -140,13 +140,12 @@ warnings (unisdr/undrr-mangrove#1511).
 - `yarn check:prop-contracts` compares the two for every component: prop
   names, optionality, a real type wherever PropTypes give one, the same enum
   members wherever PropTypes list `oneOf` values (in any order or quote
-  style), and the same default wherever both sides state one. The normal
-  build runs with the docgen server off, so build with it on first, as CI
-  does:
+  style), and the same default wherever both sides state one. Run it after
+  the production build, as CI does:
 
   ```bash
-  MANGROVE_DOCGEN_SERVER=true yarn exec storybook build -o .cache/docgen-server-build
-  yarn check:prop-contracts --build-dir=.cache/docgen-server-build
+  yarn build
+  yarn check:prop-contracts
   ```
 
   A build directory without docgen server output fails the check. Components

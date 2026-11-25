@@ -16,7 +16,8 @@ yarn-error.log
 .vscode/
 .yarn/cache/
 coverage/
-/.yarn
+/.yarn/*
+!/.yarn/patches/
 .cache
 CLAUDE.md
 CONTRIBUTING_ISSUES.md

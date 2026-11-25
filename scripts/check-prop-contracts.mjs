@@ -12,11 +12,10 @@
  * scripts/prop-contracts-migrated.json fail the check, so a migrated batch
  * cannot regress while the rest are pending (unisdr/undrr-mangrove#1511).
  *
- * The normal build runs with the docgen server off, so it writes no
- * `services/core/docgen`. Build with it on first:
+ * The normal build writes the server metadata in `services/core/docgen`.
  *
- *   MANGROVE_DOCGEN_SERVER=true yarn exec storybook build -o .cache/docgen-server-build
- *   yarn check:prop-contracts --build-dir=.cache/docgen-server-build
+ *   yarn build
+ *   yarn check:prop-contracts
  *
  * A build directory without docgen server output fails the check, so it
  * never passes by comparing nothing.
@@ -48,7 +47,7 @@ try {
 if (!contracts.length) {
   console.error(
     `No components in ${path.join(buildDir, 'services', 'core', 'docgen')}. ` +
-      'Was Storybook built with MANGROVE_DOCGEN_SERVER=true?'
+      'Build Storybook with server docgen enabled.'
   );
   process.exit(1);
 }

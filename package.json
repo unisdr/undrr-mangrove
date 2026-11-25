@@ -29,7 +29,7 @@
     "generate-ai-manifest": "node scripts/ai-manifest/generate-ai-manifest.js",
     "validate-manifest": "node scripts/ai-manifest/generate-ai-manifest.js --validate",
     "check:catalogue-baseline": "node scripts/ai-manifest/catalogue-baseline.mjs",
-    "//check:prop-contracts": "Compares Storybook's docgen-server props with each component's PropTypes: names, optionality, types, enum members and defaults. Reports every component; fails only for those in scripts/prop-contracts-migrated.json. Needs a build with the docgen server on: MANGROVE_DOCGEN_SERVER=true yarn exec storybook build -o .cache/docgen-server-build, then yarn check:prop-contracts --build-dir=.cache/docgen-server-build. See unisdr/undrr-mangrove#1511.",
+    "//check:prop-contracts": "Compares Storybook's docgen-server props with each component's PropTypes: names, optionality, types, enum members and defaults. Run after yarn build. Reports every component and fails for disagreements in scripts/prop-contracts-migrated.json. See unisdr/undrr-mangrove#1511.",
     "check:prop-contracts": "node scripts/check-prop-contracts.mjs",
     "jsdoc:draft": "node scripts/jsdoc-from-proptypes.mjs",
     "check:dependencies": "yarn dedupe react react-dom --check && node scripts/check-dependency-versions.mjs",
@@ -215,7 +215,9 @@
     "minimatch@^9.0.4": "^11.0.0",
     "minimatch@^10.2.2": "^11.0.0",
     "minimatch@^10.2.4": "^11.0.0",
-    "minimatch@^10.2.6": "^11.0.0"
+    "minimatch@^10.2.6": "^11.0.0",
+    "storybook@npm:11.0.0-rc.0": "patch:storybook@npm%3A11.0.0-rc.0#~/.yarn/patches/storybook-npm-11.0.0-rc.0-918ed7ea16.patch",
+    "@storybook/react@npm:11.0.0-rc.0": "patch:@storybook/react@npm%3A11.0.0-rc.0#~/.yarn/patches/@storybook-react-npm-11.0.0-rc.0-68163a19c7.patch"
   },
   "repository": {
     "type": "git",
