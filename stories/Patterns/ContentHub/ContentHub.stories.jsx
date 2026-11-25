@@ -11,8 +11,8 @@ export default {
   args: { showOnThisPage: true, withHero: false, routeCards: 'icon' },
   argTypes: {
     routeCards: { control: 'inline-radio', options: ['vertical', 'icon'] },
-    heroSource: { control: 'inline-radio', options: ['header', 'page'] },
-    pageHeroMedia: { control: 'inline-radio', options: ['image', 'video'] },
+    heroSource: { control: 'inline-radio' },
+    pageHeroMedia: { control: 'inline-radio' },
     headerSurface: {
       control: 'inline-radio',
       options: ['primary', 'secondary', 'tertiary', 'detached'],

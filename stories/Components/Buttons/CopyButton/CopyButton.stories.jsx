@@ -9,7 +9,6 @@ const meta = {
   argTypes: {
     textToCopy: { control: 'text' },
     variant: {
-      options: ['outline', 'primary', 'secondary'],
       control: { type: 'inline-radio' },
     },
   },

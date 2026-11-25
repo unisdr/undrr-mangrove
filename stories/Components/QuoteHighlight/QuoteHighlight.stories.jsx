@@ -20,7 +20,6 @@ export default {
     },
     alignment: {
       control: { type: 'radio' },
-      options: ['full', 'left', 'right'],
     },
   },
   decorators: [
