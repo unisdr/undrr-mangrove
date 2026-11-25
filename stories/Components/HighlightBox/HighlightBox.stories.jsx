@@ -4,6 +4,12 @@ import { HighlightBox } from './HighlightBox';
 export default {
   title: 'Components/HighlightBox',
   component: HighlightBox,
+  argTypes: {
+    float: {
+      options: [null, 'start', 'end'],
+      control: { type: 'radio', labels: { null: 'None' } },
+    },
+  },
   parameters: {
     layout: 'padded',
   },
