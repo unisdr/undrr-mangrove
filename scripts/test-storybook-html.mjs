@@ -75,8 +75,14 @@ async function checkBookmarkedArgs(page) {
     'components-pageheader--default',
     'languages[0].value:it;languages[0].label:ViaURL'
   );
+  // Wait for the bookmarked values in the preview. The first render can
+  // briefly show the story defaults before the manager applies the URL.
+  const waitForBookmark = { state: 'attached', timeout: 15_000 };
   const languages = preview.locator('.mg-page-header__select');
-  await languages.waitFor({ state: 'attached' });
+  await languages
+    .locator('option')
+    .filter({ hasText: 'ViaURL' })
+    .waitFor(waitForBookmark);
   assert.deepEqual(
     (await languages.locator('option').allTextContents()).map(label =>
       label.trim()
@@ -89,24 +95,14 @@ async function checkBookmarkedArgs(page) {
     'components-notice-notice--info-notice',
     'headingLevel:h5;isCompact:true'
   );
-  const heading = preview.locator('.mg-notice__title');
-  assert.equal(await heading.evaluate(element => element.tagName), 'H5');
-  assert.equal(
-    await preview
-      .locator('.mg-notice')
-      .evaluate(element => element.classList.contains('mg-notice--compact')),
-    true,
-    'Notice should render the compact variant from the bookmarked args'
-  );
+  await preview
+    .locator('.mg-notice.mg-notice--compact h5.mg-notice__title')
+    .waitFor(waitForBookmark);
 
   await open('patterns-content-card--news', 'className:bookmarked-card');
-  assert.equal(
-    await preview
-      .locator('[data-content-layout]')
-      .evaluate(element => element.classList.contains('bookmarked-card')),
-    true,
-    'ContentCard should apply a documented className supplied only in the URL'
-  );
+  await preview
+    .locator('[data-content-layout].bookmarked-card')
+    .waitFor(waitForBookmark);
 }
 
 try {
