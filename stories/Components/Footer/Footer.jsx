@@ -23,6 +23,17 @@ const defaultSyndicationConfig = {
 
 const EMPTY_SYNDICATION_CONFIG = {};
 
+/**
+ * Site footer with optional PreventionWeb syndication.
+ *
+ * @param {object} props
+ * @param {string} [props.variant='default'] Visual variant.
+ * @param {boolean} [props.enableSyndication=true] Load the PreventionWeb widget for global UNDRR footer content.
+ * @param {{contenttype?: string, pageid?: string, includemetatags?: boolean, includecss?: boolean, suffixID?: string, activedomain?: string}} [props.syndicationConfig] Overrides for the syndication widget defaults.
+ * @param {React.ReactNode} [props.complementaryContent=null] Site-specific content above the syndicated footer. Takes precedence over children when rendered.
+ * @param {React.ReactNode} [props.children] Site-specific content above the syndicated footer.
+ * @param {string} [props.className] Additional CSS classes.
+ */
 export function Footer({
   variant = 'default',
   enableSyndication = true,

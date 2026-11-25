@@ -25,6 +25,27 @@ const isSafeUrl = url => {
 };
 const HEADING_LEVELS = ['h2', 'h3', 'h4', 'h5', 'h6'];
 
+/**
+ * Service status with an optional retry action and countdown.
+ *
+ * @param {object} props
+ * @param {React.ReactNode} [props.title] Notice heading.
+ * @param {React.ReactNode} [props.description] Explanation. Strings render as plain text.
+ * @param {'degraded'|'offline'} [props.status='degraded'] Service state.
+ * @param {'h2'|'h3'|'h4'|'h5'|'h6'} [props.headingLevel='h3'] Heading level in the containing page.
+ * @param {boolean} [props.isCompact=false] Use compact padding and typography.
+ * @param {boolean} [props.isOverlay=false] Centre the notice over its container.
+ * @param {(event?: React.MouseEvent<HTMLElement>) => void} [props.onRetry] Called for manual and automatic retries.
+ * @param {string} [props.retryLabel] Override the retry button text.
+ * @param {string} [props.statusUrl] External status page URL using HTTP or HTTPS.
+ * @param {string} [props.statusUrlLabel] Override the status link text.
+ * @param {number|null} [props.countdownSeconds=null] Seconds to the first automatic retry. The delay doubles after each attempt. Requires onRetry.
+ * @param {number} [props.maxAutoRetries=3] Automatic retry limit before the visitor can only retry manually.
+ * @param {string} [props.lang] UI language tag. Unsupported languages fall back to English.
+ * @param {'ltr'|'rtl'|'auto'} [props.dir] Explicit text direction. Otherwise the language determines it.
+ * @param {{retryLabel?: string, statusUrlLabel?: string, opensInNewTab?: string, statusDegraded?: string, statusOffline?: string, countdownPrefix?: string, countdownAnnouncement?: string, autoRetryStopped?: string}} [props.labels] UI label overrides. Keep the `{seconds}` placeholder in countdownAnnouncement.
+ * @param {string} [props.className] Additional CSS classes.
+ */
 export const ServiceNotice = ({
   title,
   description,

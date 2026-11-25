@@ -207,6 +207,22 @@ TreeItem.propTypes = {
   toggleIcon: PropTypes.string,
 };
 
+/**
+ * Keyboard-navigable tree.
+ *
+ * @param {object} props
+ * @param {React.ReactNode} props.children Tree items.
+ * @param {boolean} [props.guides=true] Show nesting guides.
+ * @param {string[]} [props.expandedIds] Controlled set of expanded item IDs.
+ * @param {string[]} [props.defaultExpandedIds] Initial expanded item IDs. Defaults to an empty list.
+ * @param {string|null} [props.selectedId] Controlled selected item ID. Use null for no selection.
+ * @param {string|null} [props.defaultSelectedId=null] Initial selected item ID.
+ * @param {(id: string, expanded: boolean) => void} [props.onToggle] Called when an item is expanded or collapsed.
+ * @param {(id: string) => void} [props.onSelect] Called when an item is selected.
+ * @param {string} [props.toggleIcon] Expand toggle icon class. Use an icon pointing towards the inline end.
+ * @param {string} [props.className] Additional CSS classes.
+ * @param {React.FocusEventHandler<HTMLUListElement>} [props.onBlur] Receives the tree's bubbling blur events.
+ */
 export const Tree = ({
   children,
   guides = true,
@@ -511,6 +527,8 @@ Tree.propTypes = {
    */
   toggleIcon: PropTypes.string,
   className: PropTypes.string,
+  /** Receives the tree's bubbling blur events. */
+  onBlur: PropTypes.func,
 };
 
 export default Tree;
