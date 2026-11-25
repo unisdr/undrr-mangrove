@@ -99,9 +99,18 @@ async function checkBookmarkedArgs(page) {
     .locator('.mg-notice.mg-notice--compact h5.mg-notice__title')
     .waitFor(waitForBookmark);
 
-  await open('patterns-content-card--news', 'className:bookmarked-card');
+  await open(
+    'patterns-content-card--news',
+    'className:bookmarked-card;headingLevel:5;content.title:Story from bookmark'
+  );
   await preview
     .locator('[data-content-layout].bookmarked-card')
+    .getByRole('heading', { level: 5, name: 'Story from bookmark' })
+    .waitFor(waitForBookmark);
+
+  await open('components-forms-checkbox--default', 'disabled:true');
+  await preview
+    .locator('input[type="checkbox"]:disabled')
     .waitFor(waitForBookmark);
 }
 
