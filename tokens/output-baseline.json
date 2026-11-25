@@ -2,7 +2,7 @@
   "$comment": "GENERATED FILE - DO NOT EDIT BY HAND. SHA-256 of every file scripts/build-tokens.cjs emits. The generated partials are not committed, so this is the only committed record of what the generator produces. Regenerate with `node scripts/build-tokens.cjs --baseline` in the same commit as the tokens/*.tokens.json change that moved it. MERGE CONFLICTS: never resolve one by hand or by picking a side on merit - these values are a function of the generator and the token sources, not of either branch's intent, so a hand-merged digest is simply wrong. Take either side to clear the conflict, then re-run --baseline and commit what it writes. A branch that changes what the generator emits (for example by adding a mixin) will legitimately have its own baseline, and taking the other side without re-running leaves a digest that no longer describes anything.",
   "algorithm": "sha256",
   "files": {
-    "stories/assets/scss/generated/_tokens-delta-2027.scss": "02bbce0682be4560736756e10e1e076f6d1fac3e491e35ae296a6d9c176a9fd0",
+    "stories/assets/scss/generated/_tokens-delta-2027.scss": "6a700c929fad30b5af517c0eafbaed470bc3775feabad0d5c7b370ee9b35d175",
     "stories/assets/scss/generated/_tokens-delta.scss": "7d9d3adbe4ca4823d12bab103eb197bba1df8858ae3865cb7d60494b0d3c872a",
     "stories/assets/scss/generated/_tokens-irp.scss": "ece269791d3fffddaf6be41d2a00a2c6aa3bff81708499ebab2ccc9f8bef7020",
     "stories/assets/scss/generated/_tokens-mcr.scss": "b251fcff4127eb58aa0b279276e988fb44471d7d42b7daf9bba00f1bd88e44c6",

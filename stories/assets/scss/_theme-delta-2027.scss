@@ -14,8 +14,8 @@
   @include mg-tokens-delta-2027;
   @include mg-delta-2027-components;
   @include mg-theme-font-routing(
-    var(--mg-delta-2027-typography-font-sans),
-    var(--mg-delta-2027-typography-font-sans),
-    var(--mg-delta-2027-typography-font-sans)
+    var(--mg-typography-font-sans),
+    var(--mg-typography-font-sans),
+    var(--mg-typography-font-sans)
   );
 }

@@ -267,5 +267,40 @@
       }
     }
   },
-  "$description": "DTCG 2025.10 token data. Mangrove output conventions are namespaced extensions. CSS-only group output recipes are not portable design tokens."
+  "$description": "DTCG 2025.10 token data. Mangrove output conventions are namespaced extensions. CSS-only group output recipes are not portable design tokens.",
+  "primitive": {
+    "$extensions": {
+      "org.undrr.mangrove": {
+        "private": true
+      }
+    },
+    "brand": {
+      "$type": "color",
+      "primary": {
+        "100": {
+          "$value": "{color.blue-50}"
+        },
+        "200": {
+          "$value": "{color.blue-200}"
+        },
+        "600": {
+          "$value": "{color.blue-900}"
+        },
+        "700": {
+          "$value": "{color.blue-700}"
+        },
+        "800": {
+          "$value": "{color.blue-800}"
+        }
+      },
+      "secondary": {
+        "600": {
+          "$value": "{color.orange-900}"
+        },
+        "700": {
+          "$value": "{color.orange-800}"
+        }
+      }
+    }
+  }
 }

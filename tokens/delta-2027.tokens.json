@@ -208,7 +208,7 @@
             "border": "{semantic.border.subtle} bottom",
             "font": "14px / 400",
             "left": "DELTA wordmark + instance selector",
-            "right": "Data \u00b7 Analysis \u00b7 About \u00b7 Settings + avatar",
+            "right": "Data · Analysis · About · Settings + avatar",
             "trigger": {
               "height": "32px",
               "padding": "0 12px",
@@ -494,267 +494,183 @@
       }
     }
   },
-  "$description": "Delta 2027 light theme. Normalized from the Delta v0.7.2 handoff. All 111 typed values retain their source paths below delta-2027; the prose accessibility-standard entry and component specifications remain handoff metadata. Mangrove adapter aliases follow separately. Existing Delta is unchanged.",
-  "delta-2027": {
-    "primitive": {
-      "neutral": {
-        "100": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.9686274509803922, 0.9725490196078431, 0.9803921568627451
-            ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        },
-        "200": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.9333333333333333, 0.9411764705882353, 0.9607843137254902
-            ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        },
-        "300": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.8666666666666667, 0.8823529411764706, 0.9254901960784314
-            ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        },
-        "400": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.7686274509803922, 0.792156862745098, 0.8509803921568627
-            ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        },
-        "500": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.6078431372549019, 0.6392156862745098, 0.7215686274509804
-            ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        },
-        "600": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.4196078431372549, 0.4549019607843137, 0.5647058823529412
-            ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        },
-        "700": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.2823529411764706, 0.3215686274509804, 0.4392156862745098
-            ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        },
-        "800": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.18823529411764706, 0.22745098039215686, 0.32941176470588235
-            ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        },
-        "900": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.11764705882352941, 0.15294117647058825, 0.23137254901960785
-            ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        },
-        "1000": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.06666666666666667, 0.09411764705882353, 0.1607843137254902
-            ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        },
-        "1100": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.03137254901960784, 0.047058823529411764, 0.09019607843137255
-            ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
+  "$description": "Delta 2027 light theme aligned to the shared Mangrove/Delta DTCG 2025.10 semantic contract. Overrides the same primitive, semantic, typography, spacing, radius, shadow, motion, layout and accessibility tokens as the default UNDRR/Mangrove spec.",
+  "primitive": {
+    "$extensions": {
+      "org.undrr.mangrove": {
+        "private": true
+      }
+    },
+    "neutral": {
+      "100": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.9686274509803922, 0.9725490196078431, 0.9803921568627451
+          ]
         }
       },
-      "warm": {
-        "$description": "Anchors #FAF9F5 (page) and #141413 (text). The other values are derived by eye. Warm page confirmed on the example screen, 2026-11-09.",
-        "50": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.9803921568627451, 0.9764705882352941, 0.9607843137254902
-            ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        },
-        "100": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.9411764705882353, 0.9333333333333333, 0.9019607843137255
-            ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        },
-        "200": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.9254901960784314, 0.9176470588235294, 0.8862745098039215
-            ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        },
-        "300": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.8784313725490196, 0.8666666666666667, 0.8235294117647058
-            ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        },
-        "400": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.8117647058823529, 0.796078431372549, 0.7450980392156863
-            ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        },
-        "700": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.3686274509803922, 0.36470588235294116, 0.34901960784313724
-            ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        },
-        "1000": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.0784313725490196, 0.0784313725490196, 0.07450980392156863
-            ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
+      "200": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.9333333333333333, 0.9411764705882353, 0.9607843137254902
+          ]
         }
       },
-      "accent": {
+      "300": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.8666666666666667, 0.8823529411764706, 0.9254901960784314
+          ]
+        }
+      },
+      "400": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.7686274509803922, 0.792156862745098, 0.8509803921568627
+          ]
+        }
+      },
+      "500": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.6078431372549019, 0.6392156862745098, 0.7215686274509804
+          ]
+        }
+      },
+      "600": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.4196078431372549, 0.4549019607843137, 0.5647058823529412
+          ]
+        }
+      },
+      "700": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.2823529411764706, 0.3215686274509804, 0.4392156862745098
+          ]
+        }
+      },
+      "800": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.18823529411764706, 0.22745098039215686, 0.32941176470588235
+          ]
+        }
+      },
+      "900": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.11764705882352941, 0.15294117647058825, 0.23137254901960785
+          ]
+        }
+      },
+      "1000": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.06666666666666667, 0.09411764705882353, 0.1607843137254902
+          ]
+        }
+      },
+      "1100": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.03137254901960784, 0.047058823529411764, 0.09019607843137255
+          ]
+        }
+      }
+    },
+    "surface": {
+      "50": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.9803921568627451, 0.9764705882352941, 0.9607843137254902
+          ]
+        }
+      },
+      "100": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.9411764705882353, 0.9333333333333333, 0.9019607843137255
+          ]
+        }
+      },
+      "200": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.9254901960784314, 0.9176470588235294, 0.8862745098039215
+          ]
+        }
+      },
+      "300": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.8784313725490196, 0.8666666666666667, 0.8235294117647058
+          ]
+        }
+      },
+      "400": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.8117647058823529, 0.796078431372549, 0.7450980392156863
+          ]
+        }
+      },
+      "700": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.3686274509803922, 0.36470588235294116, 0.34901960784313724
+          ]
+        }
+      },
+      "1000": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.0784313725490196, 0.0784313725490196, 0.07450980392156863
+          ]
+        }
+      },
+      "$description": "Anchors #FAF9F5 (page) and #141413 (text). The other values are derived by eye. Warm page confirmed on the example screen, 2026-11-09."
+    },
+    "brand": {
+      "$type": "color",
+      "primary": {
         "100": {
           "$type": "color",
           "$value": {
@@ -762,11 +678,6 @@
             "components": [
               0.9098039215686274, 0.9450980392156862, 0.9764705882352941
             ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
           }
         },
         "200": {
@@ -776,11 +687,6 @@
             "components": [
               0.7843137254901961, 0.8627450980392157, 0.9411764705882353
             ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
           }
         },
         "300": {
@@ -790,11 +696,6 @@
             "components": [
               0.615686274509804, 0.7529411764705882, 0.8901960784313725
             ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
           }
         },
         "400": {
@@ -804,11 +705,6 @@
             "components": [
               0.41568627450980394, 0.6274509803921569, 0.8196078431372549
             ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
           }
         },
         "500": {
@@ -818,11 +714,6 @@
             "components": [
               0.25882352941176473, 0.5137254901960784, 0.7372549019607844
             ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
           }
         },
         "600": {
@@ -832,11 +723,6 @@
             "components": [
               0.17647058823529413, 0.43529411764705883, 0.6392156862745098
             ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
           }
         },
         "700": {
@@ -846,11 +732,6 @@
             "components": [
               0.1411764705882353, 0.35294117647058826, 0.5215686274509804
             ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
           }
         },
         "800": {
@@ -860,11 +741,6 @@
             "components": [
               0.10196078431372549, 0.26666666666666666, 0.39215686274509803
             ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
           }
         },
         "900": {
@@ -874,11 +750,6 @@
             "components": [
               0.06666666666666667, 0.18823529411764706, 0.2823529411764706
             ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
           }
         },
         "1000": {
@@ -888,11 +759,6 @@
             "components": [
               0.0392156862745098, 0.11764705882352941, 0.1803921568627451
             ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
           }
         },
         "1100": {
@@ -902,280 +768,415 @@
             "components": [
               0.01568627450980392, 0.058823529411764705, 0.09411764705882353
             ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
           }
         }
       },
-      "green": {
-        "100": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.9019607843137255, 0.9568627450980393, 0.9254901960784314
-            ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        },
-        "200": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.7529411764705882, 0.8941176470588236, 0.807843137254902
-            ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        },
-        "500": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.11372549019607843, 0.5607843137254902, 0.33725490196078434
-            ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        },
+      "secondary": {
         "600": {
-          "$type": "color",
           "$value": {
             "colorSpace": "srgb",
-            "components": [
-              0.0784313725490196, 0.4196078431372549, 0.25098039215686274
-            ]
+            "components": [0, 0.4823529411764706, 0.47843137254901963]
           },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
+          "$description": "UNDRR teal secondary brand colour."
         },
         "700": {
-          "$type": "color",
           "$value": {
             "colorSpace": "srgb",
-            "components": [
-              0.054901960784313725, 0.30980392156862746, 0.1843137254901961
-            ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        }
-      },
-      "amber": {
-        "100": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.996078431372549, 0.9529411764705882, 0.8862745098039215
-            ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        },
-        "200": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.9921568627450981, 0.8588235294117647, 0.6509803921568628
-            ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        },
-        "500": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [0.8156862745098039, 0.47058823529411764, 0.0]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        },
-        "600": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [0.6588235294117647, 0.3607843137254902, 0.0]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        },
-        "700": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [0.47843137254901963, 0.2627450980392157, 0.0]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        }
-      },
-      "red": {
-        "100": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.9921568627450981, 0.9254901960784314, 0.9176470588235294
-            ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        },
-        "200": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.9764705882352941, 0.7725490196078432, 0.7568627450980392
-            ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        },
-        "500": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.8784313725490196, 0.2823529411764706, 0.25098039215686274
-            ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        },
-        "600": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.7843137254901961, 0.20784313725490197, 0.16470588235294117
-            ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        },
-        "700": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.611764705882353, 0.1568627450980392, 0.12549019607843137
-            ]
-          },
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
+            "components": [0, 0.4117647058823529, 0.40784313725490196]
           }
         }
       }
     },
-    "semantic": {
-      "background": {
-        "default": {
+    "green": {
+      "100": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.9019607843137255, 0.9568627450980393, 0.9254901960784314
+          ]
+        }
+      },
+      "200": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.7529411764705882, 0.8941176470588236, 0.807843137254902
+          ]
+        }
+      },
+      "500": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.11372549019607843, 0.5607843137254902, 0.33725490196078434
+          ]
+        }
+      },
+      "600": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.0784313725490196, 0.4196078431372549, 0.25098039215686274
+          ]
+        }
+      },
+      "700": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.054901960784313725, 0.30980392156862746, 0.1843137254901961
+          ]
+        }
+      }
+    },
+    "amber": {
+      "100": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.996078431372549, 0.9529411764705882, 0.8862745098039215
+          ]
+        }
+      },
+      "200": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.9921568627450981, 0.8588235294117647, 0.6509803921568628
+          ]
+        }
+      },
+      "500": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.8156862745098039, 0.47058823529411764, 0]
+        }
+      },
+      "600": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.6588235294117647, 0.3607843137254902, 0]
+        }
+      },
+      "700": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.47843137254901963, 0.2627450980392157, 0]
+        }
+      }
+    },
+    "red": {
+      "100": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.9921568627450981, 0.9254901960784314, 0.9176470588235294
+          ]
+        }
+      },
+      "200": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.9764705882352941, 0.7725490196078432, 0.7568627450980392
+          ]
+        }
+      },
+      "500": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.8784313725490196, 0.2823529411764706, 0.25098039215686274
+          ]
+        }
+      },
+      "600": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.7843137254901961, 0.20784313725490197, 0.16470588235294117
+          ]
+        }
+      },
+      "700": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.611764705882353, 0.1568627450980392, 0.12549019607843137
+          ]
+        }
+      }
+    }
+  },
+  "semantic": {
+    "background": {
+      "default": {
+        "$type": "color",
+        "$value": "{primitive.surface.50}",
+        "$description": "#FAF9F5 - page background (warm). White surfaces sit on it",
+        "$extensions": {
+          "org.undrr.mangrove": {
+            "format": "srgb-rgb-function"
+          }
+        }
+      },
+      "surface": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 1, 1]
+        },
+        "$description": "card / panel background",
+        "$extensions": {
+          "org.undrr.mangrove": {
+            "format": "srgb-rgb-function"
+          }
+        }
+      },
+      "inset": {
+        "$type": "color",
+        "$value": "{primitive.surface.100}",
+        "$description": "hover state on rows / list items, current nav item",
+        "$extensions": {
+          "org.undrr.mangrove": {
+            "format": "srgb-rgb-function"
+          }
+        }
+      },
+      "overlay": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.06666666666666667, 0.09411764705882353, 0.1607843137254902
+          ],
+          "alpha": 0.48
+        },
+        "$description": "modal scrim",
+        "$extensions": {
+          "org.undrr.mangrove": {
+            "format": "literal"
+          }
+        }
+      },
+      "toast": {
+        "$type": "color",
+        "$value": "{primitive.neutral.900}",
+        "$description": "Adapter role from the handoff toast and tooltip specifications.",
+        "$extensions": {
+          "org.undrr.mangrove": {
+            "format": "srgb-rgb-function"
+          }
+        }
+      },
+      "disabled": {
+        "$type": "color",
+        "$value": "{primitive.surface.100}",
+        "$description": "Disabled control fill (decoupled from row-hover inset).",
+        "$extensions": {
+          "org.undrr.mangrove": {
+            "format": "srgb-rgb-function"
+          }
+        }
+      }
+    },
+    "border": {
+      "default": {
+        "$type": "color",
+        "$value": "{primitive.surface.300}",
+        "$extensions": {
+          "org.undrr.mangrove": {
+            "format": "srgb-rgb-function"
+          }
+        }
+      },
+      "subtle": {
+        "$type": "color",
+        "$value": "{primitive.surface.200}",
+        "$extensions": {
+          "org.undrr.mangrove": {
+            "format": "srgb-rgb-function"
+          }
+        }
+      },
+      "strong": {
+        "$type": "color",
+        "$value": "{primitive.surface.400}",
+        "$extensions": {
+          "org.undrr.mangrove": {
+            "format": "srgb-rgb-function"
+          }
+        }
+      },
+      "control": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.5607843137254902, 0.5490196078431373, 0.5098039215686274
+          ]
+        },
+        "$description": "Inputs, selects, secondary buttons. 3.36:1 on white, 3.19:1 on page (WCAG 1.4.11). Hover: text.secondary. Cards and dividers keep default/subtle. Agreed 2026-11-09.",
+        "$extensions": {
+          "org.undrr.mangrove": {
+            "format": "srgb-rgb-function"
+          }
+        }
+      }
+    },
+    "text": {
+      "primary": {
+        "$type": "color",
+        "$value": "{primitive.surface.1000}",
+        "$description": "17.50:1 on page, 18.43:1 on white - body text, headings",
+        "$extensions": {
+          "org.undrr.mangrove": {
+            "format": "srgb-rgb-function"
+          }
+        }
+      },
+      "secondary": {
+        "$type": "color",
+        "$value": "{primitive.surface.700}",
+        "$description": "6.26:1 on page, 6.59:1 on white - supporting text, labels",
+        "$extensions": {
+          "org.undrr.mangrove": {
+            "format": "srgb-rgb-function"
+          }
+        }
+      },
+      "inverse": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 1, 1]
+        },
+        "$description": "text on dark surfaces",
+        "$extensions": {
+          "org.undrr.mangrove": {
+            "format": "srgb-rgb-function"
+          }
+        }
+      },
+      "disabled": {
+        "$type": "color",
+        "$value": "{primitive.neutral.500}",
+        "$description": "2.52:1 on white, 2.39:1 on page — disabled / decorative ONLY, never informational text or input placeholders (renamed from v0.7.2 semantic.text.placeholder).",
+        "$extensions": {
+          "org.undrr.mangrove": {
+            "format": "srgb-rgb-function"
+          }
+        }
+      }
+    },
+    "action": {
+      "default": {
+        "$type": "color",
+        "$value": "{primitive.brand.primary.600}",
+        "$description": "5.37:1 on white, 5.09:1 on page - interactive elements, links",
+        "$extensions": {
+          "org.undrr.mangrove": {
+            "format": "srgb-rgb-function"
+          }
+        }
+      },
+      "hover": {
+        "$type": "color",
+        "$value": "{primitive.brand.primary.700}",
+        "$extensions": {
+          "org.undrr.mangrove": {
+            "format": "srgb-rgb-function"
+          }
+        }
+      },
+      "active": {
+        "$type": "color",
+        "$value": "{primitive.brand.primary.800}",
+        "$extensions": {
+          "org.undrr.mangrove": {
+            "format": "srgb-rgb-function"
+          }
+        }
+      },
+      "disabled": {
+        "$type": "color",
+        "$value": "{primitive.neutral.400}",
+        "$extensions": {
+          "org.undrr.mangrove": {
+            "format": "srgb-rgb-function"
+          }
+        }
+      },
+      "selected": {
+        "$type": "color",
+        "$value": "{primitive.brand.primary.100}",
+        "$description": "Adapter role from the handoff table and tree selected-state specifications.",
+        "$extensions": {
+          "org.undrr.mangrove": {
+            "format": "srgb-rgb-function"
+          }
+        }
+      },
+      "secondary": {
+        "$type": "color",
+        "$value": "{primitive.brand.secondary.600}",
+        "$description": "Secondary brand accent (UNDRR teal).",
+        "$extensions": {
+          "org.undrr.mangrove": {
+            "format": "srgb-rgb-function"
+          }
+        }
+      },
+      "secondaryHover": {
+        "$type": "color",
+        "$value": "{primitive.brand.secondary.700}",
+        "$extensions": {
+          "org.undrr.mangrove": {
+            "format": "srgb-rgb-function",
+            "name": "--mg-semantic-action-secondary-hover"
+          }
+        }
+      }
+    },
+    "status": {
+      "positive": {
+        "text": {
           "$type": "color",
-          "$value": "{delta-2027.primitive.warm.50}",
-          "$description": "#FAF9F5 - page background (warm). White surfaces sit on it",
+          "$value": "{primitive.green.600}",
+          "$description": "6.55:1 on white, 6.22:1 on page",
           "$extensions": {
             "org.undrr.mangrove": {
               "format": "srgb-rgb-function"
             }
           }
         },
-        "surface": {
+        "background": {
           "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [1.0, 1.0, 1.0]
-          },
-          "$description": "card / panel background",
+          "$value": "{primitive.green.100}",
           "$extensions": {
             "org.undrr.mangrove": {
               "format": "srgb-rgb-function"
             }
           }
         },
-        "inset": {
+        "border": {
           "$type": "color",
-          "$value": "{delta-2027.primitive.warm.100}",
-          "$description": "hover state on rows / list items, current nav item",
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        },
-        "overlay": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.06666666666666667, 0.09411764705882353, 0.1607843137254902
-            ],
-            "alpha": 0.48
-          },
-          "$description": "modal scrim",
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "literal"
-            }
-          }
-        },
-        "toast": {
-          "$type": "color",
-          "$value": "{delta-2027.primitive.neutral.900}",
-          "$description": "Adapter role from the handoff toast and tooltip specifications.",
+          "$value": "{primitive.green.200}",
           "$extensions": {
             "org.undrr.mangrove": {
               "format": "srgb-rgb-function"
@@ -1183,43 +1184,29 @@
           }
         }
       },
-      "border": {
-        "default": {
+      "warning": {
+        "text": {
           "$type": "color",
-          "$value": "{delta-2027.primitive.warm.300}",
+          "$value": "{primitive.amber.600}",
+          "$description": "5.00:1 on white, 4.75:1 on page",
           "$extensions": {
             "org.undrr.mangrove": {
               "format": "srgb-rgb-function"
             }
           }
         },
-        "subtle": {
+        "background": {
           "$type": "color",
-          "$value": "{delta-2027.primitive.warm.200}",
+          "$value": "{primitive.amber.100}",
           "$extensions": {
             "org.undrr.mangrove": {
               "format": "srgb-rgb-function"
             }
           }
         },
-        "strong": {
+        "border": {
           "$type": "color",
-          "$value": "{delta-2027.primitive.warm.400}",
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        },
-        "control": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.5607843137254902, 0.5490196078431373, 0.5098039215686274
-            ]
-          },
-          "$description": "Inputs, selects, secondary buttons. 3.36:1 on white, 3.19:1 on page (WCAG 1.4.11). Hover: text.secondary. Cards and dividers keep default/subtle. Agreed 2026-11-09.",
+          "$value": "{primitive.amber.200}",
           "$extensions": {
             "org.undrr.mangrove": {
               "format": "srgb-rgb-function"
@@ -1227,56 +1214,29 @@
           }
         }
       },
-      "text": {
-        "primary": {
+      "critical": {
+        "text": {
           "$type": "color",
-          "$value": "{delta-2027.primitive.warm.1000}",
-          "$description": "17.50:1 on page, 18.43:1 on white - body text, headings",
+          "$value": "{primitive.red.600}",
+          "$description": "5.25:1 on white, 4.99:1 on page",
           "$extensions": {
             "org.undrr.mangrove": {
               "format": "srgb-rgb-function"
             }
           }
         },
-        "secondary": {
+        "background": {
           "$type": "color",
-          "$value": "{delta-2027.primitive.warm.700}",
-          "$description": "6.26:1 on page, 6.59:1 on white - supporting text, labels",
+          "$value": "{primitive.red.100}",
           "$extensions": {
             "org.undrr.mangrove": {
               "format": "srgb-rgb-function"
             }
           }
         },
-        "placeholder": {
+        "border": {
           "$type": "color",
-          "$value": "{delta-2027.primitive.neutral.500}",
-          "$description": "2.52:1 on white, 2.39:1 on page - decorative / disabled ONLY, never informational text",
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        },
-        "inverse": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [1.0, 1.0, 1.0]
-          },
-          "$description": "text on dark surfaces",
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        }
-      },
-      "action": {
-        "default": {
-          "$type": "color",
-          "$value": "{delta-2027.primitive.accent.600}",
-          "$description": "5.37:1 on white, 5.09:1 on page - interactive elements, links",
+          "$value": "{primitive.red.200}",
           "$extensions": {
             "org.undrr.mangrove": {
               "format": "srgb-rgb-function"
@@ -1285,35 +1245,8 @@
         },
         "hover": {
           "$type": "color",
-          "$value": "{delta-2027.primitive.accent.700}",
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        },
-        "active": {
-          "$type": "color",
-          "$value": "{delta-2027.primitive.accent.800}",
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        },
-        "disabled": {
-          "$type": "color",
-          "$value": "{delta-2027.primitive.neutral.400}",
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "srgb-rgb-function"
-            }
-          }
-        },
-        "selected": {
-          "$type": "color",
-          "$value": "{delta-2027.primitive.accent.100}",
-          "$description": "Adapter role from the handoff table and tree selected-state specifications.",
+          "$value": "{primitive.red.700}",
+          "$description": "Destructive button hover. Agreed 2026-11-09.",
           "$extensions": {
             "org.undrr.mangrove": {
               "format": "srgb-rgb-function"
@@ -1321,142 +1254,28 @@
           }
         }
       },
-      "status": {
-        "positive": {
-          "text": {
-            "$type": "color",
-            "$value": "{delta-2027.primitive.green.600}",
-            "$description": "6.55:1 on white, 6.22:1 on page",
-            "$extensions": {
-              "org.undrr.mangrove": {
-                "format": "srgb-rgb-function"
-              }
-            }
-          },
-          "background": {
-            "$type": "color",
-            "$value": "{delta-2027.primitive.green.100}",
-            "$extensions": {
-              "org.undrr.mangrove": {
-                "format": "srgb-rgb-function"
-              }
-            }
-          },
-          "border": {
-            "$type": "color",
-            "$value": "{delta-2027.primitive.green.200}",
-            "$extensions": {
-              "org.undrr.mangrove": {
-                "format": "srgb-rgb-function"
-              }
-            }
-          }
-        },
-        "warning": {
-          "text": {
-            "$type": "color",
-            "$value": "{delta-2027.primitive.amber.600}",
-            "$description": "5.00:1 on white, 4.75:1 on page",
-            "$extensions": {
-              "org.undrr.mangrove": {
-                "format": "srgb-rgb-function"
-              }
-            }
-          },
-          "background": {
-            "$type": "color",
-            "$value": "{delta-2027.primitive.amber.100}",
-            "$extensions": {
-              "org.undrr.mangrove": {
-                "format": "srgb-rgb-function"
-              }
-            }
-          },
-          "border": {
-            "$type": "color",
-            "$value": "{delta-2027.primitive.amber.200}",
-            "$extensions": {
-              "org.undrr.mangrove": {
-                "format": "srgb-rgb-function"
-              }
-            }
-          }
-        },
-        "critical": {
-          "text": {
-            "$type": "color",
-            "$value": "{delta-2027.primitive.red.600}",
-            "$description": "5.25:1 on white, 4.99:1 on page",
-            "$extensions": {
-              "org.undrr.mangrove": {
-                "format": "srgb-rgb-function"
-              }
-            }
-          },
-          "background": {
-            "$type": "color",
-            "$value": "{delta-2027.primitive.red.100}",
-            "$extensions": {
-              "org.undrr.mangrove": {
-                "format": "srgb-rgb-function"
-              }
-            }
-          },
-          "border": {
-            "$type": "color",
-            "$value": "{delta-2027.primitive.red.200}",
-            "$extensions": {
-              "org.undrr.mangrove": {
-                "format": "srgb-rgb-function"
-              }
-            }
-          },
-          "hover": {
-            "$type": "color",
-            "$value": "{delta-2027.primitive.red.700}",
-            "$description": "Destructive button hover. Agreed 2026-11-09.",
-            "$extensions": {
-              "org.undrr.mangrove": {
-                "format": "srgb-rgb-function"
-              }
-            }
-          }
-        },
-        "informational": {
-          "text": {
-            "$type": "color",
-            "$value": "{delta-2027.primitive.accent.600}",
-            "$extensions": {
-              "org.undrr.mangrove": {
-                "format": "srgb-rgb-function"
-              }
-            }
-          },
-          "background": {
-            "$type": "color",
-            "$value": "{delta-2027.primitive.accent.100}",
-            "$extensions": {
-              "org.undrr.mangrove": {
-                "format": "srgb-rgb-function"
-              }
-            }
-          },
-          "border": {
-            "$type": "color",
-            "$value": "{delta-2027.primitive.accent.200}",
-            "$extensions": {
-              "org.undrr.mangrove": {
-                "format": "srgb-rgb-function"
-              }
-            }
-          }
-        }
-      },
-      "focus": {
-        "ring": {
+      "informational": {
+        "text": {
           "$type": "color",
-          "$value": "{delta-2027.primitive.accent.600}",
-          "$description": "2px solid, 2px offset",
+          "$value": "{primitive.brand.primary.600}",
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "background": {
+          "$type": "color",
+          "$value": "{primitive.brand.primary.100}",
+          "$extensions": {
+            "org.undrr.mangrove": {
+              "format": "srgb-rgb-function"
+            }
+          }
+        },
+        "border": {
+          "$type": "color",
+          "$value": "{primitive.brand.primary.200}",
           "$extensions": {
             "org.undrr.mangrove": {
               "format": "srgb-rgb-function"
@@ -1465,375 +1284,546 @@
         }
       }
     },
-    "typography": {
-      "font": {
-        "sans": {
-          "$type": "fontFamily",
-          "$value": ["Inter", "system-ui", "-apple-system", "sans-serif"],
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "font-family-stack"
-            }
-          }
-        },
-        "mono": {
-          "$type": "fontFamily",
-          "$value": ["IBM Plex Mono", "Fira Code", "monospace"],
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "format": "font-family-stack"
-            }
+    "focus": {
+      "ring": {
+        "$type": "color",
+        "$value": "{primitive.brand.primary.600}",
+        "$description": "2px solid, 2px offset",
+        "$extensions": {
+          "org.undrr.mangrove": {
+            "format": "srgb-rgb-function"
           }
         }
       },
-      "scale": {
-        "11": {
-          "$type": "dimension",
-          "$value": {
-            "value": 11,
-            "unit": "px"
-          }
-        },
-        "12": {
-          "$type": "dimension",
-          "$value": {
-            "value": 12,
-            "unit": "px"
-          }
-        },
-        "14": {
-          "$type": "dimension",
-          "$value": {
-            "value": 14,
-            "unit": "px"
-          }
-        },
-        "20": {
-          "$type": "dimension",
-          "$value": {
-            "value": 20,
-            "unit": "px"
-          }
-        },
-        "24": {
-          "$type": "dimension",
-          "$value": {
-            "value": 24,
-            "unit": "px"
-          }
-        },
-        "30": {
-          "$type": "dimension",
-          "$value": {
-            "value": 30,
-            "unit": "px"
-          }
-        }
-      },
-      "weight": {
-        "regular": {
-          "$type": "fontWeight",
-          "$value": 400
-        },
-        "medium": {
-          "$type": "fontWeight",
-          "$value": 500
-        },
-        "semibold": {
-          "$type": "fontWeight",
-          "$value": 600
-        }
-      },
-      "lineHeight": {
-        "tight": {
-          "$type": "number",
-          "$value": 1.25,
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "name": "--mg-delta-2027-typography-line-height-tight"
-            }
-          }
-        },
-        "normal": {
-          "$type": "number",
-          "$value": 1.5,
-          "$extensions": {
-            "org.undrr.mangrove": {
-              "name": "--mg-delta-2027-typography-line-height-normal"
-            }
+      "ringInverse": {
+        "$type": "color",
+        "$value": "{semantic.text.inverse}",
+        "$description": "Keyboard focus indicator on dark surfaces.",
+        "$extensions": {
+          "org.undrr.mangrove": {
+            "format": "srgb-rgb-function",
+            "name": "--mg-semantic-focus-ring-inverse"
           }
         }
       }
     },
-    "spacing": {
-      "1": {
-        "$type": "dimension",
-        "$value": {
-          "value": 4,
-          "unit": "px"
-        },
-        "$description": "icon gaps, tight inline spacing"
+    "$extensions": {
+      "org.undrr.mangrove": {
+        "private": false,
+        "format": "srgb-rgb-function"
+      }
+    }
+  },
+  "typography": {
+    "$extensions": {
+      "org.undrr.mangrove": {
+        "private": false
+      }
+    },
+    "font": {
+      "sans": {
+        "$type": "fontFamily",
+        "$value": ["Inter", "system-ui", "-apple-system", "sans-serif"],
+        "$extensions": {
+          "org.undrr.mangrove": {
+            "format": "font-family-stack"
+          }
+        }
       },
-      "2": {
-        "$type": "dimension",
+      "mono": {
+        "$type": "fontFamily",
+        "$value": ["IBM Plex Mono", "Fira Code", "monospace"],
+        "$extensions": {
+          "org.undrr.mangrove": {
+            "format": "font-family-stack"
+          }
+        }
+      }
+    },
+    "size": {
+      "$type": "dimension",
+      "caption": {
         "$value": {
-          "value": 8,
+          "value": 11,
           "unit": "px"
-        },
-        "$description": "badge padding, label-icon gap"
+        }
       },
-      "3": {
-        "$type": "dimension",
+      "label": {
         "$value": {
           "value": 12,
           "unit": "px"
-        },
-        "$description": "compact padding"
+        }
       },
-      "4": {
-        "$type": "dimension",
+      "body": {
+        "$value": {
+          "value": 14,
+          "unit": "px"
+        }
+      },
+      "subheading": {
         "$value": {
           "value": 16,
           "unit": "px"
-        },
-        "$description": "default component padding, mobile margin"
+        }
       },
-      "6": {
-        "$type": "dimension",
+      "title": {
+        "$value": {
+          "value": 20,
+          "unit": "px"
+        }
+      },
+      "kpi": {
         "$value": {
           "value": 24,
           "unit": "px"
-        },
-        "$description": "card padding, section gaps, tablet/desktop margin"
+        }
       },
-      "8": {
-        "$type": "dimension",
+      "display": {
         "$value": {
-          "value": 32,
+          "value": 30,
           "unit": "px"
-        },
-        "$description": "between major sections, desktop margin"
-      },
-      "12": {
-        "$type": "dimension",
-        "$value": {
-          "value": 48,
-          "unit": "px"
-        },
-        "$description": "large section breaks"
-      },
-      "16": {
-        "$type": "dimension",
-        "$value": {
-          "value": 64,
-          "unit": "px"
-        },
-        "$description": "page-level separation"
+        }
       }
     },
-    "radius": {
-      "sm": {
-        "$type": "dimension",
-        "$value": {
+    "weight": {
+      "$type": "fontWeight",
+      "regular": {
+        "$type": "fontWeight",
+        "$value": 400
+      },
+      "medium": {
+        "$type": "fontWeight",
+        "$value": 500
+      },
+      "semibold": {
+        "$type": "fontWeight",
+        "$value": 600
+      },
+      "bold": {
+        "$type": "fontWeight",
+        "$value": 700
+      }
+    },
+    "lineHeight": {
+      "$type": "number",
+      "tight": {
+        "$value": 1.25
+      },
+      "normal": {
+        "$value": 1.5
+      }
+    }
+  },
+  "spacing": {
+    "2xs": {
+      "$type": "dimension",
+      "$value": {
+        "value": 4,
+        "unit": "px"
+      },
+      "$description": "icon gaps, tight inline spacing",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "private": false,
+          "format": "literal"
+        }
+      }
+    },
+    "xs": {
+      "$type": "dimension",
+      "$value": {
+        "value": 8,
+        "unit": "px"
+      },
+      "$description": "badge padding, label-icon gap",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "private": false,
+          "format": "literal"
+        }
+      }
+    },
+    "sm": {
+      "$type": "dimension",
+      "$value": {
+        "value": 12,
+        "unit": "px"
+      },
+      "$description": "compact padding",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "private": false,
+          "format": "literal"
+        }
+      }
+    },
+    "md": {
+      "$type": "dimension",
+      "$value": {
+        "value": 16,
+        "unit": "px"
+      },
+      "$description": "default component padding, mobile margin",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "private": false,
+          "format": "literal"
+        }
+      }
+    },
+    "lg": {
+      "$type": "dimension",
+      "$value": {
+        "value": 24,
+        "unit": "px"
+      },
+      "$description": "card padding, section gaps, tablet/desktop margin",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "private": false,
+          "format": "literal"
+        }
+      }
+    },
+    "xl": {
+      "$type": "dimension",
+      "$value": {
+        "value": 32,
+        "unit": "px"
+      },
+      "$description": "between major sections, desktop margin",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "private": false,
+          "format": "literal"
+        }
+      }
+    },
+    "2xl": {
+      "$type": "dimension",
+      "$value": {
+        "value": 48,
+        "unit": "px"
+      },
+      "$description": "large section breaks",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "private": false,
+          "format": "literal"
+        }
+      }
+    },
+    "3xl": {
+      "$type": "dimension",
+      "$value": {
+        "value": 64,
+        "unit": "px"
+      },
+      "$description": "page-level separation",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "private": false,
+          "format": "literal"
+        }
+      }
+    }
+  },
+  "radius": {
+    "sm": {
+      "$type": "dimension",
+      "$value": {
+        "value": 4,
+        "unit": "px"
+      },
+      "$description": "badges, chips",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "private": false
+        }
+      }
+    },
+    "md": {
+      "$type": "dimension",
+      "$value": {
+        "value": 6,
+        "unit": "px"
+      },
+      "$description": "buttons, inputs",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "private": false
+        }
+      }
+    },
+    "lg": {
+      "$type": "dimension",
+      "$value": {
+        "value": 8,
+        "unit": "px"
+      },
+      "$description": "cards, dropdowns",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "private": false
+        }
+      }
+    },
+    "xl": {
+      "$type": "dimension",
+      "$value": {
+        "value": 12,
+        "unit": "px"
+      },
+      "$description": "modals",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "private": false
+        }
+      }
+    },
+    "full": {
+      "$type": "dimension",
+      "$value": {
+        "value": 9999,
+        "unit": "px"
+      },
+      "$description": "pills, avatars",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "private": false
+        }
+      }
+    },
+    "button": {
+      "$type": "dimension",
+      "$value": "{radius.md}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "form-input": {
+      "$type": "dimension",
+      "$value": "{radius.md}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "tag": {
+      "$type": "dimension",
+      "$value": "{radius.sm}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    }
+  },
+  "shadow": {
+    "sm": {
+      "$type": "shadow",
+      "$value": {
+        "color": {
+          "colorSpace": "srgb",
+          "components": [
+            0.06666666666666667, 0.09411764705882353, 0.1607843137254902
+          ],
+          "alpha": 0.06
+        },
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 1,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 2,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      },
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "private": false
+        }
+      }
+    },
+    "md": {
+      "$type": "shadow",
+      "$value": {
+        "color": {
+          "colorSpace": "srgb",
+          "components": [
+            0.06666666666666667, 0.09411764705882353, 0.1607843137254902
+          ],
+          "alpha": 0.1
+        },
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
           "value": 4,
           "unit": "px"
         },
-        "$description": "badges, chips"
-      },
-      "md": {
-        "$type": "dimension",
-        "$value": {
-          "value": 6,
-          "unit": "px"
-        },
-        "$description": "buttons, inputs"
-      },
-      "lg": {
-        "$type": "dimension",
-        "$value": {
-          "value": 8,
-          "unit": "px"
-        },
-        "$description": "cards, dropdowns"
-      },
-      "xl": {
-        "$type": "dimension",
-        "$value": {
+        "blur": {
           "value": 12,
           "unit": "px"
         },
-        "$description": "modals"
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
       },
-      "full": {
-        "$type": "dimension",
-        "$value": {
-          "value": 9999,
+      "$description": "dropdowns, popovers",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "private": false
+        }
+      }
+    },
+    "lg": {
+      "$type": "shadow",
+      "$value": {
+        "color": {
+          "colorSpace": "srgb",
+          "components": [
+            0.06666666666666667, 0.09411764705882353, 0.1607843137254902
+          ],
+          "alpha": 0.14
+        },
+        "offsetX": {
+          "value": 0,
           "unit": "px"
         },
-        "$description": "pills, avatars"
-      }
-    },
-    "shadow": {
-      "sm": {
-        "$type": "shadow",
-        "$value": {
-          "color": {
-            "colorSpace": "srgb",
-            "components": [
-              0.06666666666666667, 0.09411764705882353, 0.1607843137254902
-            ],
-            "alpha": 0.06
-          },
-          "offsetX": {
-            "value": 0.0,
-            "unit": "px"
-          },
-          "offsetY": {
-            "value": 1,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 2,
-            "unit": "px"
-          },
-          "spread": {
-            "value": 0,
-            "unit": "px"
-          }
-        }
-      },
-      "md": {
-        "$type": "shadow",
-        "$value": {
-          "color": {
-            "colorSpace": "srgb",
-            "components": [
-              0.06666666666666667, 0.09411764705882353, 0.1607843137254902
-            ],
-            "alpha": 0.1
-          },
-          "offsetX": {
-            "value": 0.0,
-            "unit": "px"
-          },
-          "offsetY": {
-            "value": 4,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 12,
-            "unit": "px"
-          },
-          "spread": {
-            "value": 0,
-            "unit": "px"
-          }
-        },
-        "$description": "dropdowns, popovers"
-      },
-      "lg": {
-        "$type": "shadow",
-        "$value": {
-          "color": {
-            "colorSpace": "srgb",
-            "components": [
-              0.06666666666666667, 0.09411764705882353, 0.1607843137254902
-            ],
-            "alpha": 0.14
-          },
-          "offsetX": {
-            "value": 0.0,
-            "unit": "px"
-          },
-          "offsetY": {
-            "value": 8,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 24,
-            "unit": "px"
-          },
-          "spread": {
-            "value": 0,
-            "unit": "px"
-          }
-        },
-        "$description": "modals"
-      }
-    },
-    "motion": {
-      "duration": {
-        "fast": {
-          "$type": "duration",
-          "$value": {
-            "value": 100,
-            "unit": "ms"
-          },
-          "$description": "tooltips, hover states, focus rings - pre-wired in components, do not use in feature code"
-        },
-        "normal": {
-          "$type": "duration",
-          "$value": {
-            "value": 200,
-            "unit": "ms"
-          },
-          "$description": "dropdowns, modals, toasts - pre-wired in components, do not use in feature code"
-        },
-        "slow": {
-          "$type": "duration",
-          "$value": {
-            "value": 300,
-            "unit": "ms"
-          },
-          "$description": "page transitions, large panels - pre-wired in components, do not use in feature code"
-        }
-      },
-      "easing": {
-        "default": {
-          "$type": "cubicBezier",
-          "$value": [0.16, 1.0, 0.3, 1.0],
-          "$description": "all transitions - fast out, slow to settle"
-        },
-        "in": {
-          "$type": "cubicBezier",
-          "$value": [0.4, 0.0, 1.0, 1.0],
-          "$description": "elements leaving the screen"
-        },
-        "out": {
-          "$type": "cubicBezier",
-          "$value": [0.0, 0.0, 0.2, 1.0],
-          "$description": "elements entering the screen"
-        }
-      }
-    },
-    "layout": {
-      "maxWidth": {
-        "$type": "dimension",
-        "$value": {
-          "value": 1280,
+        "offsetY": {
+          "value": 8,
           "unit": "px"
         },
-        "$extensions": {
-          "org.undrr.mangrove": {
-            "name": "--mg-delta-2027-layout-max-width"
-          }
-        }
-      }
-    },
-    "accessibility": {
-      "targetMin": {
-        "$type": "dimension",
-        "$value": {
+        "blur": {
           "value": 24,
           "unit": "px"
         },
-        "$description": "Smallest clickable area, width and height (WCAG 2.5.8). Icon buttons are 32px. A smaller visual, for example a 16px checkbox, gets its size from padding or its label.",
-        "$extensions": {
-          "org.undrr.mangrove": {
-            "name": "--mg-delta-2027-accessibility-target-min"
-          }
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      },
+      "$description": "modals",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "private": false
         }
       }
+    }
+  },
+  "motion": {
+    "duration": {
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "private": false
+        }
+      },
+      "fast": {
+        "$type": "duration",
+        "$value": {
+          "value": 100,
+          "unit": "ms"
+        },
+        "$description": "tooltips, hover states, focus rings - pre-wired in components, do not use in feature code"
+      },
+      "normal": {
+        "$type": "duration",
+        "$value": {
+          "value": 200,
+          "unit": "ms"
+        },
+        "$description": "dropdowns, modals, toasts - pre-wired in components, do not use in feature code"
+      },
+      "slow": {
+        "$type": "duration",
+        "$value": {
+          "value": 300,
+          "unit": "ms"
+        },
+        "$description": "page transitions, large panels - pre-wired in components, do not use in feature code"
+      }
+    },
+    "easing": {
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "private": false
+        }
+      },
+      "default": {
+        "$type": "cubicBezier",
+        "$value": [0.16, 1, 0.3, 1],
+        "$description": "all transitions - fast out, slow to settle"
+      },
+      "in": {
+        "$type": "cubicBezier",
+        "$value": [0.4, 0, 1, 1],
+        "$description": "elements leaving the screen"
+      },
+      "out": {
+        "$type": "cubicBezier",
+        "$value": [0, 0, 0.2, 1],
+        "$description": "elements entering the screen"
+      }
+    },
+    "duration-fast": {
+      "$type": "duration",
+      "$value": "{motion.duration.fast}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "private": true
+        }
+      }
+    },
+    "duration-medium": {
+      "$type": "duration",
+      "$value": "{motion.duration.normal}"
+    },
+    "easing-standard": {
+      "$type": "cubicBezier",
+      "$value": "{motion.easing.default}"
+    }
+  },
+  "layout": {
+    "$extensions": {
+      "org.undrr.mangrove": {
+        "private": false
+      }
+    },
+    "maxWidth": {
+      "$type": "dimension",
+      "$value": {
+        "value": 1280,
+        "unit": "px"
+      }
+    }
+  },
+  "accessibility": {
+    "$extensions": {
+      "org.undrr.mangrove": {
+        "private": false
+      }
+    },
+    "targetMin": {
+      "$type": "dimension",
+      "$value": {
+        "value": 24,
+        "unit": "px"
+      },
+      "$description": "Smallest clickable area, width and height (WCAG 2.5.8). Icon buttons are 32px. A smaller visual, for example a 16px checkbox, gets its size from padding or its label."
     }
   },
   "theme": {
@@ -1851,7 +1841,7 @@
   "color": {
     "text": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.text.primary}",
+      "$value": "{semantic.text.primary}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "srgb-channels"
@@ -1860,7 +1850,7 @@
     },
     "interactive": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.action.default}",
+      "$value": "{semantic.action.default}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "srgb-channels"
@@ -1869,7 +1859,7 @@
     },
     "interactive-active": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.action.hover}",
+      "$value": "{semantic.action.hover}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "srgb-channels"
@@ -1878,7 +1868,7 @@
     },
     "secondary": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.text.secondary}",
+      "$value": "{semantic.text.secondary}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "srgb-channels"
@@ -1887,7 +1877,7 @@
     },
     "tertiary": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.action.default}",
+      "$value": "{semantic.action.default}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "srgb-channels"
@@ -1896,7 +1886,7 @@
     },
     "quaternary": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.text.primary}",
+      "$value": "{semantic.text.primary}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "srgb-channels"
@@ -1905,7 +1895,7 @@
     },
     "button": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.text.inverse}",
+      "$value": "{semantic.text.inverse}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "srgb-channels"
@@ -1914,7 +1904,7 @@
     },
     "button--hover": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.text.inverse}",
+      "$value": "{semantic.text.inverse}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "srgb-channels"
@@ -1923,7 +1913,7 @@
     },
     "button-secondary-background": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.background.surface}",
+      "$value": "{semantic.background.surface}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "srgb-channels"
@@ -1932,7 +1922,7 @@
     },
     "button-secondary-background--hover": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.background.inset}",
+      "$value": "{semantic.background.inset}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "srgb-channels"
@@ -1941,7 +1931,7 @@
     },
     "button-outline-primary": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.action.default}",
+      "$value": "{semantic.action.default}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "srgb-channels"
@@ -1950,7 +1940,7 @@
     },
     "button-outline-primary--hover": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.action.hover}",
+      "$value": "{semantic.action.hover}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "srgb-channels"
@@ -1959,7 +1949,7 @@
     },
     "button-outline-secondary": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.text.primary}",
+      "$value": "{semantic.text.primary}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "srgb-channels"
@@ -1968,7 +1958,7 @@
     },
     "button-outline-secondary--hover": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.text.primary}",
+      "$value": "{semantic.text.primary}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "srgb-channels"
@@ -1977,7 +1967,7 @@
     },
     "text-button": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.text.inverse}",
+      "$value": "{semantic.text.inverse}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "srgb-channels"
@@ -1986,7 +1976,7 @@
     },
     "form-check": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.action.default}",
+      "$value": "{semantic.action.default}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "srgb-channels"
@@ -1995,7 +1985,7 @@
     },
     "form-check--hover": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.action.hover}",
+      "$value": "{semantic.action.hover}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "srgb-channels"
@@ -2004,7 +1994,7 @@
     },
     "form-check--checked": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.action.default}",
+      "$value": "{semantic.action.default}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "srgb-channels"
@@ -2013,7 +2003,7 @@
     },
     "form-focus": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.focus.ring}",
+      "$value": "{semantic.focus.ring}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "srgb-channels"
@@ -2022,7 +2012,7 @@
     },
     "focus-ring": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.focus.ring}",
+      "$value": "{semantic.focus.ring}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "srgb-channels"
@@ -2031,7 +2021,7 @@
     },
     "tag": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.text.secondary}",
+      "$value": "{semantic.text.secondary}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "srgb-channels"
@@ -2040,7 +2030,7 @@
     },
     "tag--hover": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.text.secondary}",
+      "$value": "{semantic.text.secondary}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "srgb-channels"
@@ -2049,7 +2039,7 @@
     },
     "tag-accent": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.background.inset}",
+      "$value": "{semantic.background.inset}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "srgb-channels"
@@ -2058,7 +2048,7 @@
     },
     "tag-accent--hover": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.background.inset}",
+      "$value": "{semantic.background.inset}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "srgb-channels"
@@ -2067,7 +2057,7 @@
     },
     "hero": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.action.default}",
+      "$value": "{semantic.action.default}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "srgb-channels"
@@ -2076,7 +2066,7 @@
     },
     "hero-title": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.text.inverse}",
+      "$value": "{semantic.text.inverse}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "srgb-channels"
@@ -2085,7 +2075,7 @@
     },
     "hero--tertiary": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.text.primary}",
+      "$value": "{semantic.text.primary}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "srgb-channels"
@@ -2094,7 +2084,7 @@
     },
     "button-background": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.action.default}",
+      "$value": "{semantic.action.default}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "literal"
@@ -2103,7 +2093,7 @@
     },
     "button-background--hover": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.action.hover}",
+      "$value": "{semantic.action.hover}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "literal"
@@ -2112,7 +2102,7 @@
     },
     "modal-scrim": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.background.overlay}",
+      "$value": "{semantic.background.overlay}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "literal"
@@ -2123,7 +2113,7 @@
   "surface": {
     "raised": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.background.surface}",
+      "$value": "{semantic.background.surface}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "literal"
@@ -2134,7 +2124,7 @@
   "border-color": {
     "button": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.action.default}",
+      "$value": "{semantic.action.default}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "literal"
@@ -2145,7 +2135,7 @@
   "card": {
     "background": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.background.surface}",
+      "$value": "{semantic.background.surface}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "literal"
@@ -2154,7 +2144,7 @@
     },
     "border-radius": {
       "$type": "dimension",
-      "$value": "{delta-2027.radius.lg}",
+      "$value": "{radius.lg}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "literal"
@@ -2163,7 +2153,7 @@
     },
     "padding": {
       "$type": "dimension",
-      "$value": "{delta-2027.spacing.4}",
+      "$value": "{spacing.md}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "literal"
@@ -2174,7 +2164,7 @@
   "form-input": {
     "background": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.background.surface}",
+      "$value": "{semantic.background.surface}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "literal"
@@ -2183,7 +2173,7 @@
     },
     "background--focus": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.background.surface}",
+      "$value": "{semantic.background.surface}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "literal"
@@ -2192,7 +2182,7 @@
     },
     "border-color": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.border.control}",
+      "$value": "{semantic.border.control}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "literal"
@@ -2210,7 +2200,7 @@
       "$extensions": {
         "org.undrr.mangrove": {
           "output": {
-            "value": "0 {delta-2027.spacing.3}",
+            "value": "0 {spacing.sm}",
             "type": "dimension",
             "format": "literal"
           }
@@ -2221,36 +2211,7 @@
   "notice": {
     "action-secondary": {
       "$type": "color",
-      "$value": "{delta-2027.semantic.action.default}",
-      "$extensions": {
-        "org.undrr.mangrove": {
-          "format": "literal"
-        }
-      }
-    }
-  },
-  "radius": {
-    "button": {
-      "$type": "dimension",
-      "$value": "{delta-2027.radius.md}",
-      "$extensions": {
-        "org.undrr.mangrove": {
-          "format": "literal"
-        }
-      }
-    },
-    "form-input": {
-      "$type": "dimension",
-      "$value": "{delta-2027.radius.md}",
-      "$extensions": {
-        "org.undrr.mangrove": {
-          "format": "literal"
-        }
-      }
-    },
-    "tag": {
-      "$type": "dimension",
-      "$value": "{delta-2027.radius.sm}",
+      "$value": "{semantic.action.default}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "literal"
@@ -2259,63 +2220,9 @@
     }
   },
   "font-size": {
-    "button": {
+    "200": {
       "$type": "dimension",
-      "$value": "{delta-2027.typography.scale.14}",
-      "$extensions": {
-        "org.undrr.mangrove": {
-          "format": "literal"
-        }
-      }
-    },
-    "form-input": {
-      "$type": "dimension",
-      "$value": "{delta-2027.typography.scale.14}",
-      "$extensions": {
-        "org.undrr.mangrove": {
-          "format": "literal"
-        }
-      }
-    },
-    "tab": {
-      "$type": "dimension",
-      "$value": "{delta-2027.typography.scale.14}",
-      "$extensions": {
-        "org.undrr.mangrove": {
-          "format": "literal"
-        }
-      }
-    },
-    "300": {
-      "$type": "dimension",
-      "$value": "{delta-2027.typography.scale.14}",
-      "$extensions": {
-        "org.undrr.mangrove": {
-          "format": "literal"
-        }
-      }
-    },
-    "400": {
-      "$type": "dimension",
-      "$value": "{delta-2027.typography.scale.20}",
-      "$extensions": {
-        "org.undrr.mangrove": {
-          "format": "literal"
-        }
-      }
-    },
-    "500": {
-      "$type": "dimension",
-      "$value": "{delta-2027.typography.scale.20}",
-      "$extensions": {
-        "org.undrr.mangrove": {
-          "format": "literal"
-        }
-      }
-    },
-    "600": {
-      "$type": "dimension",
-      "$value": "{delta-2027.typography.scale.24}",
+      "$value": "{typography.size.label}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "literal"
@@ -2324,16 +2231,70 @@
     },
     "250": {
       "$type": "dimension",
-      "$value": "{delta-2027.typography.scale.14}",
+      "$value": "{typography.size.body}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "literal"
         }
       }
     },
-    "200": {
+    "300": {
       "$type": "dimension",
-      "$value": "{delta-2027.typography.scale.12}",
+      "$value": "{typography.size.body}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "400": {
+      "$type": "dimension",
+      "$value": "{typography.size.title}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "500": {
+      "$type": "dimension",
+      "$value": "{typography.size.title}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "600": {
+      "$type": "dimension",
+      "$value": "{typography.size.kpi}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "button": {
+      "$type": "dimension",
+      "$value": "{typography.size.body}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "form-input": {
+      "$type": "dimension",
+      "$value": "{typography.size.body}",
+      "$extensions": {
+        "org.undrr.mangrove": {
+          "format": "literal"
+        }
+      }
+    },
+    "tab": {
+      "$type": "dimension",
+      "$value": "{typography.size.body}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "literal"
@@ -2344,7 +2305,7 @@
   "tab": {
     "min-block-size": {
       "$type": "dimension",
-      "$value": "{delta-2027.spacing.8}",
+      "$value": "{spacing.xl}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "literal"
@@ -2355,7 +2316,7 @@
       "$extensions": {
         "org.undrr.mangrove": {
           "output": {
-            "value": "0 {delta-2027.spacing.3}",
+            "value": "0 {spacing.sm}",
             "type": "dimension"
           }
         }
@@ -2365,7 +2326,7 @@
   "font-family": {
     "text": {
       "$type": "fontFamily",
-      "$value": "{delta-2027.typography.font.sans}",
+      "$value": "{typography.font.sans}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "literal"
@@ -2374,7 +2335,7 @@
     },
     "heading": {
       "$type": "fontFamily",
-      "$value": "{delta-2027.typography.font.sans}",
+      "$value": "{typography.font.sans}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "literal"
@@ -2383,7 +2344,7 @@
     },
     "display": {
       "$type": "fontFamily",
-      "$value": "{delta-2027.typography.font.sans}",
+      "$value": "{typography.font.sans}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "literal"
@@ -2392,7 +2353,7 @@
     },
     "ui": {
       "$type": "fontFamily",
-      "$value": "{delta-2027.typography.font.sans}",
+      "$value": "{typography.font.sans}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "literal"
@@ -2401,7 +2362,7 @@
     },
     "code": {
       "$type": "fontFamily",
-      "$value": "{delta-2027.typography.font.mono}",
+      "$value": "{typography.font.mono}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "literal"
@@ -2412,7 +2373,7 @@
   "font-line-height": {
     "500": {
       "$type": "number",
-      "$value": "{delta-2027.typography.lineHeight.tight}",
+      "$value": "{typography.lineHeight.tight}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "literal"
@@ -2421,7 +2382,7 @@
     },
     "700": {
       "$type": "number",
-      "$value": "{delta-2027.typography.lineHeight.normal}",
+      "$value": "{typography.lineHeight.normal}",
       "$extensions": {
         "org.undrr.mangrove": {
           "format": "literal"
@@ -2434,26 +2395,12 @@
       "$extensions": {
         "org.undrr.mangrove": {
           "output": {
-            "value": "2px {delta-2027.spacing.3} {delta-2027.spacing.1}",
+            "value": "2px {spacing.sm} {spacing.2xs}",
             "type": "dimension"
           }
         }
       },
       "$description": "Horizontal control padding with the component optical adjustment; consumers can override the complete padding role."
-    }
-  },
-  "motion": {
-    "duration-fast": {
-      "$type": "duration",
-      "$value": "{delta-2027.motion.duration.fast}"
-    },
-    "duration-medium": {
-      "$type": "duration",
-      "$value": "{delta-2027.motion.duration.normal}"
-    },
-    "easing-standard": {
-      "$type": "cubicBezier",
-      "$value": "{delta-2027.motion.easing.default}"
     }
   }
 }

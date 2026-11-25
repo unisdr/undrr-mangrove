@@ -1,72 +1,47 @@
-# Delta v0.7.2 mapping inventory
+# Delta v0.7.2 → Shared Contract Mapping
 
-First-pass mapping for the Delta token handoff received on 17 November 2026, tracked by [#1495](https://github.com/unisdr/undrr-mangrove/issues/1495). This is an integration plan for the separate Delta 2027 theme, not an approved change to existing themes.
+Mapping between Anders's Delta v0.7.2 design handoff (received 17 November 2026), Mangrove's existing CSS custom-property adapters, and the proposed shared DTCG 2025.10 semantic contract tracked by [#1495](https://github.com/unisdr/undrr-mangrove/issues/1495).
 
-The inventory covers all 30 `semantic` colour tokens. Primitive palettes and the prose component specifications are excluded. Counts describe existing-role coverage, not implementation effort or the quality of Delta's data.
+For the full side-by-side Mangrove vs. Delta DTCG specification and Anders's v0.7.2 migration table, see [Proposed shared token contract](proposals/delta-token-exchange.md).
 
-| Outcome | Count |
-| --- | --- |
-| Existing target, requiring naming/format/value mapping | 10 |
-| Related component role, requiring meaning/scope agreement | 13 |
-| No dedicated shared counterpart identified | 7 |
+## Shared Contract Groups
 
-## Existing targets
+Both [`tokens/mangrove.tokens.json`](../tokens/mangrove.tokens.json) (+ [`tokens/undrr.tokens.json`](../tokens/undrr.tokens.json)) and [`tokens/delta-2027.tokens.json`](../tokens/delta-2027.tokens.json) author the same top-level contract:
 
-All Delta names below are relative to `semantic`. An existing component property is a possible adapter target, not proof of a universal shared role.
+- `primitive`: `neutral`, `surface` (was `warm`), `brand.primary` (was `accent`), `brand.secondary`, `green`, `amber`, `red`
+- `semantic`: `background` (`default`, `surface`, `inset`, `disabled`, `overlay`, `toast`), `border` (`default`, `subtle`, `strong`, `control`), `text` (`primary`, `secondary`, `disabled`, `inverse`), `action` (`default`, `hover`, `active`, `disabled`, `selected`, `secondary`, `secondaryHover`), `status` (`positive`, `warning`, `critical`, `informational`), `focus` (`ring`, `ringInverse`)
+- `typography`: `font.{sans,mono}`, `size.{caption,label,body,subheading,title,kpi,display}`, `weight`, `lineHeight`
+- `spacing`: `2xs`, `xs`, `sm`, `md`, `lg`, `xl`, `2xl`, `3xl`
+- `radius.{sm,md,lg,xl,full}`, `shadow.{sm,md,lg}`, `motion.{duration,easing}`, `layout.maxWidth`, `accessibility.targetMin`
 
-| Delta role | Existing target or use |
-| --- | --- |
-| `background.surface` | `--mg-surface-raised` and the field/card surface properties. |
-| `background.overlay` | `--mg-color-modal-scrim`. |
-| `border.control` | `--mg-form-input-border-color`; pilot `--mg-control-border`. |
-| `text.primary` | `--mg-color-text`; pilot `--mg-control-text`. |
-| `text.secondary` | Supporting-copy properties such as `--mg-empty-state-text-color`. |
-| `text.inverse` | Inverse-facing button/text properties; centralising the role remains useful. |
-| `action.default` | `--mg-color-interactive`; pilot `--mg-control-accent`. |
-| `action.hover` | `--mg-color-interactive-active`, despite its current name. |
-| `status.critical.text` | Validation/error colour; pilot `--mg-control-error`. |
-| `focus.ring` | `--mg-color-focus-ring`. |
+In `mangrove.tokens.json` and `undrr.tokens.json`, these shared groups are marked `private: true` for CSS emission so the five existing brand CSS bundles remain 100% byte-identical while [`scripts/build-tokens.cjs`](../scripts/build-tokens.cjs) exports the full shared contract to `dist/tokens/*.tokens.json`. In `delta-2027.tokens.json`, they emit directly as `--mg-semantic-*`, `--mg-typography-*`, `--mg-spacing-*`, `--mg-radius-*`, `--mg-shadow-*`, `--mg-motion-*`, `--mg-layout-max-width`, and `--mg-accessibility-target-min`.
 
-The pilot properties belong to the proposed ComboBox integration in [#1088](https://github.com/unisdr/undrr-mangrove/pull/1088); they are not part of this foundation branch.
+## Mapping to Legacy Mangrove CSS Roles
 
-## Related roles needing a decision
+Existing Mangrove components still read legacy `--mg-color-*`, `--mg-surface-*`, `--mg-form-input-*`, and `--mg-font-size-*` custom properties. `delta-2027.tokens.json` bridges the shared semantic contract to those existing adapter tokens:
 
-| Delta role | Reconciliation needed |
-| --- | --- |
-| `background.inset` | Pilot hover/selection roles cover part of its use; Delta also applies it to navigation and disabled controls. |
-| `text.placeholder` | Delta restricts it to decorative/disabled content. The pilot's muted role styles actual placeholders, so these purposes cannot be blindly joined. |
-| `status.positive.text` | Notice's positive icon colour is related; ordinary copy colour is a separate decision. |
-| `status.positive.background` | Notice positive background is currently component-local and palette-derived. |
-| `status.positive.border` | Notice positive border is component-local and palette-derived. |
-| `status.warning.text` | Related warning icon/indicator colour; decide which copy should use it. |
-| `status.warning.background` | Related Notice warning background. |
-| `status.warning.border` | Related Notice warning border. |
-| `status.critical.background` | Related Notice negative background. |
-| `status.critical.border` | Related Notice negative border. |
-| `status.informational.text` | Related Notice informational icon colour; distinguish it from body copy. |
-| `status.informational.background` | Related Notice informational background. |
-| `status.informational.border` | Related Notice informational border. |
+| Shared semantic token | Delta 2027 CSS property | Legacy Mangrove adapter target(s) |
+| --- | --- | --- |
+| `semantic.background.surface` | `--mg-semantic-background-surface` | `--mg-surface-raised`, `--mg-card-background`, `--mg-form-input-background` |
+| `semantic.background.overlay` | `--mg-semantic-background-overlay` | `--mg-color-modal-scrim` |
+| `semantic.background.inset` | `--mg-semantic-background-inset` | `--mg-color-button-secondary-background--hover`, `--mg-color-tag-accent` |
+| `semantic.background.disabled` | `--mg-semantic-background-disabled` | Disabled inputs and checkboxes in `_delta-2027-components.scss` |
+| `semantic.border.control` | `--mg-semantic-border-control` | `--mg-form-input-border-color`; pilot `--mg-control-border` |
+| `semantic.text.primary` | `--mg-semantic-text-primary` | `--mg-color-text`, `--mg-color-button-outline-secondary`; pilot `--mg-control-text` |
+| `semantic.text.secondary` | `--mg-semantic-text-secondary` | `--mg-color-secondary`, `--mg-empty-state-text-color`, readable `<input>` placeholders |
+| `semantic.text.disabled` | `--mg-semantic-text-disabled` | Disabled/decorative ink only (renamed from v0.7.2 `semantic.text.placeholder`) |
+| `semantic.text.inverse` | `--mg-semantic-text-inverse` | `--mg-color-button`, `--mg-color-text-button`, `--mg-color-hero-title` |
+| `semantic.action.default` | `--mg-semantic-action-default` | `--mg-color-interactive`, `--mg-border-color-button`, `--mg-notice-action-secondary`; pilot `--mg-control-accent` |
+| `semantic.action.hover` | `--mg-semantic-action-hover` | `--mg-color-interactive-active`, `--mg-color-button-background--hover` |
+| `semantic.status.critical.text` | `--mg-semantic-status-critical-text` | Notice negative tone; pilot `--mg-control-error` |
+| `semantic.focus.ring` | `--mg-semantic-focus-ring` | `--mg-color-focus-ring`, `--mg-color-form-focus` |
+| `typography.size.{caption..display}` | `--mg-typography-size-*` | `--mg-font-size-button`, `--mg-font-size-form-input`, `--mg-font-size-tab` |
+| `spacing.{2xs..3xl}` | `--mg-spacing-*` | `--mg-card-padding`, `--mg-padding-button`, `--mg-form-input-padding` |
 
-These can become shared semantic roles or stay in a Delta-specific adapter. Components only need to consume the roles relevant to them.
+## Component Work Beyond Aliasing
 
-## Additional roles
+The Delta 2027 theme rules in [`stories/assets/scss/_delta-2027-components.scss`](../stories/assets/scss/_delta-2027-components.scss) also handle behaviour and geometry differences that token values alone cannot express:
 
-No dedicated shared counterpart was identified for:
-
-- `background.default`, a page-background role.
-- `border.default`, `border.subtle` and `border.strong`, separate decorative border strengths.
-- `action.active`, a pressed colour distinct from hover.
-- `action.disabled`, an explicit disabled-action colour.
-- `status.critical.hover`, a destructive-action hover colour distinct from ordinary actions.
-
-Existing CSS can express these values. The question is where to define and consume them. Different palette, spacing, type or density values are expected theme variation, not missing capabilities.
-
-## Component work beyond aliasing
-
-The first integration should verify the supplied specification against actual rendering:
-
-- Selected options need a checkmark without a selected fill; the pilot currently renders a label with tinted fill and heavier text.
-- Fields need Delta's inset focus treatment rather than an offset ring.
-- Disabled controls need explicit fill/text treatment rather than whole-control opacity.
-
-The full component inventory, source-generation workflow and interpretation questions remain part of Delta 2027 implementation planning. This list does not imply that all other components have been verified.
+- Selected options use a checkmark rather than a tinted selected fill in React Aria custom selects (verified in the separate [#1088](https://github.com/unisdr/undrr-mangrove/pull/1088) ComboBox proof).
+- Fields use Delta's 1px inset focus treatment rather than an offset ring, and explicit disabled surface/text tokens rather than whole-control opacity.
+- Legacy `--mg-color-*` three-channel adapters (`45 111 163`) are computed from `{semantic.*}` at build time so components using `rgb(var(--mg-color-interactive) / <alpha>)` continue working seamlessly alongside direct `--mg-semantic-*` consumers.

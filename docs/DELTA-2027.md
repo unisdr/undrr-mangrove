@@ -16,7 +16,7 @@ Use separate wrappers or frames for different brands. Nesting another brand insi
 
 ## How the tokens reach components
 
-A token gives a value a name, such as an action colour or a spacing size. The Delta source keeps Anders's groups and names under `delta-2027`. Mappings then connect those values to the roles Mangrove components already read. Extra Delta roles remain available without requiring every component to use them.
+A token gives a value a name, such as an action colour or a spacing size. Under the aligned shared contract ([proposal](proposals/delta-token-exchange.md)), `tokens/delta-2027.tokens.json` uses the same top-level groups and paths (`primitive`, `semantic`, `typography`, `spacing.{2xs..3xl}`, `radius`, `shadow`, `motion`, `layout`, `accessibility`) as Mangrove's base and UNDRR sources, emitting clean `--mg-semantic-*`, `--mg-typography-*`, and `--mg-spacing-*` properties alongside legacy `--mg-color-*` adapters.
 
 DTCG defines a shared format for token names, types and values. The Mangrove build combines the Delta source with inherited Mangrove values, then produces CSS and a complete JSON file for other tools. See [Design-token sources](DESIGN-TOKENS.md) for the format and build rules.
 
@@ -28,7 +28,7 @@ The source and exported files have similar names but different purposes:
 | Build output: `dist/tokens/delta-2027.tokens.json` | Complete exchange file, including the values and references other tools need. |
 | Built npm package: `tokens/delta-2027.tokens.json` | The same complete exchange file, ready for a consuming application or design tool. |
 
-The handoff contains 112 `$value` entries. Of these, 111 describe typed values. The remaining entry, “WCAG 2.2 AA”, is an accessibility target, so it stays in metadata. Two additional semantic aliases, selected action and toast surface, come from the supplied component descriptions. The source also records the original file's SHA-256 and retains those component descriptions as metadata.
+The original v0.7.2 handoff contained 112 `$value` entries. Of these, 111 describe typed values. The remaining entry, “WCAG 2.2 AA”, is an accessibility target, so it stays in metadata. Additional semantic roles (`semantic.action.selected`, `semantic.action.secondary`, `semantic.action.secondaryHover`, `semantic.background.disabled`, `semantic.background.toast`, `semantic.focus.ringInverse`) align with shared Mangrove multi-brand requirements. The source also records the original file's SHA-256 and retains component descriptions as metadata.
 
 ## Edit values and override colours
 
@@ -38,7 +38,7 @@ The two colour representations need different CSS. For example, within Delta 202
 
 | Property | Example value | Read it in CSS |
 | --- | --- | --- |
-| `--mg-delta-2027-semantic-action-default` | `rgb(45 111 163)` | `color: var(--mg-delta-2027-semantic-action-default)` |
+| `--mg-semantic-action-default` | `rgb(45 111 163)` | `color: var(--mg-semantic-action-default)` |
 | `--mg-color-interactive` | `45 111 163` | `color: rgb(var(--mg-color-interactive))` |
 
 The first property contains a complete CSS colour. The second keeps Mangrove's existing three-channel format. Do not wrap the complete colour in another `rgb()`.

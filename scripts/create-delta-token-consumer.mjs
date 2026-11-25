@@ -63,13 +63,13 @@ try {
   const sourcePath = path.join(temporaryTokens, 'delta-2027.tokens.json');
   const source = JSON.parse(await fs.readFile(sourcePath, 'utf8'));
   const original = structuredClone(source);
-  source['delta-2027'].primitive.accent['600'].$value.components = [
+  source.primitive.brand.primary['600'].$value.components = [
     124 / 255,
     58 / 255,
     237 / 255,
   ];
-  source['delta-2027'].typography.weight.medium.$value = 700;
-  source['delta-2027'].spacing['3'].$value = { value: 16, unit: 'px' };
+  source.typography.weight.medium.$value = 700;
+  source.spacing.sm.$value = { value: 16, unit: 'px' };
   await fs.writeFile(sourcePath, JSON.stringify(source, null, 2));
   const edited = buildDtcgDocuments({ tokensDir: temporaryTokens }).get(
     'delta-2027.tokens.json'
@@ -162,19 +162,18 @@ try {
   const report = {
     sourceEdits: [
       {
-        path: 'delta-2027.primitive.accent.600.$value.components',
-        before:
-          original['delta-2027'].primitive.accent['600'].$value.components,
-        after: source['delta-2027'].primitive.accent['600'].$value.components,
+        path: 'primitive.brand.primary.600.$value.components',
+        before: original.primitive.brand.primary['600'].$value.components,
+        after: source.primitive.brand.primary['600'].$value.components,
       },
       {
-        path: 'delta-2027.typography.weight.medium.$value',
-        before: original['delta-2027'].typography.weight.medium.$value,
+        path: 'typography.weight.medium.$value',
+        before: original.typography.weight.medium.$value,
         after: 700,
       },
       {
-        path: 'delta-2027.spacing.3.$value',
-        before: original['delta-2027'].spacing['3'].$value,
+        path: 'spacing.sm.$value',
+        before: original.spacing.sm.$value,
         after: { value: 16, unit: 'px' },
       },
     ],

@@ -73,7 +73,7 @@ export function resolveDocument(document) {
 export function deltaStyles(document) {
   const tokens = resolveDocument(document);
   const get = (path, type) => {
-    const token = tokens.get(`delta-2027.${path}`);
+    const token = tokens.get(path);
     if (!token || token.type !== type)
       throw new Error(`Expected ${type}: ${path}`);
     return token.value;
@@ -114,11 +114,11 @@ export function deltaStyles(document) {
     '--example-hover': color('semantic.action.hover'),
     '--example-inverse': color('semantic.text.inverse'),
     '--example-focus': color('semantic.focus.ring'),
-    '--example-padding': dimension('spacing.3'),
-    '--example-gap': dimension('spacing.4'),
+    '--example-padding': dimension('spacing.sm'),
+    '--example-gap': dimension('spacing.md'),
     '--example-radius': dimension('radius.md'),
-    '--example-body-size': dimension('typography.scale.14'),
-    '--example-title-size': dimension('typography.scale.20'),
+    '--example-body-size': dimension('typography.size.body'),
+    '--example-title-size': dimension('typography.size.title'),
     '--example-weight': String(get('typography.weight.medium', 'fontWeight')),
     '--example-regular': String(get('typography.weight.regular', 'fontWeight')),
     '--example-line-height': String(

@@ -56,7 +56,7 @@ function ComponentGallery({ theme }) {
   const [accent, setAccent] = useState('#7c3aed');
   const accentProperty =
     theme === 'Delta 2027 Theme'
-      ? '--mg-delta-2027-semantic-action-default'
+      ? '--mg-semantic-action-default'
       : '--mg-color-interactive';
 
   useEffect(() => {

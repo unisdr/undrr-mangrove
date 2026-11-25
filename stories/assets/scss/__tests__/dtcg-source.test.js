@@ -543,6 +543,143 @@ describe('self-contained portable exchange documents', () => {
       components: [0, 79 / 255, 145 / 255],
     });
   });
+
+  test('Mangrove default and Delta 2027 share identical semantic contract paths with brand-specific values', () => {
+    const documents = buildDtcgDocuments();
+    const mangroveValues = resolveDocument(
+      documents.get('mangrove.tokens.json')
+    );
+    const deltaValues = resolveDocument(
+      documents.get('delta-2027.tokens.json')
+    );
+    const sharedContractKeys = values =>
+      [...values.keys()]
+        .filter(
+          key =>
+            /^(semantic|typography|radius|shadow|layout|accessibility)\./.test(
+              key
+            ) ||
+            /^motion\.(duration|easing)\./.test(key) ||
+            /^spacing\.(2xs|xs|sm|md|lg|xl|2xl|3xl)$/.test(key)
+        )
+        .sort();
+    expect(sharedContractKeys(mangroveValues)).toEqual(
+      sharedContractKeys(deltaValues)
+    );
+    expect(mangroveValues.get('typography.size.body')).toEqual({
+      value: 16,
+      unit: 'px',
+    });
+    expect(deltaValues.get('typography.size.body')).toEqual({
+      value: 14,
+      unit: 'px',
+    });
+    expect(mangroveValues.get('semantic.action.default')).not.toEqual(
+      deltaValues.get('semantic.action.default')
+    );
+
+    const proposalMangrove = JSON.parse(
+      fs.readFileSync(
+        path.join(ROOT, 'docs/proposals/mangrove-default.dtcg.tokens.json'),
+        'utf8'
+      )
+    );
+    const proposalDelta = JSON.parse(
+      fs.readFileSync(
+        path.join(ROOT, 'docs/proposals/delta-2027.dtcg.tokens.json'),
+        'utf8'
+      )
+    );
+    expect(proposalMangrove).toEqual(documents.get('mangrove.tokens.json'));
+    expect(proposalDelta).toEqual(documents.get('delta-2027.tokens.json'));
+  });
+
+  test('standalone shared-contract JSON files are valid, self-contained, and cover 100% of Delta v0.7.2', () => {
+    const readJson = rel =>
+      JSON.parse(fs.readFileSync(path.join(ROOT, rel), 'utf8'));
+    const documents = buildDtcgDocuments();
+    const fullMangrove = resolveDocument(documents.get('mangrove.tokens.json'));
+    const fullDelta = resolveDocument(documents.get('delta-2027.tokens.json'));
+
+    const standaloneMangrove = readJson(
+      'docs/proposals/mangrove-shared-contract.dtcg.tokens.json'
+    );
+    const standaloneDelta = readJson(
+      'docs/proposals/delta-shared-contract.dtcg.tokens.json'
+    );
+    const v072 = readJson('docs/proposals/delta-v0.7.2.dtcg.tokens.json');
+
+    expect(() =>
+      validateDocument(standaloneMangrove, 'mangrove-shared-contract')
+    ).not.toThrow();
+    expect(() =>
+      validateDocument(standaloneDelta, 'delta-shared-contract')
+    ).not.toThrow();
+    expect(JSON.stringify(standaloneMangrove)).not.toContain('$extensions');
+    expect(JSON.stringify(standaloneDelta)).not.toContain('$extensions');
+
+    const smValues = resolveDocument(standaloneMangrove);
+    const sdValues = resolveDocument(standaloneDelta);
+
+    const nonPrimitiveKeys = values =>
+      [...values.keys()].filter(key => !key.startsWith('primitive.')).sort();
+    expect(nonPrimitiveKeys(smValues)).toEqual(nonPrimitiveKeys(sdValues));
+
+    for (const key of nonPrimitiveKeys(smValues)) {
+      expect(smValues.get(key)).toEqual(fullMangrove.get(key));
+      expect(sdValues.get(key)).toEqual(fullDelta.get(key));
+    }
+
+    const v072Values = resolveDocument(v072);
+    const scaleToSize = {
+      11: 'caption',
+      12: 'label',
+      14: 'body',
+      16: 'subheading',
+      20: 'title',
+      24: 'kpi',
+      30: 'display',
+    };
+    const spacingToTshirt = {
+      1: '2xs',
+      2: 'xs',
+      3: 'sm',
+      4: 'md',
+      6: 'lg',
+      8: 'xl',
+      12: '2xl',
+      16: '3xl',
+    };
+    const mapV072Key = key => {
+      if (key.startsWith('primitive.warm.'))
+        return key.replace('primitive.warm.', 'primitive.surface.');
+      if (key.startsWith('primitive.accent.'))
+        return key.replace('primitive.accent.', 'primitive.brand.primary.');
+      if (key === 'semantic.text.placeholder') return 'semantic.text.disabled';
+      if (key.startsWith('typography.scale.'))
+        return `typography.size.${scaleToSize[key.split('.').pop()]}`;
+      if (/^spacing\.\d+$/.test(key))
+        return `spacing.${spacingToTshirt[key.split('.').pop()]}`;
+      return key;
+    };
+
+    for (const [oldKey, oldValue] of v072Values) {
+      const mappedKey = mapV072Key(oldKey);
+      expect(sdValues.has(mappedKey)).toBe(true);
+      expect(sdValues.get(mappedKey)).toEqual(oldValue);
+    }
+
+    const deltaScss = build().get(
+      'stories/assets/scss/generated/_tokens-delta-2027.scss'
+    );
+    const toKebab = segment =>
+      segment.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+    for (const key of nonPrimitiveKeys(sdValues)) {
+      const cssName = `--mg-${key.split('.').map(toKebab).join('-')}`;
+      expect(deltaScss).toContain(`${cssName}:`);
+    }
+    expect(deltaScss).toContain('--mg-typography-weight-bold: 700;');
+  });
 });
 
 describe('authored production values remain authoritative', () => {
