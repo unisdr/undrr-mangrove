@@ -1,0 +1,907 @@
+{
+  "$description": "Mangrove / UNDRR default shared DTCG 2025.10 contract. Self-contained token specification matching the Delta 2027 schema without legacy adapter tokens.",
+  "primitive": {
+    "neutral": {
+      "50": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.9411764705882353, 0.9529411764705882, 0.9647058823529412
+          ]
+        }
+      },
+      "100": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.8941176470588236, 0.9058823529411765, 0.9176470588235294
+          ]
+        }
+      },
+      "200": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.792156862745098, 0.803921568627451, 0.8156862745098039
+          ]
+        }
+      },
+      "300": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.6941176470588235, 0.7058823529411765, 0.7176470588235294
+          ]
+        }
+      },
+      "400": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.49411764705882355, 0.5019607843137255, 0.5098039215686274
+          ]
+        }
+      },
+      "500": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.4, 0.4, 0.4]
+        }
+      },
+      "600": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.30196078431372547, 0.30196078431372547, 0.30196078431372547
+          ]
+        }
+      },
+      "700": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.2, 0.2, 0.2]
+        }
+      },
+      "800": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.10196078431372549, 0.10196078431372549, 0.10196078431372549
+          ]
+        }
+      },
+      "900": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0, 0, 0]
+        }
+      },
+      "1000": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0, 0, 0]
+        }
+      },
+      "1100": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0, 0, 0]
+        }
+      }
+    },
+    "surface": {
+      "50": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.9411764705882353, 0.9529411764705882, 0.9647058823529412
+          ]
+        }
+      },
+      "100": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.8941176470588236, 0.9058823529411765, 0.9176470588235294
+          ]
+        }
+      },
+      "200": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.792156862745098, 0.803921568627451, 0.8156862745098039
+          ]
+        }
+      },
+      "300": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.6941176470588235, 0.7058823529411765, 0.7176470588235294
+          ]
+        }
+      },
+      "400": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.49411764705882355, 0.5019607843137255, 0.5098039215686274
+          ]
+        }
+      },
+      "700": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.30196078431372547, 0.30196078431372547, 0.30196078431372547
+          ]
+        }
+      },
+      "1000": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.10196078431372549, 0.10196078431372549, 0.10196078431372549
+          ]
+        }
+      }
+    },
+    "brand": {
+      "primary": {
+        "100": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.9019607843137255, 0.9294117647058824, 0.9568627450980393
+            ]
+          }
+        },
+        "200": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.7019607843137254, 0.792156862745098, 0.8705882352941177
+            ]
+          }
+        },
+        "600": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0, 0.30980392156862746, 0.5686274509803921]
+          }
+        },
+        "700": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.2, 0.4470588235294118, 0.6549019607843137]
+          }
+        },
+        "800": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.10196078431372549, 0.3803921568627451, 0.611764705882353
+            ]
+          }
+        }
+      },
+      "secondary": {
+        "600": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.9215686274509803, 0.4588235294117647, 0.16470588235294117
+            ]
+          }
+        },
+        "700": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.9294117647058824, 0.5137254901960784, 0.24705882352941178
+            ]
+          }
+        }
+      }
+    },
+    "green": {
+      "100": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.9294117647058824, 0.9568627450980393, 0.9568627450980393
+          ]
+        }
+      },
+      "200": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.6078431372549019, 0.7568627450980392, 0.7568627450980392
+          ]
+        }
+      },
+      "500": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.0392156862745098, 0.4117647058823529, 0.4117647058823529
+          ]
+        }
+      },
+      "600": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.0392156862745098, 0.4117647058823529, 0.4117647058823529
+          ]
+        }
+      },
+      "700": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.027450980392156862, 0.30196078431372547, 0.30196078431372547
+          ]
+        }
+      }
+    },
+    "amber": {
+      "100": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.9921568627450981, 0.9647058823529412, 0.8509803921568627
+          ]
+        }
+      },
+      "200": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.9568627450980393, 0.8941176470588236, 0.5882352941176471
+          ]
+        }
+      },
+      "500": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.996078431372549, 0.7568627450980392, 0.1411764705882353
+          ]
+        }
+      },
+      "600": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.5254901960784314, 0.3843137254901961, 0]
+        }
+      },
+      "700": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.3803921568627451, 0.2784313725490196, 0]
+        }
+      }
+    },
+    "red": {
+      "100": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.9764705882352941, 0.9019607843137255, 0.9137254901960784
+          ]
+        }
+      },
+      "200": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.9254901960784314, 0.7098039215686275, 0.7372549019607844
+          ]
+        }
+      },
+      "500": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.8549019607843137, 0.4196078431372549, 0.4745098039215686
+          ]
+        }
+      },
+      "600": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.7568627450980392, 0.03529411764705882, 0.12549019607843137
+          ]
+        }
+      },
+      "700": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.6078431372549019, 0.027450980392156862, 0.09803921568627451
+          ]
+        }
+      }
+    }
+  },
+  "semantic": {
+    "background": {
+      "default": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 1, 1]
+        },
+        "$description": "Page background"
+      },
+      "surface": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 1, 1]
+        },
+        "$description": "Raised card, panel, and input surface"
+      },
+      "inset": {
+        "$type": "color",
+        "$value": "{primitive.surface.50}",
+        "$description": "Subtle hover fill on rows, list items, and current nav"
+      },
+      "disabled": {
+        "$type": "color",
+        "$value": "{primitive.surface.100}",
+        "$description": "Disabled control fill"
+      },
+      "overlay": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0, 0, 0],
+          "alpha": 0.85
+        },
+        "$description": "Modal scrim"
+      },
+      "toast": {
+        "$type": "color",
+        "$value": "{primitive.neutral.800}",
+        "$description": "High-contrast notification/toast surface"
+      }
+    },
+    "border": {
+      "default": {
+        "$type": "color",
+        "$value": "{primitive.surface.200}"
+      },
+      "subtle": {
+        "$type": "color",
+        "$value": "{primitive.surface.100}"
+      },
+      "strong": {
+        "$type": "color",
+        "$value": "{primitive.surface.300}"
+      },
+      "control": {
+        "$type": "color",
+        "$value": "{primitive.surface.400}",
+        "$description": "Inputs, selects, and secondary button borders meeting WCAG 1.4.11"
+      }
+    },
+    "text": {
+      "primary": {
+        "$type": "color",
+        "$value": "{primitive.surface.1000}",
+        "$description": "Body text and headings"
+      },
+      "secondary": {
+        "$type": "color",
+        "$value": "{primitive.surface.700}",
+        "$description": "Supporting copy, labels, and readable field placeholders"
+      },
+      "disabled": {
+        "$type": "color",
+        "$value": "{primitive.neutral.500}",
+        "$description": "Disabled or decorative ink ONLY — never use for informational text or input placeholders (renamed from v0.7.2 semantic.text.placeholder)"
+      },
+      "inverse": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 1, 1]
+        },
+        "$description": "Text on dark or brand-filled surfaces"
+      }
+    },
+    "action": {
+      "default": {
+        "$type": "color",
+        "$value": "{primitive.brand.primary.600}",
+        "$description": "Primary interactive elements and links"
+      },
+      "hover": {
+        "$type": "color",
+        "$value": "{primitive.brand.primary.700}"
+      },
+      "active": {
+        "$type": "color",
+        "$value": "{primitive.brand.primary.800}"
+      },
+      "disabled": {
+        "$type": "color",
+        "$value": "{primitive.neutral.400}"
+      },
+      "selected": {
+        "$type": "color",
+        "$value": "{primitive.brand.primary.100}",
+        "$description": "Selected row or tree-item surface tint"
+      },
+      "secondary": {
+        "$type": "color",
+        "$value": "{primitive.brand.secondary.600}",
+        "$description": "Secondary brand accent for two-colour brands"
+      },
+      "secondaryHover": {
+        "$type": "color",
+        "$value": "{primitive.brand.secondary.700}"
+      }
+    },
+    "status": {
+      "positive": {
+        "text": {
+          "$type": "color",
+          "$value": "{primitive.green.600}"
+        },
+        "background": {
+          "$type": "color",
+          "$value": "{primitive.green.100}"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "{primitive.green.200}"
+        }
+      },
+      "warning": {
+        "text": {
+          "$type": "color",
+          "$value": "{primitive.amber.600}"
+        },
+        "background": {
+          "$type": "color",
+          "$value": "{primitive.amber.100}"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "{primitive.amber.200}"
+        }
+      },
+      "critical": {
+        "text": {
+          "$type": "color",
+          "$value": "{primitive.red.600}"
+        },
+        "background": {
+          "$type": "color",
+          "$value": "{primitive.red.100}"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "{primitive.red.200}"
+        },
+        "hover": {
+          "$type": "color",
+          "$value": "{primitive.red.700}"
+        }
+      },
+      "informational": {
+        "text": {
+          "$type": "color",
+          "$value": "{primitive.brand.primary.600}"
+        },
+        "background": {
+          "$type": "color",
+          "$value": "{primitive.brand.primary.100}"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "{primitive.brand.primary.200}"
+        }
+      }
+    },
+    "focus": {
+      "ring": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.5254901960784314, 0.3843137254901961, 0]
+        },
+        "$description": "Keyboard focus indicator"
+      },
+      "ringInverse": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 1, 1]
+        },
+        "$description": "Keyboard focus indicator on dark surfaces"
+      }
+    }
+  },
+  "typography": {
+    "font": {
+      "sans": {
+        "$type": "fontFamily",
+        "$value": ["Roboto", "sans-serif"]
+      },
+      "mono": {
+        "$type": "fontFamily",
+        "$value": [
+          "ui-monospace",
+          "SFMono-Regular",
+          "Consolas",
+          "Liberation Mono",
+          "Menlo",
+          "monospace"
+        ]
+      }
+    },
+    "size": {
+      "caption": {
+        "$type": "dimension",
+        "$value": {
+          "value": 11.25,
+          "unit": "px"
+        }
+      },
+      "label": {
+        "$type": "dimension",
+        "$value": {
+          "value": 12.5,
+          "unit": "px"
+        }
+      },
+      "body": {
+        "$type": "dimension",
+        "$value": {
+          "value": 16,
+          "unit": "px"
+        }
+      },
+      "subheading": {
+        "$type": "dimension",
+        "$value": {
+          "value": 18,
+          "unit": "px"
+        }
+      },
+      "title": {
+        "$type": "dimension",
+        "$value": {
+          "value": 23,
+          "unit": "px"
+        }
+      },
+      "kpi": {
+        "$type": "dimension",
+        "$value": {
+          "value": 32,
+          "unit": "px"
+        }
+      },
+      "display": {
+        "$type": "dimension",
+        "$value": {
+          "value": 40,
+          "unit": "px"
+        }
+      }
+    },
+    "weight": {
+      "regular": {
+        "$type": "fontWeight",
+        "$value": 400
+      },
+      "medium": {
+        "$type": "fontWeight",
+        "$value": 500
+      },
+      "semibold": {
+        "$type": "fontWeight",
+        "$value": 600
+      },
+      "bold": {
+        "$type": "fontWeight",
+        "$value": 700
+      }
+    },
+    "lineHeight": {
+      "tight": {
+        "$type": "number",
+        "$value": 1.25
+      },
+      "normal": {
+        "$type": "number",
+        "$value": 1.5
+      }
+    }
+  },
+  "spacing": {
+    "2xs": {
+      "$type": "dimension",
+      "$value": {
+        "value": 5,
+        "unit": "px"
+      }
+    },
+    "xs": {
+      "$type": "dimension",
+      "$value": {
+        "value": 10,
+        "unit": "px"
+      }
+    },
+    "sm": {
+      "$type": "dimension",
+      "$value": {
+        "value": 12.5,
+        "unit": "px"
+      }
+    },
+    "md": {
+      "$type": "dimension",
+      "$value": {
+        "value": 15,
+        "unit": "px"
+      }
+    },
+    "lg": {
+      "$type": "dimension",
+      "$value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "xl": {
+      "$type": "dimension",
+      "$value": {
+        "value": 30,
+        "unit": "px"
+      }
+    },
+    "2xl": {
+      "$type": "dimension",
+      "$value": {
+        "value": 50,
+        "unit": "px"
+      }
+    },
+    "3xl": {
+      "$type": "dimension",
+      "$value": {
+        "value": 60,
+        "unit": "px"
+      }
+    }
+  },
+  "radius": {
+    "sm": {
+      "$type": "dimension",
+      "$value": {
+        "value": 5,
+        "unit": "px"
+      }
+    },
+    "md": {
+      "$type": "dimension",
+      "$value": {
+        "value": 5,
+        "unit": "px"
+      }
+    },
+    "lg": {
+      "$type": "dimension",
+      "$value": {
+        "value": 5,
+        "unit": "px"
+      }
+    },
+    "xl": {
+      "$type": "dimension",
+      "$value": {
+        "value": 5,
+        "unit": "px"
+      }
+    },
+    "full": {
+      "$type": "dimension",
+      "$value": {
+        "value": 9999,
+        "unit": "px"
+      }
+    }
+  },
+  "shadow": {
+    "sm": {
+      "$type": "shadow",
+      "$value": {
+        "color": {
+          "colorSpace": "srgb",
+          "components": [
+            0.30196078431372547, 0.30196078431372547, 0.30196078431372547
+          ],
+          "alpha": 0.24
+        },
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 0,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 0,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 1,
+          "unit": "px"
+        },
+        "inset": true
+      }
+    },
+    "md": {
+      "$type": "shadow",
+      "$value": {
+        "color": {
+          "colorSpace": "srgb",
+          "components": [0, 0, 0],
+          "alpha": 0.12
+        },
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 4,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 12,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "lg": {
+      "$type": "shadow",
+      "$value": {
+        "color": {
+          "colorSpace": "srgb",
+          "components": [0, 0, 0],
+          "alpha": 0.22
+        },
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 18,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 55,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    }
+  },
+  "motion": {
+    "duration": {
+      "fast": {
+        "$type": "duration",
+        "$value": {
+          "value": 160,
+          "unit": "ms"
+        }
+      },
+      "normal": {
+        "$type": "duration",
+        "$value": {
+          "value": 300,
+          "unit": "ms"
+        }
+      },
+      "slow": {
+        "$type": "duration",
+        "$value": {
+          "value": 400,
+          "unit": "ms"
+        }
+      }
+    },
+    "easing": {
+      "default": {
+        "$type": "cubicBezier",
+        "$value": [0.2, 0, 0, 1]
+      },
+      "in": {
+        "$type": "cubicBezier",
+        "$value": [0.4, 0, 1, 1]
+      },
+      "out": {
+        "$type": "cubicBezier",
+        "$value": [0, 0, 0.2, 1]
+      }
+    }
+  },
+  "layout": {
+    "maxWidth": {
+      "$type": "dimension",
+      "$value": {
+        "value": 1440,
+        "unit": "px"
+      }
+    }
+  },
+  "accessibility": {
+    "targetMin": {
+      "$type": "dimension",
+      "$value": {
+        "value": 24,
+        "unit": "px"
+      },
+      "$description": "Smallest clickable target size (WCAG 2.5.8)."
+    }
+  }
+}
