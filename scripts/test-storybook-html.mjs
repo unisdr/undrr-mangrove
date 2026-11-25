@@ -60,6 +60,55 @@ async function checkDocs(page) {
   assert.deepEqual(errors, [], 'Rendered docs must not raise uncaught errors');
 }
 
+// Storybook applies the URL before server-inferred Controls are available.
+// Exercise both an explicit Control and a prop absent from the story's args.
+async function checkBookmarkedArgs(page) {
+  const bookmark = new URL('./', url);
+  const preview = page.frameLocator('#storybook-preview-iframe');
+  const open = async (id, args) => {
+    bookmark.searchParams.set('path', `/story/${id}`);
+    bookmark.searchParams.set('args', args);
+    await page.goto(bookmark.href);
+  };
+
+  await open(
+    'components-pageheader--default',
+    'languages[0].value:it;languages[0].label:ViaURL'
+  );
+  const languages = preview.locator('.mg-page-header__select');
+  await languages.waitFor({ state: 'attached' });
+  assert.deepEqual(
+    (await languages.locator('option').allTextContents()).map(label =>
+      label.trim()
+    ),
+    ['ViaURL'],
+    'PageHeader should render the language list from the bookmarked args'
+  );
+
+  await open(
+    'components-notice-notice--info-notice',
+    'headingLevel:h5;isCompact:true'
+  );
+  const heading = preview.locator('.mg-notice__title');
+  assert.equal(await heading.evaluate(element => element.tagName), 'H5');
+  assert.equal(
+    await preview
+      .locator('.mg-notice')
+      .evaluate(element => element.classList.contains('mg-notice--compact')),
+    true,
+    'Notice should render the compact variant from the bookmarked args'
+  );
+
+  await open('patterns-content-card--news', 'className:bookmarked-card');
+  assert.equal(
+    await preview
+      .locator('[data-content-layout]')
+      .evaluate(element => element.classList.contains('bookmarked-card')),
+    true,
+    'ContentCard should apply a documented className supplied only in the URL'
+  );
+}
+
 try {
   const context = await browser.newContext({
     permissions: ['clipboard-read', 'clipboard-write'],
@@ -249,8 +298,9 @@ try {
   );
   const docsPage = await context.newPage();
   await checkDocs(docsPage);
+  await checkBookmarkedArgs(docsPage);
   console.log(
-    'HTML gate passed: rendered docs, generated JSX and HTML, clipboard punctuation, five themes, RTL, live interaction and Controls updates.'
+    'HTML gate passed: rendered docs, generated JSX and HTML, clipboard punctuation, five themes, RTL, live interaction, Controls updates and bookmarked args.'
   );
 } finally {
   clearTimeout(deadline);
