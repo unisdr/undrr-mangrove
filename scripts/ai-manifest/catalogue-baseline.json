@@ -464,17 +464,17 @@
   "components-forms-range": {
     "props": {
       "analyticsLabel": "string | optional | no default | described",
-      "className": "string | optional | no default | undescribed",
-      "defaultValue": "number | string | optional | no default | undescribed",
-      "disabled": "bool | optional | default=false | undescribed",
-      "id": "string | required | no default | undescribed",
-      "max": "number | string | optional | default=100 | undescribed",
-      "min": "number | string | optional | default=0 | undescribed",
-      "name": "string | optional | no default | undescribed",
-      "onChange": "func | optional | no default | undescribed",
-      "step": "number | string | optional | no default | undescribed",
+      "className": "string | optional | no default | described",
+      "defaultValue": "number | string | optional | no default | described",
+      "disabled": "bool | optional | default=false | described",
+      "id": "string | required | no default | described",
+      "max": "number | string | optional | default=100 | described",
+      "min": "number | string | optional | default=0 | described",
+      "name": "string | optional | no default | described",
+      "onChange": "func | optional | no default | described",
+      "step": "number | string | optional | no default | described",
       "ticks": "{ value: number | string, label: string }[] | optional | no default | undescribed",
-      "value": "number | string | optional | no default | undescribed"
+      "value": "number | string | optional | no default | described"
     },
     "examples": [
       "Continuous",
