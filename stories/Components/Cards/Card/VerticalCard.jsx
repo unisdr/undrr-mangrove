@@ -7,6 +7,29 @@ import { CardLabel, CardTitle, resolveCardLink } from './cardParts';
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
+/**
+ * @typedef {object} VerticalCardItem
+ * @property {string} title Card title.
+ * @property {string} [link] Card title link.
+ * @property {string} [target] Target for the link.
+ * @property {string} [rel] Relationship for the link.
+ * @property {string} [imgback] Image URL.
+ * @property {string} [imgalt] Alternative text for the image.
+ * @property {string} [summaryText] Summary, which can include HTML.
+ * @property {string} [label1] First label.
+ * @property {string} [label2] Second label.
+ * @property {string} [button] Call to action label.
+ * @property {string} [buttonLink] Call to action destination. Defaults to link.
+ */
+
+/**
+ * A vertical card with optional media and a call to action.
+ *
+ * @param {Object} props
+ * @param {VerticalCardItem[]} props.data Card data.
+ * @param {'primary'|'secondary'|'tertiary'|'quaternary'} [props.variant='primary'] Visual variant.
+ * @param {string} [props.className] Additional CSS classes.
+ */
 export function VerticalCard({ data, variant = 'primary', className }) {
   const variantClass =
     variant && variant !== 'primary' ? `mg-card--${variant}` : null;

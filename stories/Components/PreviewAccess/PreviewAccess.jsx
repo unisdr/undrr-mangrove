@@ -26,7 +26,7 @@ const DEFAULT_MESSAGE =
  * @param {boolean} [props.live]            When true, mounts the real gate.
  * @param {string}  [props.pin]             Unlock PIN.
  * @param {string}  [props.id]              Storage scope key for the unlock.
- * @param {string}  [props.persist]         Where the unlock is kept: 'session' or 'local'.
+ * @param {'session'|'local'} [props.persist]         Where the unlock is kept: 'session' or 'local'.
  * @param {number}  [props.maxAge]          Days a 'local' unlock lasts.
  * @param {string}  [props.eyebrow]         Small label above the title.
  * @param {string}  [props.title]           Modal heading.

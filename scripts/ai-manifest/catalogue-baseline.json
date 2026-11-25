@@ -74,9 +74,9 @@
   },
   "components-cards-book-card": {
     "props": {
-      "className": "string | optional | no default | undescribed",
-      "data": "array | required | no default | undescribed",
-      "variant": "'primary' | 'secondary' | 'tertiary' | 'quaternary' | optional | default='primary' | undescribed"
+      "className": "string | optional | no default | described",
+      "data": "array | required | no default | described",
+      "variant": "'primary' | 'secondary' | 'tertiary' | 'quaternary' | optional | default='primary' | described"
     },
     "examples": [
       "Book Card",
@@ -89,9 +89,9 @@
   },
   "components-cards-horizontal-book-card": {
     "props": {
-      "className": "string | optional | no default | undescribed",
-      "data": "array | required | no default | undescribed",
-      "variant": "'primary' | 'secondary' | 'tertiary' | 'quaternary' | optional | default='primary' | undescribed"
+      "className": "string | optional | no default | described",
+      "data": "array | required | no default | described",
+      "variant": "'primary' | 'secondary' | 'tertiary' | 'quaternary' | optional | default='primary' | described"
     },
     "examples": [
       "Horizontal Book Card",
@@ -104,9 +104,9 @@
   },
   "components-cards-horizontal-card": {
     "props": {
-      "className": "string | optional | no default | undescribed",
-      "data": "array | required | no default | undescribed",
-      "variant": "'primary' | 'secondary' | 'tertiary' | 'quaternary' | optional | default='primary' | undescribed"
+      "className": "string | optional | no default | described",
+      "data": "array | required | no default | described",
+      "variant": "'primary' | 'secondary' | 'tertiary' | 'quaternary' | optional | default='primary' | described"
     },
     "examples": [
       "Horizontal Card",
@@ -159,9 +159,9 @@
   },
   "components-cards-vertical-card": {
     "props": {
-      "className": "string | optional | no default | undescribed",
-      "data": "{ title: string, link: string, target: string, rel: string, imgback: string, imgalt: string, summaryText: string, label1: string, label2: string, button: string, buttonLink: string }[] | required | no default | undescribed",
-      "variant": "'primary' | 'secondary' | 'tertiary' | 'quaternary' | optional | default='primary' | undescribed"
+      "className": "string | optional | no default | described",
+      "data": "{ title: string, link: string, target: string, rel: string, imgback: string, imgalt: string, summaryText: string, label1: string, label2: string, button: string, buttonLink: string }[] | required | no default | described",
+      "variant": "'primary' | 'secondary' | 'tertiary' | 'quaternary' | optional | default='primary' | described"
     },
     "examples": [
       "Vertical Card",
@@ -464,17 +464,17 @@
   "components-forms-range": {
     "props": {
       "analyticsLabel": "string | optional | no default | described",
-      "className": "string | optional | no default | undescribed",
-      "defaultValue": "number | string | optional | no default | undescribed",
-      "disabled": "bool | optional | default=false | undescribed",
-      "id": "string | required | no default | undescribed",
-      "max": "number | string | optional | default=100 | undescribed",
-      "min": "number | string | optional | default=0 | undescribed",
-      "name": "string | optional | no default | undescribed",
-      "onChange": "func | optional | no default | undescribed",
-      "step": "number | string | optional | no default | undescribed",
+      "className": "string | optional | no default | described",
+      "defaultValue": "number | string | optional | no default | described",
+      "disabled": "bool | optional | default=false | described",
+      "id": "string | required | no default | described",
+      "max": "number | string | optional | default=100 | described",
+      "min": "number | string | optional | default=0 | described",
+      "name": "string | optional | no default | described",
+      "onChange": "func | optional | no default | described",
+      "step": "number | string | optional | no default | described",
       "ticks": "{ value: number | string, label: string }[] | optional | no default | undescribed",
-      "value": "number | string | optional | no default | undescribed"
+      "value": "number | string | optional | no default | described"
     },
     "examples": [
       "Continuous",

@@ -165,7 +165,20 @@ const routes = [
   'validate-data',
 ];
 
-/** Story-only composition. Hash routes keep navigation inside each mounted example. */
+/**
+ * Story-only composition. Hash routes keep navigation inside each mounted example.
+ *
+ * @param {Object} props
+ * @param {'landing'|'overview'|'about'|'indicators'|'reporting'|'reports'|'data'|'how-to-report'|'validate-data'} [props.initialPage='overview'] Page to show first and return to on Back.
+ * @param {string} [props.locale='english'] Storybook locale key. Arabic uses right-to-left layout.
+ * @param {boolean} [props.showOnThisPage=true] Show the On this page sidebar on detail pages.
+ * @param {boolean} [props.withHero=false] Include a hero with the page heading.
+ * @param {'header'|'page'} [props.heroSource='header'] Use the hub header banner or a separate hero block.
+ * @param {'image'|'video'} [props.pageHeroMedia='image'] Media for the separate hero.
+ * @param {'primary'|'secondary'|'tertiary'|'detached'} [props.headerSurface='primary'] Surface for the hub header.
+ * @param {'vertical'|'icon'} [props.routeCards='icon'] Presentation for route cards.
+ * @param {string} [props.routePrefix] Namespace for the example's hash routes.
+ */
 export function ContentHub({
   initialPage = 'overview',
   locale = 'english',

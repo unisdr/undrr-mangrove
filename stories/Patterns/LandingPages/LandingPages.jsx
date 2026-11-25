@@ -292,6 +292,11 @@ Breadcrumbs.propTypes = {
  * Story-only compositions of three landing page shapes UNDRR publishes today.
  * They exist so higher-level page structure can be discussed and compared, not
  * as components: no exports, hydration API or distributed CSS classes.
+ *
+ * @param {Object} props
+ * @param {'topic'|'report'|'index'} [props.archetype='topic'] Select a landing page shape.
+ * @param {string} [props.locale='english'] Storybook locale key. Arabic uses right-to-left layout.
+ * @param {string} [props.id] Prefix for the example's in-page IDs.
  */
 export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
   const text = words[locale] || words.english;
