@@ -26,7 +26,7 @@ export const CONTENT_FAMILIES = [
 ];
 
 // Literal IDs keep PropTypes discoverable through react-docgen.
-export const CONTENT_FAMILY_IDS = [
+export const CONTENT_FAMILY_IDS = /** @type {const} */ ([
   'article',
   'publication',
   'resource',
@@ -38,4 +38,4 @@ export const CONTENT_FAMILY_IDS = [
   'commitment',
   'landing-page',
   'person',
-];
+]);

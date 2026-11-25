@@ -13,6 +13,25 @@ const FOCUSABLE =
 
 const sanitize = html => ({ __html: DOMPurify.sanitize(html) });
 
+/**
+ * Edge drawer or floating panel.
+ *
+ * @param {object} props
+ * @param {boolean} [props.isOpen=false] Whether the drawer is open.
+ * @param {(event?: React.MouseEvent<HTMLElement>) => void} [props.onClose] Callback for the close button, backdrop or Escape.
+ * @param {'start'|'end'|'bottom'} [props.position='start'] Opening edge. Start and end follow the text direction.
+ * @param {React.ReactNode} [props.title] Heading that names the dialog.
+ * @param {React.ReactNode} [props.children] Body content. Strings render as plain text.
+ * @param {React.ReactNode} [props.footer] Footer content. Strings render as plain text.
+ * @param {string} [props.bodyHtml] Server-rendered HTML for hydration. Mangrove sanitises it and uses it in place of children.
+ * @param {string} [props.footerHtml] Server-rendered HTML for hydration. Mangrove sanitises it and uses it in place of footer.
+ * @param {string} [props.lang] UI language tag. Unsupported languages fall back to English.
+ * @param {'ltr'|'rtl'|'auto'} [props.dir] Explicit text direction. Otherwise the language determines it.
+ * @param {{closeLabel?: string}} [props.labels] UI label overrides.
+ * @param {string} [props.className] Additional CSS classes.
+ * @param {boolean} [props.backdrop=true] Show a backdrop and make the edge drawer modal.
+ * @param {boolean} [props.isFloatingPanel=false] Render as a non-modal floating panel.
+ */
 export const Drawer = ({
   isOpen = false,
   onClose,
