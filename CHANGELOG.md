@@ -11,9 +11,11 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 ## Unreleased
 
-## 2.6.0-rc.0, 2026-11-26
+## 2.6.0, 2026-11-26
 
-This release candidate introduces disclosure navigation in MegaMenu and improves article layouts at tablet widths. The public component documentation uses Storybook 11 RC 0.
+See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.6.0) for full details.
+
+Mangrove 2.6 introduces disclosure navigation in MegaMenu and improves article layouts at tablet widths. The public component documentation uses Storybook 11 RC 0.
 
 ### Breaking and visible changes
 
@@ -24,6 +26,14 @@ This release candidate introduces disclosure navigation in MegaMenu and improves
 
 - **Storybook 11 publishes component props using server docgen.** Mangrove's documented catalogue still exposes the established prop contracts and examples. Consumers of Storybook's raw `manifests/components.json` should support version 1 and follow the relative JSON references. Saved Page Actions and HighlightBox Controls links continue to work. ([#1532](https://github.com/unisdr/undrr-mangrove/pull/1532), [#1533](https://github.com/unisdr/undrr-mangrove/pull/1533))
 - **Publication Record demonstrates adaptive file lists.** The experimental example shows a linked cover, a compact single-file row, and a table with language filters for multilingual records. ([#1503](https://github.com/unisdr/undrr-mangrove/pull/1503))
+
+### CDN
+
+Use matching 2.6.0 CSS and JavaScript after the shared-web-assets production deployment.
+
+```html
+<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.6.0/css/style.css" />
+```
 
 ## 2.5.0, 2026-11-13
 
