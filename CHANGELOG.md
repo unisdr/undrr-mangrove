@@ -11,9 +11,29 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 ## Unreleased
 
+## 2.6.0, 2026-11-26
+
+See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.6.0) for full details.
+
+Mangrove 2.6 introduces disclosure navigation in MegaMenu and improves article layouts at tablet widths. The public component documentation uses Storybook 11 RC 0.
+
 ### Breaking and visible changes
 
+- **MegaMenu desktop panels open on click.** Sections with panels render buttons in place of links. Update selectors that require an anchor or rely on hover. The panel contains the section landing link and each category landing page is the first link in its group. Update analytics reports for `Mega menu: Section` and `Mega menu: Category` where those reports previously tracked navigation clicks. ([#1501](https://github.com/unisdr/undrr-mangrove/pull/1501))
 - **Article grid two-column breakpoint aligns with tablet container (900px).** `.mg-grid--article` and `.mg-reading--with-contents` switch from a stacked single column to the two-column sidebar layout at 900px (`$mg-breakpoint-tablet`) instead of 48rem (768px), preventing the main reading column from squeezing inside `mg-container` between 768px and 899px. Drupal pages using these classes switch to two columns at 900px. A grid that is not inside `mg-container` (for example, full-width page content) now also stacks between 768px and 899px, even though it would have room for the rail there. ([#1504](https://github.com/unisdr/undrr-mangrove/issues/1504))
+
+### Documentation and discoverability
+
+- **Storybook 11 publishes component props using server docgen.** Mangrove's documented catalogue still exposes the established prop contracts and examples. Consumers of Storybook's raw `manifests/components.json` should support version 1 and follow the relative JSON references. Saved Page Actions and HighlightBox Controls links continue to work. ([#1532](https://github.com/unisdr/undrr-mangrove/pull/1532), [#1533](https://github.com/unisdr/undrr-mangrove/pull/1533))
+- **Publication Record demonstrates adaptive file lists.** The experimental example shows a linked cover, a compact single-file row, and a table with language filters for multilingual records. ([#1503](https://github.com/unisdr/undrr-mangrove/pull/1503))
+
+### CDN
+
+Use matching 2.6.0 CSS and JavaScript after the shared-web-assets production deployment.
+
+```html
+<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.6.0/css/style.css" />
+```
 
 ## 2.5.0, 2026-11-13
 
