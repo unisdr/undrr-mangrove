@@ -100,14 +100,10 @@ export const TreeItem = ({
     }
   };
 
+  // A click on the link bubbles here, so the link has no handler of its own
+  // and the browser still follows it.
   const handleLabelClick = e => {
-    if (asLink && href) {
-      if (hasChildren) {
-        handleToggle(e);
-      } else {
-        handleSelect(e);
-      }
-    } else if (hasChildren) {
+    if (hasChildren) {
       handleToggle(e);
     } else {
       handleSelect(e);
@@ -167,7 +163,6 @@ export const TreeItem = ({
             tabIndex={-1}
             className="mg-tree__label"
             aria-current={current || undefined}
-            onClick={handleLabelClick}
           >
             {label}
           </a>

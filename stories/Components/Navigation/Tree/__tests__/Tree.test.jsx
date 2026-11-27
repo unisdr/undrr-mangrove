@@ -354,6 +354,48 @@ describe('Tree and TreeItem', () => {
     expect(link).not.toHaveAttribute('aria-current');
   });
 
+  describe('pointer clicks on linked rows', () => {
+    const renderLinked = props =>
+      render(
+        <Tree {...props}>
+          <TreeItem id="parent" label="Parent" href="#parent" asLink>
+            <TreeItem id="leaf" label="Leaf" href="#leaf" asLink />
+          </TreeItem>
+        </Tree>
+      );
+
+    it('selects a linked leaf once and lets its link navigate', () => {
+      const onSelect = jest.fn();
+      renderLinked({ defaultExpandedIds: ['parent'], onSelect });
+      const link = screen.getByRole('link', { name: 'Leaf' });
+      const navigate = jest.fn();
+      link.addEventListener('click', navigate);
+
+      const notPrevented = fireEvent.click(link);
+
+      expect(notPrevented).toBe(true);
+      expect(navigate).toHaveBeenCalledTimes(1);
+      expect(onSelect).toHaveBeenCalledTimes(1);
+      expect(onSelect).toHaveBeenCalledWith('leaf');
+    });
+
+    it('toggles a linked parent once from its link or its chevron', () => {
+      const onToggle = jest.fn();
+      renderLinked({ onToggle });
+      const parent = getItem('parent');
+
+      expect(
+        fireEvent.click(screen.getByRole('link', { name: 'Parent' }))
+      ).toBe(true);
+      expect(onToggle).toHaveBeenCalledTimes(1);
+      expect(parent).toHaveAttribute('aria-expanded', 'true');
+
+      fireEvent.click(parent.querySelector('.mg-tree__toggle'));
+      expect(onToggle).toHaveBeenCalledTimes(2);
+      expect(parent).toHaveAttribute('aria-expanded', 'false');
+    });
+  });
+
   it('sets aria-current on the link when current is given', () => {
     render(
       <Tree>
