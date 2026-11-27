@@ -176,7 +176,7 @@
     "sass-loader": "17.1.0",
     "storybook": "11.0.0-rc.0",
     "style-loader": "4.0.0",
-    "stylelint": "~17.16.0",
+    "stylelint": "~18.1.0",
     "stylelint-config-recommended-scss": "17.0.1",
     "stylelint-config-standard-scss": "17.0.0",
     "stylelint-prettier": "5.1.0",
