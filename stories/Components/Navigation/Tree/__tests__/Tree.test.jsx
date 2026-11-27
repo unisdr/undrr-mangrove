@@ -354,7 +354,7 @@ describe('Tree and TreeItem', () => {
     expect(link).not.toHaveAttribute('aria-current');
   });
 
-  describe('pointer clicks on linked rows', () => {
+  describe('clicks on linked rows', () => {
     const renderLinked = props =>
       render(
         <Tree {...props}>
@@ -364,17 +364,32 @@ describe('Tree and TreeItem', () => {
         </Tree>
       );
 
+    // Records whether each link click reached the document unprevented, as
+    // the browser needs it to follow the link.
+    const watchNavigation = () => {
+      const followed = [];
+      const listener = e => {
+        if (e.target.closest('a')) {
+          followed.push(!e.defaultPrevented);
+          e.preventDefault();
+        }
+      };
+      document.addEventListener('click', listener);
+      return {
+        followed,
+        stop: () => document.removeEventListener('click', listener),
+      };
+    };
+
     it('selects a linked leaf once and lets its link navigate', () => {
       const onSelect = jest.fn();
       renderLinked({ defaultExpandedIds: ['parent'], onSelect });
-      const link = screen.getByRole('link', { name: 'Leaf' });
-      const navigate = jest.fn();
-      link.addEventListener('click', navigate);
+      const nav = watchNavigation();
 
-      const notPrevented = fireEvent.click(link);
+      fireEvent.click(screen.getByRole('link', { name: 'Leaf' }));
+      nav.stop();
 
-      expect(notPrevented).toBe(true);
-      expect(navigate).toHaveBeenCalledTimes(1);
+      expect(nav.followed).toEqual([true]);
       expect(onSelect).toHaveBeenCalledTimes(1);
       expect(onSelect).toHaveBeenCalledWith('leaf');
     });
@@ -383,17 +398,80 @@ describe('Tree and TreeItem', () => {
       const onToggle = jest.fn();
       renderLinked({ onToggle });
       const parent = getItem('parent');
+      const nav = watchNavigation();
 
-      expect(
-        fireEvent.click(screen.getByRole('link', { name: 'Parent' }))
-      ).toBe(true);
+      fireEvent.click(screen.getByRole('link', { name: 'Parent' }));
       expect(onToggle).toHaveBeenCalledTimes(1);
       expect(parent).toHaveAttribute('aria-expanded', 'true');
 
       fireEvent.click(parent.querySelector('.mg-tree__toggle'));
+      nav.stop();
       expect(onToggle).toHaveBeenCalledTimes(2);
       expect(parent).toHaveAttribute('aria-expanded', 'false');
+      expect(nav.followed).toEqual([true]);
     });
+
+    it.each(['ctrlKey', 'metaKey', 'shiftKey', 'altKey'])(
+      'leaves the tree unchanged on a %s click, which opens the link elsewhere',
+      modifier => {
+        const onSelect = jest.fn();
+        const onToggle = jest.fn();
+        renderLinked({ defaultExpandedIds: ['parent'], onSelect, onToggle });
+        const nav = watchNavigation();
+
+        fireEvent.click(screen.getByRole('link', { name: 'Leaf' }), {
+          [modifier]: true,
+        });
+        fireEvent.click(screen.getByRole('link', { name: 'Parent' }), {
+          [modifier]: true,
+        });
+        nav.stop();
+
+        expect(nav.followed).toEqual([true, true]);
+        expect(onSelect).not.toHaveBeenCalled();
+        expect(onToggle).not.toHaveBeenCalled();
+        expect(getItem('parent')).toHaveAttribute('aria-expanded', 'true');
+      }
+    );
+
+    it.each(['Enter', ' '])(
+      'selects a linked leaf once and follows its link on %p',
+      key => {
+        const onSelect = jest.fn();
+        renderLinked({ defaultExpandedIds: ['parent'], onSelect });
+        const nav = watchNavigation();
+        const leaf = getItem('leaf');
+        act(() => leaf.focus());
+
+        fireEvent.keyDown(leaf, { key });
+        nav.stop();
+
+        expect(nav.followed).toEqual([true]);
+        expect(onSelect).toHaveBeenCalledTimes(1);
+        expect(onSelect).toHaveBeenCalledWith('leaf');
+      }
+    );
+
+    it.each(['Enter', ' '])(
+      'selects and toggles a linked parent once and follows its link on %p',
+      key => {
+        const onSelect = jest.fn();
+        const onToggle = jest.fn();
+        renderLinked({ onSelect, onToggle });
+        const nav = watchNavigation();
+        const parent = getItem('parent');
+        act(() => parent.focus());
+
+        fireEvent.keyDown(parent, { key });
+        nav.stop();
+
+        expect(nav.followed).toEqual([true]);
+        expect(onSelect).toHaveBeenCalledTimes(1);
+        expect(onSelect).toHaveBeenCalledWith('parent');
+        expect(onToggle).toHaveBeenCalledTimes(1);
+        expect(parent).toHaveAttribute('aria-expanded', 'true');
+      }
+    );
   });
 
   it('sets aria-current on the link when current is given', () => {

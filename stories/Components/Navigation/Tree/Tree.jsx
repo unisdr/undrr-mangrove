@@ -77,8 +77,7 @@ export const TreeItem = ({
   const iconClass =
     toggleIcon || (context && context.toggleIcon) || DEFAULT_TOGGLE_ICON;
 
-  const handleToggle = e => {
-    if (e) e.stopPropagation();
+  const handleToggle = () => {
     const next = !isExpanded;
     if (controlledExpanded === undefined) {
       setLocalExpanded(next);
@@ -100,11 +99,16 @@ export const TreeItem = ({
     }
   };
 
-  // A click on the link bubbles here, so the link has no handler of its own
-  // and the browser still follows it.
+  // Clicks on the chevron and the link bubble here, so neither has a handler
+  // of its own. The click keeps bubbling, so the browser follows the link and
+  // page-level click listeners, such as analytics, still see it. A modified
+  // click opens the link elsewhere, such as a new tab, so this page's tree is
+  // left as it is.
   const handleLabelClick = e => {
+    const isModified = e.ctrlKey || e.metaKey || e.shiftKey || e.altKey;
+    if (isModified && e.target.closest('a')) return;
     if (hasChildren) {
-      handleToggle(e);
+      handleToggle();
     } else {
       handleSelect(e);
     }
@@ -145,7 +149,6 @@ export const TreeItem = ({
           <button
             type="button"
             className="mg-tree__toggle"
-            onClick={handleToggle}
             tabIndex={-1}
             aria-hidden="true"
           >
@@ -441,16 +444,19 @@ export const Tree = ({
         case 'Enter':
         case ' ': {
           e.preventDefault();
-          selectItem(currentId);
           // Only the item's own link: an expanded parent also contains its
           // children's links.
           const link = currentEl.querySelector(
             ':scope > .mg-tree__label-container > a'
           );
           if (link) {
+            // The link's click bubbles to the row, which selects a leaf and
+            // toggles a parent, so only a parent is selected here.
+            if (hasChildren) selectItem(currentId);
             link.click();
-          } else if (hasChildren) {
-            toggleFn();
+          } else {
+            selectItem(currentId);
+            if (hasChildren) toggleFn();
           }
           break;
         }

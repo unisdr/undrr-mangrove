@@ -72,7 +72,10 @@
     }
   }
 
+  // The toggle keeps its size beside a wrapping label, so the chevron stays on
+  // the guide and the area that expands without navigating stays 24px wide.
   &__toggle {
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
