@@ -72,7 +72,10 @@
     }
   }
 
+  // The toggle keeps its size beside a wrapping label, so the chevron stays on
+  // the guide and the area that expands without navigating stays 24px wide.
   &__toggle {
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -129,13 +132,32 @@
   // Links are underlined so they read differently from plain-text items. The
   // colour stays inherited: the interactive colour on the hover tint is below
   // 4.5:1 in IRP, so hover thickens the underline instead.
+  // A link fills the highlighted row, so a click anywhere in it navigates.
+  // Negative margins pull the anchor over the container's block and inline-end
+  // padding and over the gap after a parent's chevron, and matching padding
+  // keeps the text where it was. The chevron, and the padding before it, stay
+  // outside the link and expand or collapse the item.
   a.mg-tree__label {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    margin-block: calc(var(--mg-spacing-50) * -1);
+    margin-inline: calc(var(--mg-spacing-100) * -1);
+    padding-block: var(--mg-spacing-50);
+    padding-inline: var(--mg-spacing-100);
+    border-radius: inherit;
     text-decoration: underline;
     text-underline-offset: 0.15em;
 
     &:hover {
       color: inherit;
       text-decoration-thickness: 2px;
+    }
+
+    // A linked leaf starts at the row's edge, so its toggle-sized inset moves
+    // into the padding.
+    &:first-child {
+      margin-inline-start: calc(var(--mg-spacing-100) * -1);
+      padding-inline-start: calc(1rem + var(--mg-spacing-100) * 2);
     }
   }
 }
